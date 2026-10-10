@@ -21,13 +21,29 @@ pipeline configuration and persistent identity registries.
 - `scripts/shared/`: shared entity normalization and geographic matching helpers.
 - `tests/{restaurants,attractions,reviews}/`: existing regression coverage.
 - `data/metadata/`: stable source/rule/schema documentation and persistent registries.
-- `data/reports/`: final summaries; `audit/{restaurants,attractions,reviews}/` holds detailed evidence; `verification/` holds execution checks.
-- `notebooks/`: two short read-only exploratory notebooks.
+- `data/reports/`: generated on demand by pipeline commands, ignored by Git and not tracked. This directory may be absent until a pipeline runs.
 
-See [data/README.md](data/README.md) for lineage, policies and artifact locations.
+See [data/DATA_CATALOG.md](data/DATA_CATALOG.md) for lineage, policies and artifact locations.
 Do not delete/reset ID registries or change source snapshots when reproducing the
-frozen outputs. Historical verification reports retain the paths and commands
-used at the time; the cleanup inventory records their current destinations.
+frozen outputs. Production never reads reports. Reproduction checkpoints live in `data/interim/`;
+reports can be removed without affecting construction.
+
+## Local setup and tests
+
+Use Python 3.13 (validated with 3.13.6) from the repository root. Install and run
+with the same interpreter:
+
+```sh
+python3 -m pip install -r requirements.txt
+python3 -c "import shapely; print(shapely.__version__)"
+python3 -m pytest
+```
+
+`requirements.txt` is the authoritative dependency source for local setup and
+Docker, including Shapely 2.2.0 and pytest 8.4.2. Shapely 2.2.0 supports Python
+3.13. Missing geometry dependencies must be installed; tests are not skipped.
+An optional virtual environment can be created with `python3 -m venv .venv` and
+activated with `source .venv/bin/activate` before the commands above.
 
 ## Docker and tests
 
@@ -36,7 +52,7 @@ Use the existing Docker service and repository bind mount:
 ```sh
 docker compose build
 docker compose config
-docker compose run --rm data-pipeline python -m unittest discover -s tests -t . -v
+docker compose run --rm data-pipeline python -m pytest
 ```
 
 Run modules from the repository root with `python -m`; direct file execution is
@@ -48,6 +64,11 @@ frozen-output reproduction.
 
 Google Maps Kaggle supplies identity/location/ratings and ordinal prices.
 OSM/Overpass adds optional hours, cuisine and explicit dietary evidence.
+For a fresh construction workspace, initialize the core table first with
+`python -m scripts.restaurants.preprocess_restaurants`, preserving the existing ID
+registry. Then fetch cached OSM data and enrich as below. The initializer refuses
+to overwrite an already enriched table; existing frozen installations only need
+`--enrich-osm`. Rebuild from raw in a separate workspace, not over consumed outputs.
 
 ```sh
 docker compose run --rm data-pipeline python -m scripts.restaurants.download_restaurants
@@ -58,7 +79,7 @@ docker compose run --rm data-pipeline python -m scripts.restaurants.preprocess_r
 The numeric price mapping is experimental: 1 → $10–20, 2 → $20–40,
 3 → $40–100, 4 → $100+; category 4 has no upper bound and missing categories
 remain missing. Default hours are experimental fallbacks, not verified schedules.
-See [restaurant report](data/reports/restaurant_data_report.md) and
+See [data catalog](data/DATA_CATALOG.md) and
 [restaurant schema](data/metadata/restaurant_schema.md).
 
 ## Attraction pipeline
@@ -72,7 +93,6 @@ docker compose run --rm data-pipeline python -m scripts.attractions.download_att
 docker compose run --rm data-pipeline python -m scripts.attractions.download_attractions --source kaggle
 docker compose run --rm data-pipeline python -m scripts.attractions.download_attractions --source landmarks
 docker compose run --rm data-pipeline python -m scripts.attractions.explore_attractions
-docker compose run --rm data-pipeline python -m scripts.attractions.resolve_attraction_review
 docker compose run --rm data-pipeline python -m scripts.attractions.filter_attractions
 docker compose run --rm data-pipeline python -m scripts.attractions.match_attractions_kaggle
 docker compose run --rm data-pipeline python -m scripts.attractions.audit_landmarks
@@ -80,9 +100,10 @@ docker compose run --rm data-pipeline python -m scripts.attractions.build_attrac
 docker compose run --rm data-pipeline python -m scripts.attractions.finalize_attractions
 ```
 
-See [attraction report](data/reports/attraction_data_report.md). Source taxonomy,
-filtering/alias evidence and historical manual-curation tables remain preserved
-under `data/reports/audit/attractions/`.
+See [data catalog](data/DATA_CATALOG.md) and
+[attraction sources](data/metadata/attractions_sources.md). Source taxonomy,
+filtering/alias configuration remains in metadata; candidate and matching checkpoints
+live in `data/interim/`. Manual curation is not required.
 
 ## Google Local matching and review corpora
 
@@ -98,6 +119,13 @@ docker compose run --rm data-pipeline python -m scripts.reviews.download_review_
 docker compose run --rm data-pipeline python -m scripts.reviews.build_review_corpora
 ```
 
+With the accepted Google registry already present, the minimal review rebuild is
+`python -m scripts.reviews.build_review_corpora`; both review files are built together.
+The metadata-download/matching commands above are only needed to rebuild the accepted
+Google mappings. On a cached installation the minimal attraction rebuild is
+`python -m scripts.attractions.finalize_attractions`; the preceding commands rebuild
+its checkpoints from raw sources.
+
 A single streaming scan of the full New York split writes an identity-free,
 disk-backed SQLite interim cache. Repeated corpus builds validate source/registry
 hashes and reuse that cache. Text corpora retain at most 100 unique reviews per
@@ -107,14 +135,5 @@ statistically representative sample. Persistent RR_/AR_ registries preserve IDs.
 
 No reviewer identities or subjective scores/labels are derived. Missing mapping or
 zero text reviews means **UNKNOWN / evidence unavailable**, never negative evidence.
-See [review summary](data/reports/review_dataset_summary.md) and
+See [data catalog](data/DATA_CATALOG.md) and
 [review schema/policy](data/metadata/review_corpus_schema.md).
-
-## Read-only exploration
-
-```sh
-docker compose run --rm data-pipeline jupyter nbconvert --to notebook --execute --output-dir /tmp notebooks/explore_restaurants.ipynb notebooks/explore_attractions.ipynb
-```
-
-Notebooks inspect existing outputs; they do not construct or overwrite data.
-Raw files, credentials and the expensive SQLite cache remain Git-ignored.

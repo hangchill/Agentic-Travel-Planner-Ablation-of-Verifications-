@@ -66,7 +66,7 @@ class AttractionCurationTests(unittest.TestCase):
             path=Path(directory)/'final_attraction_curation_manual.csv'
             content='manual_decision,manual_reason,manual_notes\nADD,user reason,\n'
             path.write_text(content)
-            with patch.object(c,'REPORTS',Path(directory)):
+            with patch.object(c,'CURATION_DIR',Path(directory)):
                 with self.assertRaisesRegex(ValueError,'refusing to overwrite'):c.main()
             self.assertEqual(path.read_text(),content)
 

@@ -12,6 +12,7 @@ from scripts.attractions.explore_attractions import markdown_table
 
 ROOT=Path(__file__).resolve().parents[2]
 REPORTS=ROOT/'data/reports/audit/attractions'
+CURATION_DIR=ROOT/'data/interim'
 MAX_INDIVIDUAL=200
 ORIGINS=['COMMONPLACE_REVIEW_LANDMARK_SUPPORTED','COMMONPLACE_EXCLUDE_LANDMARK_SUPPORTED','UNMATCHED_SCENIC_LANDMARK','UNMATCHED_INDIVIDUAL_LANDMARK']
 MANUAL_FIELDS=['manual_decision','manual_reason','manual_notes']
@@ -192,7 +193,7 @@ def build_curation(commonplace,landmarks,matched,gaps,weak,max_individual=MAX_IN
 
 def main():
     for filename in ['final_attraction_curation.csv','final_attraction_curation_manual.csv']:
-        path=REPORTS/filename
+        path=CURATION_DIR/filename
         if path.exists():
             old=pd.read_csv(path,dtype='string',keep_default_na=False)
             if old[MANUAL_FIELDS].apply(lambda col:col.str.strip().ne('')).any().any():raise ValueError('Manual edits exist; refusing to overwrite populated curation decisions')
@@ -203,8 +204,8 @@ def main():
     expected=commonplace.loc[commonplace.attraction_filter_decision.eq('INCLUDE'),'source_record_id']
     if len(commonplace)!=20451 or len(include)!=2901 or set(include.source_record_id)!=set(expected):raise ValueError('Automatic base integrity failed')
     landmarks=pd.concat([read('data/interim/individual_landmarks_clean.csv'),read('data/interim/scenic_landmarks_clean.csv')],ignore_index=True)
-    matched=pd.concat([read('data/reports/audit/attractions/commonplace_review_supported_by_landmarks.csv'),read('data/reports/audit/attractions/commonplace_exclude_supported_by_landmarks.csv')],ignore_index=True)
-    frame,statistics=build_curation(commonplace,landmarks,matched,read('data/reports/audit/attractions/landmarks_unmatched_commonplace.csv'),read('data/reports/audit/attractions/kaggle_commonplace_name_only_candidates.csv'))
+    matched=pd.concat([read('data/interim/commonplace_review_supported_by_landmarks.csv'),read('data/interim/commonplace_exclude_supported_by_landmarks.csv')],ignore_index=True)
+    frame,statistics=build_curation(commonplace,landmarks,matched,read('data/interim/landmarks_unmatched_commonplace.csv'),read('data/interim/kaggle_commonplace_name_only_candidates.csv'))
     def frequencies(field):
         if field=='review_priority':return frame[field].value_counts().reindex(['HIGH','MEDIUM','LOW'],fill_value=0).rename_axis(field).reset_index(name='candidates')
         return frame.groupby(field,dropna=False,sort=True).size().reset_index(name='candidates')
@@ -244,8 +245,10 @@ def main():
         '## Integrity','',
         'CommonPlace remains INCLUDE 2901, REVIEW 5790, EXCLUDE 11760, UNMAPPED 0, total 20451. Restaurants, rule metadata, automatic candidate base, Kaggle audit and landmark matching inputs are read-only.',
         'All manual fields are blank. No final ATTR_ IDs, processed attractions.csv, automatic additions, commit or push.','']
-    (REPORTS/'final_attraction_curation.csv').write_text(frame.to_csv(index=False))
-    (REPORTS/'final_attraction_curation_manual.csv').write_text(frame[MANUAL_COLUMNS].to_csv(index=False))
+    CURATION_DIR.mkdir(parents=True,exist_ok=True)
+    REPORTS.mkdir(parents=True,exist_ok=True)
+    (CURATION_DIR/'final_attraction_curation.csv').write_text(frame.to_csv(index=False))
+    (CURATION_DIR/'final_attraction_curation_manual.csv').write_text(frame[MANUAL_COLUMNS].to_csv(index=False))
     (REPORTS/'final_attraction_curation_report.md').write_text('\n'.join(lines))
     print('Curation candidates:',len(frame));print(frequencies('candidate_origin').to_string(index=False));print(frequencies('review_priority').to_string(index=False));print(json.dumps(statistics,indent=2));print('Possible INCLUDE aliases:',int(frame.possible_existing_include_match.sum()),'; Kaggle name support:',int(frame.kaggle_name_support.sum()))
 

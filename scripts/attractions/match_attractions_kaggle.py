@@ -218,12 +218,10 @@ def main(argv=None):
     primary_gaps=kaggle.loc[kaggle.kaggle_row_id.isin(primary_unmatched)].merge(summary[['kaggle_row_id','match_status','evidence_reason']],on='kaggle_row_id',validate='one_to_one')
     # Name-only candidates remain inspection evidence, never counted as supported matches.
     weak=details.loc[details.match_method.isin(['exact_name_only','fuzzy_name_only'])]
-    paths={ROOT/'data/interim/kaggle_tourist_locations_clean.csv':kaggle.to_csv(index=False),
-        ROOT/'data/interim/commonplace_kaggle_tourist_signal.csv':signals.to_csv(index=False),
-        ROOT/'data/reports/audit/attractions/kaggle_commonplace_matching_summary.csv':summary.to_csv(index=False),
+    paths={ROOT/'data/reports/audit/attractions/kaggle_commonplace_matching_summary.csv':summary.to_csv(index=False),
         ROOT/'data/reports/audit/attractions/kaggle_commonplace_matching_report.csv':details.to_csv(index=False),
         ROOT/'data/reports/audit/attractions/kaggle_commonplace_ambiguous_matches.csv':details.loc[details.match_status.eq('AMBIGUOUS')].to_csv(index=False),
-        ROOT/'data/reports/audit/attractions/kaggle_commonplace_name_only_candidates.csv':weak.to_csv(index=False),
+        ROOT/'data/interim/kaggle_commonplace_name_only_candidates.csv':weak.to_csv(index=False),
         ROOT/'data/reports/audit/attractions/commonplace_review_supported_by_kaggle.csv':summary.loc[summary.match_status.eq('MATCHED_REVIEW')].rename(columns={'commonplace_facility_type':'facility_type','commonplace_domain_label':'facility_domain_label','commonplace_borough':'borough'}).to_csv(index=False),
         ROOT/'data/reports/audit/attractions/commonplace_include_supported_by_kaggle.csv':summary.loc[summary.match_status.eq('MATCHED_INCLUDE')].rename(columns={'commonplace_facility_type':'facility_type','commonplace_domain_label':'facility_domain_label','commonplace_borough':'borough'}).to_csv(index=False),
         ROOT/'data/reports/audit/attractions/kaggle_matches_commonplace_exclude.csv':summary.loc[summary.match_status.eq('MATCHED_EXCLUDE')].to_csv(index=False),

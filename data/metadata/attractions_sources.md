@@ -1,4 +1,4 @@
-# Attractions exploration: CommonPlace only
+# Attraction sources and geometry methodology
 
 Source: [NYC Open Data CommonPlace, t95h-5fsr](https://data.cityofnewyork.us/City-Government/CommonPlace/t95h-5fsr).
 The downloader uses the official CSV export and schema API. It caches the exact
@@ -24,8 +24,35 @@ canonical attraction IDs. Blank source fields remain null; no imputation,
 deduplication, geocoding or tourism filtering is applied. Unsupported borough
 code 8 is retained with a null borough label.
 
-The notebook/report surface category-keyword exploration subsets only. Their
+Generated diagnostics surface category-keyword exploration subsets only. Their
 membership is not a final inclusion/exclusion policy. CommonPlace alone does
 not establish tourism completeness and supplies no admission prices, opening
-hours or visitor ratings. No processed attractions dataset is generated.
-Restaurant scripts, metadata, tests and processed data are unchanged.
+hours or visitor ratings. Finalization constructs the processed attraction universe from CommonPlace INCLUDE
+identities and the existing deterministic shortlist rules; see data/DATA_CATALOG.md.
+
+## LPC landmarks and supporting evidence
+
+Individual Landmark Sites (`buis-pvji`) and Scenic Landmarks (`qexa-qpj6`) are the
+only added LPC sources; historic-district building records are excluded. Individual
+eligibility uses designated status, with currency unverified because a current flag
+is absent. Scenic eligibility requires current_=true and DESIGNATED status without
+conflicting inactive/calendared/rescinded action. All source rows/status groups remain
+in clean checkpoints; only eligible features support matching.
+
+Socrata exports retain EPSG:2263 projected geometry despite GeoJSON conventions and
+an incorrectly WGS84-labelled Shapefile .prj. Cached LPC spatial-reference metadata
+resolves the conflict. Geometries are repaired deterministically where needed;
+representative points lie inside/on polygons. Individual transformed coordinates and
+scenic extents are checked against source geographic/LPC spatial evidence. No geocoding.
+
+Matching requires normalized name plus location evidence: within 50 m, exact names
+within 150 m, or polygon containment for large sites. Multiple plausible candidates
+remain ambiguous; proximity alone cannot collapse different names/functions. Existing
+fuzzy thresholds, scoped rules, source-ID deduplication and shortlist ranking/caps
+remain in the construction modules and metadata. Kaggle geographic confirmation is
+unavailable in this snapshot; its name-only evidence cannot originate additions.
+
+The unchanged classified checkpoint has 20,451 rows: INCLUDE 2,901, REVIEW 5,790,
+EXCLUDE 11,760. No whole REVIEW subtype was promoted; the selective shortlist and
+finalizer apply the preserved experimental policy. Historical blank manual fields
+are not required decisions; populated manual edits remain protected against overwrite.

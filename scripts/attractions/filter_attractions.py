@@ -121,8 +121,6 @@ def main():
     interim=ROOT/'data/interim';reports=ROOT/'data/reports/audit/attractions'
     paths={interim/'commonplace_attraction_classified.csv':classified.to_csv(index=False),
         interim/'commonplace_attraction_candidates.csv':pools['INCLUDE'].to_csv(index=False),
-        interim/'commonplace_attraction_review.csv':pools['REVIEW'].to_csv(index=False),
-        interim/'commonplace_attraction_unmapped.csv':pools['UNMAPPED'].to_csv(index=False),
         reports/'commonplace_candidate_name_review.csv':name_review.to_csv(index=False)}
     for decision,filename in [('INCLUDE','included'),('REVIEW','review'),('EXCLUDE','excluded')]:
         paths[reports/f'commonplace_{filename}_subtypes.csv']=audits[decision].to_csv(index=False)

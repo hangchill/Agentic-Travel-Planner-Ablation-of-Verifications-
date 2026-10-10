@@ -215,9 +215,7 @@ def enrich_osm(canonical_path=ROOT/'data/processed/restaurants.csv',cache_path=C
     merged=merge_csv(content,enrichment)
     output=pd.read_csv(io.StringIO(merged),dtype=str,keep_default_na=False)
     coverage=coverage_report(osm,report,output,data['retrieval'],data)
-    files={ROOT/'data/interim/osm_restaurants_clean.csv':osm.to_csv(index=False),
-        ROOT/'data/interim/osm_restaurant_enrichment.csv':enrichment.to_csv(index=False),
-        ROOT/'data/reports/audit/restaurants/osm_matching_report.csv':report.to_csv(index=False),
+    files={ROOT/'data/reports/audit/restaurants/osm_matching_report.csv':report.to_csv(index=False),
         ROOT/'data/reports/audit/restaurants/osm_ambiguous_matches.csv':report.loc[report.match_status.eq('AMBIGUOUS')].to_csv(index=False),
         ROOT/'data/reports/restaurant_data_report.md':coverage,canonical_path:merged}
     for path,value in files.items():

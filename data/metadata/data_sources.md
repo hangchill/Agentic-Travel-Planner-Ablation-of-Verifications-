@@ -27,7 +27,7 @@ Maps URLs were manually inspected by the project team to infer approximate
 per-person ranges for budget experiments. `price_mapping.csv` is the sole mapping
 source. These estimates are experimental, not exact real-world guarantees.
 Manual observation records remain separate in
-`data/reports/audit/restaurants/manual_price_category_check.csv`; they are never autofilled.
+`data/metadata/price_validation.csv`; they are never autofilled.
 Field semantics and ranges are in `restaurant_schema.md`.
 
 ## Optional OpenStreetMap / Overpass

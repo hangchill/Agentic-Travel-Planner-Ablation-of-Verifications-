@@ -219,7 +219,7 @@ def main():
     samples=sample_price_categories(restaurants)
     PROCESSED_DIR.mkdir(parents=True,exist_ok=True);REPORT_DIR.mkdir(parents=True,exist_ok=True)
     (REPORT_DIR/'audit/restaurants').mkdir(parents=True,exist_ok=True)
-    save_manual_template(manual_price_template(samples),REPORT_DIR/'audit/restaurants/manual_price_category_check.csv')
+    save_manual_template(manual_price_template(samples),PROJECT_ROOT/'data/metadata/price_validation.csv')
     restaurants.to_csv(PROCESSED_DIR/'restaurants.csv',index=False)
     registry.to_csv(REGISTRY_FILE,index=False)
     (REPORT_DIR/'restaurant_data_report.md').write_text(canonical_report(restaurants))

@@ -151,7 +151,7 @@ def match_landmarks(landmarks,commonplace,threshold=FUZZY_THRESHOLD):
 
 
 def subtype_support(cp,summary):
-    weak=pd.read_csv(ROOT/'data/reports/audit/attractions/kaggle_commonplace_name_only_candidates.csv',dtype={'commonplace_source_id':'string'})
+    weak=pd.read_csv(ROOT/'data/interim/kaggle_commonplace_name_only_candidates.csv',dtype={'commonplace_source_id':'string'})
     accepted=summary.loc[summary.match_status.isin(STATUSES[:3])]
     rows=[]
     for key,group in cp.loc[cp.attraction_filter_decision.eq('REVIEW')].groupby(['facility_type','facility_domain_code','facility_domain_label'],dropna=False,sort=True):
@@ -187,10 +187,10 @@ def main():
     artifacts={ROOT/'data/interim/individual_landmarks_clean.csv':individual.to_csv(index=False),
         ROOT/'data/interim/scenic_landmarks_clean.csv':scenic.to_csv(index=False),
         ROOT/'data/reports/audit/attractions/landmark_commonplace_matching_report.csv':details.to_csv(index=False),
-        ROOT/'data/reports/audit/attractions/landmark_commonplace_matching_summary.csv':summary.to_csv(index=False),
-        ROOT/'data/reports/audit/attractions/landmarks_unmatched_commonplace.csv':gaps.to_csv(index=False)}
+        ROOT/'data/interim/landmark_commonplace_matching_summary.csv':summary.to_csv(index=False),
+        ROOT/'data/interim/landmarks_unmatched_commonplace.csv':gaps.to_csv(index=False)}
     for decision in ['INCLUDE','REVIEW','EXCLUDE']:
-        artifacts[ROOT/f'data/reports/audit/attractions/commonplace_{decision.lower()}_supported_by_landmarks.csv']=summary.loc[summary.match_status.eq('MATCHED_'+decision)].to_csv(index=False)
+        artifacts[ROOT/(f'data/interim/commonplace_{decision.lower()}_supported_by_landmarks.csv' if decision in ['REVIEW','EXCLUDE'] else f'data/reports/audit/attractions/commonplace_{decision.lower()}_supported_by_landmarks.csv')]=summary.loc[summary.match_status.eq('MATCHED_'+decision)].to_csv(index=False)
     counts=summary.groupby(['landmark_source','match_status']).size().unstack(fill_value=0).reindex(columns=STATUSES,fill_value=0)
     schemas={'individual':individual_schema,'scenic':scenic_schema}
     # JSON represents unavailable currency flags without inventing current status.
@@ -225,7 +225,7 @@ def main():
         'Supported individual records justify SELECTIVE_PROMOTION_NEEDED, not blanket subtype promotion. No selective promotion is applied here. Remaining mixed categories stay REVIEW.',
         'Kaggle counts are name-only candidate pairs, not confirmed identity matches. Landmark support counts unique CommonPlace source records.',
         'Zero supported rows does not establish absence of tourist relevance. Name and location differences can cause coverage gaps.',''])
-    for path,content in artifacts.items():path.write_text(content)
+    for path,content in artifacts.items():path.parent.mkdir(parents=True,exist_ok=True);path.write_text(content)
     print(counts.to_string());print('Raw rows:',len(individual),len(scenic));print('Eligible rows:',int(individual.active_designated.sum()),int(scenic.active_designated.sum()));print('CommonPlace:',cp.attraction_filter_decision.value_counts().to_dict())
 
 if __name__=='__main__':main()
