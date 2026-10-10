@@ -56,3 +56,14 @@ The unchanged classified checkpoint has 20,451 rows: INCLUDE 2,901, REVIEW 5,790
 EXCLUDE 11,760. No whole REVIEW subtype was promoted; the selective shortlist and
 finalizer apply the preserved experimental policy. Historical blank manual fields
 are not required decisions; populated manual edits remain protected against overwrite.
+
+## Admission enrichment
+
+The separate [admission pipeline](attraction_admission.md) appends ten cost/provenance
+fields from checksum-verified public source snapshots without altering identities,
+classification or source rules. Precedence is associated official structured admission
+records, then confidently linked Wikidata P2555, then OSM whole-attraction fee/charge.
+Only accepted source-ID or exact-normalized-name/location matches apply. Missing
+evidence remains unknown; the initial snapshot has 29 status observations and ten
+exact free admissions across 3,066 canonical attractions. All source snapshots are
+Git-ignored; optional reports are generated on demand and never consumed at runtime.

@@ -7,7 +7,7 @@ application-facing datasets below. Other project stages are maintained separatel
 | Dataset | Rows | Purpose |
 | --- | ---: | --- |
 | `data/processed/restaurants.csv` | 670 | Restaurant identity, location, prices, hours and cuisine evidence |
-| `data/processed/attractions.csv` | 3,066 | Attraction identity, categories and source provenance |
+| `data/processed/attractions.csv` | 3,066 | Attraction identity/categories/provenance and conservative admission evidence |
 | `data/processed/restaurant_reviews.csv` | 20,349 | Text evidence for 246 restaurants |
 | `data/processed/attraction_reviews.csv` | 36,203 | Text evidence for 638 attractions |
 
@@ -98,12 +98,23 @@ docker compose run --rm data-pipeline python -m scripts.attractions.match_attrac
 docker compose run --rm data-pipeline python -m scripts.attractions.audit_landmarks
 docker compose run --rm data-pipeline python -m scripts.attractions.build_attraction_curation
 docker compose run --rm data-pipeline python -m scripts.attractions.finalize_attractions
+docker compose run --rm data-pipeline python -m scripts.attractions.download_admission_sources
+docker compose run --rm data-pipeline python -m scripts.attractions.enrich_admission_costs
 ```
 
 See [data catalog](data/DATA_CATALOG.md) and
 [attraction sources](data/metadata/attractions_sources.md). Source taxonomy,
 filtering/alias configuration remains in metadata; candidate and matching checkpoints
 live in `data/interim/`. Manual curation is not required.
+
+Admission enrichment reads checksum-verified OSM/Wikidata snapshots offline, keeping
+unknown prices null. The initial snapshot has status evidence for 29/3,066 attractions
+and exact prices for 10/3,066 (all free). No positive ticket price is invented.
+See [admission schema, source hierarchy and budget policy](data/metadata/attraction_admission.md).
+An optional `--report data/reports/attraction_admission_coverage.json` writes an
+on-demand, Git-ignored coverage report. Fetch once explicitly; skip downloads for
+cached reproduction. Source-backed admission is separate from incidental spending,
+whose hard-budget default is zero unless the user specifies an allowance.
 
 ## Google Local matching and review corpora
 
@@ -123,8 +134,9 @@ With the accepted Google registry already present, the minimal review rebuild is
 `python -m scripts.reviews.build_review_corpora`; both review files are built together.
 The metadata-download/matching commands above are only needed to rebuild the accepted
 Google mappings. On a cached installation the minimal attraction rebuild is
-`python -m scripts.attractions.finalize_attractions`; the preceding commands rebuild
-its checkpoints from raw sources.
+`python3 -m scripts.attractions.finalize_attractions` followed by
+`python3 -m scripts.attractions.enrich_admission_costs`; the preceding commands rebuild
+its checkpoints from raw sources. Enrichment does not modify benchmark artifacts or registries.
 
 A single streaming scan of the full New York split writes an identity-free,
 disk-backed SQLite interim cache. Repeated corpus builds validate source/registry
