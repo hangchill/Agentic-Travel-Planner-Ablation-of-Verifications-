@@ -8,7 +8,7 @@ these frozen outputs.
 | Dataset | Rows | Primary key | Foreign keys | Main source and purpose |
 | --- | ---: | --- | --- | --- |
 | `processed/restaurants.csv` | 670 | `restaurant_id` | None | Google Maps Kaggle identity/location/rating/price, with optional OSM hours/cuisine/diet evidence |
-| `processed/attractions.csv` | 3,066 | `attraction_id` | None | CommonPlace base plus deterministically selected NYC LPC landmark-supported additions; identity/categories/provenance |
+| `processed/attractions.csv` | 3,066 | `attraction_id` | None | CommonPlace base plus deterministically selected NYC LPC landmark-supported additions; identity/categories/provenance plus source-backed admission evidence |
 | `processed/restaurant_reviews.csv` | 20,349 | `restaurant_review_id` | `restaurant_id` → restaurants; `(restaurant_id,gmap_id)` → accepted Google registry | Historical Google Local text evidence for 246 restaurants |
 | `processed/attraction_reviews.csv` | 36,203 | `attraction_review_id` | `attraction_id` → attractions; `(attraction_id,gmap_id)` → accepted Google registry | Historical Google Local text evidence for 638 attractions |
 
@@ -19,8 +19,10 @@ price ranges are approximate; category 4 is open-ended, not an unknown bounded m
 Observed hours and assumed defaults remain distinguishable. Absent OSM dietary tags
 mean unknown, not false. See [restaurant schema](metadata/restaurant_schema.md).
 
-Attraction fields absent in a source remain null; no admission price, rating or hours
-are inferred. Source taxonomy and category mappings retain experimental visitor rules;
+Attraction fields absent in a source remain null; no rating or hours are inferred.
+Admission evidence is separately enriched from cached public sources; missing cost
+is unknown, never free. See [admission schema and budget policy](metadata/attraction_admission.md).
+Initial evidence coverage is 29/3,066; exact-price coverage is 10/3,066 (all free). Source taxonomy and category mappings retain experimental visitor rules;
 they do not establish public access. Source/rule provenance remains in each row.
 
 Review text is nonempty in processed corpora. Missing source timestamps remain null;
@@ -64,6 +66,7 @@ observations, with persistent RR_/AR_ IDs. The sample is not statistically repre
 - Landmark matching summary, REVIEW/EXCLUDE support and unmatched landmarks: shortlist/finalization inputs.
 - Full and compact shortlist: candidate checkpoint and existing manual-edit overwrite protection.
 - Google metadata clean table: geographic matching checkpoint; OSM records are extracted directly from cached raw JSON.
+- Admission cost records, auditable matches, accepted mappings and conflicts: offline source normalization/matching checkpoints; canonical costs come only from accepted evidence.
 - Google matched-review SQLite: intentionally expensive single-pass, identity-free cache, Git-ignored; source/registry hashes validate reuse.
 
 All these checkpoints live in `data/interim/`; production never reads `data/reports/`.
@@ -87,7 +90,7 @@ Raw downloads and cached source metadata are preserved; do not refresh snapshots
 | Output | Required dependency chain | Minimal cached regeneration |
 | --- | --- | --- |
 | restaurants.csv | Google Maps CSV + restaurant ID/price metadata → core preprocessing → cached OSM JSON + hours/holiday helpers → enriched table | `python3 -m scripts.restaurants.preprocess_restaurants --enrich-osm` |
-| attractions.csv | CommonPlace raw/dictionary → explore_attractions cleaning → filter_attractions; Kaggle raw → match_attractions_kaggle name evidence; LPC raw → audit_landmarks geometry/matches → build_attraction_curation shortlist; all + rules/categories/ID registry → finalize_attractions | `python3 -m scripts.attractions.finalize_attractions` |
+| attractions.csv | CommonPlace raw/dictionary → explore_attractions cleaning → filter_attractions; Kaggle raw → match_attractions_kaggle name evidence; LPC raw → audit_landmarks geometry/matches → build_attraction_curation shortlist; all + rules/categories/ID registry → finalize_attractions → cached admission OSM/Wikidata/optional official snapshots → enrich_admission_costs | `python3 -m scripts.attractions.finalize_attractions` then `python3 -m scripts.attractions.enrich_admission_costs` |
 | restaurant_reviews.csv | Frozen restaurant/attraction coordinates + Google metadata → google_local_matching accepted registry; full review gzip + registry → build_review_corpora SQLite extraction → text deduplication/sampling + RR registry | `python3 -m scripts.reviews.build_review_corpora` |
 | attraction_reviews.csv | Same accepted registry/extraction/cache/sampling chain + AR registry | Built by the same review command |
 
