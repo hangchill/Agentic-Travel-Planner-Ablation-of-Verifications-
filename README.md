@@ -137,3 +137,18 @@ No reviewer identities or subjective scores/labels are derived. Missing mapping 
 zero text reviews means **UNKNOWN / evidence unavailable**, never negative evidence.
 See [data catalog](data/DATA_CATALOG.md) and
 [review schema/policy](data/metadata/review_corpus_schema.md).
+
+## Benchmark specification
+
+[data/benchmark/README.md](data/benchmark/README.md) documents the fixed-NYC constraint
+catalog and semantic-case schema, including current versus future data support and
+collective coverage requirements. The 60 structured semantic cases use seed 42 and explicitly tagged benchmark-only assumptions
+for planned flight, accommodation, transport and budget domains; real support flags remain unchanged.
+The frozen naturalized wording benchmark is `data/benchmark/prompt_variants_naturalized.jsonl`:
+180 prompts (three styles per semantic case), with human-readable entity names and hidden IDs.
+`semantic_cases.jsonl` retains canonical IDs and exact values. The case/prompt manifests
+contain 60/180 rows respectively. Experiments read frozen prompts and never regenerate them.
+Generate with `python3 -m scripts.benchmark.generate_prompt_variants` and validate with
+`python3 -m scripts.benchmark.validate_prompt_variants`.
+Regenerate with `python3 -m scripts.benchmark.generate_semantic_cases` and validate with
+`python3 -m scripts.benchmark.validate_semantic_cases`.
