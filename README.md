@@ -17,7 +17,7 @@ Supporting tables for areas, weather and transport sit alongside them in
 | Dataset | Rows | Purpose |
 | --- | ---: | --- |
 | `data/processed/areas.csv` | 5 | Naive lookup of the five NYC boroughs (`area_id` primary key) with bounding boxes |
-| `data/processed/weather.csv` | 1,825 | Daily 2025 historical weather per borough (365 days × 5 areas) |
+| `data/processed/weather.csv` | 1,825 | Daily 2025 weather per borough; a 4-season, 14-day window sample (280 rows) can be taken from it, see below |
 | `data/processed/transport_modes.csv` | 4 | Naive fare table for walking, bus, subway and taxi |
 | `data/processed/accomodation.csv` | 365 | Hotels with location, rating, stars, price and amenities (work in progress, see below) |
 
@@ -162,90 +162,81 @@ See [data catalog](data/DATA_CATALOG.md) and
 
 ## Area, weather, transport and accommodation data
 
-These tables are built by hand or in notebooks (`scripts/weather/`, `scripts/accoms/`), not by
-the `python -m` pipelines above, and are not covered by the frozen-output guarantees. Paths in
-the notebooks are absolute and point at one team member's checkout, so edit them before
-re-running elsewhere. The notebooks need `pandas` (pinned in `requirements.txt`) and `pyarrow`
-(for the parquet read), which are not both guaranteed by `requirements.txt`.
-
-### Pipeline
+These four tables are built by hand or in notebooks (`scripts/weather/`, `scripts/accoms/`), not
+by the `python -m` pipelines above, and are not covered by the frozen-output guarantees. The
+notebooks use absolute paths from one team member's checkout, so edit them before re-running
+elsewhere, and need `pandas` and `pyarrow` (for the parquet read). `data/raw/` is not tracked
+in Git, so the raw inputs must be shared separately.
 
 | Output | Built from | How |
 | --- | --- | --- |
-| `data/processed/areas.csv` | Hand-chosen borough list and bounding boxes | Written by hand as a static CSV; no script (`scripts/naives_/area.ipynb` is an empty placeholder) |
-| `data/processed/transport_modes.csv` | Assumed fares (see below) | Written by hand as a static CSV; no script |
+| `data/processed/areas.csv` | Chosen borough list and bounding boxes | Written by hand; no script (`scripts/naives_/area.ipynb` is an empty placeholder) |
+| `data/processed/transport_modes.csv` | Assumed fares | Written by hand; no script |
 | `data/processed/weather.csv` | `data/raw/{Bronx,Brooklyn,Manhattan,Queens,Staten} all year.csv` | `scripts/weather/weather_processing.ipynb` |
-| `data/processed/accomodation.csv` | `data/raw/hotels.parquet` and `data/raw/accomodations_manhatten.csv` | `scripts/accoms/processing.ipynb` |
+| `data/processed/accomodation.csv` | `data/raw/hotels.parquet`, `data/raw/accomodations_manhatten.csv` | `scripts/accoms/processing.ipynb` |
 
-**Weather.** The raw inputs are five per-borough daily weather exports for 2025 (Open-Meteo
-archive format, one `<Borough> all year.csv` each, kept in the untracked `data/raw/`). The
-notebook:
-1. reads the five files and tags each with an `area` column (Bronx, Brooklyn, Manhattan,
-   Queens, Staten Island);
-2. concatenates them and drops `weather_code (wmo code)`;
-3. renames `time` to `date`, `temperature_2m_max/min` to `temperature_max/min`, and
-   `rain_sum` to `rainfall`, and parses `date`;
-4. writes `data/processed/weather.csv` with the default pandas index, so the file has an
-   unnamed leading index column.
+### Areas
 
-The notebook also contains a seasonal-window filter (spring, summer, autumn, winter, 14 days
-each). It is not applied: the result is never assigned and the conditions are combined with
-`&`, so the filter would match nothing. `weather.csv` therefore holds all 365 days per borough
-(1,825 rows). It contains a few column-name encoding issues (the degree sign in the `°C`
-headers) that can show as garbled characters depending on the reader.
+The lookup of the five boroughs we have data for: `area_id` is the primary key (1 Manhattan,
+2 Brooklyn, 3 Queens, 4 Bronx, 5 Staten Island), plus `area_name` and a rough rectangular
+bounding box per borough. The boxes overlap and are not borough boundaries. The box column
+headers are mislabeled: values are south-latitude, west-longitude, north-latitude,
+east-longitude, not longitude/latitude as the header says. Other tables store the borough
+name, not `area_id` (`weather.csv` and `accomodation.csv` use `area`), so join on name.
+`weather_processing.ipynb` numbered the boroughs differently in an earlier draft (Bronx 2,
+Brooklyn 3, Queens 4), so do not reuse ids from there.
 
-**Areas.** `area_id` is the primary key (1 Manhattan, 2 Brooklyn, 3 Queens, 4 Bronx, 5 Staten
-Island), with a rough rectangular bounding box per borough (south/west/north/east corners).
-The boxes overlap and are not borough boundaries. The box column headers in the file are
-mislabeled: values are in south-latitude, west-longitude, north-latitude, east-longitude order,
-not longitude/latitude as the header says. `weather.csv` stores the borough name in `area`
-rather than `area_id`, so join on `area_name`.
+### Transport modes
 
-**Transport.** One row per mode, in USD. `walking` is free; `bus` and `subway` are a flat
-$3.00 per trip; `taxi` is a $3.00 base fare plus about $2.17 per km (yellow-cab rate of $0.70
-per fifth of a mile). `vehicle_capacity` is a rough value and blank for walking. Surcharges,
+One hand-written row per mode, in USD: `walking` is free; `bus` and `subway` are a flat $3.00
+per trip; `taxi` is a $3.00 base fare plus about $2.17 per km (the yellow-cab rate of $0.70
+per fifth of a mile). `vehicle_capacity` is a rough number, blank for walking. Surcharges,
 tolls, tips and waiting time are ignored, and the rates come from memory rather than a checked
-MTA/TLC source.
+MTA/TLC source, so treat them as naive approximations.
 
-**Accommodations.** Two sources are merged by `scripts/accoms/processing.ipynb`:
-- `data/raw/hotels.parquet` (1,093 hotels across New York State): identifier, contact, link,
-  photo, owner and data-quality columns are dropped and only rows whose `city` is Bronx,
-  Queens, Staten Island, Manhattan or Brooklyn are kept (242 rows); `city` is renamed `area`.
-- `data/raw/accomodations_manhatten.csv` (124 hotels, booking-site export) was added because
-  the parquet filter loses almost all Manhattan hotels: the parquet labels them `New York`,
-  and labels most Queens hotels by neighborhood (Jamaica, Flushing, ...). Its columns are
-  renamed to match the parquet (`neighborhood` to `district`, `starLevel` to `hotel_stars`,
-  `overallScore` to `rating` divided by 2, `reviewCount` to `review_count`, `city` mapped to
-  `area`) and columns with no equivalent are dropped. One hotel that duplicates a parquet row
-  (within about 25 m) is removed.
+### Weather
 
-`data/processed/accomodation.csv` has 365 rows (Brooklyn 154, Manhattan 123, Bronx 67, Staten
-Island 14, Queens 7) and no index column. Columns: `name`, `street_address`, `district`,
-`area`, `zipcode`, `latitude`, `longitude`, `rating`, `review_count`, `hotel_stars`,
-`price_usd`, thirteen `amenity_*` flags and `description`.
+The design is a four-season sample: one 14-day window per season, meant to stand in for typical
+conditions in each borough and season rather than a full calendar. The windows are 8-21 May
+(spring), 8-21 June (summer), 8-21 October (autumn) and 8-21 December (winter). The raw inputs
+are five per-borough daily weather exports for 2025 (Open-Meteo archive format). The notebook
+tags each with its `area`, concatenates them, drops `weather_code`, renames columns to a
+common schema (`time` to `date`, `rain_sum` to `rainfall`, and so on) and writes
+`data/processed/weather.csv`. Columns: date, max/min/mean temperature (°C), precipitation sum
+(mm), rainfall (mm), precipitation hours, maximum wind speed (km/h) and `area`.
 
-**The table contains synthetic values; no column has gaps.** Observed values are never
-changed, but everything that was missing is filled with seeded (seed 42) estimates:
-- *Manhattan rows (from the CSV export):* it has no street address, zipcode, price or
-  amenities, so these were drawn at random. Price and amenity chances rise with `hotel_stars`,
-  zipcodes come from a list for each neighborhood, and street numbers are random, so they do
-  not point to real buildings.
-- *Parquet rows:* the rating is the anchor. Missing `hotel_stars` come from a linear fit of
-  stars on rating (about 0.25 + 0.65 x rating) plus noise, rounded to 1 decimal place. Missing
-  `price_usd` comes from a log-price regression on stars, rating and borough fitted to the
-  107 observed prices, plus noise. Missing `rating` comes from stars, or the borough median
-  if stars are also missing. Missing `district` is copied from the nearest hotel in the same
-  borough. `review_count` (236 missing) is a log-normal draw that rises with stars, and
-  missing `description` is a sentence built from the row's own name, stars, district, rating
-  and amenities. The amenity flags in the parquet are sparse (at most 2 per hotel), so extra
-  flags were added at the same star-based chances as the Manhattan rows, keeping the observed
-  ones.
+**The season filter is not applied to the saved file yet.** The notebook builds the 280-row
+sample (4 windows x 14 days x 5 areas) in a `seasonal` DataFrame, but `weather.csv` is still
+written from the full-year data, so it has 1,825 rows (365 days x 5 areas) and an unnamed
+leading index column. The filter is kept for later tooling; filter `weather.csv` to the four
+windows (combined with `|`) before using it as seasonal weather.
 
-Do not use the filled fields for real addresses, prices, review counts or amenity claims, and
-do not treat a hotel's stars or price as ground truth when it was imputed. Ratings and review
-counts also come from different platforms (Google versus a booking site), so treat them as
-only roughly comparable. `data/raw/` is not tracked in Git, so teammates need the raw files
-shared separately.
+### Accommodations
+
+Two sources are merged, and every gap is filled, so the table has no missing values.
+1. *Google parquet* (`hotels.parquet`, 1,093 hotels across New York State): drop identifier,
+   contact, link, photo, owner and data-quality columns, keep rows whose `city` is one of the
+   five boroughs (242 rows) and rename `city` to `area`. This filter loses nearly all Manhattan
+   and Queens hotels, because the parquet labels Manhattan `New York` and most of Queens by
+   neighborhood.
+2. *Manhattan export* (`accomodations_manhatten.csv`, 124 hotels from a booking site), added to
+   fix that imbalance: columns are renamed to the parquet schema (`overallScore` halved into
+   `rating`, `reviewCount` into `review_count`, `city` mapped to `area`) and columns with no
+   equivalent are dropped. It has no address, zipcode, price or amenities, so those are random,
+   seeded values (seed 42) that rise with `hotel_stars`; street numbers do not point to real
+   buildings.
+3. *Gap filling for the parquet rows* (rating is the anchor): missing `hotel_stars` come from
+   a linear fit on rating, `price_usd` from a log-price regression on stars, rating and borough,
+   and `rating` from stars or the borough median. `district` is copied from the nearest hotel,
+   `review_count` is a random draw that rises with stars, `description` is a sentence built
+   from the row's own columns, and extra amenity flags are added at star-based chances.
+4. A hotel in both sources (within about 25 m) is kept once, from the parquet.
+
+The result has 365 rows (Brooklyn 154, Manhattan 123, Bronx 67, Staten Island 14, Queens 7)
+and no index column. Observed values are never changed, but many fields are synthetic: do not
+use the filled addresses, prices, review counts or amenities as real facts. Ratings and review
+counts come from different platforms, so treat them as only roughly comparable. Queens is
+still thin until its neighborhoods are mapped to the borough.
 
 ## Benchmark specification
 
