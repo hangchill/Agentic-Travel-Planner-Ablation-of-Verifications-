@@ -1,0 +1,5358 @@
+{
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "semantic_case_id",
+    "difficulty",
+    "expected_solvability",
+    "trip_days",
+    "constraints",
+    "metadata"
+  ],
+  "properties": {
+    "semantic_case_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "difficulty": {
+      "enum": [
+        "easy",
+        "medium",
+        "hard",
+        "unsolvable"
+      ]
+    },
+    "expected_solvability": {
+      "enum": [
+        "SOLVABLE",
+        "UNSOLVABLE"
+      ]
+    },
+    "trip_days": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "constraints": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "constraint_id",
+          "type",
+          "category",
+          "operator",
+          "value",
+          "hardness",
+          "explicitness",
+          "verification"
+        ],
+        "properties": {
+          "constraint_id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "type": {
+            "enum": [
+              "trip_requirement",
+              "flight_airport_requirement",
+              "flight_time_constraint",
+              "flight_requirement",
+              "accommodation_requirement",
+              "accommodation_time_constraint",
+              "accommodation_nightly_budget",
+              "attraction_requirement",
+              "attraction_count_constraint",
+              "restaurant_requirement",
+              "meal_budget_constraint",
+              "transport_requirement",
+              "transport_limit",
+              "schedule_time_constraint",
+              "schedule_requirement",
+              "budget_constraint",
+              "subjective_preference",
+              "other_requirement"
+            ]
+          },
+          "category": {
+            "enum": [
+              "trip",
+              "flight",
+              "accommodation",
+              "attraction",
+              "food",
+              "transport",
+              "schedule",
+              "budget",
+              "subjective",
+              "other"
+            ]
+          },
+          "operator": {
+            "enum": [
+              "between",
+              "eq",
+              "exclude",
+              "gte",
+              "in",
+              "include",
+              "lte",
+              "ne",
+              "not_in",
+              "prefer"
+            ]
+          },
+          "value": {},
+          "hardness": {
+            "enum": [
+              "hard",
+              "soft"
+            ]
+          },
+          "explicitness": {
+            "enum": [
+              "explicit",
+              "implicit"
+            ]
+          },
+          "verification": {
+            "enum": [
+              "deterministic",
+              "llm_subjective",
+              "deterministic_plus_llm",
+              "unavailable_until_data_added"
+            ]
+          }
+        },
+        "oneOf": [
+          {
+            "properties": {
+              "type": {
+                "const": "trip_requirement"
+              },
+              "category": {
+                "const": "trip"
+              },
+              "operator": {
+                "const": "eq"
+              },
+              "value": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "kind",
+                  "value"
+                ],
+                "properties": {
+                  "kind": {
+                    "const": "duration_days"
+                  },
+                  "value": {
+                    "$ref": "#/$defs/values/positive_integer"
+                  }
+                }
+              },
+              "verification": {
+                "const": "deterministic"
+              }
+            },
+            "required": [
+              "type",
+              "category",
+              "operator",
+              "value",
+              "verification"
+            ]
+          },
+          {
+            "properties": {
+              "type": {
+                "const": "trip_requirement"
+              },
+              "category": {
+                "const": "trip"
+              },
+              "operator": {
+                "const": "gte"
+              },
+              "value": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "kind",
+                  "value"
+                ],
+                "properties": {
+                  "kind": {
+                    "const": "duration_days"
+                  },
+                  "value": {
+                    "$ref": "#/$defs/values/positive_integer"
+                  }
+                }
+              },
+              "verification": {
+                "const": "deterministic"
+              }
+            },
+            "required": [
+              "type",
+              "category",
+              "operator",
+              "value",
+              "verification"
+            ]
+          },
+          {
+            "properties": {
+              "type": {
+                "const": "trip_requirement"
+              },
+              "category": {
+                "const": "trip"
+              },
+              "operator": {
+                "const": "lte"
+              },
+              "value": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "kind",
+                  "value"
+                ],
+                "properties": {
+                  "kind": {
+                    "const": "duration_days"
+                  },
+                  "value": {
+                    "$ref": "#/$defs/values/positive_integer"
+                  }
+                }
+              },
+              "verification": {
+                "const": "deterministic"
+              }
+            },
+            "required": [
+              "type",
+              "category",
+              "operator",
+              "value",
+              "verification"
+            ]
+          },
+          {
+            "properties": {
+              "type": {
+                "const": "trip_requirement"
+              },
+              "category": {
+                "const": "trip"
+              },
+              "operator": {
+                "const": "between"
+              },
+              "value": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "kind",
+                  "value"
+                ],
+                "properties": {
+                  "kind": {
+                    "const": "duration_days"
+                  },
+                  "value": {
+                    "type": "object",
+                    "additionalProperties": false,
+                    "required": [
+                      "min",
+                      "max"
+                    ],
+                    "properties": {
+                      "min": {
+                        "$ref": "#/$defs/values/positive_integer"
+                      },
+                      "max": {
+                        "$ref": "#/$defs/values/positive_integer"
+                      }
+                    }
+                  }
+                }
+              },
+              "verification": {
+                "const": "deterministic"
+              }
+            },
+            "required": [
+              "type",
+              "category",
+              "operator",
+              "value",
+              "verification"
+            ]
+          },
+          {
+            "properties": {
+              "type": {
+                "const": "trip_requirement"
+              },
+              "category": {
+                "const": "trip"
+              },
+              "operator": {
+                "const": "eq"
+              },
+              "value": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "kind",
+                  "value"
+                ],
+                "properties": {
+                  "kind": {
+                    "const": "traveller_count"
+                  },
+                  "value": {
+                    "$ref": "#/$defs/values/positive_integer"
+                  }
+                }
+              },
+              "verification": {
+                "const": "deterministic"
+              }
+            },
+            "required": [
+              "type",
+              "category",
+              "operator",
+              "value",
+              "verification"
+            ]
+          },
+          {
+            "properties": {
+              "type": {
+                "const": "trip_requirement"
+              },
+              "category": {
+                "const": "trip"
+              },
+              "operator": {
+                "const": "gte"
+              },
+              "value": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "kind",
+                  "value"
+                ],
+                "properties": {
+                  "kind": {
+                    "const": "traveller_count"
+                  },
+                  "value": {
+                    "$ref": "#/$defs/values/positive_integer"
+                  }
+                }
+              },
+              "verification": {
+                "const": "deterministic"
+              }
+            },
+            "required": [
+              "type",
+              "category",
+              "operator",
+              "value",
+              "verification"
+            ]
+          },
+          {
+            "properties": {
+              "type": {
+                "const": "trip_requirement"
+              },
+              "category": {
+                "const": "trip"
+              },
+              "operator": {
+                "const": "lte"
+              },
+              "value": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "kind",
+                  "value"
+                ],
+                "properties": {
+                  "kind": {
+                    "const": "traveller_count"
+                  },
+                  "value": {
+                    "$ref": "#/$defs/values/positive_integer"
+                  }
+                }
+              },
+              "verification": {
+                "const": "deterministic"
+              }
+            },
+            "required": [
+              "type",
+              "category",
+              "operator",
+              "value",
+              "verification"
+            ]
+          },
+          {
+            "properties": {
+              "type": {
+                "const": "trip_requirement"
+              },
+              "category": {
+                "const": "trip"
+              },
+              "operator": {
+                "const": "between"
+              },
+              "value": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "kind",
+                  "value"
+                ],
+                "properties": {
+                  "kind": {
+                    "const": "traveller_count"
+                  },
+                  "value": {
+                    "type": "object",
+                    "additionalProperties": false,
+                    "required": [
+                      "min",
+                      "max"
+                    ],
+                    "properties": {
+                      "min": {
+                        "$ref": "#/$defs/values/positive_integer"
+                      },
+                      "max": {
+                        "$ref": "#/$defs/values/positive_integer"
+                      }
+                    }
+                  }
+                }
+              },
+              "verification": {
+                "const": "deterministic"
+              }
+            },
+            "required": [
+              "type",
+              "category",
+              "operator",
+              "value",
+              "verification"
+            ]
+          },
+          {
+            "properties": {
+              "type": {
+                "const": "trip_requirement"
+              },
+              "category": {
+                "const": "trip"
+              },
+              "operator": {
+                "const": "eq"
+              },
+              "value": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "kind",
+                  "value"
+                ],
+                "properties": {
+                  "kind": {
+                    "const": "persona"
+                  },
+                  "value": {
+                    "$ref": "#/$defs/values/persona"
+                  }
+                }
+              },
+              "verification": {
+                "const": "deterministic"
+              }
+            },
+            "required": [
+              "type",
+              "category",
+              "operator",
+              "value",
+              "verification"
+            ]
+          },
+          {
+            "properties": {
+              "type": {
+                "const": "trip_requirement"
+              },
+              "category": {
+                "const": "trip"
+              },
+              "operator": {
+                "const": "in"
+              },
+              "value": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "kind",
+                  "value"
+                ],
+                "properties": {
+                  "kind": {
+                    "const": "persona"
+                  },
+                  "value": {
+                    "type": "array",
+                    "minItems": 1,
+                    "uniqueItems": true,
+                    "items": {
+                      "$ref": "#/$defs/values/persona"
+                    }
+                  }
+                }
+              },
+              "verification": {
+                "const": "deterministic"
+              }
+            },
+            "required": [
+              "type",
+              "category",
+              "operator",
+              "value",
+              "verification"
+            ]
+          },
+          {
+            "properties": {
+              "type": {
+                "const": "flight_airport_requirement"
+              },
+              "category": {
+                "const": "flight"
+              },
+              "operator": {
+                "const": "eq"
+              },
+              "value": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "kind",
+                  "value"
+                ],
+                "properties": {
+                  "kind": {
+                    "const": "departure"
+                  },
+                  "value": {
+                    "$ref": "#/$defs/values/airport"
+                  }
+                }
+              },
+              "verification": {
+                "const": "unavailable_until_data_added"
+              }
+            },
+            "required": [
+              "type",
+              "category",
+              "operator",
+              "value",
+              "verification"
+            ]
+          },
+          {
+            "properties": {
+              "type": {
+                "const": "flight_airport_requirement"
+              },
+              "category": {
+                "const": "flight"
+              },
+              "operator": {
+                "const": "in"
+              },
+              "value": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "kind",
+                  "value"
+                ],
+                "properties": {
+                  "kind": {
+                    "const": "departure"
+                  },
+                  "value": {
+                    "type": "array",
+                    "minItems": 1,
+                    "uniqueItems": true,
+                    "items": {
+                      "$ref": "#/$defs/values/airport"
+                    }
+                  }
+                }
+              },
+              "verification": {
+                "const": "unavailable_until_data_added"
+              }
+            },
+            "required": [
+              "type",
+              "category",
+              "operator",
+              "value",
+              "verification"
+            ]
+          },
+          {
+            "properties": {
+              "type": {
+                "const": "flight_airport_requirement"
+              },
+              "category": {
+                "const": "flight"
+              },
+              "operator": {
+                "const": "eq"
+              },
+              "value": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "kind",
+                  "value"
+                ],
+                "properties": {
+                  "kind": {
+                    "const": "arrival"
+                  },
+                  "value": {
+                    "enum": [
+                      "JFK",
+                      "LGA",
+                      "EWR"
+                    ]
+                  }
+                }
+              },
+              "verification": {
+                "const": "unavailable_until_data_added"
+              }
+            },
+            "required": [
+              "type",
+              "category",
+              "operator",
+              "value",
+              "verification"
+            ]
+          },
+          {
+            "properties": {
+              "type": {
+                "const": "flight_airport_requirement"
+              },
+              "category": {
+                "const": "flight"
+              },
+              "operator": {
+                "const": "in"
+              },
+              "value": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "kind",
+                  "value"
+                ],
+                "properties": {
+                  "kind": {
+                    "const": "arrival"
+                  },
+                  "value": {
+                    "type": "array",
+                    "minItems": 1,
+                    "uniqueItems": true,
+                    "items": {
+                      "enum": [
+                        "JFK",
+                        "LGA",
+                        "EWR"
+                      ]
+                    }
+                  }
+                }
+              },
+              "verification": {
+                "const": "unavailable_until_data_added"
+              }
+            },
+            "required": [
+              "type",
+              "category",
+              "operator",
+              "value",
+              "verification"
+            ]
+          },
+          {
+            "properties": {
+              "type": {
+                "const": "flight_time_constraint"
+              },
+              "category": {
+                "const": "flight"
+              },
+              "operator": {
+                "const": "between"
+              },
+              "value": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "kind",
+                  "value"
+                ],
+                "properties": {
+                  "kind": {
+                    "const": "departure"
+                  },
+                  "value": {
+                    "$ref": "#/$defs/values/time_window"
+                  }
+                }
+              },
+              "verification": {
+                "const": "unavailable_until_data_added"
+              }
+            },
+            "required": [
+              "type",
+              "category",
+              "operator",
+              "value",
+              "verification"
+            ]
+          },
+          {
+            "properties": {
+              "type": {
+                "const": "flight_time_constraint"
+              },
+              "category": {
+                "const": "flight"
+              },
+              "operator": {
+                "const": "between"
+              },
+              "value": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "kind",
+                  "value"
+                ],
+                "properties": {
+                  "kind": {
+                    "const": "arrival"
+                  },
+                  "value": {
+                    "$ref": "#/$defs/values/time_window"
+                  }
+                }
+              },
+              "verification": {
+                "const": "unavailable_until_data_added"
+              }
+            },
+            "required": [
+              "type",
+              "category",
+              "operator",
+              "value",
+              "verification"
+            ]
+          },
+          {
+            "properties": {
+              "type": {
+                "const": "flight_requirement"
+              },
+              "category": {
+                "const": "flight"
+              },
+              "operator": {
+                "const": "eq"
+              },
+              "value": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "kind",
+                  "value"
+                ],
+                "properties": {
+                  "kind": {
+                    "const": "direct_only"
+                  },
+                  "value": {
+                    "$ref": "#/$defs/values/boolean"
+                  }
+                }
+              },
+              "verification": {
+                "const": "unavailable_until_data_added"
+              }
+            },
+            "required": [
+              "type",
+              "category",
+              "operator",
+              "value",
+              "verification"
+            ]
+          },
+          {
+            "properties": {
+              "type": {
+                "const": "flight_requirement"
+              },
+              "category": {
+                "const": "flight"
+              },
+              "operator": {
+                "const": "eq"
+              },
+              "value": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "kind",
+                  "value"
+                ],
+                "properties": {
+                  "kind": {
+                    "const": "airline"
+                  },
+                  "value": {
+                    "$ref": "#/$defs/values/string"
+                  }
+                }
+              },
+              "verification": {
+                "const": "unavailable_until_data_added"
+              }
+            },
+            "required": [
+              "type",
+              "category",
+              "operator",
+              "value",
+              "verification"
+            ]
+          },
+          {
+            "properties": {
+              "type": {
+                "const": "flight_requirement"
+              },
+              "category": {
+                "const": "flight"
+              },
+              "operator": {
+                "const": "prefer"
+              },
+              "value": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "kind",
+                  "value"
+                ],
+                "properties": {
+                  "kind": {
+                    "const": "airline"
+                  },
+                  "value": {
+                    "$ref": "#/$defs/values/string"
+                  }
+                }
+              },
+              "verification": {
+                "const": "unavailable_until_data_added"
+              }
+            },
+            "required": [
+              "type",
+              "category",
+              "operator",
+              "value",
+              "verification"
+            ]
+          },
+          {
+            "properties": {
+              "type": {
+                "const": "flight_requirement"
+              },
+              "category": {
+                "const": "flight"
+              },
+              "operator": {
+                "const": "in"
+              },
+              "value": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "kind",
+                  "value"
+                ],
+                "properties": {
+                  "kind": {
+                    "const": "airline"
+                  },
+                  "value": {
+                    "type": "array",
+                    "minItems": 1,
+                    "uniqueItems": true,
+                    "items": {
+                      "$ref": "#/$defs/values/string"
+                    }
+                  }
+                }
+              },
+              "verification": {
+                "const": "unavailable_until_data_added"
+              }
+            },
+            "required": [
+              "type",
+              "category",
+              "operator",
+              "value",
+              "verification"
+            ]
+          },
+          {
+            "properties": {
+              "type": {
+                "const": "accommodation_requirement"
+              },
+              "category": {
+                "const": "accommodation"
+              },
+              "operator": {
+                "const": "eq"
+              },
+              "value": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "kind",
+                  "value"
+                ],
+                "properties": {
+                  "kind": {
+                    "const": "type"
+                  },
+                  "value": {
+                    "$ref": "#/$defs/values/lodging_type"
+                  }
+                }
+              },
+              "verification": {
+                "const": "unavailable_until_data_added"
+              }
+            },
+            "required": [
+              "type",
+              "category",
+              "operator",
+              "value",
+              "verification"
+            ]
+          },
+          {
+            "properties": {
+              "type": {
+                "const": "accommodation_requirement"
+              },
+              "category": {
+                "const": "accommodation"
+              },
+              "operator": {
+                "const": "in"
+              },
+              "value": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "kind",
+                  "value"
+                ],
+                "properties": {
+                  "kind": {
+                    "const": "type"
+                  },
+                  "value": {
+                    "type": "array",
+                    "minItems": 1,
+                    "uniqueItems": true,
+                    "items": {
+                      "$ref": "#/$defs/values/lodging_type"
+                    }
+                  }
+                }
+              },
+              "verification": {
+                "const": "unavailable_until_data_added"
+              }
+            },
+            "required": [
+              "type",
+              "category",
+              "operator",
+              "value",
+              "verification"
+            ]
+          },
+          {
+            "properties": {
+              "type": {
+                "const": "accommodation_requirement"
+              },
+              "category": {
+                "const": "accommodation"
+              },
+              "operator": {
+                "const": "gte"
+              },
+              "value": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "kind",
+                  "value"
+                ],
+                "properties": {
+                  "kind": {
+                    "const": "rating"
+                  },
+                  "value": {
+                    "$ref": "#/$defs/values/rating"
+                  }
+                }
+              },
+              "verification": {
+                "const": "unavailable_until_data_added"
+              }
+            },
+            "required": [
+              "type",
+              "category",
+              "operator",
+              "value",
+              "verification"
+            ]
+          },
+          {
+            "properties": {
+              "type": {
+                "const": "accommodation_requirement"
+              },
+              "category": {
+                "const": "accommodation"
+              },
+              "operator": {
+                "const": "eq"
+              },
+              "value": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "kind",
+                  "value"
+                ],
+                "properties": {
+                  "kind": {
+                    "const": "neighbourhood"
+                  },
+                  "value": {
+                    "$ref": "#/$defs/values/string"
+                  }
+                }
+              },
+              "verification": {
+                "const": "unavailable_until_data_added"
+              }
+            },
+            "required": [
+              "type",
+              "category",
+              "operator",
+              "value",
+              "verification"
+            ]
+          },
+          {
+            "properties": {
+              "type": {
+                "const": "accommodation_requirement"
+              },
+              "category": {
+                "const": "accommodation"
+              },
+              "operator": {
+                "const": "in"
+              },
+              "value": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "kind",
+                  "value"
+                ],
+                "properties": {
+                  "kind": {
+                    "const": "neighbourhood"
+                  },
+                  "value": {
+                    "type": "array",
+                    "minItems": 1,
+                    "uniqueItems": true,
+                    "items": {
+                      "$ref": "#/$defs/values/string"
+                    }
+                  }
+                }
+              },
+              "verification": {
+                "const": "unavailable_until_data_added"
+              }
+            },
+            "required": [
+              "type",
+              "category",
+              "operator",
+              "value",
+              "verification"
+            ]
+          },
+          {
+            "properties": {
+              "type": {
+                "const": "accommodation_requirement"
+              },
+              "category": {
+                "const": "accommodation"
+              },
+              "operator": {
+                "const": "include"
+              },
+              "value": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "kind",
+                  "value"
+                ],
+                "properties": {
+                  "kind": {
+                    "const": "amenity"
+                  },
+                  "value": {
+                    "$ref": "#/$defs/values/amenity"
+                  }
+                }
+              },
+              "verification": {
+                "const": "unavailable_until_data_added"
+              }
+            },
+            "required": [
+              "type",
+              "category",
+              "operator",
+              "value",
+              "verification"
+            ]
+          },
+          {
+            "properties": {
+              "type": {
+                "const": "accommodation_requirement"
+              },
+              "category": {
+                "const": "accommodation"
+              },
+              "operator": {
+                "const": "exclude"
+              },
+              "value": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "kind",
+                  "value"
+                ],
+                "properties": {
+                  "kind": {
+                    "const": "amenity"
+                  },
+                  "value": {
+                    "$ref": "#/$defs/values/amenity"
+                  }
+                }
+              },
+              "verification": {
+                "const": "unavailable_until_data_added"
+              }
+            },
+            "required": [
+              "type",
+              "category",
+              "operator",
+              "value",
+              "verification"
+            ]
+          },
+          {
+            "properties": {
+              "type": {
+                "const": "accommodation_time_constraint"
+              },
+              "category": {
+                "const": "accommodation"
+              },
+              "operator": {
+                "const": "eq"
+              },
+              "value": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "kind",
+                  "value"
+                ],
+                "properties": {
+                  "kind": {
+                    "const": "check_in"
+                  },
+                  "value": {
+                    "$ref": "#/$defs/values/datetime"
+                  }
+                }
+              },
+              "verification": {
+                "const": "unavailable_until_data_added"
+              }
+            },
+            "required": [
+              "type",
+              "category",
+              "operator",
+              "value",
+              "verification"
+            ]
+          },
+          {
+            "properties": {
+              "type": {
+                "const": "accommodation_time_constraint"
+              },
+              "category": {
+                "const": "accommodation"
+              },
+              "operator": {
+                "const": "gte"
+              },
+              "value": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "kind",
+                  "value"
+                ],
+                "properties": {
+                  "kind": {
+                    "const": "check_in"
+                  },
+                  "value": {
+                    "$ref": "#/$defs/values/datetime"
+                  }
+                }
+              },
+              "verification": {
+                "const": "unavailable_until_data_added"
+              }
+            },
+            "required": [
+              "type",
+              "category",
+              "operator",
+              "value",
+              "verification"
+            ]
+          },
+          {
+            "properties": {
+              "type": {
+                "const": "accommodation_time_constraint"
+              },
+              "category": {
+                "const": "accommodation"
+              },
+              "operator": {
+                "const": "lte"
+              },
+              "value": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "kind",
+                  "value"
+                ],
+                "properties": {
+                  "kind": {
+                    "const": "check_in"
+                  },
+                  "value": {
+                    "$ref": "#/$defs/values/datetime"
+                  }
+                }
+              },
+              "verification": {
+                "const": "unavailable_until_data_added"
+              }
+            },
+            "required": [
+              "type",
+              "category",
+              "operator",
+              "value",
+              "verification"
+            ]
+          },
+          {
+            "properties": {
+              "type": {
+                "const": "accommodation_time_constraint"
+              },
+              "category": {
+                "const": "accommodation"
+              },
+              "operator": {
+                "const": "between"
+              },
+              "value": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "kind",
+                  "value"
+                ],
+                "properties": {
+                  "kind": {
+                    "const": "check_in"
+                  },
+                  "value": {
+                    "type": "object",
+                    "additionalProperties": false,
+                    "required": [
+                      "min",
+                      "max"
+                    ],
+                    "properties": {
+                      "min": {
+                        "$ref": "#/$defs/values/datetime"
+                      },
+                      "max": {
+                        "$ref": "#/$defs/values/datetime"
+                      }
+                    }
+                  }
+                }
+              },
+              "verification": {
+                "const": "unavailable_until_data_added"
+              }
+            },
+            "required": [
+              "type",
+              "category",
+              "operator",
+              "value",
+              "verification"
+            ]
+          },
+          {
+            "properties": {
+              "type": {
+                "const": "accommodation_time_constraint"
+              },
+              "category": {
+                "const": "accommodation"
+              },
+              "operator": {
+                "const": "eq"
+              },
+              "value": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "kind",
+                  "value"
+                ],
+                "properties": {
+                  "kind": {
+                    "const": "check_out"
+                  },
+                  "value": {
+                    "$ref": "#/$defs/values/datetime"
+                  }
+                }
+              },
+              "verification": {
+                "const": "unavailable_until_data_added"
+              }
+            },
+            "required": [
+              "type",
+              "category",
+              "operator",
+              "value",
+              "verification"
+            ]
+          },
+          {
+            "properties": {
+              "type": {
+                "const": "accommodation_time_constraint"
+              },
+              "category": {
+                "const": "accommodation"
+              },
+              "operator": {
+                "const": "gte"
+              },
+              "value": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "kind",
+                  "value"
+                ],
+                "properties": {
+                  "kind": {
+                    "const": "check_out"
+                  },
+                  "value": {
+                    "$ref": "#/$defs/values/datetime"
+                  }
+                }
+              },
+              "verification": {
+                "const": "unavailable_until_data_added"
+              }
+            },
+            "required": [
+              "type",
+              "category",
+              "operator",
+              "value",
+              "verification"
+            ]
+          },
+          {
+            "properties": {
+              "type": {
+                "const": "accommodation_time_constraint"
+              },
+              "category": {
+                "const": "accommodation"
+              },
+              "operator": {
+                "const": "lte"
+              },
+              "value": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "kind",
+                  "value"
+                ],
+                "properties": {
+                  "kind": {
+                    "const": "check_out"
+                  },
+                  "value": {
+                    "$ref": "#/$defs/values/datetime"
+                  }
+                }
+              },
+              "verification": {
+                "const": "unavailable_until_data_added"
+              }
+            },
+            "required": [
+              "type",
+              "category",
+              "operator",
+              "value",
+              "verification"
+            ]
+          },
+          {
+            "properties": {
+              "type": {
+                "const": "accommodation_time_constraint"
+              },
+              "category": {
+                "const": "accommodation"
+              },
+              "operator": {
+                "const": "between"
+              },
+              "value": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "kind",
+                  "value"
+                ],
+                "properties": {
+                  "kind": {
+                    "const": "check_out"
+                  },
+                  "value": {
+                    "type": "object",
+                    "additionalProperties": false,
+                    "required": [
+                      "min",
+                      "max"
+                    ],
+                    "properties": {
+                      "min": {
+                        "$ref": "#/$defs/values/datetime"
+                      },
+                      "max": {
+                        "$ref": "#/$defs/values/datetime"
+                      }
+                    }
+                  }
+                }
+              },
+              "verification": {
+                "const": "unavailable_until_data_added"
+              }
+            },
+            "required": [
+              "type",
+              "category",
+              "operator",
+              "value",
+              "verification"
+            ]
+          },
+          {
+            "properties": {
+              "type": {
+                "const": "accommodation_nightly_budget"
+              },
+              "category": {
+                "const": "accommodation"
+              },
+              "operator": {
+                "const": "lte"
+              },
+              "value": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "kind",
+                  "value"
+                ],
+                "properties": {
+                  "kind": {
+                    "const": "per_night"
+                  },
+                  "value": {
+                    "$ref": "#/$defs/values/money"
+                  }
+                }
+              },
+              "verification": {
+                "const": "unavailable_until_data_added"
+              }
+            },
+            "required": [
+              "type",
+              "category",
+              "operator",
+              "value",
+              "verification"
+            ]
+          },
+          {
+            "properties": {
+              "type": {
+                "const": "accommodation_nightly_budget"
+              },
+              "category": {
+                "const": "accommodation"
+              },
+              "operator": {
+                "const": "between"
+              },
+              "value": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "kind",
+                  "value"
+                ],
+                "properties": {
+                  "kind": {
+                    "const": "per_night"
+                  },
+                  "value": {
+                    "type": "object",
+                    "additionalProperties": false,
+                    "required": [
+                      "min",
+                      "max"
+                    ],
+                    "properties": {
+                      "min": {
+                        "$ref": "#/$defs/values/money"
+                      },
+                      "max": {
+                        "$ref": "#/$defs/values/money"
+                      }
+                    }
+                  }
+                }
+              },
+              "verification": {
+                "const": "unavailable_until_data_added"
+              }
+            },
+            "required": [
+              "type",
+              "category",
+              "operator",
+              "value",
+              "verification"
+            ]
+          },
+          {
+            "properties": {
+              "type": {
+                "const": "attraction_requirement"
+              },
+              "category": {
+                "const": "attraction"
+              },
+              "operator": {
+                "const": "include"
+              },
+              "value": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "kind",
+                  "value"
+                ],
+                "properties": {
+                  "kind": {
+                    "const": "entity"
+                  },
+                  "value": {
+                    "$ref": "#/$defs/values/attraction_ids"
+                  }
+                }
+              },
+              "verification": {
+                "const": "deterministic"
+              }
+            },
+            "required": [
+              "type",
+              "category",
+              "operator",
+              "value",
+              "verification"
+            ]
+          },
+          {
+            "properties": {
+              "type": {
+                "const": "attraction_requirement"
+              },
+              "category": {
+                "const": "attraction"
+              },
+              "operator": {
+                "const": "exclude"
+              },
+              "value": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "kind",
+                  "value"
+                ],
+                "properties": {
+                  "kind": {
+                    "const": "entity"
+                  },
+                  "value": {
+                    "$ref": "#/$defs/values/attraction_ids"
+                  }
+                }
+              },
+              "verification": {
+                "const": "deterministic"
+              }
+            },
+            "required": [
+              "type",
+              "category",
+              "operator",
+              "value",
+              "verification"
+            ]
+          },
+          {
+            "properties": {
+              "type": {
+                "const": "attraction_requirement"
+              },
+              "category": {
+                "const": "attraction"
+              },
+              "operator": {
+                "const": "include"
+              },
+              "value": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "kind",
+                  "value"
+                ],
+                "properties": {
+                  "kind": {
+                    "const": "category"
+                  },
+                  "value": {
+                    "$ref": "#/$defs/values/attraction_category"
+                  }
+                }
+              },
+              "verification": {
+                "const": "deterministic"
+              }
+            },
+            "required": [
+              "type",
+              "category",
+              "operator",
+              "value",
+              "verification"
+            ]
+          },
+          {
+            "properties": {
+              "type": {
+                "const": "attraction_requirement"
+              },
+              "category": {
+                "const": "attraction"
+              },
+              "operator": {
+                "const": "in"
+              },
+              "value": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "kind",
+                  "value"
+                ],
+                "properties": {
+                  "kind": {
+                    "const": "category"
+                  },
+                  "value": {
+                    "type": "array",
+                    "minItems": 1,
+                    "uniqueItems": true,
+                    "items": {
+                      "$ref": "#/$defs/values/attraction_category"
+                    }
+                  }
+                }
+              },
+              "verification": {
+                "const": "deterministic"
+              }
+            },
+            "required": [
+              "type",
+              "category",
+              "operator",
+              "value",
+              "verification"
+            ]
+          },
+          {
+            "properties": {
+              "type": {
+                "const": "attraction_requirement"
+              },
+              "category": {
+                "const": "attraction"
+              },
+              "operator": {
+                "const": "exclude"
+              },
+              "value": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "kind",
+                  "value"
+                ],
+                "properties": {
+                  "kind": {
+                    "const": "category"
+                  },
+                  "value": {
+                    "$ref": "#/$defs/values/attraction_category"
+                  }
+                }
+              },
+              "verification": {
+                "const": "deterministic"
+              }
+            },
+            "required": [
+              "type",
+              "category",
+              "operator",
+              "value",
+              "verification"
+            ]
+          },
+          {
+            "properties": {
+              "type": {
+                "const": "attraction_requirement"
+              },
+              "category": {
+                "const": "attraction"
+              },
+              "operator": {
+                "const": "not_in"
+              },
+              "value": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "kind",
+                  "value"
+                ],
+                "properties": {
+                  "kind": {
+                    "const": "category"
+                  },
+                  "value": {
+                    "type": "array",
+                    "minItems": 1,
+                    "uniqueItems": true,
+                    "items": {
+                      "$ref": "#/$defs/values/attraction_category"
+                    }
+                  }
+                }
+              },
+              "verification": {
+                "const": "deterministic"
+              }
+            },
+            "required": [
+              "type",
+              "category",
+              "operator",
+              "value",
+              "verification"
+            ]
+          },
+          {
+            "properties": {
+              "type": {
+                "const": "attraction_requirement"
+              },
+              "category": {
+                "const": "attraction"
+              },
+              "operator": {
+                "const": "gte"
+              },
+              "value": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "kind",
+                  "value"
+                ],
+                "properties": {
+                  "kind": {
+                    "const": "rating"
+                  },
+                  "value": {
+                    "$ref": "#/$defs/values/rating"
+                  }
+                }
+              },
+              "verification": {
+                "const": "unavailable_until_data_added"
+              }
+            },
+            "required": [
+              "type",
+              "category",
+              "operator",
+              "value",
+              "verification"
+            ]
+          },
+          {
+            "properties": {
+              "type": {
+                "const": "attraction_count_constraint"
+              },
+              "category": {
+                "const": "attraction"
+              },
+              "operator": {
+                "const": "gte"
+              },
+              "value": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "kind",
+                  "value"
+                ],
+                "properties": {
+                  "kind": {
+                    "const": "visits"
+                  },
+                  "value": {
+                    "$ref": "#/$defs/values/nonnegative_integer"
+                  }
+                }
+              },
+              "verification": {
+                "const": "deterministic"
+              }
+            },
+            "required": [
+              "type",
+              "category",
+              "operator",
+              "value",
+              "verification"
+            ]
+          },
+          {
+            "properties": {
+              "type": {
+                "const": "attraction_count_constraint"
+              },
+              "category": {
+                "const": "attraction"
+              },
+              "operator": {
+                "const": "lte"
+              },
+              "value": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "kind",
+                  "value"
+                ],
+                "properties": {
+                  "kind": {
+                    "const": "visits"
+                  },
+                  "value": {
+                    "$ref": "#/$defs/values/nonnegative_integer"
+                  }
+                }
+              },
+              "verification": {
+                "const": "deterministic"
+              }
+            },
+            "required": [
+              "type",
+              "category",
+              "operator",
+              "value",
+              "verification"
+            ]
+          },
+          {
+            "properties": {
+              "type": {
+                "const": "restaurant_requirement"
+              },
+              "category": {
+                "const": "food"
+              },
+              "operator": {
+                "const": "include"
+              },
+              "value": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "kind",
+                  "value"
+                ],
+                "properties": {
+                  "kind": {
+                    "const": "diet"
+                  },
+                  "value": {
+                    "$ref": "#/$defs/values/diet"
+                  }
+                }
+              },
+              "verification": {
+                "const": "deterministic"
+              }
+            },
+            "required": [
+              "type",
+              "category",
+              "operator",
+              "value",
+              "verification"
+            ]
+          },
+          {
+            "properties": {
+              "type": {
+                "const": "restaurant_requirement"
+              },
+              "category": {
+                "const": "food"
+              },
+              "operator": {
+                "const": "include"
+              },
+              "value": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "kind",
+                  "value"
+                ],
+                "properties": {
+                  "kind": {
+                    "const": "cuisine"
+                  },
+                  "value": {
+                    "$ref": "#/$defs/values/string"
+                  }
+                }
+              },
+              "verification": {
+                "const": "deterministic"
+              }
+            },
+            "required": [
+              "type",
+              "category",
+              "operator",
+              "value",
+              "verification"
+            ]
+          },
+          {
+            "properties": {
+              "type": {
+                "const": "restaurant_requirement"
+              },
+              "category": {
+                "const": "food"
+              },
+              "operator": {
+                "const": "in"
+              },
+              "value": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "kind",
+                  "value"
+                ],
+                "properties": {
+                  "kind": {
+                    "const": "cuisine"
+                  },
+                  "value": {
+                    "type": "array",
+                    "minItems": 1,
+                    "uniqueItems": true,
+                    "items": {
+                      "$ref": "#/$defs/values/string"
+                    }
+                  }
+                }
+              },
+              "verification": {
+                "const": "deterministic"
+              }
+            },
+            "required": [
+              "type",
+              "category",
+              "operator",
+              "value",
+              "verification"
+            ]
+          },
+          {
+            "properties": {
+              "type": {
+                "const": "restaurant_requirement"
+              },
+              "category": {
+                "const": "food"
+              },
+              "operator": {
+                "const": "exclude"
+              },
+              "value": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "kind",
+                  "value"
+                ],
+                "properties": {
+                  "kind": {
+                    "const": "cuisine"
+                  },
+                  "value": {
+                    "$ref": "#/$defs/values/string"
+                  }
+                }
+              },
+              "verification": {
+                "const": "deterministic"
+              }
+            },
+            "required": [
+              "type",
+              "category",
+              "operator",
+              "value",
+              "verification"
+            ]
+          },
+          {
+            "properties": {
+              "type": {
+                "const": "restaurant_requirement"
+              },
+              "category": {
+                "const": "food"
+              },
+              "operator": {
+                "const": "not_in"
+              },
+              "value": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "kind",
+                  "value"
+                ],
+                "properties": {
+                  "kind": {
+                    "const": "cuisine"
+                  },
+                  "value": {
+                    "type": "array",
+                    "minItems": 1,
+                    "uniqueItems": true,
+                    "items": {
+                      "$ref": "#/$defs/values/string"
+                    }
+                  }
+                }
+              },
+              "verification": {
+                "const": "deterministic"
+              }
+            },
+            "required": [
+              "type",
+              "category",
+              "operator",
+              "value",
+              "verification"
+            ]
+          },
+          {
+            "properties": {
+              "type": {
+                "const": "restaurant_requirement"
+              },
+              "category": {
+                "const": "food"
+              },
+              "operator": {
+                "const": "gte"
+              },
+              "value": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "kind",
+                  "value"
+                ],
+                "properties": {
+                  "kind": {
+                    "const": "rating"
+                  },
+                  "value": {
+                    "$ref": "#/$defs/values/rating"
+                  }
+                }
+              },
+              "verification": {
+                "const": "deterministic"
+              }
+            },
+            "required": [
+              "type",
+              "category",
+              "operator",
+              "value",
+              "verification"
+            ]
+          },
+          {
+            "properties": {
+              "type": {
+                "const": "restaurant_requirement"
+              },
+              "category": {
+                "const": "food"
+              },
+              "operator": {
+                "const": "include"
+              },
+              "value": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "kind",
+                  "value"
+                ],
+                "properties": {
+                  "kind": {
+                    "const": "entity"
+                  },
+                  "value": {
+                    "$ref": "#/$defs/values/restaurant_ids"
+                  }
+                }
+              },
+              "verification": {
+                "const": "deterministic"
+              }
+            },
+            "required": [
+              "type",
+              "category",
+              "operator",
+              "value",
+              "verification"
+            ]
+          },
+          {
+            "properties": {
+              "type": {
+                "const": "restaurant_requirement"
+              },
+              "category": {
+                "const": "food"
+              },
+              "operator": {
+                "const": "exclude"
+              },
+              "value": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "kind",
+                  "value"
+                ],
+                "properties": {
+                  "kind": {
+                    "const": "entity"
+                  },
+                  "value": {
+                    "$ref": "#/$defs/values/restaurant_ids"
+                  }
+                }
+              },
+              "verification": {
+                "const": "deterministic"
+              }
+            },
+            "required": [
+              "type",
+              "category",
+              "operator",
+              "value",
+              "verification"
+            ]
+          },
+          {
+            "properties": {
+              "type": {
+                "const": "meal_budget_constraint"
+              },
+              "category": {
+                "const": "food"
+              },
+              "operator": {
+                "const": "lte"
+              },
+              "value": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "kind",
+                  "value"
+                ],
+                "properties": {
+                  "kind": {
+                    "const": "per_person"
+                  },
+                  "value": {
+                    "$ref": "#/$defs/values/money"
+                  }
+                }
+              },
+              "verification": {
+                "const": "deterministic"
+              }
+            },
+            "required": [
+              "type",
+              "category",
+              "operator",
+              "value",
+              "verification"
+            ]
+          },
+          {
+            "properties": {
+              "type": {
+                "const": "meal_budget_constraint"
+              },
+              "category": {
+                "const": "food"
+              },
+              "operator": {
+                "const": "between"
+              },
+              "value": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "kind",
+                  "value"
+                ],
+                "properties": {
+                  "kind": {
+                    "const": "per_person"
+                  },
+                  "value": {
+                    "type": "object",
+                    "additionalProperties": false,
+                    "required": [
+                      "min",
+                      "max"
+                    ],
+                    "properties": {
+                      "min": {
+                        "$ref": "#/$defs/values/money"
+                      },
+                      "max": {
+                        "$ref": "#/$defs/values/money"
+                      }
+                    }
+                  }
+                }
+              },
+              "verification": {
+                "const": "deterministic"
+              }
+            },
+            "required": [
+              "type",
+              "category",
+              "operator",
+              "value",
+              "verification"
+            ]
+          },
+          {
+            "properties": {
+              "type": {
+                "const": "transport_requirement"
+              },
+              "category": {
+                "const": "transport"
+              },
+              "operator": {
+                "const": "eq"
+              },
+              "value": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "kind",
+                  "value"
+                ],
+                "properties": {
+                  "kind": {
+                    "const": "mode"
+                  },
+                  "value": {
+                    "$ref": "#/$defs/values/transport_mode"
+                  }
+                }
+              },
+              "verification": {
+                "const": "unavailable_until_data_added"
+              }
+            },
+            "required": [
+              "type",
+              "category",
+              "operator",
+              "value",
+              "verification"
+            ]
+          },
+          {
+            "properties": {
+              "type": {
+                "const": "transport_requirement"
+              },
+              "category": {
+                "const": "transport"
+              },
+              "operator": {
+                "const": "prefer"
+              },
+              "value": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "kind",
+                  "value"
+                ],
+                "properties": {
+                  "kind": {
+                    "const": "mode"
+                  },
+                  "value": {
+                    "$ref": "#/$defs/values/transport_mode"
+                  }
+                }
+              },
+              "verification": {
+                "const": "unavailable_until_data_added"
+              }
+            },
+            "required": [
+              "type",
+              "category",
+              "operator",
+              "value",
+              "verification"
+            ]
+          },
+          {
+            "properties": {
+              "type": {
+                "const": "transport_requirement"
+              },
+              "category": {
+                "const": "transport"
+              },
+              "operator": {
+                "const": "in"
+              },
+              "value": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "kind",
+                  "value"
+                ],
+                "properties": {
+                  "kind": {
+                    "const": "mode"
+                  },
+                  "value": {
+                    "type": "array",
+                    "minItems": 1,
+                    "uniqueItems": true,
+                    "items": {
+                      "$ref": "#/$defs/values/transport_mode"
+                    }
+                  }
+                }
+              },
+              "verification": {
+                "const": "unavailable_until_data_added"
+              }
+            },
+            "required": [
+              "type",
+              "category",
+              "operator",
+              "value",
+              "verification"
+            ]
+          },
+          {
+            "properties": {
+              "type": {
+                "const": "transport_requirement"
+              },
+              "category": {
+                "const": "transport"
+              },
+              "operator": {
+                "const": "ne"
+              },
+              "value": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "kind",
+                  "value"
+                ],
+                "properties": {
+                  "kind": {
+                    "const": "mode"
+                  },
+                  "value": {
+                    "$ref": "#/$defs/values/transport_mode"
+                  }
+                }
+              },
+              "verification": {
+                "const": "unavailable_until_data_added"
+              }
+            },
+            "required": [
+              "type",
+              "category",
+              "operator",
+              "value",
+              "verification"
+            ]
+          },
+          {
+            "properties": {
+              "type": {
+                "const": "transport_requirement"
+              },
+              "category": {
+                "const": "transport"
+              },
+              "operator": {
+                "const": "not_in"
+              },
+              "value": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "kind",
+                  "value"
+                ],
+                "properties": {
+                  "kind": {
+                    "const": "mode"
+                  },
+                  "value": {
+                    "type": "array",
+                    "minItems": 1,
+                    "uniqueItems": true,
+                    "items": {
+                      "$ref": "#/$defs/values/transport_mode"
+                    }
+                  }
+                }
+              },
+              "verification": {
+                "const": "unavailable_until_data_added"
+              }
+            },
+            "required": [
+              "type",
+              "category",
+              "operator",
+              "value",
+              "verification"
+            ]
+          },
+          {
+            "properties": {
+              "type": {
+                "const": "transport_limit"
+              },
+              "category": {
+                "const": "transport"
+              },
+              "operator": {
+                "const": "lte"
+              },
+              "value": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "kind",
+                  "value"
+                ],
+                "properties": {
+                  "kind": {
+                    "const": "travel_time_minutes"
+                  },
+                  "value": {
+                    "$ref": "#/$defs/values/nonnegative_number"
+                  }
+                }
+              },
+              "verification": {
+                "const": "unavailable_until_data_added"
+              }
+            },
+            "required": [
+              "type",
+              "category",
+              "operator",
+              "value",
+              "verification"
+            ]
+          },
+          {
+            "properties": {
+              "type": {
+                "const": "transport_limit"
+              },
+              "category": {
+                "const": "transport"
+              },
+              "operator": {
+                "const": "lte"
+              },
+              "value": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "kind",
+                  "value"
+                ],
+                "properties": {
+                  "kind": {
+                    "const": "walking_time_minutes"
+                  },
+                  "value": {
+                    "$ref": "#/$defs/values/nonnegative_number"
+                  }
+                }
+              },
+              "verification": {
+                "const": "unavailable_until_data_added"
+              }
+            },
+            "required": [
+              "type",
+              "category",
+              "operator",
+              "value",
+              "verification"
+            ]
+          },
+          {
+            "properties": {
+              "type": {
+                "const": "transport_limit"
+              },
+              "category": {
+                "const": "transport"
+              },
+              "operator": {
+                "const": "lte"
+              },
+              "value": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "kind",
+                  "value"
+                ],
+                "properties": {
+                  "kind": {
+                    "const": "walking_distance_metres"
+                  },
+                  "value": {
+                    "$ref": "#/$defs/values/nonnegative_number"
+                  }
+                }
+              },
+              "verification": {
+                "const": "unavailable_until_data_added"
+              }
+            },
+            "required": [
+              "type",
+              "category",
+              "operator",
+              "value",
+              "verification"
+            ]
+          },
+          {
+            "properties": {
+              "type": {
+                "const": "schedule_time_constraint"
+              },
+              "category": {
+                "const": "schedule"
+              },
+              "operator": {
+                "const": "gte"
+              },
+              "value": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "kind",
+                  "value"
+                ],
+                "properties": {
+                  "kind": {
+                    "const": "daily_start"
+                  },
+                  "value": {
+                    "$ref": "#/$defs/values/time"
+                  }
+                }
+              },
+              "verification": {
+                "const": "deterministic"
+              }
+            },
+            "required": [
+              "type",
+              "category",
+              "operator",
+              "value",
+              "verification"
+            ]
+          },
+          {
+            "properties": {
+              "type": {
+                "const": "schedule_time_constraint"
+              },
+              "category": {
+                "const": "schedule"
+              },
+              "operator": {
+                "const": "lte"
+              },
+              "value": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "kind",
+                  "value"
+                ],
+                "properties": {
+                  "kind": {
+                    "const": "daily_end"
+                  },
+                  "value": {
+                    "$ref": "#/$defs/values/time"
+                  }
+                }
+              },
+              "verification": {
+                "const": "deterministic"
+              }
+            },
+            "required": [
+              "type",
+              "category",
+              "operator",
+              "value",
+              "verification"
+            ]
+          },
+          {
+            "properties": {
+              "type": {
+                "const": "schedule_time_constraint"
+              },
+              "category": {
+                "const": "schedule"
+              },
+              "operator": {
+                "const": "between"
+              },
+              "value": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "kind",
+                  "value"
+                ],
+                "properties": {
+                  "kind": {
+                    "const": "activity_window"
+                  },
+                  "value": {
+                    "$ref": "#/$defs/values/activity_window"
+                  }
+                }
+              },
+              "verification": {
+                "const": "deterministic"
+              }
+            },
+            "required": [
+              "type",
+              "category",
+              "operator",
+              "value",
+              "verification"
+            ]
+          },
+          {
+            "properties": {
+              "type": {
+                "const": "schedule_time_constraint"
+              },
+              "category": {
+                "const": "schedule"
+              },
+              "operator": {
+                "const": "between"
+              },
+              "value": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "kind",
+                  "value"
+                ],
+                "properties": {
+                  "kind": {
+                    "const": "meal_window"
+                  },
+                  "value": {
+                    "$ref": "#/$defs/values/meal_window"
+                  }
+                }
+              },
+              "verification": {
+                "const": "deterministic"
+              }
+            },
+            "required": [
+              "type",
+              "category",
+              "operator",
+              "value",
+              "verification"
+            ]
+          },
+          {
+            "properties": {
+              "type": {
+                "const": "schedule_requirement"
+              },
+              "category": {
+                "const": "schedule"
+              },
+              "operator": {
+                "const": "lte"
+              },
+              "value": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "kind",
+                  "value"
+                ],
+                "properties": {
+                  "kind": {
+                    "const": "activities_per_day"
+                  },
+                  "value": {
+                    "$ref": "#/$defs/values/nonnegative_integer"
+                  }
+                }
+              },
+              "verification": {
+                "const": "deterministic"
+              }
+            },
+            "required": [
+              "type",
+              "category",
+              "operator",
+              "value",
+              "verification"
+            ]
+          },
+          {
+            "properties": {
+              "type": {
+                "const": "schedule_requirement"
+              },
+              "category": {
+                "const": "schedule"
+              },
+              "operator": {
+                "const": "gte"
+              },
+              "value": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "kind",
+                  "value"
+                ],
+                "properties": {
+                  "kind": {
+                    "const": "free_minutes_per_day"
+                  },
+                  "value": {
+                    "$ref": "#/$defs/values/nonnegative_number"
+                  }
+                }
+              },
+              "verification": {
+                "const": "deterministic"
+              }
+            },
+            "required": [
+              "type",
+              "category",
+              "operator",
+              "value",
+              "verification"
+            ]
+          },
+          {
+            "properties": {
+              "type": {
+                "const": "schedule_requirement"
+              },
+              "category": {
+                "const": "schedule"
+              },
+              "operator": {
+                "const": "gte"
+              },
+              "value": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "kind",
+                  "value"
+                ],
+                "properties": {
+                  "kind": {
+                    "const": "buffer_minutes"
+                  },
+                  "value": {
+                    "$ref": "#/$defs/values/nonnegative_number"
+                  }
+                }
+              },
+              "verification": {
+                "const": "deterministic"
+              }
+            },
+            "required": [
+              "type",
+              "category",
+              "operator",
+              "value",
+              "verification"
+            ]
+          },
+          {
+            "properties": {
+              "type": {
+                "const": "budget_constraint"
+              },
+              "category": {
+                "const": "budget"
+              },
+              "operator": {
+                "const": "lte"
+              },
+              "value": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "kind",
+                  "value"
+                ],
+                "properties": {
+                  "kind": {
+                    "const": "trip"
+                  },
+                  "value": {
+                    "$ref": "#/$defs/values/money"
+                  }
+                }
+              },
+              "verification": {
+                "const": "unavailable_until_data_added"
+              }
+            },
+            "required": [
+              "type",
+              "category",
+              "operator",
+              "value",
+              "verification"
+            ]
+          },
+          {
+            "properties": {
+              "type": {
+                "const": "budget_constraint"
+              },
+              "category": {
+                "const": "budget"
+              },
+              "operator": {
+                "const": "between"
+              },
+              "value": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "kind",
+                  "value"
+                ],
+                "properties": {
+                  "kind": {
+                    "const": "trip"
+                  },
+                  "value": {
+                    "type": "object",
+                    "additionalProperties": false,
+                    "required": [
+                      "min",
+                      "max"
+                    ],
+                    "properties": {
+                      "min": {
+                        "$ref": "#/$defs/values/money"
+                      },
+                      "max": {
+                        "$ref": "#/$defs/values/money"
+                      }
+                    }
+                  }
+                }
+              },
+              "verification": {
+                "const": "unavailable_until_data_added"
+              }
+            },
+            "required": [
+              "type",
+              "category",
+              "operator",
+              "value",
+              "verification"
+            ]
+          },
+          {
+            "properties": {
+              "type": {
+                "const": "budget_constraint"
+              },
+              "category": {
+                "const": "budget"
+              },
+              "operator": {
+                "const": "lte"
+              },
+              "value": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "kind",
+                  "value"
+                ],
+                "properties": {
+                  "kind": {
+                    "const": "daily"
+                  },
+                  "value": {
+                    "$ref": "#/$defs/values/money"
+                  }
+                }
+              },
+              "verification": {
+                "const": "unavailable_until_data_added"
+              }
+            },
+            "required": [
+              "type",
+              "category",
+              "operator",
+              "value",
+              "verification"
+            ]
+          },
+          {
+            "properties": {
+              "type": {
+                "const": "budget_constraint"
+              },
+              "category": {
+                "const": "budget"
+              },
+              "operator": {
+                "const": "between"
+              },
+              "value": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "kind",
+                  "value"
+                ],
+                "properties": {
+                  "kind": {
+                    "const": "daily"
+                  },
+                  "value": {
+                    "type": "object",
+                    "additionalProperties": false,
+                    "required": [
+                      "min",
+                      "max"
+                    ],
+                    "properties": {
+                      "min": {
+                        "$ref": "#/$defs/values/money"
+                      },
+                      "max": {
+                        "$ref": "#/$defs/values/money"
+                      }
+                    }
+                  }
+                }
+              },
+              "verification": {
+                "const": "unavailable_until_data_added"
+              }
+            },
+            "required": [
+              "type",
+              "category",
+              "operator",
+              "value",
+              "verification"
+            ]
+          },
+          {
+            "properties": {
+              "type": {
+                "const": "budget_constraint"
+              },
+              "category": {
+                "const": "budget"
+              },
+              "operator": {
+                "const": "lte"
+              },
+              "value": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "kind",
+                  "value"
+                ],
+                "properties": {
+                  "kind": {
+                    "const": "food"
+                  },
+                  "value": {
+                    "$ref": "#/$defs/values/money"
+                  }
+                }
+              },
+              "verification": {
+                "const": "unavailable_until_data_added"
+              }
+            },
+            "required": [
+              "type",
+              "category",
+              "operator",
+              "value",
+              "verification"
+            ]
+          },
+          {
+            "properties": {
+              "type": {
+                "const": "budget_constraint"
+              },
+              "category": {
+                "const": "budget"
+              },
+              "operator": {
+                "const": "between"
+              },
+              "value": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "kind",
+                  "value"
+                ],
+                "properties": {
+                  "kind": {
+                    "const": "food"
+                  },
+                  "value": {
+                    "type": "object",
+                    "additionalProperties": false,
+                    "required": [
+                      "min",
+                      "max"
+                    ],
+                    "properties": {
+                      "min": {
+                        "$ref": "#/$defs/values/money"
+                      },
+                      "max": {
+                        "$ref": "#/$defs/values/money"
+                      }
+                    }
+                  }
+                }
+              },
+              "verification": {
+                "const": "unavailable_until_data_added"
+              }
+            },
+            "required": [
+              "type",
+              "category",
+              "operator",
+              "value",
+              "verification"
+            ]
+          },
+          {
+            "properties": {
+              "type": {
+                "const": "budget_constraint"
+              },
+              "category": {
+                "const": "budget"
+              },
+              "operator": {
+                "const": "lte"
+              },
+              "value": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "kind",
+                  "value"
+                ],
+                "properties": {
+                  "kind": {
+                    "const": "attraction"
+                  },
+                  "value": {
+                    "$ref": "#/$defs/values/money"
+                  }
+                }
+              },
+              "verification": {
+                "const": "unavailable_until_data_added"
+              }
+            },
+            "required": [
+              "type",
+              "category",
+              "operator",
+              "value",
+              "verification"
+            ]
+          },
+          {
+            "properties": {
+              "type": {
+                "const": "budget_constraint"
+              },
+              "category": {
+                "const": "budget"
+              },
+              "operator": {
+                "const": "between"
+              },
+              "value": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "kind",
+                  "value"
+                ],
+                "properties": {
+                  "kind": {
+                    "const": "attraction"
+                  },
+                  "value": {
+                    "type": "object",
+                    "additionalProperties": false,
+                    "required": [
+                      "min",
+                      "max"
+                    ],
+                    "properties": {
+                      "min": {
+                        "$ref": "#/$defs/values/money"
+                      },
+                      "max": {
+                        "$ref": "#/$defs/values/money"
+                      }
+                    }
+                  }
+                }
+              },
+              "verification": {
+                "const": "unavailable_until_data_added"
+              }
+            },
+            "required": [
+              "type",
+              "category",
+              "operator",
+              "value",
+              "verification"
+            ]
+          },
+          {
+            "properties": {
+              "type": {
+                "const": "budget_constraint"
+              },
+              "category": {
+                "const": "budget"
+              },
+              "operator": {
+                "const": "lte"
+              },
+              "value": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "kind",
+                  "value"
+                ],
+                "properties": {
+                  "kind": {
+                    "const": "accommodation"
+                  },
+                  "value": {
+                    "$ref": "#/$defs/values/money"
+                  }
+                }
+              },
+              "verification": {
+                "const": "unavailable_until_data_added"
+              }
+            },
+            "required": [
+              "type",
+              "category",
+              "operator",
+              "value",
+              "verification"
+            ]
+          },
+          {
+            "properties": {
+              "type": {
+                "const": "budget_constraint"
+              },
+              "category": {
+                "const": "budget"
+              },
+              "operator": {
+                "const": "between"
+              },
+              "value": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "kind",
+                  "value"
+                ],
+                "properties": {
+                  "kind": {
+                    "const": "accommodation"
+                  },
+                  "value": {
+                    "type": "object",
+                    "additionalProperties": false,
+                    "required": [
+                      "min",
+                      "max"
+                    ],
+                    "properties": {
+                      "min": {
+                        "$ref": "#/$defs/values/money"
+                      },
+                      "max": {
+                        "$ref": "#/$defs/values/money"
+                      }
+                    }
+                  }
+                }
+              },
+              "verification": {
+                "const": "unavailable_until_data_added"
+              }
+            },
+            "required": [
+              "type",
+              "category",
+              "operator",
+              "value",
+              "verification"
+            ]
+          },
+          {
+            "properties": {
+              "type": {
+                "const": "budget_constraint"
+              },
+              "category": {
+                "const": "budget"
+              },
+              "operator": {
+                "const": "lte"
+              },
+              "value": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "kind",
+                  "value"
+                ],
+                "properties": {
+                  "kind": {
+                    "const": "flight"
+                  },
+                  "value": {
+                    "$ref": "#/$defs/values/money"
+                  }
+                }
+              },
+              "verification": {
+                "const": "unavailable_until_data_added"
+              }
+            },
+            "required": [
+              "type",
+              "category",
+              "operator",
+              "value",
+              "verification"
+            ]
+          },
+          {
+            "properties": {
+              "type": {
+                "const": "budget_constraint"
+              },
+              "category": {
+                "const": "budget"
+              },
+              "operator": {
+                "const": "between"
+              },
+              "value": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "kind",
+                  "value"
+                ],
+                "properties": {
+                  "kind": {
+                    "const": "flight"
+                  },
+                  "value": {
+                    "type": "object",
+                    "additionalProperties": false,
+                    "required": [
+                      "min",
+                      "max"
+                    ],
+                    "properties": {
+                      "min": {
+                        "$ref": "#/$defs/values/money"
+                      },
+                      "max": {
+                        "$ref": "#/$defs/values/money"
+                      }
+                    }
+                  }
+                }
+              },
+              "verification": {
+                "const": "unavailable_until_data_added"
+              }
+            },
+            "required": [
+              "type",
+              "category",
+              "operator",
+              "value",
+              "verification"
+            ]
+          },
+          {
+            "properties": {
+              "type": {
+                "const": "subjective_preference"
+              },
+              "category": {
+                "const": "subjective"
+              },
+              "operator": {
+                "const": "eq"
+              },
+              "value": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "target",
+                  "attribute",
+                  "value"
+                ],
+                "properties": {
+                  "target": {
+                    "const": "restaurant"
+                  },
+                  "attribute": {
+                    "const": "quiet"
+                  },
+                  "value": {
+                    "$ref": "#/$defs/values/boolean"
+                  }
+                }
+              },
+              "verification": {
+                "const": "llm_subjective"
+              }
+            },
+            "required": [
+              "type",
+              "category",
+              "operator",
+              "value",
+              "verification"
+            ]
+          },
+          {
+            "properties": {
+              "type": {
+                "const": "subjective_preference"
+              },
+              "category": {
+                "const": "subjective"
+              },
+              "operator": {
+                "const": "prefer"
+              },
+              "value": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "target",
+                  "attribute"
+                ],
+                "properties": {
+                  "target": {
+                    "const": "restaurant"
+                  },
+                  "attribute": {
+                    "const": "quiet"
+                  },
+                  "value": {
+                    "$ref": "#/$defs/values/boolean",
+                    "default": true
+                  }
+                }
+              },
+              "verification": {
+                "const": "llm_subjective"
+              }
+            },
+            "required": [
+              "type",
+              "category",
+              "operator",
+              "value",
+              "verification"
+            ]
+          },
+          {
+            "properties": {
+              "type": {
+                "const": "subjective_preference"
+              },
+              "category": {
+                "const": "subjective"
+              },
+              "operator": {
+                "const": "eq"
+              },
+              "value": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "target",
+                  "attribute",
+                  "value"
+                ],
+                "properties": {
+                  "target": {
+                    "const": "restaurant"
+                  },
+                  "attribute": {
+                    "const": "romantic"
+                  },
+                  "value": {
+                    "$ref": "#/$defs/values/boolean"
+                  }
+                }
+              },
+              "verification": {
+                "const": "llm_subjective"
+              }
+            },
+            "required": [
+              "type",
+              "category",
+              "operator",
+              "value",
+              "verification"
+            ]
+          },
+          {
+            "properties": {
+              "type": {
+                "const": "subjective_preference"
+              },
+              "category": {
+                "const": "subjective"
+              },
+              "operator": {
+                "const": "prefer"
+              },
+              "value": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "target",
+                  "attribute"
+                ],
+                "properties": {
+                  "target": {
+                    "const": "restaurant"
+                  },
+                  "attribute": {
+                    "const": "romantic"
+                  },
+                  "value": {
+                    "$ref": "#/$defs/values/boolean",
+                    "default": true
+                  }
+                }
+              },
+              "verification": {
+                "const": "llm_subjective"
+              }
+            },
+            "required": [
+              "type",
+              "category",
+              "operator",
+              "value",
+              "verification"
+            ]
+          },
+          {
+            "properties": {
+              "type": {
+                "const": "subjective_preference"
+              },
+              "category": {
+                "const": "subjective"
+              },
+              "operator": {
+                "const": "eq"
+              },
+              "value": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "target",
+                  "attribute",
+                  "value"
+                ],
+                "properties": {
+                  "target": {
+                    "const": "restaurant"
+                  },
+                  "attribute": {
+                    "const": "authentic"
+                  },
+                  "value": {
+                    "$ref": "#/$defs/values/boolean"
+                  }
+                }
+              },
+              "verification": {
+                "const": "llm_subjective"
+              }
+            },
+            "required": [
+              "type",
+              "category",
+              "operator",
+              "value",
+              "verification"
+            ]
+          },
+          {
+            "properties": {
+              "type": {
+                "const": "subjective_preference"
+              },
+              "category": {
+                "const": "subjective"
+              },
+              "operator": {
+                "const": "prefer"
+              },
+              "value": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "target",
+                  "attribute"
+                ],
+                "properties": {
+                  "target": {
+                    "const": "restaurant"
+                  },
+                  "attribute": {
+                    "const": "authentic"
+                  },
+                  "value": {
+                    "$ref": "#/$defs/values/boolean",
+                    "default": true
+                  }
+                }
+              },
+              "verification": {
+                "const": "llm_subjective"
+              }
+            },
+            "required": [
+              "type",
+              "category",
+              "operator",
+              "value",
+              "verification"
+            ]
+          },
+          {
+            "properties": {
+              "type": {
+                "const": "subjective_preference"
+              },
+              "category": {
+                "const": "subjective"
+              },
+              "operator": {
+                "const": "eq"
+              },
+              "value": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "target",
+                  "attribute",
+                  "value"
+                ],
+                "properties": {
+                  "target": {
+                    "const": "restaurant"
+                  },
+                  "attribute": {
+                    "const": "family_friendly"
+                  },
+                  "value": {
+                    "$ref": "#/$defs/values/boolean"
+                  }
+                }
+              },
+              "verification": {
+                "const": "llm_subjective"
+              }
+            },
+            "required": [
+              "type",
+              "category",
+              "operator",
+              "value",
+              "verification"
+            ]
+          },
+          {
+            "properties": {
+              "type": {
+                "const": "subjective_preference"
+              },
+              "category": {
+                "const": "subjective"
+              },
+              "operator": {
+                "const": "prefer"
+              },
+              "value": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "target",
+                  "attribute"
+                ],
+                "properties": {
+                  "target": {
+                    "const": "restaurant"
+                  },
+                  "attribute": {
+                    "const": "family_friendly"
+                  },
+                  "value": {
+                    "$ref": "#/$defs/values/boolean",
+                    "default": true
+                  }
+                }
+              },
+              "verification": {
+                "const": "llm_subjective"
+              }
+            },
+            "required": [
+              "type",
+              "category",
+              "operator",
+              "value",
+              "verification"
+            ]
+          },
+          {
+            "properties": {
+              "type": {
+                "const": "subjective_preference"
+              },
+              "category": {
+                "const": "subjective"
+              },
+              "operator": {
+                "const": "eq"
+              },
+              "value": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "target",
+                  "attribute",
+                  "value"
+                ],
+                "properties": {
+                  "target": {
+                    "const": "restaurant"
+                  },
+                  "attribute": {
+                    "const": "good_for_groups"
+                  },
+                  "value": {
+                    "$ref": "#/$defs/values/boolean"
+                  }
+                }
+              },
+              "verification": {
+                "const": "llm_subjective"
+              }
+            },
+            "required": [
+              "type",
+              "category",
+              "operator",
+              "value",
+              "verification"
+            ]
+          },
+          {
+            "properties": {
+              "type": {
+                "const": "subjective_preference"
+              },
+              "category": {
+                "const": "subjective"
+              },
+              "operator": {
+                "const": "prefer"
+              },
+              "value": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "target",
+                  "attribute"
+                ],
+                "properties": {
+                  "target": {
+                    "const": "restaurant"
+                  },
+                  "attribute": {
+                    "const": "good_for_groups"
+                  },
+                  "value": {
+                    "$ref": "#/$defs/values/boolean",
+                    "default": true
+                  }
+                }
+              },
+              "verification": {
+                "const": "llm_subjective"
+              }
+            },
+            "required": [
+              "type",
+              "category",
+              "operator",
+              "value",
+              "verification"
+            ]
+          },
+          {
+            "properties": {
+              "type": {
+                "const": "subjective_preference"
+              },
+              "category": {
+                "const": "subjective"
+              },
+              "operator": {
+                "const": "eq"
+              },
+              "value": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "target",
+                  "attribute",
+                  "value"
+                ],
+                "properties": {
+                  "target": {
+                    "const": "attraction"
+                  },
+                  "attribute": {
+                    "const": "scenic"
+                  },
+                  "value": {
+                    "$ref": "#/$defs/values/boolean"
+                  }
+                }
+              },
+              "verification": {
+                "const": "llm_subjective"
+              }
+            },
+            "required": [
+              "type",
+              "category",
+              "operator",
+              "value",
+              "verification"
+            ]
+          },
+          {
+            "properties": {
+              "type": {
+                "const": "subjective_preference"
+              },
+              "category": {
+                "const": "subjective"
+              },
+              "operator": {
+                "const": "prefer"
+              },
+              "value": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "target",
+                  "attribute"
+                ],
+                "properties": {
+                  "target": {
+                    "const": "attraction"
+                  },
+                  "attribute": {
+                    "const": "scenic"
+                  },
+                  "value": {
+                    "$ref": "#/$defs/values/boolean",
+                    "default": true
+                  }
+                }
+              },
+              "verification": {
+                "const": "llm_subjective"
+              }
+            },
+            "required": [
+              "type",
+              "category",
+              "operator",
+              "value",
+              "verification"
+            ]
+          },
+          {
+            "properties": {
+              "type": {
+                "const": "subjective_preference"
+              },
+              "category": {
+                "const": "subjective"
+              },
+              "operator": {
+                "const": "eq"
+              },
+              "value": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "target",
+                  "attribute",
+                  "value"
+                ],
+                "properties": {
+                  "target": {
+                    "const": "attraction"
+                  },
+                  "attribute": {
+                    "const": "family_friendly"
+                  },
+                  "value": {
+                    "$ref": "#/$defs/values/boolean"
+                  }
+                }
+              },
+              "verification": {
+                "const": "llm_subjective"
+              }
+            },
+            "required": [
+              "type",
+              "category",
+              "operator",
+              "value",
+              "verification"
+            ]
+          },
+          {
+            "properties": {
+              "type": {
+                "const": "subjective_preference"
+              },
+              "category": {
+                "const": "subjective"
+              },
+              "operator": {
+                "const": "prefer"
+              },
+              "value": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "target",
+                  "attribute"
+                ],
+                "properties": {
+                  "target": {
+                    "const": "attraction"
+                  },
+                  "attribute": {
+                    "const": "family_friendly"
+                  },
+                  "value": {
+                    "$ref": "#/$defs/values/boolean",
+                    "default": true
+                  }
+                }
+              },
+              "verification": {
+                "const": "llm_subjective"
+              }
+            },
+            "required": [
+              "type",
+              "category",
+              "operator",
+              "value",
+              "verification"
+            ]
+          },
+          {
+            "properties": {
+              "type": {
+                "const": "subjective_preference"
+              },
+              "category": {
+                "const": "subjective"
+              },
+              "operator": {
+                "const": "eq"
+              },
+              "value": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "target",
+                  "attribute",
+                  "value"
+                ],
+                "properties": {
+                  "target": {
+                    "const": "attraction"
+                  },
+                  "attribute": {
+                    "const": "educational"
+                  },
+                  "value": {
+                    "$ref": "#/$defs/values/boolean"
+                  }
+                }
+              },
+              "verification": {
+                "const": "llm_subjective"
+              }
+            },
+            "required": [
+              "type",
+              "category",
+              "operator",
+              "value",
+              "verification"
+            ]
+          },
+          {
+            "properties": {
+              "type": {
+                "const": "subjective_preference"
+              },
+              "category": {
+                "const": "subjective"
+              },
+              "operator": {
+                "const": "prefer"
+              },
+              "value": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "target",
+                  "attribute"
+                ],
+                "properties": {
+                  "target": {
+                    "const": "attraction"
+                  },
+                  "attribute": {
+                    "const": "educational"
+                  },
+                  "value": {
+                    "$ref": "#/$defs/values/boolean",
+                    "default": true
+                  }
+                }
+              },
+              "verification": {
+                "const": "llm_subjective"
+              }
+            },
+            "required": [
+              "type",
+              "category",
+              "operator",
+              "value",
+              "verification"
+            ]
+          },
+          {
+            "properties": {
+              "type": {
+                "const": "subjective_preference"
+              },
+              "category": {
+                "const": "subjective"
+              },
+              "operator": {
+                "const": "eq"
+              },
+              "value": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "target",
+                  "attribute",
+                  "value"
+                ],
+                "properties": {
+                  "target": {
+                    "const": "itinerary"
+                  },
+                  "attribute": {
+                    "const": "relaxing"
+                  },
+                  "value": {
+                    "$ref": "#/$defs/values/boolean"
+                  }
+                }
+              },
+              "verification": {
+                "const": "deterministic_plus_llm"
+              }
+            },
+            "required": [
+              "type",
+              "category",
+              "operator",
+              "value",
+              "verification"
+            ]
+          },
+          {
+            "properties": {
+              "type": {
+                "const": "subjective_preference"
+              },
+              "category": {
+                "const": "subjective"
+              },
+              "operator": {
+                "const": "prefer"
+              },
+              "value": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "target",
+                  "attribute"
+                ],
+                "properties": {
+                  "target": {
+                    "const": "itinerary"
+                  },
+                  "attribute": {
+                    "const": "relaxing"
+                  },
+                  "value": {
+                    "$ref": "#/$defs/values/boolean",
+                    "default": true
+                  }
+                }
+              },
+              "verification": {
+                "const": "deterministic_plus_llm"
+              }
+            },
+            "required": [
+              "type",
+              "category",
+              "operator",
+              "value",
+              "verification"
+            ]
+          },
+          {
+            "properties": {
+              "type": {
+                "const": "subjective_preference"
+              },
+              "category": {
+                "const": "subjective"
+              },
+              "operator": {
+                "const": "eq"
+              },
+              "value": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "target",
+                  "attribute",
+                  "value"
+                ],
+                "properties": {
+                  "target": {
+                    "const": "place"
+                  },
+                  "attribute": {
+                    "const": "crowdedness"
+                  },
+                  "value": {
+                    "$ref": "#/$defs/values/crowd_level"
+                  }
+                }
+              },
+              "verification": {
+                "const": "llm_subjective"
+              }
+            },
+            "required": [
+              "type",
+              "category",
+              "operator",
+              "value",
+              "verification"
+            ]
+          },
+          {
+            "properties": {
+              "type": {
+                "const": "subjective_preference"
+              },
+              "category": {
+                "const": "subjective"
+              },
+              "operator": {
+                "const": "prefer"
+              },
+              "value": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "target",
+                  "attribute",
+                  "value"
+                ],
+                "properties": {
+                  "target": {
+                    "const": "place"
+                  },
+                  "attribute": {
+                    "const": "crowdedness"
+                  },
+                  "value": {
+                    "$ref": "#/$defs/values/crowd_level"
+                  }
+                }
+              },
+              "verification": {
+                "const": "llm_subjective"
+              }
+            },
+            "required": [
+              "type",
+              "category",
+              "operator",
+              "value",
+              "verification"
+            ]
+          },
+          {
+            "properties": {
+              "type": {
+                "const": "subjective_preference"
+              },
+              "category": {
+                "const": "subjective"
+              },
+              "operator": {
+                "const": "eq"
+              },
+              "value": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "target",
+                  "attribute",
+                  "value"
+                ],
+                "properties": {
+                  "target": {
+                    "const": "itinerary"
+                  },
+                  "attribute": {
+                    "const": "cultural"
+                  },
+                  "value": {
+                    "$ref": "#/$defs/values/boolean"
+                  }
+                }
+              },
+              "verification": {
+                "const": "deterministic_plus_llm"
+              }
+            },
+            "required": [
+              "type",
+              "category",
+              "operator",
+              "value",
+              "verification"
+            ]
+          },
+          {
+            "properties": {
+              "type": {
+                "const": "subjective_preference"
+              },
+              "category": {
+                "const": "subjective"
+              },
+              "operator": {
+                "const": "prefer"
+              },
+              "value": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "target",
+                  "attribute"
+                ],
+                "properties": {
+                  "target": {
+                    "const": "itinerary"
+                  },
+                  "attribute": {
+                    "const": "cultural"
+                  },
+                  "value": {
+                    "$ref": "#/$defs/values/boolean",
+                    "default": true
+                  }
+                }
+              },
+              "verification": {
+                "const": "deterministic_plus_llm"
+              }
+            },
+            "required": [
+              "type",
+              "category",
+              "operator",
+              "value",
+              "verification"
+            ]
+          },
+          {
+            "properties": {
+              "type": {
+                "const": "subjective_preference"
+              },
+              "category": {
+                "const": "subjective"
+              },
+              "operator": {
+                "const": "eq"
+              },
+              "value": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "target",
+                  "attribute",
+                  "value"
+                ],
+                "properties": {
+                  "target": {
+                    "const": "itinerary"
+                  },
+                  "attribute": {
+                    "const": "adventurous"
+                  },
+                  "value": {
+                    "$ref": "#/$defs/values/boolean"
+                  }
+                }
+              },
+              "verification": {
+                "const": "deterministic_plus_llm"
+              }
+            },
+            "required": [
+              "type",
+              "category",
+              "operator",
+              "value",
+              "verification"
+            ]
+          },
+          {
+            "properties": {
+              "type": {
+                "const": "subjective_preference"
+              },
+              "category": {
+                "const": "subjective"
+              },
+              "operator": {
+                "const": "prefer"
+              },
+              "value": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "target",
+                  "attribute"
+                ],
+                "properties": {
+                  "target": {
+                    "const": "itinerary"
+                  },
+                  "attribute": {
+                    "const": "adventurous"
+                  },
+                  "value": {
+                    "$ref": "#/$defs/values/boolean",
+                    "default": true
+                  }
+                }
+              },
+              "verification": {
+                "const": "deterministic_plus_llm"
+              }
+            },
+            "required": [
+              "type",
+              "category",
+              "operator",
+              "value",
+              "verification"
+            ]
+          },
+          {
+            "properties": {
+              "type": {
+                "const": "other_requirement"
+              },
+              "category": {
+                "const": "other"
+              },
+              "operator": {
+                "const": "include"
+              },
+              "value": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "kind",
+                  "value"
+                ],
+                "properties": {
+                  "kind": {
+                    "const": "accessibility"
+                  },
+                  "value": {
+                    "$ref": "#/$defs/values/accessibility"
+                  }
+                }
+              },
+              "verification": {
+                "const": "unavailable_until_data_added"
+              }
+            },
+            "required": [
+              "type",
+              "category",
+              "operator",
+              "value",
+              "verification"
+            ]
+          },
+          {
+            "properties": {
+              "type": {
+                "const": "other_requirement"
+              },
+              "category": {
+                "const": "other"
+              },
+              "operator": {
+                "const": "eq"
+              },
+              "value": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "kind",
+                  "value"
+                ],
+                "properties": {
+                  "kind": {
+                    "const": "weather_sensitive"
+                  },
+                  "value": {
+                    "$ref": "#/$defs/values/weather_policy"
+                  }
+                }
+              },
+              "verification": {
+                "const": "unavailable_until_data_added"
+              }
+            },
+            "required": [
+              "type",
+              "category",
+              "operator",
+              "value",
+              "verification"
+            ]
+          },
+          {
+            "properties": {
+              "type": {
+                "const": "other_requirement"
+              },
+              "category": {
+                "const": "other"
+              },
+              "operator": {
+                "const": "eq"
+              },
+              "value": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "kind",
+                  "value"
+                ],
+                "properties": {
+                  "kind": {
+                    "const": "indoor_only"
+                  },
+                  "value": {
+                    "$ref": "#/$defs/values/boolean"
+                  }
+                }
+              },
+              "verification": {
+                "const": "unavailable_until_data_added"
+              }
+            },
+            "required": [
+              "type",
+              "category",
+              "operator",
+              "value",
+              "verification"
+            ]
+          },
+          {
+            "properties": {
+              "type": {
+                "const": "other_requirement"
+              },
+              "category": {
+                "const": "other"
+              },
+              "operator": {
+                "const": "eq"
+              },
+              "value": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "kind",
+                  "value"
+                ],
+                "properties": {
+                  "kind": {
+                    "const": "avoid_repeated_categories"
+                  },
+                  "value": {
+                    "$ref": "#/$defs/values/boolean"
+                  }
+                }
+              },
+              "verification": {
+                "const": "deterministic"
+              }
+            },
+            "required": [
+              "type",
+              "category",
+              "operator",
+              "value",
+              "verification"
+            ]
+          },
+          {
+            "properties": {
+              "type": {
+                "const": "other_requirement"
+              },
+              "category": {
+                "const": "other"
+              },
+              "operator": {
+                "const": "gte"
+              },
+              "value": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "kind",
+                  "value"
+                ],
+                "properties": {
+                  "kind": {
+                    "const": "required_rest_period"
+                  },
+                  "value": {
+                    "$ref": "#/$defs/values/nonnegative_number"
+                  }
+                }
+              },
+              "verification": {
+                "const": "deterministic"
+              }
+            },
+            "required": [
+              "type",
+              "category",
+              "operator",
+              "value",
+              "verification"
+            ]
+          },
+          {
+            "properties": {
+              "type": {
+                "const": "other_requirement"
+              },
+              "category": {
+                "const": "other"
+              },
+              "operator": {
+                "const": "include"
+              },
+              "value": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "kind",
+                  "value"
+                ],
+                "properties": {
+                  "kind": {
+                    "const": "special_event"
+                  },
+                  "value": {
+                    "$ref": "#/$defs/values/event"
+                  }
+                }
+              },
+              "verification": {
+                "const": "unavailable_until_data_added"
+              }
+            },
+            "required": [
+              "type",
+              "category",
+              "operator",
+              "value",
+              "verification"
+            ]
+          }
+        ]
+      }
+    },
+    "metadata": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "constraint_count",
+        "category_count",
+        "subjective_constraint_count",
+        "implicit_constraint_count",
+        "hard_constraint_count",
+        "soft_constraint_count",
+        "interaction_count",
+        "categories_present",
+        "constraint_types_present",
+        "constraint_variants_present"
+      ],
+      "properties": {
+        "constraint_count": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "category_count": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "subjective_constraint_count": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "implicit_constraint_count": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "hard_constraint_count": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "soft_constraint_count": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "interaction_count": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "categories_present": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "enum": [
+              "trip",
+              "flight",
+              "accommodation",
+              "attraction",
+              "food",
+              "transport",
+              "schedule",
+              "budget",
+              "subjective",
+              "other"
+            ]
+          }
+        },
+        "constraint_types_present": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "enum": [
+              "trip_requirement",
+              "flight_airport_requirement",
+              "flight_time_constraint",
+              "flight_requirement",
+              "accommodation_requirement",
+              "accommodation_time_constraint",
+              "accommodation_nightly_budget",
+              "attraction_requirement",
+              "attraction_count_constraint",
+              "restaurant_requirement",
+              "meal_budget_constraint",
+              "transport_requirement",
+              "transport_limit",
+              "schedule_time_constraint",
+              "schedule_requirement",
+              "budget_constraint",
+              "subjective_preference",
+              "other_requirement"
+            ]
+          }
+        },
+        "constraint_variants_present": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "enum": [
+              "trip_duration_days",
+              "number_of_travellers",
+              "traveller_type",
+              "required_departure_airport",
+              "required_arrival_airport",
+              "departure_time_preference",
+              "arrival_time_preference",
+              "direct_flight_only",
+              "airline_preference",
+              "accommodation_type",
+              "minimum_hotel_rating",
+              "required_neighbourhood",
+              "accommodation_amenity",
+              "check_in_constraint",
+              "check_out_constraint",
+              "accommodation_budget_per_night",
+              "required_attraction",
+              "excluded_attraction",
+              "attraction_category",
+              "avoid_attraction_category",
+              "minimum_attraction_rating",
+              "minimum_attraction_count",
+              "maximum_attraction_count",
+              "dietary_requirement",
+              "cuisine",
+              "excluded_cuisine",
+              "minimum_restaurant_rating",
+              "required_restaurant",
+              "avoid_restaurant",
+              "meal_budget_per_person",
+              "preferred_transport_mode",
+              "avoid_transport_mode",
+              "max_travel_time",
+              "max_walking_time",
+              "max_walking_distance",
+              "earliest_start_time",
+              "latest_end_time",
+              "required_activity_time",
+              "meal_time_constraint",
+              "max_activities_per_day",
+              "free_time_requirement",
+              "buffer_time_requirement",
+              "total_budget",
+              "daily_budget",
+              "food_budget",
+              "attraction_budget",
+              "accommodation_budget",
+              "flight_budget",
+              "quiet_restaurant",
+              "romantic_restaurant",
+              "authentic_restaurant",
+              "family_friendly_restaurant",
+              "good_for_groups_restaurant",
+              "scenic_attraction",
+              "family_friendly_attraction",
+              "educational_attraction",
+              "relaxing_itinerary",
+              "crowdedness_preference",
+              "cultural_trip",
+              "adventurous_trip",
+              "accessibility_requirement",
+              "weather_sensitive_preference",
+              "indoor_only_preference",
+              "avoid_repeated_categories",
+              "required_rest_period",
+              "special_event_requirement"
+            ]
+          }
+        }
+      }
+    },
+    "unsat_reason": {
+      "type": "string",
+      "minLength": 1
+    },
+    "affected_constraint_ids": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    }
+  },
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:nyc-travel:semantic-case:2.0.0",
+  "$defs": {
+    "values": {
+      "positive_integer": {
+        "type": "integer",
+        "minimum": 1
+      },
+      "nonnegative_integer": {
+        "type": "integer",
+        "minimum": 0
+      },
+      "nonnegative_number": {
+        "type": "number",
+        "minimum": 0
+      },
+      "money": {
+        "type": "number",
+        "minimum": 0
+      },
+      "rating": {
+        "type": "number",
+        "minimum": 0,
+        "maximum": 5
+      },
+      "string": {
+        "type": "string",
+        "minLength": 1
+      },
+      "boolean": {
+        "type": "boolean"
+      },
+      "time": {
+        "type": "string",
+        "pattern": "^(?:[01][0-9]|2[0-3]):[0-5][0-9]$"
+      },
+      "time_window": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "start",
+          "end"
+        ],
+        "properties": {
+          "start": {
+            "type": "string",
+            "pattern": "^(?:[01][0-9]|2[0-3]):[0-5][0-9]$"
+          },
+          "end": {
+            "type": "string",
+            "pattern": "^(?:[01][0-9]|2[0-3]):[0-5][0-9]$"
+          }
+        }
+      },
+      "datetime": {
+        "type": "string",
+        "format": "date-time"
+      },
+      "airport": {
+        "type": "string",
+        "pattern": "^[A-Z]{3}$"
+      },
+      "persona": {
+        "enum": [
+          "solo",
+          "couple",
+          "family",
+          "friends",
+          "business",
+          "senior"
+        ]
+      },
+      "lodging_type": {
+        "enum": [
+          "hotel",
+          "hostel",
+          "apartment",
+          "guesthouse",
+          "resort"
+        ]
+      },
+      "amenity": {
+        "enum": [
+          "wifi",
+          "breakfast",
+          "pool",
+          "gym",
+          "parking",
+          "kitchen",
+          "air_conditioning"
+        ]
+      },
+      "diet": {
+        "enum": [
+          "vegetarian",
+          "vegan",
+          "halal",
+          "kosher",
+          "gluten_free"
+        ]
+      },
+      "transport_mode": {
+        "enum": [
+          "walking",
+          "transit",
+          "taxi",
+          "rideshare",
+          "cycling",
+          "car"
+        ]
+      },
+      "crowd_level": {
+        "enum": [
+          "low",
+          "moderate",
+          "high"
+        ]
+      },
+      "accessibility": {
+        "enum": [
+          "step_free",
+          "wheelchair_accessible",
+          "accessible_restroom",
+          "hearing_support",
+          "visual_support"
+        ]
+      },
+      "weather_policy": {
+        "enum": [
+          "avoid_rain",
+          "avoid_extreme_heat",
+          "avoid_extreme_cold"
+        ]
+      },
+      "event": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "event_id",
+          "date"
+        ],
+        "properties": {
+          "event_id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "date": {
+            "type": "string",
+            "format": "date"
+          }
+        }
+      },
+      "activity_window": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "entity_type",
+          "entity_id",
+          "trip_day",
+          "window"
+        ],
+        "properties": {
+          "entity_type": {
+            "enum": [
+              "restaurant",
+              "attraction"
+            ]
+          },
+          "entity_id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "trip_day": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "window": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "start",
+              "end"
+            ],
+            "properties": {
+              "start": {
+                "type": "string",
+                "pattern": "^(?:[01][0-9]|2[0-3]):[0-5][0-9]$"
+              },
+              "end": {
+                "type": "string",
+                "pattern": "^(?:[01][0-9]|2[0-3]):[0-5][0-9]$"
+              }
+            }
+          }
+        }
+      },
+      "meal_window": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "meal",
+          "trip_day",
+          "window"
+        ],
+        "properties": {
+          "meal": {
+            "enum": [
+              "breakfast",
+              "lunch",
+              "dinner"
+            ]
+          },
+          "trip_day": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "window": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "start",
+              "end"
+            ],
+            "properties": {
+              "start": {
+                "type": "string",
+                "pattern": "^(?:[01][0-9]|2[0-3]):[0-5][0-9]$"
+              },
+              "end": {
+                "type": "string",
+                "pattern": "^(?:[01][0-9]|2[0-3]):[0-5][0-9]$"
+              }
+            }
+          }
+        }
+      },
+      "attraction_category": {
+        "enum": [
+          "amusement",
+          "beach",
+          "garden",
+          "historic_site",
+          "landmark",
+          "market",
+          "museum",
+          "park",
+          "religious_site",
+          "sports",
+          "theater",
+          "transport_landmark",
+          "zoo"
+        ]
+      },
+      "attraction_ids": {
+        "type": "array",
+        "minItems": 1,
+        "uniqueItems": true,
+        "items": {
+          "type": "string",
+          "pattern": "^ATTR_[0-9]+$"
+        }
+      },
+      "restaurant_ids": {
+        "type": "array",
+        "minItems": 1,
+        "uniqueItems": true,
+        "items": {
+          "type": "string",
+          "pattern": "^REST_[0-9]+$"
+        }
+      }
+    }
+  },
+  "title": "NYC travel semantic case (no cases generated)",
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "expected_solvability": {
+            "const": "UNSOLVABLE"
+          }
+        }
+      },
+      "then": {
+        "required": [
+          "unsat_reason",
+          "affected_constraint_ids"
+        ],
+        "properties": {
+          "difficulty": {
+            "const": "unsolvable"
+          }
+        }
+      },
+      "else": {
+        "properties": {
+          "difficulty": {
+            "enum": [
+              "easy",
+              "medium",
+              "hard"
+            ]
+          }
+        },
+        "not": {
+          "anyOf": [
+            {
+              "required": [
+                "unsat_reason"
+              ]
+            },
+            {
+              "required": [
+                "affected_constraint_ids"
+              ]
+            }
+          ]
+        }
+      }
+    }
+  ]
+}

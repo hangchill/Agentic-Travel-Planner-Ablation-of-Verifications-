@@ -1,0 +1,1814 @@
+{
+  "catalog_version": "2.0.0",
+  "destination": "New York City",
+  "support_semantics": "Evidence/plan-field availability, not implemented-verifier status or guaranteed per-entity decidability.",
+  "categories": [
+    "trip",
+    "flight",
+    "accommodation",
+    "attraction",
+    "food",
+    "transport",
+    "schedule",
+    "budget",
+    "subjective",
+    "other"
+  ],
+  "operators": [
+    "between",
+    "eq",
+    "exclude",
+    "gte",
+    "in",
+    "include",
+    "lte",
+    "ne",
+    "not_in",
+    "prefer"
+  ],
+  "verification_types": [
+    "deterministic",
+    "llm_subjective",
+    "deterministic_plus_llm",
+    "unavailable_until_data_added"
+  ],
+  "constraints": [
+    {
+      "constraint_type": "trip_requirement",
+      "category": "trip",
+      "description": "Structured trip requirement. Resolve selector and operator against its variants.",
+      "value_type": "object",
+      "allowed_operators": [
+        "between",
+        "eq",
+        "gte",
+        "in",
+        "lte"
+      ],
+      "currently_supported": true,
+      "verification_types": [
+        "deterministic"
+      ],
+      "data_source": [
+        "verifier-only"
+      ],
+      "variants": [
+        {
+          "category": "trip",
+          "description": "Required number of itinerary days.",
+          "value_type": "positive_integer",
+          "allowed_operators": [
+            "eq",
+            "gte",
+            "lte",
+            "between"
+          ],
+          "default_hardness": "hard",
+          "verification_type": "deterministic",
+          "data_source": [
+            "verifier-only"
+          ],
+          "currently_supported": true,
+          "notes": "Plan-level check; no claim about real-world availability.",
+          "legacy_constraint_type": "trip_duration_days",
+          "selector": {
+            "kind": "duration_days"
+          }
+        },
+        {
+          "category": "trip",
+          "description": "Declared party size; does not establish booking capacity.",
+          "value_type": "positive_integer",
+          "allowed_operators": [
+            "eq",
+            "gte",
+            "lte",
+            "between"
+          ],
+          "default_hardness": "hard",
+          "verification_type": "deterministic",
+          "data_source": [
+            "verifier-only"
+          ],
+          "currently_supported": true,
+          "notes": "Plan-level check; no claim about real-world availability.",
+          "legacy_constraint_type": "number_of_travellers",
+          "selector": {
+            "kind": "traveller_count"
+          }
+        },
+        {
+          "category": "trip",
+          "description": "Declared traveller persona used to condition planning.",
+          "value_type": "persona",
+          "allowed_operators": [
+            "eq",
+            "in"
+          ],
+          "default_hardness": "hard",
+          "verification_type": "deterministic",
+          "data_source": [
+            "verifier-only"
+          ],
+          "currently_supported": true,
+          "notes": "Checks declared persona only; suitability requires separate domain constraints.",
+          "legacy_constraint_type": "traveller_type",
+          "selector": {
+            "kind": "persona"
+          }
+        }
+      ],
+      "notes": "Family support means at least one supported variant; per-variant support, verification, hardness and source are authoritative. No unsupported variant is activated by family aggregation."
+    },
+    {
+      "constraint_type": "flight_airport_requirement",
+      "category": "flight",
+      "description": "Structured flight airport requirement. Resolve selector and operator against its variants.",
+      "value_type": "object",
+      "allowed_operators": [
+        "eq",
+        "in"
+      ],
+      "currently_supported": false,
+      "verification_types": [
+        "unavailable_until_data_added"
+      ],
+      "data_source": [
+        "flight dataset"
+      ],
+      "variants": [
+        {
+          "category": "flight",
+          "description": "Required origin airport.",
+          "value_type": "airport",
+          "allowed_operators": [
+            "eq",
+            "in"
+          ],
+          "default_hardness": "hard",
+          "verification_type": "unavailable_until_data_added",
+          "data_source": [
+            "flight dataset"
+          ],
+          "currently_supported": false,
+          "notes": "Flight dataset not supplied. Origin airport may vary; trip destination remains NYC. Airline/airport identities require validation against future flight data.",
+          "legacy_constraint_type": "required_departure_airport",
+          "selector": {
+            "kind": "departure"
+          }
+        },
+        {
+          "category": "flight",
+          "description": "Required arrival airport serving the fixed NYC destination.",
+          "value_type": "airport",
+          "allowed_operators": [
+            "eq",
+            "in"
+          ],
+          "default_hardness": "hard",
+          "verification_type": "unavailable_until_data_added",
+          "data_source": [
+            "flight dataset"
+          ],
+          "currently_supported": false,
+          "notes": "Flight dataset not supplied. Origin airport may vary; trip destination remains NYC. Airline/airport identities require validation against future flight data.",
+          "legacy_constraint_type": "required_arrival_airport",
+          "selector": {
+            "kind": "arrival"
+          }
+        }
+      ],
+      "notes": "Family support means at least one supported variant; per-variant support, verification, hardness and source are authoritative. No unsupported variant is activated by family aggregation."
+    },
+    {
+      "constraint_type": "flight_time_constraint",
+      "category": "flight",
+      "description": "Structured flight time constraint. Resolve selector and operator against its variants.",
+      "value_type": "object",
+      "allowed_operators": [
+        "between"
+      ],
+      "currently_supported": false,
+      "verification_types": [
+        "unavailable_until_data_added"
+      ],
+      "data_source": [
+        "flight dataset"
+      ],
+      "variants": [
+        {
+          "category": "flight",
+          "description": "Preferred departure time window.",
+          "value_type": "time_window",
+          "allowed_operators": [
+            "between"
+          ],
+          "default_hardness": "soft",
+          "verification_type": "unavailable_until_data_added",
+          "data_source": [
+            "flight dataset"
+          ],
+          "currently_supported": false,
+          "notes": "Flight dataset not supplied. Origin airport may vary; trip destination remains NYC. Airline/airport identities require validation against future flight data.",
+          "legacy_constraint_type": "departure_time_preference",
+          "selector": {
+            "kind": "departure"
+          }
+        },
+        {
+          "category": "flight",
+          "description": "Preferred arrival time window.",
+          "value_type": "time_window",
+          "allowed_operators": [
+            "between"
+          ],
+          "default_hardness": "soft",
+          "verification_type": "unavailable_until_data_added",
+          "data_source": [
+            "flight dataset"
+          ],
+          "currently_supported": false,
+          "notes": "Flight dataset not supplied. Origin airport may vary; trip destination remains NYC. Airline/airport identities require validation against future flight data.",
+          "legacy_constraint_type": "arrival_time_preference",
+          "selector": {
+            "kind": "arrival"
+          }
+        }
+      ],
+      "notes": "Family support means at least one supported variant; per-variant support, verification, hardness and source are authoritative. No unsupported variant is activated by family aggregation."
+    },
+    {
+      "constraint_type": "flight_requirement",
+      "category": "flight",
+      "description": "Structured flight requirement. Resolve selector and operator against its variants.",
+      "value_type": "object",
+      "allowed_operators": [
+        "eq",
+        "in",
+        "prefer"
+      ],
+      "currently_supported": false,
+      "verification_types": [
+        "unavailable_until_data_added"
+      ],
+      "data_source": [
+        "flight dataset"
+      ],
+      "variants": [
+        {
+          "category": "flight",
+          "description": "Require a flight without connections.",
+          "value_type": "boolean",
+          "allowed_operators": [
+            "eq"
+          ],
+          "default_hardness": "hard",
+          "verification_type": "unavailable_until_data_added",
+          "data_source": [
+            "flight dataset"
+          ],
+          "currently_supported": false,
+          "notes": "Flight dataset not supplied. Origin airport may vary; trip destination remains NYC. Airline/airport identities require validation against future flight data.",
+          "legacy_constraint_type": "direct_flight_only",
+          "selector": {
+            "kind": "direct_only"
+          }
+        },
+        {
+          "category": "flight",
+          "description": "Preferred airline identity.",
+          "value_type": "string",
+          "allowed_operators": [
+            "eq",
+            "in",
+            "prefer"
+          ],
+          "default_hardness": "soft",
+          "verification_type": "unavailable_until_data_added",
+          "data_source": [
+            "flight dataset"
+          ],
+          "currently_supported": false,
+          "notes": "Flight dataset not supplied. Origin airport may vary; trip destination remains NYC. Airline/airport identities require validation against future flight data.",
+          "legacy_constraint_type": "airline_preference",
+          "selector": {
+            "kind": "airline"
+          }
+        }
+      ],
+      "notes": "Family support means at least one supported variant; per-variant support, verification, hardness and source are authoritative. No unsupported variant is activated by family aggregation."
+    },
+    {
+      "constraint_type": "accommodation_requirement",
+      "category": "accommodation",
+      "description": "Structured accommodation requirement. Resolve selector and operator against its variants.",
+      "value_type": "object",
+      "allowed_operators": [
+        "eq",
+        "exclude",
+        "gte",
+        "in",
+        "include"
+      ],
+      "currently_supported": false,
+      "verification_types": [
+        "unavailable_until_data_added"
+      ],
+      "data_source": [
+        "accommodation dataset"
+      ],
+      "variants": [
+        {
+          "category": "accommodation",
+          "description": "Required lodging class.",
+          "value_type": "lodging_type",
+          "allowed_operators": [
+            "eq",
+            "in"
+          ],
+          "default_hardness": "hard",
+          "verification_type": "unavailable_until_data_added",
+          "data_source": [
+            "accommodation dataset"
+          ],
+          "currently_supported": false,
+          "notes": "Accommodation dataset not supplied; timezone, price scope and rating scale must be verified on activation.",
+          "legacy_constraint_type": "accommodation_type",
+          "selector": {
+            "kind": "type"
+          }
+        },
+        {
+          "category": "accommodation",
+          "description": "Minimum lodging rating on a declared five-point scale.",
+          "value_type": "rating",
+          "allowed_operators": [
+            "gte"
+          ],
+          "default_hardness": "hard",
+          "verification_type": "unavailable_until_data_added",
+          "data_source": [
+            "accommodation dataset"
+          ],
+          "currently_supported": false,
+          "notes": "Accommodation dataset not supplied; timezone, price scope and rating scale must be verified on activation.",
+          "legacy_constraint_type": "minimum_hotel_rating",
+          "selector": {
+            "kind": "rating"
+          }
+        },
+        {
+          "category": "accommodation",
+          "description": "Required NYC lodging neighbourhood.",
+          "value_type": "string",
+          "allowed_operators": [
+            "eq",
+            "in"
+          ],
+          "default_hardness": "hard",
+          "verification_type": "unavailable_until_data_added",
+          "data_source": [
+            "accommodation dataset"
+          ],
+          "currently_supported": false,
+          "notes": "Accommodation dataset not supplied; timezone, price scope and rating scale must be verified on activation.",
+          "legacy_constraint_type": "required_neighbourhood",
+          "selector": {
+            "kind": "neighbourhood"
+          }
+        },
+        {
+          "category": "accommodation",
+          "description": "Required lodging amenity.",
+          "value_type": "amenity",
+          "allowed_operators": [
+            "include",
+            "exclude"
+          ],
+          "default_hardness": "hard",
+          "verification_type": "unavailable_until_data_added",
+          "data_source": [
+            "accommodation dataset"
+          ],
+          "currently_supported": false,
+          "notes": "Accommodation dataset not supplied; timezone, price scope and rating scale must be verified on activation.",
+          "legacy_constraint_type": "accommodation_amenity",
+          "selector": {
+            "kind": "amenity"
+          }
+        }
+      ],
+      "notes": "Family support means at least one supported variant; per-variant support, verification, hardness and source are authoritative. No unsupported variant is activated by family aggregation."
+    },
+    {
+      "constraint_type": "accommodation_time_constraint",
+      "category": "accommodation",
+      "description": "Structured accommodation time constraint. Resolve selector and operator against its variants.",
+      "value_type": "object",
+      "allowed_operators": [
+        "between",
+        "eq",
+        "gte",
+        "lte"
+      ],
+      "currently_supported": false,
+      "verification_types": [
+        "unavailable_until_data_added"
+      ],
+      "data_source": [
+        "accommodation dataset"
+      ],
+      "variants": [
+        {
+          "category": "accommodation",
+          "description": "Required lodging check-in date/time.",
+          "value_type": "datetime",
+          "allowed_operators": [
+            "eq",
+            "gte",
+            "lte",
+            "between"
+          ],
+          "default_hardness": "hard",
+          "verification_type": "unavailable_until_data_added",
+          "data_source": [
+            "accommodation dataset"
+          ],
+          "currently_supported": false,
+          "notes": "Accommodation dataset not supplied; timezone, price scope and rating scale must be verified on activation.",
+          "legacy_constraint_type": "check_in_constraint",
+          "selector": {
+            "kind": "check_in"
+          }
+        },
+        {
+          "category": "accommodation",
+          "description": "Required lodging check-out date/time.",
+          "value_type": "datetime",
+          "allowed_operators": [
+            "eq",
+            "gte",
+            "lte",
+            "between"
+          ],
+          "default_hardness": "hard",
+          "verification_type": "unavailable_until_data_added",
+          "data_source": [
+            "accommodation dataset"
+          ],
+          "currently_supported": false,
+          "notes": "Accommodation dataset not supplied; timezone, price scope and rating scale must be verified on activation.",
+          "legacy_constraint_type": "check_out_constraint",
+          "selector": {
+            "kind": "check_out"
+          }
+        }
+      ],
+      "notes": "Family support means at least one supported variant; per-variant support, verification, hardness and source are authoritative. No unsupported variant is activated by family aggregation."
+    },
+    {
+      "constraint_type": "accommodation_nightly_budget",
+      "category": "accommodation",
+      "description": "Structured accommodation nightly budget. Resolve selector and operator against its variants.",
+      "value_type": "object",
+      "allowed_operators": [
+        "between",
+        "lte"
+      ],
+      "currently_supported": false,
+      "verification_types": [
+        "unavailable_until_data_added"
+      ],
+      "data_source": [
+        "accommodation dataset"
+      ],
+      "variants": [
+        {
+          "category": "accommodation",
+          "description": "Maximum USD nightly lodging price.",
+          "value_type": "money",
+          "allowed_operators": [
+            "lte",
+            "between"
+          ],
+          "default_hardness": "hard",
+          "verification_type": "unavailable_until_data_added",
+          "data_source": [
+            "accommodation dataset"
+          ],
+          "currently_supported": false,
+          "notes": "Accommodation dataset not supplied; timezone, price scope and rating scale must be verified on activation.",
+          "legacy_constraint_type": "accommodation_budget_per_night",
+          "selector": {
+            "kind": "per_night"
+          }
+        }
+      ],
+      "notes": "Family support means at least one supported variant; per-variant support, verification, hardness and source are authoritative. No unsupported variant is activated by family aggregation."
+    },
+    {
+      "constraint_type": "attraction_requirement",
+      "category": "attraction",
+      "description": "Structured attraction requirement. Resolve selector and operator against its variants.",
+      "value_type": "object",
+      "allowed_operators": [
+        "exclude",
+        "gte",
+        "in",
+        "include",
+        "not_in"
+      ],
+      "currently_supported": true,
+      "verification_types": [
+        "deterministic",
+        "unavailable_until_data_added"
+      ],
+      "data_source": [
+        "attractions.csv",
+        "unavailable"
+      ],
+      "variants": [
+        {
+          "category": "attraction",
+          "description": "Include canonical attraction identities.",
+          "value_type": "attraction_ids",
+          "allowed_operators": [
+            "include"
+          ],
+          "default_hardness": "hard",
+          "verification_type": "deterministic",
+          "data_source": [
+            "attractions.csv"
+          ],
+          "currently_supported": true,
+          "notes": "Canonical identities/categories are available. Counts measure scheduled visits; repeated visits count separately unless constrained otherwise. No public-access guarantee.",
+          "legacy_constraint_type": "required_attraction",
+          "selector": {
+            "kind": "entity"
+          }
+        },
+        {
+          "category": "attraction",
+          "description": "Exclude canonical attraction identities.",
+          "value_type": "attraction_ids",
+          "allowed_operators": [
+            "exclude"
+          ],
+          "default_hardness": "hard",
+          "verification_type": "deterministic",
+          "data_source": [
+            "attractions.csv"
+          ],
+          "currently_supported": true,
+          "notes": "Canonical identities/categories are available. Counts measure scheduled visits; repeated visits count separately unless constrained otherwise. No public-access guarantee.",
+          "legacy_constraint_type": "excluded_attraction",
+          "selector": {
+            "kind": "entity"
+          }
+        },
+        {
+          "category": "attraction",
+          "description": "Include the specified attraction category.",
+          "value_type": "attraction_category",
+          "allowed_operators": [
+            "include",
+            "in"
+          ],
+          "default_hardness": "hard",
+          "verification_type": "deterministic",
+          "data_source": [
+            "attractions.csv"
+          ],
+          "currently_supported": true,
+          "notes": "Canonical identities/categories are available. Counts measure scheduled visits; repeated visits count separately unless constrained otherwise. No public-access guarantee.",
+          "legacy_constraint_type": "attraction_category",
+          "selector": {
+            "kind": "category"
+          }
+        },
+        {
+          "category": "attraction",
+          "description": "Exclude the specified attraction category.",
+          "value_type": "attraction_category",
+          "allowed_operators": [
+            "exclude",
+            "not_in"
+          ],
+          "default_hardness": "hard",
+          "verification_type": "deterministic",
+          "data_source": [
+            "attractions.csv"
+          ],
+          "currently_supported": true,
+          "notes": "Canonical identities/categories are available. Counts measure scheduled visits; repeated visits count separately unless constrained otherwise. No public-access guarantee.",
+          "legacy_constraint_type": "avoid_attraction_category",
+          "selector": {
+            "kind": "category"
+          }
+        },
+        {
+          "category": "attraction",
+          "description": "Minimum attraction rating.",
+          "value_type": "rating",
+          "allowed_operators": [
+            "gte"
+          ],
+          "default_hardness": "hard",
+          "verification_type": "unavailable_until_data_added",
+          "data_source": [
+            "unavailable"
+          ],
+          "currently_supported": false,
+          "notes": "attractions.csv has no rating field; Google matching/review ratings are not a canonical attraction rating.",
+          "legacy_constraint_type": "minimum_attraction_rating",
+          "selector": {
+            "kind": "rating"
+          }
+        }
+      ],
+      "notes": "Family support means at least one supported variant; per-variant support, verification, hardness and source are authoritative. No unsupported variant is activated by family aggregation."
+    },
+    {
+      "constraint_type": "attraction_count_constraint",
+      "category": "attraction",
+      "description": "Structured attraction count constraint. Resolve selector and operator against its variants.",
+      "value_type": "object",
+      "allowed_operators": [
+        "gte",
+        "lte"
+      ],
+      "currently_supported": true,
+      "verification_types": [
+        "deterministic"
+      ],
+      "data_source": [
+        "attractions.csv"
+      ],
+      "variants": [
+        {
+          "category": "attraction",
+          "description": "Minimum attraction visits across the trip.",
+          "value_type": "nonnegative_integer",
+          "allowed_operators": [
+            "gte"
+          ],
+          "default_hardness": "hard",
+          "verification_type": "deterministic",
+          "data_source": [
+            "attractions.csv"
+          ],
+          "currently_supported": true,
+          "notes": "Canonical identities/categories are available. Counts measure scheduled visits; repeated visits count separately unless constrained otherwise. No public-access guarantee.",
+          "legacy_constraint_type": "minimum_attraction_count",
+          "selector": {
+            "kind": "visits"
+          }
+        },
+        {
+          "category": "attraction",
+          "description": "Maximum attraction visits across the trip.",
+          "value_type": "nonnegative_integer",
+          "allowed_operators": [
+            "lte"
+          ],
+          "default_hardness": "hard",
+          "verification_type": "deterministic",
+          "data_source": [
+            "attractions.csv"
+          ],
+          "currently_supported": true,
+          "notes": "Canonical identities/categories are available. Counts measure scheduled visits; repeated visits count separately unless constrained otherwise. No public-access guarantee.",
+          "legacy_constraint_type": "maximum_attraction_count",
+          "selector": {
+            "kind": "visits"
+          }
+        }
+      ],
+      "notes": "Family support means at least one supported variant; per-variant support, verification, hardness and source are authoritative. No unsupported variant is activated by family aggregation."
+    },
+    {
+      "constraint_type": "restaurant_requirement",
+      "category": "food",
+      "description": "Structured restaurant requirement. Resolve selector and operator against its variants.",
+      "value_type": "object",
+      "allowed_operators": [
+        "exclude",
+        "gte",
+        "in",
+        "include",
+        "not_in"
+      ],
+      "currently_supported": true,
+      "verification_types": [
+        "deterministic"
+      ],
+      "data_source": [
+        "restaurants.csv"
+      ],
+      "variants": [
+        {
+          "category": "food",
+          "description": "Require explicit restaurant dietary evidence.",
+          "value_type": "diet",
+          "allowed_operators": [
+            "include"
+          ],
+          "default_hardness": "hard",
+          "verification_type": "deterministic",
+          "data_source": [
+            "restaurants.csv"
+          ],
+          "currently_supported": true,
+          "notes": "Dietary/cuisine evidence is sparse: absent tags are UNKNOWN. Meal budgets use experimental price intervals only, not an estimated meal cost; overlapping/open-ended intervals may be indeterminate. Ratings are historical source observations, not guarantees.",
+          "legacy_constraint_type": "dietary_requirement",
+          "selector": {
+            "kind": "diet"
+          }
+        },
+        {
+          "category": "food",
+          "description": "Include a cuisine label.",
+          "value_type": "string",
+          "allowed_operators": [
+            "include",
+            "in"
+          ],
+          "default_hardness": "hard",
+          "verification_type": "deterministic",
+          "data_source": [
+            "restaurants.csv"
+          ],
+          "currently_supported": true,
+          "notes": "Dietary/cuisine evidence is sparse: absent tags are UNKNOWN. Meal budgets use experimental price intervals only, not an estimated meal cost; overlapping/open-ended intervals may be indeterminate. Ratings are historical source observations, not guarantees.",
+          "legacy_constraint_type": "cuisine",
+          "selector": {
+            "kind": "cuisine"
+          }
+        },
+        {
+          "category": "food",
+          "description": "Exclude a cuisine label.",
+          "value_type": "string",
+          "allowed_operators": [
+            "exclude",
+            "not_in"
+          ],
+          "default_hardness": "hard",
+          "verification_type": "deterministic",
+          "data_source": [
+            "restaurants.csv"
+          ],
+          "currently_supported": true,
+          "notes": "Dietary/cuisine evidence is sparse: absent tags are UNKNOWN. Meal budgets use experimental price intervals only, not an estimated meal cost; overlapping/open-ended intervals may be indeterminate. Ratings are historical source observations, not guarantees.",
+          "legacy_constraint_type": "excluded_cuisine",
+          "selector": {
+            "kind": "cuisine"
+          }
+        },
+        {
+          "category": "food",
+          "description": "Minimum canonical Google Maps restaurant rating.",
+          "value_type": "rating",
+          "allowed_operators": [
+            "gte"
+          ],
+          "default_hardness": "hard",
+          "verification_type": "deterministic",
+          "data_source": [
+            "restaurants.csv"
+          ],
+          "currently_supported": true,
+          "notes": "Dietary/cuisine evidence is sparse: absent tags are UNKNOWN. Meal budgets use experimental price intervals only, not an estimated meal cost; overlapping/open-ended intervals may be indeterminate. Ratings are historical source observations, not guarantees.",
+          "legacy_constraint_type": "minimum_restaurant_rating",
+          "selector": {
+            "kind": "rating"
+          }
+        },
+        {
+          "category": "food",
+          "description": "Include canonical restaurant identities.",
+          "value_type": "restaurant_ids",
+          "allowed_operators": [
+            "include"
+          ],
+          "default_hardness": "hard",
+          "verification_type": "deterministic",
+          "data_source": [
+            "restaurants.csv"
+          ],
+          "currently_supported": true,
+          "notes": "Use canonical REST_ IDs; restaurant availability is a separate constraint.",
+          "legacy_constraint_type": "required_restaurant",
+          "selector": {
+            "kind": "entity"
+          }
+        },
+        {
+          "category": "food",
+          "description": "Exclude canonical restaurant identities.",
+          "value_type": "restaurant_ids",
+          "allowed_operators": [
+            "exclude"
+          ],
+          "default_hardness": "hard",
+          "verification_type": "deterministic",
+          "data_source": [
+            "restaurants.csv"
+          ],
+          "currently_supported": true,
+          "notes": "Use canonical REST_ IDs; restaurant availability is a separate constraint.",
+          "legacy_constraint_type": "avoid_restaurant",
+          "selector": {
+            "kind": "entity"
+          }
+        }
+      ],
+      "notes": "Family support means at least one supported variant; per-variant support, verification, hardness and source are authoritative. No unsupported variant is activated by family aggregation."
+    },
+    {
+      "constraint_type": "meal_budget_constraint",
+      "category": "food",
+      "description": "Structured meal budget constraint. Resolve selector and operator against its variants.",
+      "value_type": "object",
+      "allowed_operators": [
+        "between",
+        "lte"
+      ],
+      "currently_supported": true,
+      "verification_types": [
+        "deterministic"
+      ],
+      "data_source": [
+        "restaurants.csv"
+      ],
+      "variants": [
+        {
+          "category": "food",
+          "description": "Maximum approximate USD price range per diner.",
+          "value_type": "money",
+          "allowed_operators": [
+            "lte",
+            "between"
+          ],
+          "default_hardness": "hard",
+          "verification_type": "deterministic",
+          "data_source": [
+            "restaurants.csv"
+          ],
+          "currently_supported": true,
+          "notes": "Dietary/cuisine evidence is sparse: absent tags are UNKNOWN. Meal budgets use experimental price intervals only, not an estimated meal cost; overlapping/open-ended intervals may be indeterminate. Ratings are historical source observations, not guarantees.",
+          "legacy_constraint_type": "meal_budget_per_person",
+          "selector": {
+            "kind": "per_person"
+          }
+        }
+      ],
+      "notes": "Family support means at least one supported variant; per-variant support, verification, hardness and source are authoritative. No unsupported variant is activated by family aggregation."
+    },
+    {
+      "constraint_type": "transport_requirement",
+      "category": "transport",
+      "description": "Structured transport requirement. Resolve selector and operator against its variants.",
+      "value_type": "object",
+      "allowed_operators": [
+        "eq",
+        "in",
+        "ne",
+        "not_in",
+        "prefer"
+      ],
+      "currently_supported": false,
+      "verification_types": [
+        "unavailable_until_data_added"
+      ],
+      "data_source": [
+        "transport/travel-time dataset"
+      ],
+      "variants": [
+        {
+          "category": "transport",
+          "description": "Prefer a mode with available routing evidence.",
+          "value_type": "transport_mode",
+          "allowed_operators": [
+            "eq",
+            "in",
+            "prefer"
+          ],
+          "default_hardness": "soft",
+          "verification_type": "unavailable_until_data_added",
+          "data_source": [
+            "transport/travel-time dataset"
+          ],
+          "currently_supported": false,
+          "notes": "No routing/travel-time dataset is present. Coordinates alone do not establish route time/distance or mode feasibility.",
+          "legacy_constraint_type": "preferred_transport_mode",
+          "selector": {
+            "kind": "mode"
+          }
+        },
+        {
+          "category": "transport",
+          "description": "Exclude routing modes.",
+          "value_type": "transport_mode",
+          "allowed_operators": [
+            "ne",
+            "not_in"
+          ],
+          "default_hardness": "hard",
+          "verification_type": "unavailable_until_data_added",
+          "data_source": [
+            "transport/travel-time dataset"
+          ],
+          "currently_supported": false,
+          "notes": "No routing/travel-time dataset is present. Coordinates alone do not establish route time/distance or mode feasibility.",
+          "legacy_constraint_type": "avoid_transport_mode",
+          "selector": {
+            "kind": "mode"
+          }
+        }
+      ],
+      "notes": "Family support means at least one supported variant; per-variant support, verification, hardness and source are authoritative. No unsupported variant is activated by family aggregation."
+    },
+    {
+      "constraint_type": "transport_limit",
+      "category": "transport",
+      "description": "Structured transport limit. Resolve selector and operator against its variants.",
+      "value_type": "object",
+      "allowed_operators": [
+        "lte"
+      ],
+      "currently_supported": false,
+      "verification_types": [
+        "unavailable_until_data_added"
+      ],
+      "data_source": [
+        "transport/travel-time dataset"
+      ],
+      "variants": [
+        {
+          "category": "transport",
+          "description": "Maximum per-leg travel duration in minutes.",
+          "value_type": "nonnegative_number",
+          "allowed_operators": [
+            "lte"
+          ],
+          "default_hardness": "hard",
+          "verification_type": "unavailable_until_data_added",
+          "data_source": [
+            "transport/travel-time dataset"
+          ],
+          "currently_supported": false,
+          "notes": "No routing/travel-time dataset is present. Coordinates alone do not establish route time/distance or mode feasibility.",
+          "legacy_constraint_type": "max_travel_time",
+          "selector": {
+            "kind": "travel_time_minutes"
+          }
+        },
+        {
+          "category": "transport",
+          "description": "Maximum walking minutes per leg.",
+          "value_type": "nonnegative_number",
+          "allowed_operators": [
+            "lte"
+          ],
+          "default_hardness": "hard",
+          "verification_type": "unavailable_until_data_added",
+          "data_source": [
+            "transport/travel-time dataset"
+          ],
+          "currently_supported": false,
+          "notes": "No routing/travel-time dataset is present. Coordinates alone do not establish route time/distance or mode feasibility.",
+          "legacy_constraint_type": "max_walking_time",
+          "selector": {
+            "kind": "walking_time_minutes"
+          }
+        },
+        {
+          "category": "transport",
+          "description": "Maximum walking distance in metres per leg.",
+          "value_type": "nonnegative_number",
+          "allowed_operators": [
+            "lte"
+          ],
+          "default_hardness": "hard",
+          "verification_type": "unavailable_until_data_added",
+          "data_source": [
+            "transport/travel-time dataset"
+          ],
+          "currently_supported": false,
+          "notes": "No routing/travel-time dataset is present. Coordinates alone do not establish route time/distance or mode feasibility.",
+          "legacy_constraint_type": "max_walking_distance",
+          "selector": {
+            "kind": "walking_distance_metres"
+          }
+        }
+      ],
+      "notes": "Family support means at least one supported variant; per-variant support, verification, hardness and source are authoritative. No unsupported variant is activated by family aggregation."
+    },
+    {
+      "constraint_type": "schedule_time_constraint",
+      "category": "schedule",
+      "description": "Structured schedule time constraint. Resolve selector and operator against its variants.",
+      "value_type": "object",
+      "allowed_operators": [
+        "between",
+        "gte",
+        "lte"
+      ],
+      "currently_supported": true,
+      "verification_types": [
+        "deterministic"
+      ],
+      "data_source": [
+        "verifier-only"
+      ],
+      "variants": [
+        {
+          "category": "schedule",
+          "description": "Earliest permitted daily planned start, NYC local time.",
+          "value_type": "time",
+          "allowed_operators": [
+            "gte"
+          ],
+          "default_hardness": "hard",
+          "verification_type": "deterministic",
+          "data_source": [
+            "verifier-only"
+          ],
+          "currently_supported": true,
+          "notes": "Checks declared plan intervals only; does not prove opening hours, booking availability or travel feasibility. Times are America/New_York local wall time; trip dates/DST must be supplied later. Free time is within the explicit daily planning window, buffers are between adjacent intervals.",
+          "legacy_constraint_type": "earliest_start_time",
+          "selector": {
+            "kind": "daily_start"
+          }
+        },
+        {
+          "category": "schedule",
+          "description": "Latest permitted daily planned end, NYC local time.",
+          "value_type": "time",
+          "allowed_operators": [
+            "lte"
+          ],
+          "default_hardness": "hard",
+          "verification_type": "deterministic",
+          "data_source": [
+            "verifier-only"
+          ],
+          "currently_supported": true,
+          "notes": "Checks declared plan intervals only; does not prove opening hours, booking availability or travel feasibility. Times are America/New_York local wall time; trip dates/DST must be supplied later. Free time is within the explicit daily planning window, buffers are between adjacent intervals.",
+          "legacy_constraint_type": "latest_end_time",
+          "selector": {
+            "kind": "daily_end"
+          }
+        },
+        {
+          "category": "schedule",
+          "description": "Required planned activity time window on a trip day.",
+          "value_type": "activity_window",
+          "allowed_operators": [
+            "between"
+          ],
+          "default_hardness": "hard",
+          "verification_type": "deterministic",
+          "data_source": [
+            "verifier-only"
+          ],
+          "currently_supported": true,
+          "notes": "Checks declared plan intervals only; does not prove opening hours, booking availability or travel feasibility. Times are America/New_York local wall time; trip dates/DST must be supplied later. Free time is within the explicit daily planning window, buffers are between adjacent intervals.",
+          "legacy_constraint_type": "required_activity_time",
+          "selector": {
+            "kind": "activity_window"
+          }
+        },
+        {
+          "category": "schedule",
+          "description": "Required planned meal time window on a trip day.",
+          "value_type": "meal_window",
+          "allowed_operators": [
+            "between"
+          ],
+          "default_hardness": "hard",
+          "verification_type": "deterministic",
+          "data_source": [
+            "verifier-only"
+          ],
+          "currently_supported": true,
+          "notes": "Checks declared plan intervals only; does not prove opening hours, booking availability or travel feasibility. Times are America/New_York local wall time; trip dates/DST must be supplied later. Free time is within the explicit daily planning window, buffers are between adjacent intervals.",
+          "legacy_constraint_type": "meal_time_constraint",
+          "selector": {
+            "kind": "meal_window"
+          }
+        }
+      ],
+      "notes": "Family support means at least one supported variant; per-variant support, verification, hardness and source are authoritative. No unsupported variant is activated by family aggregation."
+    },
+    {
+      "constraint_type": "schedule_requirement",
+      "category": "schedule",
+      "description": "Structured schedule requirement. Resolve selector and operator against its variants.",
+      "value_type": "object",
+      "allowed_operators": [
+        "gte",
+        "lte"
+      ],
+      "currently_supported": true,
+      "verification_types": [
+        "deterministic"
+      ],
+      "data_source": [
+        "verifier-only"
+      ],
+      "variants": [
+        {
+          "category": "schedule",
+          "description": "Maximum number of scheduled activities per day.",
+          "value_type": "nonnegative_integer",
+          "allowed_operators": [
+            "lte"
+          ],
+          "default_hardness": "hard",
+          "verification_type": "deterministic",
+          "data_source": [
+            "verifier-only"
+          ],
+          "currently_supported": true,
+          "notes": "Checks declared plan intervals only; does not prove opening hours, booking availability or travel feasibility. Times are America/New_York local wall time; trip dates/DST must be supplied later. Free time is within the explicit daily planning window, buffers are between adjacent intervals.",
+          "legacy_constraint_type": "max_activities_per_day",
+          "selector": {
+            "kind": "activities_per_day"
+          }
+        },
+        {
+          "category": "schedule",
+          "description": "Minimum unscheduled minutes per day.",
+          "value_type": "nonnegative_number",
+          "allowed_operators": [
+            "gte"
+          ],
+          "default_hardness": "hard",
+          "verification_type": "deterministic",
+          "data_source": [
+            "verifier-only"
+          ],
+          "currently_supported": true,
+          "notes": "Checks declared plan intervals only; does not prove opening hours, booking availability or travel feasibility. Times are America/New_York local wall time; trip dates/DST must be supplied later. Free time is within the explicit daily planning window, buffers are between adjacent intervals.",
+          "legacy_constraint_type": "free_time_requirement",
+          "selector": {
+            "kind": "free_minutes_per_day"
+          }
+        },
+        {
+          "category": "schedule",
+          "description": "Minimum buffer minutes between scheduled activities.",
+          "value_type": "nonnegative_number",
+          "allowed_operators": [
+            "gte"
+          ],
+          "default_hardness": "hard",
+          "verification_type": "deterministic",
+          "data_source": [
+            "verifier-only"
+          ],
+          "currently_supported": true,
+          "notes": "Checks declared plan intervals only; does not prove opening hours, booking availability or travel feasibility. Times are America/New_York local wall time; trip dates/DST must be supplied later. Free time is within the explicit daily planning window, buffers are between adjacent intervals.",
+          "legacy_constraint_type": "buffer_time_requirement",
+          "selector": {
+            "kind": "buffer_minutes"
+          }
+        }
+      ],
+      "notes": "Family support means at least one supported variant; per-variant support, verification, hardness and source are authoritative. No unsupported variant is activated by family aggregation."
+    },
+    {
+      "constraint_type": "budget_constraint",
+      "category": "budget",
+      "description": "Structured budget constraint. Resolve selector and operator against its variants.",
+      "value_type": "object",
+      "allowed_operators": [
+        "between",
+        "lte"
+      ],
+      "currently_supported": false,
+      "verification_types": [
+        "unavailable_until_data_added"
+      ],
+      "data_source": [
+        "accommodation dataset",
+        "flight dataset",
+        "unavailable"
+      ],
+      "variants": [
+        {
+          "category": "budget",
+          "description": "Maximum whole-trip USD budget.",
+          "value_type": "money",
+          "allowed_operators": [
+            "lte",
+            "between"
+          ],
+          "default_hardness": "hard",
+          "verification_type": "unavailable_until_data_added",
+          "data_source": [
+            "unavailable"
+          ],
+          "currently_supported": false,
+          "notes": "No complete cost evidence/aggregation policy exists. Restaurant intervals do not define meal cost; admission/lodging/flight prices are absent. flight_budget is defined once here and also applies to flight selection. Money is USD per declared scope; party-size inclusion must be explicit.",
+          "legacy_constraint_type": "total_budget",
+          "selector": {
+            "kind": "trip"
+          }
+        },
+        {
+          "category": "budget",
+          "description": "Maximum USD budget on each trip day.",
+          "value_type": "money",
+          "allowed_operators": [
+            "lte",
+            "between"
+          ],
+          "default_hardness": "hard",
+          "verification_type": "unavailable_until_data_added",
+          "data_source": [
+            "unavailable"
+          ],
+          "currently_supported": false,
+          "notes": "No complete cost evidence/aggregation policy exists. Restaurant intervals do not define meal cost; admission/lodging/flight prices are absent. flight_budget is defined once here and also applies to flight selection. Money is USD per declared scope; party-size inclusion must be explicit.",
+          "legacy_constraint_type": "daily_budget",
+          "selector": {
+            "kind": "daily"
+          }
+        },
+        {
+          "category": "budget",
+          "description": "Maximum USD food spend across the trip.",
+          "value_type": "money",
+          "allowed_operators": [
+            "lte",
+            "between"
+          ],
+          "default_hardness": "hard",
+          "verification_type": "unavailable_until_data_added",
+          "data_source": [
+            "unavailable"
+          ],
+          "currently_supported": false,
+          "notes": "No complete cost evidence/aggregation policy exists. Restaurant intervals do not define meal cost; admission/lodging/flight prices are absent. flight_budget is defined once here and also applies to flight selection. Money is USD per declared scope; party-size inclusion must be explicit.",
+          "legacy_constraint_type": "food_budget",
+          "selector": {
+            "kind": "food"
+          }
+        },
+        {
+          "category": "budget",
+          "description": "Maximum USD admission spend across the trip.",
+          "value_type": "money",
+          "allowed_operators": [
+            "lte",
+            "between"
+          ],
+          "default_hardness": "hard",
+          "verification_type": "unavailable_until_data_added",
+          "data_source": [
+            "unavailable"
+          ],
+          "currently_supported": false,
+          "notes": "No complete cost evidence/aggregation policy exists. Restaurant intervals do not define meal cost; admission/lodging/flight prices are absent. flight_budget is defined once here and also applies to flight selection. Money is USD per declared scope; party-size inclusion must be explicit.",
+          "legacy_constraint_type": "attraction_budget",
+          "selector": {
+            "kind": "attraction"
+          }
+        },
+        {
+          "category": "budget",
+          "description": "Maximum USD lodging spend across the trip.",
+          "value_type": "money",
+          "allowed_operators": [
+            "lte",
+            "between"
+          ],
+          "default_hardness": "hard",
+          "verification_type": "unavailable_until_data_added",
+          "data_source": [
+            "accommodation dataset"
+          ],
+          "currently_supported": false,
+          "notes": "No complete cost evidence/aggregation policy exists. Restaurant intervals do not define meal cost; admission/lodging/flight prices are absent. flight_budget is defined once here and also applies to flight selection. Money is USD per declared scope; party-size inclusion must be explicit.",
+          "legacy_constraint_type": "accommodation_budget",
+          "selector": {
+            "kind": "accommodation"
+          }
+        },
+        {
+          "category": "budget",
+          "description": "Maximum USD flight spend across the trip.",
+          "value_type": "money",
+          "allowed_operators": [
+            "lte",
+            "between"
+          ],
+          "default_hardness": "hard",
+          "verification_type": "unavailable_until_data_added",
+          "data_source": [
+            "flight dataset"
+          ],
+          "currently_supported": false,
+          "notes": "No complete cost evidence/aggregation policy exists. Restaurant intervals do not define meal cost; admission/lodging/flight prices are absent. flight_budget is defined once here and also applies to flight selection. Money is USD per declared scope; party-size inclusion must be explicit.",
+          "legacy_constraint_type": "flight_budget",
+          "selector": {
+            "kind": "flight"
+          }
+        }
+      ],
+      "notes": "Family support means at least one supported variant; per-variant support, verification, hardness and source are authoritative. No unsupported variant is activated by family aggregation."
+    },
+    {
+      "constraint_type": "subjective_preference",
+      "category": "subjective",
+      "description": "Structured subjective preference. Resolve selector and operator against its variants.",
+      "value_type": "object",
+      "allowed_operators": [
+        "eq",
+        "prefer"
+      ],
+      "currently_supported": true,
+      "verification_types": [
+        "deterministic_plus_llm",
+        "llm_subjective"
+      ],
+      "data_source": [
+        "attraction_reviews.csv",
+        "attractions.csv",
+        "restaurant_reviews.csv",
+        "verifier-only"
+      ],
+      "variants": [
+        {
+          "category": "subjective",
+          "description": "Prefer quiet dining.",
+          "value_type": "boolean",
+          "allowed_operators": [
+            "eq",
+            "prefer"
+          ],
+          "default_hardness": "soft",
+          "verification_type": "llm_subjective",
+          "data_source": [
+            "restaurant_reviews.csv"
+          ],
+          "currently_supported": true,
+          "notes": "Historical text evidence exists only for mapped entities with nonempty reviews. No subjective labels/verifier are implemented here. Missing or inconclusive evidence is UNKNOWN; a benchmark solvability label must not presume every entity is verifiable.",
+          "legacy_constraint_type": "quiet_restaurant",
+          "selector": {
+            "target": "restaurant",
+            "attribute": "quiet"
+          }
+        },
+        {
+          "category": "subjective",
+          "description": "Prefer romantic dining.",
+          "value_type": "boolean",
+          "allowed_operators": [
+            "eq",
+            "prefer"
+          ],
+          "default_hardness": "soft",
+          "verification_type": "llm_subjective",
+          "data_source": [
+            "restaurant_reviews.csv"
+          ],
+          "currently_supported": true,
+          "notes": "Historical text evidence exists only for mapped entities with nonempty reviews. No subjective labels/verifier are implemented here. Missing or inconclusive evidence is UNKNOWN; a benchmark solvability label must not presume every entity is verifiable.",
+          "legacy_constraint_type": "romantic_restaurant",
+          "selector": {
+            "target": "restaurant",
+            "attribute": "romantic"
+          }
+        },
+        {
+          "category": "subjective",
+          "description": "Prefer authentic dining experiences.",
+          "value_type": "boolean",
+          "allowed_operators": [
+            "eq",
+            "prefer"
+          ],
+          "default_hardness": "soft",
+          "verification_type": "llm_subjective",
+          "data_source": [
+            "restaurant_reviews.csv"
+          ],
+          "currently_supported": true,
+          "notes": "Historical text evidence exists only for mapped entities with nonempty reviews. No subjective labels/verifier are implemented here. Missing or inconclusive evidence is UNKNOWN; a benchmark solvability label must not presume every entity is verifiable.",
+          "legacy_constraint_type": "authentic_restaurant",
+          "selector": {
+            "target": "restaurant",
+            "attribute": "authentic"
+          }
+        },
+        {
+          "category": "subjective",
+          "description": "Prefer family-friendly dining.",
+          "value_type": "boolean",
+          "allowed_operators": [
+            "eq",
+            "prefer"
+          ],
+          "default_hardness": "soft",
+          "verification_type": "llm_subjective",
+          "data_source": [
+            "restaurant_reviews.csv"
+          ],
+          "currently_supported": true,
+          "notes": "Historical text evidence exists only for mapped entities with nonempty reviews. No subjective labels/verifier are implemented here. Missing or inconclusive evidence is UNKNOWN; a benchmark solvability label must not presume every entity is verifiable.",
+          "legacy_constraint_type": "family_friendly_restaurant",
+          "selector": {
+            "target": "restaurant",
+            "attribute": "family_friendly"
+          }
+        },
+        {
+          "category": "subjective",
+          "description": "Prefer group-suitable dining.",
+          "value_type": "boolean",
+          "allowed_operators": [
+            "eq",
+            "prefer"
+          ],
+          "default_hardness": "soft",
+          "verification_type": "llm_subjective",
+          "data_source": [
+            "restaurant_reviews.csv"
+          ],
+          "currently_supported": true,
+          "notes": "Historical text evidence exists only for mapped entities with nonempty reviews. No subjective labels/verifier are implemented here. Missing or inconclusive evidence is UNKNOWN; a benchmark solvability label must not presume every entity is verifiable.",
+          "legacy_constraint_type": "good_for_groups_restaurant",
+          "selector": {
+            "target": "restaurant",
+            "attribute": "good_for_groups"
+          }
+        },
+        {
+          "category": "subjective",
+          "description": "Prefer scenic attractions.",
+          "value_type": "boolean",
+          "allowed_operators": [
+            "eq",
+            "prefer"
+          ],
+          "default_hardness": "soft",
+          "verification_type": "llm_subjective",
+          "data_source": [
+            "attraction_reviews.csv"
+          ],
+          "currently_supported": true,
+          "notes": "Historical text evidence exists only for mapped entities with nonempty reviews. No subjective labels/verifier are implemented here. Missing or inconclusive evidence is UNKNOWN; a benchmark solvability label must not presume every entity is verifiable.",
+          "legacy_constraint_type": "scenic_attraction",
+          "selector": {
+            "target": "attraction",
+            "attribute": "scenic"
+          }
+        },
+        {
+          "category": "subjective",
+          "description": "Prefer family-friendly attractions.",
+          "value_type": "boolean",
+          "allowed_operators": [
+            "eq",
+            "prefer"
+          ],
+          "default_hardness": "soft",
+          "verification_type": "llm_subjective",
+          "data_source": [
+            "attraction_reviews.csv"
+          ],
+          "currently_supported": true,
+          "notes": "Historical text evidence exists only for mapped entities with nonempty reviews. No subjective labels/verifier are implemented here. Missing or inconclusive evidence is UNKNOWN; a benchmark solvability label must not presume every entity is verifiable.",
+          "legacy_constraint_type": "family_friendly_attraction",
+          "selector": {
+            "target": "attraction",
+            "attribute": "family_friendly"
+          }
+        },
+        {
+          "category": "subjective",
+          "description": "Prefer educational attractions.",
+          "value_type": "boolean",
+          "allowed_operators": [
+            "eq",
+            "prefer"
+          ],
+          "default_hardness": "soft",
+          "verification_type": "llm_subjective",
+          "data_source": [
+            "attraction_reviews.csv"
+          ],
+          "currently_supported": true,
+          "notes": "Historical text evidence exists only for mapped entities with nonempty reviews. No subjective labels/verifier are implemented here. Missing or inconclusive evidence is UNKNOWN; a benchmark solvability label must not presume every entity is verifiable.",
+          "legacy_constraint_type": "educational_attraction",
+          "selector": {
+            "target": "attraction",
+            "attribute": "educational"
+          }
+        },
+        {
+          "category": "subjective",
+          "description": "Prefer a relaxing itinerary.",
+          "value_type": "boolean",
+          "allowed_operators": [
+            "eq",
+            "prefer"
+          ],
+          "default_hardness": "soft",
+          "verification_type": "deterministic_plus_llm",
+          "data_source": [
+            "restaurant_reviews.csv",
+            "attraction_reviews.csv",
+            "verifier-only"
+          ],
+          "currently_supported": true,
+          "notes": "Historical text evidence exists only for mapped entities with nonempty reviews. No subjective labels/verifier are implemented here. Missing or inconclusive evidence is UNKNOWN; a benchmark solvability label must not presume every entity is verifiable.",
+          "legacy_constraint_type": "relaxing_itinerary",
+          "selector": {
+            "target": "itinerary",
+            "attribute": "relaxing"
+          }
+        },
+        {
+          "category": "subjective",
+          "description": "Preferred crowd level across selected places.",
+          "value_type": "crowd_level",
+          "allowed_operators": [
+            "eq",
+            "prefer"
+          ],
+          "default_hardness": "soft",
+          "verification_type": "llm_subjective",
+          "data_source": [
+            "restaurant_reviews.csv",
+            "attraction_reviews.csv"
+          ],
+          "currently_supported": true,
+          "notes": "Historical text evidence exists only for mapped entities with nonempty reviews. No subjective labels/verifier are implemented here. Missing or inconclusive evidence is UNKNOWN; a benchmark solvability label must not presume every entity is verifiable.",
+          "legacy_constraint_type": "crowdedness_preference",
+          "selector": {
+            "target": "place",
+            "attribute": "crowdedness"
+          }
+        },
+        {
+          "category": "subjective",
+          "description": "Prefer cultural experiences across the itinerary.",
+          "value_type": "boolean",
+          "allowed_operators": [
+            "eq",
+            "prefer"
+          ],
+          "default_hardness": "soft",
+          "verification_type": "deterministic_plus_llm",
+          "data_source": [
+            "attractions.csv",
+            "attraction_reviews.csv",
+            "verifier-only"
+          ],
+          "currently_supported": true,
+          "notes": "Historical text evidence exists only for mapped entities with nonempty reviews. No subjective labels/verifier are implemented here. Missing or inconclusive evidence is UNKNOWN; a benchmark solvability label must not presume every entity is verifiable.",
+          "legacy_constraint_type": "cultural_trip",
+          "selector": {
+            "target": "itinerary",
+            "attribute": "cultural"
+          }
+        },
+        {
+          "category": "subjective",
+          "description": "Prefer adventurous experiences across the itinerary.",
+          "value_type": "boolean",
+          "allowed_operators": [
+            "eq",
+            "prefer"
+          ],
+          "default_hardness": "soft",
+          "verification_type": "deterministic_plus_llm",
+          "data_source": [
+            "attraction_reviews.csv",
+            "verifier-only"
+          ],
+          "currently_supported": true,
+          "notes": "Historical text evidence exists only for mapped entities with nonempty reviews. No subjective labels/verifier are implemented here. Missing or inconclusive evidence is UNKNOWN; a benchmark solvability label must not presume every entity is verifiable.",
+          "legacy_constraint_type": "adventurous_trip",
+          "selector": {
+            "target": "itinerary",
+            "attribute": "adventurous"
+          }
+        }
+      ],
+      "notes": "Family support means at least one supported variant; per-variant support, verification, hardness and source are authoritative. No unsupported variant is activated by family aggregation."
+    },
+    {
+      "constraint_type": "other_requirement",
+      "category": "other",
+      "description": "Structured other requirement. Resolve selector and operator against its variants.",
+      "value_type": "object",
+      "allowed_operators": [
+        "eq",
+        "gte",
+        "include"
+      ],
+      "currently_supported": true,
+      "verification_types": [
+        "deterministic",
+        "unavailable_until_data_added"
+      ],
+      "data_source": [
+        "attractions.csv",
+        "unavailable",
+        "verifier-only"
+      ],
+      "variants": [
+        {
+          "category": "other",
+          "description": "Require a defined accessibility feature.",
+          "value_type": "accessibility",
+          "allowed_operators": [
+            "include"
+          ],
+          "default_hardness": "hard",
+          "verification_type": "unavailable_until_data_added",
+          "data_source": [
+            "unavailable"
+          ],
+          "currently_supported": false,
+          "notes": "Explicitly typed cross-cutting requirement; no arbitrary free text. Accessibility, indoor status, weather and event data are not available. Rest/repetition check declared intervals and canonical categories only.",
+          "legacy_constraint_type": "accessibility_requirement",
+          "selector": {
+            "kind": "accessibility"
+          }
+        },
+        {
+          "category": "other",
+          "description": "Prefer weather-compatible visits.",
+          "value_type": "weather_policy",
+          "allowed_operators": [
+            "eq"
+          ],
+          "default_hardness": "hard",
+          "verification_type": "unavailable_until_data_added",
+          "data_source": [
+            "unavailable"
+          ],
+          "currently_supported": false,
+          "notes": "Explicitly typed cross-cutting requirement; no arbitrary free text. Accessibility, indoor status, weather and event data are not available. Rest/repetition check declared intervals and canonical categories only.",
+          "legacy_constraint_type": "weather_sensitive_preference",
+          "selector": {
+            "kind": "weather_sensitive"
+          }
+        },
+        {
+          "category": "other",
+          "description": "Require explicitly indoor venues.",
+          "value_type": "boolean",
+          "allowed_operators": [
+            "eq"
+          ],
+          "default_hardness": "hard",
+          "verification_type": "unavailable_until_data_added",
+          "data_source": [
+            "unavailable"
+          ],
+          "currently_supported": false,
+          "notes": "Explicitly typed cross-cutting requirement; no arbitrary free text. Accessibility, indoor status, weather and event data are not available. Rest/repetition check declared intervals and canonical categories only.",
+          "legacy_constraint_type": "indoor_only_preference",
+          "selector": {
+            "kind": "indoor_only"
+          }
+        },
+        {
+          "category": "other",
+          "description": "Avoid category repetition across planned attractions.",
+          "value_type": "boolean",
+          "allowed_operators": [
+            "eq"
+          ],
+          "default_hardness": "hard",
+          "verification_type": "deterministic",
+          "data_source": [
+            "attractions.csv",
+            "verifier-only"
+          ],
+          "currently_supported": true,
+          "notes": "Explicitly typed cross-cutting requirement; no arbitrary free text. Accessibility, indoor status, weather and event data are not available. Rest/repetition check declared intervals and canonical categories only.",
+          "legacy_constraint_type": "avoid_repeated_categories",
+          "selector": {
+            "kind": "avoid_repeated_categories"
+          }
+        },
+        {
+          "category": "other",
+          "description": "Minimum daily planned uninterrupted rest minutes.",
+          "value_type": "nonnegative_number",
+          "allowed_operators": [
+            "gte"
+          ],
+          "default_hardness": "hard",
+          "verification_type": "deterministic",
+          "data_source": [
+            "verifier-only"
+          ],
+          "currently_supported": true,
+          "notes": "Explicitly typed cross-cutting requirement; no arbitrary free text. Accessibility, indoor status, weather and event data are not available. Rest/repetition check declared intervals and canonical categories only.",
+          "legacy_constraint_type": "required_rest_period",
+          "selector": {
+            "kind": "required_rest_period"
+          }
+        },
+        {
+          "category": "other",
+          "description": "Require a specified event identity/date.",
+          "value_type": "event",
+          "allowed_operators": [
+            "include"
+          ],
+          "default_hardness": "hard",
+          "verification_type": "unavailable_until_data_added",
+          "data_source": [
+            "unavailable"
+          ],
+          "currently_supported": false,
+          "notes": "Explicitly typed cross-cutting requirement; no arbitrary free text. Accessibility, indoor status, weather and event data are not available. Rest/repetition check declared intervals and canonical categories only.",
+          "legacy_constraint_type": "special_event_requirement",
+          "selector": {
+            "kind": "special_event"
+          }
+        }
+      ],
+      "notes": "Family support means at least one supported variant; per-variant support, verification, hardness and source are authoritative. No unsupported variant is activated by family aggregation."
+    }
+  ],
+  "legacy_type_mapping": {
+    "trip_duration_days": "trip_requirement",
+    "number_of_travellers": "trip_requirement",
+    "traveller_type": "trip_requirement",
+    "required_departure_airport": "flight_airport_requirement",
+    "required_arrival_airport": "flight_airport_requirement",
+    "departure_time_preference": "flight_time_constraint",
+    "arrival_time_preference": "flight_time_constraint",
+    "direct_flight_only": "flight_requirement",
+    "airline_preference": "flight_requirement",
+    "accommodation_type": "accommodation_requirement",
+    "minimum_hotel_rating": "accommodation_requirement",
+    "required_neighbourhood": "accommodation_requirement",
+    "accommodation_amenity": "accommodation_requirement",
+    "check_in_constraint": "accommodation_time_constraint",
+    "check_out_constraint": "accommodation_time_constraint",
+    "accommodation_budget_per_night": "accommodation_nightly_budget",
+    "required_attraction": "attraction_requirement",
+    "excluded_attraction": "attraction_requirement",
+    "attraction_category": "attraction_requirement",
+    "avoid_attraction_category": "attraction_requirement",
+    "minimum_attraction_rating": "attraction_requirement",
+    "minimum_attraction_count": "attraction_count_constraint",
+    "maximum_attraction_count": "attraction_count_constraint",
+    "dietary_requirement": "restaurant_requirement",
+    "cuisine": "restaurant_requirement",
+    "excluded_cuisine": "restaurant_requirement",
+    "minimum_restaurant_rating": "restaurant_requirement",
+    "required_restaurant": "restaurant_requirement",
+    "avoid_restaurant": "restaurant_requirement",
+    "meal_budget_per_person": "meal_budget_constraint",
+    "preferred_transport_mode": "transport_requirement",
+    "avoid_transport_mode": "transport_requirement",
+    "max_travel_time": "transport_limit",
+    "max_walking_time": "transport_limit",
+    "max_walking_distance": "transport_limit",
+    "earliest_start_time": "schedule_time_constraint",
+    "latest_end_time": "schedule_time_constraint",
+    "required_activity_time": "schedule_time_constraint",
+    "meal_time_constraint": "schedule_time_constraint",
+    "max_activities_per_day": "schedule_requirement",
+    "free_time_requirement": "schedule_requirement",
+    "buffer_time_requirement": "schedule_requirement",
+    "total_budget": "budget_constraint",
+    "daily_budget": "budget_constraint",
+    "food_budget": "budget_constraint",
+    "attraction_budget": "budget_constraint",
+    "accommodation_budget": "budget_constraint",
+    "flight_budget": "budget_constraint",
+    "quiet_restaurant": "subjective_preference",
+    "romantic_restaurant": "subjective_preference",
+    "authentic_restaurant": "subjective_preference",
+    "family_friendly_restaurant": "subjective_preference",
+    "good_for_groups_restaurant": "subjective_preference",
+    "scenic_attraction": "subjective_preference",
+    "family_friendly_attraction": "subjective_preference",
+    "educational_attraction": "subjective_preference",
+    "relaxing_itinerary": "subjective_preference",
+    "crowdedness_preference": "subjective_preference",
+    "cultural_trip": "subjective_preference",
+    "adventurous_trip": "subjective_preference",
+    "accessibility_requirement": "other_requirement",
+    "weather_sensitive_preference": "other_requirement",
+    "indoor_only_preference": "other_requirement",
+    "avoid_repeated_categories": "other_requirement",
+    "required_rest_period": "other_requirement",
+    "special_event_requirement": "other_requirement"
+  }
+}
