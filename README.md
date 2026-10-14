@@ -40,6 +40,16 @@ reports can be removed without affecting construction.
 
 ## Local setup and tests
 
+The diagram's nine sandbox table models and workflow compatibility rules are
+documented in [Schema alignment](docs/SCHEMA_ALIGNMENT.md).
+
+For the importable recovery controller, offline tests, synthetic demonstration,
+saved-plan experiment runner and scorer, see [Recovery and evaluation](docs/RECOVERY.md).
+For a beginner-friendly file-by-file explanation, VS Code terminal commands and
+a runnable offline notebook cell, see [Component walkthrough](docs/COMPONENT_WALKTHROUGH.md).
+That guide includes Windows PowerShell commands using the existing parent `.venv`.
+Docker is optional for this work; LangGraph does not require Docker.
+
 Use Python 3.13 (validated with 3.13.6) from the repository root. Install and run
 with the same interpreter:
 
