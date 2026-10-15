@@ -103,6 +103,8 @@ def create_agent_runtime(
     oracle_translation=False,
     preference_search=False,
     refine_steps=None,
+    ## (added) Selected repair strategy (R0-R4).
+    repair_strategy=None, 
     debug=True,
 ):
     from chinatravel.environment.world_env import WorldEnv
@@ -115,6 +117,11 @@ def create_agent_runtime(
         preference_search=preference_search,
         refine_steps=refine_steps,
     )
+
+    ## (added) Keep experiment outputs separate for each repair strategy.
+    if repair_strategy is not None:
+        method = f"{method}_{repair_strategy}"
+
     result_dir, log_dir, cache_dir = build_run_dirs(project_root_path, method)
     kwargs = {
         "method": agent_name,
@@ -124,6 +131,8 @@ def create_agent_runtime(
         "log_dir": log_dir,
         "debug": debug,
         "refine_steps": refine_steps,
+        ## (added) Forward strategy to the agent.
+        "repair_strategy": repair_strategy,
         "lang": lang,
     }
     return AgentRuntime(
@@ -243,8 +252,20 @@ def init_agent(kwargs):
         raise ValueError(f"Unsupported agent method: {method}") from exc
     return builder(kwargs)
 
-
+## changed to fit OpenRouter
 def init_llm(llm_name):
     from .llms import create_llm
 
+    ## OpenRouter requires the full provider/model identifier.
+    ## Preserve it when using the OpenRouter endpoint.
+    base_url = (
+        os.getenv("CHINATRAVEL_OPENAI_BASE_URL")
+        or os.getenv("OPENAI_BASE_URL")
+        or ""
+    )
+
+    if "openrouter.ai" in base_url.lower():
+        return create_llm(llm_name, model=llm_name)
+
+    ## Preserve the original ChinaTravel behavior for other providers.
     return create_llm(llm_name)
