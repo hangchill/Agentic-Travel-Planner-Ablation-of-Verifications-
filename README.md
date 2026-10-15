@@ -1,3 +1,150 @@
+# DSA4213 Group Project — Verification-Guided Travel Planner
+
+This repository is adapted from the original [ChinaTravel benchmark](https://github.com/search?q=ChinaTravel&type=repositories) for our DSA4213 group project.
+
+Our project investigates whether modelling constraint interdependencies can improve verification-guided repair in LLM-based travel planning.
+
+We use the existing ChinaTravel planner and compare five repair strategies.
+
+| Strategy | Description |
+|---|---|
+| R0 | Whole-plan regeneration (baseline) |
+| R1 | Targeted repair |
+| R2 | Protected repair |
+| R3 | Adaptive-scope repair |
+| R4 | Constraint-interdependency-guided repair |
+
+The original ChinaTravel documentation is preserved below this section.
+
+## Quick Setup for Group Members
+
+### 1. Clone the repository
+
+```bash
+git clone <YOUR-REPOSITORY-URL>
+cd Agentic-Travel-Planner-Ablation-of-Verifications-
+```
+
+### 2. Set up Python
+
+Use Python 3.12 (tested with 3.12.8).
+
+```bash
+python3.12 -m venv .venv
+source .venv/bin/activate
+python -m pip install -r requirements.txt
+python -m pip check
+```
+
+For Windows, activate the environment using `.venv\Scripts\activate`.
+
+### 3. Download the ChinaTravel sandbox
+
+```bash
+python scripts/setup_project.py
+```
+
+This automatically downloads and extracts the official Chinese sandbox into `chinatravel/environment/database/`.
+
+You do not need to download the sandbox manually.
+
+### 4. Configure OpenRouter
+
+Copy the environment template:
+
+```bash
+cp .env.example .env
+```
+
+For Windows PowerShell, use `Copy-Item .env.example .env`.
+
+Open `.env` and replace the placeholder with our OpenRouter API key (found in CANVAS).
+
+```dotenv
+CHINATRAVEL_OPENAI_API_KEY=OUR_GROUP_API_KEY
+CHINATRAVEL_OPENAI_BASE_URL=https://openrouter.ai/api/v1
+```
+
+On macOS/Linux, load the environment variables:
+
+```bash
+set -a
+source .env
+set +a
+```
+
+**Do not commit `.env` to GitHub.**
+
+### 5. Run R0 to check your setup
+
+```bash
+python run_exp.py \
+  --agent LLM-modulo \
+  --repair_strategy R0 \
+  --llm openai/gpt-4.1 \
+  --splits medium \
+  --index e20241028160845920703 \
+  --refine_steps 2 \
+  --oracle_translation \
+  --lang zh
+```
+
+This runs one medium-difficulty ChinaTravel case using the shared R0 framework.
+
+**Note:** Running GPT-4.1 through OpenRouter incurs API costs.
+
+Results are saved under `results/`, while repair histories and logs are saved under `cache/`.
+
+## For Teammates — Implementing R1–R4
+
+The shared framework and R0 are already implemented. You do not need to rewrite the original planner.
+
+### Main files
+
+All these files are inside `chinatravel/agent/nesy_verifier/`.
+
+| File | Purpose |
+|---|---|
+| `repair_strategies/base.py` | Common interface for all repair methods |
+| `repair_strategies/r0.py` | Example implementation |
+| `shared_verifier.py` | Checks constraints |
+| `shared_repair_loop.py` | Handles repair attempts, acceptance/rejection and logging |
+| `llm_modulo.py` | Main agent and strategy selection |
+
+For a detailed explanation of the implementation and R0 tests, see `framework_r0.ipynb`.
+
+### How to implement your strategy
+
+Create your assigned file inside `repair_strategies/`, such as `r1.py`, `r2.py`, `r3.py` or `r4.py`.
+
+Follow the interface in `base.py`:
+
+```python
+def repair(self, problem, raw_plan, verification_results, context, llm):
+    ## Implement your repair strategy here.
+
+    return RepairResult(
+        repaired_plan=new_plan,
+        metadata={"strategy": "R1"},
+    )
+```
+
+Your strategy receives the current raw itinerary, verification feedback, travel information and LLM adapter. It must return a proposed raw itinerary.
+
+If your method needs to reject a proposed repair, override the `accept()` method.
+
+After implementing your strategy, register it in `llm_modulo.py` and test it on one case before running larger experiments.
+
+**Current status:** R0 is integrated and has completed an end-to-end test. R1–R4 are not yet registered. The framework's basic unit tests passed, but verifier reliability issues still need further validation before final experiments.
+
+---
+
+# Original ChinaTravel Documentation
+
+The original ChinaTravel README, including installation details, evaluation instructions, acknowledgements, licence and citation, is retained below.
+
+---
+
 <center>
   <h1>[ICLR'26] ChinaTravel: An Open-Ended Travel Planning Benchmark with Compositional Constraint Validation for Language Agents</h1>
 </center>

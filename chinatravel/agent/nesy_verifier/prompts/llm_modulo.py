@@ -3,6 +3,12 @@ INITIAL_PROMPT = """You are a proficient planner. Based on the provided informat
 Important Reminder: 
 1. For innercity_transport, duration information (in minutes) is provided. Please infer the appropriate specific start_time and end_time for your plan by the duration. For example, if the provided information indicates that it takes 20 minutes to travel from one location to another by metro, you can utilize this duration information in your planning process. 
 2. Note that in the travel plan, the "price" for each event represents the unit price. You need to reasoning the "cost" based on the number of participants and the type of event. 
+3. IMPORTANT: Do not create separate activities with type "innercity_transport".
+   Inner-city transport must be stored inside the "transports" field
+   of the activity being travelled to, as shown in the example.
+   Valid activity types are only: airplane, train, attraction,
+   breakfast, lunch, dinner, and accommodation.
+   Every activity must include start_time and end_time.
 
 ***** Example *****
 Query: 当前位置北京。我一个人想去南京玩2天，预算3000人民币，尽量多坐地铁，喜欢吃江浙菜，想去南京博物院，请给我一个旅行规划。

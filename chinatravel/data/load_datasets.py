@@ -1,5 +1,7 @@
 import os
 import json
+## added
+import ast
 
 project_root_path = os.path.dirname(
     os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -53,13 +55,34 @@ def _strip_oracle_fields(data_i):
         data_i.pop(key, None)
     return data_i
 
-
+## changed
 def _validate_query_record(data_i):
-    if "hard_logic_py" in data_i and not isinstance(data_i["hard_logic_py"], list):
-        raise ValueError(
-            "Expected fixed ChinaTravel data where hard_logic_py is a list, "
-            f"got {type(data_i['hard_logic_py']).__name__} for {data_i.get('uid', '<unknown>')}."
-        )
+
+    ## Convert string-encoded constraint lists from the original Hugging Face dataset into actual Python lists.
+    ## This fixes a data-format mismatch without changing the constraints.
+    if isinstance(data_i.get("hard_logic_py"), str):
+        try:
+            data_i["hard_logic_py"] = ast.literal_eval(
+                data_i["hard_logic_py"]
+            )
+        except (ValueError, SyntaxError) as e:
+            raise ValueError(
+                f"Cannot parse hard_logic_py for {data_i.get('uid')}"
+            ) from e
+
+    ## Ensure the resulting constraints have the expected structure.
+    if "hard_logic_py" in data_i:
+        if not isinstance(data_i["hard_logic_py"], list):
+            raise ValueError(
+                f"Expected hard_logic_py to be a list for {data_i.get('uid')}"
+            )
+
+        if not all(isinstance(x, str) for x in data_i["hard_logic_py"]):
+            raise ValueError(
+                f"Expected all hard_logic_py entries to be strings "
+                f"for {data_i.get('uid')}"
+            )
+
     return data_i
 
 

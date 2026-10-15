@@ -39,6 +39,14 @@ if __name__ == "__main__":
     parser.add_argument('--oracle_translation', action='store_true', help='Set this flag to enable oracle translation.')
     parser.add_argument('--preference_search', action='store_true', help='Set this flag to enable preference search.')
     parser.add_argument('--refine_steps', type=int, default=10, help='Steps for refine-based method, such as LLM-modulo, Reflection')
+    ## (Added) Select which repair method to use for the experiment.
+    parser.add_argument(
+        "--repair_strategy",
+        type=str,
+        choices=["R0", "R1", "R2", "R3", "R4"],
+        default=None,
+        help="Repair strategy for LLM-Modulo. Omit to use the original ChinaTravel repair loop.",
+    )
     parser.add_argument("--lang", "--locale", choices=["zh", "en"], default="zh", help="Language environment to load.")
 
 
@@ -76,6 +84,8 @@ if __name__ == "__main__":
         oracle_translation=args.oracle_translation,
         preference_search=args.preference_search,
         refine_steps=args.refine_steps,
+        ## added
+        repair_strategy=args.repair_strategy,
     )
     res_dir = runtime.result_dir
     log_dir = runtime.log_dir
