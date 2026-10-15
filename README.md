@@ -107,7 +107,7 @@ All these files are inside `chinatravel/agent/nesy_verifier/`.
 |---|---|
 | `repair_strategies/base.py` | Common interface for all repair methods |
 | `repair_strategies/r0.py` | Example implementation |
-| `shared_verifier.py` | Checks constraints |
+| `shared_verifier.py` | Checks constraints and separately records technical verification errors |
 | `shared_repair_loop.py` | Handles repair attempts, acceptance/rejection and logging |
 | `llm_modulo.py` | Main agent and strategy selection |
 
@@ -135,8 +135,9 @@ If your method needs to reject a proposed repair, override the `accept()` method
 
 After implementing your strategy, register it in `llm_modulo.py` and test it on one case before running larger experiments.
 
-**Current status:** R0 is integrated and has completed an end-to-end test. R1–R4 are not yet registered. The framework's basic unit tests passed, but verifier reliability issues still need further validation before final experiments.
+**Current status:** The shared framework and R0 are implemented and tested end-to-end. The shared verifier has been improved to detect invalid itinerary structures, transport translation failures and verifier execution errors separately from genuine constraint violations. All 27 new regression tests passed, and the latest R0 end-to-end test completed successfully (although the final itinerary still had violations).
 
+R1–R4 are not yet implemented or registered. See `framework_r0.ipynb` for implementation details, testing results and remaining limitations.
 ---
 
 # Original ChinaTravel Documentation
