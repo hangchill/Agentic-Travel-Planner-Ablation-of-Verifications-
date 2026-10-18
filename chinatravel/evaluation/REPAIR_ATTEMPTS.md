@@ -41,7 +41,7 @@ Query/verifier inputs are detached snapshots; mutations cannot rewrite stored
 outcomes. Return the proposal through `RepairResult` and acceptance through the
 Boolean `accept()` result. Rejected candidate outcomes remain observable.
 
-`RepairAttemptRecord` is the standardized observation after a completed proposal.
+`RepairAttemptRecord` is the standardized observation of a repair attempt.
 It contains intent, raw candidate and accepted-after plans, original constraint
 descriptors, tri-state before/after vectors, transitions, and efficiency fields.
 Canonical fields live directly on the record; `repair_metadata` is for prompts,
@@ -54,10 +54,11 @@ not a repair attempt. Existing history fields remain available.
 - Missing counts/scope are `None`. Feedback indices distinguish unavailable
   (`None`) from explicitly none (`[]`). Target/protected lists retain `[]` for
   none/unavailable. All index lists are unique and 1-based.
-- Token deltas and repair duration cover `repair()` only. Missing provider usage
-  is unavailable, not zero. Model-call counts are unavailable.
-- Exceptions before proposal completion propagate; the paired runner preserves
-  completed attempts and stores the exception on the pair result.
+- Efficiency fields are derived centrally; see the [metric definitions](REPAIR_METRICS.md)
+  for dispatch counting, token completeness and generation/verification/attempt timing.
+- Failed attempts retain their exception and measured costs before propagation.
+  Unevaluated candidate states are unknown. The paired runner also stores the
+  exception on the pair result; owners do not manually report efficiency totals.
 
 R0 sends every False personal failure plus commonsense feedback already supplied
 by the shared verifier. It excludes unknown personal checks and preserves all
@@ -68,5 +69,5 @@ scope is mapped, and explicit top-level fields win. Unrecorded targets/feedback
 are not invented. New writes use only canonical fields.
 
 See [paired storage/resume](REPAIR_COMPARISON.md), [metrics](REPAIR_METRICS.md),
-and the [matrix definition](REGRESSION_MATRIX.md). Edit-footprint/changed-slot
-analysis is deferred until stable itinerary-item identities are agreed.
+and the [matrix definition](REGRESSION_MATRIX.md). Operational changed-slot
+semantics are defined in the metrics document.

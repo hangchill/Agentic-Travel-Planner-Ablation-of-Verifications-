@@ -87,6 +87,21 @@ class RepairAttemptRecord:
     protected_constraint_indices: list[int] = field(default_factory=list)
     escalation_reason: str | None = None
     decision_reason: str | None = None
+    tool_call_count: int | None = None
+    tool_call_counts_by_type: dict[str, int] | None = None
+    successful_tool_call_count: int | None = None
+    failed_tool_call_count: int | None = None
+    verification_count: int | None = None
+    model_calls: int | None = None
+    repair_model_calls: int | None = None
+    verification_model_calls: int | None = None
+    failed_model_calls: int | None = None
+    total_tokens_delta: int | None = None
+    verification_time_seconds: float | None = None
+    attempt_time_seconds: float | None = None
+    changed_slot_count: int | None = None
+    total_comparable_slots: int | None = None
+    changed_slot_rate: float | None = None
 
     def __post_init__(self):
         # Constructor callers may still supply old debug metadata. Direct fields
@@ -179,6 +194,29 @@ class RepairAttemptRecord:
         expected_failed = failed_constraint_indices(before)
         if self.concurrent_failed_constraint_indices != expected_failed:
             raise ValueError("Concurrent failures must match the before vector")
+        for name in ("tool_call_count", "successful_tool_call_count", "failed_tool_call_count", "verification_count", "model_calls", "repair_model_calls", "verification_model_calls", "failed_model_calls", "total_tokens_delta"):
+            value = getattr(self, name)
+            if value is not None and (type(value) is not int or value < 0):
+                raise ValueError(f"{name} must be a nonnegative integer or None")
+        if self.tool_call_counts_by_type is not None:
+            if not isinstance(self.tool_call_counts_by_type, dict) or any(
+                not isinstance(key, str) or not key or type(value) is not int or value < 0
+                for key, value in self.tool_call_counts_by_type.items()
+            ):
+                raise ValueError("Tool type counts must be nonnegative integers")
+            if self.tool_call_count is not None and sum(self.tool_call_counts_by_type.values()) != self.tool_call_count:
+                raise ValueError("Tool type counts must sum to tool_call_count")
+        if all(value is not None for value in (self.tool_call_count, self.successful_tool_call_count, self.failed_tool_call_count)):
+            if self.successful_tool_call_count + self.failed_tool_call_count != self.tool_call_count:
+                raise ValueError("Tool outcomes must sum to tool_call_count")
+        changed, comparable, rate = self.changed_slot_count, self.total_comparable_slots, self.changed_slot_rate
+        if any(value is not None for value in (changed, comparable, rate)):
+            if any(type(value) is not int or value < 0 for value in (changed, comparable)) or changed > comparable:
+                raise ValueError("Invalid edit footprint counts")
+            expected = changed / comparable if comparable else None
+            if (expected is None and rate is not None) or (expected is not None and (
+                type(rate) not in (int, float) or not math.isfinite(rate) or not math.isclose(rate, expected))):
+                raise ValueError("Edit footprint rate must match counts")
         for prefix in ("input", "output"):
             values = [getattr(self, f"{prefix}_tokens_{suffix}")
                       for suffix in ("before", "after", "delta")]
@@ -188,11 +226,12 @@ class RepairAttemptRecord:
             if start is not None and end is not None:
                 if end < start or (delta is not None and delta != end - start):
                     raise ValueError("token counters and delta are inconsistent")
-        duration = self.repair_time_seconds
-        if duration is not None and (
-            type(duration) not in (int, float) or not math.isfinite(duration) or duration < 0
-        ):
-            raise ValueError("repair_time_seconds must be finite and nonnegative")
+        for name in ("repair_time_seconds", "verification_time_seconds", "attempt_time_seconds"):
+            duration = getattr(self, name)
+            if duration is not None and (
+                type(duration) not in (int, float) or not math.isfinite(duration) or duration < 0
+            ):
+                raise ValueError(f"{name} must be finite and nonnegative")
         if self.exception is not None and not isinstance(self.exception, str):
             raise ValueError("exception must be a string or None")
         # Reject non-JSON payloads and nonfinite values rather than losing data.

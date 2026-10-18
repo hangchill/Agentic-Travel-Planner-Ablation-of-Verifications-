@@ -4,6 +4,7 @@ import sys
 
 from copy import deepcopy
 from chinatravel.agent.base import BaseAgent
+from chinatravel.agent.model_usage import usage_snapshot, usage_delta, reported_token_count
 
 from chinatravel.agent.nesy_verifier.shared_repair_loop import run_repair_loop
 from chinatravel.agent.nesy_verifier.repair_strategies import create_repair_strategy
@@ -167,9 +168,12 @@ class LLMModuloAgent(BaseAgent):
         self.problem = problem
 
         ## Reset token usage counters for this problem.
+        if hasattr(self.backbone_llm, "reset_usage"):
+            self.backbone_llm.reset_usage()
         self.backbone_llm.input_token_count = 0
         self.backbone_llm.output_token_count = 0
         self.backbone_llm.input_token_maxx = 0
+        initial_usage_before = usage_snapshot(self.backbone_llm)
 
         ## Reset timing information and temporary travel data.
         self.llm_inference_time = 0
@@ -338,8 +342,11 @@ class LLMModuloAgent(BaseAgent):
             environment_context={"lang": self.lang},
             generation_metadata={
                 "raw_response": response,
-                "input_tokens": self.backbone_llm.input_token_count,
-                "output_tokens": self.backbone_llm.output_token_count,
+                "input_tokens": usage_delta(initial_usage_before, usage_snapshot(self.backbone_llm), "input_tokens"),
+                "output_tokens": usage_delta(initial_usage_before, usage_snapshot(self.backbone_llm), "output_tokens"),
+                "total_tokens": usage_delta(initial_usage_before, usage_snapshot(self.backbone_llm), "total_tokens"),
+                "model_calls": usage_delta(initial_usage_before, usage_snapshot(self.backbone_llm), "model_calls"),
+                "failed_model_calls": usage_delta(initial_usage_before, usage_snapshot(self.backbone_llm), "failed_model_calls"),
                 "elapsed_time_seconds": time.time() - self.start_clock,
                 "llm_inference_time_seconds": self.llm_inference_time,
                 "information_collection_time_seconds": self.information_collection_time,
@@ -350,13 +357,22 @@ class LLMModuloAgent(BaseAgent):
         """Collect, shortlist, generate and verify once; no repairs are performed."""
         from chinatravel.agent.nesy_verifier.shared_repair_loop import verify_plan
 
-        state = self._generate_initial_plan(problem, prob_idx or problem.get("uid"))
-        state.initial_verification = verify_plan(
-            state.problem,
-            {"people_number": problem["people_number"], "start_city": problem["start_city"],
-             "target_city": problem["target_city"], "itinerary": deepcopy(state.raw_initial_plan)},
-            translate_fn=self.translate_innercity_transport,
-        )
+        from time import perf_counter
+        from chinatravel.agent.system_usage import system_usage_scope, system_delta, verification_execution
+
+        with system_usage_scope() as usage:
+            before = usage.snapshot()
+            started = perf_counter()
+            state = self._generate_initial_plan(problem, prob_idx or problem.get("uid"))
+            state.generation_metadata["initial_generation_time_s"] = perf_counter() - started
+            state.generation_metadata["initial_generation_tool_calls"] = system_delta(before, usage.snapshot())["tool_call_count"]
+            state.generation_metadata["initial_generation_tool_call_counts_by_type"] = system_delta(before, usage.snapshot())["tool_call_counts_by_type"]
+            state.initial_verification = verification_execution(verify_plan)(
+                state.problem,
+                {"people_number": problem["people_number"], "start_city": problem["start_city"],
+                 "target_city": problem["target_city"], "itinerary": deepcopy(state.raw_initial_plan)},
+                translate_fn=self.translate_innercity_transport,
+            )
         return state
 
     def solve(self, problem, prob_idx, oracle_verifier):
@@ -405,8 +421,8 @@ class LLMModuloAgent(BaseAgent):
             final_plan["error_info"] = final_verification["error_info"]
             final_plan["personal_constraints"] = final_verification["personal_constraints"]
             final_plan["elapsed_time(sec)"] = time.time() - self.start_clock
-            final_plan["input_token_count"] = self.backbone_llm.input_token_count
-            final_plan["output_token_count"] = self.backbone_llm.output_token_count
+            final_plan["input_token_count"] = reported_token_count(self.backbone_llm, "input")
+            final_plan["output_token_count"] = reported_token_count(self.backbone_llm, "output")
             final_plan["input_token_maxx"] = self.backbone_llm.input_token_maxx
             final_plan["llm_inference_time(sec)"] = self.llm_inference_time
             final_plan["information_collection_time"] = self.information_collection_time
@@ -435,8 +451,8 @@ class LLMModuloAgent(BaseAgent):
             "itinerary": json_plan, 
             
             "elapsed_time(sec)": time.time() - self.start_clock, 
-            "input_token_count": self.backbone_llm.input_token_count,
-            "output_token_count": self.backbone_llm.output_token_count,
+            "input_token_count": reported_token_count(self.backbone_llm, "input"),
+            "output_token_count": reported_token_count(self.backbone_llm, "output"),
             "input_token_maxx": self.backbone_llm.input_token_maxx,
             "llm_inference_time(sec)": self.llm_inference_time, 
             "information_collection_time": self.information_collection_time, 
@@ -527,8 +543,8 @@ class LLMModuloAgent(BaseAgent):
                 "itinerary": json_plan, 
                 
                 "elapsed_time(sec)": time.time() - self.start_clock, 
-                "input_token_count": self.backbone_llm.input_token_count,
-                "output_token_count": self.backbone_llm.output_token_count,
+                "input_token_count": reported_token_count(self.backbone_llm, "input"),
+                "output_token_count": reported_token_count(self.backbone_llm, "output"),
                 "input_token_maxx": self.backbone_llm.input_token_maxx,
                 "llm_inference_time(sec)": self.llm_inference_time, 
                 "information_collection_time": self.information_collection_time, 

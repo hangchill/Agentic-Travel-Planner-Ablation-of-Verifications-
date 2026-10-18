@@ -1,3 +1,4 @@
+from chinatravel.agent.system_usage import tool_api
 import ast
 from pandas import DataFrame
 from typing import Any
@@ -239,6 +240,7 @@ class WorldEnv:
             "restaurants_with_recommended_food": self.restaurants.restaurants_with_recommended_food,
         }
 
+    @tool_api("next_page")
     def next_page(self):
         """
         Go to the next page.

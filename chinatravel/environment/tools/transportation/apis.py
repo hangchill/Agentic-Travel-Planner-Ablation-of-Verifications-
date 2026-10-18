@@ -1,3 +1,4 @@
+from chinatravel.agent.system_usage import tool_api
 import os
 import json
 import heapq
@@ -187,6 +188,7 @@ class Transportation:
             )
         return self._nearest_station_cache[cache_key]
 
+    @tool_api("goto")
     def goto(self, city, start, end, start_time, transport_type, verbose=False):
         if transport_type not in ["walk", "metro", "taxi"]:
             return "only support transport_type in ['walk','metro','taxi']"

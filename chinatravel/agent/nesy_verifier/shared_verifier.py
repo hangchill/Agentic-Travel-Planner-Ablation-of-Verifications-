@@ -1,3 +1,4 @@
+from chinatravel.agent.system_usage import verification_execution
 
 ## Shared verifier used by all repair strategies (R0-R4).
 
@@ -204,6 +205,7 @@ def check_personal_constraints(problem, plan):
     return results, evaluation_errors
 
 
+@verification_execution
 def verify_plan(problem, plan, translate_fn=None):
 
     schema_errors = _validate_plan_structure(plan)
