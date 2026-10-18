@@ -38,8 +38,6 @@ def normalize_repair_intent_metadata(metadata: dict, *, legacy_read=False) -> tu
         if name in (*INTENT_FIELDS, *DERIVED_FIELDS, "repair_strategy")}
     if "strategy" in remaining:
         intent["repair_strategy"] = remaining.pop("strategy")
-    if "repair_strategy" in remaining:
-        intent["repair_strategy"] = remaining.pop("repair_strategy")
     legacy = remaining.pop("scope", None)
     scope = intent.get("editable_scope", legacy)
     if scope == "whole_plan":

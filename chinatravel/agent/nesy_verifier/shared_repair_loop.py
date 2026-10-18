@@ -121,9 +121,9 @@ def run_repair_loop(
         repair_started = perf_counter()
         ## Ask the selected strategy to propose a repair.
         result = strategy.repair(
-            problem=problem,
+            problem=deepcopy(problem),
             raw_plan=deepcopy(current_plan),
-            verification_results=current_verification,
+            verification_results=deepcopy(current_verification),
             context=context,
             llm=llm,
         )
@@ -146,8 +146,8 @@ def run_repair_loop(
 
         ## Let the strategy decide whether to accept the proposal.
         accepted = strategy.accept(
-            current_verification,
-            candidate_verification,
+            deepcopy(current_verification),
+            deepcopy(candidate_verification),
         )
 
         ## Compare constraint results before and after the proposed repair.
