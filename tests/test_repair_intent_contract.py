@@ -8,7 +8,7 @@ from unittest.mock import Mock, patch
 from chinatravel.agent.nesy_verifier import shared_repair_loop as loop
 from chinatravel.agent.nesy_verifier.repair_strategies.r0 import R0WholePlanRepair
 from chinatravel.evaluation.repair_attempt import (
-    DERIVED_FIELDS, INTENT_FIELDS, RepairAttemptRecord, normalize_repair_intent_metadata,
+    DERIVED_FIELDS, INTENT_FIELDS, RepairAttemptRecord,
 )
 from chinatravel.evaluation.regression_matrix import build_regression_matrix
 from test_regression_matrix import BUDGET, TRIP, cell, contribution, record
@@ -62,20 +62,13 @@ class IntentContractTests(unittest.TestCase):
         old["target_provenance"] = None
         self.assertEqual(RepairAttemptRecord.from_dict(old).editable_scope, "day")
         self.assertIsNone(RepairAttemptRecord.from_dict(old).target_provenance)
-        intent, debug = normalize_repair_intent_metadata({"scope": "plan", "target_constraint_indices": [1]})
-        self.assertEqual(intent["editable_scope"], "plan")
-        self.assertEqual(debug, {})
+        old.pop("editable_scope")
+        old["repair_metadata"]["scope"] = "plan"
+        self.assertEqual(RepairAttemptRecord.from_dict(old).editable_scope, "plan")
 
     def test_explicit_empty_feedback_is_distinct_from_unavailable(self):
         self.assertIsNone(record().feedback_personal_constraint_indices)
         self.assertEqual(record(feedback_personal_constraint_indices=[]).feedback_personal_constraint_indices, [])
-
-    def test_strategy_metadata_cannot_duplicate_shared_observations(self):
-        intent, debug = normalize_repair_intent_metadata({
-            "step": 99, "accepted": False, "before_personal_constraints": [True],
-            "input_tokens_delta": 100, "target_constraint_indices": [1], "prompt": "debug"})
-        self.assertEqual(intent, {"target_constraint_indices": [1]})
-        self.assertEqual(debug, {"prompt": "debug"})
 
     def test_legacy_nested_targets_and_structured_scope_are_read_safely(self):
         old = record().to_dict()
@@ -173,7 +166,9 @@ class R0IntentTests(unittest.TestCase):
 
         strategy = Mock()
         strategy.repair.return_value = RepairResult([], {
-            "concurrent_failed_constraint_indices": [2], "concurrent_commonsense_failure_count": 99})
+            "concurrent_failed_constraint_indices": [2], "concurrent_commonsense_failure_count": 99,
+            "step": 99, "accepted": True, "before_personal_constraints": [True],
+            "input_tokens_delta": 100, "target_constraint_indices": [1], "prompt": "debug"})
         strategy.accept.return_value = False
         before = {"personal_constraints": [False, None], "commonsense_errors": ["A", "B"], "passed": False}
         after = {"personal_constraints": [True, None], "commonsense_errors": [], "passed": False}
@@ -184,6 +179,11 @@ class R0IntentTests(unittest.TestCase):
         self.assertEqual(value["concurrent_failed_constraint_indices"], [1])
         self.assertEqual(value["concurrent_commonsense_failure_count"], 2)
         self.assertFalse(value["accepted"])
+        self.assertEqual(value["step"], 1)
+        self.assertEqual(value["before_personal_constraints"], [False, None])
+        self.assertIsNone(value["input_tokens_delta"])
+        self.assertEqual(value["target_constraint_indices"], [1])
+        self.assertEqual(value["repair_metadata"], {"prompt": "debug"})
 
 
 class ScopeMatrixTests(unittest.TestCase):

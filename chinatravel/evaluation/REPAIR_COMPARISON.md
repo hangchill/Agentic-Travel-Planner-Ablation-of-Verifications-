@@ -1,182 +1,74 @@
-# Paired repair comparisons (Phase 4)
+# Paired repair experiments and storage
 
-Only R0 was present when this runner was added. The strategy registry is
-`chinatravel.agent.nesy_verifier.repair_strategies.STRATEGY_FACTORIES`; it maps
-names to zero-argument factories returning fresh strategy instances. R0 loads
-lazily. Future owners register their own implementations here; there is no
-filesystem guessing or fallback to R0. No R1–R4 implementation is supplied.
-
-## Initial-state extraction
-
-`LLMModuloAgent._generate_initial_plan()` contains the original initialization,
-information collection, shortlisting, context construction, generation and
-parsing steps. It returns `InitialRepairState`. Normal `solve()` calls this once,
-then continues its original legacy/shared verification and repair path.
-
-`prepare_initial_repair_state(problem, prob_idx=None)` calls the same generation
-method and verifies the plan once. The serializable snapshot contains:
-
-```text
-query_uid
-problem
-raw_initial_plan
-initial_verification
-repair_context
-environment_context          language; runtime objects are not serialized
-generation_metadata          original response, token totals and timing
-```
-
-Initial usage includes the original query preparation calls. Existing timer
-limitations remain; the runner does not invent missing provider usage or call
-counts. Repair summaries cover repair attempts, not initial preparation.
-
-The shared loop accepts optional `initial_verification` and `history_callback`.
-Omitting both preserves its existing verification path and history structure.
-The paired runner passes independent copies of the saved initial verification;
-candidate verification uses the ordinary verifier without semantic changes.
-
-## CLI
+The runner generates and verifies one initial plan per query, then runs registered
+strategies from independent copies of that plan, context and verification.
+Only R0 is currently registered. Future owners add zero-argument factories to
+`repair_strategies.STRATEGY_FACTORIES`; unavailable methods never fall back to R0.
+See the [strategy contract](REPAIR_ATTEMPTS.md).
 
 ```bash
 python run_repair_comparison.py \
-  --splits medium --index QUERY_UID \
-  --lang zh --llm MODEL \
-  --repair-strategies R0 \
-  --max-steps 10 --run-id paired-trial-01
+  --splits medium --index QUERY_UID --lang zh --llm MODEL \
+  --repair-strategies R0 --max-steps 10 --run-id paired-01
 ```
 
-Available options include:
+Other options: `--skip-unavailable`, `--output-dir`, `--temperature`, `--top-p`,
+`--seed`, `--resume`, `--retry-failed`. A UUID is generated when run ID is omitted.
+Oracle fields are retained through the native loader. The manifest records query
+source/UIDs/content hashes, model/settings, language, strategy availability,
+repair budget, seed, Git/source fingerprints, timestamp and reuse policy.
+Local seeds do not guarantee provider determinism or restore mid-run RNG state.
 
-```text
---repair-strategies R0 R1 R2 R3
---skip-unavailable
---output-dir results/repair_comparison
---run-id ID
---temperature FLOAT
---top-p FLOAT
---seed INT
---resume
---retry-failed                 requires --resume
-```
+`InitialRepairState` stores query, raw plan, verification, strategy context and
+available initial-generation usage. `prepare_initial_repair_state()` reuses the
+same generation steps as normal R0. Normal `solve()` retains its verification
+path; optional shared-loop snapshot/callback arguments support paired runs.
 
-Unavailable methods fail before query/model setup unless explicitly skipped.
-Skipped methods are recorded in the manifest and pair outputs. Oracle fields
-are always retained (`oracle_translation=True`); the existing native query
-loader and model/agent factories are reused. No query adapter/splitter is added.
-If no run ID is supplied, a UUID is generated. A new invocation refuses to
-overwrite an existing run directory.
+The CLI creates fresh strategy/model/agent/environment runtimes per pair. Problem,
+plan, context and initial verification are deep-copied. Every pair records the
+same sorted-JSON SHA-256 `initial_plan_hash` for a query; a full-state hash also
+checks saved context integrity. Python callers must supply isolated runtimes via
+`runtime_factory`; SDK clients are not blindly deep-copied. Repairs may remain
+stochastic even though their initial inputs are identical.
 
-The manifest records UTC timestamp, Git commit and tracked-diff hash, relevant
-implementation hash, split/source, ordered query UIDs, query-content hashes,
-language, model identifier, available/requested/skipped strategies, repair budget,
-oracle setting, accessible model request settings, and optional local seed.
-Python/NumPy seeds do not guarantee provider determinism. The raw initial plan
-and context are shared exactly; stochastic repair responses are not guaranteed
-to be identical or order-independent. Local seeds are restarted on invocation,
-not restored to a mid-run random-generator state on resume.
-
-## Independence and hashes
-
-For each query, preparation runs once and its state is atomically saved before
-any strategy runs. The SHA-256 initial plan hash uses sorted-key, compact UTF-8
-JSON serialization. A separate full-state hash detects saved context or snapshot
-tampering. Every pair stores the same initial plan hash and initial plan.
-
-The runner deep-copies problem, plan, context and initial verification for each
-loop. It constructs fresh strategy objects. The CLI constructs fresh model,
-agent and `WorldEnv` objects per pair and supplies a bound transport translator
-with that query's independent problem state. Factory inputs are detached too.
-No generation/selection is repeated for a repair pair. Python API callers must
-honor the `runtime_factory` contract: return an independent model/environment
-runtime per pair; arbitrary injected collaborators cannot be made isolated by
-copying an SDK client.
-
-## Outputs and identity
+## Storage
 
 ```text
 results/repair_comparison/<run_id>/
   run_manifest.json
   attempts.jsonl
   summaries.csv
-  queries/<escaped-uid-and-digest>/
+  queries/<escaped-query-uid-and-digest>/
     initial_state.json
     <escaped-strategy-and-digest>.json
-    initial_failure.json       only when preparation fails
-  logs/                        original initial-generation/agent logs
 ```
 
-Escaped names plus digests avoid path traversal and case/encoding collisions.
-Pair JSON contains invocation/run identity, query, strategy, initial plan hash,
-initial raw plan/verification, final accepted raw plan/verification, repair
-history, serialized attempt records, central summary metrics, execution status,
-stop reason and exception. `completed` means execution completed; verified
-personal outcomes and aggregate verifier `passed` are separate fields.
+**attempts.jsonl is the canonical raw repair-attempt stream for analysis. No
+database is required.** Each line is a standardized record plus invocation
+`run_id` and strategy-specific `matrix_run_id=<run_id>/<strategy>`. Matrix tooling
+accepts it directly. Pair JSON checkpoints are authoritative for crash recovery
+and rebuild the analysis stream without appending duplicates.
 
-`summaries.csv` uses `summarize_repair_history()` without reimplementing formulas,
-plus invocation run ID, query/strategy identity, initial hash and execution
-status. Identity is supplied even when step 0 alone contains no identity.
+Pair results contain initial/final raw plans and verification, history, attempt
+records, central summary metrics, execution status, stop reason and exception.
+`completed` means execution completed, not all constraints passed. Summaries use
+`repair_metrics.py` and add run/query/strategy/hash/status fields. Preparation
+failure is stored as `initial_failure.json`; incomplete proposals are not
+fabricated as completed attempts. Other queries/strategies continue after errors.
 
-`attempts.jsonl` is flat: each serialized attempt plus invocation `run_id` and
-`matrix_run_id=<run_id>/<strategy>`. Query/strategy identity is explicit. The
-matrix loader strips those two transport fields and uses `matrix_run_id` as
-the strategy-specific run identity, preventing different methods at the same
-query/step from colliding. Existing matrix definitions remain unchanged.
+## Resume
 
-```bash
-python scripts/build_regression_matrix.py \
-  --input results/repair_comparison/paired-trial-01/attempts.jsonl \
-  --repair-strategy R0 --output-dir artifacts/matrix-r0
-```
+Use the same CLI configuration and `--run-id ... --resume`. Configuration, query
+contents/order, available strategies and implementation/settings must match.
+Initial snapshots are reused and checked, not regenerated over existing pairs.
+Completed/skipped pairs stay untouched; failed pairs retry only with
+`--retry-failed`. Interrupted pairs and failed-pair retries restart from the saved
+initial state, replacing their old attempt prefix rather than combining runs.
 
-R0 now logs all current False personal constraints as targets with
-`target_provenance="r0_failed_feedback"` and `editable_scope="plan"`. Exactly one
-mapped failed target can enter the strict primary matrix. Multiple targets are
-retained but excluded from directional attribution; unknown states are not
-targets. The runner itself never infers targets. Canonical intent lives directly
-on the record, with debug metadata kept separate. See
-[Metadata required from repair strategies](REPAIR_ATTEMPTS.md#metadata-required-from-repair-strategies)
-for exact R0/R1/R2/R3 contracts and the distinction between targets and editable
-scope. R1–R4 remain unimplemented.
-
-The candidate matrix is the primary comparison of proposed repair behavior.
-The accepted matrix measures safeguards/outcomes, so rollback can drive R2's
-accepted regression rate down without making its proposals intrinsically safer.
-Scope-conditioned aggregation is secondary and preserves primary eligibility.
-These estimate observed associations, not causal dependencies. Slot/edit-footprint
-analysis remains deferred.
-
-## Checkpointing, failure and resume
-
-Pair JSON files are authoritative. They are written using a same-directory
-temporary file, flushed/fsynced and atomically replaced. Completed proposals
-checkpoint after the loop records them. Initial generation, each completed
-proposal and final pair completion have durable snapshots. A strategy exception
-records its type/message and completed attempt prefix, then other methods
-continue. An exception before a proposal completes does not fabricate an attempt
-record. Preparation failure is recorded separately and other queries continue.
-
-JSONL and CSV indexes are rebuilt atomically from pair checkpoints, rather than
-appended. This avoids duplicate attempts on repeated/resumed execution.
-Old records are normalized through the canonical reader when rebuilding JSONL;
-legacy intent is promoted to direct fields without changing stored old pair files.
-No targets are invented for old R0 attempts that did not record them. A crash
-between file replacements may leave indexes stale; resume rebuilds them before
-work. A directory lock prevents concurrent writers. After a hard process crash,
-inspect the recorded PID and remove a stale `.comparison.lock` manually before
-resuming; locks are never silently stolen.
-
-```bash
-python run_repair_comparison.py ... --run-id paired-trial-01 --resume
-```
-
-Resume requires matching configuration, query contents/order, strategy availability,
-and recorded implementation/settings. Saved initial state hashes are checked.
-Completed/skipped pairs are never rerun. Failed pairs remain recorded unless
-`--retry-failed` is supplied. Interrupted `running` pairs restart from the saved
-initial state; failed-pair retries do likewise, replacing their prior attempt
-stream rather than mixing two trajectories. There is no mid-attempt continuation
-or exactly-once guarantee for a provider request interrupted before checkpoint.
-Missing initial state alongside pair checkpoints raises instead of generating
-a different starting plan. A failed preparation with no initial snapshot may be
-retried on resume. Sandbox contents/provider behavior are not fingerprinted;
-keep those fixed externally. No live end-to-end claim is made by mock tests.
+Checkpoints and rebuilt JSONL/CSV indexes use atomic replacement. Resume repairs
+stale indexes and reads old records through the canonical reader. A run lock
+prevents simultaneous writers; after a hard crash, inspect the PID and remove
+its stale lock manually. There is no exactly-once provider-request guarantee if
+interruption occurs before checkpoint. Keep sandbox/provider versions fixed
+externally. See [metrics](REPAIR_METRICS.md), [matrix methodology](REGRESSION_MATRIX.md),
+and `python run_repair_comparison.py --help` for options.

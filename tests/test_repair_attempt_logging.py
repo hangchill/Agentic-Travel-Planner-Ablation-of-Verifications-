@@ -204,9 +204,35 @@ class RepairAttemptTests(unittest.TestCase):
                 kwargs["verification_results"]["personal_constraints"][0] = True
                 return super().repair(**kwargs)
 
-        record = self.run_loop([False], [True], MutatingStrategy())["history"][1]["repair_attempt"]
+        result = self.run_loop([False], [True], MutatingStrategy())
+        record = result["history"][1]["repair_attempt"]
         self.assertEqual(record["before_personal_constraints"], [False])
         self.assertEqual(record["fixed"], [1])
+        self.assertEqual(result["history"][0]["verification"]["personal_constraints"], [False])
+        from chinatravel.evaluation.repair_metrics import summarize_repair_history
+
+        self.assertEqual(summarize_repair_history(result["history"])["final_failed_count"], 0)
+
+    def test_accept_cannot_mutate_shared_verification_or_query(self):
+        class MutatingStrategy(StubStrategy):
+            def repair(self, **kwargs):
+                kwargs["problem"]["hard_logic_py"][0] = "result=True"
+                return super().repair(**kwargs)
+
+            def accept(self, current_verification, candidate_verification):
+                current_verification["personal_constraints"][0] = True
+                candidate_verification["personal_constraints"][0] = False
+                candidate_verification["passed"] = False
+                return True
+
+        result = self.run_loop([False], [True], MutatingStrategy(),
+                               query_fields={"hard_logic_py": ["result=False"]})
+        self.assertEqual(result["history"][0]["verification"]["personal_constraints"], [False])
+        self.assertEqual(result["verification"]["personal_constraints"], [True])
+        self.assertTrue(result["verification"]["passed"])
+        record = result["history"][1]["repair_attempt"]
+        self.assertEqual(record["constraint_descriptors"][0]["hard_logic_py"], "result=False")
+        self.assertEqual(record["after_personal_constraints"], [True])
 
     def test_initial_pass_produces_no_attempt_record(self):
         strategy = StubStrategy()
