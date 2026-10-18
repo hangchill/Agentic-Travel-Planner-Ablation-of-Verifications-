@@ -10,6 +10,9 @@ import json
 import os
 from pathlib import Path
 import tempfile
+from time import perf_counter
+from chinatravel.agent.system_usage import system_usage_scope, system_delta
+from chinatravel.agent.model_usage import usage_snapshot, usage_delta
 from urllib.parse import quote
 
 from chinatravel.agent.nesy_verifier.initial_state import InitialRepairState
@@ -75,7 +78,8 @@ def _rebuild_indexes(root):
         "run_id", "query_uid", "repair_strategy", "initial_plan_hash", "execution_status"]
     writer = csv.DictWriter(stream, fieldnames=columns)
     writer.writeheader()
-    writer.writerows(summaries)
+    writer.writerows({key: json.dumps(value, sort_keys=True) if isinstance(value, (dict, list)) else value
+                     for key, value in row.items()} for row in summaries)
     _write(root / "summaries.csv", stream.getvalue())
 
 
@@ -160,7 +164,12 @@ def run_comparison(queries, *, run_id, output_root, config, prepare_initial_stat
                 if any(path.name != "initial_failure.json" for path in query_dir.glob("*.json")):
                     raise ValueError("Cannot regenerate missing initial state for existing pair checkpoints")
                 try:
-                    state = prepare_initial_state(deepcopy(problem))
+                    with system_usage_scope() as initial_usage:
+                        initial_before = initial_usage.snapshot()
+                        initial_started = perf_counter()
+                        state = prepare_initial_state(deepcopy(problem))
+                        state.generation_metadata["shared_initialization_time_s"] = perf_counter() - initial_started
+                        state.generation_metadata["shared_initialization_system_metrics"] = system_delta(initial_before, initial_usage.snapshot())
                     if state.problem != problem or state.initial_verification is None:
                         raise ValueError("Preparation must retain the query and supply initial verification")
                     stored = {"run_id": run_id, "query_uid": uid, "state": state.to_dict(),
@@ -202,6 +211,11 @@ def run_comparison(queries, *, run_id, output_root, config, prepare_initial_stat
                     result["final_accepted_plan"] = deepcopy(
                         accepted_entry["candidate_plan"] if accepted_entry["step"] else state.raw_initial_plan)
                     result["summary_metrics"] = summarize_repair_history(history)
+                    result["summary_metrics"].update(result.get("system_metrics", {}))
+                    result["summary_metrics"]["shared_initialization_time_s"] = state.generation_metadata.get("shared_initialization_time_s")
+                    result["summary_metrics"]["initial_generation_time_s"] = state.generation_metadata.get("initial_generation_time_s")
+                    result["summary_metrics"]["initial_generation_tool_calls"] = state.generation_metadata.get("initial_generation_tool_calls")
+                    result["summary_metrics"]["shared_initialization_tool_calls"] = state.generation_metadata.get("shared_initialization_system_metrics", {}).get("tool_call_count")
                     _save(pair_path, result)
                     _rebuild_indexes(root)
 
@@ -217,11 +231,30 @@ def run_comparison(queries, *, run_id, output_root, config, prepare_initial_stat
                     if stable_hash(plan_copy) != plan_hash:
                         raise ValueError("Initial plan differs before strategy execution")
                     checkpoint(result["repair_history"])
-                    outcome = run_repair_loop(
-                        problem_copy, plan_copy, factories[name](), context_copy, llm, translator,
-                        max_steps=config["max_steps"], initial_verification=deepcopy(state.initial_verification),
-                        history_callback=checkpoint,
-                    )
+                    with system_usage_scope() as strategy_usage:
+                        system_before = strategy_usage.snapshot()
+                        model_before = usage_snapshot(llm)
+                        strategy_started = perf_counter()
+                        try:
+                            outcome = run_repair_loop(
+                                problem_copy, plan_copy, factories[name](), context_copy, llm, translator,
+                                max_steps=config["max_steps"], initial_verification=deepcopy(state.initial_verification),
+                                history_callback=checkpoint,
+                            )
+                        finally:
+                            metrics = system_delta(system_before, strategy_usage.snapshot())
+                            metrics["total_execution_time_s"] = perf_counter() - strategy_started
+                            metrics["strategy_execution_time_s"] = metrics["total_execution_time_s"]
+                            metrics["repair_tool_calls"] = metrics["tool_call_count"]
+                            metrics["repair_verification_count"] = metrics.pop("verification_count")
+                            metrics["repair_verification_iterations"] = metrics["repair_verification_count"]
+                            initial_count = state.generation_metadata.get("shared_initialization_system_metrics", {}).get("verification_count")
+                            metrics["initial_verification_count"] = initial_count
+                            metrics["verification_count_total"] = initial_count + metrics["repair_verification_count"] if initial_count is not None else None
+                            model_after = usage_snapshot(llm)
+                            for column, counter in (("model_call_count", "model_calls"), ("prompt_tokens", "input_tokens"), ("completion_tokens", "output_tokens"), ("total_tokens", "total_tokens")):
+                                metrics[column] = usage_delta(model_before, model_after, counter)
+                            result["system_metrics"] = metrics
                     result.update(execution_status="completed", stop_reason=(
                         "verification_passed" if outcome["verification"]["passed"] else "repair_budget_exhausted"))
                     checkpoint(outcome["history"])

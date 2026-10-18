@@ -50,6 +50,8 @@ def compute_attempt_metrics(record: RepairAttemptRecord | dict) -> dict:
         "newly_violated_count": regressed,
         "repair_success_rate": _ratio(fixed, failed),
         "targeted_repair_success_rate": _ratio(targeted_fixed, len(eligible_targets)),
+        "targeted_fixed_count": targeted_fixed,
+        "targeted_failed_before_count": len(eligible_targets),
         "new_violation_rate": _ratio(regressed, passed),
         "net_repair_gain": fixed - regressed,
         "candidate_all_personal_constraints_pass": _all_pass(after),
@@ -60,13 +62,25 @@ def compute_attempt_metrics(record: RepairAttemptRecord | dict) -> dict:
         "accepted_new_violation_rate": _ratio(accepted_regressed, passed),
         "input_tokens_delta": record.input_tokens_delta,
         "output_tokens_delta": record.output_tokens_delta,
-        "total_tokens_delta": _complete_sum(
-            [record.input_tokens_delta, record.output_tokens_delta]
-        ),
+        "total_tokens_delta": (record.total_tokens_delta if record.total_tokens_delta is not None else
+                               _complete_sum([record.input_tokens_delta, record.output_tokens_delta])),
         "repair_time_seconds": record.repair_time_seconds,
+        "verification_time_seconds": record.verification_time_seconds,
+        "attempt_time_seconds": record.attempt_time_seconds,
+        "changed_slot_count": record.changed_slot_count,
+        "total_comparable_slots": record.total_comparable_slots,
+        "changed_slot_rate": record.changed_slot_rate,
         "accepted": int(record.accepted),
         "attempt_count": 1,
-        "model_calls": None,
+        "tool_call_count": record.tool_call_count,
+        "tool_call_counts_by_type": record.tool_call_counts_by_type,
+        "successful_tool_call_count": record.successful_tool_call_count,
+        "failed_tool_call_count": record.failed_tool_call_count,
+        "verification_count": record.verification_count,
+        "model_calls": record.model_calls,
+        "repair_model_calls": record.repair_model_calls,
+        "verification_model_calls": record.verification_model_calls,
+        "failed_model_calls": record.failed_model_calls,
     }
 
 
@@ -86,7 +100,10 @@ def summarize_repair_history(history: list[dict]) -> dict:
     ):
         raise ValueError("Step-0 personal_constraints must be a list of bool or None")
     current = list(initial)
+    accepted_verification = history[0].get("verification", {})
     rows = []
+    records = []
+    attempts_until_success = 0 if history[0].get("verification", {}).get("passed") is True else None
     query_uid = repair_strategy = None
     previous_step = 0
     for entry in history[1:]:
@@ -105,8 +122,12 @@ def summarize_repair_history(history: list[dict]) -> dict:
             raise ValueError("History contains multiple repair strategies")
         repair_strategy = record.repair_strategy
         rows.append(compute_attempt_metrics(record))
+        records.append(record)
+        if attempts_until_success is None and record.accepted and entry.get("verification", {}).get("passed") is True:
+            attempts_until_success = len(rows)
         if record.accepted:
             current = list(record.after_personal_constraints)
+            accepted_verification = entry.get("verification", {})
         previous_step = record.step
 
     def total(name):
@@ -122,13 +143,52 @@ def summarize_repair_history(history: list[dict]) -> dict:
     time_total = complete_total("repair_time_seconds")
     final_passed = sum(value is True for value in current)
     final_failed = sum(value is False for value in current)
+    scopes = [record.editable_scope for record in records]
+    levels = [record.scope_level or {"slot": 1, "day": 2, "plan": 3}.get(record.editable_scope) for record in records]
+    known_levels = [level for level in levels if level is not None]
+    previous_level = None
+    escalation_count = 0
+    for record, level in zip(records, levels):
+        if previous_level is not None and level is not None and level > previous_level:
+            escalation_count += 1
+        if level is not None:
+            previous_level = level
+    from collections import Counter
+    tool_types = Counter()
+    for record in records:
+        tool_types.update(record.tool_call_counts_by_type or {})
+    initial_count = history[0].get("system_metrics", {}).get("verification_count")
+    repair_count = complete_total("verification_count")
     return {
+        "total_execution_time_s": history[0].get("pipeline_system_metrics", {}).get("total_execution_time_s"),
+        "repair_attempt_count": attempts,
+        "tool_call_count": complete_total("tool_call_count"),
+        "repair_tool_calls": complete_total("tool_call_count"),
+        "tool_call_counts_by_type": dict(sorted(tool_types.items())) if all(record.tool_call_counts_by_type is not None for record in records) else None,
+        "successful_tool_call_count": complete_total("successful_tool_call_count"),
+        "failed_tool_call_count": complete_total("failed_tool_call_count"),
+        "repair_verification_count": repair_count,
+        "repair_verification_iterations": repair_count,
+        "initial_verification_count": initial_count,
+        "verification_count_total": initial_count + repair_count if initial_count is not None and repair_count is not None else None,
         "query_uid": query_uid,
         "repair_strategy": repair_strategy,
         "attempts": attempts,
         "accepted_attempts": accepted_attempts,
         "rejected_attempts": attempts - accepted_attempts,
         "acceptance_rate": _ratio(accepted_attempts, attempts),
+        "rejection_rate": _ratio(attempts - accepted_attempts, attempts),
+        "failed_attempts": sum(record.exception is not None for record in records),
+        "decision_rejected_attempts": sum(not record.accepted and record.exception is None for record in records),
+        "decision_rejection_rate": _ratio(
+            sum(not record.accepted and record.exception is None for record in records),
+            sum(record.exception is None for record in records)),
+        "attempts_until_success": attempts_until_success,
+        "repair_success": accepted_verification.get("passed"),
+        "mean_targeted_repair_success_rate": _defined_mean([row["targeted_repair_success_rate"] for row in rows]),
+        "targeted_repair_success_rate": _ratio(total("targeted_fixed_count"), total("targeted_failed_before_count")),
+        "total_targeted_fixed": total("targeted_fixed_count"),
+        "total_targeted_failed_before": total("targeted_failed_before_count"),
         "total_fixed": total("fixed_count"),
         "total_newly_violated": total("newly_violated_count"),
         "cumulative_net_repair_gain": total("net_repair_gain"),
@@ -139,11 +199,29 @@ def summarize_repair_history(history: list[dict]) -> dict:
         "accepted_cumulative_net_repair_gain": total("accepted_net_repair_gain"),
         "total_input_tokens_delta": input_total,
         "total_output_tokens_delta": output_total,
-        "total_tokens_delta": _complete_sum([input_total, output_total]),
+        "total_tokens_delta": complete_total("total_tokens_delta"),
+        "total_token_data_complete": complete_total("total_tokens_delta") is not None,
         "token_data_complete": input_total is not None and output_total is not None,
         "total_repair_time_seconds": time_total,
         "timing_data_complete": time_total is not None,
-        "model_calls": None,
+        "model_calls": complete_total("model_calls"),
+        "model_call_data_complete": complete_total("model_calls") is not None,
+        "repair_model_calls": complete_total("repair_model_calls"),
+        "verification_model_calls": complete_total("verification_model_calls"),
+        "failed_model_calls": complete_total("failed_model_calls"),
+        "total_verification_time_seconds": complete_total("verification_time_seconds"),
+        "total_attempt_time_seconds": complete_total("attempt_time_seconds"),
+        "changed_slot_count": complete_total("changed_slot_count"),
+        "total_comparable_slots": complete_total("total_comparable_slots"),
+        "changed_slot_rate": _ratio(complete_total("changed_slot_count"), complete_total("total_comparable_slots")) if all(row["changed_slot_count"] is not None for row in rows) else None,
+        "mean_changed_slot_count": _defined_mean([row["changed_slot_count"] for row in rows]),
+        "mean_changed_slot_rate": _defined_mean([row["changed_slot_rate"] for row in rows]),
+        "footprint_measured_attempts": sum(row["changed_slot_count"] is not None for row in rows),
+        "attempts_scope_slot": scopes.count("slot"), "attempts_scope_day": scopes.count("day"),
+        "attempts_scope_plan": scopes.count("plan"), "attempts_scope_unavailable": scopes.count(None),
+        "escalation_count": escalation_count if len(known_levels) == len(records) else None,
+        "highest_scope_level": max(known_levels) if known_levels and len(known_levels) == len(records) else None,
+        "scope_data_complete": len(known_levels) == len(records),
         "initial_failed_count": sum(value is False for value in initial),
         "final_failed_count": final_failed,
         "initial_unknown_count": sum(value is None for value in initial),

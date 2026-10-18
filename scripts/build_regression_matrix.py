@@ -10,6 +10,7 @@ import sys
 if __package__ in (None, ""):
     sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
+from chinatravel.evaluation.train_test_split import load_manifest, filter_attempts
 from chinatravel.evaluation.constraint_families import CONSTRAINT_FAMILIES
 from chinatravel.evaluation.regression_matrix import (
     AGGREGATE_COLUMNS, CONTRIBUTION_COLUMNS, SCOPE_AGGREGATE_COLUMNS, build_regression_matrix,
@@ -19,7 +20,25 @@ from chinatravel.evaluation.regression_matrix import (
 def load_input(path, run_id=None):
     path = Path(path)
     default_run = run_id or "file-" + hashlib.sha256(str(path.resolve()).encode()).hexdigest()[:16]
-    if path.suffix.lower() == ".jsonl":
+    if path.suffix.lower() == ".csv":
+        string_fields = {"query_uid", "repair_strategy", "exception", "target_provenance", "editable_scope",
+                         "escalation_reason", "decision_reason", "run_id", "matrix_run_id"}
+        with path.open(encoding="utf-8", newline="") as stream:
+            items = []
+            for row in csv.DictReader(stream):
+                item = {}
+                for key, value in row.items():
+                    if value == "":
+                        item[key] = None
+                    elif key in string_fields:
+                        item[key] = value
+                    else:
+                        try:
+                            item[key] = json.loads(value)
+                        except (ValueError, TypeError) as exc:
+                            raise ValueError(f"{path}: CSV field {key!r} requires JSON encoding") from exc
+                items.append(item)
+    elif path.suffix.lower() == ".jsonl":
         with path.open(encoding="utf-8") as stream:
             items = [json.loads(line) for line in stream if line.strip()]
     else:
@@ -61,12 +80,20 @@ def main(argv=None):
     parser.add_argument("--output-dir", required=True, type=Path)
     parser.add_argument("--run-id", help="Override run identity for every supplied input")
     parser.add_argument("--repair-strategy", help="Filter by exact recorded strategy name")
+    parser.add_argument("--split-manifest", type=Path)
+    parser.add_argument("--partition", choices=("train", "test"))
     args = parser.parse_args(argv)
+    if bool(args.split_manifest) != bool(args.partition):
+        parser.error("--split-manifest and --partition must be supplied together")
     records = [record for path in args.input for record in load_input(path, args.run_id)]
+    if args.split_manifest:
+        records = filter_attempts(records, load_manifest(args.split_manifest), args.partition)
     if args.repair_strategy:
         records = [item for item in records
                    if item["repair_attempt"].get("repair_strategy") == args.repair_strategy]
     analysis = build_regression_matrix(records)
+    if args.split_manifest:
+        analysis["coverage"]["split_selection"] = {"partition": args.partition, "manifest_sha256": hashlib.sha256(args.split_manifest.read_bytes()).hexdigest()}
     strategies = {row["repair_strategy"] for row in analysis["aggregate"]}
     if len(strategies) > 1:
         parser.error("Pivot CSVs require one strategy; select --repair-strategy to avoid pooling methods")

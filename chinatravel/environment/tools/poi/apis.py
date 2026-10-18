@@ -1,3 +1,4 @@
+from chinatravel.agent.system_usage import tool_api
 import os
 import json
 from chinatravel.environment.language import CITY_SLUGS, city_names, normalize_lang, relative_database_path
@@ -33,6 +34,7 @@ class Poi:
         self.city_cn_list = city_cn_list
         self.city_list = city_list
 
+    @tool_api("poi_lat_lon_search")
     def search(self, city: str, name: str):
         city_key = city.lower() if isinstance(city, str) else city
         if city_key in self.city_list:

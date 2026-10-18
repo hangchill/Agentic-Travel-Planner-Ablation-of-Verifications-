@@ -20,6 +20,7 @@ from dataclasses import dataclass, field
 from typing import Any
 
 from chinatravel.json_utils import repair_json
+from chinatravel.agent.model_usage import ModelUsage, instrumented_http_client
 
 
 DEFAULT_MAX_TOKENS = 4096
@@ -264,6 +265,8 @@ class OpenAICompatibleLLM(AbstractLLM):
         wire_api: str | None = None,
     ) -> None:
         super().__init__()
+        self._usage = ModelUsage()
+        self._usage_transport_attached = False
         self.model = model
         self.name = name or model
         self.max_tokens = max_tokens
@@ -320,14 +323,24 @@ class OpenAICompatibleLLM(AbstractLLM):
     def llm(self) -> Any:
         if self._llm is None:
             try:
-                from openai import OpenAI
+                from openai import OpenAI, DefaultHttpxClient
             except ImportError as exc:
                 raise ImportError(
                     "The openai package is required for OpenAI-compatible model calls. "
                     "Install project requirements or use the rule placeholder."
                 ) from exc
-            self._llm = OpenAI(**self._client_kwargs)
+            self._llm = OpenAI(http_client=instrumented_http_client(self, client_factory=DefaultHttpxClient), **self._client_kwargs)
         return self._llm
+
+    def reset_usage(self):
+        self._usage.reset()
+        self.input_token_count = self.output_token_count = self.input_token_maxx = 0
+
+    def usage_snapshot(self):
+        result = dict(self._usage.__dict__)
+        if self._llm is not None and not self._usage_transport_attached:
+            result["model_calls"] = result["failed_model_calls"] = None
+        return result
 
     def chat(
         self,
@@ -417,6 +430,16 @@ class OpenAICompatibleLLM(AbstractLLM):
         return request_args
 
     def _send_request(
+        self, messages: list[dict[str, Any]], request_args: dict[str, Any],
+    ) -> dict[str, Any]:
+        try:
+            return self._dispatch_request(messages, request_args)
+        except Exception:
+            if self._llm is not None and not self._usage_transport_attached:
+                self._record_usage(None)
+            raise
+
+    def _dispatch_request(
         self,
         messages: list[dict[str, Any]],
         request_args: dict[str, Any],
@@ -432,7 +455,8 @@ class OpenAICompatibleLLM(AbstractLLM):
                 input=messages,
                 **request_args,
             )
-            self._record_usage(response)
+            if not self._usage_transport_attached:
+                self._record_usage(response)
             return _responses_to_message(response)
 
         completion = self.llm.chat.completions.create(
@@ -440,19 +464,13 @@ class OpenAICompatibleLLM(AbstractLLM):
             messages=messages,
             **request_args,
         )
-        self._record_usage(completion)
+        if not self._usage_transport_attached:
+            self._record_usage(completion)
         return _message_to_dict(completion.choices[0].message)
 
     def _record_usage(self, completion: Any) -> None:
-        usage = getattr(completion, "usage", None)
-        if usage is None:
-            return
-        prompt_tokens = getattr(usage, "prompt_tokens", None)
-        if prompt_tokens is None:
-            prompt_tokens = getattr(usage, "input_tokens", None)
-        completion_tokens = getattr(usage, "completion_tokens", None)
-        if completion_tokens is None:
-            completion_tokens = getattr(usage, "output_tokens", None)
+        usage = completion.get("usage") if isinstance(completion, dict) else getattr(completion, "usage", None)
+        prompt_tokens, completion_tokens, _ = self._usage.observe(usage)
         if prompt_tokens is not None:
             self.input_token_count += int(prompt_tokens)
             self.input_token_maxx = max(self.input_token_maxx, int(prompt_tokens))

@@ -1,3 +1,4 @@
+from chinatravel.agent.system_usage import tool_api
 import pandas as pd
 from pandas import DataFrame
 from typing import Callable
@@ -43,15 +44,18 @@ class Accommodations:
 
         self.poi = Poi(lang=self.lang)
 
+    @tool_api("accommodations_keys")
     def keys(self, city):
         return self.key_type_tuple_list[city]
 
+    @tool_api("accommodations_select")
     def select(self, city, key, func: Callable) -> DataFrame:
         if key not in self.data[city].keys():
             return "Key not found."
         bool_list = [func(x) for x in self.data[city][key]]
         return self.data[city][bool_list]
 
+    @tool_api("accommodations_nearby")
     def nearby(self, city, point: str, topk: int = None, dist: float = 5) -> DataFrame:
         lat_lon = self.poi.search(city, point)
         if isinstance(lat_lon, str):

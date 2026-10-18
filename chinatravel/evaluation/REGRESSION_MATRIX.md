@@ -82,6 +82,8 @@ python scripts/build_regression_matrix.py \
 ```
 
 Accepted inputs are serialized JSONL records/envelopes, flat paired-runner streams,
+CSV exports of full attempt records (non-string values JSON encoded; blank nullable
+cells mean None),
 and JSON histories with formal attempt records (step 0 is skipped). Histories
 without records are rejected. Explicit `--run-id` overrides input identity;
 otherwise supplied IDs or stable file-path hashes apply. Paired streams use

@@ -10,6 +10,7 @@ import sys
 import uuid
 
 from chinatravel.agent.nesy_verifier.repair_strategies import STRATEGY_FACTORIES
+from chinatravel.evaluation.train_test_split import load_manifest, select_queries
 from chinatravel.evaluation.repair_comparison import run_comparison, stable_hash
 
 
@@ -39,7 +40,11 @@ def main(argv=None):
     parser.add_argument("--top-p", type=float)
     parser.add_argument("--seed", type=int, help="Seed Python/NumPy locally; does not guarantee provider determinism")
     parser.add_argument("--oracle-translation", "--oracle_translation", action="store_true", default=True)
+    parser.add_argument("--split-manifest", type=Path)
+    parser.add_argument("--partition", choices=("train", "test"))
     args = parser.parse_args(argv)
+    if bool(args.split_manifest) != bool(args.partition):
+        parser.error("--split-manifest and --partition must be supplied together")
     if args.resume and not args.run_id:
         parser.error("--resume requires --run-id")
     if args.retry_failed and not args.resume:
@@ -99,6 +104,11 @@ def main(argv=None):
         return agent.backbone_llm, agent.translate_innercity_transport
 
     ids, data = load_query(args)
+    if args.split_manifest and len(ids) != len(set(ids)):
+        parser.error("Query UIDs must be unique before partition selection")
+    if args.split_manifest:
+        data = select_queries(data, load_manifest(args.split_manifest), args.partition)
+        ids = list(data)
     selected = args.index or ids
     if any(uid not in data for uid in selected):
         parser.error("Requested UID is not present in the selected split")
@@ -113,13 +123,20 @@ def main(argv=None):
     # Include uncommitted implementation bytes, not just HEAD, in resume compatibility.
     source_paths = [Path(__file__), project / "chinatravel/evaluation/repair_comparison.py",
                     project / "chinatravel/evaluation/repair_metrics.py",
-                    *sorted((project / "chinatravel/agent/nesy_verifier").rglob("*.py"))]
+                    project / "chinatravel/evaluation/edit_footprint.py",
+                    project / "chinatravel/evaluation/train_test_split.py",
+                    project / "chinatravel/agent/llms.py", project / "chinatravel/agent/model_usage.py", project / "chinatravel/agent/system_usage.py",
+                    *sorted((project / "chinatravel/agent/nesy_verifier").rglob("*.py")),
+                    *sorted((project / "chinatravel/environment").rglob("*.py"))]
     code_hash = stable_hash({str(path.relative_to(project)): path.read_text(encoding="utf-8") for path in source_paths})
     config = {"split_query_source": args.splits, "language": args.lang, "model_identifier": model,
               "repair_strategies": args.repair_strategies, "max_steps": args.max_steps,
               "oracle_translation": True, "sampling_settings": settings,
               "seed": args.seed, "seed_scope": "Python and NumPy only",
               "git_commit": commit, "git_diff_hash": stable_hash(diff), "implementation_hash": code_hash}
+    if args.split_manifest:
+        config["partition"] = args.partition
+        config["split_manifest_hash"] = stable_hash(load_manifest(args.split_manifest))
     directory = run_comparison(
         {uid: data[uid] for uid in selected}, run_id=run_id, output_root=args.output_dir,
         config=config, prepare_initial_state=prepare, runtime_factory=runtime,

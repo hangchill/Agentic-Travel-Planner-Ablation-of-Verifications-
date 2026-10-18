@@ -1,3 +1,4 @@
+from chinatravel.agent.system_usage import tool_api
 import os
 import pandas as pd
 from pandas import DataFrame
@@ -40,6 +41,7 @@ class IntercityTransport:
                     (exposed_city_list[start_idx], exposed_city_list[end_idx])
                 ] = train_df
 
+    @tool_api("intercity_transport_select")
     def select(
         self, start_city, end_city, intercity_type, earliest_leave_time="00:00"
     ) -> DataFrame:
