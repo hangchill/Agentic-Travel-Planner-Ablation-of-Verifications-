@@ -39,7 +39,10 @@ def load_input(path, run_id=None):
             records.append({"run_id": run_id or item.get("run_id", default_run),
                             "repair_attempt": item["repair_attempt"]})
         elif "before_personal_constraints" in item:
-            records.append({"run_id": default_run, "repair_attempt": item})
+            # Paired-runner flat streams carry invocation and strategy-run identity.
+            payload = {key: value for key, value in item.items() if key not in ("run_id", "matrix_run_id")}
+            records.append({"run_id": run_id or item.get("matrix_run_id", item.get("run_id", default_run)),
+                            "repair_attempt": payload})
         else:
             raise ValueError(f"{path}: proposal lacks a formal repair_attempt record")
     return records

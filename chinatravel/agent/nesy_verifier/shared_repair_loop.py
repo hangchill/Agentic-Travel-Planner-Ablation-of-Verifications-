@@ -79,13 +79,15 @@ def run_repair_loop(
     llm,
     translate_fn,
     max_steps=10,
+    initial_verification=None,
+    history_callback=None,
 ):
 
     ## Keep the current accepted itinerary separate from candidates.
     current_plan = deepcopy(raw_plan)
 
     ## Verify the initial itinerary.
-    current_verification = verify_plan(
+    current_verification = deepcopy(initial_verification) if initial_verification is not None else verify_plan(
         problem,
         {
             "people_number": problem["people_number"],
@@ -186,6 +188,8 @@ def run_repair_loop(
             "metadata": result.metadata,
             "repair_attempt": record.to_dict(),
         })
+        if history_callback is not None:
+            history_callback(deepcopy(history))
 
         ## Update the current plan only when accepted.
         if accepted:

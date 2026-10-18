@@ -7,7 +7,8 @@ from copy import deepcopy
 from chinatravel.agent.base import BaseAgent
 
 from chinatravel.agent.nesy_verifier.shared_repair_loop import run_repair_loop
-from chinatravel.agent.nesy_verifier.repair_strategies.r0 import R0WholePlanRepair
+from chinatravel.agent.nesy_verifier.repair_strategies import create_repair_strategy
+from chinatravel.agent.nesy_verifier.initial_state import InitialRepairState
 from chinatravel.agent.nesy_verifier.prompts.llm_modulo import INITIAL_PROMPT, BACK_PROMPT
 from chinatravel.agent.nesy_verifier.prompts.poi_selection import HOTEL_SELECTION_INSTRUCTION, ATTRACTION_SELECTION_INSTRUCTION, RESTAURANT_SELECTION_INSTRUCTION, TRANSPORT_GO_SELECTION_INSTRUCTION, TRANSPORT_BACK_SELECTION_INSTRUCTION
 # from symbol_verification.commonsense_constraint import func_commonsense_constraints
@@ -156,7 +157,7 @@ class LLMModuloAgent(BaseAgent):
     ## problem: User's travel request and structured information.
     ## prob_idx: Index used for naming experiment output files.
     ## oracle_verifier: Argument passed into solve(), but not directly used in the inspected implementation.
-    def solve(self, problem, prob_idx, oracle_verifier): 
+    def _generate_initial_plan(self, problem, prob_idx):
         ## Redirect standard output and errors to per-problem log files.
         sys.stdout = Logger(
             "{}/problem_{}.log".format(
@@ -364,16 +365,53 @@ class LLMModuloAgent(BaseAgent):
         ## Preserve the raw itinerary before transport translation modifies it.
         raw_plan = deepcopy(json_plan)
 
+        return InitialRepairState(
+            query_uid=problem.get("uid"), problem=deepcopy(problem),
+            raw_initial_plan=raw_plan, repair_context=deepcopy(repair_context),
+            environment_context={"lang": self.lang},
+            generation_metadata={
+                "raw_response": response,
+                "input_tokens": self.backbone_llm.input_token_count,
+                "output_tokens": self.backbone_llm.output_token_count,
+                "elapsed_time_seconds": time.time() - self.start_clock,
+                "llm_inference_time_seconds": self.llm_inference_time,
+                "information_collection_time_seconds": self.information_collection_time,
+            },
+        )
+
+    def prepare_initial_repair_state(self, problem, prob_idx=None):
+        """Collect, shortlist, generate and verify once; no repairs are performed."""
+        from chinatravel.agent.nesy_verifier.shared_repair_loop import verify_plan
+
+        state = self._generate_initial_plan(problem, prob_idx or problem.get("uid"))
+        state.initial_verification = verify_plan(
+            state.problem,
+            {"people_number": problem["people_number"], "start_city": problem["start_city"],
+             "target_city": problem["target_city"], "itinerary": deepcopy(state.raw_initial_plan)},
+            translate_fn=self.translate_innercity_transport,
+        )
+        return state
+
+    def solve(self, problem, prob_idx, oracle_verifier):
+        state = self._generate_initial_plan(problem, prob_idx)
+        raw_plan = deepcopy(state.raw_initial_plan)
+        json_plan = deepcopy(raw_plan)
+        response = state.generation_metadata["raw_response"]
+        repair_context = state.repair_context
+        selected_go_train = repair_context["go_train_info"]
+        selected_go_flight = repair_context["go_flight_info"]
+        selected_back_train = repair_context["back_train_info"]
+        selected_back_flight = repair_context["back_flight_info"]
+        selected_attraction_info = repair_context["attraction_info"]
+        selected_restaurant_info = repair_context["restaurant_info"]
+        selected_hotel_info = repair_context["accommodation_info"]
+        selected_innercity_transport_info = repair_context["innercity_transport_info"]
+
         ## Use the new shared framework when a repair strategy is selected.
         ## Keep the original ChinaTravel R0 loop unchanged when None.
         if self.repair_strategy_name is not None:
 
-            if self.repair_strategy_name == "R0":
-                strategy = R0WholePlanRepair()
-            else:
-                raise NotImplementedError(
-                    f"{self.repair_strategy_name} is not implemented yet."
-                )
+            strategy = create_repair_strategy(self.repair_strategy_name)
 
             ## Run shared verification and repair.
             loop_result = run_repair_loop(
