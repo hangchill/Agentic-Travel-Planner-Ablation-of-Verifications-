@@ -1,4 +1,3 @@
-## To understand the code (used ## to write comments)
 
 import os
 import sys
@@ -7,10 +6,10 @@ from copy import deepcopy
 from chinatravel.agent.base import BaseAgent
 
 from chinatravel.agent.nesy_verifier.shared_repair_loop import run_repair_loop
-from chinatravel.agent.nesy_verifier.repair_strategies.r0 import R0WholePlanRepair
+from chinatravel.agent.nesy_verifier.repair_strategies import create_repair_strategy
+from chinatravel.agent.nesy_verifier.initial_state import InitialRepairState
 from chinatravel.agent.nesy_verifier.prompts.llm_modulo import INITIAL_PROMPT, BACK_PROMPT
 from chinatravel.agent.nesy_verifier.prompts.poi_selection import HOTEL_SELECTION_INSTRUCTION, ATTRACTION_SELECTION_INSTRUCTION, RESTAURANT_SELECTION_INSTRUCTION, TRANSPORT_GO_SELECTION_INSTRUCTION, TRANSPORT_BACK_SELECTION_INSTRUCTION
-# from symbol_verification.commonsense_constraint import func_commonsense_constraints
 from chinatravel.agent.nesy_verifier.verifier.commonsense_constraint_nl import collect_commonsense_constraints_error
 from chinatravel.agent.nesy_verifier.verifier.personal_constraint_nl import collect_personal_error
 
@@ -20,7 +19,6 @@ import ast
 from chinatravel.agent.utils import Logger
 
 import numpy as np
-import re
 import json
 from chinatravel.json_utils import repair_json
 import time
@@ -72,7 +70,6 @@ class LLMModuloAgent(BaseAgent):
         poi_info = self.env(
             "{func}('{city}', 'name', lambda x: True)".format(func=func_name, city=city)
         )["data"]
-        # print(poi_info)
         ## Retrieve additional pages until no more results remain.
         while True:
             info_i = self.env("next_page()")["data"]
@@ -93,7 +90,6 @@ class LLMModuloAgent(BaseAgent):
                 source_city=source_city, target_city=target_city, trans_type=trans_type
             )
         )["data"]
-        # print(poi_info)
         ## Collect all pages of transport results.
         while True:
             info_i = self.env("next_page()")["data"]
@@ -101,7 +97,6 @@ class LLMModuloAgent(BaseAgent):
                 break
             else:
                 trans_info = pd.concat([trans_info, info_i], axis=0, ignore_index=True)
-        # print(poi_info)
         ## Standardize the transport price column.
         trans_info = trans_info.rename(columns={'Cost': 'price'})
         return trans_info
@@ -119,13 +114,11 @@ class LLMModuloAgent(BaseAgent):
             )
         )
 
-        # print(call_str)
         ## No transport is required if both locations are identical.
         if start == end:
             return []
         info = self.env(call_str)["data"]
 
-        # print(start, end, info)
         ## Return when no valid transport solution exists.
         if info == "No solution":
             return info
@@ -152,11 +145,8 @@ class LLMModuloAgent(BaseAgent):
 
         return info
 
-    ## Main function that generates, verifies, and repairs a travel itinerary.
-    ## problem: User's travel request and structured information.
-    ## prob_idx: Index used for naming experiment output files.
-    ## oracle_verifier: Argument passed into solve(), but not directly used in the inspected implementation.
-    def solve(self, problem, prob_idx, oracle_verifier): 
+    # Generate the raw itinerary and reusable repair context.
+    def _generate_initial_plan(self, problem, prob_idx):
         ## Redirect standard output and errors to per-problem log files.
         sys.stdout = Logger(
             "{}/problem_{}.log".format(
@@ -208,7 +198,6 @@ class LLMModuloAgent(BaseAgent):
             problem["target_city"], "restaurant"
         )
 
-        # print(self.memory)
         ## Ask the LLM to shortlist suitable travel options.
         ## These candidate selections will later be inserted into the itinerary generation and repair prompts.
         selected_go_train_index, selected_go_flight_index = self.select_intercity_transport_go(self.memory["train_go"], self.memory["flight_go"], problem, required_num=self.num_candidates_intercity_transports)        
@@ -251,7 +240,6 @@ class LLMModuloAgent(BaseAgent):
         def add_poi_name(df, key):
             if len(df) > 0:
                 for item in df[key]:
-                    # print(item)
                     POI_set.add(item)
         add_poi_name(self.memory["train_go"].iloc[selected_go_train_index], "To")
         add_poi_name(self.memory["flight_go"].iloc[selected_go_flight_index], "To")
@@ -269,7 +257,6 @@ class LLMModuloAgent(BaseAgent):
 
         print(f"collecting innercity transport for {len(POI_list)} POIs ...")
         
-        selected_poi_innercity_transport_list = []
         selected_innercity_transport_info = ""
         ## Retrieve transport options between pairs of shortlisted locations.
         for poi_a in tqdm(POI_list):
@@ -286,7 +273,6 @@ class LLMModuloAgent(BaseAgent):
                                         )
                     if transports_sel == "No solution":
                         continue
-                    selected_poi_innercity_transport_list.append((poi_a, poi_b, trans_type, transports_sel))
                     if len(transports_sel) > 0:
                         duration = calc_time_delta(transports_sel[0]["start_time"], transports_sel[-1]["end_time"])
                         cost = 0
@@ -297,19 +283,6 @@ class LLMModuloAgent(BaseAgent):
                         selected_innercity_transport_info += f" {trans_type}: empty. "
                 selected_innercity_transport_info += "\n"
         
-        # for poi_a, poi_b, trans_type, transport_c in selected_poi_innercity_transport_list:
-        #     if len(transport_c) > 0:
-        #         start_time = transport_c[0]["start_time"]
-        #         end_time = transport_c[-1]["end_time"]
-        #         cost = 0
-        #         for item in transport_c:
-        #             cost += item["cost"]
-        #         selected_innercity_transport_info += f"from {poi_a} to {poi_b}, {trans_type}: start_time {start_time}, end_time {end_time}, cost {cost}\n"
-        #     else:
-        #         selected_innercity_transport_info += f"from {poi_a} to {poi_b}, {trans_type}: None\n"
-        
-        # print(selected_innercity_transport_info)
-
         ## Record the time spent collecting travel information.
         self.information_collection_time = time.time() - self.start_clock
         
@@ -339,7 +312,6 @@ class LLMModuloAgent(BaseAgent):
             innercity_transport_info=selected_innercity_transport_info,
             query=problem['nature_language'])
         
-        # print(query_message)
 
         
         prompt_file = os.path.join(self.log_dir, f'problem_{prob_idx}_step_0_prompt.txt')
@@ -351,29 +323,62 @@ class LLMModuloAgent(BaseAgent):
         response = self.backbone_llm([{"role": "user", "content": query_message}],one_line=False)
         self.llm_inference_time += time.time() - pre_time
 
-        # response = """[{'day': 1, 'activities': [{'start_time': '08:00', 'end_time': '08:25', 'start': '上海站', 'end': '苏州站', 'cost': 55.23, 'TrainID': 'G7004', 'type': 'train', 'tickets': 2, 'transports': 'empty'}, {'position': '苏州观前街乐桥地铁站亚朵酒店', 'type': 'accommodation', 'transports': {'from': '苏州站', 'to': '苏州观前街乐桥地铁站亚朵酒店', 'mode': 'metro', 'start_time': '08:25', 'end_time': '08:39', 'cost': 4}, 'room_type': 1, 'cost': 420, 'start_time': '09:00', 'end_time': '24:00', 'rooms': 1}, {'position': '拙政园', 'type': 'attraction', 'transports': {'from': '苏州观前街乐桥地铁站亚朵酒店', 'to': '拙政园', 'mode': 'metro', 'start_time': '09:30', 'end_time': '09:52', 'cost': 4}, 'cost': 80.0, 'tickets': 2, 'start_time': '10:00', 'end_time': '12:00'}, {'position': '珍珠饭店', 'type': 'lunch', 'transports': {'from': '拙政园', 'to': '珍珠饭店', 'mode': 'metro', 'start_time': '12:00', 'end_time': '12:19', 'cost': 4}, 'cost': 188, 'start_time': '12:30', 'end_time': '13:30'}, {'position': '平江路历史街区', 'type': 'attraction', 'transports': {'from': '珍珠饭店', 'to': '平江路历史街区', 'mode': 'walk', 'start_time': '13:30', 'end_time': '13:40', 'cost': 0}, 'cost': 0.0, 'tickets': 2, 'start_time': '13:45', 'end_time': '15:45'}, {'position': '苏州观前街乐桥地铁站亚朵酒店', 'type': 'accommodation', 'transports': {'from': '平江路历史街区', 'to': '苏州观前街乐桥地铁站亚朵酒店', 'mode': 'metro', 'start_time': '15:45', 'end_time': '16:05', 'cost': 4}, 'room_type': 1, 'cost': 420, 'start_time': '16:30', 'end_time': '24:00', 'rooms': 1}]}, {'day': 2, 'activities': [{'position': '虎丘山风景名胜区', 'type': 'attraction', 'transports': {'from': '苏州观前街乐桥地铁站亚朵酒店', 'to': '虎丘山风景名胜区', 'mode': 'metro', 'start_time': '09:00', 'end_time': '09:28', 'cost': 6}, 'cost': 70.0, 'tickets': 2, 'start_time': '09:30', 'end_time': '11:30'}, {'position': '孙盛兴奥灶面馆(山塘街店)', 'type': 'lunch', 'transports': {'from': '虎丘山风景名胜区', 'to': '孙盛兴奥灶面馆(山塘街店)', 'mode': 'metro', 'start_time': '11:30', 'end_time': '11:45', 'cost': 4}, 'cost': 114, 'start_time': '12:00', 'end_time': '13:00'}, {'position': '苏州古运河游船(山塘街白居易码头)', 'type': 'attraction', 'transports': {'from': '孙盛兴奥灶面馆(山塘街店)', 'to': '苏州古运河游船(山塘街白居易码头)', 'mode': 'walk', 'start_time': '13:00', 'end_time': '13:10', 'cost': 0}, 'cost': 190.0, 'tickets': 2, 'start_time': '13:15', 'end_time': '15:15'}, {'position': '苏州观前街乐桥地铁站亚朵酒店', 'type': 'accommodation', 'transports': {'from': '苏州古运河游船(山塘街白居易码头)', 'to': '苏州观前街乐桥地铁站亚朵酒店', 'mode': 'metro', 'start_time': '15:15', 'end_time': '15:36', 'cost': 4}, 'room_type': 1, 'cost': 420, 'start_time': '16:00', 'end_time': '24:00', 'rooms': 1}]}, {'day': 3, 'activities': [{'position': '苏州博物馆', 'type': 'attraction', 'transports': {'from': '苏州观前街乐桥地铁站亚朵酒店', 'to': '苏州博物馆', 'mode': 'metro', 'start_time': '09:00', 'end_time': '09:23', 'cost': 6}, 'cost': 0.0, 'tickets': 2, 'start_time': '09:30', 'end_time': '11:30'}, {'position': '得月楼(观前店)', 'type': 'lunch', 'transports': {'from': '苏州博物馆', 'to': '得月楼(观前店)', 'mode': 'metro', 'start_time': '11:30', 'end_time': '11:48', 'cost': 4}, 'cost': 306, 'start_time': '12:00', 'end_time': '13:00'}, {'position': '苏州站', 'type': 'train', 'transports': {'from': '得月楼(观前店)', 'to': '苏州站', 'mode': 'metro', 'start_time': '13:00', 'end_time': '13:09', 'cost': 4}, 'start_time': '14:00', 'end_time': '14:30', 'TrainID': 'G7029', 'cost': 110.46, 'tickets': 2}]}]
-        # """
-        # print(response)
         
         response = """[{"day": 1,""" + response
         ## Repair the LLM response's JSON formatting before parsing it.
         nl_plan = repair_json(response)
-        # print(nl_plan)
         json_plan = json.loads(nl_plan)
 
         ## Preserve the raw itinerary before transport translation modifies it.
         raw_plan = deepcopy(json_plan)
 
+        return InitialRepairState(
+            query_uid=problem.get("uid"), problem=deepcopy(problem),
+            raw_initial_plan=raw_plan, repair_context=deepcopy(repair_context),
+            environment_context={"lang": self.lang},
+            generation_metadata={
+                "raw_response": response,
+                "input_tokens": self.backbone_llm.input_token_count,
+                "output_tokens": self.backbone_llm.output_token_count,
+                "elapsed_time_seconds": time.time() - self.start_clock,
+                "llm_inference_time_seconds": self.llm_inference_time,
+                "information_collection_time_seconds": self.information_collection_time,
+            },
+        )
+
+    def prepare_initial_repair_state(self, problem, prob_idx=None):
+        """Collect, shortlist, generate and verify once; no repairs are performed."""
+        from chinatravel.agent.nesy_verifier.shared_repair_loop import verify_plan
+
+        state = self._generate_initial_plan(problem, prob_idx or problem.get("uid"))
+        state.initial_verification = verify_plan(
+            state.problem,
+            {"people_number": problem["people_number"], "start_city": problem["start_city"],
+             "target_city": problem["target_city"], "itinerary": deepcopy(state.raw_initial_plan)},
+            translate_fn=self.translate_innercity_transport,
+        )
+        return state
+
+    def solve(self, problem, prob_idx, oracle_verifier):
+        state = self._generate_initial_plan(problem, prob_idx)
+        raw_plan = deepcopy(state.raw_initial_plan)
+        json_plan = deepcopy(raw_plan)
+        response = state.generation_metadata["raw_response"]
+        repair_context = state.repair_context
+        selected_go_train = repair_context["go_train_info"]
+        selected_go_flight = repair_context["go_flight_info"]
+        selected_back_train = repair_context["back_train_info"]
+        selected_back_flight = repair_context["back_flight_info"]
+        selected_attraction_info = repair_context["attraction_info"]
+        selected_restaurant_info = repair_context["restaurant_info"]
+        selected_hotel_info = repair_context["accommodation_info"]
+        selected_innercity_transport_info = repair_context["innercity_transport_info"]
+
         ## Use the new shared framework when a repair strategy is selected.
         ## Keep the original ChinaTravel R0 loop unchanged when None.
         if self.repair_strategy_name is not None:
 
-            if self.repair_strategy_name == "R0":
-                strategy = R0WholePlanRepair()
-            else:
-                raise NotImplementedError(
-                    f"{self.repair_strategy_name} is not implemented yet."
-                )
+            strategy = create_repair_strategy(self.repair_strategy_name)
 
             ## Run shared verification and repair.
             loop_result = run_repair_loop(
@@ -459,7 +464,6 @@ class LLMModuloAgent(BaseAgent):
         
         print("ITER: ", 0, "ERROR:\n", error_info)
 
-        # exit(0)
         ## Store the verifier's error messages with the evaluated itinerary.
         evaluated_plan["error_info"] = error_info
 
@@ -500,7 +504,6 @@ class LLMModuloAgent(BaseAgent):
             backprompt=error_info_nl
             )
             
-            # print(query_message)
             
             prompt_file = os.path.join(self.log_dir, f'problem_{prob_idx}_step_{step_i}_prompt.txt')
             with open(prompt_file, "w", encoding="utf-8") as f:
@@ -516,7 +519,6 @@ class LLMModuloAgent(BaseAgent):
             nl_plan = repair_json(response)
             json_plan = json.loads(nl_plan)
 
-            # print(json_plan)
 
             evaluated_plan = {
                 "people_number": problem["people_number"],
@@ -570,20 +572,17 @@ class LLMModuloAgent(BaseAgent):
 
     def select_accommodation(self, hotel_info, query, required_num=10):
         
-        # print(hotel_info.head())
         
         hotel_info = hotel_info.drop(columns=["hotelname_en"])
 
         # 将 hotel_info 转换为不带索引的字符串
         hotel_info_str = hotel_info.to_csv(sep='\t', na_rep='nan', index=False)
 
-        # print(hotel_info_str)
 
         time_before = time.time()
         # filtering hotel info by llm
         query_message=[{"role": "user", "content": HOTEL_SELECTION_INSTRUCTION.format(required_options=required_num, user_requirements=query["nature_language"], hotel_info=hotel_info_str)}]
 
-        # print(query_message[0]["content"])
 
         answer = self.backbone_llm(query_message,one_line=False)
 
@@ -591,7 +590,6 @@ class LLMModuloAgent(BaseAgent):
         self.llm_inference_time_count += time.time() - time_before
 
         print(answer)
-        # match = re.search(r'\s*\[(.*?)\]', answer, re.DOTALL)
         
         selected_idx = []
         # if match:
@@ -616,13 +614,11 @@ class LLMModuloAgent(BaseAgent):
     
     def select_attraction(self, attraction_info, query, required_num=50):
 
-        # print(attraction_info.head())
 
         attraction_info = attraction_info
         # 将 attraction_info 转换为不带索引的字符串
         attraction_info_str = attraction_info.to_csv(sep='\t', na_rep='nan', index=False)
 
-        # print(attraction_info_str)
 
         time_before = time.time()
         query_message=[{"role": "user", "content": ATTRACTION_SELECTION_INSTRUCTION.format(required_options=required_num, user_requirements=query["nature_language"], attraction_info=attraction_info_str)}]
@@ -657,7 +653,6 @@ class LLMModuloAgent(BaseAgent):
 
         restaurant_info_str = restaurant_info.to_csv(sep='\t', na_rep='nan', index=False)
 
-        # print(restaurant_info_str)
 
         time_before = time.time()
         query_message=[{"role": "user", "content": RESTAURANT_SELECTION_INSTRUCTION.format(required_options=required_num, user_requirements=query["nature_language"], restaurant_info=restaurant_info_str)}]
@@ -762,8 +757,6 @@ class LLMModuloAgent(BaseAgent):
 
     def translate_innercity_transport(self, plan, problem):
         
-        # print("Translating...")
-        # print(plan)
 
         for day_activity in plan:
             for activity in day_activity['activities']:
@@ -814,9 +807,6 @@ class LLMModuloAgent(BaseAgent):
                         activity['transports'] = []
                     
 
-        # print("TRANSFERED:")
-        # print(plan)
 
-        # exit(0)
 
         return plan
