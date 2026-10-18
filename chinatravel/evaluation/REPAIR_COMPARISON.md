@@ -128,9 +128,22 @@ python scripts/build_regression_matrix.py \
   --repair-strategy R0 --output-dir artifacts/matrix-r0
 ```
 
-R0 still does not declare explicit targets: the stream is ingestible, but those
-attempts remain excluded from directional matrix attribution. No targets are
-inferred by this runner.
+R0 now logs all current False personal constraints as targets with
+`target_provenance="r0_failed_feedback"` and `editable_scope="plan"`. Exactly one
+mapped failed target can enter the strict primary matrix. Multiple targets are
+retained but excluded from directional attribution; unknown states are not
+targets. The runner itself never infers targets. Canonical intent lives directly
+on the record, with debug metadata kept separate. See
+[Metadata required from repair strategies](REPAIR_ATTEMPTS.md#metadata-required-from-repair-strategies)
+for exact R0/R1/R2/R3 contracts and the distinction between targets and editable
+scope. R1–R4 remain unimplemented.
+
+The candidate matrix is the primary comparison of proposed repair behavior.
+The accepted matrix measures safeguards/outcomes, so rollback can drive R2's
+accepted regression rate down without making its proposals intrinsically safer.
+Scope-conditioned aggregation is secondary and preserves primary eligibility.
+These estimate observed associations, not causal dependencies. Slot/edit-footprint
+analysis remains deferred.
 
 ## Checkpointing, failure and resume
 
@@ -143,7 +156,10 @@ continue. An exception before a proposal completes does not fabricate an attempt
 record. Preparation failure is recorded separately and other queries continue.
 
 JSONL and CSV indexes are rebuilt atomically from pair checkpoints, rather than
-appended. This avoids duplicate attempts on repeated/resumed execution. A crash
+appended. This avoids duplicate attempts on repeated/resumed execution.
+Old records are normalized through the canonical reader when rebuilding JSONL;
+legacy intent is promoted to direct fields without changing stored old pair files.
+No targets are invented for old R0 attempts that did not record them. A crash
 between file replacements may leave indexes stale; resume rebuilds them before
 work. A directory lock prevents concurrent writers. After a hard process crash,
 inspect the recorded PID and remove a stale `.comparison.lock` manually before

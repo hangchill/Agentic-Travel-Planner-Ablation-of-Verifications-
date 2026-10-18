@@ -16,6 +16,7 @@ from chinatravel.agent.nesy_verifier.initial_state import InitialRepairState
 from chinatravel.agent.nesy_verifier.repair_strategies import STRATEGY_FACTORIES
 from chinatravel.agent.nesy_verifier.shared_repair_loop import run_repair_loop
 from chinatravel.evaluation.repair_metrics import summarize_repair_history
+from chinatravel.evaluation.repair_attempt import coerce_repair_attempt
 
 
 def stable_hash(value):
@@ -60,7 +61,7 @@ def _rebuild_indexes(root):
         if "execution_status" not in result:
             continue
         for record in result.get("repair_attempts", []):
-            attempts.append({**record, "run_id": result["run_id"],
+            attempts.append({**coerce_repair_attempt(record).to_dict(), "run_id": result["run_id"],
                              "query_uid": result["query_uid"], "repair_strategy": result["repair_strategy"],
                              "matrix_run_id": result["matrix_run_id"]})
         if result.get("summary_metrics") is not None:

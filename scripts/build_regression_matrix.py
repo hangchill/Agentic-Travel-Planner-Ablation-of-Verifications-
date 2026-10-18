@@ -12,7 +12,7 @@ if __package__ in (None, ""):
 
 from chinatravel.evaluation.constraint_families import CONSTRAINT_FAMILIES
 from chinatravel.evaluation.regression_matrix import (
-    AGGREGATE_COLUMNS, CONTRIBUTION_COLUMNS, build_regression_matrix,
+    AGGREGATE_COLUMNS, CONTRIBUTION_COLUMNS, SCOPE_AGGREGATE_COLUMNS, build_regression_matrix,
 )
 
 
@@ -73,6 +73,8 @@ def main(argv=None):
     args.output_dir.mkdir(parents=True, exist_ok=True)
     _write_csv(args.output_dir / "matrix_contributions.csv", analysis["contributions"], CONTRIBUTION_COLUMNS)
     _write_csv(args.output_dir / "regression_matrix_long.csv", analysis["aggregate"], AGGREGATE_COLUMNS)
+    _write_csv(args.output_dir / "regression_matrix_by_scope_long.csv",
+               analysis["aggregate_by_scope"], SCOPE_AGGREGATE_COLUMNS)
     for perspective, filename in (("candidate", "regression_matrix_candidate.csv"),
                                   ("accepted_trajectory", "regression_matrix_accepted.csv")):
         lookup = {(row["source_family"], row["destination_family"]): row["regression_rate"]

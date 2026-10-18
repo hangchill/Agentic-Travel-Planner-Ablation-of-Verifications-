@@ -44,7 +44,7 @@ def record(before=None, after=None, codes=None, targets=None, **kwargs):
         target_constraint_indices=[1] if targets is None else targets,
         target_constraint_labels=[], before_personal_constraints=before,
         after_personal_constraints=after, **transitions, candidate_plan=[],
-        accepted_plan_after=[], repair_metadata={"target_provenance": "explicit"},
+        accepted_plan_after=[], repair_metadata={}, target_provenance="explicit",
         constraint_descriptors=[{"constraint_index": index, "hard_logic_py": code}
                                 for index, code in enumerate(codes, 1)],
     )
@@ -251,9 +251,14 @@ class MatrixCliTests(unittest.TestCase):
             ]}), encoding="utf-8")
             result = self.run_cli("--input", str(jsonl), str(history_file), "--run-id", "run-a", "--output-dir", str(output))
             self.assertEqual(result.returncode, 0, result.stderr)
-            self.assertEqual(len(list(output.iterdir())), 5)
+            self.assertEqual(len(list(output.iterdir())), 6)
             coverage = json.loads((output / "matrix_coverage.json").read_text())
             self.assertEqual(coverage["duplicate_records_ignored"], 1)
+            with (output / "regression_matrix_by_scope_long.csv").open(newline="") as stream:
+                scoped = list(csv.DictReader(stream))
+            self.assertTrue(scoped)
+            self.assertTrue(all(row["editable_scope"] == "" for row in scoped))
+            self.assertEqual(coverage["missing_editable_scope_attempts"], 1)
             for filename, expected in (("regression_matrix_candidate.csv", "1.0"),
                                        ("regression_matrix_accepted.csv", "0.0")):
                 with (output / filename).open(newline="") as stream:

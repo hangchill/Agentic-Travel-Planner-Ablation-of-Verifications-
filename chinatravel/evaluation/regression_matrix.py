@@ -1,12 +1,13 @@
 """Offline, attempt-level regression matrices from explicit single targets."""
 
 from collections import defaultdict
+from copy import deepcopy
 import json
 
 from chinatravel.evaluation.constraint_families import (
     CONSTRAINT_FAMILIES, NORMALIZER_VERSION, classify_constraints,
 )
-from chinatravel.evaluation.repair_attempt import RepairAttemptRecord
+from chinatravel.evaluation.repair_attempt import coerce_repair_attempt
 
 TAXONOMY_VERSION = "1.0.0"
 MATRIX_DEFINITION_VERSION = "1.0.0"
@@ -17,6 +18,10 @@ CONTRIBUTION_COLUMNS = (
     "accepted", "exclusion_reason", "target_provenance", "target_mapping_status",
     "descriptor_exclusions", "taxonomy_version", "normalizer_version",
     "matrix_definition_version",
+    "target_count", "concurrent_failed_count", "concurrent_commonsense_failure_count",
+    "feedback_personal_constraint_count", "feedback_commonsense_failure_count",
+    "editable_scope", "scope_level", "protected_constraint_count", "escalation_reason",
+    "is_single_target", "is_isolated_personal_target", "has_concurrent_commonsense_failure",
 )
 AGGREGATE_COLUMNS = (
     "repair_strategy", "perspective", "source_family", "destination_family",
@@ -24,6 +29,7 @@ AGGREGATE_COLUMNS = (
     "support_queries", "unknown_after_excluded_attempts", "taxonomy_version",
     "normalizer_version", "matrix_definition_version", "counting_unit", "target_policy",
 )
+SCOPE_AGGREGATE_COLUMNS = ("repair_strategy", "editable_scope", *AGGREGATE_COLUMNS[1:])
 _VERSIONS = dict(taxonomy_version=TAXONOMY_VERSION,
                  normalizer_version=NORMALIZER_VERSION,
                  matrix_definition_version=MATRIX_DEFINITION_VERSION)
@@ -40,11 +46,8 @@ def _prepare(records, run_id):
             item = item["repair_attempt"]
         if not isinstance(item_run, str) or not item_run:
             raise ValueError("Every attempt needs a nonempty run_id")
-        if isinstance(item, RepairAttemptRecord):
-            payload = item.to_dict()
-        else:
-            payload = RepairAttemptRecord.from_dict(item).to_dict()
-        record = RepairAttemptRecord.from_dict(payload)
+        record = deepcopy(coerce_repair_attempt(item))
+        payload = record.to_dict()
         key = (item_run, record.query_uid, record.step)
         if key in unique:
             if unique[key][1].to_dict() != payload:
@@ -91,8 +94,54 @@ def _source(record, mapping):
     return index, family, status, None
 
 
-def _flat(value):
-    return value if value is None or isinstance(value, (str, int, float, bool)) else json.dumps(value, sort_keys=True)
+def _coverage_summary(audits):
+    """One coverage implementation for global, strategy and scope populations."""
+    coverage = {
+        "total_repair_attempts": 0,
+        "zero_target_attempts": 0, "single_target_attempts": 0, "multi_target_attempts": 0,
+        "target_mapping": {status: 0 for status in ("mapped", "unmapped", "ambiguous", "compound")},
+        "target_missing_descriptor_instances": 0,
+        "source_target_not_false_attempts": 0, "attempts_missing_descriptors": 0,
+        "missing_descriptor_instances": 0, "missing_query_uid_attempts": 0,
+        "destination_unknown_after_excluded_contributions": 0,
+        "destination_unknown_after_excluded_attempts": 0,
+        "candidate_eligible_contributions": 0, "accepted_eligible_contributions": 0,
+        "isolated_single_target_attempts": 0, "single_target_with_other_personal_failures_attempts": 0,
+        "concurrent_commonsense_failure_attempts": 0, "missing_target_provenance_attempts": 0,
+        "missing_editable_scope_attempts": 0,
+    }
+    queries = set()
+    for record, mapping, exclusions, eligible_count, unknown_count in audits:
+        coverage["total_repair_attempts"] += 1
+        targets = record.target_constraint_indices
+        coverage[("zero_target_attempts" if not targets else "single_target_attempts"
+                  if len(targets) == 1 else "multi_target_attempts")] += 1
+        failed = len(record.concurrent_failed_constraint_indices)
+        coverage["isolated_single_target_attempts"] += int(len(targets) == 1 and failed == 1)
+        coverage["single_target_with_other_personal_failures_attempts"] += int(len(targets) == 1 and failed > 1)
+        coverage["concurrent_commonsense_failure_attempts"] += int((record.concurrent_commonsense_failure_count or 0) > 0)
+        coverage["missing_target_provenance_attempts"] += int(record.target_provenance is None)
+        coverage["missing_editable_scope_attempts"] += int(record.editable_scope is None)
+        if record.query_uid is None:
+            coverage["missing_query_uid_attempts"] += 1
+        else:
+            queries.add(record.query_uid)
+        missing = sum(row["classification_status"] == "missing_descriptor" for row in exclusions)
+        coverage["attempts_missing_descriptors"] += int(missing > 0)
+        coverage["missing_descriptor_instances"] += missing
+        for index in targets:
+            if index not in mapping:
+                coverage["target_missing_descriptor_instances"] += 1
+            else:
+                coverage["target_mapping"][mapping[index]["classification_status"]] += 1
+        if len(targets) == 1 and record.before_personal_constraints[targets[0] - 1] is not False:
+            coverage["source_target_not_false_attempts"] += 1
+        coverage["candidate_eligible_contributions"] += eligible_count
+        coverage["accepted_eligible_contributions"] += eligible_count
+        coverage["destination_unknown_after_excluded_contributions"] += unknown_count
+        coverage["destination_unknown_after_excluded_attempts"] += int(unknown_count > 0)
+    coverage["distinct_query_count"] = len(queries)
+    return coverage
 
 
 def build_regression_matrix(records, run_id="default") -> dict:
@@ -104,42 +153,16 @@ def build_regression_matrix(records, run_id="default") -> dict:
     """
     prepared, duplicates = _prepare(records, run_id)
     contributions = []
-    coverage = {
-        "total_repair_attempts": len(prepared), "duplicate_records_ignored": duplicates,
-        "zero_target_attempts": 0, "single_target_attempts": 0, "multi_target_attempts": 0,
-        "target_mapping": {status: 0 for status in ("mapped", "unmapped", "ambiguous", "compound")},
-        "target_missing_descriptor_instances": 0,
-        "source_target_not_false_attempts": 0, "attempts_missing_descriptors": 0,
-        "missing_descriptor_instances": 0, "missing_query_uid_attempts": 0,
-        "destination_unknown_after_excluded_contributions": 0,
-        "destination_unknown_after_excluded_attempts": 0,
-        "candidate_eligible_contributions": 0, "accepted_eligible_contributions": 0,
-        "distinct_query_count": len({r.query_uid for _, r in prepared if r.query_uid is not None}),
-        **_VERSIONS,
-    }
+    audits = []
     for item_run, record in prepared:
         targets = record.target_constraint_indices
-        coverage[("zero_target_attempts" if not targets else "single_target_attempts"
-                  if len(targets) == 1 else "multi_target_attempts")] += 1
-        if record.query_uid is None:
-            coverage["missing_query_uid_attempts"] += 1
         mapping, exclusions = _classifications(record)
-        missing = sum(row["classification_status"] == "missing_descriptor" for row in exclusions)
-        coverage["attempts_missing_descriptors"] += int(missing > 0)
-        coverage["missing_descriptor_instances"] += missing
-        for index in targets:
-            if index not in mapping:
-                coverage["target_missing_descriptor_instances"] += 1
-            else:
-                coverage["target_mapping"][mapping[index]["classification_status"]] += 1
-        if len(targets) == 1 and record.before_personal_constraints[targets[0] - 1] is not False:
-            coverage["source_target_not_false_attempts"] += 1
         source_index, source_family, source_status, source_reason = _source(record, mapping)
         destinations = defaultdict(list)
         for index, classification in mapping.items():
             if classification["classification_status"] == "mapped":
                 destinations[classification["family"]].append(index - 1)
-        unknown_excluded = False
+        unknown_count = eligible_count = 0
         for destination in CONSTRAINT_FAMILIES:
             indices = destinations[destination]
             reason = source_reason
@@ -152,9 +175,9 @@ def build_regression_matrix(records, run_id="default") -> dict:
                     reason = "destination_not_all_pass_before"
                 elif any(record.after_personal_constraints[i] is None for i in indices):
                     reason = "destination_unknown_after"
-                    unknown_excluded = True
-                    coverage["destination_unknown_after_excluded_contributions"] += 1
+                    unknown_count += 1
             eligible = reason is None
+            eligible_count += int(eligible)
             regressed = eligible and any(record.after_personal_constraints[i] is False for i in indices)
             for perspective in PERSPECTIVES:
                 contributions.append({
@@ -165,16 +188,38 @@ def build_regression_matrix(records, run_id="default") -> dict:
                     "eligible": eligible,
                     "regression": bool(regressed and (perspective == "candidate" or record.accepted)) if eligible else None,
                     "accepted": record.accepted, "exclusion_reason": reason,
-                    "target_provenance": _flat(record.repair_metadata.get("target_provenance")),
+                    "target_provenance": record.target_provenance,
+                    "target_count": len(targets),
+                    "concurrent_failed_count": len(record.concurrent_failed_constraint_indices),
+                    "concurrent_commonsense_failure_count": record.concurrent_commonsense_failure_count,
+                    "feedback_personal_constraint_count": (len(record.feedback_personal_constraint_indices)
+                        if record.feedback_personal_constraint_indices is not None else None),
+                    "feedback_commonsense_failure_count": record.feedback_commonsense_failure_count,
+                    "editable_scope": record.editable_scope, "scope_level": record.scope_level,
+                    "protected_constraint_count": len(record.protected_constraint_indices),
+                    "escalation_reason": record.escalation_reason,
+                    "is_single_target": len(targets) == 1,
+                    "is_isolated_personal_target": len(targets) == 1 and len(record.concurrent_failed_constraint_indices) == 1,
+                    "has_concurrent_commonsense_failure": (record.concurrent_commonsense_failure_count > 0
+                        if record.concurrent_commonsense_failure_count is not None else None),
                     "target_mapping_status": source_status,
                     "descriptor_exclusions": json.dumps(exclusions, sort_keys=True), **_VERSIONS,
                 })
-                if eligible:
-                    coverage[("candidate_eligible_contributions" if perspective == "candidate"
-                              else "accepted_eligible_contributions")] += 1
-        coverage["destination_unknown_after_excluded_attempts"] += int(unknown_excluded)
+        audits.append((record, mapping, exclusions, eligible_count, unknown_count))
+    coverage = {**_coverage_summary(audits), "duplicate_records_ignored": duplicates, **_VERSIONS}
+    by_strategy, by_scope = defaultdict(list), defaultdict(list)
+    for audit in audits:
+        record = audit[0]
+        by_strategy[record.repair_strategy].append(audit)
+        by_scope[(record.repair_strategy, record.editable_scope)].append(audit)
+    coverage["by_strategy"] = [{"repair_strategy": strategy, **_coverage_summary(group)}
+                               for strategy, group in sorted(by_strategy.items())]
+    coverage["by_strategy_scope"] = [{"repair_strategy": strategy, "editable_scope": scope,
+                                     **_coverage_summary(group)}
+        for (strategy, scope), group in sorted(by_scope.items(), key=lambda pair: (pair[0][0], pair[0][1] or ""))]
     return {"contributions": contributions,
-            "aggregate": aggregate_contributions(contributions), "coverage": coverage}
+            "aggregate": aggregate_contributions(contributions),
+            "aggregate_by_scope": aggregate_contributions(contributions, by_scope=True), "coverage": coverage}
 
 
 def build_contribution_table(records, run_id="default") -> list[dict]:
@@ -185,7 +230,7 @@ def summarize_matrix_coverage(records, run_id="default") -> dict:
     return build_regression_matrix(records, run_id)["coverage"]
 
 
-def aggregate_contributions(contributions) -> list[dict]:
+def aggregate_contributions(contributions, *, by_scope=False) -> list[dict]:
     """Aggregate once per stable contribution key; reject conflicting duplicates."""
     unique = {}
     strategies = set()
@@ -199,24 +244,25 @@ def aggregate_contributions(contributions) -> list[dict]:
         if key in unique and unique[key] != row:
             raise ValueError(f"Conflicting duplicate contribution: {key!r}")
         unique[key] = row
-        strategies.add(row["repair_strategy"])
+        strategies.add((row["repair_strategy"], row.get("editable_scope") if by_scope else None))
     cells = defaultdict(list)
     for row in unique.values():
-        cells[(row["repair_strategy"], row["perspective"], row["source_family"],
+        cells[(row["repair_strategy"], row.get("editable_scope") if by_scope else None, row["perspective"], row["source_family"],
                row["destination_family"])].append(row)
     result = []
-    for strategy in sorted(strategies):
+    for strategy, scope in sorted(strategies, key=lambda pair: (pair[0], pair[1] or "")):
         for perspective in PERSPECTIVES:
             for source in CONSTRAINT_FAMILIES:
                 for destination in CONSTRAINT_FAMILIES:
                     if source == destination:
                         continue
-                    rows = cells[(strategy, perspective, source, destination)]
+                    rows = cells[(strategy, scope, perspective, source, destination)]
                     eligible = [row for row in rows if row["eligible"]]
                     attempts = {(row["run_id"], row["query_uid"], row["step"]) for row in eligible}
                     regressions = sum(row["regression"] is True for row in eligible)
                     result.append({
                         "repair_strategy": strategy, "perspective": perspective,
+                        **({"editable_scope": scope} if by_scope else {}),
                         "source_family": source, "destination_family": destination,
                         "regression_count": regressions, "eligible_count": len(attempts),
                         "regression_rate": regressions / len(attempts) if attempts else None,

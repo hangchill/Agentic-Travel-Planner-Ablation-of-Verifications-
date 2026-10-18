@@ -11,8 +11,10 @@ Source family `i` is eligible only for an attempt with exactly one explicit
 `target_constraint_indices` entry. That 1-based target must exist, have state
 exactly `False` before repair, and have a descriptor whose Phase 3A classification
 is `mapped`. Missing, unmapped, ambiguous, or compound sources are excluded.
-In particular, empty R0 target metadata stays empty; there is no all-failures
-fallback. Invalid records (including out-of-range targets) fail validation.
+R0 now declares its False personal feedback targets at repair time with
+`r0_failed_feedback` provenance. Empty legacy target lists still stay empty;
+there is no matrix-time all-failures fallback. Invalid records (including
+out-of-range targets) fail validation.
 
 Every descriptor is classified. Only mapped instances form destination family
 `j`. Its contribution is eligible only if at least one such instance exists,
@@ -43,6 +45,25 @@ proposals remain in both denominators and the candidate numerator; they cannot
 contribute an accepted regression. Do not filter the accepted population to
 accepted attempts. Unknown-outcome exclusions make the estimate conditional on
 evaluable outcomes; their counts are exposed separately.
+
+## Candidate is the primary cross-strategy view
+
+The **candidate matrix** asks: "When this strategy proposes a repair targeting
+family i, how often does the proposal break a previously satisfied family j?"
+It is the main comparison of proposed repair behavior across strategies.
+
+The **accepted matrix** asks: "How often does such a regression actually enter
+the continuing accepted trajectory?" It is a system safeguard/outcome measure.
+Low accepted regression for R2 is not evidence its proposals are intrinsically
+safer: rollback can force accepted regression toward zero. Candidate harm remains
+observable. These remain observed repair-regression associations, not causal
+dependencies.
+
+The primary matrix is strict single-target; multiple-target attempts remain in
+coverage/contributions but are excluded from directional attribution. Concurrency
+and scope fields never silently change primary eligibility. An isolated personal
+target means exactly one target and exactly one concurrent personal failure;
+commonsense failures may still coexist, so isolation does not establish causality.
 
 ## Python API and identity
 
@@ -82,14 +103,22 @@ run_id, query_uid, step, repair_strategy, source_constraint_index,
 source_family, destination_family, perspective, eligible, regression,
 accepted, exclusion_reason, target_provenance, target_mapping_status,
 descriptor_exclusions, taxonomy_version, normalizer_version,
-matrix_definition_version
+matrix_definition_version, target_count, concurrent_failed_count,
+concurrent_commonsense_failure_count, feedback_personal_constraint_count,
+feedback_commonsense_failure_count, editable_scope, scope_level,
+protected_constraint_count, escalation_reason, is_single_target,
+is_isolated_personal_target, has_concurrent_commonsense_failure
 ```
 
 One row per attempt, destination family and perspective is emitted, including
 excluded attempts with no source family. `regression` is `None` when ineligible.
 `descriptor_exclusions` is a JSON string listing indices, classification status,
-and reasons for excluded/missing descriptors. `target_provenance` comes from
-`repair_metadata` when present; structured values are encoded as JSON strings.
+and reasons for excluded/missing descriptors. Scope, provenance, feedback and
+concurrency come from canonical record fields, migrated on read when old records
+stored intent in metadata. Feedback counts and concurrent commonsense presence
+remain `None` when unavailable; explicitly empty feedback has count 0.
+`has_concurrent_commonsense_failure` is True/False for known counts, otherwise
+None. Scope is slot/day/plan or unavailable (None/blank), never `unknown`.
 
 Exclusion precedence is source validity, diagonal, absent mapped destination,
 destination not all PASS before, then unknown candidate after. Source reasons
@@ -115,6 +144,18 @@ eligible attempts, across runs. Repeated attempts from one query are not
 independent observations. Definition/taxonomy versions are `1.0.0`, while
 normalizer version is imported from Phase 3A. `counting_unit=repair_attempt` and
 `target_policy=single_explicit_failed_target`.
+
+## Secondary scope-conditioned matrix
+
+`regression_matrix_by_scope_long.csv` has the same aggregate columns, with
+`editable_scope` after `repair_strategy`. It uses the exact same contribution
+rows and eligibility, grouped separately by strategy, scope, perspective and
+family pair. Missing scope forms an explicit None/blank group and is counted
+in coverage; it is never assigned to slot/day/plan. This secondary view can
+compare R3's scopes without changing or replacing the primary strategy-level
+matrix. The Python result adds `aggregate_by_scope`; both views share one
+aggregation implementation. Diagonals and zero-support rates remain unavailable.
+No additional scope pivots or changed-slot/edit-footprint metrics are introduced.
 
 ## Coverage audit
 
@@ -152,6 +193,25 @@ distinct attempts having any such pair. Eligible contribution counts are by
 perspective and must match. No-target/multi-target attempts are retained in
 coverage even though excluded from directional inference.
 
+Phase 4.1 also retains these global coverage counts and reports them in
+`by_strategy` and `by_strategy_scope` row lists:
+
+```text
+isolated_single_target_attempts
+single_target_with_other_personal_failures_attempts
+concurrent_commonsense_failure_attempts
+missing_target_provenance_attempts
+missing_editable_scope_attempts
+```
+
+Each breakdown includes total/zero/single/multi-target attempts, mapping-status
+counts (target instances), eligible candidate/accepted contributions, unknown-after
+exclusions, missing descriptors and distinct query counts. Missing scope has an
+explicit `editable_scope: null` row in the scope breakdown; it is not pooled with
+a known scope. Missing commonsense counts do not count as observed failures;
+their contribution Boolean remains unavailable. Coverage describes the supplied
+trajectories only; representativeness is unestablished without real trajectories.
+
 ## CLI
 
 ```bash
@@ -175,8 +235,9 @@ is applied before aggregation. Multiple remaining strategies raise an error
 before writing, since one pivot pair cannot represent multiple strategies
 without pooling. The Python API keeps strategies separate in its long table.
 
-Five files are produced: contributions and long aggregates above,
-`regression_matrix_candidate.csv`, `regression_matrix_accepted.csv`, and coverage.
+Six files are produced: `matrix_contributions.csv`, `regression_matrix_long.csv`,
+`regression_matrix_by_scope_long.csv`, `regression_matrix_candidate.csv`,
+`regression_matrix_accepted.csv`, and `matrix_coverage.json`.
 Pivot rows are source families, columns are destination families; unavailable
 and diagonal cells are blank, while observed zero regression rates are `0.0`.
 Empty input produces header-only long tables, blank pivots, and zero coverage.
@@ -184,3 +245,8 @@ Empty input produces header-only long tables, blank pivots, and zero coverage.
 No train/test enforcement is performed. Choose the intended input partition
 externally; inspect strict single-target and classification coverage before
 interpreting a sparse matrix.
+
+For the exact per-strategy intent contract, see
+[Metadata required from repair strategies](REPAIR_ATTEMPTS.md#metadata-required-from-repair-strategies).
+Target selection and editable scope are independent. Changed-slot/edit-footprint
+analysis is intentionally deferred until stable activity identities are agreed.

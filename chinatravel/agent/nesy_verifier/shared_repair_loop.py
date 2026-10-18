@@ -2,7 +2,9 @@
 from copy import deepcopy
 from time import perf_counter
 
-from chinatravel.evaluation.repair_attempt import RepairAttemptRecord
+from chinatravel.evaluation.repair_attempt import (
+    RepairAttemptRecord, failed_constraint_indices, normalize_repair_intent_metadata,
+)
 
 
 def verify_plan(*args, **kwargs):
@@ -155,20 +157,27 @@ def run_repair_loop(
             after_verification,
         )
 
+        intent, debug_metadata = normalize_repair_intent_metadata(result.metadata)
+        strategy_name = intent.pop("repair_strategy", type(strategy).__name__)
+        # Derivable context is authoritative, never supplied by a strategy.
+        intent["concurrent_failed_constraint_indices"] = failed_constraint_indices(before_verification["personal_constraints"])
+        commonsense = before_verification.get("commonsense_errors")
+        intent["concurrent_commonsense_failure_count"] = len(commonsense) if isinstance(commonsense, list) else None
+        intent.setdefault("target_constraint_indices", [])
+        intent.setdefault("target_constraint_labels", [])
         record = RepairAttemptRecord(
             step=step,
             query_uid=problem.get("uid") if isinstance(problem.get("uid"), str) else None,
             constraint_descriptors=_constraint_descriptors(problem),
-            repair_strategy=result.metadata.get("strategy", type(strategy).__name__),
-            target_constraint_indices=deepcopy(result.metadata.get("target_constraint_indices", [])),
-            target_constraint_labels=deepcopy(result.metadata.get("target_constraint_labels", [])),
+            repair_strategy=strategy_name,
+            **intent,
             accepted=accepted,
             before_personal_constraints=before_verification["personal_constraints"],
             after_personal_constraints=after_verification["personal_constraints"],
             **transitions,
             candidate_plan=deepcopy(result.repaired_plan),
             accepted_plan_after=deepcopy(result.repaired_plan if accepted else before_plan),
-            repair_metadata=deepcopy(result.metadata),
+            repair_metadata=debug_metadata,
             input_tokens_before=input_before,
             input_tokens_after=input_after,
             input_tokens_delta=_token_delta(input_before, input_after),
@@ -185,7 +194,7 @@ def run_repair_loop(
             "candidate_plan": deepcopy(result.repaired_plan),
             "verification": candidate_verification,
             "constraint_transitions": transitions,
-            "metadata": result.metadata,
+            "metadata": deepcopy(debug_metadata),
             "repair_attempt": record.to_dict(),
         })
         if history_callback is not None:

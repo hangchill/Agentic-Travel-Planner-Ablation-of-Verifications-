@@ -53,7 +53,7 @@ class RepairAttemptTests(unittest.TestCase):
             [False, True], [True, True],
             StubStrategy(metadata={"strategy": "R0", "target_constraint_indices": [1],
                                    "target_constraint_labels": ["budget"],
-                                   "editable_scope": "whole_plan"}),
+                                   "editable_scope": "plan"}),
             SimpleNamespace(input_token_count=10, output_token_count=4),
         )
         entry = result["history"][1]

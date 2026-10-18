@@ -6,7 +6,6 @@ import csv
 import json
 import os
 from pathlib import Path
-import subprocess
 from types import SimpleNamespace
 import tempfile
 import time
@@ -180,6 +179,25 @@ class ComparisonTests(unittest.TestCase):
         self.assertEqual(len(rows), 2)
         self.assertEqual(len({(row["matrix_run_id"], row["query_uid"], row["step"]) for row in rows}), 2)
 
+    def test_resume_rebuilds_old_attempts_in_canonical_format(self):
+        root = self.run_comparison()
+        path = next(path for path in (root / "queries").glob("*/*.json") if path.name != "initial_state.json")
+        old = json.loads(path.read_text())
+        attempt = old["repair_attempts"][0]
+        attempt.pop("editable_scope")
+        attempt.pop("target_provenance")
+        attempt["repair_metadata"]["scope"] = "whole_plan"
+        attempt["repair_metadata"]["target_provenance"] = "legacy"
+        path.write_text(json.dumps(old))
+        self.run_comparison(resume=True)
+        rows = [json.loads(line) for line in (root / "attempts.jsonl").read_text().splitlines()]
+        migrated = next(row for row in rows if row["repair_strategy"] == old["repair_strategy"])
+        self.assertEqual(migrated["editable_scope"], "plan")
+        self.assertEqual(migrated["target_provenance"], "legacy")
+        self.assertNotIn("scope", migrated["repair_metadata"])
+        self.assertNotIn("target_provenance", migrated["repair_metadata"])
+        self.assertEqual(self.prepare.call_count, 1)
+
     def test_initial_snapshot_tampering_is_detected(self):
         root = self.run_comparison()
         path = next((root / "queries").glob("*/initial_state.json"))
@@ -267,28 +285,6 @@ class ExtractionCompatibilityTests(unittest.TestCase):
             agent._generate_initial_plan.assert_called_once()
             self.assertNotIn("initial_verification", loop_call.call_args.kwargs)
             self.assertEqual(loop_call.call_args.kwargs["raw_plan"], snapshot.raw_initial_plan)
-
-    def test_extracted_generation_body_matches_previous_solve_prefix(self):
-        project = Path(__file__).resolve().parents[1]
-        relative = "chinatravel/agent/nesy_verifier/llm_modulo.py"
-        original = ast.parse(subprocess.check_output(["git", "show", "HEAD:" + relative], cwd=project, text=True))
-        current = ast.parse((project / relative).read_text())
-        old_class = next(n for n in original.body if isinstance(n, ast.ClassDef) and n.name == "LLMModuloAgent")
-        new_class = next(n for n in current.body if isinstance(n, ast.ClassDef) and n.name == "LLMModuloAgent")
-        old_solve = next(n for n in old_class.body if isinstance(n, ast.FunctionDef) and n.name == "solve")
-        new_generation = next(n for n in new_class.body if isinstance(n, ast.FunctionDef) and n.name == "_generate_initial_plan")
-        if any(isinstance(n, ast.Call) and isinstance(n.func, ast.Attribute)
-               and n.func.attr == "_generate_initial_plan" for n in ast.walk(old_solve)):
-            self.skipTest("HEAD already includes the extraction")
-        if not any(isinstance(n, ast.Assign) and any(isinstance(t, ast.Name) and t.id == "raw_plan" for t in n.targets)
-                   for n in old_solve.body):
-            self.skipTest("HEAD already includes the extraction")
-        prefix = []
-        for node in old_solve.body:
-            prefix.append(node)
-            if isinstance(node, ast.Assign) and any(isinstance(t, ast.Name) and t.id == "raw_plan" for t in node.targets):
-                break
-        self.assertEqual([ast.dump(n) for n in prefix], [ast.dump(n) for n in new_generation.body[:-1]])
 
 
 if __name__ == "__main__":

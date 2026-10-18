@@ -1,6 +1,8 @@
 
 import json
 import time
+from collections import Counter
+from chinatravel.evaluation.repair_attempt import failed_constraint_indices
 
 from chinatravel.json_utils import repair_json
 from chinatravel.agent.nesy_verifier.prompts.llm_modulo import BACK_PROMPT
@@ -21,6 +23,14 @@ class R0WholePlanRepair(BaseRepairStrategy):
         context,
         llm,
     ) -> RepairResult:
+
+        failed_indices = failed_constraint_indices(verification_results["personal_constraints"])
+        commonsense_errors = verification_results.get("commonsense_errors")
+        feedback = verification_results["error_info"]
+        # Shared verifier emits commonsense_errors verbatim in error_info. Count
+        # actual supplied occurrences, preserving duplicates without guessing.
+        feedback_commonsense_count = (sum((Counter(commonsense_errors) & Counter(feedback)).values())
+                                      if isinstance(commonsense_errors, list) else None)
 
         ## Combine commonsense and personal constraint feedback.
         error_info_nl = "\n".join(
@@ -63,7 +73,11 @@ class R0WholePlanRepair(BaseRepairStrategy):
             repaired_plan=repaired_plan,
             metadata={
                 "strategy": "R0",
-                "scope": "whole_plan",
+                "target_constraint_indices": failed_indices,
+                "target_provenance": "r0_failed_feedback",
+                "editable_scope": "plan",
+                "feedback_personal_constraint_indices": failed_indices.copy(),
+                "feedback_commonsense_failure_count": feedback_commonsense_count,
                 "prompt": query_message,
                 "raw_response": response,
                 "llm_inference_time": inference_time,

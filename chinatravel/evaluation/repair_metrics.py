@@ -2,14 +2,7 @@
 
 from statistics import mean
 
-from chinatravel.evaluation.repair_attempt import RepairAttemptRecord
-
-
-def _as_record(record: RepairAttemptRecord | dict) -> RepairAttemptRecord:
-    if isinstance(record, RepairAttemptRecord):
-        record.validate()
-        return record
-    return RepairAttemptRecord.from_dict(record)
+from chinatravel.evaluation.repair_attempt import RepairAttemptRecord, coerce_repair_attempt
 
 
 def _ratio(numerator, denominator):
@@ -36,7 +29,7 @@ def compute_attempt_metrics(record: RepairAttemptRecord | dict) -> dict:
     prior accepted state to the candidate only on acceptance, otherwise itself.
     Unknown states never count as passes, failures, fixes, or regressions.
     """
-    record = _as_record(record)
+    record = coerce_repair_attempt(record)
     before = record.before_personal_constraints
     after = record.after_personal_constraints
     failed = sum(value is False for value in before)
@@ -99,7 +92,7 @@ def summarize_repair_history(history: list[dict]) -> dict:
     for entry in history[1:]:
         if "repair_attempt" not in entry:
             raise ValueError("Every proposal must contain a repair_attempt record")
-        record = _as_record(entry["repair_attempt"])
+        record = coerce_repair_attempt(entry["repair_attempt"])
         if record.step <= previous_step or entry.get("step") != record.step:
             raise ValueError("History steps must increase and match repair_attempt steps")
         if record.before_personal_constraints != current:
