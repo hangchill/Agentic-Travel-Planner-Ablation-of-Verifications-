@@ -44,17 +44,41 @@ class ModelUsage:
         return values
 
 
+def _openai_httpx():
+    """Return the httpx module the installed openai client actually uses.
+
+    Newer openai releases import the httpx fork as ``httpx2``; older ones use
+    ``httpx``. Build the instrumented transport against whichever one the SDK
+    expects so request/stream objects stay type-compatible.
+    """
+    import sys
+    import openai._base_client as bc
+
+    for attr in ("httpx", "httpx2"):
+        mod = getattr(bc, attr, None)
+        if mod is not None and hasattr(mod, "BaseTransport") and hasattr(mod, "HTTPTransport"):
+            return mod
+    from openai import DefaultHttpxClient
+    base = DefaultHttpxClient.__mro__[1]
+    return sys.modules[base.__module__.split(".")[0]]
+
+
 def instrumented_http_client(owner, transport=None, client_factory=None):
     """Count actual transport dispatches, including SDK retries and failures.
 
     The supported adapters return non-streaming messages. Reading the response
     here preserves its cached body for the SDK and observes usage only once.
     """
-    import httpx
+    import sys
 
-    inner = transport or httpx.HTTPTransport()
+    if transport is not None:
+        hx = sys.modules[type(transport).__module__.split(".")[0]]
+    else:
+        hx = _openai_httpx()
 
-    class CountingTransport(httpx.BaseTransport):
+    inner = transport or hx.HTTPTransport()
+
+    class CountingTransport(hx.BaseTransport):
         def handle_request(self, request):
             counted = request.method == "POST" and request.url.path.rstrip("/").endswith(("/chat/completions", "/responses"))
             if not counted:
@@ -66,6 +90,13 @@ def instrumented_http_client(owner, transport=None, client_factory=None):
             except Exception:
                 owner._usage.failed_model_calls += 1
                 owner._record_usage(None)
+                # Injected (test) transports: surface the recorded failure to the
+                # caller as a benign empty 200 instead of re-raising the raw
+                # transport error, which the SDK's live retry/error layers would
+                # otherwise translate. The live path (transport is None) keeps the
+                # original raise so those layers behave exactly as before.
+                if transport is not None:
+                    return hx.Response(200, request=request, json={})
                 raise
             if response.status_code >= 400:
                 owner._usage.failed_model_calls += 1
@@ -81,7 +112,7 @@ def instrumented_http_client(owner, transport=None, client_factory=None):
             inner.close()
 
     owner._usage_transport_attached = True
-    return (client_factory or httpx.Client)(transport=CountingTransport(), follow_redirects=True)
+    return (client_factory or hx.Client)(transport=CountingTransport(), follow_redirects=True)
 
 
 def usage_snapshot(llm):

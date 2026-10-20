@@ -125,7 +125,7 @@ if __name__ == "__main__":
         "--method", "-m", type=str, default="travel_agent"
     )
     parser.add_argument("--preference", "-p", action="store_true", default=False)
-    parser.add_argument("--lang", "--locale", choices=["zh", "en"], default="zh")
+    parser.add_argument("--lang", "--locale", choices=["zh", "en"], default="en")
     args = parser.parse_args()
     from chinatravel.agent.load_model import ensure_method_language
 

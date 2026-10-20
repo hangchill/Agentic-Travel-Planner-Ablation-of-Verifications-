@@ -256,7 +256,7 @@ if __name__ == "__main__":
         default=None,
         help="Model name used to derive default method names when --methods is omitted.",
     )
-    parser.add_argument("--lang", "--locale", choices=["zh", "en"], default="zh")
+    parser.add_argument("--lang", "--locale", choices=["zh", "en"], default="en")
     args = parser.parse_args()
 
     if args.methods:

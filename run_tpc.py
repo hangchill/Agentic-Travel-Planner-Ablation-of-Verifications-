@@ -40,7 +40,7 @@ if __name__ == "__main__":
         default=300,
         help="Timeout in seconds for each query",
     )
-    parser.add_argument("--lang", "--locale", choices=["zh", "en"], default="zh", help="Language environment to load.")
+    parser.add_argument("--lang", "--locale", choices=["zh", "en"], default="en", help="Language environment to load.")
 
     parser.add_argument('--oracle_translation', action='store_true', help='Set this flag to enable oracle translation.')
 
