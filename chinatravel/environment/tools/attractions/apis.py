@@ -1,3 +1,4 @@
+from chinatravel.agent.system_usage import tool_api
 import pandas as pd
 from pandas import DataFrame
 from typing import Callable
@@ -52,15 +53,18 @@ class Attractions:
 
         self.poi = Poi(lang=self.lang)
 
+    @tool_api("attractions_keys")
     def keys(self, city: str):
         return self.key_type_tuple_list_map[city]
 
+    @tool_api("attractions_select")
     def select(self, city: str, key, func: Callable) -> DataFrame:
         if key not in self.data[city].keys():
             return "Key not found."
         bool_list = [func(x) for x in self.data[city][key]]
         return self.data[city][bool_list]
 
+    @tool_api("attractions_id_is_open")
     def id_is_open(self, city: str, id: int, time: str) -> bool:
         # open_time = self.data[city]["opentime"][id]
         # end_time = self.data[city]["endtime"][id]
@@ -77,6 +81,7 @@ class Attractions:
         else:
             return open_time <= time or time <= end_time
 
+    @tool_api("attractions_nearby")
     def nearby(self, city: str, point: str, topk: int = None, dist=2) -> DataFrame:
         lat_lon = self.poi.search(city, point)
         if isinstance(lat_lon, str):
@@ -93,6 +98,7 @@ class Attractions:
             return tmp[tmp["distance"] <= dist]
         return tmp[tmp["distance"] <= dist].head(topk)
 
+    @tool_api("attractions_types")
     def get_type_list(self, city: str):
         return self.type_list_map[city]
 

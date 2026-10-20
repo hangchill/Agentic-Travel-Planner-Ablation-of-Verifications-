@@ -1,3 +1,4 @@
+from chinatravel.agent.system_usage import tool_api
 import pandas as pd
 from pandas import DataFrame
 from typing import Callable
@@ -44,15 +45,18 @@ class Restaurants:
 
         self.poi = Poi(lang=self.lang)
 
+    @tool_api("restaurants_keys")
     def keys(self, city: str):
         return self.key_type_tuple_list_map[city]
 
+    @tool_api("restaurants_select")
     def select(self, city: str, key, func: Callable) -> DataFrame:
         if key not in self.data[city].keys():
             return "Key not found."
         bool_list = [func(x) for x in self.data[city][key]]
         return self.data[city][bool_list]
 
+    @tool_api("restaurants_id_is_open")
     def id_is_open(self, city: str, id: int, time: str) -> bool:
         match = self.data[city].loc[self.data[city]["id"] == id]
         open_time = match["opentime"].values[0]
@@ -75,6 +79,7 @@ class Restaurants:
         else:
             return open_time <= time or time <= end_time
 
+    @tool_api("restaurants_nearby")
     def nearby(self, city: str, point: str, topk: int = None, dist=2) -> DataFrame:
         lat_lon = self.poi.search(city, point)
         if isinstance(lat_lon, str):
@@ -91,9 +96,11 @@ class Restaurants:
             return tmp[tmp["distance"] <= dist]
         return tmp[tmp["distance"] <= dist].head(topk)
 
+    @tool_api("restaurants_with_recommended_food")
     def restaurants_with_recommended_food(self, city: str, food: str):
         return self.data[city][self.data[city]["recommendedfood"].str.contains(food)]
 
+    @tool_api("restaurants_cuisine")
     def get_cuisine_list(self, city: str):
         return self.cuisine_list_map[city]
 

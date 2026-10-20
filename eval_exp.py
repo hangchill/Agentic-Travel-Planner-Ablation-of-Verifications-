@@ -83,7 +83,7 @@ if __name__ == "__main__":
         help="Model name used to derive default result directories when --method all.",
     )
     parser.add_argument("--preference", "-p", action="store_true", default=False)
-    parser.add_argument("--lang", "--locale", choices=["zh", "en"], default="zh")
+    parser.add_argument("--lang", "--locale", choices=["zh", "en"], default="en")
     args = parser.parse_args()
     if args.method == "all":
         from chinatravel.agent.load_model import resolve_llm_name

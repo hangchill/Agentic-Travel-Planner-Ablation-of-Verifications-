@@ -16,6 +16,7 @@ from chinatravel.agent.nesy_verifier.initial_state import InitialRepairState
 from chinatravel.agent.nesy_verifier.repair_strategies import STRATEGY_FACTORIES, create_repair_strategy
 from chinatravel.agent.nesy_verifier.repair_strategies.base import BaseRepairStrategy, RepairResult
 from chinatravel.agent.nesy_verifier import shared_repair_loop as loop
+from chinatravel.agent.model_usage import reported_token_count
 from chinatravel.evaluation import repair_comparison as comparison
 from scripts.build_regression_matrix import load_input
 from chinatravel.evaluation.regression_matrix import build_regression_matrix
@@ -232,9 +233,10 @@ class ComparisonTests(unittest.TestCase):
                 prepare_initial_state=self.prepare, runtime_factory=self.runtime, strategy_factories=self.factories)
         pair = self.pairs(root)[0]
         self.assertEqual(pair["execution_status"], "failed")
-        self.assertEqual(len(pair["repair_attempts"]), 1)
-        self.assertEqual(pair["summary_metrics"]["attempts"], 1)
-        self.assertEqual(len((root / "attempts.jsonl").read_text().splitlines()), 1)
+        self.assertEqual(len(pair["repair_attempts"]), 2)
+        self.assertIn("second proposal failed", pair["repair_attempts"][-1]["exception"])
+        self.assertEqual(pair["summary_metrics"]["attempts"], 2)
+        self.assertEqual(len((root / "attempts.jsonl").read_text().splitlines()), 2)
 
 
 class ExtractionCompatibilityTests(unittest.TestCase):
@@ -248,6 +250,7 @@ class ExtractionCompatibilityTests(unittest.TestCase):
                    and node.name in ("solve", "prepare_initial_repair_state")]
         module = ast.Module(body=methods, type_ignores=[])
         scope = dict(deepcopy=deepcopy, json=json, os=os, time=time, create_repair_strategy=create_repair_strategy,
+                     reported_token_count=reported_token_count,
                      **namespace)
         exec(compile(ast.fix_missing_locations(module), str(path), "exec"), scope)
         return scope

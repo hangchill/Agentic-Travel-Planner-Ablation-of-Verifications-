@@ -7,7 +7,7 @@ project_root_path = os.path.dirname(
     os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 )
 
-from chinatravel.environment.language import normalize_lang
+from chinatravel.environment.language import normalize_lang, CITY_NAMES
 
 
 class NpEncoder(json.JSONEncoder):
@@ -91,6 +91,44 @@ def _load_huggingface_split(split):
 
     config_name = "preference" if split in PREFERENCE_HUGGINGFACE_SPLITS else "default"
     return hg_load_dataset("LAMDA-NeSy/ChinaTravel", name=config_name)[split].to_list()
+
+
+## Map Chinese city names to their canonical English equivalents using the
+## authoritative CITY_NAMES table from environment/language.py.
+_ZH_TO_EN_CITY = dict(zip(CITY_NAMES["zh"], CITY_NAMES["en"]))
+
+
+def _adapt_record_to_english(data_i):
+    """Turn a Hugging Face query record into its English form in place.
+
+    The HF query files are bilingual: they carry both ``nature_language`` (zh)
+    and ``nature_language_en`` (en), with Chinese city names. For an English run
+    the agent reads ``nature_language`` and looks up cities against the English
+    sandbox (database_en), so we promote the English query text and translate
+    the city fields using the canonical CITY_NAMES mapping. Constraints
+    (``hard_logic_py``) are language-neutral DSL and are left unchanged.
+    """
+    english_query = data_i.get("nature_language_en")
+    if not english_query:
+        raise ValueError(
+            f"Query {data_i.get('uid')!r} has no 'nature_language_en'; cannot "
+            f"run in English. Use --lang zh for this split, or supply English "
+            f"query text."
+        )
+    data_i["nature_language"] = english_query
+
+    for field in ("start_city", "target_city"):
+        city = data_i.get(field)
+        if city in _ZH_TO_EN_CITY:
+            data_i[field] = _ZH_TO_EN_CITY[city]
+        elif city in CITY_NAMES["en"]:
+            pass  # already English
+        elif city is not None:
+            raise ValueError(
+                f"Query {data_i.get('uid')!r} has unrecognized {field}={city!r}; "
+                f"cannot map to an English city name."
+            )
+    return data_i
 
 
 def _resolve_local_query_paths(data_dir, split, query_ids, lang):
@@ -222,21 +260,115 @@ def save_json_file(json_data, file_path):
 
 
 
+def _read_split_uids(split):
+    """Read the ordered UID list for a named split from default_splits/<split>.txt."""
+    path = os.path.join(
+        project_root_path, "chinatravel", "evaluation",
+        "default_splits", f"{split}.txt",
+    )
+    with open(path, "r", encoding="utf-8") as f:
+        return [line.strip() for line in f if line.strip()]
+
+
+def _hf_base_split(split):
+    """Resolve the base Hugging Face split for a (possibly suffixed) split name.
+
+    A train/test subset is named ``<base>_train`` / ``<base>_test`` where
+    ``<base>`` is a known HF split. It loads the base HF queries and then keeps
+    only the UIDs listed in ``default_splits/<split>.txt``. Returns the base
+    split name plus the UID filter (or None for no filtering).
+    """
+    if split in DEFAULT_HUGGINGFACE_SPLITS:
+        return split, None
+    for suffix in ("_train", "_test"):
+        if split.endswith(suffix):
+            base = split[: -len(suffix)]
+            if base in DEFAULT_HUGGINGFACE_SPLITS:
+                return base, set(_read_split_uids(split))
+    return None, None
+
+
+## Combined (stratified, multi-category) splits: a single train/test list whose
+## UIDs come from several base HF splits (easy/medium/human). The UID->origin map
+## is recorded in evaluation/splits/combined_origin.json so each query is fetched
+## from the correct base split.
+COMBINED_SPLITS = {"combined_train", "combined_test"}
+
+
+def _combined_origin_map():
+    path = os.path.join(
+        project_root_path, "chinatravel", "evaluation",
+        "splits", "combined_origin.json",
+    )
+    with open(path, "r", encoding="utf-8") as f:
+        return json.load(f)["origin"]
+
+
+def _load_combined_split(args, split):
+    """Load a stratified combined split by fetching each UID from its base HF split."""
+    lang = normalize_lang(getattr(args, "lang", None))
+    wanted = set(_read_split_uids(split))
+    origin = _combined_origin_map()
+
+    ## Group the wanted UIDs by which base HF split they came from.
+    by_base = {}
+    for uid in wanted:
+        base = origin.get(uid)
+        if base is None:
+            raise ValueError(f"UID {uid!r} missing from combined_origin.json")
+        by_base.setdefault(base, set()).add(uid)
+
+    query_id_list, data_dict = [], {}
+    for base, uids in by_base.items():
+        for data_i in _load_huggingface_split(base):
+            if data_i.get("uid") not in uids:
+                continue
+            if lang == "en":
+                data_i = _adapt_record_to_english(data_i)
+            data_i = _validate_query_record(data_i)
+            if not getattr(args, "oracle_translation", False):
+                _strip_oracle_fields(data_i)
+            data_dict[data_i["uid"]] = data_i
+    query_id_list = sorted(data_dict)
+    missing = wanted - set(query_id_list)
+    if missing:
+        raise ValueError(f"Combined split {split!r} missing queries: {sorted(missing)}")
+    return query_id_list, data_dict
+
+
 def load_query(args):
     lang = normalize_lang(getattr(args, "lang", None))
-    if lang == "en":
+
+    ## Stratified combined splits draw from several base HF splits at once.
+    if args.splits in COMBINED_SPLITS:
+        return _load_combined_split(args, args.splits)
+
+    base_split, uid_filter = _hf_base_split(args.splits)
+
+    ## Local query files take priority when they exist (e.g. a locally generated
+    ## split). Fall back to the bilingual Hugging Face dataset otherwise.
+    if base_split is None:
         return load_query_local(args)
 
-    if args.splits not in DEFAULT_HUGGINGFACE_SPLITS:
-        return load_query_local(args)
-    query_data = [_validate_query_record(data_i) for data_i in _load_huggingface_split(args.splits)]
+    ## The HF query files are bilingual. For both languages we load the same
+    ## records; for English we promote nature_language_en and translate cities.
+    ## A train/test subset reuses the base HF split and filters by UID, so no
+    ## local query files are required.
+    raw_records = _load_huggingface_split(base_split)
 
-    query_id_list = [data_i["uid"] for data_i in query_data]
+    query_id_list = []
     data_dict = {}
-    for data_i in query_data:
+    for data_i in raw_records:
+        if uid_filter is not None and data_i.get("uid") not in uid_filter:
+            continue
+        if lang == "en":
+            data_i = _adapt_record_to_english(data_i)
+        data_i = _validate_query_record(data_i)
+
         if not getattr(args, "oracle_translation", False):
             _strip_oracle_fields(data_i)
 
+        query_id_list.append(data_i["uid"])
         data_dict[data_i["uid"]] = data_i
 
     return query_id_list, data_dict
@@ -247,7 +379,7 @@ if __name__ == "__main__":
 
     argparser = argparse.ArgumentParser()
     argparser.add_argument("--splits", type=str, default="easy")
-    argparser.add_argument("--lang", type=str, choices=["zh", "en"], default="zh")
+    argparser.add_argument("--lang", type=str, choices=["zh", "en"], default="en")
 
     # from datasets import load_dataset as hg_load_dataset
 
