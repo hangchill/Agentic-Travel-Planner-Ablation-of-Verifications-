@@ -14,6 +14,23 @@ We use the existing ChinaTravel planner and compare five repair strategies.
 | R3 | Adaptive-scope repair |
 | R4 | Constraint-interdependency-guided repair |
 
+### Verification is held constant (the experimental control)
+
+Across all five strategies, **only the repair step is ablated — the verification is the
+same.** Every strategy's plan is checked by the one shared verifier
+(`chinatravel/agent/nesy_verifier/shared_verifier.py::verify_plan`), which re-checks the
+**whole itinerary against all constraints** after every repair attempt. R0–R4 differ only in
+*which parts of the plan may change* during repair, never in *how the plan is checked*. This
+keeps the comparison apples-to-apples: any difference in results is attributable to the repair
+method, not to the verifier.
+
+Note there are two "baselines" in the repo, and they are not the same:
+
+- **Project R0** (`--repair_strategy R0`) runs through the shared repair loop and shared
+  verifier — **the same verification R1–R4 use**. This is the baseline we ablate against.
+- **Legacy ChinaTravel** (no `--repair_strategy`) uses the original, separate verification
+  path and is *not* the comparison baseline.
+
 The original ChinaTravel documentation is preserved below this section.
 
 ## Quick Setup for Group Members
