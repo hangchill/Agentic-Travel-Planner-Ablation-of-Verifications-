@@ -288,8 +288,60 @@ def _hf_base_split(split):
     return None, None
 
 
+## Combined (stratified, multi-category) splits: a single train/test list whose
+## UIDs come from several base HF splits (easy/medium/human). The UID->origin map
+## is recorded in evaluation/splits/combined_origin.json so each query is fetched
+## from the correct base split.
+COMBINED_SPLITS = {"combined_train", "combined_test"}
+
+
+def _combined_origin_map():
+    path = os.path.join(
+        project_root_path, "chinatravel", "evaluation",
+        "splits", "combined_origin.json",
+    )
+    with open(path, "r", encoding="utf-8") as f:
+        return json.load(f)["origin"]
+
+
+def _load_combined_split(args, split):
+    """Load a stratified combined split by fetching each UID from its base HF split."""
+    lang = normalize_lang(getattr(args, "lang", None))
+    wanted = set(_read_split_uids(split))
+    origin = _combined_origin_map()
+
+    ## Group the wanted UIDs by which base HF split they came from.
+    by_base = {}
+    for uid in wanted:
+        base = origin.get(uid)
+        if base is None:
+            raise ValueError(f"UID {uid!r} missing from combined_origin.json")
+        by_base.setdefault(base, set()).add(uid)
+
+    query_id_list, data_dict = [], {}
+    for base, uids in by_base.items():
+        for data_i in _load_huggingface_split(base):
+            if data_i.get("uid") not in uids:
+                continue
+            if lang == "en":
+                data_i = _adapt_record_to_english(data_i)
+            data_i = _validate_query_record(data_i)
+            if not getattr(args, "oracle_translation", False):
+                _strip_oracle_fields(data_i)
+            data_dict[data_i["uid"]] = data_i
+    query_id_list = sorted(data_dict)
+    missing = wanted - set(query_id_list)
+    if missing:
+        raise ValueError(f"Combined split {split!r} missing queries: {sorted(missing)}")
+    return query_id_list, data_dict
+
+
 def load_query(args):
     lang = normalize_lang(getattr(args, "lang", None))
+
+    ## Stratified combined splits draw from several base HF splits at once.
+    if args.splits in COMBINED_SPLITS:
+        return _load_combined_split(args, args.splits)
 
     base_split, uid_filter = _hf_base_split(args.splits)
 

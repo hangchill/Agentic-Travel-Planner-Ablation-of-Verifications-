@@ -117,7 +117,7 @@ All these files are inside `chinatravel/agent/nesy_verifier/`.
 | `shared_repair_loop.py` | Handles repair attempts, acceptance/rejection and logging |
 | `llm_modulo.py` | Main agent and strategy selection |
 
-For a detailed explanation of the implementation and R0 tests, see `framework_r0.ipynb`. For how the train/test split is built and wired into the runner (so experiments use `--splits medium_train` with no data leakage), see `train_test_split_r0.ipynb`. That notebook also runs the R0 baseline per query and commits the results to `experiments/r0_medium_train/`, so teammates can re-run the notebook and load the exact same results without re-calling the (paid, non-deterministic) LLM.
+For a detailed explanation of the implementation and R0 tests, see `framework_r0.ipynb`. For how the train/test split is built and wired into the runner (with no data leakage), see `train_test_split_r0.ipynb`. The experiments use a **stratified** 70/30 split across the `easy`, `medium`, and `human` query sets (same difficulty mix on both sides), run with `--splits combined_train` for development and `--splits combined_test` for the final comparison. A single-category `medium` split (`--splits medium_train` / `medium_test`) is also available as a simpler example. The notebook also runs the R0 baseline per query and commits the results to `experiments/r0_combined_sample/` (a 5-query sample spanning easy/medium/human; an earlier medium-only sample is kept in `experiments/r0_medium_sample/`), so teammates can re-run the notebook and load the exact same results without re-calling the (paid, non-deterministic) LLM.
 
 ### How to implement your strategy
 
