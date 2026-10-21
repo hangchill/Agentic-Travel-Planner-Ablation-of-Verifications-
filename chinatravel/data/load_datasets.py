@@ -297,6 +297,9 @@ MULTI_ORIGIN_SPLITS = {
     "combined_test": "combined",
     "subset_train": "subset",
     "subset_test": "subset",
+    ## Shared 5-query pilot set: every team member runs their strategy on these
+    ## exact queries for a first apples-to-apples R0-vs-Rx comparison.
+    "pilot5": "pilot5",
 }
 ## Backwards-compatible alias.
 COMBINED_SPLITS = set(MULTI_ORIGIN_SPLITS)
