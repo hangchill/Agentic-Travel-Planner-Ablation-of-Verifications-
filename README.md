@@ -44,9 +44,12 @@ For Windows, activate the environment using `.venv\Scripts\activate`.
 python scripts/setup_project.py
 ```
 
-This automatically downloads and extracts the official Chinese sandbox into `chinatravel/environment/database/`.
+This automatically downloads and extracts **both** official sandboxes:
 
-You do not need to download the sandbox manually.
+- English sandbox → `chinatravel/environment/database_en/` (used by default)
+- Chinese sandbox → `chinatravel/environment/database/`
+
+You do not need to download either sandbox manually. Our experiments default to the English sandbox (`--lang en`).
 
 ### 4. Configure OpenRouter
 
@@ -84,12 +87,15 @@ python run_exp.py \
   --llm openai/gpt-4.1 \
   --splits medium \
   --index e20241028160845920703 \
-  --refine_steps 2 \
-  --oracle_translation \
-  --lang zh
+  --refine_steps 5 \
+  --oracle_translation
 ```
 
 This runs one medium-difficulty ChinaTravel case using the shared R0 framework.
+
+`--lang en` is the default, so it no longer needs to be passed (add `--lang zh` only if you specifically want the Chinese sandbox). For the comparative experiments, keep the repair budget fixed at `--refine_steps 5` across every strategy (R0–R4) so the comparison is fair and R3 has room to escalate its repair scope.
+
+**English queries:** the ChinaTravel query files on Hugging Face are bilingual — each query carries both a Chinese (`nature_language`) and an English (`nature_language_en`) version. When you run with `--lang en`, the loader automatically downloads the same dataset, uses the English query text, and translates the city names to English so everything resolves against the English sandbox (`database_en`). No separate English query download or local query files are needed; an English request produces an English itinerary.
 
 **Note:** Running GPT-4.1 through OpenRouter incurs API costs.
 
@@ -111,7 +117,7 @@ All these files are inside `chinatravel/agent/nesy_verifier/`.
 | `shared_repair_loop.py` | Handles repair attempts, acceptance/rejection and logging |
 | `llm_modulo.py` | Main agent and strategy selection |
 
-For a detailed explanation of the implementation and R0 tests, see `framework_r0.ipynb`.
+For a detailed explanation of the implementation and R0 tests, see `framework_r0.ipynb`. For how the train/test split is built and wired into the runner (with no data leakage), see `train_test_split_r0.ipynb`. The experiments use a **stratified** 70/30 split across the `easy`, `medium`, and `human` query sets (same difficulty mix on both sides), run with `--splits combined_train` for development and `--splits combined_test` for the final comparison. A single-category `medium` split (`--splits medium_train` / `medium_test`) is also available as a simpler example. The notebook also runs the R0 baseline per query and commits the results to `experiments/r0_combined_sample/` (a 5-query sample spanning easy/medium/human; an earlier medium-only sample is kept in `experiments/r0_medium_sample/`), so teammates can re-run the notebook and load the exact same results without re-calling the (paid, non-deterministic) LLM.
 
 ### How to implement your strategy
 
@@ -135,7 +141,7 @@ If your method needs to reject a proposed repair, override the `accept()` method
 
 After implementing your strategy, register it in `llm_modulo.py` and test it on one case before running larger experiments.
 
-**Current status:** The shared framework and R0 are implemented and tested end-to-end. The shared verifier has been improved to detect invalid itinerary structures, transport translation failures and verifier execution errors separately from genuine constraint violations. All 27 new regression tests passed, and the latest R0 end-to-end test completed successfully (although the final itinerary still had violations).
+**Current status:** The shared framework and R0 are implemented and tested end-to-end. The shared verifier has been improved to detect invalid itinerary structures, transport translation failures and verifier execution errors separately from genuine constraint violations. With both sandboxes installed the full test suite passes (193 tests, 0 failures, 0 errors), and the R0 end-to-end test completed successfully (although the final itinerary still had violations). See `framework_r0.ipynb` for runnable proof cells and captured output.
 
 R1–R4 are not yet implemented or registered. See `framework_r0.ipynb` for implementation details, testing results and remaining limitations.
 ---
@@ -143,6 +149,8 @@ R1–R4 are not yet implemented or registered. See `framework_r0.ipynb` for impl
 # Original ChinaTravel Documentation
 
 The original ChinaTravel README, including installation details, evaluation instructions, acknowledgements, licence and citation, is retained below.
+
+> **Note for our project:** the original docs below state that the run/evaluation scripts default to Chinese. In **our** fork that default has been changed to English (`--lang en`); pass `--lang zh` only if you want the Chinese sandbox. Our group-specific instructions are in the **Quick Setup for Group Members** section above.
 
 ---
 

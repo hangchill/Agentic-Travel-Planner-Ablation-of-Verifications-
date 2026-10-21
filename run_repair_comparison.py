@@ -27,7 +27,7 @@ def main(argv=None):
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--splits", default="easy")
     parser.add_argument("--index", nargs="+", help="Optional query UID subset")
-    parser.add_argument("--lang", choices=("zh", "en"), default="zh")
+    parser.add_argument("--lang", choices=("zh", "en"), default="en")
     parser.add_argument("--llm")
     parser.add_argument("--repair-strategies", nargs="+", default=["R0"])
     parser.add_argument("--skip-unavailable", action="store_true")

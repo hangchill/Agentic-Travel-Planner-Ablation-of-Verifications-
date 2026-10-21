@@ -47,7 +47,7 @@ if __name__ == "__main__":
         default=None,
         help="Repair strategy for LLM-Modulo. Omit to use the original ChinaTravel repair loop.",
     )
-    parser.add_argument("--lang", "--locale", choices=["zh", "en"], default="zh", help="Language environment to load.")
+    parser.add_argument("--lang", "--locale", choices=["zh", "en"], default="en", help="Language environment to load.")
 
 
     args = parser.parse_args()

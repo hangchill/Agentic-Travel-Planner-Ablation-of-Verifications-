@@ -44,4 +44,10 @@ if __name__ == "__main__":
         "database",
     )
 
+    install_sandbox(
+        "English",
+        "ChinaTravel_sandbox_en.zip",
+        "database_en",
+    )
+
     print("\nSandbox setup complete!")

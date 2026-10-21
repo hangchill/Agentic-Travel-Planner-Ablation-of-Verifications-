@@ -1,5 +1,6 @@
 
 import os
+import re
 import sys
 
 from copy import deepcopy
@@ -44,7 +45,11 @@ class LLMModuloAgent(BaseAgent):
         ## (added) Store the selected repair strategy. None means original ChinaTravel R0.
         self.repair_strategy_name = kwargs.get("repair_strategy", None)
         ## Directory for storing prompts, plans, and error logs.
-        self.log_dir = os.path.join(self.log_dir, f'llm_modulo-{self.model_name}')
+        ## Sanitize the model name so provider IDs like "openai/gpt-4.1" don't
+        ## introduce path separators. On Windows a "/" (or "\\") in a path
+        ## component is treated as a directory separator and breaks log creation.
+        safe_model_name = re.sub(r"[^0-9A-Za-z_.-]+", "_", str(self.model_name or "model")).strip("_") or "model"
+        self.log_dir = os.path.join(self.log_dir, f'llm_modulo-{safe_model_name}')
         if not os.path.exists(self.log_dir):
             os.makedirs(self.log_dir)
         
