@@ -1,0 +1,290 @@
+from copy import deepcopy
+from .base import BaseRepairStrategy, RepairResult
+from chinatravel.evaluation.repair_attempt import failed_constraint_indices
+from chinatravel.evaluation.constraint_families import classify_constraint
+import json
+
+ACTIVITY_TYPES = {"dining": {"breakfast", "lunch", "dinner"},
+                  "accommodation": {"accommodation"},
+                  "attraction": {"attraction"},
+                  "transport_mode": {"train", "airplane"},}
+
+# returns all matching activities
+def find_candidate_slots(raw_plan, constraint_family):
+    allowed_types = ACTIVITY_TYPES.get(constraint_family)
+    if not allowed_types:
+        return []
+    candidates = []
+    for day_idx, day in enumerate(raw_plan):
+        for activity_idx, activity in enumerate(day.get("activities", [])):
+            if activity.get("type") in allowed_types:
+                candidates.append((day_idx, activity_idx))
+    return candidates
+
+def find_editable_slot(raw_plan, constraint_family):
+    if constraint_family == "transport_mode":
+        candidates = find_transport_slots(raw_plan)
+    else:
+        candidates = find_candidate_slots(raw_plan, constraint_family)    
+    if len(candidates) == 1:
+        return candidates[0]
+    return None
+
+def classify_failed_constraint(problem, target_idx):
+    constraints = problem.get("hard_logic_py", [])
+    if not 1 <= target_idx <= len(constraints):
+        return None
+    descriptor = {"constraint_index": target_idx,
+                  "hard_logic_py": constraints[target_idx - 1],}
+    result = classify_constraint(descriptor)
+    if result["classification_status"] != "mapped":
+        return None
+    return result["family"]
+
+# replace one activity and preserve the rest of the itinerary
+def replace_activity_slot(raw_plan, slot, replacement):
+    day_idx, activity_idx = slot
+    repaired_plan = deepcopy(raw_plan)
+    if not isinstance(replacement, dict):
+        raise ValueError("Replacement must be an activity dictionary")
+    if not 0 <= day_idx < len(repaired_plan):
+        raise ValueError("Invalid day index")
+    activities = repaired_plan[day_idx]["activities"]
+    if not 0 <= activity_idx < len(activities):
+        raise ValueError("Invalid activity index")
+    original_type = activities[activity_idx].get("type")
+    if replacement.get("type") != original_type:
+        raise ValueError("Replacement must preserve activity type")
+    required_keys = {"type", "start_time", "end_time"}
+    if original_type not in {"train", "airplane"}:
+        required_keys.add("position")
+    if not required_keys.issubset(replacement):
+        raise ValueError("Replacement activity missing required fields")
+    activities[activity_idx] = deepcopy(replacement)
+    return repaired_plan
+
+def generate_replacement(
+    problem, raw_plan, slot, constraint_text, context, llm):
+    day_idx, activity_idx = slot
+    original = raw_plan[day_idx]["activities"][activity_idx]
+    prompt = f"""
+You are repairing one activity in a travel itinerary.
+User request:{problem["nature_language"]}
+Failed constraint:{constraint_text}
+Current activity:{json.dumps(original, ensure_ascii=False)}
+Available travel information:{json.dumps(context, ensure_ascii=False, default=str)}
+Return ONLY one JSON object representing a replacement activity.
+
+Rules:
+- Preserve the original activity type.
+- Keep the same activity structure and required fields.
+- Use only entities supported by the available travel information.
+- Do not return the entire itinerary.
+- Do not invent prices, opening hours, or transport details.
+"""
+    response = llm([{"role": "user", "content": prompt}], 
+                   one_line=False,)
+    try:
+        replacement = json.loads(response)
+    except (ValueError, TypeError) as exc:
+        raise ValueError("Invalid replacement JSON") from exc
+    if not isinstance(replacement, dict):
+        raise ValueError("LLM must return one activity object") 
+    return replacement
+
+def select_editable_slot(problem, raw_plan, candidates, constraint_text, llm):
+    if not candidates:
+        return None
+    if len(candidates) == 1:
+        return candidates[0]
+    candidate_info = [{"day_index": day_idx,
+                       "activity_index": activity_idx,
+                       "activity": raw_plan[day_idx]["activities"][activity_idx],}
+                       for day_idx, activity_idx in candidates]
+    prompt = f"""
+You are identifying which itinerary activity should be edited
+to address a failed travel constraint.
+
+User request:
+{problem["nature_language"]}
+
+Failed constraint:
+{constraint_text}
+
+Candidate activities:
+{json.dumps(candidate_info, ensure_ascii=False)}
+
+Select ONE activity most relevant to the failed constraint.
+
+Return ONLY a JSON object in this format:
+{{"day_index": 0, "activity_index": 1}}
+
+Use the exact zero-based indices provided.
+Do not invent new indices.
+"""
+    response = llm([{"role": "user", "content": prompt}], one_line=False,)
+
+    try:
+        selection = json.loads(response)
+        if not isinstance(selection, dict):
+            return None
+        slot = (selection["day_index"], selection["activity_index"],)
+    except (ValueError, TypeError, KeyError):
+        return None
+
+    if (type(slot[0]) is not int
+        or type(slot[1]) is not int
+        or slot not in candidates):
+        return None
+    return slot
+
+# identify activities containing an inner city transport dictionary
+def find_transport_slots(raw_plan): 
+    candidates = []
+    for day_idx, day in enumerate(raw_plan):
+        for activity_idx, activity in enumerate(day.get("activities", [])):
+            transport = activity.get("transports")
+            if isinstance(transport, dict):
+                candidates.append((day_idx, activity_idx))
+    return candidates
+
+def replace_transport_slot(raw_plan, slot, replacement): # ensure only nested transport fields changes
+    day_idx, activity_idx = slot
+    repaired_plan = deepcopy(raw_plan)
+    activity = repaired_plan[day_idx]["activities"][activity_idx]
+    if not isinstance(activity.get("transports"), dict):
+        raise ValueError("Selected activity has no editable transport")
+    if not isinstance(replacement, dict):
+        raise ValueError("Replacement transport must be a dictionary")
+    required_keys = {"from", "to", "start_time", "end_time", "mode", "cost"}
+    original = activity["transports"]
+    if replacement["from"] != original["from"]:
+        raise ValueError("Transport origin cannot change")
+    if replacement["to"] != original["to"]:
+        raise ValueError("Transport destination cannot change")
+    if replacement["mode"] not in {"metro", "taxi", "walk"}:
+        raise ValueError("Unsupported transport mode")
+    if (type(replacement["cost"]) not in (int, float)
+        or replacement["cost"] < 0):
+        raise ValueError("Invalid transport cost")
+    if not required_keys.issubset(replacement):
+        raise ValueError("Replacement transport is missing required fields")
+    activity["transports"] = deepcopy(replacement)
+    return repaired_plan
+
+# replace only transport information, preserve origin and destination
+def generate_transport_replacement(
+    problem, raw_plan, slot, constraint_text, context, llm):
+    day_idx, activity_idx = slot
+    original = raw_plan[day_idx]["activities"][activity_idx]["transports"]
+    prompt = f"""
+You are repairing one inner-city transport segment in a travel itinerary.
+
+User request:
+{problem["nature_language"]}
+
+Failed constraint:
+{constraint_text}
+
+Current transport:
+{json.dumps(original, ensure_ascii=False)}
+
+Available transport information:
+{context.get("innercity_transport_info", "")}
+
+Return ONLY one JSON object with:
+from, to, start_time, end_time, mode, cost.
+
+Rules:
+- Preserve the original from and to locations.
+- Change only the transport segment.
+- Use a transport option supported by the available information.
+- Do not invent routes, times or costs.
+- Do not return the entire itinerary.
+"""
+    response = llm([{"role": "user", "content": prompt}], one_line=False,)
+
+    try:
+        replacement = json.loads(response)
+    except (ValueError, TypeError) as exc:
+        raise ValueError("Invalid transport replacement JSON") from exc
+
+    if not isinstance(replacement, dict):
+        raise ValueError("Transport replacement must be an object")
+    if replacement.get("from") != original.get("from"):
+        raise ValueError("Transport origin cannot change")
+    if replacement.get("to") != original.get("to"):
+        raise ValueError("Transport destination cannot change")
+    return replacement
+
+def select_repair_target(problem, raw_plan, failed_indices):
+    for target_idx in failed_indices:
+        family = classify_failed_constraint(problem, target_idx)
+        if family == "transport_mode":
+            candidates = find_transport_slots(raw_plan)
+        else:
+            candidates = find_candidate_slots(raw_plan, family)
+        if candidates:
+            return target_idx, family, candidates
+    return None, None, []
+
+class R1TargetedRepair(BaseRepairStrategy):
+    def repair(self, problem, raw_plan, verification_results, context, llm):
+        failed_indices = failed_constraint_indices(
+            verification_results["personal_constraints"])
+        if not failed_indices:
+            return RepairResult(
+                repaired_plan=deepcopy(raw_plan),
+                metadata={"strategy": "R1",
+                          "target_constraint_indices": [],
+                          "editable_scope": "slot",
+                          "scope_level": 1,
+                          "failure_reason": "no_failed_personal_constraint",},)
+
+        target_idx, constraint_family, candidates = select_repair_target(
+            problem, raw_plan, failed_indices,)
+        if target_idx is None:
+            return RepairResult(repaired_plan=deepcopy(raw_plan),
+                                metadata={
+                                    "strategy": "R1",
+                                    "target_constraint_indices": [],
+                                    "editable_scope": "slot",
+                                    "scope_level": 1,
+                                    "failure_reason": "no_localizable_failed_constraint",},) 
+        constraint_text = problem["hard_logic_py"][target_idx - 1]
+        editable_slot = select_editable_slot(
+            problem=problem, raw_plan=raw_plan, candidates=candidates,
+            constraint_text=constraint_text, llm=llm,)
+        
+        metadata = {"strategy": "R1", 
+                    "target_constraint_indices": [target_idx],
+                    "editable_scope": "slot",
+                    "scope_level": 1,
+                    "feedback_personal_constraint_indices": [target_idx],
+                    "constraint_family": constraint_family,
+                    "editable_slot": editable_slot,}
+
+        # keep original plan if no unique slot can be identified
+        if editable_slot is None:
+            metadata["failure_reason"] = "no_localizable_slot"
+            return RepairResult(repaired_plan=deepcopy(raw_plan), metadata=metadata,)
+        try:
+            if constraint_family == "transport_mode":
+                replacement = generate_transport_replacement(
+                    problem=problem, raw_plan=raw_plan,
+                    slot=editable_slot, constraint_text=constraint_text,
+                    context=context,llm=llm,)
+                repaired_plan = replace_transport_slot(
+                    raw_plan, editable_slot, replacement,)
+            else:
+                replacement = generate_replacement(
+                    problem=problem, raw_plan=raw_plan,
+                    slot=editable_slot, constraint_text=constraint_text,
+                    context=context, llm=llm,)
+                repaired_plan = replace_activity_slot(
+                    raw_plan, editable_slot, replacement,)
+        except (ValueError, TypeError, KeyError) as exc:
+            metadata["failure_reason"] = "invalid_replacement"
+            metadata["failure_detail"] = str(exc)[:200]
+            return RepairResult(repaired_plan=deepcopy(raw_plan), metadata=metadata,)
+        return RepairResult(repaired_plan=repaired_plan, metadata=metadata,)

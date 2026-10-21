@@ -6,9 +6,11 @@ def _r0():
 
     return R0WholePlanRepair()
 
+def _r1():
+    from .r1 import R1TargetedRepair
+    return R1TargetedRepair()
 
-STRATEGY_FACTORIES = {"R0": _r0}
-
+STRATEGY_FACTORIES = {"R0": _r0, "R1": _r1,}
 
 def create_repair_strategy(name):
     try:
