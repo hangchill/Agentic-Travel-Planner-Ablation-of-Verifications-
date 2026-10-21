@@ -107,7 +107,7 @@ The original versions are upstream ChinaTravel (commit `d3a4e7b`). Our changes:
 
 | File | Author | What we changed |
 | --- | --- | --- |
-| `chinatravel/agent/nesy_verifier/llm_modulo.py` | En Rui, Nancy Shen | Major: refactored `solve()` to support pluggable repair strategies (`repair_strategy`), split out initial-plan generation and repair-state preparation, and wired in model/system usage tracking. |
+| `chinatravel/agent/nesy_verifier/llm_modulo.py` | En Rui, Nancy Shen | Major: refactored `solve()` to support pluggable repair strategies (`repair_strategy`), split out initial-plan generation and repair-state preparation, and wired in model/system usage tracking. Also sanitizes the model name in the per-problem log directory (e.g. `openai/gpt-4.1` -> `openai_gpt-4.1`) so logging works on Windows, where a `/` in a path component is treated as a directory separator. |
 | `chinatravel/agent/llms.py` | Nancy Shen | Added LLM usage instrumentation to `OpenAICompatibleLLM` (instrumented HTTP client, `reset_usage`/`usage_snapshot`, usage recording around requests). |
 | `chinatravel/agent/load_model.py` | En Rui | Added a `repair_strategy` parameter threaded into the runtime; separate output dirs per strategy; OpenRouter support in `init_llm` (passes the full `provider/model` id when using an OpenRouter base URL). |
 | `chinatravel/agent/nesy_verifier/prompts/llm_modulo.py` | En Rui | Added prompt rules: inner-city transport must live in `transports`, restricted the set of valid activity types, and required `start_time`/`end_time`. |
