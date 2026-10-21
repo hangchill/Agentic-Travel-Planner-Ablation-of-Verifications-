@@ -72,7 +72,7 @@ accepted**; R4 adds matrix guidance on top.
 | **R0** Whole-plan regeneration (baseline) | Verify → tell the LLM which constraints failed → ask for an **entirely regenerated** itinerary → repeat until pass or budget hit. | May needlessly rewrite parts that were already correct. |
 | **R1** Targeted | Only **flagged** itinerary slots (fields a failed critic names) may be replaced; code **blocks** any edit to unflagged fields. The LLM is asked only for new values for the failed constraints' slots. | Freezing everything else can make a newly-surfaced constraint unfixable within the locked scope. |
 | **R2** Protected (rollback) | Full rewrite allowed, but if a revision breaks **any critic that previously passed** (e.g. introduces a budget/timing violation), the proposal is **rejected and the last accepted itinerary is restored**; the LLM is told what it broke. | Rollback can stall progress if every rewrite trades one violation for another. |
-| **R3** Adaptive scope | Starts as R1 (targeted). If **stuck for 2 rounds**, it widens the editable scope: day → whole plan. Re-verifies **all** constraints after each attempt. | More complex control; widening scope reintroduces R0-style regression risk late in the loop. |
+| **R3** Adaptive scope | Repairs **all** current failures together each iteration. Starts as R1 (targeted: only the slots the failures localize to), then widens on a **fixed schedule** of 2 iterations per rung: slot (iters 1–2) → day (3–4) → whole plan (5+). Re-verifies **all** constraints after each attempt. | More complex control; widening scope reintroduces R0-style regression risk late in the loop. |
 | **R4** Dependency-aware (matrix-guided) | Uses `M` to pick the **smallest** set of itinerary variables that fixes the violation while minimizing regression risk. | Depends on a good `M`; adds an optimization layer (see below). |
 
 Implementation hooks: strategies are registered in a zero-argument factory map,
@@ -80,8 +80,8 @@ Implementation hooks: strategies are registered in a zero-argument factory map,
 `llm_modulo.py` dispatches via `create_repair_strategy(name)` — no more hardcoded
 `if/elif`. The loop driver is `run_repair_loop` in `shared_repair_loop.py`; acceptance
 (R2's rollback) belongs in `accept()`, while R3 keeps the default always-accept and does
-its scope-widening inside `repair()` using the post-accept verification it is handed each
-step.
+its scope-widening inside `repair()` on a fixed iteration schedule (`rounds_per_rung`,
+default 2).
 
 ### R4 — dependency-aware / matrix-guided repair
 

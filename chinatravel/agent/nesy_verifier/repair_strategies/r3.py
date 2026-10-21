@@ -9,16 +9,24 @@
 ## (L2), and from iteration 5 onwards the whole plan (L3). At its tightest rung it
 ## is R1; at its widest it is R0.
 ##
+## Each iteration repairs ALL currently failing constraints together in one LLM
+## call: every failure is shown, and the editable region is the union of the
+## slots (L1) / days (L2) the failures localize to, or the whole plan (L3).
+##
 ## This file implements the repair behaviour and emits the standardized repair
 ## output contract (see chinatravel/evaluation/REPAIR_ATTEMPTS.md): canonical intent
-## keys (target_constraint_indices, editable_scope, scope_level, escalation_reason)
-## plus per-step debug components. The shared loop builds and validates the
-## RepairAttemptRecord; this strategy never computes repair timing or token usage.
-## It does NOT build the interdependency matrix - that is a separate downstream task.
+## keys (target_constraint_indices, editable_scope, scope_level, escalation_reason,
+## target_provenance, feedback_personal_constraint_indices,
+## feedback_commonsense_failure_count) plus per-step debug components. What the
+## repair broke (newly_violated) is measured by the shared loop after verifying
+## the candidate, on the same RepairAttemptRecord; this strategy never computes
+## outcomes, repair timing or token usage. It does NOT build the interdependency
+## matrix - that is a separate downstream task.
 
 import json
 import re
 import time
+from collections import Counter
 from copy import deepcopy
 
 from chinatravel.json_utils import repair_json
@@ -111,6 +119,27 @@ def _global_heuristic_slots(plan, k=GLOBAL_HEURISTIC_K):
 _DAY_RE = re.compile(r"day\s+(\d+)", re.IGNORECASE)
 _ACT_RE = re.compile(r"activit(?:y|ies)\s+(\d+)", re.IGNORECASE)
 _QUOTED_RE = re.compile(r"'([^']+)'|\"([^\"]+)\"")
+
+## Personal-failure feedback line written by shared_verifier.verify_plan.
+_PERSONAL_FEEDBACK_RE = re.compile(r"^Personal constraint (\d+) failed")
+
+
+def _feedback_personal_indices(feedback_lines):
+    """1-based personal constraint indices actually named in the feedback lines."""
+    indices = set()
+    for line in feedback_lines:
+        m = _PERSONAL_FEEDBACK_RE.match(line) if isinstance(line, str) else None
+        if m:
+            indices.add(int(m.group(1)))
+    return sorted(indices)
+
+
+def _feedback_commonsense_count(commonsense_errors, feedback_lines):
+    """Commonsense failure messages supplied in the feedback (duplicates kept),
+    counted the same way as R0; None when commonsense errors are unavailable."""
+    if not isinstance(commonsense_errors, list):
+        return None
+    return sum((Counter(commonsense_errors) & Counter(feedback_lines)).values())
 
 
 def _localize_message(message, plan, pos_to_slots):
@@ -209,14 +238,16 @@ class R3AdaptiveScopeRepair(BaseRepairStrategy):
         for i, status in enumerate(personal):
             if status is False:
                 dsl = hard_logic[i] if i < len(hard_logic) else ""
+                ## 1-based, matching target_constraint_indices.
                 targets.append(
-                    {"kind": "personal", "ref": f"personal:{i}", "index": i, "dsl": dsl}
+                    {"kind": "personal", "ref": f"personal:{i + 1}",
+                     "constraint_index": i + 1, "dsl": dsl}
                 )
-        for k, msg in enumerate(verification.get("commonsense_errors", []) or []):
+        for k, msg in enumerate(verification.get("commonsense_errors", []) or [], 1):
             targets.append(
                 {"kind": "commonsense", "ref": f"commonsense:{k}", "message": msg}
             )
-        for k, msg in enumerate(verification.get("schema_errors", []) or []):
+        for k, msg in enumerate(verification.get("schema_errors", []) or [], 1):
             targets.append({"kind": "schema", "ref": f"schema:{k}", "message": msg})
         return targets
 
@@ -413,7 +444,8 @@ class R3AdaptiveScopeRepair(BaseRepairStrategy):
         proposal, raw_response = self._parse_response(response)
 
         if proposal is None:
-            ## Parse failure -> no-op repair (will accrue stuck and widen).
+            ## Parse failure -> no-op repair: the current plan is proposed unchanged
+            ## (the fixed schedule still advances on the next iteration).
             merged, changed = deepcopy(raw_plan), 0
         elif scope == PLAN:
             merged, changed = proposal, self._count_changed_all(raw_plan, proposal)
@@ -424,10 +456,15 @@ class R3AdaptiveScopeRepair(BaseRepairStrategy):
             targets, localized, editable, raw_plan, merged, raw_plan
         )
 
+        ## Feedback actually supplied to the model (the prompt uses error_info at
+        ## every rung), measured from the lines sent rather than assumed.
+        feedback_lines = verification_results.get("error_info", []) or []
+
         ## Canonical intent (promoted onto the RepairAttemptRecord by the loop).
-        ## target_constraint_indices are the current False personal constraints as
-        ## original 1-based hard_logic_py indices; scope is reported as both the
-        ## string rung (editable_scope) and the agreeing 1-based level (scope_level).
+        ## target_constraint_indices are all current False personal constraints
+        ## (never unknown None) as original 1-based hard_logic_py indices - R3
+        ## repairs them together; scope is reported as both the string rung
+        ## (editable_scope) and the agreeing 1-based level (scope_level).
         metadata = {
             "strategy": "R3",
             "target_constraint_indices": failed_constraint_indices(
@@ -436,7 +473,14 @@ class R3AdaptiveScopeRepair(BaseRepairStrategy):
             "editable_scope": scope,
             "scope_level": SCOPE_LEVEL[scope],
             "target_provenance": "r3_adaptive_scope",
+            "feedback_personal_constraint_indices": _feedback_personal_indices(
+                feedback_lines
+            ),
+            "feedback_commonsense_failure_count": _feedback_commonsense_count(
+                verification_results.get("commonsense_errors"), feedback_lines
+            ),
             ## Debug / audit components (kept in repair_metadata; non-canonical).
+            "parse_failed": proposal is None,
             "scope_fraction": round(scope_fraction, 4),
             "changed_slots": changed,
             "editable_slots": self._slot_descriptors(editable, raw_plan),

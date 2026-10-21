@@ -224,6 +224,10 @@ class MergeAndMetadataTests(unittest.TestCase):
         # Targets are 1-based hard_logic_py indices of current False personals.
         self.assertEqual(meta["target_constraint_indices"], [1])
         self.assertEqual(meta["target_provenance"], "r3_adaptive_scope")
+        # Feedback is measured from the error_info lines actually supplied.
+        self.assertEqual(meta["feedback_personal_constraint_indices"], [1])
+        self.assertEqual(meta["feedback_commonsense_failure_count"], 0)
+        self.assertFalse(meta["parse_failed"])
         self.assertNotIn("escalation_reason", meta)   # no widening on step 1
         # only the lunch slot was editable -> attraction frozen, lunch replaced.
         self.assertEqual(result.repaired_plan[0]["activities"][0]["position"], "A")
@@ -236,7 +240,35 @@ class MergeAndMetadataTests(unittest.TestCase):
         # debug components for the later matrix build are present.
         for key in ("scope_fraction", "targeted_constraints", "per_target_edits"):
             self.assertIn(key, meta)
-        self.assertIn("personal:0", meta["per_target_edits"])
+        self.assertIn("personal:1", meta["per_target_edits"])
+
+    def test_multi_failure_feedback_fields(self):
+        s = R3AdaptiveScopeRepair()
+        problem = {"nature_language": "q",
+                   "hard_logic_py": ["result=True", "result=False", "result=False"]}
+        verification = {
+            "personal_constraints": [True, False, False],
+            "commonsense_errors": ["c-a", "c-b"],
+            "schema_errors": [],
+            "error_info": ["c-a", "c-b",
+                           "Personal constraint 2 failed: result=False",
+                           "Personal constraint 3 failed: result=False"],
+        }
+        meta = s.repair(problem, self._plan(), verification, _ctx(),
+                        _MockLLM("not json")).metadata
+        self.assertEqual(meta["target_constraint_indices"], [2, 3])
+        self.assertEqual(meta["feedback_personal_constraint_indices"], [2, 3])
+        self.assertEqual(meta["feedback_commonsense_failure_count"], 2)
+
+    def test_commonsense_count_unavailable_is_none(self):
+        s = R3AdaptiveScopeRepair()
+        problem = {"nature_language": "q", "hard_logic_py": ["result=False"]}
+        verification = {"personal_constraints": [False], "schema_errors": [],
+                        "error_info": ["Personal constraint 1 failed: result=False"]}
+        meta = s.repair(problem, self._plan(), verification, _ctx(),
+                        _MockLLM("not json")).metadata
+        self.assertIsNone(meta["feedback_commonsense_failure_count"])
+        self.assertEqual(meta["feedback_personal_constraint_indices"], [1])
 
     def test_escalation_reason_reported_on_widen(self):
         s = R3AdaptiveScopeRepair(rounds_per_rung=1)
@@ -300,6 +332,57 @@ class SharedLoopContractTests(unittest.TestCase):
         # R3-specific debug survives in repair_metadata.
         self.assertIn("scope_fraction", record.repair_metadata)
         self.assertIn("per_target_edits", record.repair_metadata)
+
+    def _multi_problem(self):
+        return {"uid": "r3-multi", "people_number": 1, "start_city": "A",
+                "target_city": "B", "nature_language": "q",
+                "hard_logic_py": [f"result = (c{i} == 1)" for i in range(1, 7)]}
+
+    def _run_multi(self, after_states):
+        """Run one R3 attempt where #2 and #5 fail together (plus one
+        commonsense error) and the verifier returns ``after_states``."""
+        plan = [{"day": 1, "activities": [
+            {"type": "attraction", "position": "A", "cost": 10},
+            {"type": "lunch", "position": "B", "cost": 20}]}]
+        llm = _MockLLM(_continuation(plan))
+        before = {
+            "personal_constraints": [True, False, True, True, False, True],
+            "commonsense_errors": ["c1"],
+            "error_info": ["c1",
+                           "Personal constraint 2 failed: result = (c2 == 1)",
+                           "Personal constraint 5 failed: result = (c5 == 1)"],
+            "passed": False,
+        }
+        after = {"personal_constraints": after_states, "commonsense_errors": [],
+                 "error_info": [], "passed": False}
+        with patch.object(loop, "verify_plan", side_effect=[before, after]):
+            out = loop.run_repair_loop(self._multi_problem(), plan,
+                                       R3AdaptiveScopeRepair(), _ctx(), llm, None,
+                                       max_steps=1)
+        entry = out["history"][1]["repair_attempt"]
+        return RepairAttemptRecord.from_dict(entry), entry
+
+    def test_multi_target_record_pairs_targets_with_breaks(self):
+        record, entry = self._run_multi([True, True, False, True, False, True])
+        # What R3 tried to fix (all failures together) ...
+        self.assertEqual(record.target_constraint_indices, [2, 5])
+        # ... and what the repair broke / fixed, measured by the loop.
+        self.assertEqual(record.newly_violated, [3])
+        self.assertEqual(record.fixed, [2])
+        self.assertEqual(record.still_failed, [5])
+        self.assertEqual(record.feedback_personal_constraint_indices, [2, 5])
+        self.assertEqual(record.feedback_commonsense_failure_count, 1)
+        self.assertEqual(record.editable_scope, "slot")
+        self.assertEqual(record.scope_level, 1)
+        self.assertFalse(set(INTENT_FIELDS + DERIVED_FIELDS) & record.repair_metadata.keys())
+        # Serialized form round-trips unchanged.
+        self.assertEqual(RepairAttemptRecord.from_dict(record.to_dict()).to_dict(), entry)
+
+    def test_unknown_after_state_is_not_a_break(self):
+        record, _ = self._run_multi([True, True, None, True, False, True])
+        self.assertEqual(record.newly_violated, [])
+        self.assertEqual(record.unknown, [3])
+        self.assertEqual(record.target_constraint_indices, [2, 5])
 
 
 if __name__ == "__main__":
