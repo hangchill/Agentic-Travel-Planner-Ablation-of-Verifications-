@@ -3,8 +3,11 @@ from chinatravel.agent.nesy_verifier.repair_strategies.r1 import (
     find_editable_slot, classify_failed_constraint, find_editable_slot, 
     replace_activity_slot, generate_replacement, R1TargetedRepair,
     find_candidate_slots, select_editable_slot, find_transport_slots, 
-    replace_transport_slot, select_repair_target)
+    replace_transport_slot, select_repair_target, localise_transport_error,
+    lookup_transport_options, convert_transport_option,)
 import json
+from unittest.mock import patch
+
 
 class TestR1(unittest.TestCase):
     def test_unique_restaurant(self):
@@ -332,6 +335,119 @@ class TestR1(unittest.TestCase):
         self.assertEqual(target_idx, 2)
         self.assertEqual(family, "dining")
         self.assertEqual(candidates, [(0, 0)])
+
+    def test_localise_commonsense_transport_error(self):
+        plan = [{"day": 1,
+                 "activities": [{
+                 "type": "attraction",
+                 "position": "Nanjing Museum",
+                 "transports": {
+                     "from": "Nanjing South Railway Station",
+                     "to": "Nanjing Museum",
+                     "start_time": "10:27",
+                     "end_time": "11:10",
+                     "mode": "metro",
+                     "cost": 5,},}],}]
+        error = ("Unavailable Inner-City Transport information in 1, "
+                 "from Nanjing South Railway Station to Nanjing Museum, "
+                 "start_time 10:27, transport_type metro")
+        slot = localise_transport_error(plan, error)
+        self.assertEqual(slot, (0, 0))
+
+    def test_lookup_transport_options(self):
+        from unittest.mock import patch
+        class FakeTransportation:
+            def __init__(self, lang):
+                self.lang = lang
+            def goto(self, city, start, end, start_time, transport_type):
+                if transport_type == "metro":
+                    return "No solution"
+                return [{"start": start,
+                         "end": end,
+                         "mode": transport_type,
+                         "start_time": start_time,
+                         "end_time": "10:30",
+                         "cost": 5,}]
+        with patch("chinatravel.environment.tools.transportation.apis.Transportation",
+                   FakeTransportation,):
+            options = lookup_transport_options(
+                city="Nanjing",
+                origin="Hotel",
+                destination="Museum",
+                start_time="10:00",)                   
+            options = lookup_transport_options(
+                city="Nanjing",
+                origin="Hotel",
+                destination="Museum",
+                start_time="10:00",)
+        self.assertEqual(len(options), 2)
+        self.assertEqual([option["mode"] for option in options],
+                         ["walk", "taxi"],)
+
+    def test_convert_transport_option(self):
+        original = {"from": "Hotel",
+                    "to": "Museum",
+                    "mode": "metro",
+                    "start_time": "10:00",
+                    "end_time": "10:40",
+                    "cost": 5,}
+        option = {"mode": "taxi",
+                  "segments": [{
+                      "start": "Hotel",
+                      "end": "Museum",
+                      "mode": "taxi",
+                      "start_time": "10:00",
+                      "end_time": "10:20",
+                      "cost": 25,}],}
+        replacement = convert_transport_option(option, original)
+        self.assertEqual(replacement["mode"], "taxi")
+        self.assertEqual(replacement["cost"], 25)
+        self.assertEqual(replacement["from"], "Hotel")
+        self.assertEqual(replacement["to"], "Museum")
+
+    def test_commonsense_transport_repair(self):
+        plan = [{"day": 1,
+                 "activities": [{
+                     "type": "attraction",
+                     "position": "Museum",
+                     "start_time": "10:30",
+                     "end_time": "12:00",
+                     "transports": {
+                         "from": "Hotel",
+                         "to": "Museum",
+                         "start_time": "10:00",
+                         "end_time": "10:30",
+                         "mode": "metro",
+                         "cost": 5,},}],}]
+        problem = {"target_city": "Nanjing",
+                   "lang": "en",
+                   "hard_logic_py": [],}
+        verification_results = {
+            "personal_constraints": [],
+            "commonsense_errors": [
+                "Unavailable Inner-City Transport information in 1, "
+                "from Hotel to Museum, start_time 10:00, "
+                "transport_type metro"],}
+        fake_options = [{
+            "mode": "taxi",
+            "segments": [{
+                "start": "Hotel",
+                "end": "Museum",
+                "mode": "taxi",
+                "start_time": "10:00",
+                "end_time": "10:20",
+                "cost": 25,}],}]
+        with patch("chinatravel.agent.nesy_verifier.repair_strategies.r1.lookup_transport_options",
+                   return_value=fake_options,):
+            result = R1TargetedRepair().repair(
+                problem=problem, raw_plan=plan,
+                verification_results=verification_results,
+                context={}, llm=None,)
+        transport = result.repaired_plan[0]["activities"][0]["transports"]
+        self.assertEqual(transport["mode"], "taxi")
+        self.assertEqual(transport["cost"], 25)
+        self.assertEqual(result.metadata["target_constraint_indices"], [])
+        self.assertEqual(result.metadata["repair_source"], "transport_lookup")
 
 if __name__ == "__main__":
     unittest.main()

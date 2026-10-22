@@ -3,6 +3,7 @@ from .base import BaseRepairStrategy, RepairResult
 from chinatravel.evaluation.repair_attempt import failed_constraint_indices
 from chinatravel.evaluation.constraint_families import classify_constraint
 import json
+import re
 
 ACTIVITY_TYPES = {"dining": {"breakfast", "lunch", "dinner"},
                   "accommodation": {"accommodation"},
@@ -228,19 +229,96 @@ def select_repair_target(problem, raw_plan, failed_indices):
             return target_idx, family, candidates
     return None, None, []
 
+
+def localise_transport_error(raw_plan, error_message):
+    pattern = (r"Unavailable Inner-City Transport information in (\d+), "
+               r"from (.+?) to (.+?), "
+               r"start_time ([^,]+), transport_type (.+)")
+    match = re.fullmatch(pattern, error_message.strip())
+    if not match:
+        return None
+    day_number = int(match.group(1))
+    origin = match.group(2)
+    destination = match.group(3)
+    start_time = match.group(4)
+    mode = match.group(5)
+    day_idx = day_number - 1
+    if not 0 <= day_idx < len(raw_plan):
+        return None
+    matches = []
+    for activity_idx, activity in enumerate(
+        raw_plan[day_idx].get("activities", [])):
+        transport = activity.get("transports")
+        if not isinstance(transport, dict):
+            continue
+        if (transport.get("from") == origin
+            and transport.get("to") == destination
+            and str(transport.get("start_time")) == start_time
+            and str(transport.get("mode")) == mode):
+            matches.append((day_idx, activity_idx))
+    return matches[0] if len(matches) == 1 else None
+
+
+def repair_commonsense_transport(
+    problem, raw_plan, verification_results):
+    errors = verification_results.get("commonsense_errors", [])
+    if not isinstance(errors, list):
+        return None
+    for error in errors:
+        if not isinstance(error, str):
+            continue
+        slot = localise_transport_error(raw_plan, error)
+        if slot is None:
+            continue
+        day_idx, activity_idx = slot
+        original = raw_plan[day_idx]["activities"][activity_idx]["transports"]
+        city = problem.get("target_city")
+        if not city:
+            continue
+        options = lookup_transport_options(
+            city=city,
+            origin=original["from"],
+            destination=original["to"],
+            start_time=original["start_time"],
+            lang=problem.get("lang", "en"),)
+        for option in options:
+            replacement = convert_transport_option(option, original)
+            if replacement is None:
+                continue
+            if replacement == original:
+                continue
+            repaired_plan = replace_transport_slot(
+                raw_plan, slot, replacement)
+            return RepairResult(
+                repaired_plan=repaired_plan,
+                metadata={"strategy": "R1",
+                          "target_constraint_indices": [],
+                          "editable_scope": "slot",
+                          "scope_level": 1,
+                          "feedback_personal_constraint_indices": [],
+                          "feedback_commonsense_failure_count": len(errors),
+                          "editable_slot": slot,
+                          "target_commonsense_error": error,
+                          "repair_source": "transport_lookup",},)
+    return None
+
 class R1TargetedRepair(BaseRepairStrategy):
     def repair(self, problem, raw_plan, verification_results, context, llm):
         failed_indices = failed_constraint_indices(
             verification_results["personal_constraints"])
         if not failed_indices:
+            commonsense_result = repair_commonsense_transport(
+                problem, raw_plan, verification_results)
+            if commonsense_result is not None:
+                return commonsense_result
             return RepairResult(
                 repaired_plan=deepcopy(raw_plan),
-                metadata={"strategy": "R1",
-                          "target_constraint_indices": [],
-                          "editable_scope": "slot",
-                          "scope_level": 1,
-                          "failure_reason": "no_failed_personal_constraint",},)
-
+                metadata={
+                    "strategy": "R1",
+                    "target_constraint_indices": [],
+                    "editable_scope": "slot",
+                    "scope_level": 1,
+                    "failure_reason": "no_localizable_failure",},)
         target_idx, constraint_family, candidates = select_repair_target(
             problem, raw_plan, failed_indices,)
         if target_idx is None:
@@ -288,3 +366,52 @@ class R1TargetedRepair(BaseRepairStrategy):
             metadata["failure_detail"] = str(exc)[:200]
             return RepairResult(repaired_plan=deepcopy(raw_plan), metadata=metadata,)
         return RepairResult(repaired_plan=repaired_plan, metadata=metadata,)
+
+def lookup_transport_options(
+    city, origin, destination, start_time, lang="en"):
+    from chinatravel.environment.tools.transportation.apis import (
+        Transportation,)
+    transport_tool = Transportation(lang=lang)
+    options = []
+    for mode in ("walk", "taxi", "metro"):
+        try:
+            result = transport_tool.goto(
+                city=city, start=origin, end=destination,
+                start_time=start_time, transport_type=mode,)
+            if isinstance(result, list) and result:
+                options.append({"mode": mode, "segments": result,})
+        except (ValueError, KeyError, TypeError, OSError):
+            continue
+    return options
+
+
+def convert_transport_option(option, original_transport):
+    """Convert one verified direct transport option to R1 format."""
+    if not isinstance(option, dict):
+        return None
+    segments = option.get("segments")
+    # only support direct journeys for now
+    if not isinstance(segments, list) or len(segments) != 1:
+        return None
+    segment = segments[0]
+    if not isinstance(segment, dict):
+        return None
+    required = {"start", "end", "mode",
+                "start_time", "end_time", "cost"}
+    if not required.issubset(segment):
+        return None
+    # preserve original journey endpoints
+    if segment["start"] != original_transport.get("from"):
+        return None
+    if segment["end"] != original_transport.get("to"):
+        return None
+    if segment["start_time"] != original_transport.get("start_time"):
+        return None
+    if segment["mode"] not in {"walk", "taxi"}:
+        return None
+    return {"from": segment["start"],
+            "to": segment["end"],
+            "mode": segment["mode"],
+            "start_time": segment["start_time"],
+            "end_time": segment["end_time"],
+            "cost": segment["cost"],}
