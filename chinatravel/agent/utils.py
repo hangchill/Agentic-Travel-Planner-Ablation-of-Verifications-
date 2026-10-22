@@ -2,7 +2,7 @@ import sys
 from numpy import ndarray, integer, floating
 import numpy as np
 import json
-
+import os
 
 def decode_numpy_dict(d):
     if isinstance(d, dict):
@@ -23,6 +23,10 @@ class Logger(object):
     def __init__(self, filename="default.log", stream=sys.stdout, debug_mode=False):
 
         self.debug_mode = debug_mode
+
+        log_dir = os.path.dirname(os.path.abspath(filename))
+        os.makedirs(log_dir, exist_ok=True)
+
         self.log = open(filename, "a", encoding="utf-8")
 
         if self.debug_mode:
@@ -35,11 +39,14 @@ class Logger(object):
             self.terminal.write(message)
 
     def flush(self):
-        pass
+        if hasattr(self, "log") and not self.log.closed:
+            self.log.flush()
+        if self.debug_mode:
+            self.terminal.flush()
 
     def __del__(self):
-        self.log.close()
-
+        if hasattr(self, "log") and not self.log.closed:
+            self.log.close()
 
 class NpEncoder(json.JSONEncoder):
     def default(self, obj):

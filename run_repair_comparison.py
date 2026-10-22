@@ -12,6 +12,7 @@ import uuid
 from chinatravel.agent.nesy_verifier.repair_strategies import STRATEGY_FACTORIES
 from chinatravel.evaluation.train_test_split import load_manifest, select_queries
 from chinatravel.evaluation.repair_comparison import run_comparison, stable_hash
+from dotenv import load_dotenv
 
 
 def model_settings(llm):
@@ -24,6 +25,7 @@ def model_settings(llm):
 
 
 def main(argv=None):
+    load_dotenv()
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--splits", default="easy")
     parser.add_argument("--index", nargs="+", help="Optional query UID subset")
@@ -128,7 +130,9 @@ def main(argv=None):
                     project / "chinatravel/agent/llms.py", project / "chinatravel/agent/model_usage.py", project / "chinatravel/agent/system_usage.py",
                     *sorted((project / "chinatravel/agent/nesy_verifier").rglob("*.py")),
                     *sorted((project / "chinatravel/environment").rglob("*.py"))]
-    code_hash = stable_hash({str(path.relative_to(project)): path.read_text(encoding="utf-8") for path in source_paths})
+    code_hash = stable_hash({str(path.resolve().relative_to(project.resolve())):
+                             path.read_text(encoding="utf-8")
+        for path in source_paths})
     config = {"split_query_source": args.splits, "language": args.lang, "model_identifier": model,
               "repair_strategies": args.repair_strategies, "max_steps": args.max_steps,
               "oracle_translation": True, "sampling_settings": settings,

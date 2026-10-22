@@ -230,6 +230,15 @@ def run_repair_loop(
             current_plan = deepcopy(result.repaired_plan)
             current_verification = candidate_verification
 
+        # Stop R1 when its proposed repair makes no changes.
+        # The attempt has already been recorded in history.
+        if (
+            strategy_name in {"R1", "R1TargetedRepair"}
+            and result is not None
+            and result.repaired_plan == before_plan
+        ):
+            break
+
     ## Return the final accepted plan and the full attempt history.
     return {
         "raw_plan": current_plan,
