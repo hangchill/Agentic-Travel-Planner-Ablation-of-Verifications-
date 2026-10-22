@@ -22,7 +22,7 @@ accommodation = Accommodations()
 restaurants = Restaurants()
 attractions = Attractions()
 intercity_transport=IntercityTransport()
-innercity_transport=Transportation()
+innercity_transport = Transportation(lang="en")
 
 
 '''
