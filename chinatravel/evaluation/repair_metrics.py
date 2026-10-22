@@ -229,3 +229,14 @@ def summarize_repair_history(history: list[dict]) -> dict:
         "final_personal_constraint_satisfaction_rate": _ratio(final_passed, final_passed + final_failed),
         "final_all_personal_constraints_pass": _all_pass(current),
     }
+
+
+def summarize_checkpoint(result, generation_metadata=None):
+    """Reconstruct existing pair-summary semantics from persisted raw evidence."""
+    metadata = generation_metadata or {}
+    summary = summarize_repair_history(result["repair_history"])
+    summary.update(result.get("system_metrics", {}))
+    for name in ("shared_initialization_time_s", "initial_generation_time_s", "initial_generation_tool_calls"):
+        summary[name] = metadata.get(name)
+    summary["shared_initialization_tool_calls"] = metadata.get("shared_initialization_system_metrics", {}).get("tool_call_count")
+    return summary

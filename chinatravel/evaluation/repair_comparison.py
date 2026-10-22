@@ -18,7 +18,7 @@ from urllib.parse import quote
 from chinatravel.agent.nesy_verifier.initial_state import InitialRepairState
 from chinatravel.agent.nesy_verifier.repair_strategies import STRATEGY_FACTORIES
 from chinatravel.agent.nesy_verifier.shared_repair_loop import run_repair_loop
-from chinatravel.evaluation.repair_metrics import summarize_repair_history
+from chinatravel.evaluation.repair_metrics import summarize_checkpoint
 from chinatravel.evaluation.repair_attempt import coerce_repair_attempt
 
 
@@ -54,7 +54,7 @@ def _component(value):
     return quote(str(value), safe="")[:90] + "-" + stable_hash(str(value))[:12]
 
 
-def _rebuild_indexes(root):
+def _rebuild_indexes(root, *, raw_only=False):
     """Pair checkpoints are authoritative; never append duplicate stream rows."""
     attempts, summaries = [], []
     for path in sorted((root / "queries").glob("*/*.json")):
@@ -72,7 +72,17 @@ def _rebuild_indexes(root):
                               "query_uid": result["query_uid"], "repair_strategy": result["repair_strategy"],
                               "initial_plan_hash": result["initial_plan_hash"],
                               "execution_status": result["execution_status"]})
+    manifest = _load(root / "run_manifest.json")
+    for uid in manifest["query_uids"]:
+        failure = root / "queries" / _component(uid) / "initial_failure.json"
+        initial = failure.parent / "initial_state.json"
+        if failure.exists() and not initial.exists():
+            for strategy in manifest["repair_strategies_requested"]:
+                summaries.append(dict(run_id=manifest["run_id"], query_uid=uid, repair_strategy=strategy,
+                                      execution_status="initial_generation_failed", exception=_load(failure)["exception"]))
     _write(root / "attempts.jsonl", "".join(json.dumps(row, ensure_ascii=False, allow_nan=False) + "\n" for row in attempts))
+    if raw_only:
+        return
     stream = io.StringIO(newline="")
     columns = sorted({key for row in summaries for key in row}) or [
         "run_id", "query_uid", "repair_strategy", "initial_plan_hash", "execution_status"]
@@ -100,7 +110,7 @@ def _lock(root):
 
 def run_comparison(queries, *, run_id, output_root, config, prepare_initial_state,
                    runtime_factory, strategy_factories=None, skip_unavailable=False,
-                   resume=False, retry_failed=False):
+                   resume=False, retry_failed=False, raw_only=False):
     """Generate once per query; runtime_factory(state, name) returns (llm, translator).
 
     The runtime factory MUST return a fresh isolated model/environment runtime
@@ -126,6 +136,8 @@ def run_comparison(queries, *, run_id, output_root, config, prepare_initial_stat
     compatibility = {"config": config, "query_hashes": {str(uid): stable_hash(problem) for uid, problem in queries.items()},
                      "query_order": list(queries), "available_strategies": sorted(factories),
                      "skip_unavailable": skip_unavailable, "runner_format_version": 1}
+    if raw_only:
+        compatibility["evidence_only"] = True
     if root.exists() and not resume:
         raise ValueError("Run directory already exists; use --resume or a new run_id")
     if resume and not (root / "run_manifest.json").is_file():
@@ -149,9 +161,10 @@ def run_comparison(queries, *, run_id, output_root, config, prepare_initial_stat
                 "compatibility": compatibility,
             }
             _save(manifest_path, manifest)
-        _rebuild_indexes(root)
+        _rebuild_indexes(root, raw_only=raw_only)
         for uid, problem in queries.items():
             query_dir = root / "queries" / _component(uid)
+            _save(query_dir / "reference" / "query.json", problem)
             initial_path = query_dir / "initial_state.json"
             if initial_path.exists():
                 stored = _load(initial_path)
@@ -210,14 +223,12 @@ def run_comparison(queries, *, run_id, output_root, config, prepare_initial_stat
                     result["final_verification"] = deepcopy(accepted_entry["verification"])
                     result["final_accepted_plan"] = deepcopy(
                         accepted_entry["candidate_plan"] if accepted_entry["step"] else state.raw_initial_plan)
-                    result["summary_metrics"] = summarize_repair_history(history)
-                    result["summary_metrics"].update(result.get("system_metrics", {}))
-                    result["summary_metrics"]["shared_initialization_time_s"] = state.generation_metadata.get("shared_initialization_time_s")
-                    result["summary_metrics"]["initial_generation_time_s"] = state.generation_metadata.get("initial_generation_time_s")
-                    result["summary_metrics"]["initial_generation_tool_calls"] = state.generation_metadata.get("initial_generation_tool_calls")
-                    result["summary_metrics"]["shared_initialization_tool_calls"] = state.generation_metadata.get("shared_initialization_system_metrics", {}).get("tool_call_count")
+                    if not raw_only:
+                        result["summary_metrics"] = summarize_checkpoint(result, state.generation_metadata)
+                    else:
+                        result.pop("summary_metrics", None)
                     _save(pair_path, result)
-                    _rebuild_indexes(root)
+                    _rebuild_indexes(root, raw_only=raw_only)
 
                 if name not in factories:
                     result.update(execution_status="skipped", stop_reason="strategy_unavailable")
@@ -264,5 +275,5 @@ def run_comparison(queries, *, run_id, output_root, config, prepare_initial_stat
                     checkpoint(result["repair_history"])
                 if stable_hash(state.to_dict()) != stored["initial_state_hash"]:
                     raise ValueError("Shared initial snapshot mutated")
-        _rebuild_indexes(root)
+        _rebuild_indexes(root, raw_only=raw_only)
     return root

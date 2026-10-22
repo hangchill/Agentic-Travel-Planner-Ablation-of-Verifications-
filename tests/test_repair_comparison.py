@@ -18,6 +18,7 @@ from chinatravel.agent.nesy_verifier.repair_strategies.base import BaseRepairStr
 from chinatravel.agent.nesy_verifier import shared_repair_loop as loop
 from chinatravel.agent.model_usage import reported_token_count
 from chinatravel.evaluation import repair_comparison as comparison
+from chinatravel.evaluation.repair_metrics import summarize_repair_history
 from scripts.build_regression_matrix import load_input
 from chinatravel.evaluation.regression_matrix import build_regression_matrix
 
@@ -78,6 +79,48 @@ class ComparisonTests(unittest.TestCase):
         return [json.loads(path.read_text()) for path in (root / "queries").glob("*/*.json")
                 if path.name not in ("initial_state.json", "initial_failure.json")]
 
+    def test_raw_only_then_offline_summary_matches_legacy(self):
+        from scripts.build_repair_summary import build_repair_summary
+        with patch("chinatravel.evaluation.repair_metrics.summarize_repair_history",
+                   side_effect=AssertionError("runner must not compute summaries")):
+            root = self.run_comparison(raw_only=True)
+        self.assertFalse((root / "summaries.csv").exists())
+        self.assertTrue((root / "attempts.jsonl").exists())
+        self.assertFalse((root / "benchmark_eval").exists())
+        self.assertFalse((root / "regression_matrix").exists())
+        for pair in self.pairs(root):
+            self.assertNotIn("summary_metrics", pair)
+        # Offline reconstruction needs neither a strategy nor a verifier.
+        with patch.object(loop, "verify_plan", side_effect=AssertionError("offline")):
+            rows = build_repair_summary(root)
+        self.assertEqual(len(rows), 2)
+        for row, pair in zip(sorted(rows, key=lambda r: r['repair_strategy']),
+                             sorted(self.pairs(root), key=lambda r: r['repair_strategy'])):
+            expected = summarize_repair_history(pair['repair_history'])
+            for key, value in expected.items():
+                if key not in pair['system_metrics']:
+                    self.assertEqual(row[key], value, key)
+            for key, value in pair['system_metrics'].items():
+                self.assertEqual(row[key], value, key)
+
+    def test_raw_initial_failure_offline_population(self):
+        from scripts.build_repair_summary import build_repair_summary
+        self.prepare.side_effect = RuntimeError("generation failed")
+        root = self.run_comparison(raw_only=True)
+        self.assertFalse((root / "summaries.csv").exists())
+        rows = build_repair_summary(root)
+        self.assertEqual(len(rows), 2)
+        self.assertTrue(all(row['execution_status'] == 'initial_generation_failed' for row in rows))
+        self.assertTrue(all('attempts' not in row for row in rows))
+        self.assertTrue((root / 'queries' / comparison._component('q1') / 'reference/query.json').exists())
+
+    def test_raw_zero_attempt_offline_summary(self):
+        from scripts.build_repair_summary import build_repair_summary
+        self.config['max_steps'] = 0
+        root = self.run_comparison(raw_only=True)
+        rows = build_repair_summary(root)
+        self.assertTrue(all(row['attempts'] == 0 and row['initial_failed_count'] == 1 for row in rows))
+
     def test_generate_once_identical_plans_context_and_hashes(self):
         root = self.run_comparison()
         self.assertEqual(self.prepare.call_count, 1)
@@ -131,7 +174,7 @@ class ComparisonTests(unittest.TestCase):
 
     def test_summary_calls_central_metrics_even_with_zero_attempts(self):
         self.config["max_steps"] = 0
-        with patch.object(comparison, "summarize_repair_history", wraps=comparison.summarize_repair_history) as summarize:
+        with patch("chinatravel.evaluation.repair_metrics.summarize_repair_history", wraps=summarize_repair_history) as summarize:
             root = self.run_comparison()
         self.assertGreaterEqual(summarize.call_count, 2)
         with (root / "summaries.csv").open() as stream:
