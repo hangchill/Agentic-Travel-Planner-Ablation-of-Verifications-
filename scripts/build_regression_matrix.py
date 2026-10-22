@@ -74,6 +74,22 @@ def _write_csv(path, rows, columns):
         writer.writerows(rows)
 
 
+def _write_pivots(directory, aggregate, *, legacy=False):
+    for perspective, prefix in (("candidate", "candidate"), ("accepted_trajectory", "accepted")):
+        lookup = {(row["source_family"], row["destination_family"]): row
+                  for row in aggregate if row["perspective"] == perspective}
+        for metric, field in (("rate", "regression_rate"), ("support", "support_count"),
+                              ("count", "regression_count")):
+            rows = [{"source_family": source, **{
+                destination: lookup.get((source, destination), {}).get(field, None if metric == "rate" else 0)
+                for destination in CONSTRAINT_FAMILIES}} for source in CONSTRAINT_FAMILIES]
+            _write_csv(directory / f"{prefix}_regression_{metric}.csv", rows,
+                       ("source_family", *CONSTRAINT_FAMILIES))
+            if legacy and metric == "rate":
+                _write_csv(directory / f"regression_matrix_{prefix}.csv", rows,
+                           ("source_family", *CONSTRAINT_FAMILIES))
+
+
 def main(argv=None):
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--input", nargs="+", required=True, type=Path)
@@ -102,14 +118,13 @@ def main(argv=None):
     _write_csv(args.output_dir / "regression_matrix_long.csv", analysis["aggregate"], AGGREGATE_COLUMNS)
     _write_csv(args.output_dir / "regression_matrix_by_scope_long.csv",
                analysis["aggregate_by_scope"], SCOPE_AGGREGATE_COLUMNS)
-    for perspective, filename in (("candidate", "regression_matrix_candidate.csv"),
-                                  ("accepted_trajectory", "regression_matrix_accepted.csv")):
-        lookup = {(row["source_family"], row["destination_family"]): row["regression_rate"]
-                  for row in analysis["aggregate"] if row["perspective"] == perspective}
-        rows = [{"source_family": source,
-                 **{destination: lookup.get((source, destination)) for destination in CONSTRAINT_FAMILIES}}
-                for source in CONSTRAINT_FAMILIES]
-        _write_csv(args.output_dir / filename, rows, ("source_family", *CONSTRAINT_FAMILIES))
+    _write_pivots(args.output_dir, analysis["aggregate"], legacy=True)
+    scopes = {row["editable_scope"] for row in analysis["aggregate_by_scope"]}
+    for scope in sorted(scopes, key=lambda value: value or ""):
+        scoped_dir = args.output_dir / "by_scope" / (scope or "unspecified")
+        scoped_dir.mkdir(parents=True, exist_ok=True)
+        _write_pivots(scoped_dir, [row for row in analysis["aggregate_by_scope"]
+                                   if row["editable_scope"] == scope])
     with (args.output_dir / "matrix_coverage.json").open("w", encoding="utf-8") as stream:
         json.dump(analysis["coverage"], stream, indent=2, allow_nan=False)
         stream.write("\n")
