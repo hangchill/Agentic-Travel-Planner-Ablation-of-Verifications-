@@ -134,7 +134,14 @@ All these files are inside `chinatravel/agent/nesy_verifier/`.
 | `shared_repair_loop.py` | Handles repair attempts, acceptance/rejection and logging |
 | `llm_modulo.py` | Main agent and strategy selection |
 
-For a detailed explanation of the implementation and R0 tests, see `framework_r0.ipynb`. For how the train/test split is built and wired into the runner (with no data leakage), see `train_test_split_r0.ipynb`. The experiments use a **stratified** split across the `easy`, `medium`, and `human` query sets (same difficulty mix on both sides). Because of our limited API budget we use a 100-query subset — **`--splits subset_train`** (69 queries, 23/23/23 easy/medium/human) for development and **`--splits subset_test`** (31 queries, ~equal mix) for the final comparison. The full-dataset stratified split (`--splits combined_train` / `combined_test`, 422/182) and a single-category `medium` split (`--splits medium_train` / `medium_test`) are also available. The notebook also runs the R0 baseline per query and commits the results to `experiments/r0_combined_sample/` (a 5-query sample spanning easy/medium/human; an earlier medium-only sample is kept in `experiments/r0_medium_sample/`), so teammates can re-run the notebook and load the exact same results without re-calling the (paid, non-deterministic) LLM.
+For a detailed explanation of the implementation and R0 tests, see `framework_r0.ipynb`. For how the train/test split is built and wired into the runner (with no data leakage), see `train_test_split_r0.ipynb`. The experiments use a **stratified** split across the `easy`, `medium`, and `human` query sets (same difficulty mix on both sides). Because of our limited API budget we use a 100-query subset — **`--splits subset_train`** (69 queries, 23/23/23 easy/medium/human) for development and **`--splits subset_test`** (31 queries, ~equal mix) for the final comparison. The full-dataset stratified split (`--splits combined_train` / `combined_test`, 422/182) and a single-category `medium` split (`--splits medium_train` / `medium_test`) are also available. Shared experiment results live under `experiments/` (tracked by git, unlike the ignored `results/` and `cache/`). Run experiments with the standard wrapper so everyone's outputs land in one consistent, comparable place:
+
+```bash
+python run_experiment.py --strategy R0 --split pilot5     # baseline on the shared 5-query set
+python run_experiment.py --strategy R1 --split pilot5     # your strategy, same queries
+```
+
+Results are saved to `experiments/<strategy>_<model>_<split>/<uid>.json` and the runner is resume-safe (skips queries that already have a result). See `experiments/README.md` for the full convention and the R1–R4 workflow.
 
 ### How to implement your strategy
 
@@ -158,7 +165,7 @@ If your method needs to reject a proposed repair, override the `accept()` method
 
 After implementing your strategy, register it in `llm_modulo.py` and test it on one case before running larger experiments.
 
-**Current status:** The shared framework and R0 are implemented and tested end-to-end. The shared verifier has been improved to detect invalid itinerary structures, transport translation failures and verifier execution errors separately from genuine constraint violations. With both sandboxes installed the full test suite passes (193 tests, 0 failures, 0 errors), and the R0 end-to-end test completed successfully (although the final itinerary still had violations). See `framework_r0.ipynb` for runnable proof cells and captured output.
+**Current status:** The shared framework and R0 are implemented and tested end-to-end. The shared verifier detects invalid itinerary structures, transport translation failures and verifier execution errors separately from genuine constraint violations, and is **language-aware** (it checks English itineraries against the English sandbox, fixing earlier false "unavailable transport" errors). Experiments run on **DeepSeek V3** by default (far cheaper than GPT-4.1) and logging is **cross-platform** (Windows long-path + nested-dir fixes). With both sandboxes installed the full test suite passes (221 tests, 0 failures, 0 errors). See `framework_r0.ipynb` for runnable proof cells and `train_test_split_r0.ipynb` for the split + R0 experiment.
 
 R1–R4 are not yet implemented or registered. See `framework_r0.ipynb` for implementation details, testing results and remaining limitations.
 ---

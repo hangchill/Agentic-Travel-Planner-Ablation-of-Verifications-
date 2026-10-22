@@ -2,6 +2,7 @@ import csv
 from copy import deepcopy
 import json
 from pathlib import Path
+import sys
 import tempfile
 import unittest
 from unittest.mock import patch
@@ -11,6 +12,10 @@ from chinatravel.evaluation.train_test_split import (
 )
 from scripts.build_train_test_split import main as split_main
 from scripts.build_regression_matrix import main as matrix_main, load_input
+## Allow importing sibling test modules (e.g. test_regression_matrix) regardless
+## of how the suite is launched (plain `unittest discover` doesn't add the tests
+## dir to sys.path, unlike pytest).
+sys.path.insert(0, str(Path(__file__).resolve().parent))
 from test_regression_matrix import record
 from types import SimpleNamespace
 import run_repair_comparison as runner

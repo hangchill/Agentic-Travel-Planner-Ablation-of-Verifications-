@@ -18,11 +18,46 @@ from chinatravel.evaluation.utils import load_json_file
     
 import pandas as pd
 
+from chinatravel.environment.language import normalize_lang, CITY_NAMES
+
 accommodation = Accommodations()
 restaurants = Restaurants()
 attractions = Attractions()
 intercity_transport=IntercityTransport()
 innercity_transport=Transportation()
+
+## Track which language the verifier's tools are currently loaded for, so we
+## only re-instantiate them when the language actually changes (re-creating the
+## tools reloads sandbox CSVs, which is relatively expensive).
+_current_tool_lang = "zh"
+
+
+def _infer_lang(symbolic_input):
+    """Infer the sandbox language from the query's cities (English names -> en)."""
+    cities = {symbolic_input.get("start_city"), symbolic_input.get("target_city")}
+    if cities & set(CITY_NAMES["en"]):
+        return "en"
+    return "zh"
+
+
+def _set_lang(lang):
+    """Point the verifier's tools at the English or Chinese sandbox.
+
+    The commonsense checks below use THIS module's tool instances, so switching
+    language means re-instantiating them here. (The identically named helper in
+    chinatravel/symbol_verification only rebinds that module's globals, which is
+    why language was not taking effect for the shared verifier.)
+    """
+    global accommodation, restaurants, attractions, intercity_transport, innercity_transport, _current_tool_lang
+    lang = normalize_lang(lang)
+    if lang == _current_tool_lang:
+        return
+    accommodation = Accommodations(lang=lang)
+    restaurants = Restaurants(lang=lang)
+    attractions = Attractions(lang=lang)
+    intercity_transport = IntercityTransport(lang=lang)
+    innercity_transport = Transportation(lang=lang)
+    _current_tool_lang = lang
 
 
 '''
@@ -926,8 +961,13 @@ def collect_type_error(symbolic_input, plan_json, verbose=False):
 
 
 
-def collect_commonsense_constraints_error(symbolic_input, plan_json, verbose=False):
-    
+def collect_commonsense_constraints_error(symbolic_input, plan_json, verbose=False, lang=None):
+
+    ## Load the verifier's tools for the right sandbox. Without this the tools
+    ## stayed on their Chinese default, so English itineraries were checked
+    ## against the Chinese database and produced false "unavailable transport"
+    ## errors. Use the explicit lang if given, else infer from the query cities.
+    _set_lang(lang if lang is not None else _infer_lang(symbolic_input))
 
     func_list = [collect_type_error, collect_intercity_transport_error, collect_attractions_error, collect_hotels_error, collect_restaurants_error, collect_transport_error, collect_time_error, collect_space_error]
     
