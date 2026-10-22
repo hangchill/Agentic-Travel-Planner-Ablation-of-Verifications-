@@ -7,7 +7,13 @@ def _r0():
     return R0WholePlanRepair()
 
 
-STRATEGY_FACTORIES = {"R0": _r0}
+def _r2():
+    from .r2 import R2ProtectedRepair
+
+    return R2ProtectedRepair()
+
+
+STRATEGY_FACTORIES = {"R0": _r0, "R2": _r2}
 
 
 def create_repair_strategy(name):
