@@ -16,7 +16,7 @@ Targets are unique, original **1-based `hard_logic_py` indices**. Scope is
 `slot`, `day`, or `plan`; strategy owners enforce the permitted edits. Target
 and scope are independent: widening edits does not automatically widen targets.
 Register a zero-argument factory in `repair_strategies.STRATEGY_FACTORIES`.
-R0 and R3 are currently implemented.
+R0, R1 and R3 are currently implemented.
 
 | Strategy | Expected intent | Optional strategy-specific fields |
 | --- | --- | --- |

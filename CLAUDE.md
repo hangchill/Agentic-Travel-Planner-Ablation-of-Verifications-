@@ -159,7 +159,8 @@ contribution — repair studies the published LLM-Modulo line has not done.
 |---|---|
 | R0 | Implemented & tested end-to-end |
 | R3 | Implemented & registered; unit-tested offline (ladder, localization, slot-freeze merge, contract-conforming metadata, and an end-to-end `run_repair_loop` record-validation test in `tests/test_r3_adaptive_repair.py`) |
-| R1 / R2 / R4 | Not yet implemented or registered |
+| R1 | Implemented & registered (`r1.py`, tests in `tests/test_r1*.py`). `run_repair_loop` stops R1 (only R1) after an attempt whose plan is unchanged |
+| R2 / R4 | Not yet implemented or registered |
 
 ## Setup
 
@@ -252,7 +253,7 @@ All project-specific code is under `chinatravel/agent/nesy_verifier/`. The flow 
 Add `repair_strategies/rN.py` subclassing `BaseRepairStrategy`; have `repair()` return a
 `RepairResult(repaired_plan=..., metadata={...})`. Override `accept()` if the strategy
 should reject some proposals. Then register it by adding a zero-argument factory to
-`STRATEGY_FACTORIES` in `repair_strategies/__init__.py` (see the `_r0` / `_r3` entries).
+`STRATEGY_FACTORIES` in `repair_strategies/__init__.py` (see the `_r0` / `_r1` / `_r3` entries).
 Test on one case via `run_exp.py` before larger runs. **R0 and R3 are the worked examples
 to copy from** (`r0.py` for the simple whole-plan case, `r3.py` for stateful scope control).
 
