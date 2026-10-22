@@ -1,4 +1,4 @@
-"""Generate one initial itinerary per query and compare registered repair methods."""
+"""Run one repair strategy and persist evidence for separate offline evaluation."""
 
 import argparse
 from copy import deepcopy
@@ -31,10 +31,10 @@ def main(argv=None):
     parser.add_argument("--index", nargs="+", help="Optional query UID subset")
     parser.add_argument("--lang", choices=("zh", "en"), default="en")
     parser.add_argument("--llm")
-    parser.add_argument("--repair-strategies", nargs="+", default=["R0"])
+    parser.add_argument("--strategy", default="R0")
     parser.add_argument("--skip-unavailable", action="store_true")
     parser.add_argument("--max-steps", "--refine_steps", type=int, default=10)
-    parser.add_argument("--output-dir", type=Path, default=Path("results/repair_comparison"))
+    parser.add_argument("--output-dir", type=Path, default=Path("results/experiments"))
     parser.add_argument("--run-id")
     parser.add_argument("--resume", action="store_true")
     parser.add_argument("--retry-failed", action="store_true")
@@ -45,6 +45,7 @@ def main(argv=None):
     parser.add_argument("--split-manifest", type=Path)
     parser.add_argument("--partition", choices=("train", "test"))
     args = parser.parse_args(argv)
+    args.repair_strategies = [args.strategy]
     if bool(args.split_manifest) != bool(args.partition):
         parser.error("--split-manifest and --partition must be supplied together")
     if args.resume and not args.run_id:
@@ -144,9 +145,10 @@ def main(argv=None):
     directory = run_comparison(
         {uid: data[uid] for uid in selected}, run_id=run_id, output_root=args.output_dir,
         config=config, prepare_initial_state=prepare, runtime_factory=runtime,
-        skip_unavailable=args.skip_unavailable, resume=args.resume, retry_failed=args.retry_failed,
+        skip_unavailable=args.skip_unavailable, resume=args.resume, retry_failed=args.retry_failed, raw_only=True,
     )
     print(f"Comparison outputs: {directory}")
+
 
 
 if __name__ == "__main__":

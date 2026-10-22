@@ -78,13 +78,13 @@ git diff d3a4e7b main -- <path/to/file>
 | `experiments/README.md` | En Rui | Explains the experiments convention: where results go (and why not `results/`/`cache/`), how to run `run_experiment.py`, the folder naming, and the R1–R4 workflow. |
 | `experiments/r0_deepseek-chat_pilot5/*.json` | En Rui | Current committed R0 baseline: DeepSeek-V3, English, budget 5, on the shared `pilot5` queries with the language-aware verifier. The baseline teammates compare R1–R4 against. |
 | `experiments/_archive_gpt4.1/*` | En Rui | Earlier GPT-4.1 R0 samples, archived for reference. Superseded by the DeepSeek baseline (they predate the language-aware verifier fix, so their transport-error counts are inflated). |
-| `run_repair_comparison.py` | Nancy Shen | Entry point to run the paired repair comparison experiment. |
+| `run_experiments.py` | Nancy Shen | Single-strategy experiment entrypoint, consolidated from the former paired CLI. |
 | `scripts/build_regression_matrix.py` | Nancy Shen | Build the regression matrix from logged attempts. |
 | `scripts/build_train_test_split.py` | Nancy Shen | Generate the train/test split config. |
 | `scripts/setup_project.py` | En Rui | Download/setup the ChinaTravel sandbox and configure `.env`. |
 
 > Note: these files stay at their current locations because the test suite imports
-> them by path (e.g. `import run_repair_comparison`, `from scripts.build_regression_matrix import ...`).
+> them by path (e.g. `import run_experiments`, `from scripts.build_regression_matrix import ...`).
 > Moving them would break those tests.
 
 ### New tests (`tests/`)
@@ -126,7 +126,7 @@ The original versions are upstream ChinaTravel (commit `d3a4e7b`). Our changes:
 | `chinatravel/environment/tools/transportation/apis.py` | Nancy Shen | Added `@tool_api("goto")` to `goto`. |
 | `chinatravel/environment/tools/poi/apis.py` | Nancy Shen | Added `@tool_api("poi_lat_lon_search")` to `search`. |
 | `run_exp.py` | En Rui | Added a `--repair_strategy {R0..R4}` CLI flag and passed it into `create_agent_runtime`. |
-| `requirements.txt` | En Rui | Added `pyarrow==19.0.1`; narrowed the `openai` pin's upper bound as part of the httpx-compatibility fix; added `python-dotenv==1.2.4` (used by `run_repair_comparison.py` but previously missing, so a fresh install failed). |
+| `requirements.txt` | En Rui | Added `pyarrow==19.0.1`; narrowed the `openai` pin's upper bound as part of the httpx-compatibility fix; added `python-dotenv==1.2.4` (used by `run_experiments.py` but previously missing, so a fresh install failed). |
 | `tests/test_train_test_split.py` | En Rui | Fixed an import error that failed under plain `unittest discover`: added the tests dir to `sys.path` so the sibling `test_regression_matrix` import resolves. The full suite is now green (221 tests). |
 | `chinatravel/.gitignore` | En Rui | Changed `evaluation/default_splits/*` to track all `*.txt` split files (previously only `easy`/`medium`/`human` were whitelisted, so new splits like `pilot5`/`subset_*` were silently untracked and never reached teammates). |
 | `pyproject.toml` | En Rui | Narrowed the `openai` dependency upper bound as part of the httpx-compatibility fix. |

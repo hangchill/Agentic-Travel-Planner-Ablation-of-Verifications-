@@ -18,7 +18,7 @@ from scripts.build_regression_matrix import main as matrix_main, load_input
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 from test_regression_matrix import record
 from types import SimpleNamespace
-import run_repair_comparison as runner
+import run_experiments as runner
 
 
 class SplitTests(unittest.TestCase):
@@ -125,7 +125,7 @@ class SplitTests(unittest.TestCase):
             self.assertEqual(coverage["split_selection"]["partition"], "train")
 
 
-    def test_paired_cli_selects_saved_partition_and_records_manifest(self):
+    def test_experiment_cli_selects_saved_partition_and_records_manifest(self):
         rows = self.records()
         manifest = build_split(rows)
         queries = {row["uid"]: row for row in rows}
@@ -139,8 +139,12 @@ class SplitTests(unittest.TestCase):
                 with patch.dict("sys.modules", {"chinatravel.agent.load_model": model_module,
                                                 "chinatravel.environment.world_env": world_module}), \
                      patch("chinatravel.data.load_datasets.load_query", return_value=(list(queries), queries)), \
-                     patch.object(runner, "run_comparison", return_value="synthetic-output") as run:
+                     patch.object(runner, "run_comparison", return_value="synthetic-output") as run, \
+                     patch("chinatravel.evaluation.export_final_plans.evaluate_repair_run") as benchmark:
                     runner.main(["--llm", "mock", "--split-manifest", str(path), "--partition", partition])
                     self.assertEqual(set(run.call_args.args[0]), set(manifest[partition]))
+                    benchmark.assert_not_called()
+                    self.assertTrue(run.call_args.kwargs["raw_only"])
                     self.assertEqual(run.call_args.kwargs["config"]["partition"], partition)
                     self.assertIn("split_manifest_hash", run.call_args.kwargs["config"])
+                    self.assertEqual(run.call_args.kwargs["config"]["repair_strategies"], ["R0"])

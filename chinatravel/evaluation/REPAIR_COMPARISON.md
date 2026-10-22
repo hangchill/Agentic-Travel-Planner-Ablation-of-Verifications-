@@ -1,4 +1,9 @@
-# Paired repair experiments and storage
+# Repair experiment evidence and offline evaluation
+
+Use `run_experiments.py` for single-strategy runs. It writes raw evidence only;
+benchmark, summary, and matrix generation are independent offline steps. Paired
+experiments sharing one initial plan remain available through the lower-level
+`chinatravel.evaluation.repair_comparison.run_comparison()` Python API.
 
 The runner generates and verifies one initial plan per query, then runs registered
 strategies from independent copies of that plan, context and verification.
@@ -7,9 +12,9 @@ Only R0 is currently registered. Future owners add zero-argument factories to
 See the [strategy contract](REPAIR_ATTEMPTS.md).
 
 ```bash
-python run_repair_comparison.py \
+python run_experiments.py \
   --splits medium --index QUERY_UID --lang zh --llm MODEL \
-  --repair-strategies R0 --max-steps 10 --run-id paired-01
+  --strategy R0 --max-steps 10 --run-id paired-01
 ```
 
 Other options: `--skip-unavailable`, `--output-dir`, `--temperature`, `--top-p`,
@@ -34,10 +39,10 @@ stochastic even though their initial inputs are identical.
 ## Storage
 
 ```text
-results/repair_comparison/<run_id>/
+results/experiments/<run_id>/
   run_manifest.json
   attempts.jsonl
-  summaries.csv
+  summaries.csv  # created only by the offline summary builder
   queries/<escaped-query-uid-and-digest>/
     initial_state.json
     <escaped-strategy-and-digest>.json
@@ -50,7 +55,8 @@ accepts it directly. Pair JSON checkpoints are authoritative for crash recovery
 and rebuild the analysis stream without appending duplicates.
 
 Pair results contain initial/final raw plans and verification, history, attempt
-records, central summary metrics, execution status, stop reason and exception.
+records, execution status, stop reason and exception. Historical paired checkpoints
+may also contain cached central summary metrics.
 `completed` means execution completed, not all constraints passed. Summaries use
 `repair_metrics.py` and add run/query/strategy/hash/status fields. Preparation
 failure is stored as `initial_failure.json`. Failed repair attempts retain costs
@@ -67,13 +73,13 @@ Completed/skipped pairs stay untouched; failed pairs retry only with
 `--retry-failed`. Interrupted pairs and failed-pair retries restart from the saved
 initial state, replacing their old attempt prefix rather than combining runs.
 
-Checkpoints and rebuilt JSONL/CSV indexes use atomic replacement. Resume repairs
+Checkpoints and rebuilt JSONL indexes use atomic replacement. Resume repairs
 stale indexes and reads old records through the canonical reader. A run lock
 prevents simultaneous writers; after a hard crash, inspect the PID and remove
 its stale lock manually. There is no exactly-once provider-request guarantee if
 interruption occurs before checkpoint. Keep sandbox/provider versions fixed
 externally. See [metrics](REPAIR_METRICS.md), [matrix methodology](REGRESSION_MATRIX.md),
-and `python run_repair_comparison.py --help` for options.
+and `python run_experiments.py --help` for options.
 
 
 ## Train/test boundary
@@ -120,15 +126,15 @@ This prevents known groups from crossing partitions; absent provenance cannot be
 recovered, so the UID fallback cannot guarantee absence of unknown variants.
 
 ```bash
-python run_repair_comparison.py --splits SOURCE --llm MODEL \
-  --repair-strategies R0 --split-manifest artifacts/train_test.json \
+python run_experiments.py --splits SOURCE --llm MODEL \
+  --strategy R0 --split-manifest artifacts/train_test.json \
   --partition train --run-id train-r0
 python scripts/build_regression_matrix.py --input attempts.jsonl \
   --repair-strategy R0 --split-manifest artifacts/train_test.json \
   --partition train --output-dir artifacts/train-matrix
 ```
 
-The paired runner selects the saved partition from the existing native query
+The experiment runner selects the saved partition from the existing native query
 loader, validates grouping metadata against the manifest, and records manifest
 hash/partition in resume compatibility. All partition queries must be available
 in the chosen source; `--index` may further restrict that partition. For TEST use
@@ -143,3 +149,164 @@ attempt UIDs fail loudly; TEST rows are excluded for `--partition train`. Covera
 records the partition and manifest-byte SHA-256. Without these two flags existing
 unrestricted diagnostics remain available. Filtered TEST matrices are diagnostics
 only, never R4 training inputs. Keep the saved manifest fixed throughout the study.
+
+### Recommended offline workflow
+
+`run_experiments.py` is the single-strategy evidence-only entrypoint. It calls
+`run_comparison(..., raw_only=True)` directly; no repair logic is duplicated.
+It does not run benchmark evaluation, summaries, or matrices automatically.
+The lower-level Python API retains paired initial-plan reuse and its legacy
+summary mode for compatibility; `_rebuild_indexes()` is preserved.
+
+```bash
+python run_experiments.py --splits pilot5 --strategy R0 --lang zh \
+  --llm YOUR_PROVIDER_MODEL_ID --max-steps 5 --seed 42 --run-id pilot5-r0
+python scripts/evaluate_repair_run.py --run-dir results/experiments/pilot5-r0
+python scripts/build_repair_summary.py --input results/experiments/pilot5-r0
+python scripts/build_regression_matrix.py \
+  --input results/experiments/pilot5-r0/attempts.jsonl \
+  --output-dir results/experiments/pilot5-r0/regression_matrix
+```
+
+Choose a registered strategy and an identifier supported by your configured
+endpoint. The experiment CLI accepts `--split-manifest ... --partition train`
+and `--index UID` for exact population selection. Do not build R4's training
+matrix from TEST runs. None of the post-processing steps starts another step.
+
+Raw output under `results/experiments/<RUN_ID>/`:
+
+- `run_manifest.json`: selected UIDs, strategies, language, partition, hashes/settings
+- `attempts.jsonl`: regression-ready formal proposal records and usage deltas
+- `queries/<uid-hash>/reference/query.json`: reference query saved before generation
+- `queries/<uid-hash>/initial_state.json`: initial verification and generation metadata
+- `queries/<uid-hash>/initial_failure.json`: exception if initialization failed
+- `queries/<uid-hash>/<strategy-hash>.json`: accepted state, full repair history,
+  attempt records, raw execution counters, status and exception
+- runtime logs/cache where configured
+
+The new runner does not calculate `summary_metrics` or create `summaries.csv`,
+benchmark outputs, or matrices. Existing summaries are not deleted on resume.
+Raw-only resume is compatibility-checked separately from legacy paired runs.
+
+The offline summary command reads only the manifest, pair checkpoints, initial
+state metadata and initial-failure records. It does not need the redundant
+attempt stream and does not load models, tools, queries from the network, or rerun
+verification. It refuses a locked run. Optional `--output PATH` leaves the run's
+normal summary untouched. Legacy paired checkpoints are supported, and their
+cached `summary_metrics` are ignored in favor of reconstruction.
+
+`summarize_checkpoint()` reuses `summarize_repair_history()` and the existing
+execution-counter override order. Final states follow accepted history; rejected
+candidates affect proposal diagnostics but not final accepted satisfaction.
+Initial failures retain undefined metrics, not zeros. Missing checkpoints get
+explicit `missing_checkpoint` rows. Strategy exceptions/stop reasons are exported.
+
+Efficiency definitions are unchanged: attempt deltas and pair `system_metrics`
+are repair/strategy execution only. `total_execution_time_s` is strategy runtime,
+not initial generation plus repair. `shared_initialization_time_s`,
+`initial_generation_time_s`, and their tool counts are separate initialization
+fields. `verification_count_total` includes initialization when known. Token and
+model-call deltas do not silently add generation usage; generation usage remains
+available in `initial_state.json` metadata. Missing historical counters remain
+unknown; they cannot be reconstructed by inventing values or rerunning calls.
+
+The benchmark wrapper reuses `eval_exp.evaluate_final_plans()` and the export
+adapter, producing `benchmark_eval/<strategy-hash>/plans/<UID>.json`,
+`evaluation_population.json`, detailed benchmark CSVs and `benchmark_summary.json`.
+It uses accepted-final translated plans and the exact experiment population,
+including failed/invalid plans. New runs retain reference queries even when
+initialization fails. Older initial-failure-only runs require original references
+via the adapter's `queries` argument. Benchmark scores remain separate from repair
+summaries. Matrix exports and formulas are unchanged.
+
+### Summary CSV columns
+
+Columns are the sorted union of defined row keys, as in the legacy exporter.
+All-initial-failure runs therefore have only identity/status/exception columns;
+unavailable quality/efficiency values are absent or blank. Normal completed rows
+use the existing metric schema plus `exception` and `stop_reason`:
+
+```text
+acceptance_rate
+accepted_attempts
+accepted_cumulative_net_repair_gain
+accepted_total_fixed
+accepted_total_newly_violated
+attempts
+attempts_scope_day
+attempts_scope_plan
+attempts_scope_slot
+attempts_scope_unavailable
+attempts_until_success
+changed_slot_count
+changed_slot_rate
+completion_tokens
+cumulative_net_repair_gain
+decision_rejected_attempts
+decision_rejection_rate
+escalation_count
+exception
+execution_status
+failed_attempts
+failed_model_calls
+failed_tool_call_count
+final_all_personal_constraints_pass
+final_failed_count
+final_personal_constraint_satisfaction_rate
+final_unknown_count
+footprint_measured_attempts
+highest_scope_level
+initial_failed_count
+initial_generation_time_s
+initial_generation_tool_calls
+initial_plan_hash
+initial_unknown_count
+initial_verification_count
+mean_changed_slot_count
+mean_changed_slot_rate
+mean_new_violation_rate
+mean_repair_success_rate
+mean_targeted_repair_success_rate
+model_call_count
+model_call_data_complete
+model_calls
+prompt_tokens
+query_uid
+rejected_attempts
+rejection_rate
+repair_attempt_count
+repair_model_calls
+repair_strategy
+repair_success
+repair_tool_calls
+repair_verification_count
+repair_verification_iterations
+run_id
+scope_data_complete
+shared_initialization_time_s
+shared_initialization_tool_calls
+stop_reason
+strategy_execution_time_s
+successful_tool_call_count
+targeted_repair_success_rate
+timing_data_complete
+token_data_complete
+tool_call_count
+tool_call_counts_by_type
+total_attempt_time_seconds
+total_comparable_slots
+total_execution_time_s
+total_fixed
+total_input_tokens_delta
+total_newly_violated
+total_output_tokens_delta
+total_repair_time_seconds
+total_targeted_failed_before
+total_targeted_fixed
+total_token_data_complete
+total_tokens
+total_tokens_delta
+total_verification_time_seconds
+verification_count_total
+verification_model_calls
+```

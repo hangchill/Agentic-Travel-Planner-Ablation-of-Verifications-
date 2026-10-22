@@ -68,6 +68,44 @@ def load_result(args, query_index, verbose=False):
 
     return method_list, result
 
+def evaluate_final_plans(query_data, plans, output_dir, *, lang="zh", preference=False):
+    """Score an exact query population without loading queries or making model calls.
+
+    Rates retain the benchmark's percentage scale and definitions.
+    """
+    import json
+    from pathlib import Path
+    from chinatravel.evaluation.commonsense_constraint import evaluate_commonsense_constraints
+    from chinatravel.evaluation.hard_constraint import evaluate_hard_constraints_v2
+    from chinatravel.evaluation.schema_constraint import evaluate_schema_constraints
+    from chinatravel.evaluation.preference import evaluate_preference_v2
+
+    ids = list(query_data)
+    if not ids or set(plans) != set(ids):
+        raise ValueError("Benchmark requires a nonempty, exactly aligned query/plan population")
+    output = Path(output_dir)
+    output.mkdir(parents=True, exist_ok=True)
+    schema = json.loads((Path(__file__).resolve().parent / "chinatravel/evaluation/output_schema.json").read_text())
+    schema_rate, schema_rows, schema_pass = evaluate_schema_constraints(ids, plans, schema)
+    comm_macro, comm_micro, comm_rows, comm_pass = evaluate_commonsense_constraints(ids, query_data, plans, lang=lang)
+    log_macro, log_micro, conditional_macro, conditional_micro, log_rows, log_pass = evaluate_hard_constraints_v2(
+        ids, query_data, plans, env_pass_id=comm_pass, lang=lang)
+    schema_rows.to_csv(output / "schema.csv", index=False)
+    comm_rows.to_csv(output / "commonsense.csv", index=False)
+    log_rows.to_csv(output / "logical_py.csv", index=False)
+    summary = dict(schema_pass_rate=schema_rate, commonsense_micro=comm_micro,
+                   commonsense_macro=comm_macro, logical_micro=log_micro, logical_macro=log_macro,
+                   conditional_logical_micro=conditional_micro, conditional_logical_macro=conditional_macro,
+                   conditional_lpr=conditional_micro,
+                   all_pass_ratio=len(set(schema_pass) & set(comm_pass) & set(log_pass)) / len(ids) * 100,
+                   query_count=len(ids), query_uids=ids, language=lang, rate_scale="percent")
+    if preference:
+        evaluate_preference_v2(ids, query_data, plans, list(set(comm_pass) & set(log_pass)), lang=lang).to_csv(
+            output / "preference.csv", index=False)
+    (output / "benchmark_summary.json").write_text(json.dumps(summary, indent=2, allow_nan=False) + "\n")
+    return summary
+
+
 if __name__ == "__main__":
 
     parser = argparse.ArgumentParser()
@@ -100,14 +138,7 @@ if __name__ == "__main__":
     # print(args.splits)
 
     from chinatravel.data.load_datasets import load_query
-    from chinatravel.evaluation.commonsense_constraint import (
-        evaluate_commonsense_constraints,
-    )
-    from chinatravel.evaluation.hard_constraint import evaluate_hard_constraints_v2
-    from chinatravel.evaluation.preference import evaluate_preference_v2
-    from chinatravel.evaluation.schema_constraint import evaluate_schema_constraints
-    from chinatravel.evaluation.utils import load_json_file
-
+    args.oracle_translation = True  # Evaluation requires the reference constraints.
     query_index, query_data = load_query(args)
     method_list, result_data = load_result(args, query_index)
 
@@ -115,104 +146,10 @@ if __name__ == "__main__":
 
 
 
-    schema_file_path = 'chinatravel/evaluation/output_schema.json'
-    schema = load_json_file(schema_file_path)
-
-
-    if not os.path.exists("eval_res/"):
-        os.makedirs("eval_res/")
-    if not os.path.exists("eval_res/splits_{}/".format(args.splits)):
-        os.makedirs("eval_res/splits_{}/".format(args.splits))
-
-
-
     for method in method_list:
-
-        print("method: ", method)
-
-        plan_count = sum(1 for plan in result_data[method].values() if plan)
-        print("There are {} results...".format(plan_count))
-
-
-        print("Method: {}".format(method))
-
-        if not os.path.exists("eval_res/splits_{}/{}/".format(args.splits, method)):
-            os.makedirs("eval_res/splits_{}/{}/".format(args.splits, method))
-
-        schema_rate, schema_result_agg, schema_pass_id = evaluate_schema_constraints(
-            query_index, result_data[method], schema=schema
-        )
-        res_file = "eval_res/splits_{}/{}/schema.csv".format(args.splits, method)
-        schema_result_agg.to_csv(res_file, index=False)
-        print("save to {}".format(res_file))
-        print("Schema Pass Rate:", schema_rate)
-
-        macro_comm, micro_comm, common_result_agg, commonsense_pass_id = evaluate_commonsense_constraints(
-            query_index, query_data, result_data[method], verbose=False, lang=args.lang
-        )
-
-        res_file = "eval_res/splits_{}/{}/commonsense.csv".format(args.splits, method)
-        common_result_agg.to_csv(res_file, index=False)
-        print("save to {}".format(res_file))
-
-        print("Commonsense constraints:")
-        print("micro accuracy: {}".format(micro_comm))
-        print("macro accuracy: {}".format(macro_comm))
-
-
-        # print("Logical constraints (flat version):")
-        # macro_logi, micro_logi, logi_result_agg, logi_pass_id_flat = evaluate_hard_constraints(
-        #     query_index, query_data, result_data[method], verbose=False
-        # )
-
-        # print("micro accuracy: {}".format(micro_logi))
-        # print("macro accuracy: {}".format(macro_logi))
-
-        # res_file = "eval_res/splits_{}/{}/logical.csv".format(args.splits, method)
-        # logi_result_agg.to_csv(res_file, index=False)
-        # print("save to {}".format(res_file))
-
-        print("Logical constraints (python version):")
-        macro_logi, micro_logi, conditional_macro_logi, conditional_micro_logi, logi_result_agg, logi_pass_id = evaluate_hard_constraints_v2(
-            query_index, query_data, result_data[method], env_pass_id=commonsense_pass_id, verbose=False, lang=args.lang
-        )
-
-
-        print("micro accuracy: {}".format(micro_logi))
-        print("macro accuracy: {}".format(macro_logi))
-
-        print("conditional micro accuracy: {}".format(conditional_micro_logi))
-        print("conditional macro accuracy: {}".format(conditional_macro_logi))
-
-
-        print("Conditional LPR: {}".format(conditional_micro_logi))
-
-        res_file = "eval_res/splits_{}/{}/logical_py.csv".format(args.splits, method)
-        logi_result_agg.to_csv(res_file, index=False)
-        print("save to {}".format(res_file))
-
-        # record the index of the queries that pass the logical constraints
-        logical_pass_info = logi_result_agg.iloc[:, 1:]
-        id_list = logi_result_agg.iloc[:, 0].tolist()
-
-        all_pass_id = list(set(schema_pass_id) & set(commonsense_pass_id) & set(logi_pass_id))
-
-
-
-        print("All pass ratio: ", 1. * len(all_pass_id) / len(query_index) * 100)
-
-        if args.preference:
-            print("Preference:")
-            result_agg = evaluate_preference_v2(
-                query_index,
-                query_data,
-                result_data[method],
-                list(set(commonsense_pass_id) & set(logi_pass_id)),
-                lang=args.lang,
-            )
-
-            res_file = "eval_res/splits_{}/{}/preference.csv".format(
-                args.splits, method
-            )
-            result_agg.to_csv(res_file, index=False)
-            print("save to {}".format(res_file))
+        summary = evaluate_final_plans(query_data, result_data[method],
+                                       os.path.join("eval_res", "splits_" + args.splits, method),
+                                       lang=args.lang, preference=args.preference)
+        print("Method:", method)
+        for field, value in summary.items():
+            print(field + ":", value)
