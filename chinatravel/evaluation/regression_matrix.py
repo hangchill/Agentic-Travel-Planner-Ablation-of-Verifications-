@@ -2,7 +2,9 @@
 
 from collections import defaultdict
 from copy import deepcopy
+import csv
 import json
+from pathlib import Path
 
 from chinatravel.evaluation.constraint_families import (
     CONSTRAINT_FAMILIES, NORMALIZER_VERSION, classify_constraints,
@@ -25,7 +27,7 @@ CONTRIBUTION_COLUMNS = (
 )
 AGGREGATE_COLUMNS = (
     "repair_strategy", "perspective", "source_family", "destination_family",
-    "regression_count", "eligible_count", "regression_rate", "support_attempts",
+    "regression_count", "eligible_count", "support_count", "regression_rate", "support_attempts",
     "support_queries", "unknown_after_excluded_attempts", "taxonomy_version",
     "normalizer_version", "matrix_definition_version", "counting_unit", "target_policy",
 )
@@ -265,6 +267,7 @@ def aggregate_contributions(contributions, *, by_scope=False) -> list[dict]:
                         **({"editable_scope": scope} if by_scope else {}),
                         "source_family": source, "destination_family": destination,
                         "regression_count": regressions, "eligible_count": len(attempts),
+                        "support_count": len(attempts),
                         "regression_rate": regressions / len(attempts) if attempts else None,
                         "support_attempts": len(attempts),
                         "support_queries": len({row["query_uid"] for row in eligible if row["query_uid"] is not None}),
@@ -273,4 +276,41 @@ def aggregate_contributions(contributions, *, by_scope=False) -> list[dict]:
                         **_VERSIONS, "counting_unit": "repair_attempt",
                         "target_policy": "single_explicit_failed_target",
                     })
+    return result
+
+
+def load_regression_matrix(directory, perspective="candidate") -> dict:
+    """Load {source: {destination: {rate, support_count, regression_count}}}.
+
+    Accepts the output root or a by_scope/<scope> directory. Missing rates are
+    None. No strategy risk policy is applied. accepted_trajectory aliases accepted.
+    """
+    if perspective == "accepted_trajectory":
+        perspective = "accepted"
+    if perspective not in ("candidate", "accepted"):
+        raise ValueError("Unknown perspective")
+    matrices = {}
+    for metric in ("rate", "support", "count"):
+        path = Path(directory) / f"{perspective}_regression_{metric}.csv"
+        with path.open(encoding="utf-8", newline="") as stream:
+            reader = csv.DictReader(stream)
+            if reader.fieldnames != ["source_family", *CONSTRAINT_FAMILIES]:
+                raise ValueError(f"Unexpected matrix columns: {path}")
+            rows = list(reader)
+        if [row["source_family"] for row in rows] != list(CONSTRAINT_FAMILIES):
+            raise ValueError(f"Unexpected matrix rows: {path}")
+        matrices[metric] = rows
+    result = {}
+    for index, source in enumerate(CONSTRAINT_FAMILIES):
+        result[source] = {}
+        for destination in CONSTRAINT_FAMILIES:
+            raw_rate = matrices["rate"][index][destination]
+            rate = float(raw_rate) if raw_rate else None
+            support = int(matrices["support"][index][destination])
+            count = int(matrices["count"][index][destination])
+            if not 0 <= count <= support or (support == 0 and (rate is not None or count != 0)):
+                raise ValueError("Inconsistent matrix counts/rate")
+            if support and (rate is None or not abs(rate - count / support) <= 1e-12):
+                raise ValueError("Inconsistent matrix counts/rate")
+            result[source][destination] = dict(rate=rate, support_count=support, regression_count=count)
     return result

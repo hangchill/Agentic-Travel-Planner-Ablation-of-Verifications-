@@ -66,7 +66,8 @@ regression values are None. `descriptor_exclusions` is a JSON string. Exact
 column names are in `CONTRIBUTION_COLUMNS` and `AGGREGATE_COLUMNS`.
 
 Aggregates report counts/rate, distinct eligible attempts and non-null queries,
-unknown-after exclusions and versions. `eligible_count == support_attempts`.
+unknown-after exclusions and versions. `support_count == eligible_count == support_attempts`. The new `support_count`
+field is an explicit denominator alias; the existing fields are retained.
 Coverage reports zero/single/multi targets, target mapping statuses (instance
 counts), missing descriptors/provenance/scope, isolated/concurrent failures,
 eligible contributions, unknown-after exclusions and query counts, globally and
@@ -101,3 +102,40 @@ Outputs:
 Pivots retain blank unsupported/diagonal cells. Empty input yields header-only
 long tables, blank pivots and zero coverage. No train/test selection is performed.
 See the [strategy contract](REPAIR_ATTEMPTS.md) and [paired runner](REPAIR_COMPARISON.md).
+
+
+### Paired rate and count exports
+
+The CLI retains both legacy rate pivots and adds these aligned CSVs:
+
+- `candidate_regression_rate.csv`
+- `candidate_regression_support.csv`
+- `candidate_regression_count.csv`
+- `accepted_regression_rate.csv`
+- `accepted_regression_support.csv`
+- `accepted_regression_count.csv`
+
+The same six files are written under `by_scope/<editable_scope>/` for each
+observed scope (`unspecified` for missing scope). Source families are rows and
+destination families are columns, with identical ordering in every file.
+Support and regression counts are zero for unsupported cells and the structurally
+excluded diagonal; their rates are blank. Positive support with no regressions
+has rate `0.0`. Long tables retain all existing columns and add `support_count`.
+Counts remain repair-attempt opportunities, not constraint-instance counts.
+Multi-target attempts remain in contributions/coverage but add neither count.
+Rejected candidates retain the existing accepted-trajectory denominator and
+contribute zero accepted regressions; candidate regressions remain observable.
+
+```python
+from chinatravel.evaluation.regression_matrix import load_regression_matrix
+
+matrix = load_regression_matrix(output_directory, perspective="candidate")
+cell = matrix["trip_specification"]["monetary_budget"]
+# {"rate": 0.4, "support_count": 5, "regression_count": 2}
+```
+
+Pass a scope subdirectory to load scoped matrices, or `perspective="accepted"`
+(`"accepted_trajectory"` also works). The loader validates matching axes and
+count/rate consistency, returns `None` for missing rates, and supplies no risk
+scoring policy. It requires the new paired exports; rebuild older exports from
+existing records to use it. Existing rate filenames remain supported unchanged.
