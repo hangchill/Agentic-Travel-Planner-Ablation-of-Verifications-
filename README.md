@@ -117,7 +117,14 @@ All these files are inside `chinatravel/agent/nesy_verifier/`.
 | `shared_repair_loop.py` | Handles repair attempts, acceptance/rejection and logging |
 | `llm_modulo.py` | Main agent and strategy selection |
 
-For a detailed explanation of the implementation and R0 tests, see `framework_r0.ipynb`. For how the train/test split is built and wired into the runner (with no data leakage), see `train_test_split_r0.ipynb`. The experiments use a **stratified** split across the `easy`, `medium`, and `human` query sets (same difficulty mix on both sides). Because of our limited API budget we use a 100-query subset — **`--splits subset_train`** (69 queries, 23/23/23 easy/medium/human) for development and **`--splits subset_test`** (31 queries, ~equal mix) for the final comparison. The full-dataset stratified split (`--splits combined_train` / `combined_test`, 422/182) and a single-category `medium` split (`--splits medium_train` / `medium_test`) are also available. The notebook also runs the R0 baseline per query and commits the results to `experiments/r0_combined_sample/` (a 5-query sample spanning easy/medium/human; an earlier medium-only sample is kept in `experiments/r0_medium_sample/`), so teammates can re-run the notebook and load the exact same results without re-calling the (paid, non-deterministic) LLM.
+For a detailed explanation of the implementation and R0 tests, see `framework_r0.ipynb`. For how the train/test split is built and wired into the runner (with no data leakage), see `train_test_split_r0.ipynb`. The experiments use a **stratified** split across the `easy`, `medium`, and `human` query sets (same difficulty mix on both sides). Because of our limited API budget we use a 100-query subset — **`--splits subset_train`** (69 queries, 23/23/23 easy/medium/human) for development and **`--splits subset_test`** (31 queries, ~equal mix) for the final comparison. The full-dataset stratified split (`--splits combined_train` / `combined_test`, 422/182) and a single-category `medium` split (`--splits medium_train` / `medium_test`) are also available. Shared experiment results live under `experiments/` (tracked by git, unlike the ignored `results/` and `cache/`). Run experiments with the standard wrapper so everyone's outputs land in one consistent, comparable place:
+
+```bash
+python run_experiment.py --strategy R0 --split pilot5     # baseline on the shared 5-query set
+python run_experiment.py --strategy R1 --split pilot5     # your strategy, same queries
+```
+
+Results are saved to `experiments/<strategy>_<model>_<split>/<uid>.json` and the runner is resume-safe (skips queries that already have a result). See `experiments/README.md` for the full convention and the R1–R4 workflow.
 
 ### How to implement your strategy
 
