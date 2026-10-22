@@ -12,7 +12,7 @@ import unittest
 from chinatravel.evaluation.repair_attempt import RepairAttemptRecord
 from chinatravel.evaluation.regression_matrix import (
     aggregate_contributions, build_contribution_table, build_regression_matrix,
-    summarize_matrix_coverage,
+    summarize_matrix_coverage, load_regression_matrix,
 )
 from scripts.build_regression_matrix import load_input
 
@@ -63,6 +63,21 @@ def contribution(analysis, destination="monetary_budget", perspective="candidate
 
 
 class RegressionMatrixTests(unittest.TestCase):
+    def test_support_examples_and_multi_target_exclusion(self):
+        for support, regressions in ((1, 0), (50, 0), (5, 2), (0, 0)):
+            with self.subTest(support=support):
+                records = [record(step=i + 1, after=[True, i >= regressions])
+                           for i in range(support)]
+                # Retain multi-target records for auditing, never for either count.
+                records.append(record(step=support + 1, targets=[1, 2]))
+                result = build_regression_matrix(records)
+                for perspective in ("candidate", "accepted_trajectory"):
+                    row = cell(result, perspective)
+                    self.assertEqual(row["support_count"], support)
+                    self.assertEqual(row["regression_count"], regressions)
+                    self.assertEqual(row["regression_rate"], regressions / support if support else None)
+                self.assertEqual(result["coverage"]["multi_target_attempts"], 1)
+
     def test_single_target_regression_and_accepted_population(self):
         result = build_regression_matrix([record()], run_id="experiment-1")
         for perspective in ("candidate", "accepted_trajectory"):
@@ -251,7 +266,7 @@ class MatrixCliTests(unittest.TestCase):
             ]}), encoding="utf-8")
             result = self.run_cli("--input", str(jsonl), str(history_file), "--run-id", "run-a", "--output-dir", str(output))
             self.assertEqual(result.returncode, 0, result.stderr)
-            self.assertEqual(len(list(output.iterdir())), 6)
+            self.assertEqual(len(list(output.iterdir())), 13)
             coverage = json.loads((output / "matrix_coverage.json").read_text())
             self.assertEqual(coverage["duplicate_records_ignored"], 1)
             with (output / "regression_matrix_by_scope_long.csv").open(newline="") as stream:
@@ -267,6 +282,33 @@ class MatrixCliTests(unittest.TestCase):
                 self.assertEqual(row["monetary_budget"], expected)
                 self.assertEqual(row["trip_specification"], "")
                 self.assertEqual(row["dining"], "")
+
+    def test_paired_exports_and_loader_global_and_scope(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            input_file, output = root / "records.jsonl", root / "out"
+            records = [record(step=i + 1, after=[True, i >= 2], accepted=False,
+                              editable_scope="slot") for i in range(5)]
+            input_file.write_text("\n".join(json.dumps(r.to_dict()) for r in records))
+            result = self.run_cli("--input", str(input_file), "--output-dir", str(output))
+            self.assertEqual(result.returncode, 0, result.stderr)
+            for directory in (output, output / "by_scope" / "slot"):
+                candidate = load_regression_matrix(directory)
+                accepted = load_regression_matrix(directory, "accepted_trajectory")
+                self.assertEqual(candidate["trip_specification"]["monetary_budget"],
+                                 dict(rate=0.4, support_count=5, regression_count=2))
+                self.assertEqual(accepted["trip_specification"]["monetary_budget"],
+                                 dict(rate=0.0, support_count=5, regression_count=0))
+                self.assertEqual(candidate["trip_specification"]["dining"],
+                                 dict(rate=None, support_count=0, regression_count=0))
+                self.assertEqual(candidate["trip_specification"]["trip_specification"],
+                                 dict(rate=None, support_count=0, regression_count=0))
+            # A mismatched trio must fail instead of silently pairing bad evidence.
+            path = output / "candidate_regression_count.csv"
+            path.write_text(path.read_text().replace(
+                "trip_specification,0,0,2,", "trip_specification,0,0,6,"))
+            with self.assertRaises(ValueError):
+                load_regression_matrix(output)
 
     def test_cli_strategy_filter_and_multiple_strategy_error(self):
         with tempfile.TemporaryDirectory() as directory:
