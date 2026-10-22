@@ -148,7 +148,7 @@ If your method needs to reject a proposed repair, override the `accept()` method
 
 After implementing your strategy, register it in `llm_modulo.py` and test it on one case before running larger experiments.
 
-**Current status:** The shared framework and R0 are implemented and tested end-to-end. The shared verifier has been improved to detect invalid itinerary structures, transport translation failures and verifier execution errors separately from genuine constraint violations. With both sandboxes installed the full test suite passes (193 tests, 0 failures, 0 errors), and the R0 end-to-end test completed successfully (although the final itinerary still had violations). See `framework_r0.ipynb` for runnable proof cells and captured output.
+**Current status:** The shared framework and R0 are implemented and tested end-to-end. The shared verifier detects invalid itinerary structures, transport translation failures and verifier execution errors separately from genuine constraint violations, and is **language-aware** (it checks English itineraries against the English sandbox, fixing earlier false "unavailable transport" errors). Experiments run on **DeepSeek V3** by default (far cheaper than GPT-4.1) and logging is **cross-platform** (Windows long-path + nested-dir fixes). With both sandboxes installed the full test suite passes (221 tests, 0 failures, 0 errors). See `framework_r0.ipynb` for runnable proof cells and `train_test_split_r0.ipynb` for the split + R0 experiment.
 
 R1–R4 are not yet implemented or registered. See `framework_r0.ipynb` for implementation details, testing results and remaining limitations.
 ---

@@ -126,7 +126,9 @@ The original versions are upstream ChinaTravel (commit `d3a4e7b`). Our changes:
 | `chinatravel/environment/tools/transportation/apis.py` | Nancy Shen | Added `@tool_api("goto")` to `goto`. |
 | `chinatravel/environment/tools/poi/apis.py` | Nancy Shen | Added `@tool_api("poi_lat_lon_search")` to `search`. |
 | `run_exp.py` | En Rui | Added a `--repair_strategy {R0..R4}` CLI flag and passed it into `create_agent_runtime`. |
-| `requirements.txt` | En Rui | Added `pyarrow==19.0.1`; narrowed the `openai` pin's upper bound as part of the httpx-compatibility fix. |
+| `requirements.txt` | En Rui | Added `pyarrow==19.0.1`; narrowed the `openai` pin's upper bound as part of the httpx-compatibility fix; added `python-dotenv==1.2.4` (used by `run_repair_comparison.py` but previously missing, so a fresh install failed). |
+| `tests/test_train_test_split.py` | En Rui | Fixed an import error that failed under plain `unittest discover`: added the tests dir to `sys.path` so the sibling `test_regression_matrix` import resolves. The full suite is now green (221 tests). |
+| `chinatravel/.gitignore` | En Rui | Changed `evaluation/default_splits/*` to track all `*.txt` split files (previously only `easy`/`medium`/`human` were whitelisted, so new splits like `pilot5`/`subset_*` were silently untracked and never reached teammates). |
 | `pyproject.toml` | En Rui | Narrowed the `openai` dependency upper bound as part of the httpx-compatibility fix. |
 | `README.md` | En Rui | Added our setup/usage instructions (OpenRouter, repair strategies, framework notes). |
 | `.gitignore` / `chinatravel/.gitignore` | En Rui | Added ignore rules for our caches/outputs. |
