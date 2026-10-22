@@ -50,8 +50,16 @@ class LLMModuloAgent(BaseAgent):
         ## component is treated as a directory separator and breaks log creation.
         safe_model_name = re.sub(r"[^0-9A-Za-z_.-]+", "_", str(self.model_name or "model")).strip("_") or "model"
         self.log_dir = os.path.join(self.log_dir, f'llm_modulo-{safe_model_name}')
-        if not os.path.exists(self.log_dir):
-            os.makedirs(self.log_dir)
+        os.makedirs(self.log_dir, exist_ok=True)
+        ## Windows has a ~260-char path limit (MAX_PATH). Our log paths are long
+        ## (verbose method name + nested folder + long filenames), so on Windows
+        ## we switch log_dir to an absolute extended-length path (the \\?\ prefix)
+        ## which lifts that limit. No-op on macOS/Linux, which have no such limit.
+        if os.name == "nt":
+            abs_log_dir = os.path.abspath(self.log_dir)
+            if not abs_log_dir.startswith("\\\\?\\"):
+                abs_log_dir = "\\\\?\\" + abs_log_dir
+            self.log_dir = abs_log_dir
         
         ## Number of candidate options shortlisted for itinerary generation.
         self.num_candidates_intercity_transports = 5 # 10
