@@ -12,6 +12,17 @@
 ## Each iteration repairs ALL currently failing constraints together in one LLM
 ## call: every failure is shown, and the editable region is the union of the
 ## slots (L1) / days (L2) the failures localize to, or the whole plan (L3).
+## An L3 proposal with the wrong day count or an empty day is discarded and
+## the current plan is kept (recorded as a no-op attempt).
+##
+## R3P (``phased=True``) is a variant for comparison against plain R3. It repairs
+## personal constraints only for up to 5 iterations on the same ladder (commonsense
+## errors are neither shown nor opened). As soon as every personal constraint
+## passes, or once those iterations are used up, the next iteration repairs the
+## commonsense errors at slot scope, with every passing personal constraint listed
+## as "must remain satisfied". If that breaks a personal constraint and budget is
+## left, it returns to personal repair on the same ladder. Run it with
+## --refine-steps 6 (5 personal + 1 commonsense), one more model call than R0/R1/R3.
 ##
 ## This file implements the repair behaviour and emits the standardized repair
 ## output contract (see chinatravel/evaluation/REPAIR_ATTEMPTS.md): canonical intent
@@ -49,6 +60,13 @@ SCOPE_LEVEL = {SLOT: 1, DAY: 2, PLAN: 3}
 ## before climbing to the next. The widest rung is kept for all later iterations.
 ## With the default (2): iters 1-2 -> slot, iters 3-4 -> day, iters 5+ -> plan.
 DEFAULT_ROUNDS_PER_RUNG = 2
+
+## R3P: personal-only iterations before the commonsense iteration is forced.
+DEFAULT_PERSONAL_ITERATIONS = 5
+
+## R3P commonsense-phase header for the personal constraints that must stay
+## satisfied (worded without "failed" so it is never counted as feedback).
+PROTECT_HEADER = "These requirements are currently satisfied and MUST remain satisfied:"
 
 ## Trip-level anchors: never "day" slots; frozen until the whole-plan rung (L3).
 ANCHOR_TYPES = {"accommodation", "airplane", "train"}
@@ -114,6 +132,19 @@ def _global_heuristic_slots(plan, k=GLOBAL_HEURISTIC_K):
     return {(d, a) for _, d, a in scored[:k]}
 
 
+def _structure_problem(current, proposal):
+    """Why a whole-plan proposal is unusable, or None if it is structurally sound:
+    it must keep the current day count and give every day a non-empty
+    activities list of dicts."""
+    if len(proposal) != len(current):
+        return "day_count_mismatch"
+    for day in proposal:
+        acts = day.get("activities") if isinstance(day, dict) else None
+        if not isinstance(acts, list) or not acts or not all(isinstance(a, dict) for a in acts):
+            return "missing_activities"
+    return None
+
+
 ## -------- localization: failing constraint -> slot set (or "global") --------
 
 _DAY_RE = re.compile(r"day\s+(\d+)", re.IGNORECASE)
@@ -122,6 +153,10 @@ _QUOTED_RE = re.compile(r"'([^']+)'|\"([^\"]+)\"")
 
 ## Personal-failure feedback line written by shared_verifier.verify_plan.
 _PERSONAL_FEEDBACK_RE = re.compile(r"^Personal constraint (\d+) failed")
+
+
+def _is_personal_feedback(line):
+    return isinstance(line, str) and _PERSONAL_FEEDBACK_RE.match(line) is not None
 
 
 def _feedback_personal_indices(feedback_lines):
@@ -205,12 +240,20 @@ class R3AdaptiveScopeRepair(BaseRepairStrategy):
     Rung-widening follows a fixed iteration schedule computed inside ``repair()``
     (``rounds_per_rung`` iterations per rung, the widest rung kept thereafter), so
     ``accept()`` stays the default (always accept). This keeps R3 distinct from R2
-    (whose job is rollback)."""
+    (whose job is rollback).
 
-    def __init__(self, rounds_per_rung=DEFAULT_ROUNDS_PER_RUNG):
+    ``phased=True`` gives the R3P variant (see the module header): a personal-only
+    phase on the ladder, then a protected slot-scope commonsense phase."""
+
+    def __init__(self, rounds_per_rung=DEFAULT_ROUNDS_PER_RUNG, phased=False,
+                 personal_iterations=DEFAULT_PERSONAL_ITERATIONS):
         self._scope_idx = 0              ## index into RUNGS (current rung)
-        self._iteration = 0              ## repair iterations taken so far
+        self._iteration = 0              ## ladder iterations taken so far
         self._rounds_per_rung = rounds_per_rung
+        self._phased = phased
+        self._personal_iterations = personal_iterations
+        self._step = 0                   ## all repair() calls (R3P debug)
+        self._strategy_name = "R3P" if phased else "R3"
 
     @property
     def _scope(self):
@@ -230,19 +273,49 @@ class R3AdaptiveScopeRepair(BaseRepairStrategy):
         )
         return previous_idx
 
+    ## ---- R3P: which kind of failure this step repairs (None for plain R3) ----
+    def _choose_phase(self, verification):
+        if not self._phased:
+            return None
+        personal = verification.get("personal_constraints", []) or []
+        if any(s is False for s in personal) and self._iteration < self._personal_iterations:
+            return "personal"
+        return "commonsense"
+
+    ## ---- feedback lines sent to the model, and the personal ones protected ----
+    def _feedback_lines(self, problem, verification, phase):
+        lines = list(verification.get("error_info", []) or [])
+        if phase is None:
+            return lines, []
+        if phase == "personal":
+            return [l for l in lines if _is_personal_feedback(l)], []
+        lines = [l for l in lines if not _is_personal_feedback(l)]
+        hard_logic = problem.get("hard_logic_py", []) or []
+        personal = verification.get("personal_constraints", []) or []
+        protected = [i for i, s in enumerate(personal, 1) if s is True]
+        if protected:
+            lines += ["", PROTECT_HEADER] + [
+                f"  - Personal constraint {i} (satisfied): "
+                f"{hard_logic[i - 1] if i - 1 < len(hard_logic) else ''}"
+                for i in protected
+            ]
+        return lines, protected
+
     ## ---- collect the failing constraints this step aims at (raw identities) ----
-    def _collect_targets(self, problem, verification):
+    def _collect_targets(self, problem, verification, phase=None):
         targets = []
         personal = verification.get("personal_constraints", []) or []
         hard_logic = problem.get("hard_logic_py", []) or []
         for i, status in enumerate(personal):
-            if status is False:
+            if status is False and phase != "commonsense":
                 dsl = hard_logic[i] if i < len(hard_logic) else ""
                 ## 1-based, matching target_constraint_indices.
                 targets.append(
                     {"kind": "personal", "ref": f"personal:{i + 1}",
                      "constraint_index": i + 1, "dsl": dsl}
                 )
+        if phase == "personal":
+            return targets
         for k, msg in enumerate(verification.get("commonsense_errors", []) or [], 1):
             targets.append(
                 {"kind": "commonsense", "ref": f"commonsense:{k}", "message": msg}
@@ -317,8 +390,8 @@ class R3AdaptiveScopeRepair(BaseRepairStrategy):
             "other activity."
         )
 
-    def _build_prompt(self, scope, problem, context, raw_plan, verification, editable):
-        error_info_nl = "\n".join(verification.get("error_info", []) or [])
+    def _build_prompt(self, scope, problem, context, raw_plan, feedback_lines, editable):
+        error_info_nl = "\n".join(feedback_lines)
         if scope == PLAN:
             backprompt = error_info_nl
         else:
@@ -421,20 +494,32 @@ class R3AdaptiveScopeRepair(BaseRepairStrategy):
 
     ## ---- the strategy entry point ----
     def repair(self, problem, raw_plan, verification_results, context, llm):
-        ## Advance the fixed widening schedule (iteration -> rung), then act.
-        previous_idx = self._advance_scope()
-        scope = self._scope
-        widened = self._scope_idx > previous_idx
+        self._step += 1
+        phase = self._choose_phase(verification_results)
+        if phase == "commonsense":
+            ## R3P commonsense step: slot scope; the personal ladder does not move.
+            scope, widened, previous_idx = SLOT, False, self._scope_idx
+        else:
+            ## Advance the fixed widening schedule (iteration -> rung), then act.
+            previous_idx = self._advance_scope()
+            scope = self._scope
+            widened = self._scope_idx > previous_idx
 
-        targets = self._collect_targets(problem, verification_results)
+        targets = self._collect_targets(problem, verification_results, phase)
         localized = self._localize_targets(targets, raw_plan)
         editable, global_present = self._editable_region(scope, raw_plan, localized)
 
         total = _total_slots(raw_plan)
         scope_fraction = (len(editable) / total) if total else 0.0
 
+        ## Feedback actually supplied to the model, measured from the lines sent
+        ## rather than assumed (plain R3: all of error_info at every rung).
+        feedback_lines, protected = self._feedback_lines(
+            problem, verification_results, phase
+        )
+
         query_message = self._build_prompt(
-            scope, problem, context, raw_plan, verification_results, editable
+            scope, problem, context, raw_plan, feedback_lines, editable
         )
 
         start_time = time.time()
@@ -443,12 +528,19 @@ class R3AdaptiveScopeRepair(BaseRepairStrategy):
 
         proposal, raw_response = self._parse_response(response)
 
+        structure_problem = None
         if proposal is None:
             ## Parse failure -> no-op repair: the current plan is proposed unchanged
             ## (the fixed schedule still advances on the next iteration).
             merged, changed = deepcopy(raw_plan), 0
         elif scope == PLAN:
-            merged, changed = proposal, self._count_changed_all(raw_plan, proposal)
+            structure_problem = _structure_problem(raw_plan, proposal)
+            if structure_problem is None:
+                merged, changed = proposal, self._count_changed_all(raw_plan, proposal)
+            else:
+                ## Unusable proposal (e.g. a truncated reply repaired into a
+                ## shorter plan) -> keep the current plan (no-op attempt).
+                merged, changed = deepcopy(raw_plan), 0
         else:
             merged, changed = self._merge(raw_plan, proposal, editable)
 
@@ -456,18 +548,15 @@ class R3AdaptiveScopeRepair(BaseRepairStrategy):
             targets, localized, editable, raw_plan, merged, raw_plan
         )
 
-        ## Feedback actually supplied to the model (the prompt uses error_info at
-        ## every rung), measured from the lines sent rather than assumed.
-        feedback_lines = verification_results.get("error_info", []) or []
-
         ## Canonical intent (promoted onto the RepairAttemptRecord by the loop).
         ## target_constraint_indices are all current False personal constraints
         ## (never unknown None) as original 1-based hard_logic_py indices - R3
-        ## repairs them together; scope is reported as both the string rung
-        ## (editable_scope) and the agreeing 1-based level (scope_level).
+        ## repairs them together; an R3P commonsense step targets none. Scope is
+        ## reported as both the string rung (editable_scope) and the agreeing
+        ## 1-based level (scope_level).
         metadata = {
-            "strategy": "R3",
-            "target_constraint_indices": failed_constraint_indices(
+            "strategy": self._strategy_name,
+            "target_constraint_indices": [] if phase == "commonsense" else failed_constraint_indices(
                 verification_results.get("personal_constraints", []) or []
             ),
             "editable_scope": scope,
@@ -481,6 +570,7 @@ class R3AdaptiveScopeRepair(BaseRepairStrategy):
             ),
             ## Debug / audit components (kept in repair_metadata; non-canonical).
             "parse_failed": proposal is None,
+            "proposal_rejected_reason": structure_problem,
             "scope_fraction": round(scope_fraction, 4),
             "changed_slots": changed,
             "editable_slots": self._slot_descriptors(editable, raw_plan),
@@ -492,6 +582,11 @@ class R3AdaptiveScopeRepair(BaseRepairStrategy):
             "raw_response": raw_response,
             "llm_inference_time": inference_time,
         }
+        if self._phased:
+            metadata["protected_constraint_indices"] = protected
+            metadata["repair_phase"] = phase
+            metadata["personal_iteration"] = self._iteration
+            metadata["r3p_call"] = self._step   ## "step" is a reserved record field
         if widened:
             metadata["escalation_reason"] = (
                 f"scheduled_widen_{RUNGS[previous_idx]}_to_{scope}_"

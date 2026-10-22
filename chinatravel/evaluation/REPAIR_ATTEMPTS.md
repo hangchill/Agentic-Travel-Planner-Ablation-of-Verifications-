@@ -16,7 +16,7 @@ Targets are unique, original **1-based `hard_logic_py` indices**. Scope is
 `slot`, `day`, or `plan`; strategy owners enforce the permitted edits. Target
 and scope are independent: widening edits does not automatically widen targets.
 Register a zero-argument factory in `repair_strategies.STRATEGY_FACTORIES`.
-R0, R1 and R3 are currently implemented.
+R0, R1, R3 and R3P are currently implemented.
 
 | Strategy | Expected intent | Optional strategy-specific fields |
 | --- | --- | --- |
@@ -24,6 +24,7 @@ R0, R1 and R3 are currently implemented.
 | R1 | Selected target indices; scope `slot` | `scope_level=1` |
 | R2 | Selected target indices; scope `plan` | `protected_constraint_indices`, reliable `decision_reason`; override `accept()` for rollback |
 | R3 | All current False personal indices (repaired together); current `slot`/`day`/`plan` scope | Matching `scope_level` 1/2/3, `escalation_reason` when widening, `target_provenance="r3_adaptive_scope"`, actual feedback indices/count |
+| R3P | Personal phase: all current False personal indices, R3 ladder scope. Commonsense phase: `[]`, scope `slot` | As R3, plus `protected_constraint_indices` (the passing personal constraints listed as "must remain satisfied") in the commonsense phase; `repair_phase` in debug metadata |
 
 For a multi-target attempt (e.g. R3 or R0 with several failures), the record
 shows the constraints the repair broke (`newly_violated`) alongside the whole

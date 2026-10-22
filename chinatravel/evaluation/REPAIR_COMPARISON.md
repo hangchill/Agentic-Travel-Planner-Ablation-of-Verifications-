@@ -2,7 +2,7 @@
 
 The runner generates and verifies one initial plan per query, then runs registered
 strategies from independent copies of that plan, context and verification.
-R0, R1 and R3 are currently registered. Future owners add zero-argument factories to
+R0, R1, R3 and R3P are currently registered. Future owners add zero-argument factories to
 `repair_strategies.STRATEGY_FACTORIES`; unavailable methods never fall back to R0.
 See the [strategy contract](REPAIR_ATTEMPTS.md).
 

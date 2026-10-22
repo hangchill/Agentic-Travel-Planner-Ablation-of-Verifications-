@@ -19,7 +19,13 @@ def _r3():
     return R3AdaptiveScopeRepair()
 
 
-STRATEGY_FACTORIES = {"R0": _r0, "R1": _r1, "R3": _r3}
+def _r3p():
+    from .r3 import R3AdaptiveScopeRepair
+
+    return R3AdaptiveScopeRepair(phased=True)
+
+
+STRATEGY_FACTORIES = {"R0": _r0, "R1": _r1, "R3": _r3, "R3P": _r3p}
 
 
 def create_repair_strategy(name):

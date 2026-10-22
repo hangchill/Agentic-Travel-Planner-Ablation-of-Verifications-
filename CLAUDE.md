@@ -73,6 +73,7 @@ accepted**; R4 adds matrix guidance on top.
 | **R1** Targeted | Only **flagged** itinerary slots (fields a failed critic names) may be replaced; code **blocks** any edit to unflagged fields. The LLM is asked only for new values for the failed constraints' slots. | Freezing everything else can make a newly-surfaced constraint unfixable within the locked scope. |
 | **R2** Protected (rollback) | Full rewrite allowed, but if a revision breaks **any critic that previously passed** (e.g. introduces a budget/timing violation), the proposal is **rejected and the last accepted itinerary is restored**; the LLM is told what it broke. | Rollback can stall progress if every rewrite trades one violation for another. |
 | **R3** Adaptive scope | Repairs **all** current failures together each iteration. Starts as R1 (targeted: only the slots the failures localize to), then widens on a **fixed schedule** of 2 iterations per rung: slot (iters 1–2) → day (3–4) → whole plan (5+). Re-verifies **all** constraints after each attempt. | More complex control; widening scope reintroduces R0-style regression risk late in the loop. |
+| **R3P** Phased R3 (variant) | `R3AdaptiveScopeRepair(phased=True)`. Up to 5 personal-only iterations on the R3 ladder (commonsense errors hidden); once all personal constraints pass (or those 5 are used) it repairs commonsense errors at slot scope, listing the passing personal constraints as "must remain satisfied" (`protected_constraint_indices`); returns to personal repair if that breaks one. Run with `--refine-steps 6`. | One more model call than R0/R1/R3 (budget difference must be reported); commonsense errors accumulate during the personal phase. |
 | **R4** Dependency-aware (matrix-guided) | Uses `M` to pick the **smallest** set of itinerary variables that fixes the violation while minimizing regression risk. | Depends on a good `M`; adds an optimization layer (see below). |
 
 Implementation hooks: strategies are registered in a zero-argument factory map,
@@ -159,6 +160,7 @@ contribution — repair studies the published LLM-Modulo line has not done.
 |---|---|
 | R0 | Implemented & tested end-to-end |
 | R3 | Implemented & registered; unit-tested offline (ladder, localization, slot-freeze merge, contract-conforming metadata, and an end-to-end `run_repair_loop` record-validation test in `tests/test_r3_adaptive_repair.py`) |
+| R3P | Implemented & registered as a switch on R3 (`phased=True`); unit-tested offline in `tests/test_r3_adaptive_repair.py`. Pilot5 results in `experiments/r3p_deepseek-chat_pilot5/` (`--refine-steps 6`) |
 | R1 | Implemented & registered (`r1.py`, tests in `tests/test_r1*.py`). `run_repair_loop` stops R1 (only R1) after an attempt whose plan is unchanged |
 | R2 / R4 | Not yet implemented or registered |
 

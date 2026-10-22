@@ -44,7 +44,7 @@ def main(argv=None):
     parser = argparse.ArgumentParser(description=__doc__,
                                      formatter_class=argparse.RawDescriptionHelpFormatter)
     parser.add_argument("--strategy", required=True,
-                        choices=["R0", "R1", "R2", "R3", "R4"],
+                        choices=["R0", "R1", "R2", "R3", "R3P", "R4"],
                         help="Repair strategy to run.")
     parser.add_argument("--split", required=True,
                         help="Split name, e.g. pilot5, subset_train, subset_test.")

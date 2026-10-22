@@ -43,7 +43,7 @@ if __name__ == "__main__":
     parser.add_argument(
         "--repair_strategy",
         type=str,
-        choices=["R0", "R1", "R2", "R3", "R4"],
+        choices=["R0", "R1", "R2", "R3", "R3P", "R4"],
         default=None,
         help="Repair strategy for LLM-Modulo. Omit to use the original ChinaTravel repair loop.",
     )
