@@ -210,7 +210,7 @@ def load_query_local(args, version="", verbose=False):
     print("config file for testing split: {}".format(split_config_file))
 
     query_id_list = []
-    with open(split_config_file, "r") as f:
+    with open(split_config_file, "r", encoding="utf-8") as f:
         for line in f.readlines():
             line = line.strip()
             query_id_list.append(line)
@@ -288,17 +288,27 @@ def _hf_base_split(split):
     return None, None
 
 
-## Combined (stratified, multi-category) splits: a single train/test list whose
-## UIDs come from several base HF splits (easy/medium/human). The UID->origin map
-## is recorded in evaluation/splits/combined_origin.json so each query is fetched
-## from the correct base split.
-COMBINED_SPLITS = {"combined_train", "combined_test"}
+## Multi-category stratified splits: a single train/test list whose UIDs come
+## from several base HF splits (easy/medium/human). Each such split family has a
+## UID->origin map under evaluation/splits/<family>_origin.json so each query is
+## fetched from the correct base split. Maps split name -> origin-map family.
+MULTI_ORIGIN_SPLITS = {
+    "combined_train": "combined",
+    "combined_test": "combined",
+    "subset_train": "subset",
+    "subset_test": "subset",
+    ## Shared 5-query pilot set: every team member runs their strategy on these
+    ## exact queries for a first apples-to-apples R0-vs-Rx comparison.
+    "pilot5": "pilot5",
+}
+## Backwards-compatible alias.
+COMBINED_SPLITS = set(MULTI_ORIGIN_SPLITS)
 
 
-def _combined_origin_map():
+def _origin_map(family):
     path = os.path.join(
         project_root_path, "chinatravel", "evaluation",
-        "splits", "combined_origin.json",
+        "splits", f"{family}_origin.json",
     )
     with open(path, "r", encoding="utf-8") as f:
         return json.load(f)["origin"]
@@ -308,14 +318,15 @@ def _load_combined_split(args, split):
     """Load a stratified combined split by fetching each UID from its base HF split."""
     lang = normalize_lang(getattr(args, "lang", None))
     wanted = set(_read_split_uids(split))
-    origin = _combined_origin_map()
+    family = MULTI_ORIGIN_SPLITS[split]
+    origin = _origin_map(family)
 
     ## Group the wanted UIDs by which base HF split they came from.
     by_base = {}
     for uid in wanted:
         base = origin.get(uid)
         if base is None:
-            raise ValueError(f"UID {uid!r} missing from combined_origin.json")
+            raise ValueError(f"UID {uid!r} missing from {family}_origin.json")
         by_base.setdefault(base, set()).add(uid)
 
     query_id_list, data_dict = [], {}
@@ -339,8 +350,9 @@ def _load_combined_split(args, split):
 def load_query(args):
     lang = normalize_lang(getattr(args, "lang", None))
 
-    ## Stratified combined splits draw from several base HF splits at once.
-    if args.splits in COMBINED_SPLITS:
+    ## Stratified multi-origin splits (combined_*, subset_*) draw from several
+    ## base HF splits at once.
+    if args.splits in MULTI_ORIGIN_SPLITS:
         return _load_combined_split(args, args.splits)
 
     base_split, uid_filter = _hf_base_split(args.splits)
