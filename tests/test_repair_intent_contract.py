@@ -129,9 +129,10 @@ class R0IntentTests(unittest.TestCase):
         self.assertEqual(value.feedback_personal_constraint_indices, [1])
         self.assertEqual(value.concurrent_failed_constraint_indices, [1])
         self.assertEqual(value.concurrent_commonsense_failure_count, 2)
-        self.assertEqual(value.feedback_commonsense_failure_count, 2)
+        self.assertEqual(value.feedback_commonsense_failure_count, 0)
         self.assertTrue(all(failure in prompt for failure in failures))
-        self.assertIn("commonsense A", prompt)
+        self.assertNotIn("commonsense A", prompt)
+        self.assertIn("Personal constraint 3 is UNKNOWN", prompt)
         self.assertNotIn("Personal constraint 3 failed", prompt)
         for metadata in (value.repair_metadata, entry["metadata"]):
             self.assertNotIn("scope", metadata)

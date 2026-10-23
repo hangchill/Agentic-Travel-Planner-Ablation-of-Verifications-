@@ -11,7 +11,7 @@ INTENT_FIELDS = (
     "target_constraint_indices", "target_constraint_labels", "target_provenance",
     "editable_scope", "scope_level", "feedback_personal_constraint_indices",
     "feedback_commonsense_failure_count", "protected_constraint_indices",
-    "escalation_reason", "decision_reason",
+    "escalation_reason", "decision_reason", "repair_phase", "target_commonsense_errors",
 )
 DERIVED_FIELDS = ("concurrent_failed_constraint_indices", "concurrent_commonsense_failure_count")
 
@@ -75,6 +75,8 @@ class RepairAttemptRecord:
     output_tokens_delta: int | None = None
     repair_time_seconds: float | None = None
     exception: str | None = None
+    repair_phase: str | None = None
+    target_commonsense_errors: list[str] = field(default_factory=list)
     query_uid: str | None = None
     constraint_descriptors: list[dict] = field(default_factory=list)
     target_provenance: str | None = None
@@ -174,6 +176,10 @@ class RepairAttemptRecord:
             raise ValueError("target_constraint_labels must be a list of strings")
         if not isinstance(self.repair_metadata, dict):
             raise ValueError("repair_metadata must be a dict")
+        if self.repair_phase not in (None, "personal", "commonsense"):
+            raise ValueError("repair_phase must be personal, commonsense or None")
+        if not isinstance(self.target_commonsense_errors, list) or any(not isinstance(error, str) for error in self.target_commonsense_errors):
+            raise ValueError("target_commonsense_errors must be a list of strings")
         reserved = {item.name for item in fields(self)} - {"repair_metadata"}
         if (reserved | {"strategy", "scope"}) & self.repair_metadata.keys():
             raise ValueError("Canonical fields belong on the record, not repair_metadata")

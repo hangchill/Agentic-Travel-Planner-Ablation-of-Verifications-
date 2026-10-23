@@ -216,7 +216,7 @@ def _build_llm_modulo(kwargs):
 
     agent_kwargs = dict(kwargs)
     agent_kwargs["model"] = kwargs["backbone_llm"]
-    agent_kwargs["max_steps"] = kwargs["refine_steps"]
+    agent_kwargs["max_steps"] = kwargs["refine_steps"] if kwargs.get("refine_steps") is not None else 6
     return LLMModuloAgent(**agent_kwargs)
 
 

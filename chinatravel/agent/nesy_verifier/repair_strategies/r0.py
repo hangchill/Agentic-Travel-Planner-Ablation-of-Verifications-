@@ -27,6 +27,17 @@ class R0WholePlanRepair(BaseRepairStrategy):
         failed_indices = failed_constraint_indices(verification_results["personal_constraints"])
         commonsense_errors = verification_results.get("commonsense_errors")
         feedback = verification_results["error_info"]
+        phase = context.get("repair_phase")
+        if phase == "commonsense":
+            failed_indices = []
+            feedback = list(commonsense_errors or [])
+        elif phase == "personal":
+            feedback = list(verification_results.get("personal_errors", [
+                f"Personal constraint {index} failed: {problem['hard_logic_py'][index - 1]}"
+                for index in failed_indices]))
+            unknown = [index for index, state in enumerate(verification_results["personal_constraints"], 1) if state is None]
+            feedback.extend(f"Personal constraint {index} is UNKNOWN; repair the plan so it can be evaluated: {problem['hard_logic_py'][index - 1]}" for index in unknown)
+
         # Shared verifier emits commonsense_errors verbatim in error_info. Count
         # actual supplied occurrences, preserving duplicates without guessing.
         feedback_commonsense_count = (sum((Counter(commonsense_errors) & Counter(feedback)).values())
@@ -34,7 +45,7 @@ class R0WholePlanRepair(BaseRepairStrategy):
 
         ## Combine commonsense and personal constraint feedback.
         error_info_nl = "\n".join(
-            verification_results["error_info"]
+            feedback
         )
 
         ## Construct the original ChinaTravel BACK_PROMPT.
