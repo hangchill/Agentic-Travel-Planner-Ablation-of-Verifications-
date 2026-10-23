@@ -4,9 +4,11 @@ from chinatravel.agent.nesy_verifier.repair_strategies.r1 import (
     replace_activity_slot, generate_replacement, R1TargetedRepair,
     find_candidate_slots, select_editable_slot, find_transport_slots, 
     replace_transport_slot, select_repair_target, localise_transport_error,
-    lookup_transport_options, convert_transport_option,)
+    lookup_transport_options, convert_transport_option, localise_transport_cost_error,
+    repair_commonsense_transport_cost)
 import json
 from unittest.mock import patch
+from copy import deepcopy
 
 
 class TestR1(unittest.TestCase):
@@ -448,6 +450,156 @@ class TestR1(unittest.TestCase):
         self.assertEqual(transport["cost"], 25)
         self.assertEqual(result.metadata["target_constraint_indices"], [])
         self.assertEqual(result.metadata["repair_source"], "transport_lookup")
+
+    def test_transport_cost_metro(self):
+        problem = {"people_number": 3,
+                   "target_city": "Beijing",
+                   "lang": "en",}
+        itinerary = [{
+            "day": 1,
+            "activities": [{
+                "type": "attraction",
+                "position": "Museum",
+                "transports": {
+                    "from": "Hotel",
+                    "to": "Museum",
+                    "mode": "metro",
+                    "start_time": "10:00",
+                    "end_time": "10:30",
+                    "cost": 5,},}],}]
+        error = (
+            "Incorrect cost infomation of innercity transport in day 1, "
+            "from Hotel to Museum, metro. "
+            "[cost = price * people_number]")
+        verification = {"commonsense_errors": [error]}
+        with patch(
+            "chinatravel.environment.tools.transportation.apis."
+            "Transportation.goto",
+            return_value=[{"cost": 4}],
+        ) as mock_goto:
+            result = repair_commonsense_transport_cost(
+                problem, itinerary, verification)
+        self.assertIsNotNone(result)
+        repaired = result.repaired_plan
+        transport = repaired[0]["activities"][0]["transports"]
+        self.assertEqual(transport["cost"], 12)  # 4 yuan per person * 3 people = 12 yuan
+
+        # all other transport fields must remain unchanged
+        original_transport = itinerary[0]["activities"][0]["transports"]
+        self.assertEqual(
+            {k: v for k, v in transport.items() if k != "cost"},
+            {k: v for k, v in original_transport.items() if k != "cost"},)
+        self.assertEqual(original_transport["cost"], 5)  # original itinerary must not be mutated
+        self.assertEqual(result.metadata["repair_source"], "transport_cost_lookup",)
+        self.assertEqual(result.metadata["target_constraint_indices"], [])
+        mock_goto.assert_called_once()
+
+    def test_transport_cost_taxi(self):
+        problem = {"people_number": 5,
+                   "target_city": "Beijing",
+                   "lang": "en",}
+
+        itinerary = [{
+            "day": 1,
+            "activities": [{
+                "type": "attraction",
+                "position": "Museum",
+                "transports": {
+                    "from": "Hotel",
+                    "to": "Museum",
+                    "mode": "taxi",
+                    "start_time": "10:00",
+                    "end_time": "10:30",
+                    "cost": 40,},}],}]
+        error = (
+            "Incorrect cost infomation of innercity transport in day 1, "
+            "from Hotel to Museum, taxi. "
+            "[cost = price * math.ceil(people_number/4)]")
+        with patch(
+            "chinatravel.environment.tools.transportation.apis."
+            "Transportation.goto",
+            return_value=[{"cost": 40}],):
+            result = repair_commonsense_transport_cost(
+                problem, itinerary,
+                {"commonsense_errors": [error]},)
+        self.assertIsNotNone(result)
+        transport = result.repaired_plan[0]["activities"][0]["transports"]
+        self.assertEqual(transport["cost"], 80)  # 5 travellers require 2 taxis: 40 * 2 = 80
+        self.assertEqual(itinerary[0]["activities"][0]["transports"]["cost"], 40,)
+        self.assertEqual(result.metadata["corrected_cost"], 80)
+        self.assertEqual(result.metadata["editable_slot"], (0, 0))
+
+    def test_transport_cost_walk(self):
+        problem = {"people_number": 2,
+                   "target_city": "Beijing",
+                   "lang": "en",}
+        itinerary = [{
+            "day": 1,
+            "activities": [{
+                "type": "attraction",
+                "position": "Museum",
+                "transports": {
+                    "from": "Hotel",
+                    "to": "Museum",
+                    "mode": "walk",
+                    "start_time": "10:00",
+                    "end_time": "10:30",
+                    "cost": 10,},}],}]
+        error = (
+            "Incorrect cost infomation of innercity transport in day 1, "
+            "from Hotel to Museum, walk. "
+            "[cost = price * math.ceil(people_number/4)]")
+        with patch(
+            "chinatravel.environment.tools.transportation.apis."
+            "Transportation.goto",
+            return_value=[{"cost": 0}],):
+            result = repair_commonsense_transport_cost(
+                problem, itinerary,
+                {"commonsense_errors": [error]},)
+        self.assertIsNotNone(result)
+        transport = result.repaired_plan[0]["activities"][0]["transports"]
+        self.assertEqual(transport["cost"], 0) # walking must cost zero
+        self.assertEqual(result.metadata["original_cost"], 10)
+        self.assertEqual(result.metadata["corrected_cost"], 0)
+        self.assertEqual(itinerary[0]["activities"][0]["transports"]["cost"], 10,)
+
+    def test_transport_cost_ambiguous_route(self):
+        problem = {"people_number": 2,
+                   "target_city": "Beijing",
+                   "lang": "en",}
+
+        transport = {
+            "from": "Hotel",
+            "to": "Museum",
+            "mode": "metro",
+            "start_time": "10:00",
+            "end_time": "10:30",
+            "cost": 5,}
+
+        itinerary = [{
+            "day": 1,
+            "activities": [
+                {"type": "attraction",
+                 "position": "Museum",
+                 "transports": deepcopy(transport),},
+                {"type": "attraction",
+                 "position": "Museum",
+                 "transports": deepcopy(transport),},],}]
+        original = deepcopy(itinerary)
+        error = (
+            "Incorrect cost infomation of innercity transport in day 1, "
+            "from Hotel to Museum, metro. "
+            "[cost = price * people_number]")
+        # two matching routes: localisation must not guess
+        self.assertIsNone(localise_transport_cost_error(itinerary, error))
+        with patch("chinatravel.environment.tools.transportation.apis."
+                   "Transportation.goto"
+                   ) as mock_goto:
+            result = repair_commonsense_transport_cost(
+                problem, itinerary, {"commonsense_errors": [error]},)
+        self.assertIsNone(result)
+        mock_goto.assert_not_called()
+        self.assertEqual(itinerary, original)
 
 if __name__ == "__main__":
     unittest.main()
