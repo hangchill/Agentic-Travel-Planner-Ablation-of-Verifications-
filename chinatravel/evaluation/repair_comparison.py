@@ -129,6 +129,10 @@ def run_comparison(queries, *, run_id, output_root, config, prepare_initial_stat
         raise ValueError(f"Unavailable repair strategies: {unavailable}; available: {sorted(factories)}")
     if config["max_steps"] < 0:
         raise ValueError("max_steps must be nonnegative")
+    budgets = config.get("strategy_max_steps", {})
+    if any(name not in requested or type(value) is not int or not 0 <= value <= min(config["max_steps"], 6)
+           for name, value in budgets.items()):
+        raise ValueError("Invalid per-strategy repair budget")
     for uid, problem in queries.items():
         if not isinstance(uid, str) or (problem.get("uid") is not None and problem["uid"] != uid):
             raise ValueError("Query mapping keys must be strings matching any available UID")
@@ -249,7 +253,7 @@ def run_comparison(queries, *, run_id, output_root, config, prepare_initial_stat
                         try:
                             outcome = run_repair_loop(
                                 problem_copy, plan_copy, factories[name](), context_copy, llm, translator,
-                                max_steps=config["max_steps"], initial_verification=deepcopy(state.initial_verification),
+                                max_steps=budgets.get(name, config["max_steps"]), initial_verification=deepcopy(state.initial_verification),
                                 history_callback=checkpoint,
                             )
                         finally:
