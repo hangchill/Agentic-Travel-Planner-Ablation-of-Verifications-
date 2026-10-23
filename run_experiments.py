@@ -31,7 +31,8 @@ def main(argv=None):
     parser.add_argument("--index", nargs="+", help="Optional query UID subset")
     parser.add_argument("--lang", choices=("zh", "en"), default="en")
     parser.add_argument("--llm")
-    parser.add_argument("--strategy", default="R0")
+    parser.add_argument("--strategy", nargs="+", default=["R0"])
+    parser.add_argument("--strategy-max-steps", action="append", default=[], metavar="STRATEGY=N")
     parser.add_argument("--skip-unavailable", action="store_true")
     parser.add_argument("--max-steps", "--refine_steps", type=int, default=6)
     parser.add_argument("--output-dir", type=Path, default=Path("results/experiments"))
@@ -45,7 +46,24 @@ def main(argv=None):
     parser.add_argument("--split-manifest", type=Path)
     parser.add_argument("--partition", choices=("train", "test"))
     args = parser.parse_args(argv)
-    args.repair_strategies = [args.strategy]
+    args.repair_strategies = args.strategy
+    strategy_max_steps = {}
+    for value in args.strategy_max_steps:
+        try:
+            label, raw_budget = value.split("=", 1)
+            budget = int(raw_budget)
+        except ValueError:
+            parser.error("--strategy-max-steps requires STRATEGY=N")
+        if label not in args.repair_strategies or label in strategy_max_steps or not 0 <= budget <= min(args.max_steps, 6):
+            parser.error("Per-strategy budgets must be unique, requested, and within the shared budget")
+        strategy_max_steps[label] = budget
+    if any(name.startswith("R4") for name in args.repair_strategies):
+        if args.splits not in ("subset_train", "combined_train", "easy_train", "medium_train", "human_train"):
+            parser.error("R4 pilot runs are training-only; test splits are disabled")
+        if not args.index or len(args.index) > 5 or args.max_steps > 6:
+            parser.error("R4 requires explicit --index with at most five queries and --max-steps <= 6")
+        if sum(strategy_max_steps.get(name, args.max_steps) for name in args.repair_strategies) > 6:
+            parser.error("R4 matrix trials share at most six repairs per query")
     if bool(args.split_manifest) != bool(args.partition):
         parser.error("--split-manifest and --partition must be supplied together")
     if args.resume and not args.run_id:
@@ -142,6 +160,8 @@ def main(argv=None):
     if args.split_manifest:
         config["partition"] = args.partition
         config["split_manifest_hash"] = stable_hash(load_manifest(args.split_manifest))
+    if strategy_max_steps:
+        config["strategy_max_steps"] = strategy_max_steps
     directory = run_comparison(
         {uid: data[uid] for uid in selected}, run_id=run_id, output_root=args.output_dir,
         config=config, prepare_initial_state=prepare, runtime_factory=runtime,
