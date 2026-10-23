@@ -42,7 +42,7 @@ class TestR1SharedLoop(unittest.TestCase):
                     "evaluation_errors": errors,
                     "passed": all(state is True for state in states)
                           and not errors,}
-        def mock_llm(messages, one_line=False):
+        def mock_llm(messages, one_line=False, json_mode=False):
             return ('{"type": "dinner", '
                     '"position": "Restaurant B", '
                     '"start_time": "18:00", '

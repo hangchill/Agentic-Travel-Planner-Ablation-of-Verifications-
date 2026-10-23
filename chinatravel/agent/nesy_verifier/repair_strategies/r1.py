@@ -2,8 +2,11 @@ from copy import deepcopy
 from .base import BaseRepairStrategy, RepairResult
 from chinatravel.evaluation.repair_attempt import failed_constraint_indices
 from chinatravel.evaluation.constraint_families import classify_constraint
+from chinatravel.environment.tools.transportation.apis import Transportation
 import json
 import re
+import math
+
 
 ACTIVITY_TYPES = {"dining": {"breakfast", "lunch", "dinner"},
                   "accommodation": {"accommodation"},
@@ -64,6 +67,25 @@ def replace_activity_slot(raw_plan, slot, replacement):
     activities[activity_idx] = deepcopy(replacement)
     return repaired_plan
 
+def parse_replacement_json(response):
+    if not isinstance(response, str):
+        raise ValueError("LLM response must be a string")
+    text = response.strip()
+    if text.startswith("```"):
+        match = re.fullmatch(
+            r"```(?:json)?\s*\n(.*?)\n```",
+            text, flags=re.DOTALL | re.IGNORECASE,)
+        if not match:
+            raise ValueError("Malformed JSON code fence")
+        text = match.group(1).strip()
+    try:
+        result = json.loads(text)
+    except (ValueError, TypeError) as exc:
+        raise ValueError("Invalid replacement JSON") from exc
+    if not isinstance(result, dict):
+        raise ValueError("Replacement must be a JSON object")
+    return result
+
 def generate_replacement(
     problem, raw_plan, slot, constraint_text, context, llm):
     day_idx, activity_idx = slot
@@ -84,11 +106,8 @@ Rules:
 - Do not invent prices, opening hours, or transport details.
 """
     response = llm([{"role": "user", "content": prompt}], 
-                   one_line=False,)
-    try:
-        replacement = json.loads(response)
-    except (ValueError, TypeError) as exc:
-        raise ValueError("Invalid replacement JSON") from exc
+                   one_line=False,  json_mode=True,)
+    replacement = parse_replacement_json(response)
     if not isinstance(replacement, dict):
         raise ValueError("LLM must return one activity object") 
     return replacement
@@ -123,8 +142,8 @@ Return ONLY a JSON object in this format:
 Use the exact zero-based indices provided.
 Do not invent new indices.
 """
-    response = llm([{"role": "user", "content": prompt}], one_line=False,)
-
+    response = llm([{"role": "user", "content": prompt}],
+                   one_line=False,  json_mode=True,)
     try:
         selection = json.loads(response)
         if not isinstance(selection, dict):
@@ -203,8 +222,8 @@ Rules:
 - Do not invent routes, times or costs.
 - Do not return the entire itinerary.
 """
-    response = llm([{"role": "user", "content": prompt}], one_line=False,)
-
+    response = llm([{"role": "user", "content": prompt}],
+                   one_line=False, json_mode=True,)
     try:
         replacement = json.loads(response)
     except (ValueError, TypeError) as exc:
@@ -302,14 +321,104 @@ def repair_commonsense_transport(
                           "repair_source": "transport_lookup",},)
     return None
 
+
+def localise_transport_cost_error(raw_plan, error_message):
+    pattern = (
+        r"Incorrect cost infomation of innercity transport in day (\d+), "
+        r"from (.+?) to (.+?), (metro|taxi|walk)\. "
+        r"\[cost = .+\]")
+    match = re.fullmatch(pattern, error_message.strip())
+    if not match:
+        return None
+    day_idx = int(match.group(1)) - 1
+    origin, destination, mode = match.group(2, 3, 4)
+    if not 0 <= day_idx < len(raw_plan):
+        return None
+    matches = []
+    for activity_idx, activity in enumerate(
+        raw_plan[day_idx].get("activities", [])):
+        transport = activity.get("transports")
+        if not isinstance(transport, dict):
+            continue
+        if (transport.get("from") == origin
+            and transport.get("to") == destination
+            and transport.get("mode") == mode):
+            matches.append((day_idx, activity_idx))
+    # never guess if multiple slots match
+    return matches[0] if len(matches) == 1 else None
+
+def repair_commonsense_transport_cost(
+    problem, raw_plan, verification_results):
+    errors = verification_results.get("commonsense_errors", [])
+    if not isinstance(errors, list):
+        return None
+    transport_tool = Transportation(lang=problem.get("lang", "en"))
+    people_number = problem.get("people_number")
+    if (type(people_number) is not int
+        or people_number <= 0):
+        return None
+    for error in errors:
+        if not isinstance(error, str):
+            continue
+        slot = localise_transport_cost_error(raw_plan, error)
+        if slot is None:
+            continue
+        day_idx, activity_idx = slot
+        original = raw_plan[day_idx]["activities"][activity_idx]["transports"]
+        mode = original["mode"]
+        try:
+            options = transport_tool.goto(
+                city=problem["target_city"],
+                start=original["from"],
+                end=original["to"],
+                start_time=original["start_time"],
+                transport_type=mode,
+                verbose=False,)
+            if not isinstance(options, list) or not options:
+                continue
+            if mode == "metro":
+                correct_cost = sum(segment["cost"] for segment in options) * people_number
+            elif mode == "taxi":
+                correct_cost = options[0]["cost"] * math.ceil(people_number / 4)
+            elif mode == "walk":
+                correct_cost = 0
+            else:
+                continue
+            if (not isinstance(correct_cost, (int, float))
+                or not math.isfinite(correct_cost)
+                or correct_cost < 0):
+                continue
+        except (KeyError, ValueError, TypeError, OSError, IndexError):
+            continue
+        if abs(original["cost"] - correct_cost) <= 0.1:
+            continue
+        repaired_plan = deepcopy(raw_plan)
+        repaired_plan[day_idx]["activities"][activity_idx]["transports"]["cost"] = correct_cost
+        return RepairResult(repaired_plan=repaired_plan,
+                            metadata={"strategy": "R1",
+                                      "target_constraint_indices": [],
+                                      "editable_scope": "slot",
+                                      "scope_level": 1,
+                                      "feedback_personal_constraint_indices": [],
+                                      "feedback_commonsense_failure_count": len(errors),
+                                      "editable_slot": slot,
+                                      "target_commonsense_error": error,
+                                      "repair_source": "transport_cost_lookup",
+                                      "original_cost": original["cost"],
+                                      "corrected_cost": correct_cost,},)
+    return None
+
 class R1TargetedRepair(BaseRepairStrategy):
     def repair(self, problem, raw_plan, verification_results, context, llm):
         failed_indices = failed_constraint_indices(
             verification_results["personal_constraints"])
         phase = context.get("repair_phase")
         if phase == "commonsense" or (phase is None and not failed_indices):
-            commonsense_result = repair_commonsense_transport(
+            commonsense_result = repair_commonsense_transport_cost(
                 problem, raw_plan, verification_results)
+            if commonsense_result is None:
+                commonsense_result = repair_commonsense_transport(
+                    problem, raw_plan, verification_results)
             if commonsense_result is not None:
                 return commonsense_result
             return RepairResult(
