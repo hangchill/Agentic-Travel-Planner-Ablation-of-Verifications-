@@ -21,7 +21,8 @@ class SchedulingTests(unittest.TestCase):
         class Strategy:
             def repair(self, **kwargs):
                 phases.append(kwargs['context']['repair_phase'])
-                return RepairResult(deepcopy(kwargs['raw_plan']) if noop else [{'day': len(phases)}],
+                unchanged = noop is True or (isinstance(noop, (list, tuple, set)) and len(phases) in noop)
+                return RepairResult(deepcopy(kwargs['raw_plan']) if unchanged else [{'day': len(phases)}],
                                     {'strategy': name, 'target_constraint_indices': [1], **({'repair_phase': reported_phase} if reported_phase else {})})
             def accept(self, *args): return not reject
         problem = dict(uid='q', people_number=1, start_city='A', target_city='B',
@@ -61,6 +62,33 @@ class SchedulingTests(unittest.TestCase):
         self.assertEqual(self.phases, ['personal'] * 5 + ['commonsense'])
         self.run_loop([verification(False, False)], initial=verification(False, False), name='R1', noop=True)
         self.assertEqual(self.phases, ['personal'])
+
+    def test_r1_recovery_noop_does_not_stop_remaining_recovery(self):
+        result = self.run_loop([verification(), verification(True), verification(False, False),
+                                verification(False, False), verification(True, False)],
+                               name='R1', noop=[4])
+        self.assertEqual(self.phases, ['personal', 'personal', 'commonsense', 'personal', 'personal'])
+        self.assertEqual(result['history'][4]['candidate_plan'], result['history'][3]['candidate_plan'])
+        self.assertEqual(summarize_repair_history(result['history'])['attempts'], 5)
+
+    def test_repeated_r1_recovery_noops_exhaust_budget(self):
+        for state in (False, None):
+            with self.subTest(state=state):
+                result = self.run_loop([verification(), verification(True), verification(state, False)] +
+                                       [verification(state, False)] * 3, name='R1', noop=[4, 5, 6], budget=100)
+                self.assertEqual(self.phases, ['personal', 'personal', 'commonsense'] + ['personal'] * 3)
+                self.assertEqual(len(result['history']) - 1, 6)
+                self.assertEqual(self.phases.count('personal'), 5)
+
+    def test_r1_commonsense_noop_still_allows_recovery(self):
+        self.run_loop([verification(True), verification(False, False), verification(True, False)],
+                      name='R1', noop=[2])
+        self.assertEqual(self.phases, ['personal', 'commonsense', 'personal'])
+
+    def test_r1_last_commonsense_regression_cannot_expand_budget(self):
+        result = self.run_loop([verification()] * 5 + [verification(False, False)], name='R1', noop=[6])
+        self.assertEqual(self.phases, ['personal'] * 5 + ['commonsense'])
+        self.assertEqual(len(result['history']) - 1, 6)
 
     def test_rejection_consumes_budget(self):
         result = self.run_loop([verification(True, False)] * 6, reject=True)

@@ -565,16 +565,16 @@ class SharedLoopContractTests(unittest.TestCase):
 class SharedR3SchedulingTests(unittest.TestCase):
     """Exercise both real R3 variants under the authoritative shared scheduler."""
 
-    def run_scheduled(self, phased, initial, outcomes):
+    def run_scheduled(self, phased, initial, outcomes, schema_errors=None):
         problem = dict(uid="scheduled-r3", people_number=1, start_city="A", target_city="B",
                        nature_language="q", hard_logic_py=["result=day_count(plan)==1"])
         plan = [{"day": 1, "activities": [{"type": "attraction", "position": "Alpha", "cost": 10}]}]
         def state(values):
             personal, cs = values
             errors = [PhasedR3PTests.CS_ALPHA] if cs else []
-            return dict(personal_constraints=[personal], commonsense_errors=errors, schema_errors=[],
-                        error_info=errors + (["Personal constraint 1 failed: result=day_count(plan)==1"] if personal is False else []),
-                        passed=personal is True and not cs)
+            return dict(personal_constraints=[personal], commonsense_errors=errors, schema_errors=list(schema_errors or []),
+                        error_info=errors + list(schema_errors or []) + (["Personal constraint 1 failed: result=day_count(plan)==1"] if personal is False else []),
+                        passed=personal is True and not cs and not schema_errors)
         strategy = R3AdaptiveScopeRepair(phased=phased)
         executed = []
         feedback = strategy._feedback_lines
@@ -598,7 +598,38 @@ class SharedR3SchedulingTests(unittest.TestCase):
             else:
                 self.assertFalse(any(t['kind'] == 'commonsense' for t in targets))
                 self.assertEqual(record.feedback_commonsense_failure_count, 0)
+        self.last_output = output
         return executed, records
+
+    def test_scheduled_commonsense_excludes_schema_objective_but_preserves_evidence(self):
+        from chinatravel.evaluation.regression_matrix import build_regression_matrix
+        schema_errors = ['GLOBAL_SCHEMA_FAILURE unrelated to commonsense']
+        for phased in (False, True):
+            with self.subTest(phased=phased):
+                phases, records = self.run_scheduled(phased, (True, True), [(True, False)], schema_errors)
+                self.assertEqual(phases, ['commonsense'])
+                record = records[0]
+                self.assertEqual([t['kind'] for t in record.repair_metadata['targeted_constraints']], ['commonsense'])
+                self.assertFalse(record.repair_metadata['global_targets'])
+                self.assertNotIn(schema_errors[0], record.repair_metadata['prompt'])
+                self.assertEqual(record.target_constraint_indices, [])
+                self.assertEqual(record.protected_constraint_indices, [1])
+                self.assertEqual(self.last_output['history'][0]['verification']['schema_errors'], schema_errors)
+                self.assertEqual(self.last_output['verification']['schema_errors'], schema_errors)
+                analysis = build_regression_matrix([record])
+                self.assertTrue(all(r['eligible_count'] == 0 and r['regression_count'] == 0 for r in analysis['aggregate']))
+
+    def test_direct_calls_keep_historical_schema_targets(self):
+        from copy import deepcopy
+        problem = dict(nature_language='q', hard_logic_py=['result=True'])
+        verification = dict(personal_constraints=[True], commonsense_errors=[PhasedR3PTests.CS_ALPHA],
+                            schema_errors=['GLOBAL_SCHEMA_FAILURE'], error_info=[PhasedR3PTests.CS_ALPHA])
+        before = deepcopy(verification)
+        for phased in (False, True):
+            result = R3AdaptiveScopeRepair(phased=phased).repair(
+                problem, PhasedR3PTests()._plan(), verification, _ctx(), _MockLLM('not json'))
+            self.assertIn('schema', [t['kind'] for t in result.metadata['targeted_constraints']])
+            self.assertEqual(verification, before)
 
     def test_shared_unknown_and_early_commonsense(self):
         for phased in (False, True):

@@ -511,7 +511,16 @@ class R3AdaptiveScopeRepair(BaseRepairStrategy):
             scope = self._scope
             widened = self._scope_idx > previous_idx
 
-        targets = self._collect_targets(problem, verification_results, phase)
+        # Scheduled commonsense repairs have a strict objective. Preserve full
+        # verification for logging; historical direct calls keep schema targeting.
+        objective_verification = verification_results
+        if context.get("repair_phase") == "commonsense":
+            objective_verification = {
+                **verification_results,
+                "schema_errors": [],
+                "error_info": list(verification_results.get("commonsense_errors") or []),
+            }
+        targets = self._collect_targets(problem, objective_verification, phase)
         localized = self._localize_targets(targets, raw_plan)
         editable, global_present = self._editable_region(scope, raw_plan, localized)
 
@@ -521,7 +530,7 @@ class R3AdaptiveScopeRepair(BaseRepairStrategy):
         ## Feedback actually supplied to the model, measured from the lines sent
         ## rather than assumed (plain R3: all of error_info at every rung).
         feedback_lines, protected = self._feedback_lines(
-            problem, verification_results, phase
+            problem, objective_verification, phase
         )
 
         if context.get("repair_phase") == "personal":

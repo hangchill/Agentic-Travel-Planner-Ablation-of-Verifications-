@@ -102,7 +102,9 @@ states, still subject to the five-personal and six-total limits. No second
 commonsense proposal is scheduled. Accepted state determines every transition.
 
 R1 unchanged personal proposals retain the reserved commonsense opportunity when
-commonsense failures remain. Otherwise its no-progress stop remains active.
+commonsense failures remain. After commonsense, unchanged proposals cannot suppress personal recovery while
+personal False/UNKNOWN states and budget remain. Every recovery no-op consumes
+a proposal; no-progress stopping otherwise remains active.
 Exceptions remain recorded and raised, rather than spending further proposals.
 
 Attempt JSON adds nullable `repair_phase` (historical default `None`) and
@@ -124,3 +126,9 @@ The legacy `repair_strategy=None` baseline does not use this scheduler and is
 outside this refactor. Historical evaluator directory names and unrelated agent
 action budgets are unchanged. A strategy reporting a different executed phase
 raises an execution error; the record retains the mismatch for diagnosis.
+
+
+For explicitly scheduled R3/R3P commonsense attempts, only commonsense violations
+select targets and editable scope. Schema errors remain in verification/history
+and evaluation but do not enter the scheduled repair objective. Direct calls
+without shared phase intent retain historical schema-targeting behavior.

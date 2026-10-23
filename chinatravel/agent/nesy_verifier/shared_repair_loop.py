@@ -264,13 +264,20 @@ def run_repair_loop(
             current_plan = deepcopy(result.repaired_plan)
             current_verification = candidate_verification
 
-        # Stop R1 when its proposed repair makes no changes.
-        # The attempt has already been recorded in history.
+        # No-progress stopping must not suppress post-commonsense recovery.
+        # Every no-op is already recorded and consumes the unchanged hard budget.
+        recovery_available = (
+            commonsense_used
+            and not all(state is True for state in current_verification["personal_constraints"])
+            and step < total_budget
+            and personal_attempts < 5
+        )
         if (
             strategy_name in {"R1", "R1TargetedRepair"}
             and result is not None
             and result.repaired_plan == before_plan
             and (commonsense_used or not (current_verification.get("commonsense_errors") or []))
+            and not recovery_available
         ):
             break
 
