@@ -3,11 +3,14 @@ import argparse
 import sys
 import os
 import json
+from dotenv import load_dotenv
 
 project_root_path = os.path.dirname(os.path.abspath(__file__))
 
 
 if __name__ == "__main__":
+
+    load_dotenv(os.path.join(project_root_path, ".env"))
 
     parser = argparse.ArgumentParser(description="argparse testing")
     parser.add_argument(
