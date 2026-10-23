@@ -152,6 +152,7 @@ def execute_dsl_code(
     variables: dict[str, Any],
     *,
     allowed_builtins: dict[str, Any] | None = None,
+    category_diagnostics: list[dict] | None = None,
 ) -> dict[str, Any]:
     builtins = dict(DEFAULT_DSL_BUILTINS)
     if allowed_builtins is not None:
@@ -163,6 +164,13 @@ def execute_dsl_code(
         allowed_builtins=set(builtins),
     )
     bound_names = _bound_names(tree)
+    from chinatravel.symbol_verification.category_labels import normalize_comparisons, normalize_operand
+    helper_name = "__category_comparison_operand"
+    while helper_name in allowed_names | bound_names | set(builtins):
+        helper_name += "_"
+    tree = normalize_comparisons(tree, helper_name)
+    builtins[helper_name] = lambda value, domain, expression: normalize_operand(
+        value, domain, expression, category_diagnostics)
     sandbox = dict(variables)
     exec(
         compile(tree, "<chinatravel-dsl>", "exec"),
