@@ -275,7 +275,7 @@ class R3AdaptiveScopeRepair(BaseRepairStrategy):
         )
         return previous_idx
 
-    ## ---- R3P: which kind of failure this step repairs (None for plain R3) ----
+    ## ---- historical direct-call fallback only; shared loop owns scheduling ----
     def _choose_phase(self, verification):
         if not self._phased:
             return None
@@ -499,6 +499,7 @@ class R3AdaptiveScopeRepair(BaseRepairStrategy):
         self._step += 1
         phase = context.get("repair_phase")
         if phase is None:
+            # Compatibility for direct calls only; never override shared intent.
             phase = self._choose_phase(verification_results)
         elif phase not in ("personal", "commonsense"):
             raise ValueError("Unknown shared repair_phase")
@@ -608,6 +609,10 @@ class R3AdaptiveScopeRepair(BaseRepairStrategy):
         if phase is not None:
             metadata["protected_constraint_indices"] = protected
             metadata["repair_phase"] = phase
+            metadata["target_commonsense_errors"] = (
+                list(objective_verification.get("commonsense_errors") or [])
+                if phase == "commonsense" else []
+            )
             metadata["personal_iteration"] = self._iteration
             metadata["r3p_call"] = self._step   ## "step" is a reserved record field
         if widened:
