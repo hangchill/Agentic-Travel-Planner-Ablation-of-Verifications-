@@ -174,7 +174,7 @@ def _validate_plan_structure(plan):
     return schema_errors
 
 
-def check_personal_constraints(problem, plan):
+def check_personal_constraints(problem, plan, category_diagnostics=None):
     results = []
     evaluation_errors = []
 
@@ -186,11 +186,13 @@ def check_personal_constraints(problem, plan):
         variables = deepcopy(func_dict)
         variables["plan"] = plan
 
+        labels = [] if category_diagnostics is not None else None
         try:
             execute_dsl_code(
                 constraint,
                 variables,
                 allowed_builtins={"set": set},
+                category_diagnostics=labels,
             )
             results.append(bool(variables.get("result", False)))
 
@@ -201,6 +203,10 @@ def check_personal_constraints(problem, plan):
                 "constraint_index": i + 1,
                 "error": str(e),
             })
+
+        finally:
+            if category_diagnostics is not None:
+                category_diagnostics.extend({"constraint_index": i + 1, **label} for label in labels)
 
     return results, evaluation_errors
 
@@ -239,6 +245,7 @@ def verify_plan(problem, plan, translate_fn=None):
     else:
         translation_errors.append("No transport translation function provided.")
 
+    category_diagnostics = []
     ## Skip personal checks if translation failed; results are unknown (None).
     if translation_errors:
         personal_results = [
@@ -247,7 +254,7 @@ def verify_plan(problem, plan, translate_fn=None):
         evaluation_errors = []
     else:
         personal_results, evaluation_errors = check_personal_constraints(
-            problem, translated_plan
+            problem, translated_plan, category_diagnostics
         )
 
     personal_errors = []
@@ -278,6 +285,7 @@ def verify_plan(problem, plan, translate_fn=None):
     return {
         "commonsense_errors": commonsense_errors,
         "personal_constraints": personal_results,
+        "category_normalization": category_diagnostics,
         "personal_errors": personal_errors,
         "evaluation_errors": evaluation_errors,
         "translation_errors": translation_errors,
