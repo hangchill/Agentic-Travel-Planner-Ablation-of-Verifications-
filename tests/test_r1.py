@@ -5,11 +5,10 @@ from chinatravel.agent.nesy_verifier.repair_strategies.r1 import (
     find_candidate_slots, select_editable_slot, find_transport_slots, 
     replace_transport_slot, select_repair_target, localise_transport_error,
     lookup_transport_options, convert_transport_option, localise_transport_cost_error,
-    repair_commonsense_transport_cost)
+    repair_commonsense_transport_cost, repair_commonsense_activity, is_within_opening_hours,)
 import json
 from unittest.mock import patch
 from copy import deepcopy
-
 
 class TestR1(unittest.TestCase):
     def test_unique_restaurant(self):
@@ -620,6 +619,167 @@ class TestR1(unittest.TestCase):
         with self.assertRaises(ValueError):
             parse_replacement_json(
                 'Here is the replacement: {"type": "attraction"}')
+
+    def test_commonsense_attraction_opening_hours(self):
+        problem = {"nature_language": "Visit the Palace Museum."}
+        itinerary = [{
+            "day": 1,
+            "activities": [{
+                "type": "attraction",
+                "position": "The Palace Museum",
+                "start_time": "18:00",
+                "end_time": "19:00",
+                "cost": 0,},
+                {"type": "dinner",
+                 "position": "Restaurant A",
+                 "start_time": "19:30",
+                 "end_time": "20:30",
+                 "cost": 100,},],}]
+        error = ("The attraction, The Palace Museum in day 1, "
+                 "is closed when you visiting. "
+                 "Its open time is [08:30 -- 17:00]")
+        original = deepcopy(itinerary)
+        def mock_llm(messages, one_line=False, json_mode=False):
+            return json.dumps({
+                "type": "attraction",
+                "position": "The Palace Museum",
+                "start_time": "15:00",
+                "end_time": "16:00",
+                "cost": 0,})
+        result = repair_commonsense_activity(
+            problem, itinerary,
+            {"commonsense_errors": [error]},
+            {}, mock_llm,)
+        self.assertIsNotNone(result)
+        self.assertEqual(result.repaired_plan[0]["activities"][0]["start_time"], "15:00",)
+        self.assertEqual(result.repaired_plan[0]["activities"][1],
+                         original[0]["activities"][1],)
+        self.assertEqual(itinerary, original)
+        self.assertEqual(result.metadata["repair_source"],
+                         "commonsense_activity",)
+
+    def test_commonsense_restaurant_opening_hours(self):
+        problem = {"nature_language": "Have dinner at Restaurant A."}
+        itinerary = [{
+            "day": 1,
+            "activities": [
+                {"type": "dinner",
+                 "position": "Restaurant A",
+                 "start_time": "22:00",
+                 "end_time": "23:00",
+                 "cost": 100,},],}]
+        error = ("The restaurant, Restaurant A in day 1, "
+                 "is closed when you visiting. "
+                 "Its open time is [10:00 -- 21:00]")
+
+        def mock_llm(messages, one_line=False, json_mode=False):
+            return json.dumps({
+                "type": "dinner",
+                "position": "Restaurant A",
+                "start_time": "19:00",
+                "end_time": "20:00",
+                "cost": 100,})
+        result = repair_commonsense_activity(
+            problem, itinerary,
+            {"commonsense_errors": [error]},
+            {}, mock_llm,)
+
+        self.assertIsNotNone(result)
+        self.assertEqual(result.repaired_plan[0]["activities"][0]["start_time"], "19:00",)
+        self.assertEqual(result.metadata["editable_slot"], (0, 0),)
+
+    def test_commonsense_activity_ambiguous_slot(self):
+        problem = {"nature_language": "Visit the Palace Museum."}
+        activity = {
+            "type": "attraction",
+            "position": "The Palace Museum",
+            "start_time": "18:00",
+            "end_time": "19:00",}
+        itinerary = [{
+            "day": 1,
+            "activities": [deepcopy(activity), deepcopy(activity)],}]
+        error = ("The attraction, The Palace Museum in day 1, "
+                 "is closed when you visiting. "
+                 "Its open time is [08:30 -- 17:00]")
+        def mock_llm(messages, one_line=False, json_mode=False):
+            self.fail("LLM must not be called for ambiguous slots")
+        result = repair_commonsense_activity(
+            problem, itinerary,
+            {"commonsense_errors": [error]},
+            {}, mock_llm,)
+        self.assertIsNone(result)
+
+    def test_commonsense_activity_invalid_replacement(self):
+        problem = {"nature_language": "Visit the Palace Museum."}
+        itinerary = [{
+            "day": 1,
+            "activities": [{
+                "type": "attraction",
+                "position": "The Palace Museum",
+                "start_time": "18:00",
+                "end_time": "19:00",}],}]
+        original = deepcopy(itinerary)
+        error = ("The attraction, The Palace Museum in day 1, "
+                 "is closed when you visiting. "
+                 "Its open time is [08:30 -- 17:00]")
+        def mock_llm(messages, one_line=False, json_mode=False):
+            return '{"type": "dinner", "position": "Restaurant A"}'
+        result = repair_commonsense_activity(
+            problem, itinerary,
+            {"commonsense_errors": [error]},
+            {}, mock_llm,)
+        self.assertIsNotNone(result)
+        self.assertEqual(result.repaired_plan, original)
+        self.assertEqual(result.metadata["failure_reason"],
+                         "invalid_commonsense_replacement",)
+
+
+    def test_commonsense_rejects_closed_replacement(self):
+        problem = {"nature_language": "Visit the Palace Museum."}
+        itinerary = [{
+            "day": 1,
+            "activities": [{
+                "type": "attraction",
+                "position": "The Palace Museum",
+                "start_time": "18:00",
+                "end_time": "19:00",}],}]
+        original = deepcopy(itinerary)
+        error = ("The attraction, The Palace Museum in day 1, "
+                 "is closed when you visiting. "
+                 "Its open time is [08:30 -- 17:00]")
+        def mock_llm(messages, one_line=False, json_mode=False):
+            return json.dumps({
+                "type": "attraction",
+                "position": "The Palace Museum",
+                "start_time": "17:30",
+                "end_time": "18:30",})
+        result = repair_commonsense_activity(
+            problem, itinerary,
+            {"commonsense_errors": [error]},
+            {}, mock_llm,)
+        self.assertIsNotNone(result)
+        self.assertEqual(result.repaired_plan, original)
+        self.assertEqual(result.metadata["failure_reason"],
+                         "invalid_commonsense_replacement",)
+
+
+    def test_opening_hours_24_end(self):
+        self.assertTrue(
+            is_within_opening_hours("22:00", "23:30", "10:00", "24:00"))
+
+    def test_opening_hours_overnight(self):
+        from chinatravel.agent.nesy_verifier.repair_strategies.r1 import (
+            is_within_opening_hours,)
+        self.assertTrue(
+            is_within_opening_hours("23:00", "23:45", "10:00", "01:00"))
+        self.assertFalse(
+            is_within_opening_hours("08:00", "09:00", "10:00", "01:00"))
+    def test_opening_hours_invalid_time(self):
+        from chinatravel.agent.nesy_verifier.repair_strategies.r1 import (
+            is_within_opening_hours,)
+        with self.assertRaises(ValueError):
+            is_within_opening_hours(
+                "25:00", "26:00", "10:00", "21:00")
 
 if __name__ == "__main__":
     unittest.main()
