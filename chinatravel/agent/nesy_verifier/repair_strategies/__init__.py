@@ -29,7 +29,17 @@ def _r3p():
     return R3AdaptiveScopeRepair(phased=True)
 
 
-STRATEGY_FACTORIES = {"R0": _r0, "R1": _r1, "R2": _r2, "R3": _r3, "R3P": _r3p}
+def _r4():
+    import os
+    from .r4 import MatrixGuidedRepair
+
+    path = os.environ.get("CHINATRAVEL_R4_MATRIX")
+    if not path:
+        raise ValueError("R4 requires CHINATRAVEL_R4_MATRIX; use r4/run_r4.py for guarded pilot runs")
+    return MatrixGuidedRepair(path)
+
+
+STRATEGY_FACTORIES = {"R0": _r0, "R1": _r1, "R2": _r2, "R3": _r3, "R3P": _r3p, "R4": _r4}
 
 
 def create_repair_strategy(name):

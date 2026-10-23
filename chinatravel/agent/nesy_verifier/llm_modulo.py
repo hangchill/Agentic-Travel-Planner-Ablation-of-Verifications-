@@ -369,6 +369,7 @@ class LLMModuloAgent(BaseAgent):
     def prepare_initial_repair_state(self, problem, prob_idx=None):
         """Collect, shortlist, generate and verify once; no repairs are performed."""
         from chinatravel.agent.nesy_verifier.shared_repair_loop import verify_plan
+        from chinatravel.agent.model_usage import usage_snapshot, usage_delta
 
         from time import perf_counter
         from chinatravel.agent.system_usage import system_usage_scope, system_delta, verification_execution
@@ -376,6 +377,8 @@ class LLMModuloAgent(BaseAgent):
         with system_usage_scope() as usage:
             before = usage.snapshot()
             started = perf_counter()
+            initial_model = getattr(self, "backbone_llm", None)
+            initial_model_before = usage_snapshot(initial_model)
             state = self._generate_initial_plan(problem, prob_idx or problem.get("uid"))
             state.generation_metadata["initial_generation_time_s"] = perf_counter() - started
             state.generation_metadata["initial_generation_tool_calls"] = system_delta(before, usage.snapshot())["tool_call_count"]
@@ -386,6 +389,11 @@ class LLMModuloAgent(BaseAgent):
                  "target_city": problem["target_city"], "itinerary": deepcopy(state.raw_initial_plan)},
                 translate_fn=self.translate_innercity_transport,
             )
+            # Initial verification can itself call the translation model. Include
+            # those requests in shared initialization, once for every query.
+            initial_model_after = usage_snapshot(initial_model)
+            for counter in ("input_tokens", "output_tokens", "total_tokens", "model_calls", "failed_model_calls"):
+                state.generation_metadata[counter] = usage_delta(initial_model_before, initial_model_after, counter)
         return state
 
     def solve(self, problem, prob_idx, oracle_verifier):
