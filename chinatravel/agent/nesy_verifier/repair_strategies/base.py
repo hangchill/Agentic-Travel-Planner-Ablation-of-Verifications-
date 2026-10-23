@@ -13,6 +13,11 @@ class RepairResult:
 
 ## Common interface for all repair strategies (R0-R4).
 class BaseRepairStrategy(ABC):
+    """Shared loop sets context['repair_phase'] to personal or commonsense.
+
+    Strategies must honor this intent while retaining full verification context.
+    Direct historical calls without the key retain their strategy's old behavior.
+    """
 
     ## Each strategy must implement how it generates a repair.
     @abstractmethod

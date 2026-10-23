@@ -306,7 +306,8 @@ class R1TargetedRepair(BaseRepairStrategy):
     def repair(self, problem, raw_plan, verification_results, context, llm):
         failed_indices = failed_constraint_indices(
             verification_results["personal_constraints"])
-        if not failed_indices:
+        phase = context.get("repair_phase")
+        if phase == "commonsense" or (phase is None and not failed_indices):
             commonsense_result = repair_commonsense_transport(
                 problem, raw_plan, verification_results)
             if commonsense_result is not None:
@@ -319,6 +320,10 @@ class R1TargetedRepair(BaseRepairStrategy):
                     "editable_scope": "slot",
                     "scope_level": 1,
                     "failure_reason": "no_localizable_failure",},)
+        if not failed_indices:
+            return RepairResult(repaired_plan=deepcopy(raw_plan), metadata={
+                "strategy": "R1", "target_constraint_indices": [],
+                "failure_reason": "no_evaluable_personal_failure", "editable_scope": "slot"})
         target_idx, constraint_family, candidates = select_repair_target(
             problem, raw_plan, failed_indices,)
         if target_idx is None:

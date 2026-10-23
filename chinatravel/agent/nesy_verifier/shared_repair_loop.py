@@ -78,10 +78,16 @@ def run_repair_loop(
     context,
     llm,
     translate_fn,
-    max_steps=10,
+    max_steps=6,
     initial_verification=None,
     history_callback=None,
 ):
+
+    if type(max_steps) is not int or max_steps < 0:
+        raise ValueError("max_steps must be a nonnegative integer")
+    total_budget = min(max_steps, 6)
+    personal_attempts = 0
+    commonsense_used = False
 
     ## Keep the current accepted itinerary separate from candidates.
     current_plan = deepcopy(raw_plan)
@@ -109,11 +115,27 @@ def run_repair_loop(
 
     ## Each proposed repair uses one attempt from the budget.
     strategy_name = type(strategy).__name__
-    for step in range(1, max_steps + 1):
+    for step in range(1, total_budget + 1):
 
         ## Stop if the current plan satisfies all reported checks.
         if current_verification["passed"]:
             break
+
+        personal_satisfied = all(state is True for state in current_verification["personal_constraints"])
+        commonsense_errors = current_verification.get("commonsense_errors") or []
+        if not commonsense_used and (personal_satisfied or personal_attempts >= 5):
+            if not commonsense_errors:
+                break
+            repair_phase = "commonsense"
+            commonsense_used = True
+        elif not personal_satisfied and personal_attempts < 5:
+            repair_phase = "personal"
+            personal_attempts += 1
+        else:
+            break
+        # Context intent extends the existing strategy signature. Full verification
+        # stays intact so personal failures remain observable during commonsense repair.
+        context["repair_phase"] = repair_phase
 
         before_verification = deepcopy(current_verification)
         before_plan = deepcopy(current_plan)
@@ -130,6 +152,9 @@ def run_repair_loop(
                 problem=deepcopy(problem), raw_plan=deepcopy(current_plan),
                 verification_results=deepcopy(current_verification), context=context, llm=llm,
             )
+            executed_phase = result.metadata.get("repair_phase")
+            if executed_phase is not None and executed_phase != repair_phase:
+                raise ValueError(f"Strategy phase {executed_phase!r} disagrees with scheduled {repair_phase!r}")
             repair_finished = perf_counter()
             usage_after_repair = usage_snapshot(llm)
             verification_started = perf_counter()
@@ -169,6 +194,15 @@ def run_repair_loop(
 
         intent, debug_metadata = normalize_repair_intent_metadata(result.metadata if result is not None else {})
         strategy_name = intent.pop("repair_strategy", strategy_name)
+        if intent.get("repair_phase") not in (None, repair_phase):
+            debug_metadata["executed_repair_phase"] = intent["repair_phase"]
+        intent["repair_phase"] = repair_phase
+        intent["target_commonsense_errors"] = list(commonsense_errors) if repair_phase == "commonsense" else []
+        if repair_phase == "commonsense":
+            intent["target_constraint_indices"] = []
+            intent["target_constraint_labels"] = []
+            intent["feedback_personal_constraint_indices"] = []
+
         # Derivable context is authoritative, never supplied by a strategy.
         intent["concurrent_failed_constraint_indices"] = failed_constraint_indices(before_verification["personal_constraints"])
         commonsense = before_verification.get("commonsense_errors")
@@ -236,6 +270,7 @@ def run_repair_loop(
             strategy_name in {"R1", "R1TargetedRepair"}
             and result is not None
             and result.repaired_plan == before_plan
+            and (commonsense_used or not (current_verification.get("commonsense_errors") or []))
         ):
             break
 
