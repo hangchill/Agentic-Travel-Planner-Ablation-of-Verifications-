@@ -581,7 +581,8 @@ class SharedR3SchedulingTests(unittest.TestCase):
         def capture(problem, verification, phase):
             executed.append(phase)
             return feedback(problem, verification, phase)
-        with patch.object(strategy, '_feedback_lines', side_effect=capture), \
+        with patch.object(strategy, '_choose_phase', side_effect=AssertionError('shared phase must bypass internal selector')), \
+             patch.object(strategy, '_feedback_lines', side_effect=capture), \
              patch.object(loop, 'verify_plan', side_effect=[state(value) for value in outcomes]):
             output = loop.run_repair_loop(problem, plan, strategy, _ctx(), _MockLLM('not json'), None,
                                           max_steps=6, initial_verification=state(initial))
@@ -593,11 +594,13 @@ class SharedR3SchedulingTests(unittest.TestCase):
             targets = record.repair_metadata['targeted_constraints']
             if record.repair_phase == 'commonsense':
                 self.assertEqual(record.target_constraint_indices, [])
+                self.assertEqual(record.target_commonsense_errors, [PhasedR3PTests.CS_ALPHA])
                 self.assertFalse(any(t['kind'] == 'personal' for t in targets))
                 self.assertEqual(record.editable_scope, 'slot')
             else:
                 self.assertFalse(any(t['kind'] == 'commonsense' for t in targets))
                 self.assertEqual(record.feedback_commonsense_failure_count, 0)
+                self.assertEqual(record.target_commonsense_errors, [])
         self.last_output = output
         return executed, records
 
@@ -630,6 +633,26 @@ class SharedR3SchedulingTests(unittest.TestCase):
                 problem, PhasedR3PTests()._plan(), verification, _ctx(), _MockLLM('not json'))
             self.assertIn('schema', [t['kind'] for t in result.metadata['targeted_constraints']])
             self.assertEqual(verification, before)
+
+    def test_returned_metadata_identifies_executed_shared_objective(self):
+        problem = dict(nature_language='q', hard_logic_py=['result=True'])
+        verification = dict(personal_constraints=[False],
+                            commonsense_errors=[PhasedR3PTests.CS_ALPHA],
+                            schema_errors=['SCHEMA_ONLY'],
+                            error_info=[PhasedR3PTests.CS_ALPHA, 'Personal constraint 1 failed: result=True'])
+        for phased in (False, True):
+            for phase in ('personal', 'commonsense'):
+                with self.subTest(phased=phased, phase=phase):
+                    strategy = R3AdaptiveScopeRepair(phased=phased)
+                    context = dict(_ctx(), repair_phase=phase)
+                    with patch.object(strategy, '_choose_phase', side_effect=AssertionError('not a scheduler')):
+                        result = strategy.repair(problem, PhasedR3PTests()._plan(), verification,
+                                                 context, _MockLLM('not json'))
+                    self.assertEqual(result.metadata['repair_phase'], phase)
+                    self.assertEqual(result.metadata['target_constraint_indices'], [1] if phase == 'personal' else [])
+                    self.assertEqual(result.metadata['target_commonsense_errors'],
+                                     [PhasedR3PTests.CS_ALPHA] if phase == 'commonsense' else [])
+                    self.assertNotIn('schema', [t['kind'] for t in result.metadata['targeted_constraints']])
 
     def test_shared_unknown_and_early_commonsense(self):
         for phased in (False, True):
