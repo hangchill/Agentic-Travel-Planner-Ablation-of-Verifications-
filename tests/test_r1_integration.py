@@ -31,7 +31,7 @@ class TestR1Integration(unittest.TestCase):
         self.assertEqual(before_errors, [])
         # simulated verifier failure to test the repair path
         simulated_verification = {"personal_constraints": [False]}
-        def mock_llm(messages, one_line=False):
+        def mock_llm(messages, one_line=False, json_mode=False):
             return ('{"type": "dinner", '
                     '"position": "Restaurant C", '
                     '"start_time": "18:00", '
@@ -70,7 +70,7 @@ class TestR1Integration(unittest.TestCase):
         self.assertEqual(before_errors, [])
         self.assertEqual(before_states, [False])
 
-        def mock_llm(messages, one_line=False):
+        def mock_llm(messages, one_line=False, json_mode=False):
             return ('{"type": "dinner", '
                     '"position": "Restaurant B", '
                     '"start_time": "18:00", '
@@ -118,7 +118,7 @@ class TestR1Integration(unittest.TestCase):
         self.assertEqual(before_errors, [])
         self.assertEqual(before_states, [False, True])
 
-        def mock_llm(messages, one_line=False):
+        def mock_llm(messages, one_line=False, json_mode=False):
             return ('{"type": "dinner", '
                     '"position": "Restaurant B", '
                     '"start_time": "18:00", '

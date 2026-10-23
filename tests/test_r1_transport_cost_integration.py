@@ -9,6 +9,8 @@ from chinatravel.agent.nesy_verifier.verifier import (
 
 class TestR1TransportCostIntegration(unittest.TestCase):
     def test_real_sandbox_taxi_cost_repair(self):
+        commonsense._set_lang("en")
+        self.addCleanup(commonsense._set_lang, "zh")
         problem = {"target_city": "Beijing",
                    "people_number": 2,
                    "lang": "en",}

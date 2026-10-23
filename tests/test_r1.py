@@ -66,7 +66,7 @@ class TestR1(unittest.TestCase):
         plan = [{"day": 1,
                  "activities": [
                     {"type": "lunch", "position": "Restaurant A"}],}]
-        def mock_llm(messages, one_line=False):
+        def mock_llm(messages, one_line=False, json_mode=False):
             return '{"type": "lunch", "position": "Restaurant B"}'
         replacement = generate_replacement(
             problem={"nature_language": "Find vegetarian food"},
@@ -90,7 +90,7 @@ class TestR1(unittest.TestCase):
                                      "        result = True\n"],}
         verification_results = {"personal_constraints": [False],}
 
-        def mock_llm(messages, one_line=False):
+        def mock_llm(messages, one_line=False, json_mode=False):
             return json.dumps({"type": "lunch",
                                "position": "Restaurant B",
                                "start_time": "12:00","end_time": "13:00",})
@@ -130,7 +130,7 @@ class TestR1(unittest.TestCase):
                      {"type": "lunch", "position": "Restaurant A"},
                      {"type": "dinner", "position": "Restaurant B"},],}]
         candidates = [(0, 0), (0, 1)]
-        def mock_llm(messages, one_line=False):
+        def mock_llm(messages, one_line=False, json_mode=False):
             return '{"day_index": 0, "activity_index": 1}'
         selected = select_editable_slot(
             problem={"nature_language": "Find a suitable dinner"},
@@ -145,7 +145,7 @@ class TestR1(unittest.TestCase):
                      {"type": "lunch", "position": "Restaurant A"},
                      {"type": "dinner", "position": "Restaurant B"},],}]
         candidates = [(0, 0), (0, 1)]
-        def mock_llm(messages, one_line=False):
+        def mock_llm(messages, one_line=False, json_mode=False):
             return '{"day_index": 5, "activity_index": 3}'
         selected = select_editable_slot(
             problem={"nature_language": "Find suitable food"},
@@ -174,7 +174,7 @@ class TestR1(unittest.TestCase):
                         "position": "Restaurant C",
                         "start_time": "18:00",
                         "end_time": "19:00",}),])
-        def mock_llm(messages, one_line=False):
+        def mock_llm(messages, one_line=False, json_mode=False):
             return next(responses)
         result = R1TargetedRepair().repair(
             problem=problem, raw_plan=plan,
@@ -195,7 +195,7 @@ class TestR1(unittest.TestCase):
                  "activities": [
                      {"type": "lunch", "position": "Restaurant A"},
                      {"type": "dinner", "position": "Restaurant B"},],}]
-        def mock_llm(messages, one_line=False):
+        def mock_llm(messages, one_line=False, json_mode=False):
             return "not valid json"
         result = select_editable_slot(
             problem={"nature_language": "Find dinner"},
@@ -208,7 +208,7 @@ class TestR1(unittest.TestCase):
                  "activities": [
                      {"type": "lunch", "position": "Restaurant A"},
                      {"type": "dinner", "position": "Restaurant B"},],}]
-        def mock_llm(messages, one_line=False):
+        def mock_llm(messages, one_line=False, json_mode=False):
             return '[0, 1]'
         result = select_editable_slot(
             problem={"nature_language": "Find dinner"},
@@ -226,7 +226,7 @@ class TestR1(unittest.TestCase):
                        "for activity in allactivities(plan):\n"
                        "    if activity_type(activity) == 'lunch':\n"
                        "        result = True\n"],}
-        def mock_llm(messages, one_line=False):
+        def mock_llm(messages, one_line=False, json_mode=False):
             return "invalid json"
         result = R1TargetedRepair().repair(
             problem=problem, raw_plan=plan,
@@ -295,7 +295,7 @@ class TestR1(unittest.TestCase):
                        "    if innercity_transport_type(activity_transports(activity)) == 'metro':\n"                       
                        "        result = True\n"],}
         verification_results = {"personal_constraints": [False]}
-        def mock_llm(messages, one_line=False):
+        def mock_llm(messages, one_line=False, json_mode=False):
             return json.dumps({"from": "Hotel",
                                "to": "Museum",
                                "start_time": "09:00",
@@ -600,6 +600,26 @@ class TestR1(unittest.TestCase):
         self.assertIsNone(result)
         mock_goto.assert_not_called()
         self.assertEqual(itinerary, original)
+
+    def test_parse_replacement_plain_json(self):
+        from chinatravel.agent.nesy_verifier.repair_strategies.r1 import (
+            parse_replacement_json,)
+        result = parse_replacement_json('{"type": "attraction"}')
+        self.assertEqual(result, {"type": "attraction"})
+
+    def test_parse_replacement_fenced_json(self):
+        from chinatravel.agent.nesy_verifier.repair_strategies.r1 import (
+            parse_replacement_json,)
+        response = '```json\n{"type": "attraction"}\n```'
+        result = parse_replacement_json(response)
+        self.assertEqual(result, {"type": "attraction"})
+
+    def test_parse_replacement_rejects_invalid_json(self):
+        from chinatravel.agent.nesy_verifier.repair_strategies.r1 import (
+            parse_replacement_json,)
+        with self.assertRaises(ValueError):
+            parse_replacement_json(
+                'Here is the replacement: {"type": "attraction"}')
 
 if __name__ == "__main__":
     unittest.main()

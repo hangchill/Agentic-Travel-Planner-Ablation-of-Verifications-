@@ -67,6 +67,25 @@ def replace_activity_slot(raw_plan, slot, replacement):
     activities[activity_idx] = deepcopy(replacement)
     return repaired_plan
 
+def parse_replacement_json(response):
+    if not isinstance(response, str):
+        raise ValueError("LLM response must be a string")
+    text = response.strip()
+    if text.startswith("```"):
+        match = re.fullmatch(
+            r"```(?:json)?\s*\n(.*?)\n```",
+            text, flags=re.DOTALL | re.IGNORECASE,)
+        if not match:
+            raise ValueError("Malformed JSON code fence")
+        text = match.group(1).strip()
+    try:
+        result = json.loads(text)
+    except (ValueError, TypeError) as exc:
+        raise ValueError("Invalid replacement JSON") from exc
+    if not isinstance(result, dict):
+        raise ValueError("Replacement must be a JSON object")
+    return result
+
 def generate_replacement(
     problem, raw_plan, slot, constraint_text, context, llm):
     day_idx, activity_idx = slot
@@ -87,11 +106,8 @@ Rules:
 - Do not invent prices, opening hours, or transport details.
 """
     response = llm([{"role": "user", "content": prompt}], 
-                   one_line=False,)
-    try:
-        replacement = json.loads(response)
-    except (ValueError, TypeError) as exc:
-        raise ValueError("Invalid replacement JSON") from exc
+                   one_line=False,  json_mode=True,)
+    replacement = parse_replacement_json(response)
     if not isinstance(replacement, dict):
         raise ValueError("LLM must return one activity object") 
     return replacement
@@ -126,8 +142,8 @@ Return ONLY a JSON object in this format:
 Use the exact zero-based indices provided.
 Do not invent new indices.
 """
-    response = llm([{"role": "user", "content": prompt}], one_line=False,)
-
+    response = llm([{"role": "user", "content": prompt}],
+                   one_line=False,  json_mode=True,)
     try:
         selection = json.loads(response)
         if not isinstance(selection, dict):
@@ -206,8 +222,8 @@ Rules:
 - Do not invent routes, times or costs.
 - Do not return the entire itinerary.
 """
-    response = llm([{"role": "user", "content": prompt}], one_line=False,)
-
+    response = llm([{"role": "user", "content": prompt}],
+                   one_line=False, json_mode=True,)
     try:
         replacement = json.loads(response)
     except (ValueError, TypeError) as exc:
