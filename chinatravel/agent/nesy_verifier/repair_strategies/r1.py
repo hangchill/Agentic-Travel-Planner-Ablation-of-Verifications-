@@ -109,7 +109,7 @@ Rules:
                    one_line=False,  json_mode=True,)
     replacement = parse_replacement_json(response)
     if not isinstance(replacement, dict):
-        raise ValueError("LLM must return one activity object") 
+        raise ValueError("LLM must return one activity object")
     return replacement
 
 def select_editable_slot(problem, raw_plan, candidates, constraint_text, llm):
@@ -408,6 +408,113 @@ def repair_commonsense_transport_cost(
                                       "corrected_cost": correct_cost,},)
     return None
 
+def is_within_opening_hours(start_time, end_time, open_time, close_time):
+    def minutes(value):
+        if not isinstance(value, str):
+            raise ValueError("Time must be a string")
+        parts = value.split(":")
+        if len(parts) != 2:
+            raise ValueError("Invalid time format")
+        hour, minute = map(int, parts)
+        if not (0 <= minute < 60):
+            raise ValueError("Invalid minutes")
+        if hour == 24 and minute == 0:
+            return 1440
+        if not (0 <= hour < 24):
+            raise ValueError("Invalid hours")
+        return hour * 60 + minute
+    opening = minutes(open_time)
+    closing = minutes(close_time)
+    start = minutes(start_time)
+    end = minutes(end_time)
+    # opening hours cross midnight
+    if closing < opening:
+        closing += 1440
+        if start < opening:
+            start += 1440
+        if end < opening:
+            end += 1440
+    return opening <= start < end <= closing
+
+def repair_commonsense_activity(
+    problem, raw_plan, verification_results, context, llm):
+    patterns = [
+        ("attraction",
+         r"The attraction, (.+?) in day (\d+), is closed "
+         r"when you visiting\. Its open time is "
+         r"\[(.+?) -- (.+?)\]",),
+         ("restaurant",
+          r"The restaurant, (.+?) in day (\d+), is closed "
+          r"when you visiting\. Its open time is "
+          r"\[(.+?) -- (.+?)\]",),]
+    for error in verification_results.get("commonsense_errors", []):
+        if not isinstance(error, str):
+            continue
+        for family, pattern in patterns:
+            match = re.fullmatch(pattern, error.strip())
+            if match is None:
+                continue
+            position = match.group(1)
+            day_idx = int(match.group(2)) - 1
+            open_time = match.group(3)
+            close_time = match.group(4)
+            if not 0 <= day_idx < len(raw_plan):
+                continue
+            matches = []
+            for activity_idx, activity in enumerate(
+                raw_plan[day_idx].get("activities", [])):
+                activity_type = activity.get("type")
+                correct_family = (
+                    activity_type == "attraction"
+                    if family == "attraction"
+                    else activity_type in
+                    {"breakfast", "lunch", "dinner"})
+                if (correct_family
+                    and activity.get("position") == position):
+                    matches.append((day_idx, activity_idx))
+            if len(matches) != 1:
+                continue
+            slot = matches[0]
+            metadata = {
+                "strategy": "R1",
+                "target_constraint_indices": [],
+                "editable_scope": "slot",
+                "scope_level": 1,
+                "editable_slot": slot,
+                "constraint_family": family,
+                "target_commonsense_error": error,
+                "repair_source": "commonsense_activity",}
+            instruction = (
+                f"Fix this commonsense violation: {error}\n"
+                f"The activity must fit within opening hours "
+                f"{open_time} to {close_time}.\n"
+                "Preserve the activity type and all unrelated "
+                "itinerary slots.")
+            try:
+                replacement = generate_replacement(
+                    problem=problem, raw_plan=raw_plan,
+                    slot=slot, constraint_text=instruction,
+                    context=context, llm=llm,)
+                if not is_within_opening_hours(
+                    replacement["start_time"],
+                    replacement["end_time"],
+                    open_time, close_time,):
+                    raise ValueError(
+                        "Replacement remains outside opening hours")
+                repaired_plan = replace_activity_slot(
+                    raw_plan, slot, replacement)
+            except (ValueError, TypeError, KeyError) as exc:
+                metadata["failure_reason"] = (
+                    "invalid_commonsense_replacement")
+                metadata["failure_detail"] = str(exc)[:200]
+                return RepairResult(
+                    repaired_plan=deepcopy(raw_plan),
+                    metadata=metadata,)
+            return RepairResult(
+                repaired_plan=repaired_plan,
+                metadata=metadata,)
+    return None
+
 class R1TargetedRepair(BaseRepairStrategy):
     def repair(self, problem, raw_plan, verification_results, context, llm):
         failed_indices = failed_constraint_indices(
@@ -419,6 +526,11 @@ class R1TargetedRepair(BaseRepairStrategy):
             if commonsense_result is None:
                 commonsense_result = repair_commonsense_transport(
                     problem, raw_plan, verification_results)
+            if commonsense_result is None:
+                commonsense_result = repair_commonsense_activity(
+                    problem=problem, raw_plan=raw_plan,
+                    verification_results=verification_results,
+                    context=context, llm=llm,)
             if commonsense_result is not None:
                 return commonsense_result
             return RepairResult(
