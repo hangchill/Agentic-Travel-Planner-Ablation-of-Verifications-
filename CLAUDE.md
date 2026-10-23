@@ -72,8 +72,7 @@ accepted**; R4 adds matrix guidance on top.
 | **R0** Whole-plan regeneration (baseline) | Verify → tell the LLM which constraints failed → ask for an **entirely regenerated** itinerary → repeat until pass or budget hit. | May needlessly rewrite parts that were already correct. |
 | **R1** Targeted | Only **flagged** itinerary slots (fields a failed critic names) may be replaced; code **blocks** any edit to unflagged fields. The LLM is asked only for new values for the failed constraints' slots. | Freezing everything else can make a newly-surfaced constraint unfixable within the locked scope. |
 | **R2** Protected (rollback) | Full rewrite allowed, but if a revision breaks **any critic that previously passed** (e.g. introduces a budget/timing violation), the proposal is **rejected and the last accepted itinerary is restored**; the LLM is told what it broke. | Rollback can stall progress if every rewrite trades one violation for another. |
-| **R3** Adaptive scope | Repairs **all** current failures together each iteration. Starts as R1 (targeted: only the slots the failures localize to), then widens on a **fixed schedule** of 2 iterations per rung: slot (iters 1–2) → day (3–4) → whole plan (5+). Re-verifies **all** constraints after each attempt. | More complex control; widening scope reintroduces R0-style regression risk late in the loop. |
-| **R3P** Phased R3 (variant) | `R3AdaptiveScopeRepair(phased=True)`. Up to 5 personal-only iterations on the R3 ladder (commonsense errors hidden); once all personal constraints pass (or those 5 are used) it repairs commonsense errors at slot scope, listing the passing personal constraints as "must remain satisfied" (`protected_constraint_indices`); returns to personal repair if that breaks one. Run with `--refine-steps 6`. | One more model call than R0/R1/R3 (budget difference must be reported); commonsense errors accumulate during the personal phase. |
+| **R3** Adaptive scope | Repairs all failures of the current phase together (the shared loop's 5+1 schedule: up to 5 personal iterations, then one commonsense iteration). Starts as R1 (targeted: only the slots the failures localize to), then widens on a **fixed schedule** of 2 iterations per rung: slot (iters 1–2) → day (3–4) → whole plan (5+). Every iteration advances the ladder, commonsense included, so the rung follows the loop's step number; the commonsense iteration uses the current rung (plan scope when it runs at step 6) and lists the passing personal constraints as "must remain satisfied" (`protected_constraint_indices`). Bookings (hotel, outbound/return train or flight) stay frozen below plan scope unless a failing constraint is about one ("booking unlock", see the `r3.py` header): personal constraints first (hotel/room, intercity, quoted booking names, inner-city leg rules, and over-budget trips via their costliest bookings), then commonsense errors that point at a booking. Re-verifies **all** constraints after each attempt. | More complex control; widening scope reintroduces R0-style regression risk late in the loop; commonsense errors accumulate unseen during the personal phase. |
 | **R4** Dependency-aware (matrix-guided) | Uses `M` to pick the **smallest** set of itinerary variables that fixes the violation while minimizing regression risk. | Depends on a good `M`; adds an optimization layer (see below). |
 
 Implementation hooks: strategies are registered in a zero-argument factory map,
@@ -141,6 +140,7 @@ S3 is the odd one out and should be treated carefully:
 | Metric | Meaning | Source in saved result |
 |---|---|---|
 | Final pass rate | Fraction of plans that satisfy all constraints at the end of repair | verifier `passed` / `error_info` |
+| Step-5 pass rate | The same, as of the end of step 5, i.e. before the last (usually commonsense) step; shows what step 6 gained or broke | per query in `phase_outcomes.csv` (`step5_*`, plus `cs_*` for what the commonsense step did, whichever step it ran at); per strategy in `pass_rates.csv` (both written by `scripts/build_repair_summary.py`, which holds all of this code) |
 | Repair rounds to convergence | Steps until pass, or hitting `--refine_steps` | length of `history` in the repair-history log |
 | Token usage | LLM input/output tokens consumed | `input_token_count`, `output_token_count`, `input_token_maxx` |
 | Wall-clock / inference time | Total and LLM-only time | `elapsed_time(sec)`, `llm_inference_time(sec)` |
@@ -160,9 +160,10 @@ contribution — repair studies the published LLM-Modulo line has not done.
 |---|---|
 | R0 | Implemented & tested end-to-end |
 | R3 | Implemented & registered; unit-tested offline (ladder, localization, slot-freeze merge, contract-conforming metadata, and an end-to-end `run_repair_loop` record-validation test in `tests/test_r3_adaptive_repair.py`) |
-| R3P | Implemented & registered as a switch on R3 (`phased=True`); unit-tested offline in `tests/test_r3_adaptive_repair.py`. Pilot5 results in `experiments/r3p_deepseek-chat_pilot5/` (`--refine-steps 6`) |
 | R1 | Implemented & registered (`r1.py`, tests in `tests/test_r1*.py`). `run_repair_loop` stops R1 (only R1) after an attempt whose plan is unchanged |
-| R2 / R4 | Not yet implemented or registered |
+| R2 | Implemented & registered (`r2.py`). Note: `accept()` currently always accepts and only records regressions in `decision_reason` (no rollback) |
+| R4 | Implemented & registered (`r4.py`); needs `CHINATRAVEL_R4_MATRIX`, and `run_experiments.py` only allows it on training splits with ≤5 explicit `--index` queries |
+| R3P | Removed — the shared loop's 5+1 phase schedule made it identical to R3. Old results stay in `experiments/r3p_deepseek-chat_pilot5/` |
 
 ## Setup
 

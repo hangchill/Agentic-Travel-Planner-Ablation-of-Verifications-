@@ -16,15 +16,14 @@ Targets are unique, original **1-based `hard_logic_py` indices**. Scope is
 `slot`, `day`, or `plan`; strategy owners enforce the permitted edits. Target
 and scope are independent: widening edits does not automatically widen targets.
 Register a zero-argument factory in `repair_strategies.STRATEGY_FACTORIES`.
-R0, R1, R3 and R3P are currently implemented.
+R0, R1, R2, R3 and R4 are currently implemented.
 
 | Strategy | Expected intent | Optional strategy-specific fields |
 | --- | --- | --- |
 | R0 | All current False personal indices; scope `plan` | Emits `target_provenance="r0_failed_feedback"` and actual feedback indices/count |
 | R1 | Selected target indices; scope `slot` | `scope_level=1` |
 | R2 | Selected target indices; scope `plan` | `protected_constraint_indices`, reliable `decision_reason`; override `accept()` for rollback |
-| R3 | All current False personal indices (repaired together); current `slot`/`day`/`plan` scope | Matching `scope_level` 1/2/3, `escalation_reason` when widening, `target_provenance="r3_adaptive_scope"`, actual feedback indices/count |
-| R3P | Personal phase: all current False personal indices, R3 ladder scope. Commonsense phase: `[]`, scope `slot` | As R3, plus `protected_constraint_indices` (the passing personal constraints listed as "must remain satisfied") in the commonsense phase; canonical `repair_phase` on the attempt record |
+| R3 | Personal phase: all current False personal indices (repaired together), current `slot`/`day`/`plan` ladder scope. Commonsense phase: `[]`, scope = current ladder rung | Matching `scope_level` 1/2/3, `escalation_reason` when widening, `target_provenance="r3_adaptive_scope"`, actual feedback indices/count, `protected_constraint_indices` (the passing personal constraints listed as "must remain satisfied") in the commonsense phase |
 
 For a multi-target attempt (e.g. R3 or R0 with several failures), the record
 shows the constraints the repair broke (`newly_violated`) alongside the whole
@@ -117,18 +116,20 @@ but remain zero-target exclusions from the unchanged primary directional matrix.
 
 
 The shared 5+1 policy applies to **all registered strategies** executed through
-`shared_repair_loop`, including R3/R3P. Both variants obey supplied phase intent;
-their old internal phase selector is only a direct-call fallback when intent is
-absent. Commonsense uses their protected slot scope; personal recovery resumes
-the adaptive ladder without counting commonsense as a ladder iteration.
-Registered strategies share the same total cap of six, not an extra R3P call.
+`shared_repair_loop`, including R3. R3 takes its phase from the loop; a direct
+call without a phase shows all failures. Every step, commonsense included,
+advances R3's ladder, so the rung follows the step number (steps 1-2 slot, 3-4
+day, 5-6 plan) and the protected commonsense step uses the current rung. The
+former R3P variant (an internal phase
+selector) is removed because the shared loop now does that scheduling.
+Registered strategies share the same total cap of six.
 The legacy `repair_strategy=None` baseline does not use this scheduler and is
 outside this refactor. Historical evaluator directory names and unrelated agent
 action budgets are unchanged. A strategy reporting a different executed phase
 raises an execution error; the record retains the mismatch for diagnosis.
 
 
-For explicitly scheduled R3/R3P commonsense attempts, only commonsense violations
+For explicitly scheduled R3 commonsense attempts, only commonsense violations
 select targets and editable scope. Schema errors remain in verification/history
 and evaluation but do not enter the scheduled repair objective. Direct calls
 without shared phase intent retain historical schema-targeting behavior.
