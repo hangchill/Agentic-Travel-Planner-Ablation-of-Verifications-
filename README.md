@@ -136,14 +136,43 @@ All these files are inside `chinatravel/agent/nesy_verifier/`.
 | `shared_repair_loop.py` | Handles repair attempts, acceptance/rejection and logging |
 | `llm_modulo.py` | Main agent and strategy selection |
 
-For a detailed explanation of the implementation and R0 tests, see `framework_r0.ipynb`. For how the train/test split is built and wired into the runner (with no data leakage), see `train_test_split_r0.ipynb`. The experiments use a **stratified** split across the `easy`, `medium`, and `human` query sets (same difficulty mix on both sides). Because of our limited API budget we use a 100-query subset — **`--splits subset_train`** (69 queries, 23/23/23 easy/medium/human) for development and **`--splits subset_test`** (31 queries, ~equal mix) for the final comparison. The full-dataset stratified split (`--splits combined_train` / `combined_test`, 422/182) and a single-category `medium` split (`--splits medium_train` / `medium_test`) are also available. Shared experiment results live under `experiments/` (tracked by git, unlike the ignored `results/` and `cache/`). Run experiments with the standard wrapper so everyone's outputs land in one consistent, comparable place:
+For implementation and historical R0 results, see `framework_r0.ipynb` and
+`train_test_split_r0.ipynb`. The current subset UID lists are `subset_train`
+(60 queries) and `subset_test` (30 queries); the full-dataset `combined_train` /
+`combined_test` and `medium_train` / `medium_test` splits are also available.
+Use the same saved population and model settings when comparing strategies.
+
+**Runner responsibilities:** `run_experiments.py` is the canonical registered
+repair-strategy study runner. `run_exp.py` remains the general ChinaTravel
+launcher for other agents, baselines, and original LLM-modulo workflows.
 
 ```bash
-python run_experiment.py --strategy R0 --split pilot5     # baseline on the shared 5-query set
-python run_experiment.py --strategy R1 --split pilot5     # your strategy, same queries
+python run_experiments.py --strategy R0 --splits pilot5 --max-steps 6 \
+  --lang en --llm YOUR_PROVIDER_MODEL_ID --run-id pilot5-r0
+python run_experiments.py --strategy R1 --splits pilot5 --max-steps 6 \
+  --lang en --llm YOUR_PROVIDER_MODEL_ID --run-id pilot5-r1
 ```
 
-Results are saved to `experiments/<strategy>_<model>_<split>/<uid>.json` and the runner is resume-safe (skips queries that already have a result). See `experiments/README.md` for the full convention and the R1–R4 workflow.
+Raw evidence is written to `results/experiments/<RUN_ID>/` (gitignored), including
+`run_manifest.json`, `attempts.jsonl`, and query checkpoints. Resume with the same
+arguments plus `--resume`; use `--retry-failed` with resume to retry failed pairs.
+This is checkpoint-based resume, not skipping arbitrary existing final-plan files.
+
+Run the independent offline stages explicitly:
+
+```bash
+python scripts/build_repair_summary.py --input results/experiments/pilot5-r1
+python scripts/evaluate_repair_run.py --run-dir results/experiments/pilot5-r1
+python scripts/build_regression_matrix.py \
+  --input results/experiments/pilot5-r1/attempts.jsonl \
+  --output-dir results/experiments/pilot5-r1/regression_matrix
+```
+
+See [the experiment workflow](experiments/Commands_to_test_queries.md) and
+[the evidence/summary contract](chinatravel/evaluation/REPAIR_COMPARISON.md).
+Registered implementations are currently R0, R1, R3, and R3P; R2/R4 are not yet
+executable. Registered strategies use the shared 5+1 scheduler, capped at six
+proposals; explicit smaller budgets are respected.
 
 ### How to implement your strategy
 

@@ -461,7 +461,7 @@ class PhasedR3PTests(unittest.TestCase):
         self.assertEqual(record.protected_constraint_indices, [1, 2])
         self.assertEqual(record.editable_scope, "slot")
         self.assertEqual(record.newly_violated, [1])
-        self.assertEqual(record.repair_metadata["repair_phase"], "commonsense")
+        self.assertEqual(record.repair_phase, "commonsense")
 
 
 @unittest.skipIf(_IMPORT_ERROR is not None, _SKIP)
@@ -545,7 +545,7 @@ class SharedLoopContractTests(unittest.TestCase):
         self.assertEqual(record.fixed, [2])
         self.assertEqual(record.still_failed, [5])
         self.assertEqual(record.feedback_personal_constraint_indices, [2, 5])
-        self.assertEqual(record.feedback_commonsense_failure_count, 1)
+        self.assertEqual(record.feedback_commonsense_failure_count, 0)
         self.assertEqual(record.editable_scope, "slot")
         self.assertEqual(record.scope_level, 1)
         self.assertFalse(set(INTENT_FIELDS + DERIVED_FIELDS) & record.repair_metadata.keys())
@@ -557,6 +557,99 @@ class SharedLoopContractTests(unittest.TestCase):
         self.assertEqual(record.newly_violated, [])
         self.assertEqual(record.unknown, [3])
         self.assertEqual(record.target_constraint_indices, [2, 5])
+
+
+
+
+@unittest.skipIf(_IMPORT_ERROR is not None, _SKIP)
+class SharedR3SchedulingTests(unittest.TestCase):
+    """Exercise both real R3 variants under the authoritative shared scheduler."""
+
+    def run_scheduled(self, phased, initial, outcomes, schema_errors=None):
+        problem = dict(uid="scheduled-r3", people_number=1, start_city="A", target_city="B",
+                       nature_language="q", hard_logic_py=["result=day_count(plan)==1"])
+        plan = [{"day": 1, "activities": [{"type": "attraction", "position": "Alpha", "cost": 10}]}]
+        def state(values):
+            personal, cs = values
+            errors = [PhasedR3PTests.CS_ALPHA] if cs else []
+            return dict(personal_constraints=[personal], commonsense_errors=errors, schema_errors=list(schema_errors or []),
+                        error_info=errors + list(schema_errors or []) + (["Personal constraint 1 failed: result=day_count(plan)==1"] if personal is False else []),
+                        passed=personal is True and not cs and not schema_errors)
+        strategy = R3AdaptiveScopeRepair(phased=phased)
+        executed = []
+        feedback = strategy._feedback_lines
+        def capture(problem, verification, phase):
+            executed.append(phase)
+            return feedback(problem, verification, phase)
+        with patch.object(strategy, '_feedback_lines', side_effect=capture), \
+             patch.object(loop, 'verify_plan', side_effect=[state(value) for value in outcomes]):
+            output = loop.run_repair_loop(problem, plan, strategy, _ctx(), _MockLLM('not json'), None,
+                                          max_steps=6, initial_verification=state(initial))
+        records = [RepairAttemptRecord.from_dict(entry['repair_attempt']) for entry in output['history'][1:]]
+        self.assertEqual([r.repair_phase for r in records], executed)
+        self.assertLessEqual(executed.count('commonsense'), 1)
+        for record in records:
+            self.assertNotIn('repair_phase', record.repair_metadata)
+            targets = record.repair_metadata['targeted_constraints']
+            if record.repair_phase == 'commonsense':
+                self.assertEqual(record.target_constraint_indices, [])
+                self.assertFalse(any(t['kind'] == 'personal' for t in targets))
+                self.assertEqual(record.editable_scope, 'slot')
+            else:
+                self.assertFalse(any(t['kind'] == 'commonsense' for t in targets))
+                self.assertEqual(record.feedback_commonsense_failure_count, 0)
+        self.last_output = output
+        return executed, records
+
+    def test_scheduled_commonsense_excludes_schema_objective_but_preserves_evidence(self):
+        from chinatravel.evaluation.regression_matrix import build_regression_matrix
+        schema_errors = ['GLOBAL_SCHEMA_FAILURE unrelated to commonsense']
+        for phased in (False, True):
+            with self.subTest(phased=phased):
+                phases, records = self.run_scheduled(phased, (True, True), [(True, False)], schema_errors)
+                self.assertEqual(phases, ['commonsense'])
+                record = records[0]
+                self.assertEqual([t['kind'] for t in record.repair_metadata['targeted_constraints']], ['commonsense'])
+                self.assertFalse(record.repair_metadata['global_targets'])
+                self.assertNotIn(schema_errors[0], record.repair_metadata['prompt'])
+                self.assertEqual(record.target_constraint_indices, [])
+                self.assertEqual(record.protected_constraint_indices, [1])
+                self.assertEqual(self.last_output['history'][0]['verification']['schema_errors'], schema_errors)
+                self.assertEqual(self.last_output['verification']['schema_errors'], schema_errors)
+                analysis = build_regression_matrix([record])
+                self.assertTrue(all(r['eligible_count'] == 0 and r['regression_count'] == 0 for r in analysis['aggregate']))
+
+    def test_direct_calls_keep_historical_schema_targets(self):
+        from copy import deepcopy
+        problem = dict(nature_language='q', hard_logic_py=['result=True'])
+        verification = dict(personal_constraints=[True], commonsense_errors=[PhasedR3PTests.CS_ALPHA],
+                            schema_errors=['GLOBAL_SCHEMA_FAILURE'], error_info=[PhasedR3PTests.CS_ALPHA])
+        before = deepcopy(verification)
+        for phased in (False, True):
+            result = R3AdaptiveScopeRepair(phased=phased).repair(
+                problem, PhasedR3PTests()._plan(), verification, _ctx(), _MockLLM('not json'))
+            self.assertIn('schema', [t['kind'] for t in result.metadata['targeted_constraints']])
+            self.assertEqual(verification, before)
+
+    def test_shared_unknown_and_early_commonsense(self):
+        for phased in (False, True):
+            with self.subTest(phased=phased):
+                phases, records = self.run_scheduled(phased, (None, True), [(None, True), (True, True), (True, False)])
+                self.assertEqual(phases, ['personal', 'personal', 'commonsense'])
+                self.assertIn('Personal constraint 1 is UNKNOWN', records[0].repair_metadata['prompt'])
+
+    def test_forced_commonsense_with_concurrent_personal_failure(self):
+        for phased in (False, True):
+            phases, records = self.run_scheduled(phased, (False, True), [(False, True)] * 6)
+            self.assertEqual(phases, ['personal'] * 5 + ['commonsense'])
+            self.assertEqual(records[-1].concurrent_failed_constraint_indices, [1])
+
+    def test_recovery_and_no_second_commonsense(self):
+        for phased in (False, True):
+            phases, records = self.run_scheduled(phased, (False, True),
+                [(True, True), (False, True), (False, True), (True, True)])
+            self.assertEqual(phases, ['personal', 'commonsense', 'personal', 'personal'])
+            self.assertEqual([r.editable_scope for r in records], ['slot', 'slot', 'slot', 'day'])
 
 
 if __name__ == "__main__":

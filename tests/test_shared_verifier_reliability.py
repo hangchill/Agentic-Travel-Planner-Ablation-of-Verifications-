@@ -466,6 +466,7 @@ class RepairLoopTests(unittest.TestCase):
 
     def test_rejected_repair_preserves_accepted_plan(self):
         problem = make_problem()
+        problem["hard_logic_py"] = ["result=False"]
         start_plan = valid_itinerary()["itinerary"]
         start_plan[0]["activities"][1]["type"] = "shopping"
         candidate = valid_itinerary()["itinerary"]
@@ -494,6 +495,7 @@ class RepairLoopTests(unittest.TestCase):
 
     def test_repair_budget_exactly_max_steps_attempts(self):
         problem = make_problem()
+        problem["hard_logic_py"] = ["result=False"]
         start_plan = valid_itinerary()["itinerary"]
         start_plan[0]["activities"][1]["type"] = "shopping"
         candidate = valid_itinerary()["itinerary"]

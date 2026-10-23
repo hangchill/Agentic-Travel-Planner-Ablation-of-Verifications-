@@ -22,7 +22,7 @@ def load_input(path, run_id=None):
     default_run = run_id or "file-" + hashlib.sha256(str(path.resolve()).encode()).hexdigest()[:16]
     if path.suffix.lower() == ".csv":
         string_fields = {"query_uid", "repair_strategy", "exception", "target_provenance", "editable_scope",
-                         "escalation_reason", "decision_reason", "run_id", "matrix_run_id"}
+                         "escalation_reason", "decision_reason", "repair_phase", "run_id", "matrix_run_id"}
         with path.open(encoding="utf-8", newline="") as stream:
             items = []
             for row in csv.DictReader(stream):

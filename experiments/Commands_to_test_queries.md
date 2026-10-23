@@ -13,7 +13,7 @@ On Windows, run `$env:PYTHONUTF8 = "1"` in the terminal first, or step 2 fails t
 
 - **`<STRATEGY>`**: one of `R0`, `R1`, `R3`, `R3P`. Use the same value in steps 1 and 4.
 - **`<SPLIT>`**: a file name, without `.txt`, from `chinatravel/evaluation/default_splits/`, e.g. `pilot5`, `subset_train`, `subset_test`.
-- **`<MAX_STEPS>`**: the repair budget. Use `6` for `R3P` and `5` for the others.
+- **`<MAX_STEPS>`**: the repair budget. Use `6` for all registered strategies (or an explicit smaller budget).
 - **`<RUN_ID>`**: a new folder name for this run, written as `<split>-<strategy>` in lowercase, e.g. `subset_train-r3p`. Use the same value in all four steps. If a run stops partway, rerun step 1 with the same `<RUN_ID>` plus `--resume`.
 
 

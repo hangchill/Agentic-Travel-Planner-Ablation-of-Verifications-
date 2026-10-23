@@ -33,7 +33,7 @@ def main(argv=None):
     parser.add_argument("--llm")
     parser.add_argument("--strategy", default="R0")
     parser.add_argument("--skip-unavailable", action="store_true")
-    parser.add_argument("--max-steps", "--refine_steps", type=int, default=10)
+    parser.add_argument("--max-steps", "--refine_steps", type=int, default=6)
     parser.add_argument("--output-dir", type=Path, default=Path("results/experiments"))
     parser.add_argument("--run-id")
     parser.add_argument("--resume", action="store_true")

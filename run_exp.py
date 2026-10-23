@@ -41,7 +41,7 @@ if __name__ == "__main__":
 
     parser.add_argument('--oracle_translation', action='store_true', help='Set this flag to enable oracle translation.')
     parser.add_argument('--preference_search', action='store_true', help='Set this flag to enable preference search.')
-    parser.add_argument('--refine_steps', type=int, default=10, help='Steps for refine-based method, such as LLM-modulo, Reflection')
+    parser.add_argument('--refine_steps', type=int, default=6, help='Steps for refine-based method, such as LLM-modulo, Reflection')
     ## (Added) Select which repair method to use for the experiment.
     parser.add_argument(
         "--repair_strategy",

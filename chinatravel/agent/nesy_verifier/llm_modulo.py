@@ -41,7 +41,7 @@ class LLMModuloAgent(BaseAgent):
         ## Environment containing travel data and callable tools.
         self.env = kwargs.get('env', None)
         ## Maximum number of repair attempts after initial generation.
-        self.max_steps = kwargs.get('max_steps', 0)
+        self.max_steps = kwargs.get('max_steps', 6)
         ## (added) Store the selected repair strategy. None means original ChinaTravel R0.
         self.repair_strategy_name = kwargs.get("repair_strategy", None)
         ## Directory for storing prompts, plans, and error logs.

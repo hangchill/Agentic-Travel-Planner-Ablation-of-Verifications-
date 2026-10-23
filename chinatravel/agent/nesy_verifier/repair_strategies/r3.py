@@ -9,8 +9,9 @@
 ## (L2), and from iteration 5 onwards the whole plan (L3). At its tightest rung it
 ## is R1; at its widest it is R0.
 ##
-## Each iteration repairs ALL currently failing constraints together in one LLM
-## call: every failure is shown, and the editable region is the union of the
+## Under shared scheduling, each iteration repairs the failures of its supplied
+## phase. Historical plain-R3 direct calls show all failures. The editable region
+## is the union of the
 ## slots (L1) / days (L2) the failures localize to, or the whole plan (L3).
 ## An L3 proposal with the wrong day count or an empty day is discarded and
 ## the current plan is kept (recorded as a no-op attempt).
@@ -22,7 +23,8 @@
 ## commonsense errors at slot scope, with every passing personal constraint listed
 ## as "must remain satisfied". If that breaks a personal constraint and budget is
 ## left, it returns to personal repair on the same ladder. Run it with
-## --refine-steps 6 (5 personal + 1 commonsense), one more model call than R0/R1/R3.
+## --refine-steps 6. All registered strategies share the same 5+1 budget.
+## Shared context repair_phase overrides this internal direct-call fallback.
 ##
 ## This file implements the repair behaviour and emits the standardized repair
 ## output contract (see chinatravel/evaluation/REPAIR_ATTEMPTS.md): canonical intent
@@ -495,7 +497,11 @@ class R3AdaptiveScopeRepair(BaseRepairStrategy):
     ## ---- the strategy entry point ----
     def repair(self, problem, raw_plan, verification_results, context, llm):
         self._step += 1
-        phase = self._choose_phase(verification_results)
+        phase = context.get("repair_phase")
+        if phase is None:
+            phase = self._choose_phase(verification_results)
+        elif phase not in ("personal", "commonsense"):
+            raise ValueError("Unknown shared repair_phase")
         if phase == "commonsense":
             ## R3P commonsense step: slot scope; the personal ladder does not move.
             scope, widened, previous_idx = SLOT, False, self._scope_idx
@@ -505,7 +511,16 @@ class R3AdaptiveScopeRepair(BaseRepairStrategy):
             scope = self._scope
             widened = self._scope_idx > previous_idx
 
-        targets = self._collect_targets(problem, verification_results, phase)
+        # Scheduled commonsense repairs have a strict objective. Preserve full
+        # verification for logging; historical direct calls keep schema targeting.
+        objective_verification = verification_results
+        if context.get("repair_phase") == "commonsense":
+            objective_verification = {
+                **verification_results,
+                "schema_errors": [],
+                "error_info": list(verification_results.get("commonsense_errors") or []),
+            }
+        targets = self._collect_targets(problem, objective_verification, phase)
         localized = self._localize_targets(targets, raw_plan)
         editable, global_present = self._editable_region(scope, raw_plan, localized)
 
@@ -515,8 +530,16 @@ class R3AdaptiveScopeRepair(BaseRepairStrategy):
         ## Feedback actually supplied to the model, measured from the lines sent
         ## rather than assumed (plain R3: all of error_info at every rung).
         feedback_lines, protected = self._feedback_lines(
-            problem, verification_results, phase
+            problem, objective_verification, phase
         )
+
+        if context.get("repair_phase") == "personal":
+            hard_logic = problem.get("hard_logic_py", [])
+            feedback_lines.extend(
+                f"Personal constraint {i} is UNKNOWN; make it evaluable: {hard_logic[i - 1]}"
+                for i, state in enumerate(verification_results.get("personal_constraints", []), 1)
+                if state is None and i <= len(hard_logic)
+            )
 
         query_message = self._build_prompt(
             scope, problem, context, raw_plan, feedback_lines, editable
@@ -582,7 +605,7 @@ class R3AdaptiveScopeRepair(BaseRepairStrategy):
             "raw_response": raw_response,
             "llm_inference_time": inference_time,
         }
-        if self._phased:
+        if phase is not None:
             metadata["protected_constraint_indices"] = protected
             metadata["repair_phase"] = phase
             metadata["personal_iteration"] = self._iteration
