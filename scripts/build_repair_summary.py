@@ -123,10 +123,30 @@ def commonsense_step_metrics(history):
 ## messages and options), answered from the earlier reply without calling the
 ## model (see RepeatRequestCache in shared_repair_loop.py). Many hits mean the
 ## strategy kept asking the same thing, i.e. it got stuck.
-CACHE_COLUMNS = ('run_id', 'query_uid', 'repair_strategy', 'execution_status', 'rounds',
-                 'cache_data_complete', 'llm_cache_hits', 'rounds_with_cache_hit',
-                 'cache_hit_round_rate', 'first_cache_hit_step', 'tokens_spent',
-                 'tokens_saved', 'tokens_saved_unknown_hits', 'tokens_without_cache')
+## Plain-language meaning of every llm_cache_hits.csv column, written next to it
+## as llm_cache_hits_columns.csv (columns: column, meaning).
+CACHE_COLUMN_MEANINGS = {
+    'run_id': 'Experiment run the row comes from.',
+    'query_uid': 'Query ID.',
+    'repair_strategy': 'Repair strategy (R0-R4).',
+    'execution_status': 'Whether the query finished (completed) or failed / is missing.',
+    'rounds': 'Repair rounds taken (at most 6).',
+    'cache_data_complete': 'False for runs made before the shared repeat-request cache existed; '
+                           'their cache columns are left empty.',
+    'llm_cache_hits': 'Requests answered from the cache: the strategy sent exactly the same request '
+                      'again for this query, so the earlier reply was reused without calling the model. '
+                      'R1 can send several requests per round, so this can exceed rounds.',
+    'rounds_with_cache_hit': 'Rounds with at least one cache hit, i.e. rounds where the strategy was '
+                             'stuck repeating itself.',
+    'cache_hit_round_rate': 'rounds_with_cache_hit / rounds: share of rounds spent repeating.',
+    'first_cache_hit_step': 'Round in which the strategy first repeated a request (empty if never).',
+    'tokens_spent': 'Tokens of real model calls during repair (input + output).',
+    'tokens_saved': 'Tokens the reused replies originally cost, i.e. avoided by the cache.',
+    'tokens_saved_unknown_hits': 'Cache hits whose original token cost was not reported, so they '
+                                 'are missing from tokens_saved.',
+    'tokens_without_cache': 'tokens_spent + tokens_saved: what the query would have cost without the cache.',
+}
+CACHE_COLUMNS = tuple(CACHE_COLUMN_MEANINGS)
 
 
 def cache_hit_metrics(history):
@@ -171,6 +191,11 @@ def _write_cache_hits(rows, destination):
     writer.writeheader()
     writer.writerows(rows)
     _write(destination, stream.getvalue())
+    stream = io.StringIO(newline='')
+    writer = csv.writer(stream)
+    writer.writerow(('column', 'meaning'))
+    writer.writerows(CACHE_COLUMN_MEANINGS.items())
+    _write(destination.with_name(destination.stem + '_columns.csv'), stream.getvalue())
     for strategy in sorted({row['repair_strategy'] for row in rows}):
         done = [row for row in rows if row['repair_strategy'] == strategy and row.get('cache_data_complete')]
         missing = sum(row['repair_strategy'] == strategy and row.get('cache_data_complete') is False

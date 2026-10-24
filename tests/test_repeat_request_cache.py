@@ -101,6 +101,20 @@ class CacheHitMetricsTests(unittest.TestCase):
         self.assertEqual((m["tokens_saved"], m["tokens_saved_unknown_hits"]), (220, 0))
         self.assertTrue(m["cache_data_complete"])
 
+    def test_every_csv_column_has_a_meaning_written_next_to_it(self):
+        import csv, tempfile
+        from pathlib import Path
+        from scripts.build_repair_summary import CACHE_COLUMNS, CACHE_COLUMN_MEANINGS, _write_cache_hits
+        self.assertTrue(all(CACHE_COLUMN_MEANINGS[c].strip() for c in CACHE_COLUMNS))
+        with tempfile.TemporaryDirectory() as tmp:
+            _write_cache_hits([], Path(tmp) / "llm_cache_hits.csv")
+            with open(Path(tmp) / "llm_cache_hits_columns.csv", newline="", encoding="utf-8") as f:
+                rows = list(csv.DictReader(f))
+            with open(Path(tmp) / "llm_cache_hits.csv", newline="", encoding="utf-8") as f:
+                header = next(csv.reader(f))
+        self.assertEqual([r["column"] for r in rows], header)
+        self.assertEqual({r["column"]: r["meaning"] for r in rows}, CACHE_COLUMN_MEANINGS)
+
     def test_old_runs_without_cache_data(self):
         from scripts.build_repair_summary import cache_hit_metrics
         history = [{}, {"repair_attempt": {"step": 1, "repair_metadata": {}, "total_tokens_delta": 50}}]
