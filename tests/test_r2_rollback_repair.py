@@ -133,6 +133,65 @@ class R2RollbackTests(unittest.TestCase):
                 self.assertEqual(attempt["metadata"]["failure_reason"], "no_valid_repair_candidate")
                 self.assertEqual(out["raw_plan"], start)
 
+    def _run(self, strategy, replies, states, max_steps=6):
+        """Run the shared loop; ``states`` maps a plan's position tag to its verification."""
+        llm = _SequenceLLM(replies)
+        verify = lambda problem, plan, **kwargs: dict(states[plan["itinerary"][0]["activities"][0]["position"]])
+        with patch.object(loop, "verify_plan", side_effect=verify):
+            out = loop.run_repair_loop(_problem(), _plan("start"), strategy, _ctx(), llm, None, max_steps=max_steps)
+        attempts = [h["repair_attempt"] for h in out["history"][1:]]
+        return out, llm, [a["repair_phase"] for a in attempts], [h["metadata"].get("early_stopped", False) for h in out["history"][1:]]
+
+    def test_unchanged_personal_attempt_skips_llm_until_commonsense(self):
+        start, fixed = _plan("start"), _plan("fixed")
+        cs_failing = dict(_state([False, True]), commonsense_errors=["cs error"])
+        out, llm, phases, skipped = self._run(
+            R2ProtectedRepair(), [_continuation(start), _continuation(fixed)],
+            {"start": cs_failing, "fixed": _state([False, True])})
+        # One echo, then the remaining personal attempts skip the LLM; the
+        # commonsense step still calls it.
+        self.assertEqual(phases, ["personal"] * 5 + ["commonsense"])
+        self.assertEqual(skipped, [False, True, True, True, True, False])
+        self.assertEqual(len(llm.prompts), 2)
+        self.assertEqual(out["raw_plan"], fixed)
+        record = RepairAttemptRecord.from_dict(out["history"][2]["repair_attempt"])
+        self.assertEqual(record.decision_reason, "no_progress_early_stop")
+        self.assertTrue(out["history"][2]["accepted"])
+
+    def test_echo_skips_remaining_personal_attempts_without_commonsense(self):
+        _, llm, phases, skipped = self._run(
+            R2ProtectedRepair(), [_continuation(_plan("start"))],
+            {"start": _state([False, True])}, max_steps=3)
+        self.assertEqual(phases, ["personal"] * 3)
+        self.assertEqual(skipped, [False, True, True])
+        self.assertEqual(len(llm.prompts), 1)
+
+    def test_changed_commonsense_then_echo_skips_rest(self):
+        start, a, b = _plan("start"), _plan("a"), _plan("b")
+        cs_failing = dict(_state([True, True]), commonsense_errors=["cs error"], passed=False)
+        _, llm, phases, skipped = self._run(
+            R2ProtectedRepair(), [_continuation(a), _continuation(a)],
+            # UNKNOWN is not a regression, so the commonsense candidate is accepted
+            # and the loop schedules personal recovery attempts after it.
+            {"start": cs_failing, "a": _state([None, True])})
+        self.assertEqual(phases, ["commonsense", "personal", "personal", "personal", "personal", "personal"])
+        self.assertEqual(skipped, [False, False, True, True, True, True])
+        self.assertEqual(len(llm.prompts), 2)
+
+    def test_case4_does_not_trigger_early_stop(self):
+        _, llm, phases, skipped = self._run(
+            R2ProtectedRepair(), ["not json", _continuation(_plan("other"))],
+            {"start": _state([False, True]), "other": _state([False, True])}, max_steps=2)
+        self.assertEqual(skipped, [False, False])
+        self.assertEqual(len(llm.prompts), 2)
+
+    def test_r0_keeps_calling_llm_on_unchanged_attempts(self):
+        from chinatravel.agent.nesy_verifier.repair_strategies.r0 import R0WholePlanRepair
+        _, llm, phases, _ = self._run(R0WholePlanRepair(), [_continuation(_plan("start"))] * 3,
+                                      {"start": _state([False, True])}, max_steps=3)
+        self.assertEqual(phases, ["personal"] * 3)
+        self.assertEqual(len(llm.prompts), 3)
+
     def test_r0_still_raises_on_unparsable_reply(self):
         from chinatravel.agent.nesy_verifier.repair_strategies.r0 import R0WholePlanRepair
         with patch.object(loop, "verify_plan", side_effect=[_state([False, True])]):
