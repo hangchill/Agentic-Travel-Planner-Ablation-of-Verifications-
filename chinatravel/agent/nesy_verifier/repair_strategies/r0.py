@@ -24,19 +24,8 @@ class R0WholePlanRepair(BaseRepairStrategy):
         llm,
     ) -> RepairResult:
 
-        failed_indices = failed_constraint_indices(verification_results["personal_constraints"])
+        failed_indices, feedback = self._build_feedback(problem, verification_results, context)
         commonsense_errors = verification_results.get("commonsense_errors")
-        feedback = verification_results["error_info"]
-        phase = context.get("repair_phase")
-        if phase == "commonsense":
-            failed_indices = []
-            feedback = list(commonsense_errors or [])
-        elif phase == "personal":
-            feedback = list(verification_results.get("personal_errors", [
-                f"Personal constraint {index} failed: {problem['hard_logic_py'][index - 1]}"
-                for index in failed_indices]))
-            unknown = [index for index, state in enumerate(verification_results["personal_constraints"], 1) if state is None]
-            feedback.extend(f"Personal constraint {index} is UNKNOWN; repair the plan so it can be evaluated: {problem['hard_logic_py'][index - 1]}" for index in unknown)
 
         # Shared verifier emits commonsense_errors verbatim in error_info. Count
         # actual supplied occurrences, preserving duplicates without guessing.
@@ -94,3 +83,21 @@ class R0WholePlanRepair(BaseRepairStrategy):
                 "llm_inference_time": inference_time,
             },
         )
+
+    ## Select the failed constraints and the feedback lines for this phase.
+    ## R2 extends this to add notes about rewrites it rolled back.
+    def _build_feedback(self, problem, verification_results, context):
+        failed_indices = failed_constraint_indices(verification_results["personal_constraints"])
+        commonsense_errors = verification_results.get("commonsense_errors")
+        feedback = verification_results["error_info"]
+        phase = context.get("repair_phase")
+        if phase == "commonsense":
+            failed_indices = []
+            feedback = list(commonsense_errors or [])
+        elif phase == "personal":
+            feedback = list(verification_results.get("personal_errors", [
+                f"Personal constraint {index} failed: {problem['hard_logic_py'][index - 1]}"
+                for index in failed_indices]))
+            unknown = [index for index, state in enumerate(verification_results["personal_constraints"], 1) if state is None]
+            feedback.extend(f"Personal constraint {index} is UNKNOWN; repair the plan so it can be evaluated: {problem['hard_logic_py'][index - 1]}" for index in unknown)
+        return failed_indices, feedback

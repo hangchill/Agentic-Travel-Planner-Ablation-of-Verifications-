@@ -173,8 +173,7 @@ python scripts/build_regression_matrix.py \
 
 See [the experiment workflow](experiments/Commands_to_test_queries.md) and
 [the evidence/summary contract](chinatravel/evaluation/REPAIR_COMPARISON.md).
-Registered implementations are currently R0, R1, R2, R3, and R3P; only R4 is not
-yet executable. Registered strategies use the shared 5+1 scheduler, capped at six
+Registered implementations are currently R0, R1, R2, R3, and R4. Registered strategies use the shared 5+1 scheduler, capped at six
 proposals; explicit smaller budgets are respected.
 
 ### How to implement your strategy
@@ -201,7 +200,7 @@ After implementing your strategy, register it in `llm_modulo.py` and test it on 
 
 **Current status:** The shared framework and R0 are implemented and tested end-to-end. The shared verifier detects invalid itinerary structures, transport translation failures and verifier execution errors separately from genuine constraint violations, and is **language-aware** (it checks English itineraries against the English sandbox, fixing earlier false "unavailable transport" errors). Experiments run on **DeepSeek V3** by default (far cheaper than GPT-4.1) and logging is **cross-platform** (Windows long-path + nested-dir fixes). With both sandboxes installed the full test suite passes (277 tests, 0 failures, 0 errors). See `framework_r0.ipynb` for runnable proof cells and `train_test_split_r0.ipynb` for the split + R0 experiment.
 
-R1, R2, R3, and R3P are implemented and registered; only R4 remains. See `framework_r0.ipynb` for implementation details, testing results and remaining limitations.
+R1, R2, R3, and R4 are all implemented and registered (R3P was merged into R3's ladder and removed). See `framework_r0.ipynb` for implementation details, testing results and remaining limitations.
 ---
 
 # Original ChinaTravel Documentation

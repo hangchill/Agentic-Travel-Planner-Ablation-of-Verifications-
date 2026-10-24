@@ -9,22 +9,55 @@
 ## (L2), and from iteration 5 onwards the whole plan (L3). At its tightest rung it
 ## is R1; at its widest it is R0.
 ##
-## Under shared scheduling, each iteration repairs the failures of its supplied
-## phase. Historical plain-R3 direct calls show all failures. The editable region
-## is the union of the
+## The shared repair loop decides each iteration's phase (context["repair_phase"]):
+## up to 5 "personal" iterations, then one "commonsense" iteration, the same 5+1
+## schedule for every registered strategy. Every iteration, whatever its phase,
+## advances the ladder, so the rung always follows the loop's step number
+## (steps 1-2 slot, 3-4 day, 5-6 plan). A personal iteration shows only the
+## personal failures; the commonsense iteration shows only the commonsense errors
+## at the current rung and lists every passing personal constraint as "must
+## remain satisfied". Direct calls without a phase show all failures. The
+## editable region is the union of the
 ## slots (L1) / days (L2) the failures localize to, or the whole plan (L3).
 ## An L3 proposal with the wrong day count or an empty day is discarded and
 ## the current plan is kept (recorded as a no-op attempt).
 ##
-## R3P (``phased=True``) is a variant for comparison against plain R3. It repairs
-## personal constraints only for up to 5 iterations on the same ladder (commonsense
-## errors are neither shown nor opened). As soon as every personal constraint
-## passes, or once those iterations are used up, the next iteration repairs the
-## commonsense errors at slot scope, with every passing personal constraint listed
-## as "must remain satisfied". If that breaks a personal constraint and budget is
-## left, it returns to personal repair on the same ladder. Run it with
-## --refine-steps 6. All registered strategies share the same 5+1 budget.
-## Shared context repair_phase overrides this internal direct-call fallback.
+## Bookings (the hotel, and the outbound / return train or flight) are frozen
+## below the plan rung, with one exception, the "booking unlock": a failure that
+## is about a booking opens that booking at any rung.
+##
+## Personal constraints come first - a failing personal constraint must be
+## fixable from step 1, so it opens the bookings it is about:
+##   - hotel / room constraints (accommodation_type, room_type, room_count ...)
+##     open the hotel;
+##   - intercity constraints (intercity_transport_type, activity_type in
+##     ['train', 'airplane'], tickets on them) open the outbound and return
+##     train or flight;
+##   - a constraint quoting a booking's name opens that booking;
+##   - inner-city leg constraints (innercity_transport_type, metro_tickets,
+##     taxi_cars ...) open every activity's leg, including the leg fields of the
+##     hotel (see "legs" below);
+##   - a budget constraint (activity_cost ...) that cannot be pinned to slots
+##     opens the bookings among the 3 most expensive activities, since a trip
+##     over budget because of its flights or hotel can only be fixed there.
+##
+## Commonsense errors open the booking they point at:
+##   - An accommodation error ("Incorrect cost information of accommodation",
+##     "accommodation activity, X in day 2, ...") opens the hotel - only on the
+##     named day if the message names one, every hotel slot otherwise.
+##   - An intercity error ("... intercity transport from origin to destination
+##     G79 ...", "(Go)" / "(Back)") opens the outbound or return train/flight.
+##   - An inner-city transport error whose leg ends at the hotel ("from Zoo to
+##     Atour Hotel") opens only that hotel activity's leg fields (transports,
+##     start_time, end_time); the booking itself (hotel, room, price, cost)
+##     stays as it is.
+## Why: without it, none of these failures could be fixed before step 5 - e.g.
+## a 3-person trip whose flights and hotel alone exceed the budget wasted steps
+## 1-4. For commonsense errors it matters most when personal constraints
+## already pass and the only (commonsense) step runs at step 1, at slot scope;
+## it also stops an unlocated accommodation error from becoming "global", which
+## opened many unrelated activities but never the hotel. Opened bookings are
+## listed in the prompt and logged as "unlocked_bookings" in the repair metadata.
 ##
 ## This file implements the repair behaviour and emits the standardized repair
 ## output contract (see chinatravel/evaluation/REPAIR_ATTEMPTS.md): canonical intent
@@ -63,15 +96,19 @@ SCOPE_LEVEL = {SLOT: 1, DAY: 2, PLAN: 3}
 ## With the default (2): iters 1-2 -> slot, iters 3-4 -> day, iters 5+ -> plan.
 DEFAULT_ROUNDS_PER_RUNG = 2
 
-## R3P: personal-only iterations before the commonsense iteration is forced.
-DEFAULT_PERSONAL_ITERATIONS = 5
-
-## R3P commonsense-phase header for the personal constraints that must stay
+## Commonsense-phase header for the personal constraints that must stay
 ## satisfied (worded without "failed" so it is never counted as feedback).
 PROTECT_HEADER = "These requirements are currently satisfied and MUST remain satisfied:"
 
-## Trip-level anchors: never "day" slots; frozen until the whole-plan rung (L3).
+## Trip-level anchors (bookings): never "day" slots; frozen until the whole-plan
+## rung (L3) unless a commonsense error unlocks them (see the module header).
 ANCHOR_TYPES = {"accommodation", "airplane", "train"}
+INTERCITY_TYPES = {"airplane", "train"}
+
+## Booking unlock levels: "all" lets the whole booking activity change; "legs"
+## lets only LEG_FIELDS change (the inner-city trip into it and its times).
+UNLOCK_ALL, UNLOCK_LEGS = "all", "legs"
+LEG_FIELDS = ("transports", "start_time", "end_time")
 
 ## Meal activities are the restaurant slots in the itinerary.
 MEAL_TYPES = {"breakfast", "lunch", "dinner"}
@@ -179,31 +216,138 @@ def _feedback_commonsense_count(commonsense_errors, feedback_lines):
     return sum((Counter(commonsense_errors) & Counter(feedback_lines)).values())
 
 
-def _localize_message(message, plan, pos_to_slots):
-    """Localize a commonsense/schema error string to slots, or 'global'."""
+def _booking_slots(message, plan):
+    """Booking slots a commonsense error is about, found from its wording rather
+    than a place name (booking unlock, see the module header):
+      - accommodation errors -> every hotel slot (the caller narrows this to the
+        named day, if any);
+      - intercity errors -> the outbound train/flight (first activity of day 1)
+        for "origin to destination" / "(Go)", the return one (last activity of
+        the last day) for "destination to origin" / "(Back)".
+    Covers the wording of both verifiers (verifier/commonsense_constraint_nl.py
+    and symbol_verification/commonsense_constraint.py)."""
+    lowered = message.lower()
     slots = set()
+    if "intercity" in lowered:
+        slots |= _intercity_slots(
+            plan,
+            go=any(k in lowered for k in ("origin to destination", "origin -> destination", "(go)")),
+            back=any(k in lowered for k in ("destination to origin", "destination -> origin", "(back)")))
+    if "accommodation" in lowered or "price * rooms" in lowered:
+        slots |= _hotel_slots(plan)
+    return slots
 
-    ## Strongest signal: the verifier often names "Day d activity a".
-    day_m = _DAY_RE.search(message)
-    act_m = _ACT_RE.search(message)
-    if day_m:
-        d = int(day_m.group(1)) - 1
-        if 0 <= d < len(plan):
-            if act_m:
-                a = int(act_m.group(1)) - 1
-                if 0 <= a < len(_activities(plan[d])):
-                    slots.add((d, a))
-            else:
-                ## Day known but not the activity -> all of that day's activities.
-                for a in range(len(_activities(plan[d]))):
-                    slots.add((d, a))
 
-    ## Also match any POI name that appears verbatim in the message (skip very
-    ## short names to avoid spurious substring hits).
+def _hotel_slots(plan):
+    return {(d, a) for d, day in enumerate(plan) for a, act in enumerate(_activities(day))
+            if isinstance(act, dict) and act.get("type") == "accommodation"}
+
+
+def _intercity_slots(plan, go=True, back=True):
+    """The outbound (first activity of day 1) and/or return (last activity of the
+    last day) train/flight booking slots."""
+    slots = set()
+    if go and plan and _activities(plan[0]) and _act_type(plan, 0, 0) in INTERCITY_TYPES:
+        slots.add((0, 0))
+    if back and plan and _activities(plan[-1]):
+        d, a = len(plan) - 1, len(_activities(plan[-1])) - 1
+        if _act_type(plan, d, a) in INTERCITY_TYPES:
+            slots.add((d, a))
+    return slots
+
+
+def _leg_slots(plan):
+    """Activities that carry an inner-city leg (the trip into them)."""
+    return {(d, a) for d, day in enumerate(plan) for a, act in enumerate(_activities(day))
+            if isinstance(act, dict) and act.get("transports")}
+
+
+## Personal-constraint (hard_logic_py) vocabulary used to find the bookings a
+## constraint is about. Function names are the fixed ChinaTravel DSL names.
+## Money: a budget-type constraint (usually the whole trip's cost).
+_COST_FUNCS = ("activity_cost", "activity_price",
+               "innercity_transport_cost", "innercity_transport_price")
+## The outbound / return train or flight.
+_INTERCITY_KEYS = ("intercity_transport_type", "'train'", "'airplane'", '"train"', '"airplane"')
+## Inner-city legs (mode, timing, distance, tickets, taxis).
+_LEG_KEYS = ("innercity_transport_type", "innercity_transport_time",
+             "innercity_transport_distance", "innercity_transport_start_time",
+             "innercity_transport_end_time", "metro_tickets", "taxi_cars")
+## The hotel.
+_HOTEL_KEYS = ("accommodation", "room_")
+
+
+def _is_cost_dsl(dsl):
+    return any(f in dsl for f in _COST_FUNCS)
+
+
+def _personal_booking_slots(dsl, plan):
+    """Booking slots a personal constraint is about (booking unlock, see the
+    module header): the hotel for hotel / room constraints, the outbound and
+    return train or flight for intercity-mode or intercity-ticket constraints,
+    and any booking whose name is quoted in the constraint."""
+    lowered = dsl.lower()
+    slots = set()
+    if any(k in lowered for k in _HOTEL_KEYS):
+        slots |= _hotel_slots(plan)
+    if any(k in lowered for k in _INTERCITY_KEYS):
+        slots |= _intercity_slots(plan)
+    quoted = {q1 or q2 for q1, q2 in _QUOTED_RE.findall(dsl)}
+    for d, day in enumerate(plan):
+        for a, act in enumerate(_activities(day)):
+            if _is_anchor(plan, d, a) and act.get("position") in quoted:
+                slots.add((d, a))
+    return slots
+
+
+def _costliest_bookings(plan, k=GLOBAL_HEURISTIC_K):
+    """Bookings among the k most expensive activities of the whole plan (bookings
+    included). A budget constraint that is over the limit because of the flights
+    or the hotel can only be fixed by changing them."""
+    scored = []
+    for d, day in enumerate(plan):
+        for a, act in enumerate(_activities(day)):
+            try:
+                cost = float(act.get("cost", 0) if isinstance(act, dict) else 0)
+            except (TypeError, ValueError):
+                cost = 0.0
+            scored.append((cost, d, a))
+    scored.sort(reverse=True)
+    return {(d, a) for _, d, a in scored[:k] if _is_anchor(plan, d, a)}
+
+
+def _localize_message(message, plan, pos_to_slots):
+    """Localize a commonsense/schema error string to slots, or 'global'.
+
+    POI names that appear verbatim in the message are the main handle (very
+    short names are skipped to avoid spurious substring hits), plus any booking
+    the message is about (``_booking_slots``). When the message names a day
+    ("in day 3"), only matches on that day count, plus the exact activity if one
+    is named; the whole day is opened only when nothing on it matched and no
+    activity is named. Booking slots are returned like any other slot; whether
+    they are actually editable is decided in ``_editable_region``."""
+    named = set(_booking_slots(message, plan))
     for pos, pos_slots in pos_to_slots.items():
         if len(pos) > 1 and pos in message:
-            slots.update(pos_slots)
+            named.update(pos_slots)
 
+    day_m = _DAY_RE.search(message)
+    if not day_m:
+        return named if named else "global"
+
+    d = int(day_m.group(1)) - 1
+    if not 0 <= d < len(plan):
+        return named if named else "global"
+
+    slots = {(nd, na) for (nd, na) in named if nd == d}
+    act_m = _ACT_RE.search(message)
+    if act_m:
+        a = int(act_m.group(1)) - 1
+        if 0 <= a < len(_activities(plan[d])):
+            slots.add((d, a))
+    elif not slots:
+        ## Day known, but neither the activity nor a POI on it -> the whole day.
+        slots = {(d, a) for a in range(len(_activities(plan[d])))}
     return slots if slots else "global"
 
 
@@ -226,8 +370,16 @@ def _localize_personal(dsl, plan, pos_to_slots, type_to_slots):
             slots.update(type_to_slots.get(m, []))
     if "attraction" in lowered:
         slots.update(type_to_slots.get("attraction", []))
-    if "accommodation" in lowered or "room_" in lowered:
+    if any(k in lowered for k in _HOTEL_KEYS):
         slots.update(type_to_slots.get("accommodation", []))
+    ## Intercity mode / tickets -> the outbound and return train or flight.
+    if any(k in lowered for k in _INTERCITY_KEYS):
+        slots |= _intercity_slots(plan)
+    ## Inner-city leg rules (mode, tickets, taxis...) -> every activity with a leg.
+    ## Skipped for money constraints: a budget sums the legs' cost but is about
+    ## the whole trip, so it stays "global".
+    if not _is_cost_dsl(lowered) and any(k in lowered for k in _LEG_KEYS):
+        slots |= _leg_slots(plan)
 
     ## 3) Nothing localizable (budget / day_count / people_count ...) -> global.
     return slots if slots else "global"
@@ -244,18 +396,16 @@ class R3AdaptiveScopeRepair(BaseRepairStrategy):
     ``accept()`` stays the default (always accept). This keeps R3 distinct from R2
     (whose job is rollback).
 
-    ``phased=True`` gives the R3P variant (see the module header): a personal-only
-    phase on the ladder, then a protected slot-scope commonsense phase."""
+    The repair phase comes from the shared loop (see the module header). Every
+    ``repair()`` call advances the ladder, commonsense calls included; the loop
+    calls ``repair()`` once per step, so the iteration count equals the step."""
 
-    def __init__(self, rounds_per_rung=DEFAULT_ROUNDS_PER_RUNG, phased=False,
-                 personal_iterations=DEFAULT_PERSONAL_ITERATIONS):
+    def __init__(self, rounds_per_rung=DEFAULT_ROUNDS_PER_RUNG):
         self._scope_idx = 0              ## index into RUNGS (current rung)
         self._iteration = 0              ## ladder iterations taken so far
         self._rounds_per_rung = rounds_per_rung
-        self._phased = phased
-        self._personal_iterations = personal_iterations
-        self._step = 0                   ## all repair() calls (R3P debug)
-        self._strategy_name = "R3P" if phased else "R3"
+        self._step = 0                   ## all repair() calls, both phases (debug)
+        self._strategy_name = "R3"
 
     @property
     def _scope(self):
@@ -274,15 +424,6 @@ class R3AdaptiveScopeRepair(BaseRepairStrategy):
             (self._iteration - 1) // self._rounds_per_rung, len(RUNGS) - 1
         )
         return previous_idx
-
-    ## ---- historical direct-call fallback only; shared loop owns scheduling ----
-    def _choose_phase(self, verification):
-        if not self._phased:
-            return None
-        personal = verification.get("personal_constraints", []) or []
-        if any(s is False for s in personal) and self._iteration < self._personal_iterations:
-            return "personal"
-        return "commonsense"
 
     ## ---- feedback lines sent to the model, and the personal ones protected ----
     def _feedback_lines(self, problem, verification, phase):
@@ -338,8 +479,60 @@ class R3AdaptiveScopeRepair(BaseRepairStrategy):
             localized.append(loc)
         return localized
 
+    ## ---- booking unlock: which frozen bookings a message opens, and how far ----
+    @staticmethod
+    def _booking_unlocks(targets, localized, plan):
+        """{(day, activity): UNLOCK_ALL | UNLOCK_LEGS} for the bookings the
+        current failures are about.
+
+        Personal constraints (the priority):
+          - a hotel / room, intercity mode or ticket constraint, or one quoting a
+            booking's name, opens those bookings fully (``_personal_booking_slots``);
+          - an inner-city leg constraint (mode, tickets, taxis) opens the hotel's
+            leg fields;
+          - a budget constraint that cannot be localized ("global") opens the
+            bookings among the most expensive activities (``_costliest_bookings``).
+        Commonsense / schema messages:
+          - a booking the message is about (``_booking_slots``: accommodation /
+            intercity errors) opens fully;
+          - a booking only named as a place (e.g. the hotel at the end of an
+            inner-city leg) opens just its LEG_FIELDS;
+          - a booking in the localized set only because the whole named day was
+            opened (no name matched on that day) stays frozen."""
+        unlocked = {}
+        for target, loc in zip(targets, localized):
+            if target["kind"] == "personal":
+                dsl = target.get("dsl", "") or ""
+                if loc == "global":
+                    if _is_cost_dsl(dsl):
+                        for slot in _costliest_bookings(plan):
+                            unlocked[slot] = UNLOCK_ALL
+                    continue
+                about = _personal_booking_slots(dsl, plan)
+                for (d, a) in loc:
+                    if not _is_anchor(plan, d, a):
+                        continue
+                    if (d, a) in about:
+                        unlocked[(d, a)] = UNLOCK_ALL
+                    else:
+                        unlocked.setdefault((d, a), UNLOCK_LEGS)
+                continue
+            if loc == "global":
+                continue
+            message = target.get("message", "")
+            about = _booking_slots(message, plan)
+            for (d, a) in loc:
+                if not _is_anchor(plan, d, a):
+                    continue
+                position = _activities(plan[d])[a].get("position")
+                if (d, a) in about:
+                    unlocked[(d, a)] = UNLOCK_ALL
+                elif isinstance(position, str) and len(position) > 1 and position in message:
+                    unlocked.setdefault((d, a), UNLOCK_LEGS)
+        return unlocked
+
     ## ---- compute the editable region at the current rung ----
-    def _editable_region(self, scope, plan, localized):
+    def _editable_region(self, scope, plan, localized, unlocked=None):
         global_present = any(loc == "global" for loc in localized)
         base = set()
         for loc in localized:
@@ -371,16 +564,22 @@ class R3AdaptiveScopeRepair(BaseRepairStrategy):
                 for a in range(len(_activities(plan[d])))
             }
 
-        ## Trip-level anchors stay frozen until L3.
+        ## Trip-level anchors stay frozen until L3, except bookings a commonsense
+        ## error unlocked (booking unlock; see _booking_unlocks).
         editable = {(d, a) for (d, a) in editable if not _is_anchor(plan, d, a)}
+        editable |= set(unlocked or ())
         return editable, global_present
 
     ## ---- prompt building ----
-    def _editable_instruction(self, editable, plan):
+    def _editable_instruction(self, editable, plan, leg_only=frozenset()):
         lines = []
         for (d, a) in sorted(editable):
             act = _activities(plan[d])[a]
             label = act.get("position") or act.get("type") or "activity"
+            if (d, a) in leg_only:
+                ## Booking unlock (legs): the booking itself must not change.
+                label += (" (only its transports, start_time and end_time; "
+                          "keep the booking itself unchanged)")
             lines.append(f"  - Day {d + 1} activity {a + 1}: {label}")
         listing = "\n".join(lines) if lines else "  (none)"
         return (
@@ -392,12 +591,14 @@ class R3AdaptiveScopeRepair(BaseRepairStrategy):
             "other activity."
         )
 
-    def _build_prompt(self, scope, problem, context, raw_plan, feedback_lines, editable):
+    def _build_prompt(self, scope, problem, context, raw_plan, feedback_lines, editable,
+                      leg_only=frozenset()):
         error_info_nl = "\n".join(feedback_lines)
         if scope == PLAN:
             backprompt = error_info_nl
         else:
-            backprompt = error_info_nl + "\n\n" + self._editable_instruction(editable, raw_plan)
+            backprompt = error_info_nl + "\n\n" + self._editable_instruction(
+                editable, raw_plan, leg_only)
         return BACK_PROMPT.format(
             go_train_info=context["go_train_info"],
             go_flight_info=context["go_flight_info"],
@@ -426,7 +627,9 @@ class R3AdaptiveScopeRepair(BaseRepairStrategy):
 
     ## ---- merge: keep frozen slots verbatim, take only editable slots ----
     @staticmethod
-    def _merge(current, proposal, editable):
+    def _merge(current, proposal, editable, leg_only=frozenset()):
+        """``leg_only`` slots (booking unlock "legs") take only LEG_FIELDS from
+        the proposal; the rest of that booking is kept from the current plan."""
         merged = deepcopy(current)
         changed = 0
         for (d, a) in editable:
@@ -436,6 +639,11 @@ class R3AdaptiveScopeRepair(BaseRepairStrategy):
             if a >= len(prop_acts):
                 continue
             new_val = prop_acts[a]
+            if (d, a) in leg_only:
+                if not isinstance(new_val, dict):
+                    continue
+                new_val = {**merged[d]["activities"][a],
+                           **{f: new_val[f] for f in LEG_FIELDS if f in new_val}}
             if merged[d]["activities"][a] != new_val:
                 merged[d]["activities"][a] = deepcopy(new_val)
                 changed += 1
@@ -497,20 +705,15 @@ class R3AdaptiveScopeRepair(BaseRepairStrategy):
     ## ---- the strategy entry point ----
     def repair(self, problem, raw_plan, verification_results, context, llm):
         self._step += 1
+        ## None only for direct calls outside the shared loop (all failures shown).
         phase = context.get("repair_phase")
-        if phase is None:
-            # Compatibility for direct calls only; never override shared intent.
-            phase = self._choose_phase(verification_results)
-        elif phase not in ("personal", "commonsense"):
+        if phase not in (None, "personal", "commonsense"):
             raise ValueError("Unknown shared repair_phase")
-        if phase == "commonsense":
-            ## R3P commonsense step: slot scope; the personal ladder does not move.
-            scope, widened, previous_idx = SLOT, False, self._scope_idx
-        else:
-            ## Advance the fixed widening schedule (iteration -> rung), then act.
-            previous_idx = self._advance_scope()
-            scope = self._scope
-            widened = self._scope_idx > previous_idx
+        ## Advance the fixed widening schedule (iteration -> rung) in both phases:
+        ## the commonsense step uses the same rung a personal step would get.
+        previous_idx = self._advance_scope()
+        scope = self._scope
+        widened = self._scope_idx > previous_idx
 
         # Scheduled commonsense repairs have a strict objective. Preserve full
         # verification for logging; historical direct calls keep schema targeting.
@@ -523,7 +726,11 @@ class R3AdaptiveScopeRepair(BaseRepairStrategy):
             }
         targets = self._collect_targets(problem, objective_verification, phase)
         localized = self._localize_targets(targets, raw_plan)
-        editable, global_present = self._editable_region(scope, raw_plan, localized)
+        ## Booking unlock: below the plan rung, bookings that a commonsense error
+        ## points at become editable (fully, or only their legs).
+        unlocked = {} if scope == PLAN else self._booking_unlocks(targets, localized, raw_plan)
+        leg_only = frozenset(s for s, level in unlocked.items() if level == UNLOCK_LEGS)
+        editable, global_present = self._editable_region(scope, raw_plan, localized, unlocked)
 
         total = _total_slots(raw_plan)
         scope_fraction = (len(editable) / total) if total else 0.0
@@ -543,7 +750,7 @@ class R3AdaptiveScopeRepair(BaseRepairStrategy):
             )
 
         query_message = self._build_prompt(
-            scope, problem, context, raw_plan, feedback_lines, editable
+            scope, problem, context, raw_plan, feedback_lines, editable, leg_only
         )
 
         start_time = time.time()
@@ -566,7 +773,7 @@ class R3AdaptiveScopeRepair(BaseRepairStrategy):
                 ## shorter plan) -> keep the current plan (no-op attempt).
                 merged, changed = deepcopy(raw_plan), 0
         else:
-            merged, changed = self._merge(raw_plan, proposal, editable)
+            merged, changed = self._merge(raw_plan, proposal, editable, leg_only)
 
         per_target_edits = self._per_target_edits(
             targets, localized, editable, raw_plan, merged, raw_plan
@@ -575,7 +782,7 @@ class R3AdaptiveScopeRepair(BaseRepairStrategy):
         ## Canonical intent (promoted onto the RepairAttemptRecord by the loop).
         ## target_constraint_indices are all current False personal constraints
         ## (never unknown None) as original 1-based hard_logic_py indices - R3
-        ## repairs them together; an R3P commonsense step targets none. Scope is
+        ## repairs them together; a commonsense step targets none. Scope is
         ## reported as both the string rung (editable_scope) and the agreeing
         ## 1-based level (scope_level).
         metadata = {
@@ -601,6 +808,13 @@ class R3AdaptiveScopeRepair(BaseRepairStrategy):
             "targeted_constraints": targets,
             "per_target_edits": per_target_edits,
             "global_targets": global_present,
+            ## Bookings opened below the plan rung by the booking unlock.
+            "unlocked_bookings": [
+                {"day": d, "activity_index": a, "type": _act_type(raw_plan, d, a),
+                 "position": _activities(raw_plan[d])[a].get("position"),
+                 "fields": level}
+                for (d, a), level in sorted(unlocked.items())
+            ],
             "iteration": self._iteration,
             "prompt": query_message,
             "raw_response": raw_response,
@@ -613,8 +827,7 @@ class R3AdaptiveScopeRepair(BaseRepairStrategy):
                 list(objective_verification.get("commonsense_errors") or [])
                 if phase == "commonsense" else []
             )
-            metadata["personal_iteration"] = self._iteration
-            metadata["r3p_call"] = self._step   ## "step" is a reserved record field
+            metadata["repair_call"] = self._step   ## "step" is a reserved record field
         if widened:
             metadata["escalation_reason"] = (
                 f"scheduled_widen_{RUNGS[previous_idx]}_to_{scope}_"

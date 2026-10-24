@@ -293,6 +293,6 @@ class MatrixGuidedRepair(R3AdaptiveScopeRepair):
                     if phase == "commonsense" else []
                 ),
                 "personal_iteration": self._iteration,
-                "r3p_call": self._step,
+                "repair_call": self._step,
             })
         return RepairResult(repaired_plan=merged, metadata=metadata)
