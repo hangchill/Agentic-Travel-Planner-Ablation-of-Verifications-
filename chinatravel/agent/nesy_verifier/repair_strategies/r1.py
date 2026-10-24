@@ -25,6 +25,25 @@ def find_candidate_slots(raw_plan, constraint_family):
                 candidates.append((day_idx, activity_idx))
     return candidates
 
+def find_budget_candidate_slots(raw_plan):
+    """Find cost-bearing activity slots for targeted budget repair."""
+    candidates = []
+    for day_idx, day in enumerate(raw_plan):
+        for activity_idx, activity in enumerate(
+            day.get("activities", [])):
+            if not isinstance(activity, dict):
+                continue
+            if activity.get("type") not in {
+                "accommodation", "attraction",
+                "breakfast", "lunch", "dinner",}:
+                continue
+            cost = activity.get("cost", 0)
+            if (isinstance(cost, (int, float))
+                and not isinstance(cost, bool)
+                and cost > 0):
+                candidates.append((day_idx, activity_idx))
+    return candidates
+
 def find_editable_slot(raw_plan, constraint_family):
     if constraint_family == "transport_mode":
         candidates = find_transport_slots(raw_plan)
@@ -242,6 +261,8 @@ def select_repair_target(problem, raw_plan, failed_indices):
         family = classify_failed_constraint(problem, target_idx)
         if family == "transport_mode":
             candidates = find_transport_slots(raw_plan)
+        elif family == "monetary_budget":
+            candidates = find_budget_candidate_slots(raw_plan)
         else:
             candidates = find_candidate_slots(raw_plan, family)
         if candidates:
@@ -556,10 +577,14 @@ class R1TargetedRepair(BaseRepairStrategy):
                                     "scope_level": 1,
                                     "failure_reason": "no_localizable_failed_constraint",},) 
         constraint_text = problem["hard_logic_py"][target_idx - 1]
-        editable_slot = select_editable_slot(
-            problem=problem, raw_plan=raw_plan, candidates=candidates,
-            constraint_text=constraint_text, llm=llm,)
-        
+        if constraint_family == "monetary_budget":
+            editable_slot = max(
+                candidates,
+                key=lambda slot: raw_plan[slot[0]]["activities"][slot[1]]["cost"],)
+        else:
+            editable_slot = select_editable_slot(
+                problem=problem, raw_plan=raw_plan,
+                candidates=candidates, constraint_text=constraint_text, llm=llm,)
         metadata = {"strategy": "R1", 
                     "target_constraint_indices": [target_idx],
                     "editable_scope": "slot",
@@ -581,10 +606,26 @@ class R1TargetedRepair(BaseRepairStrategy):
                 repaired_plan = replace_transport_slot(
                     raw_plan, editable_slot, replacement,)
             else:
+                repair_instruction = constraint_text
+                if constraint_family == "monetary_budget":
+                    repair_instruction += (
+                        "\nReduce the cost of this activity while preserving "
+                        "its type, required fields, and other user constraints. "
+                        "Use only verified alternatives from the available "
+                        "travel information. Do not invent prices.")
                 replacement = generate_replacement(
-                    problem=problem, raw_plan=raw_plan,
-                    slot=editable_slot, constraint_text=constraint_text,
-                    context=context, llm=llm,)
+                    problem=problem, raw_plan=raw_plan, slot=editable_slot,
+                    constraint_text=repair_instruction, context=context, llm=llm,)
+                if constraint_family == "monetary_budget":
+                    original = raw_plan[editable_slot[0]]["activities"][editable_slot[1]]
+                    old_cost = original.get("cost")
+                    new_cost = replacement.get("cost")
+                    if (not isinstance(old_cost, (int, float))
+                        or isinstance(old_cost, bool)
+                        or not isinstance(new_cost, (int, float))
+                        or isinstance(new_cost, bool)
+                        or new_cost >= old_cost):
+                        raise ValueError("Budget replacement must reduce activity cost")
                 repaired_plan = replace_activity_slot(
                     raw_plan, editable_slot, replacement,)
         except (ValueError, TypeError, KeyError) as exc:
