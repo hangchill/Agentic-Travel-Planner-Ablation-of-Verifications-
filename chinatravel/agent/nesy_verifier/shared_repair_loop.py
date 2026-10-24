@@ -1,6 +1,19 @@
 
+import json
 from copy import deepcopy
 from time import perf_counter
+
+
+def _plan_fingerprint(plan):
+    """Canonical, order-stable signature of a plan for no-progress detection.
+
+    Two plans that serialize to the same canonical JSON count as the same plan,
+    so trivial key-ordering differences do not hide a genuine repeat.
+    """
+    try:
+        return json.dumps(plan, sort_keys=True, ensure_ascii=False, default=str)
+    except Exception:
+        return repr(plan)
 
 from chinatravel.agent.system_usage import (system_snapshot, system_delta, verification_execution, measured_repair_pipeline)
 
@@ -113,6 +126,14 @@ def run_repair_loop(
         "system_metrics": system_delta(initial_system_before, system_snapshot()),
     }]
 
+    ## No-progress signal shared with strategies (optional for them to read).
+    ## Tracks how many times each distinct candidate plan has been proposed and
+    ## whether the last attempt made no change, so a strategy can choose to stop
+    ## early or escalate. The loop never forces a stop from this; the decision
+    ## stays with each strategy.
+    plan_proposal_counts = {}
+    no_progress_streak = 0
+
     ## Each proposed repair uses one attempt from the budget.
     strategy_name = type(strategy).__name__
     for step in range(1, total_budget + 1):
@@ -139,6 +160,18 @@ def run_repair_loop(
 
         before_verification = deepcopy(current_verification)
         before_plan = deepcopy(current_plan)
+
+        ## Expose the no-progress signal so a strategy MAY stop early or escalate.
+        ## Reading these is optional; the loop never forces a decision from them.
+        ##  - no_progress_streak: consecutive unchanged attempts so far
+        ##  - last_attempt_no_progress: was the previous attempt a no-op
+        ##  - accepted_plan_repeat_count: times the current accepted plan has
+        ##    already been proposed (so a strategy can see a loop forming)
+        context["no_progress_streak"] = no_progress_streak
+        context["last_attempt_no_progress"] = no_progress_streak > 0
+        context["accepted_plan_repeat_count"] = plan_proposal_counts.get(
+            _plan_fingerprint(before_plan), 0
+        )
         system_before = system_snapshot()
         usage_before = usage_snapshot(llm)
         repair_started = perf_counter()
@@ -185,6 +218,25 @@ def run_repair_loop(
                 "passed": False, "verification_unavailable": True,
             }
         after_verification = deepcopy(candidate_verification)
+
+        ## Standardised no-progress DETECTION + LOGGING (shared across R0-R4).
+        ## Flag when the candidate is identical to the CURRENT ACCEPTED plan
+        ## (before_plan), not to any earlier rejected proposal -- so a rollback
+        ## strategy's genuinely new candidate is never misread as a repeat.
+        ## This only records a reason; it does NOT change `accepted` and does NOT
+        ## stop the loop. Each strategy keeps its own stop/continue decision, and
+        ## rejecting a candidate stays separate from stopping.
+        no_progress = (
+            result is not None
+            and failure is None
+            and _plan_fingerprint(result.repaired_plan) == _plan_fingerprint(before_plan)
+        )
+        ## Update the shared no-progress trackers for the next iteration's context.
+        if result is not None and failure is None:
+            fingerprint = _plan_fingerprint(result.repaired_plan)
+            plan_proposal_counts[fingerprint] = plan_proposal_counts.get(fingerprint, 0) + 1
+        no_progress_streak = no_progress_streak + 1 if no_progress else 0
+
         ## Compare constraint results before and after the proposed repair.
         ## Compare against the current accepted plan, not a rejected candidate.
         transitions = compare_constraint_results(
@@ -209,6 +261,10 @@ def run_repair_loop(
         intent["concurrent_commonsense_failure_count"] = len(commonsense) if isinstance(commonsense, list) else None
         intent.setdefault("target_constraint_indices", [])
         intent.setdefault("target_constraint_labels", [])
+        ## Log the no-progress signal so metrics can see unchanged-plan attempts
+        ## uniformly. Do not overwrite a reason the strategy already recorded.
+        if no_progress and not intent.get("decision_reason"):
+            intent["decision_reason"] = "no_progress_unchanged"
         record = RepairAttemptRecord(
             step=step,
             query_uid=problem.get("uid") if isinstance(problem.get("uid"), str) else None,

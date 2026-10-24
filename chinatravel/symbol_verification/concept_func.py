@@ -127,6 +127,26 @@ def poi_distance(city, poi1, poi2, start_time="00:00", transport_type="walk"):
     return goto(city, poi1, poi2, start_time, transport_type)[0]["distance"]
 
 
+def _as_transport_list(transports):
+    """Coerce a transports value into a list of transport dicts.
+
+    Plans store an activity's ``transports`` in three shapes: a list of
+    transport dicts, a single transport dict, or the string ``"empty"`` (also
+    ``None`` / missing). The DSL transport helpers all expect a list, so
+    normalise here. Unsupported shapes collapse to an empty list rather than
+    raising, so a malformed entry contributes zero instead of crashing the
+    constraint (which the verifier would otherwise record as an unevaluable
+    ``None`` result).
+    """
+    if transports is None or transports == "empty":
+        return []
+    if isinstance(transports, dict):
+        return [transports]
+    if isinstance(transports, list):
+        return [t for t in transports if isinstance(t, dict)]
+    return []
+
+
 def innercity_transport_cost(transports, node=None):
     """
     计算市内交通费用
@@ -136,6 +156,7 @@ def innercity_transport_cost(transports, node=None):
     Returns:
         float: 选定类型的交通费用总和，如果 node 为 None 则返回所有类型的总和
     """
+    transports = _as_transport_list(transports)
     cost = 0
     for transport in transports:
         transport_mode = transport.get("mode", transport.get("type"))
@@ -145,9 +166,10 @@ def innercity_transport_cost(transports, node=None):
 
 
 def innercity_transport_price(transports):
+    transports = _as_transport_list(transports)
     price = 0
     for transport in transports:
-        price += transport["price"]
+        price += transport.get("price", 0)
     return price
 
 
@@ -160,6 +182,7 @@ def innercity_transport_distance(transports, mode=None):
     Returns:
         float: 选定类型的交通距离总和，如果 mode 为 None 则返回所有类型的总和
     """
+    transports = _as_transport_list(transports)
     distance = 0
     for transport in transports:
         transport_mode = transport.get("mode", transport.get("type"))
@@ -176,20 +199,29 @@ def innercity_transport_time(transports, mode=None):
 
         return (hour1 - hour2) * 60 + (minu1 - minu2)
 
+    transports = _as_transport_list(transports)
     time_cost = 0
     for transport in transports:
         transport_mode = transport.get("mode", transport.get("type"))
         if mode is None or transport_mode == mode:
+            if transport.get("end_time") is None or transport.get("start_time") is None:
+                continue
             time_cost += calc_time_delta(
                 transport["end_time"], transport["start_time"]
             )
     return time_cost
 
 def metro_tickets(transports):
-    return transports[1]["tickets"]
+    transports = _as_transport_list(transports)
+    if len(transports) >= 2 and "tickets" in transports[1]:
+        return transports[1]["tickets"]
+    if len(transports) == 1 and "tickets" in transports[0]:
+        return transports[0]["tickets"]
+    return "invalid input"
 
 
 def taxi_cars(transports):
+    transports = _as_transport_list(transports)
     if len(transports) > 0 and "cars" in transports[0]:
         return transports[0]["cars"]
     else:
@@ -238,10 +270,11 @@ def accommodation_type(activity, target_city):
 
 
 def innercity_transport_type(transports):
+    transports = _as_transport_list(transports)
     if len(transports) == 3:
-        return transports[1]["mode"]
+        return transports[1].get("mode", "empty")
     elif len(transports) == 1:
-        return transports[0]["mode"]
+        return transports[0].get("mode", "empty")
     return "empty"
 
 
@@ -250,11 +283,17 @@ def intercity_transport_type(activity):
 
 
 def innercity_transport_start_time(transports):
-    return transports[0]["start_time"]
+    transports = _as_transport_list(transports)
+    if not transports:
+        return "empty"
+    return transports[0].get("start_time", "empty")
 
 
 def innercity_transport_end_time(transports):
-    return transports[len(transports) - 1]["end_time"]
+    transports = _as_transport_list(transports)
+    if not transports:
+        return "empty"
+    return transports[-1].get("end_time", "empty")
 
 def intercity_transport_origin(activity):
     city_list=["上海", "北京", "深圳", "广州", "重庆", "成都", "杭州", "武汉", "南京","苏州", "Shanghai", "Beijing", "Shenzhen", "Guangzhou", "Chongqing", "Chengdu", "Hangzhou", "Wuhan", "Nanjing","Suzhou"]
