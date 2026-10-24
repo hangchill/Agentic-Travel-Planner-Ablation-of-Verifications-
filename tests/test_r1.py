@@ -823,21 +823,22 @@ class TestR1(unittest.TestCase):
         original = deepcopy(itinerary)
         def mock_llm(messages, one_line=False, json_mode=False):
             return json.dumps({
-                "type": "accommodation",
-                "position": "Hotel B",
-                "start_time": "20:00",
-                "end_time": "23:00",
-                "cost": 300,})
+                "type": "lunch",
+                "position": "Restaurant B",
+                "start_time": "12:00",
+                "end_time": "13:00",
+                "cost": 50,})
         result = R1TargetedRepair().repair(
             problem=problem, raw_plan=itinerary,
             verification_results={
                 "personal_constraints": [False],
                 "commonsense_errors": [],},
             context={}, llm=mock_llm,)
-        self.assertEqual(result.repaired_plan[0]["activities"][0]["cost"], 300,)
-        self.assertEqual(result.repaired_plan[0]["activities"][1],
-                         original[0]["activities"][1],)
+        self.assertEqual(result.repaired_plan[0]["activities"][1]["cost"], 50,)
+        self.assertEqual(result.repaired_plan[0]["activities"][0],
+                         original[0]["activities"][0],)
         self.assertEqual(itinerary, original)
+        self.assertEqual(result.metadata["editable_slot"], (0, 1),)
 
     def test_budget_repair_rejects_non_cheaper_replacement(self):
         problem = {"nature_language": "Stay within 400 yuan.",
@@ -873,6 +874,45 @@ class TestR1(unittest.TestCase):
         self.assertEqual(result.repaired_plan, original)
         self.assertEqual(result.metadata["failure_reason"],
                          "invalid_replacement",)
+
+    def test_budget_prefers_attraction_over_hotel(self):
+        problem = {
+            "nature_language": "Keep the trip within 400 yuan.",
+            "hard_logic_py": [
+                "total_cost = 0\n"
+                "for activity in allactivities(plan):\n"
+                "    total_cost += activity_cost(activity)\n"
+                "result = (total_cost <= 400)"],}
+        itinerary = [{
+            "day": 1,
+            "activities": [
+                {"type": "accommodation",
+                 "position": "Hotel A",
+                 "start_time": "20:00",
+                 "end_time": "23:00",
+                 "cost": 500,},
+                {"type": "attraction",
+                 "position": "Attraction A",
+                 "start_time": "14:00",
+                 "end_time": "15:00",
+                 "cost": 300,},],}]
+
+        def mock_llm(messages, one_line=False, json_mode=False):
+            return json.dumps({
+                "type": "attraction",
+                "position": "Attraction B",
+                "start_time": "14:00",
+                "end_time": "15:00",
+                "cost": 100,})
+        result = R1TargetedRepair().repair(
+            problem=problem, raw_plan=itinerary,
+            verification_results={
+                "personal_constraints": [False],
+                "commonsense_errors": [],},
+            context={}, llm=mock_llm,)
+        self.assertEqual(result.metadata["editable_slot"], (0, 1))
+        self.assertEqual(result.repaired_plan[0]["activities"][1]["cost"], 100)
+        self.assertEqual(result.repaired_plan[0]["activities"][0]["cost"], 500)
 
 if __name__ == "__main__":
     unittest.main()

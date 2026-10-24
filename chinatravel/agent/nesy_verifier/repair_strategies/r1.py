@@ -578,9 +578,18 @@ class R1TargetedRepair(BaseRepairStrategy):
                                     "failure_reason": "no_localizable_failed_constraint",},) 
         constraint_text = problem["hard_logic_py"][target_idx - 1]
         if constraint_family == "monetary_budget":
-            editable_slot = max(
-                candidates,
-                key=lambda slot: raw_plan[slot[0]]["activities"][slot[1]]["cost"],)
+            def budget_priority(slot):
+                activity = raw_plan[slot[0]]["activities"][slot[1]]
+                activity_type = activity.get("type")
+                cost = activity.get("cost", 0)
+                priority = {
+                    "attraction": 2,
+                    "lunch": 1,
+                    "dinner": 1,
+                    "breakfast": 1,
+                    "accommodation": 0,}
+                return (priority.get(activity_type, 0), cost)
+            editable_slot = max(candidates, key=budget_priority)
         else:
             editable_slot = select_editable_slot(
                 problem=problem, raw_plan=raw_plan,
@@ -609,10 +618,17 @@ class R1TargetedRepair(BaseRepairStrategy):
                 repair_instruction = constraint_text
                 if constraint_family == "monetary_budget":
                     repair_instruction += (
-                        "\nReduce the cost of this activity while preserving "
-                        "its type, required fields, and other user constraints. "
-                        "Use only verified alternatives from the available "
-                        "travel information. Do not invent prices.")
+                        "\nReduce the total cost of the selected activity. "
+                        "For accommodation, distinguish the price per room "
+                        "from the total activity cost. "
+                        "If cost is calculated as price * rooms, update both "
+                        "price and cost consistently when selecting a cheaper "
+                        "verified hotel. "
+                        "Preserve the required number of rooms, room type, "
+                        "activity type, and other user constraints. "
+                        "Use only verified sandbox alternatives. "
+                        "Do not invent prices or artificially lower costs. "
+                        "Return the complete replacement activity as JSON.")
                 replacement = generate_replacement(
                     problem=problem, raw_plan=raw_plan, slot=editable_slot,
                     constraint_text=repair_instruction, context=context, llm=llm,)
