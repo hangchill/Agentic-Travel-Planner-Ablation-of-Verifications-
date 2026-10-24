@@ -1,0 +1,811 @@
+{
+  "run_id": "subset_test-r3",
+  "query_uid": "m20241028164936662445",
+  "state": {
+    "query_uid": "m20241028164936662445",
+    "problem": {
+      "uid": "m20241028164936662445",
+      "tag": "easy",
+      "start_city": "Beijing",
+      "target_city": "Chongqing",
+      "days": 3,
+      "people_number": 4,
+      "limit_rooms": false,
+      "limits_room_type": false,
+      "hard_logic_py": [
+        "result=(day_count(plan)==3)",
+        "result=(people_count(plan)==4)",
+        "result=True\nfor activity in allactivities(plan):\n  if activity_type(activity) in ['attraction', 'airplane', 'train'] and activity_tickets(activity)!=4: result=False\n  if innercity_transport_type(activity_transports(activity))=='metro'and metro_tickets(activity_transports(activity))!=4: result=False",
+        "restaurant_name_set=set()\nfor activity in allactivities(plan):\n  if activity_type(activity) in ['breakfast', 'lunch', 'dinner']: restaurant_name_set.add(activity_position(activity))\nresult=({'蓝苑人家渝菜坊(北滨路店)'}<=restaurant_name_set)",
+        "result=True\nfor activity in allactivities(plan):\n  if innercity_transport_type(activity_transports(activity))=='taxi'and taxi_cars(activity_transports(activity))!=1: result=False"
+      ],
+      "nature_language": "Current location: Beijing. Four of us want to visit Chongqing for 3 days and would like to eat at Lanyuan Renjia Yucai Fang (Beibin Road branch). Please provide us with a travel plan.",
+      "nature_language_en": "Current location: Beijing. Four of us want to visit Chongqing for 3 days and would like to eat at Lanyuan Renjia Yucai Fang (Beibin Road branch). Please provide us with a travel plan."
+    },
+    "raw_initial_plan": [
+      {
+        "day": 1,
+        "activities": [
+          {
+            "start_time": "06:55",
+            "end_time": "13:57",
+            "start": "Beijing West Railway Station",
+            "end": "Chongqing North Railway Station",
+            "price": 948.05,
+            "cost": 3792.2,
+            "TrainID": "G51",
+            "type": "train",
+            "tickets": 4,
+            "transports": "empty"
+          },
+          {
+            "position": "Qianhe Zhixuan Gaokong Hotel (Jiefangbei Hongyadong Branch)",
+            "type": "accommodation",
+            "transports": {
+              "from": "Chongqing North Railway Station",
+              "to": "Qianhe Zhixuan Gaokong Hotel (Jiefangbei Hongyadong Branch)",
+              "mode": "metro",
+              "start_time": "13:57",
+              "end_time": "14:13",
+              "cost": 12
+            },
+            "room_type": 2,
+            "price": 208,
+            "cost": 416,
+            "start_time": "14:20",
+            "end_time": "24:00",
+            "rooms": 2
+          },
+          {
+            "position": "Hongya Cave",
+            "type": "attraction",
+            "transports": {
+              "from": "Qianhe Zhixuan Gaokong Hotel (Jiefangbei Hongyadong Branch)",
+              "to": "Hongya Cave",
+              "mode": "metro",
+              "start_time": "14:30",
+              "end_time": "14:35",
+              "cost": 8
+            },
+            "price": 0.0,
+            "cost": 0.0,
+            "tickets": 4,
+            "start_time": "14:40",
+            "end_time": "17:40"
+          },
+          {
+            "position": "Yang Ji Long Fu (Liberation Monument Main Store)",
+            "type": "dinner",
+            "transports": {
+              "from": "Hongya Cave",
+              "to": "Yang Ji Long Fu (Liberation Monument Main Store)",
+              "mode": "metro",
+              "start_time": "17:40",
+              "end_time": "17:51",
+              "cost": 8
+            },
+            "price": 96,
+            "cost": 384,
+            "start_time": "18:00",
+            "end_time": "19:00"
+          }
+        ]
+      },
+      {
+        "day": 2,
+        "activities": [
+          {
+            "position": "Chongqing WFC Xianlai Tower Observation Deck",
+            "type": "attraction",
+            "transports": {
+              "from": "Qianhe Zhixuan Gaokong Hotel (Jiefangbei Hongyadong Branch)",
+              "to": "Chongqing WFC Xianlai Tower Observation Deck",
+              "mode": "metro",
+              "start_time": "09:00",
+              "end_time": "09:06",
+              "cost": 8
+            },
+            "price": 118,
+            "cost": 472,
+            "tickets": 4,
+            "start_time": "09:10",
+            "end_time": "10:10"
+          },
+          {
+            "position": "Chongqing Two Rivers Cruise",
+            "type": "attraction",
+            "transports": {
+              "from": "Chongqing WFC Xianlai Tower Observation Deck",
+              "to": "Chongqing Two Rivers Cruise",
+              "mode": "taxi",
+              "start_time": "10:10",
+              "end_time": "10:11",
+              "cost": 11
+            },
+            "price": 138,
+            "cost": 552,
+            "tickets": 4,
+            "start_time": "10:20",
+            "end_time": "11:50"
+          },
+          {
+            "position": "Lanyuan Renjia Yucai Fang (Beibin Road branch)",
+            "type": "lunch",
+            "transports": {
+              "from": "Chongqing Two Rivers Cruise",
+              "to": "Lanyuan Renjia Yucai Fang (Beibin Road branch)",
+              "mode": "taxi",
+              "start_time": "11:50",
+              "end_time": "12:00",
+              "cost": 11
+            },
+            "price": 100,
+            "cost": 400,
+            "start_time": "12:10",
+            "end_time": "13:10"
+          },
+          {
+            "position": "Ci Qi Kou Ancient Town",
+            "type": "attraction",
+            "transports": {
+              "from": "Lanyuan Renjia Yucai Fang (Beibin Road branch)",
+              "to": "Ci Qi Kou Ancient Town",
+              "mode": "metro",
+              "start_time": "13:10",
+              "end_time": "13:52",
+              "cost": 16
+            },
+            "price": 0.0,
+            "cost": 0.0,
+            "tickets": 4,
+            "start_time": "14:00",
+            "end_time": "17:00"
+          },
+          {
+            "position": "General Ba's Intangible Cultural Heritage Original Flavor Hot Pot (Jiefangbei Branch)",
+            "type": "dinner",
+            "transports": {
+              "from": "Ci Qi Kou Ancient Town",
+              "to": "General Ba's Intangible Cultural Heritage Original Flavor Hot Pot (Jiefangbei Branch)",
+              "mode": "metro",
+              "start_time": "17:00",
+              "end_time": "17:44",
+              "cost": 16
+            },
+            "price": 89,
+            "cost": 356,
+            "start_time": "17:50",
+            "end_time": "18:50"
+          }
+        ]
+      },
+      {
+        "day": 3,
+        "activities": [
+          {
+            "position": "Chongqing Zoo",
+            "type": "attraction",
+            "transports": {
+              "from": "Qianhe Zhixuan Gaokong Hotel (Jiefangbei Hongyadong Branch)",
+              "to": "Chongqing Zoo",
+              "mode": "metro",
+              "start_time": "08:00",
+              "end_time": "08:22",
+              "cost": 12
+            },
+            "price": 24.5,
+            "cost": 98,
+            "tickets": 4,
+            "start_time": "08:30",
+            "end_time": "10:30"
+          },
+          {
+            "position": "Chongqing Huguang Guild Hall",
+            "type": "attraction",
+            "transports": {
+              "from": "Chongqing Zoo",
+              "to": "Chongqing Huguang Guild Hall",
+              "mode": "metro",
+              "start_time": "10:30",
+              "end_time": "10:59",
+              "cost": 16
+            },
+            "price": 25,
+            "cost": 100,
+            "tickets": 4,
+            "start_time": "11:00",
+            "end_time": "12:30"
+          },
+          {
+            "position": "Instrument Factory Hot Pot (Jiefangbei Branch)",
+            "type": "lunch",
+            "transports": {
+              "from": "Chongqing Huguang Guild Hall",
+              "to": "Instrument Factory Hot Pot (Jiefangbei Branch)",
+              "mode": "metro",
+              "start_time": "12:30",
+              "end_time": "12:40",
+              "cost": 8
+            },
+            "price": 100,
+            "cost": 400,
+            "start_time": "12:50",
+            "end_time": "13:50"
+          },
+          {
+            "start": "Chongqing Jiangbei International Airport",
+            "end": "Beijing Capital International Airport",
+            "start_time": "16:39",
+            "end_time": "18:21",
+            "FlightID": "FL338",
+            "type": "airplane",
+            "transports": {
+              "from": "Instrument Factory Hot Pot (Jiefangbei Branch)",
+              "to": "Chongqing Jiangbei International Airport",
+              "mode": "metro",
+              "start_time": "13:50",
+              "end_time": "14:40",
+              "cost": 20
+            },
+            "price": 762.95,
+            "cost": 3051.8,
+            "tickets": 4
+          }
+        ]
+      }
+    ],
+    "repair_context": {
+      "go_train_info": "TrainID\tTrainType\tFrom\tTo\tBeginTime\tEndTime\tDuration\tprice\r\nG53\tHigh-speed rail\tBeijing West Railway Station\tChongqing North Railway Station\t15:05\t22:00\t6.92\t948.05\r\nG51\tHigh-speed rail\tBeijing West Railway Station\tChongqing North Railway Station\t06:55\t13:57\t7.03\t948.05\r\n",
+      "go_flight_info": "FlightID\tFrom\tTo\tBeginTime\tEndTime\tDuration\tprice\r\nFL113\tBeijing Capital International Airport\tChongqing Jiangbei International Airport\t09:43\t11:32\t1.82\t692.46\r\nFL116\tBeijing Capital International Airport\tChongqing Jiangbei International Airport\t10:10\t11:59\t1.82\t686.67\r\nFL111\tBeijing Daxing International Airport\tChongqing Jiangbei International Airport\t14:13\t16:02\t1.82\t704.49\r\n",
+      "back_train_info": "TrainID\tTrainType\tFrom\tTo\tBeginTime\tEndTime\tDuration\tprice\r\nG54\tHigh-speed rail\tChongqing North Railway Station\tBeijing West Railway Station\t14:32\t21:44\t7.2\t948.05\r\nG333\tHigh-speed rail\tChongqing North Railway Station\tBeijing West Railway Station\t10:51\t19:08\t8.35\t948.05\r\nG372\tHigh-speed rail\tChongqing West Railway Station\tBeijing West Railway Station\t11:55\t21:35\t9.8\t948.05\r\n",
+      "back_flight_info": "FlightID\tFrom\tTo\tBeginTime\tEndTime\tDuration\tprice\r\nFL338\tChongqing Jiangbei International Airport\tBeijing Capital International Airport\t14:50\t16:39\t1.82\t762.95\r\nFL336\tChongqing Jiangbei International Airport\tBeijing Capital International Airport\t11:59\t13:48\t1.82\t742.24\r\n",
+      "attraction_info": "name\ttype\tlat\tlon\topentime\tendtime\tprice\trecommendmintime\trecommendmaxtime\r\nHongya Cave\tCultural Tourism Area\t29.568126\t106.584807\t09:00\t23:00\t0.0\t3.0\t3.5\r\nCi Qi Kou Ancient Town\thistorical site\t29.587707\t106.456424\t00:00\t24:00\t0.0\t3.0\t3.5\r\nChongqing Two Rivers Cruise\tAmusement Park/Sports Entertainment\t29.56859\t106.582999\t12:00\t22:00\t138.0\t1.0\t1.5\r\nWulong Natural Three Bridges\tnatural scenery\t29.439361\t107.811703\t08:30\t16:30\t125.0\t1.5\t3.0\r\nDazu Rock Carvings\thistorical site\t29.75248\t105.776324\t08:30\t18:00\t110.0\t2.5\t4.0\r\nChongqing Zoo\tAmusement Park/Sports Entertainment\t29.509218\t106.512622\t08:00\t17:00\t24.5\t1.0\t2.0\r\nChongqing Huguang Guild Hall\thistorical site\t29.563904\t106.59329\t09:00\t19:00\t25.0\t1.0\t2.5\r\nChongqing Huguang Guild Hall\thistorical site\t29.563904\t106.59329\t09:00\t19:00\t25.0\t1.0\t2.5\r\nChongqing WFC Xianlai Tower Observation Deck\tCultural Landscape\t29.565159\t106.584095\t09:30\t22:00\t118.0\t0.5\t1.0\r\nChongqing Great Bombing 'June 5th' Tunnel Massacre Historical Exhibition Hall\tMuseum/Memorial Hall\t29.560086\t106.582184\t10:00\t18:00\t0.0\t1.0\t2.5\r\nLiziba Light Rail Station\tCultural Landscape\t29.559022\t106.544144\t06:30\t23:16\t0.0\t1.5\t2.0\r\nChongqing Science and Technology Museum\tMuseum/Memorial Hall\t29.578407\t106.584431\t09:30\t17:00\t0.0\t3.0\t3.5\r\nChongqing People's Square\tpark\t29.568293\t106.558852\t00:00\t24:00\t0.0\t2.0\t2.5\r\nChongqing Guotai Art Center\tArt museum\t29.566231\t106.583585\t00:00\t24:00\t0.0\t1.5\t2.0\r\nChongqing Industrial Museum\tMuseum/Memorial Hall\t29.475933\t106.498761\t09:00\t17:00\t0.0\t1.0\t2.0\r\n",
+      "restaurant_info": "name\tlat\tlon\tprice\tcuisine\topentime\tendtime\trecommendedfood\r\nYang Ji Long Fu (Liberation Monument Main Store)\t29.5609878\t106.5781935\t96.0\tSichuan cuisine\t11:00\t22:00\tYang's Family Braised Goose, Republican Era Spicy Rabbit, Yang's Signature Fish, Traditional Sichuan Pepper Chicken, Bald Commander, Pan-Fried Heart of Cabbage, Yang's Sichuan Pepper Pork Ribs, Pan-Fried Vermicelli Casserole, Pork Intestines, Flavored Rabbit Head\r\nInstrument Factory Hot Pot (Jiefangbei Branch)\t29.5589518\t106.5710451\t100.0\tHot pot\t10:30\t23:30\tRecommended dishes\r\nGeneral Ba's Intangible Cultural Heritage Original Flavor Hot Pot (Jiefangbei Branch)\t29.556122\t106.5766709\t89.0\tHot pot\t10:00\t24:00\tRecommended dishes\r\nAt Yuli Chongqing Hot Pot (Jiefangbei Delicious Street Branch)\t29.5555135\t106.5771769\t78.0\tHot pot\t10:00\t01:00\tSalted Egg Yolk Shrimp Paste, Double Pepper Tender Tripe, Huajiezi Tender Beef, Dajing Lane Fresh Duck Intestines\r\nDust Aroma (Chuanghui Shouzhuo Branch)\t29.5538018\t106.5778091\t133.0\tSichuan cuisine\t11:30\t22:00\tPickled Pepper Glutinous Skin Baby Rabbit, Secret Sauce Salmon, Gluttonous Frog Legs, Kung Pao Chicken, Dry Pot Cauliflower, Golden Shredded Shrimp Balls, Dry-Braised River Catfish\r\n",
+      "accommodation_info": "name\tfeaturehoteltype\tlat\tlon\tprice\tnumbed\r\nChongqing North Railway Station Atour Hotel\tFree parking\t29.603878\t106.553201\t332\t2\r\nLavande Hotel (Chongqing Jiefangbei Center Pedestrian Street)\tButler Service\t29.557208\t106.575533\t237\t1\r\nQianhe Zhixuan Gaokong Hotel (Jiefangbei Hongyadong Branch)\tRiver view room\t29.559812\t106.582407\t208\t2\r\n",
+      "innercity_transport_info": "from Qianhe Zhixuan Gaokong Hotel (Jiefangbei Hongyadong Branch) to Qianhe Zhixuan Gaokong Hotel (Jiefangbei Hongyadong Branch):  metro: empty.  taxi: empty.  walk: empty. \nfrom Qianhe Zhixuan Gaokong Hotel (Jiefangbei Hongyadong Branch) to Chongqing Guotai Art Center: metro: duration 6, cost 8. taxi: duration 1, cost 11.0. walk: duration 8, cost 0.0. \nfrom Qianhe Zhixuan Gaokong Hotel (Jiefangbei Hongyadong Branch) to At Yuli Chongqing Hot Pot (Jiefangbei Delicious Street Branch): metro: duration 7, cost 8. taxi: duration 1, cost 11.0. walk: duration 8, cost 0.0. \nfrom Qianhe Zhixuan Gaokong Hotel (Jiefangbei Hongyadong Branch) to Wulong Natural Three Bridges: metro: duration 1252, cost 24. taxi: duration 179, cost 534.45. walk: duration 1439, cost 0.0. \nfrom Qianhe Zhixuan Gaokong Hotel (Jiefangbei Hongyadong Branch) to General Ba's Intangible Cultural Heritage Original Flavor Hot Pot (Jiefangbei Branch): metro: duration 6, cost 8. taxi: duration 1, cost 11.0. walk: duration 8, cost 0.0. \nfrom Qianhe Zhixuan Gaokong Hotel (Jiefangbei Hongyadong Branch) to Chongqing Zoo: metro: duration 22, cost 12. taxi: duration 13, cost 35.45. walk: duration 105, cost 0.0. \nfrom Qianhe Zhixuan Gaokong Hotel (Jiefangbei Hongyadong Branch) to Hongya Cave: metro: duration 5, cost 8. taxi: duration 1, cost 11.0. walk: duration 11, cost 0.0. \nfrom Qianhe Zhixuan Gaokong Hotel (Jiefangbei Hongyadong Branch) to Chongqing WFC Xianlai Tower Observation Deck: metro: duration 6, cost 8. taxi: duration 0, cost 11.0. walk: duration 7, cost 0.0. \nfrom Qianhe Zhixuan Gaokong Hotel (Jiefangbei Hongyadong Branch) to Chongqing Two Rivers Cruise: metro: duration 7, cost 8. taxi: duration 1, cost 11.0. walk: duration 11, cost 0.0. \nfrom Qianhe Zhixuan Gaokong Hotel (Jiefangbei Hongyadong Branch) to Dust Aroma (Chuanghui Shouzhuo Branch): metro: duration 7, cost 8. taxi: duration 1, cost 11.0. walk: duration 9, cost 0.0. \nfrom Qianhe Zhixuan Gaokong Hotel (Jiefangbei Hongyadong Branch) to Chongqing Science and Technology Museum: metro: duration 19, cost 8. taxi: duration 3, cost 11.95. walk: duration 24, cost 0.0. \nfrom Qianhe Zhixuan Gaokong Hotel (Jiefangbei Hongyadong Branch) to Yang Ji Long Fu (Liberation Monument Main Store): metro: duration 7, cost 8. taxi: duration 0, cost 11.0. walk: duration 5, cost 0.0. \nfrom Qianhe Zhixuan Gaokong Hotel (Jiefangbei Hongyadong Branch) to Dazu Rock Carvings: metro: duration 630, cost 28. taxi: duration 121, cost 358.8. walk: duration 970, cost 0.0. \nfrom Qianhe Zhixuan Gaokong Hotel (Jiefangbei Hongyadong Branch) to Chongqing People's Square: metro: duration 8, cost 8. taxi: duration 3, cost 13.34. walk: duration 29, cost 0.0. \nfrom Qianhe Zhixuan Gaokong Hotel (Jiefangbei Hongyadong Branch) to Chongqing Jiangbei International Airport: metro: duration 50, cost 20. taxi: duration 28, cost 80.27. walk: duration 228, cost 0.0. \nfrom Qianhe Zhixuan Gaokong Hotel (Jiefangbei Hongyadong Branch) to Chongqing Great Bombing 'June 5th' Tunnel Massacre Historical Exhibition Hall: taxi: duration 0, cost 11.0. walk: duration 0, cost 0.0. \nfrom Qianhe Zhixuan Gaokong Hotel (Jiefangbei Hongyadong Branch) to Chongqing Industrial Museum: metro: duration 48, cost 16. taxi: duration 18, cost 50.22. walk: duration 148, cost 0.0. \nfrom Qianhe Zhixuan Gaokong Hotel (Jiefangbei Hongyadong Branch) to Instrument Factory Hot Pot (Jiefangbei Branch): metro: duration 5, cost 8. taxi: duration 1, cost 11.0. walk: duration 13, cost 0.0. \nfrom Qianhe Zhixuan Gaokong Hotel (Jiefangbei Hongyadong Branch) to Chongqing West Railway Station: metro: duration 33, cost 20. taxi: duration 23, cost 64.35. walk: duration 185, cost 0.0. \nfrom Qianhe Zhixuan Gaokong Hotel (Jiefangbei Hongyadong Branch) to Ci Qi Kou Ancient Town: metro: duration 42, cost 16. taxi: duration 18, cost 51.37. walk: duration 151, cost 0.0. \nfrom Qianhe Zhixuan Gaokong Hotel (Jiefangbei Hongyadong Branch) to Chongqing North Railway Station Atour Hotel: metro: duration 17, cost 12. taxi: duration 8, cost 24.46. walk: duration 67, cost 0.0. \nfrom Qianhe Zhixuan Gaokong Hotel (Jiefangbei Hongyadong Branch) to Chongqing North Railway Station: metro: duration 16, cost 12. taxi: duration 9, cost 26.4. walk: duration 74, cost 0.0. \nfrom Qianhe Zhixuan Gaokong Hotel (Jiefangbei Hongyadong Branch) to Lavande Hotel (Chongqing Jiefangbei Center Pedestrian Street): metro: duration 4, cost 8. taxi: duration 1, cost 11.0. walk: duration 8, cost 0.0. \nfrom Qianhe Zhixuan Gaokong Hotel (Jiefangbei Hongyadong Branch) to Liziba Light Rail Station: metro: duration 10, cost 8. taxi: duration 5, cost 17.68. walk: duration 44, cost 0.0. \nfrom Qianhe Zhixuan Gaokong Hotel (Jiefangbei Hongyadong Branch) to Chongqing Huguang Guild Hall: metro: duration 9, cost 8. taxi: duration 1, cost 11.0. walk: duration 13, cost 0.0. \nfrom Chongqing Guotai Art Center to Qianhe Zhixuan Gaokong Hotel (Jiefangbei Hongyadong Branch): metro: duration 6, cost 8. taxi: duration 1, cost 11.0. walk: duration 8, cost 0.0. \nfrom Chongqing Guotai Art Center to Chongqing Guotai Art Center:  metro: empty.  taxi: empty.  walk: empty. \nfrom Chongqing Guotai Art Center to At Yuli Chongqing Hot Pot (Jiefangbei Delicious Street Branch): metro: duration 11, cost 8. taxi: duration 2, cost 11.0. walk: duration 16, cost 0.0. \nfrom Chongqing Guotai Art Center to Wulong Natural Three Bridges: metro: duration 1254, cost 24. taxi: duration 179, cost 534.29. walk: duration 1438, cost 0.0. \nfrom Chongqing Guotai Art Center to General Ba's Intangible Cultural Heritage Original Flavor Hot Pot (Jiefangbei Branch): metro: duration 11, cost 8. taxi: duration 1, cost 11.0. walk: duration 15, cost 0.0. \nfrom Chongqing Guotai Art Center to Chongqing Zoo: metro: duration 26, cost 16. taxi: duration 14, cost 37.39. walk: duration 112, cost 0.0. \nfrom Chongqing Guotai Art Center to Hongya Cave: taxi: duration 0, cost 11.0. walk: duration 2, cost 0.0. \nfrom Chongqing Guotai Art Center to Chongqing WFC Xianlai Tower Observation Deck: taxi: duration 0, cost 11.0. walk: duration 1, cost 0.0. \nfrom Chongqing Guotai Art Center to Chongqing Two Rivers Cruise: taxi: duration 0, cost 11.0. walk: duration 3, cost 0.0. \nfrom Chongqing Guotai Art Center to Dust Aroma (Chuanghui Shouzhuo Branch): metro: duration 11, cost 8. taxi: duration 2, cost 11.0. walk: duration 17, cost 0.0. \nfrom Chongqing Guotai Art Center to Chongqing Science and Technology Museum: metro: duration 21, cost 8. taxi: duration 2, cost 11.0. walk: duration 16, cost 0.0. \nfrom Chongqing Guotai Art Center to Yang Ji Long Fu (Liberation Monument Main Store): metro: duration 12, cost 8. taxi: duration 1, cost 11.0. walk: duration 9, cost 0.0. \nfrom Chongqing Guotai Art Center to Dazu Rock Carvings: metro: duration 634, cost 28. taxi: duration 121, cost 358.46. walk: duration 970, cost 0.0. \nfrom Chongqing Guotai Art Center to Chongqing People's Square: metro: duration 11, cost 8. taxi: duration 3, cost 13.13. walk: duration 28, cost 0.0. \nfrom Chongqing Guotai Art Center to Chongqing Jiangbei International Airport: metro: duration 52, cost 20. taxi: duration 27, cost 77.1. walk: duration 219, cost 0.0. \nfrom Chongqing Guotai Art Center to Chongqing Great Bombing 'June 5th' Tunnel Massacre Historical Exhibition Hall: metro: duration 6, cost 8. taxi: duration 1, cost 11.0. walk: duration 8, cost 0.0. \nfrom Chongqing Guotai Art Center to Chongqing Industrial Museum: metro: duration 53, cost 16. taxi: duration 19, cost 52.99. walk: duration 155, cost 0.0. \nfrom Chongqing Guotai Art Center to Instrument Factory Hot Pot (Jiefangbei Branch): metro: duration 10, cost 8. taxi: duration 2, cost 11.0. walk: duration 17, cost 0.0. \nfrom Chongqing Guotai Art Center to Chongqing West Railway Station: metro: duration 37, cost 20. taxi: duration 23, cost 66.23. walk: duration 190, cost 0.0. \nfrom Chongqing Guotai Art Center to Ci Qi Kou Ancient Town: metro: duration 46, cost 20. taxi: duration 18, cost 51.17. walk: duration 150, cost 0.0. \nfrom Chongqing Guotai Art Center to Chongqing North Railway Station Atour Hotel: metro: duration 19, cost 12. taxi: duration 7, cost 22.57. walk: duration 61, cost 0.0. \nfrom Chongqing Guotai Art Center to Chongqing North Railway Station: metro: duration 18, cost 12. taxi: duration 8, cost 24.48. walk: duration 67, cost 0.0. \nfrom Chongqing Guotai Art Center to Lavande Hotel (Chongqing Jiefangbei Center Pedestrian Street): metro: duration 9, cost 8. taxi: duration 1, cost 11.0. walk: duration 15, cost 0.0. \nfrom Chongqing Guotai Art Center to Liziba Light Rail Station: metro: duration 14, cost 12. taxi: duration 5, cost 18.37. walk: duration 46, cost 0.0. \nfrom Chongqing Guotai Art Center to Chongqing Huguang Guild Hall: taxi: duration 1, cost 11.0. walk: duration 11, cost 0.0. \nfrom At Yuli Chongqing Hot Pot (Jiefangbei Delicious Street Branch) to Qianhe Zhixuan Gaokong Hotel (Jiefangbei Hongyadong Branch): metro: duration 7, cost 8. taxi: duration 1, cost 11.0. walk: duration 8, cost 0.0. \nfrom At Yuli Chongqing Hot Pot (Jiefangbei Delicious Street Branch) to Chongqing Guotai Art Center: metro: duration 11, cost 8. taxi: duration 2, cost 11.0. walk: duration 16, cost 0.0. \nfrom At Yuli Chongqing Hot Pot (Jiefangbei Delicious Street Branch) to At Yuli Chongqing Hot Pot (Jiefangbei Delicious Street Branch):  metro: empty.  taxi: empty.  walk: empty. \nfrom At Yuli Chongqing Hot Pot (Jiefangbei Delicious Street Branch) to Wulong Natural Three Bridges: metro: duration 1257, cost 24. taxi: duration 180, cost 536.5. walk: duration 1444, cost 0.0. \nfrom At Yuli Chongqing Hot Pot (Jiefangbei Delicious Street Branch) to General Ba's Intangible Cultural Heritage Original Flavor Hot Pot (Jiefangbei Branch): metro: duration 9, cost 8. taxi: duration 0, cost 11.0. walk: duration 1, cost 0.0. \nfrom At Yuli Chongqing Hot Pot (Jiefangbei Delicious Street Branch) to Chongqing Zoo: metro: duration 23, cost 12. taxi: duration 12, cost 33.02. walk: duration 97, cost 0.0. \nfrom At Yuli Chongqing Hot Pot (Jiefangbei Delicious Street Branch) to Hongya Cave: metro: duration 10, cost 8. taxi: duration 2, cost 11.0. walk: duration 18, cost 0.0. \nfrom At Yuli Chongqing Hot Pot (Jiefangbei Delicious Street Branch) to Chongqing WFC Xianlai Tower Observation Deck: metro: duration 11, cost 8. taxi: duration 1, cost 11.0. walk: duration 15, cost 0.0. \nfrom At Yuli Chongqing Hot Pot (Jiefangbei Delicious Street Branch) to Chongqing Two Rivers Cruise: metro: duration 12, cost 8. taxi: duration 2, cost 11.0. walk: duration 18, cost 0.0. \nfrom At Yuli Chongqing Hot Pot (Jiefangbei Delicious Street Branch) to Dust Aroma (Chuanghui Shouzhuo Branch): taxi: duration 0, cost 11.0. walk: duration 2, cost 0.0. \nfrom At Yuli Chongqing Hot Pot (Jiefangbei Delicious Street Branch) to Chongqing Science and Technology Museum: metro: duration 24, cost 8. taxi: duration 3, cost 13.92. walk: duration 31, cost 0.0. \nfrom At Yuli Chongqing Hot Pot (Jiefangbei Delicious Street Branch) to Yang Ji Long Fu (Liberation Monument Main Store): metro: duration 10, cost 8. taxi: duration 0, cost 11.0. walk: duration 7, cost 0.0. \nfrom At Yuli Chongqing Hot Pot (Jiefangbei Delicious Street Branch) to Dazu Rock Carvings: metro: duration 632, cost 28. taxi: duration 120, cost 357.19. walk: duration 966, cost 0.0. \nfrom At Yuli Chongqing Hot Pot (Jiefangbei Delicious Street Branch) to Chongqing People's Square: metro: duration 10, cost 8. taxi: duration 3, cost 12.65. walk: duration 27, cost 0.0. \nfrom At Yuli Chongqing Hot Pot (Jiefangbei Delicious Street Branch) to Chongqing Jiangbei International Airport: metro: duration 55, cost 20. taxi: duration 29, cost 83.11. walk: duration 235, cost 0.0. \nfrom At Yuli Chongqing Hot Pot (Jiefangbei Delicious Street Branch) to Chongqing Great Bombing 'June 5th' Tunnel Massacre Historical Exhibition Hall: metro: duration 7, cost 8. taxi: duration 1, cost 11.0. walk: duration 8, cost 0.0. \nfrom At Yuli Chongqing Hot Pot (Jiefangbei Delicious Street Branch) to Chongqing Industrial Museum: metro: duration 49, cost 16. taxi: duration 17, cost 47.1. walk: duration 139, cost 0.0. \nfrom At Yuli Chongqing Hot Pot (Jiefangbei Delicious Street Branch) to Instrument Factory Hot Pot (Jiefangbei Branch): metro: duration 8, cost 8. taxi: duration 1, cost 11.0. walk: duration 8, cost 0.0. \nfrom At Yuli Chongqing Hot Pot (Jiefangbei Delicious Street Branch) to Chongqing West Railway Station: metro: duration 33, cost 20. taxi: duration 22, cost 61.38. walk: duration 177, cost 0.0. \nfrom At Yuli Chongqing Hot Pot (Jiefangbei Delicious Street Branch) to Ci Qi Kou Ancient Town: metro: duration 44, cost 16. taxi: duration 18, cost 49.75. walk: duration 146, cost 0.0. \nfrom At Yuli Chongqing Hot Pot (Jiefangbei Delicious Street Branch) to Chongqing North Railway Station Atour Hotel: metro: duration 20, cost 12. taxi: duration 8, cost 25.15. walk: duration 70, cost 0.0. \nfrom At Yuli Chongqing Hot Pot (Jiefangbei Delicious Street Branch) to Chongqing North Railway Station: metro: duration 19, cost 12. taxi: duration 9, cost 27.11. walk: duration 76, cost 0.0. \nfrom At Yuli Chongqing Hot Pot (Jiefangbei Delicious Street Branch) to Lavande Hotel (Chongqing Jiefangbei Center Pedestrian Street): metro: duration 7, cost 8. taxi: duration 0, cost 11.0. walk: duration 2, cost 0.0. \nfrom At Yuli Chongqing Hot Pot (Jiefangbei Delicious Street Branch) to Liziba Light Rail Station: metro: duration 12, cost 8. taxi: duration 4, cost 15.99. walk: duration 38, cost 0.0. \nfrom At Yuli Chongqing Hot Pot (Jiefangbei Delicious Street Branch) to Chongqing Huguang Guild Hall: metro: duration 14, cost 8. taxi: duration 2, cost 11.06. walk: duration 21, cost 0.0. \nfrom Wulong Natural Three Bridges to Qianhe Zhixuan Gaokong Hotel (Jiefangbei Hongyadong Branch): metro: duration 1252, cost 24. taxi: duration 179, cost 534.45. walk: duration 1439, cost 0.0. \nfrom Wulong Natural Three Bridges to Chongqing Guotai Art Center: metro: duration 1254, cost 24. taxi: duration 179, cost 534.29. walk: duration 1438, cost 0.0. \nfrom Wulong Natural Three Bridges to At Yuli Chongqing Hot Pot (Jiefangbei Delicious Street Branch): metro: duration 1257, cost 24. taxi: duration 180, cost 536.5. walk: duration 1444, cost 0.0. \nfrom Wulong Natural Three Bridges to Wulong Natural Three Bridges:  metro: empty.  taxi: empty.  walk: empty. \nfrom Wulong Natural Three Bridges to General Ba's Intangible Cultural Heritage Original Flavor Hot Pot (Jiefangbei Branch): metro: duration 1257, cost 24. taxi: duration 180, cost 536.75. walk: duration 1445, cost 0.0. \nfrom Wulong Natural Three Bridges to Chongqing Zoo: metro: duration 1272, cost 28. taxi: duration 189, cost 562.76. walk: duration 1514, cost 0.0. \nfrom Wulong Natural Three Bridges to Hongya Cave: metro: duration 1253, cost 24. taxi: duration 179, cost 533.87. walk: duration 1437, cost 0.0. \nfrom Wulong Natural Three Bridges to Chongqing WFC Xianlai Tower Observation Deck: metro: duration 1254, cost 24. taxi: duration 179, cost 534.01. walk: duration 1438, cost 0.0. \nfrom Wulong Natural Three Bridges to Chongqing Two Rivers Cruise: metro: duration 1255, cost 24. taxi: duration 179, cost 534.68. walk: duration 1439, cost 0.0. \nfrom Wulong Natural Three Bridges to Dust Aroma (Chuanghui Shouzhuo Branch): metro: duration 1257, cost 24. taxi: duration 180, cost 536.14. walk: duration 1443, cost 0.0. \nfrom Wulong Natural Three Bridges to Chongqing Science and Technology Museum: metro: duration 1260, cost 20. taxi: duration 179, cost 534.64. walk: duration 1439, cost 0.0. \nfrom Wulong Natural Three Bridges to Yang Ji Long Fu (Liberation Monument Main Store): metro: duration 1258, cost 24. taxi: duration 180, cost 536.34. walk: duration 1444, cost 0.0. \nfrom Wulong Natural Three Bridges to Dazu Rock Carvings: metro: duration 1876, cost 36. taxi: duration 300, cost 895.62. walk: duration 2402, cost 0.0. \nfrom Wulong Natural Three Bridges to Chongqing People's Square: metro: duration 1257, cost 24. taxi: duration 183, cost 545.13. walk: duration 1467, cost 0.0. \nfrom Wulong Natural Three Bridges to Chongqing Jiangbei International Airport: metro: duration 1251, cost 20. taxi: duration 174, cost 518.18. walk: duration 1395, cost 0.0. \nfrom Wulong Natural Three Bridges to Chongqing Great Bombing 'June 5th' Tunnel Massacre Historical Exhibition Hall: metro: duration 1252, cost 24. taxi: duration 179, cost 534.57. walk: duration 1439, cost 0.0. \nfrom Wulong Natural Three Bridges to Chongqing Industrial Museum: metro: duration 1298, cost 28. taxi: duration 191, cost 568.13. walk: duration 1529, cost 0.0. \nfrom Wulong Natural Three Bridges to Instrument Factory Hot Pot (Jiefangbei Branch): metro: duration 1256, cost 24. taxi: duration 181, cost 539.34. walk: duration 1452, cost 0.0. \nfrom Wulong Natural Three Bridges to Chongqing West Railway Station: metro: duration 1283, cost 32. taxi: duration 200, cost 595.05. walk: duration 1600, cost 0.0. \nfrom Wulong Natural Three Bridges to Ci Qi Kou Ancient Town: metro: duration 1289, cost 28. taxi: duration 198, cost 590.6. walk: duration 1589, cost 0.0. \nfrom Wulong Natural Three Bridges to Chongqing North Railway Station Atour Hotel: metro: duration 1260, cost 24. taxi: duration 185, cost 549.82. walk: duration 1480, cost 0.0. \nfrom Wulong Natural Three Bridges to Chongqing North Railway Station: metro: duration 1257, cost 24. taxi: duration 185, cost 551.1. walk: duration 1483, cost 0.0. \nfrom Wulong Natural Three Bridges to Lavande Hotel (Chongqing Jiefangbei Center Pedestrian Street): metro: duration 1255, cost 24. taxi: duration 180, cost 537.3. walk: duration 1446, cost 0.0. \nfrom Wulong Natural Three Bridges to Liziba Light Rail Station: metro: duration 1260, cost 24. taxi: duration 185, cost 551.01. walk: duration 1483, cost 0.0. \nfrom Wulong Natural Three Bridges to Chongqing Huguang Guild Hall: metro: duration 1257, cost 24. taxi: duration 178, cost 529.96. walk: duration 1427, cost 0.0. \nfrom General Ba's Intangible Cultural Heritage Original Flavor Hot Pot (Jiefangbei Branch) to Qianhe Zhixuan Gaokong Hotel (Jiefangbei Hongyadong Branch): metro: duration 6, cost 8. taxi: duration 1, cost 11.0. walk: duration 8, cost 0.0. \nfrom General Ba's Intangible Cultural Heritage Original Flavor Hot Pot (Jiefangbei Branch) to Chongqing Guotai Art Center: metro: duration 11, cost 8. taxi: duration 1, cost 11.0. walk: duration 15, cost 0.0. \nfrom General Ba's Intangible Cultural Heritage Original Flavor Hot Pot (Jiefangbei Branch) to At Yuli Chongqing Hot Pot (Jiefangbei Delicious Street Branch): metro: duration 9, cost 8. taxi: duration 0, cost 11.0. walk: duration 1, cost 0.0. \nfrom General Ba's Intangible Cultural Heritage Original Flavor Hot Pot (Jiefangbei Branch) to Wulong Natural Three Bridges: metro: duration 1257, cost 24. taxi: duration 180, cost 536.75. walk: duration 1445, cost 0.0. \nfrom General Ba's Intangible Cultural Heritage Original Flavor Hot Pot (Jiefangbei Branch) to General Ba's Intangible Cultural Heritage Original Flavor Hot Pot (Jiefangbei Branch):  metro: empty.  taxi: empty.  walk: empty. \nfrom General Ba's Intangible Cultural Heritage Original Flavor Hot Pot (Jiefangbei Branch) to Chongqing Zoo: metro: duration 23, cost 12. taxi: duration 12, cost 33.04. walk: duration 97, cost 0.0. \nfrom General Ba's Intangible Cultural Heritage Original Flavor Hot Pot (Jiefangbei Branch) to Hongya Cave: metro: duration 10, cost 8. taxi: duration 2, cost 11.0. walk: duration 18, cost 0.0. \nfrom General Ba's Intangible Cultural Heritage Original Flavor Hot Pot (Jiefangbei Branch) to Chongqing WFC Xianlai Tower Observation Deck: metro: duration 11, cost 8. taxi: duration 1, cost 11.0. walk: duration 14, cost 0.0. \nfrom General Ba's Intangible Cultural Heritage Original Flavor Hot Pot (Jiefangbei Branch) to Chongqing Two Rivers Cruise: metro: duration 12, cost 8. taxi: duration 2, cost 11.0. walk: duration 18, cost 0.0. \nfrom General Ba's Intangible Cultural Heritage Original Flavor Hot Pot (Jiefangbei Branch) to Dust Aroma (Chuanghui Shouzhuo Branch): metro: duration 9, cost 8. taxi: duration 0, cost 11.0. walk: duration 3, cost 0.0. \nfrom General Ba's Intangible Cultural Heritage Original Flavor Hot Pot (Jiefangbei Branch) to Chongqing Science and Technology Museum: metro: duration 24, cost 8. taxi: duration 3, cost 13.74. walk: duration 30, cost 0.0. \nfrom General Ba's Intangible Cultural Heritage Original Flavor Hot Pot (Jiefangbei Branch) to Yang Ji Long Fu (Liberation Monument Main Store): taxi: duration 0, cost 11.0. walk: duration 6, cost 0.0. \nfrom General Ba's Intangible Cultural Heritage Original Flavor Hot Pot (Jiefangbei Branch) to Dazu Rock Carvings: metro: duration 632, cost 28. taxi: duration 120, cost 356.89. walk: duration 965, cost 0.0. \nfrom General Ba's Intangible Cultural Heritage Original Flavor Hot Pot (Jiefangbei Branch) to Chongqing People's Square: metro: duration 9, cost 8. taxi: duration 3, cost 12.37. walk: duration 26, cost 0.0. \nfrom General Ba's Intangible Cultural Heritage Original Flavor Hot Pot (Jiefangbei Branch) to Chongqing Jiangbei International Airport: metro: duration 54, cost 20. taxi: duration 29, cost 82.91. walk: duration 235, cost 0.0. \nfrom General Ba's Intangible Cultural Heritage Original Flavor Hot Pot (Jiefangbei Branch) to Chongqing Great Bombing 'June 5th' Tunnel Massacre Historical Exhibition Hall: metro: duration 6, cost 8. taxi: duration 1, cost 11.0. walk: duration 8, cost 0.0. \nfrom General Ba's Intangible Cultural Heritage Original Flavor Hot Pot (Jiefangbei Branch) to Chongqing Industrial Museum: metro: duration 50, cost 16. taxi: duration 17, cost 47.19. walk: duration 139, cost 0.0. \nfrom General Ba's Intangible Cultural Heritage Original Flavor Hot Pot (Jiefangbei Branch) to Instrument Factory Hot Pot (Jiefangbei Branch): taxi: duration 0, cost 11.0. walk: duration 7, cost 0.0. \nfrom General Ba's Intangible Cultural Heritage Original Flavor Hot Pot (Jiefangbei Branch) to Chongqing West Railway Station: metro: duration 34, cost 20. taxi: duration 22, cost 61.31. walk: duration 177, cost 0.0. \nfrom General Ba's Intangible Cultural Heritage Original Flavor Hot Pot (Jiefangbei Branch) to Ci Qi Kou Ancient Town: metro: duration 44, cost 16. taxi: duration 18, cost 49.45. walk: duration 145, cost 0.0. \nfrom General Ba's Intangible Cultural Heritage Original Flavor Hot Pot (Jiefangbei Branch) to Chongqing North Railway Station Atour Hotel: metro: duration 19, cost 12. taxi: duration 8, cost 24.86. walk: duration 69, cost 0.0. \nfrom General Ba's Intangible Cultural Heritage Original Flavor Hot Pot (Jiefangbei Branch) to Chongqing North Railway Station: metro: duration 18, cost 12. taxi: duration 9, cost 26.82. walk: duration 75, cost 0.0. \nfrom General Ba's Intangible Cultural Heritage Original Flavor Hot Pot (Jiefangbei Branch) to Lavande Hotel (Chongqing Jiefangbei Center Pedestrian Street): taxi: duration 0, cost 11.0. walk: duration 1, cost 0.0. \nfrom General Ba's Intangible Cultural Heritage Original Flavor Hot Pot (Jiefangbei Branch) to Liziba Light Rail Station: metro: duration 12, cost 8. taxi: duration 4, cost 15.79. walk: duration 38, cost 0.0. \nfrom General Ba's Intangible Cultural Heritage Original Flavor Hot Pot (Jiefangbei Branch) to Chongqing Huguang Guild Hall: metro: duration 14, cost 8. taxi: duration 2, cost 11.09. walk: duration 21, cost 0.0. \nfrom Chongqing Zoo to Qianhe Zhixuan Gaokong Hotel (Jiefangbei Hongyadong Branch): metro: duration 22, cost 12. taxi: duration 13, cost 35.45. walk: duration 105, cost 0.0. \nfrom Chongqing Zoo to Chongqing Guotai Art Center: metro: duration 26, cost 16. taxi: duration 14, cost 37.39. walk: duration 112, cost 0.0. \nfrom Chongqing Zoo to At Yuli Chongqing Hot Pot (Jiefangbei Delicious Street Branch): metro: duration 23, cost 12. taxi: duration 12, cost 33.02. walk: duration 97, cost 0.0. \nfrom Chongqing Zoo to Wulong Natural Three Bridges: metro: duration 1272, cost 28. taxi: duration 189, cost 562.76. walk: duration 1514, cost 0.0. \nfrom Chongqing Zoo to General Ba's Intangible Cultural Heritage Original Flavor Hot Pot (Jiefangbei Branch): metro: duration 23, cost 12. taxi: duration 12, cost 33.04. walk: duration 97, cost 0.0. \nfrom Chongqing Zoo to Chongqing Zoo:  metro: empty.  taxi: empty.  walk: empty. \nfrom Chongqing Zoo to Hongya Cave: metro: duration 25, cost 16. taxi: duration 14, cost 38.2. walk: duration 114, cost 0.0. \nfrom Chongqing Zoo to Chongqing WFC Xianlai Tower Observation Deck: metro: duration 26, cost 16. taxi: duration 13, cost 37.24. walk: duration 111, cost 0.0. \nfrom Chongqing Zoo to Chongqing Two Rivers Cruise: metro: duration 27, cost 16. taxi: duration 14, cost 37.88. walk: duration 113, cost 0.0. \nfrom Chongqing Zoo to Dust Aroma (Chuanghui Shouzhuo Branch): metro: duration 23, cost 12. taxi: duration 12, cost 32.78. walk: duration 96, cost 0.0. \nfrom Chongqing Zoo to Chongqing Science and Technology Museum: metro: duration 39, cost 16. taxi: duration 15, cost 41.3. walk: duration 124, cost 0.0. \nfrom Chongqing Zoo to Yang Ji Long Fu (Liberation Monument Main Store): metro: duration 24, cost 12. taxi: duration 12, cost 34.67. walk: duration 102, cost 0.0. \nfrom Chongqing Zoo to Dazu Rock Carvings: metro: duration 624, cost 28. taxi: duration 114, cost 337.74. walk: duration 914, cost 0.0. \nfrom Chongqing Zoo to Chongqing People's Square: metro: duration 21, cost 12. taxi: duration 11, cost 32.47. walk: duration 95, cost 0.0. \nfrom Chongqing Zoo to Chongqing Jiangbei International Airport: metro: duration 70, cost 24. taxi: duration 40, cost 116.42. walk: duration 324, cost 0.0. \nfrom Chongqing Zoo to Chongqing Great Bombing 'June 5th' Tunnel Massacre Historical Exhibition Hall: metro: duration 22, cost 12. taxi: duration 13, cost 35.46. walk: duration 105, cost 0.0. \nfrom Chongqing Zoo to Chongqing Industrial Museum: metro: duration 34, cost 8. taxi: duration 5, cost 18.44. walk: duration 47, cost 0.0. \nfrom Chongqing Zoo to Instrument Factory Hot Pot (Jiefangbei Branch): metro: duration 22, cost 12. taxi: duration 11, cost 32.36. walk: duration 94, cost 0.0. \nfrom Chongqing Zoo to Chongqing West Railway Station: metro: duration 20, cost 12. taxi: duration 10, cost 30.26. walk: duration 87, cost 0.0. \nfrom Chongqing Zoo to Ci Qi Kou Ancient Town: metro: duration 40, cost 16. taxi: duration 15, cost 40.89. walk: duration 123, cost 0.0. \nfrom Chongqing Zoo to Chongqing North Railway Station Atour Hotel: metro: duration 30, cost 16. taxi: duration 16, cost 45.12. walk: duration 134, cost 0.0. \nfrom Chongqing Zoo to Chongqing North Railway Station: metro: duration 29, cost 16. taxi: duration 17, cost 47.0. walk: duration 139, cost 0.0. \nfrom Chongqing Zoo to Lavande Hotel (Chongqing Jiefangbei Center Pedestrian Street): metro: duration 21, cost 12. taxi: duration 12, cost 33.02. walk: duration 97, cost 0.0. \nfrom Chongqing Zoo to Liziba Light Rail Station: metro: duration 18, cost 12. taxi: duration 9, cost 26.78. walk: duration 75, cost 0.0. \nfrom Chongqing Zoo to Chongqing Huguang Guild Hall: metro: duration 29, cost 16. taxi: duration 14, cost 39.33. walk: duration 118, cost 0.0. \nfrom Hongya Cave to Qianhe Zhixuan Gaokong Hotel (Jiefangbei Hongyadong Branch): metro: duration 5, cost 8. taxi: duration 1, cost 11.0. walk: duration 11, cost 0.0. \nfrom Hongya Cave to Chongqing Guotai Art Center: taxi: duration 0, cost 11.0. walk: duration 2, cost 0.0. \nfrom Hongya Cave to At Yuli Chongqing Hot Pot (Jiefangbei Delicious Street Branch): metro: duration 10, cost 8. taxi: duration 2, cost 11.0. walk: duration 18, cost 0.0. \nfrom Hongya Cave to Wulong Natural Three Bridges: metro: duration 1253, cost 24. taxi: duration 179, cost 533.87. walk: duration 1437, cost 0.0. \nfrom Hongya Cave to General Ba's Intangible Cultural Heritage Original Flavor Hot Pot (Jiefangbei Branch): metro: duration 10, cost 8. taxi: duration 2, cost 11.0. walk: duration 18, cost 0.0. \nfrom Hongya Cave to Chongqing Zoo: metro: duration 25, cost 16. taxi: duration 14, cost 38.2. walk: duration 114, cost 0.0. \nfrom Hongya Cave to Hongya Cave:  metro: empty.  taxi: empty.  walk: empty. \nfrom Hongya Cave to Chongqing WFC Xianlai Tower Observation Deck: taxi: duration 0, cost 11.0. walk: duration 4, cost 0.0. \nfrom Hongya Cave to Chongqing Two Rivers Cruise: taxi: duration 0, cost 11.0. walk: duration 2, cost 0.0. \nfrom Hongya Cave to Dust Aroma (Chuanghui Shouzhuo Branch): metro: duration 10, cost 8. taxi: duration 2, cost 11.0. walk: duration 20, cost 0.0. \nfrom Hongya Cave to Chongqing Science and Technology Museum: metro: duration 20, cost 8. taxi: duration 1, cost 11.0. walk: duration 13, cost 0.0. \nfrom Hongya Cave to Yang Ji Long Fu (Liberation Monument Main Store): metro: duration 11, cost 8. taxi: duration 1, cost 11.0. walk: duration 12, cost 0.0. \nfrom Hongya Cave to Dazu Rock Carvings: metro: duration 633, cost 28. taxi: duration 121, cost 358.73. walk: duration 970, cost 0.0. \nfrom Hongya Cave to Chongqing People's Square: metro: duration 10, cost 8. taxi: duration 3, cost 13.5. walk: duration 30, cost 0.0. \nfrom Hongya Cave to Chongqing Jiangbei International Airport: metro: duration 51, cost 20. taxi: duration 27, cost 76.03. walk: duration 216, cost 0.0. \nfrom Hongya Cave to Chongqing Great Bombing 'June 5th' Tunnel Massacre Historical Exhibition Hall: metro: duration 5, cost 8. taxi: duration 1, cost 11.0. walk: duration 11, cost 0.0. \nfrom Hongya Cave to Chongqing Industrial Museum: metro: duration 52, cost 16. taxi: duration 19, cost 54.06. walk: duration 158, cost 0.0. \nfrom Hongya Cave to Instrument Factory Hot Pot (Jiefangbei Branch): metro: duration 9, cost 8. taxi: duration 2, cost 11.0. walk: duration 20, cost 0.0. \nfrom Hongya Cave to Chongqing West Railway Station: metro: duration 36, cost 20. taxi: duration 24, cost 67.14. walk: duration 193, cost 0.0. \nfrom Hongya Cave to Ci Qi Kou Ancient Town: metro: duration 45, cost 20. taxi: duration 18, cost 51.52. walk: duration 151, cost 0.0. \nfrom Hongya Cave to Chongqing North Railway Station Atour Hotel: metro: duration 18, cost 12. taxi: duration 7, cost 22.23. walk: duration 60, cost 0.0. \nfrom Hongya Cave to Chongqing North Railway Station: metro: duration 17, cost 12. taxi: duration 8, cost 24.12. walk: duration 66, cost 0.0. \nfrom Hongya Cave to Lavande Hotel (Chongqing Jiefangbei Center Pedestrian Street): metro: duration 8, cost 8. taxi: duration 2, cost 11.0. walk: duration 18, cost 0.0. \nfrom Hongya Cave to Liziba Light Rail Station: metro: duration 13, cost 12. taxi: duration 6, cost 18.94. walk: duration 48, cost 0.0. \nfrom Hongya Cave to Chongqing Huguang Guild Hall: taxi: duration 1, cost 11.0. walk: duration 11, cost 0.0. \nfrom Chongqing WFC Xianlai Tower Observation Deck to Qianhe Zhixuan Gaokong Hotel (Jiefangbei Hongyadong Branch): metro: duration 6, cost 8. taxi: duration 0, cost 11.0. walk: duration 7, cost 0.0. \nfrom Chongqing WFC Xianlai Tower Observation Deck to Chongqing Guotai Art Center: taxi: duration 0, cost 11.0. walk: duration 1, cost 0.0. \nfrom Chongqing WFC Xianlai Tower Observation Deck to At Yuli Chongqing Hot Pot (Jiefangbei Delicious Street Branch): metro: duration 11, cost 8. taxi: duration 1, cost 11.0. walk: duration 15, cost 0.0. \nfrom Chongqing WFC Xianlai Tower Observation Deck to Wulong Natural Three Bridges: metro: duration 1254, cost 24. taxi: duration 179, cost 534.01. walk: duration 1438, cost 0.0. \nfrom Chongqing WFC Xianlai Tower Observation Deck to General Ba's Intangible Cultural Heritage Original Flavor Hot Pot (Jiefangbei Branch): metro: duration 11, cost 8. taxi: duration 1, cost 11.0. walk: duration 14, cost 0.0. \nfrom Chongqing WFC Xianlai Tower Observation Deck to Chongqing Zoo: metro: duration 26, cost 16. taxi: duration 13, cost 37.24. walk: duration 111, cost 0.0. \nfrom Chongqing WFC Xianlai Tower Observation Deck to Hongya Cave: taxi: duration 0, cost 11.0. walk: duration 4, cost 0.0. \nfrom Chongqing WFC Xianlai Tower Observation Deck to Chongqing WFC Xianlai Tower Observation Deck:  metro: empty.  taxi: empty.  walk: empty. \nfrom Chongqing WFC Xianlai Tower Observation Deck to Chongqing Two Rivers Cruise: taxi: duration 0, cost 11.0. walk: duration 4, cost 0.0. \nfrom Chongqing WFC Xianlai Tower Observation Deck to Dust Aroma (Chuanghui Shouzhuo Branch): metro: duration 11, cost 8. taxi: duration 2, cost 11.0. walk: duration 16, cost 0.0. \nfrom Chongqing WFC Xianlai Tower Observation Deck to Chongqing Science and Technology Museum: metro: duration 21, cost 8. taxi: duration 2, cost 11.0. walk: duration 17, cost 0.0. \nfrom Chongqing WFC Xianlai Tower Observation Deck to Yang Ji Long Fu (Liberation Monument Main Store): metro: duration 12, cost 8. taxi: duration 1, cost 11.0. walk: duration 8, cost 0.0. \nfrom Chongqing WFC Xianlai Tower Observation Deck to Dazu Rock Carvings: metro: duration 634, cost 28. taxi: duration 121, cost 358.81. walk: duration 970, cost 0.0. \nfrom Chongqing WFC Xianlai Tower Observation Deck to Chongqing People's Square: metro: duration 11, cost 8. taxi: duration 3, cost 13.35. walk: duration 29, cost 0.0. \nfrom Chongqing WFC Xianlai Tower Observation Deck to Chongqing Jiangbei International Airport: metro: duration 52, cost 20. taxi: duration 27, cost 77.52. walk: duration 220, cost 0.0. \nfrom Chongqing WFC Xianlai Tower Observation Deck to Chongqing Great Bombing 'June 5th' Tunnel Massacre Historical Exhibition Hall: metro: duration 6, cost 8. taxi: duration 0, cost 11.0. walk: duration 7, cost 0.0. \nfrom Chongqing WFC Xianlai Tower Observation Deck to Chongqing Industrial Museum: metro: duration 53, cost 16. taxi: duration 19, cost 52.72. walk: duration 154, cost 0.0. \nfrom Chongqing WFC Xianlai Tower Observation Deck to Instrument Factory Hot Pot (Jiefangbei Branch): metro: duration 10, cost 8. taxi: duration 2, cost 11.0. walk: duration 17, cost 0.0. \nfrom Chongqing WFC Xianlai Tower Observation Deck to Chongqing West Railway Station: metro: duration 37, cost 20. taxi: duration 23, cost 66.19. walk: duration 190, cost 0.0. \nfrom Chongqing WFC Xianlai Tower Observation Deck to Ci Qi Kou Ancient Town: metro: duration 46, cost 20. taxi: duration 18, cost 51.49. walk: duration 151, cost 0.0. \nfrom Chongqing WFC Xianlai Tower Observation Deck to Chongqing North Railway Station Atour Hotel: metro: duration 19, cost 12. taxi: duration 7, cost 23.01. walk: duration 62, cost 0.0. \nfrom Chongqing WFC Xianlai Tower Observation Deck to Chongqing North Railway Station: metro: duration 18, cost 12. taxi: duration 8, cost 24.93. walk: duration 69, cost 0.0. \nfrom Chongqing WFC Xianlai Tower Observation Deck to Lavande Hotel (Chongqing Jiefangbei Center Pedestrian Street): metro: duration 9, cost 8. taxi: duration 1, cost 11.0. walk: duration 14, cost 0.0. \nfrom Chongqing WFC Xianlai Tower Observation Deck to Liziba Light Rail Station: metro: duration 14, cost 12. taxi: duration 5, cost 18.46. walk: duration 47, cost 0.0. \nfrom Chongqing WFC Xianlai Tower Observation Deck to Chongqing Huguang Guild Hall: taxi: duration 1, cost 11.0. walk: duration 10, cost 0.0. \nfrom Chongqing Two Rivers Cruise to Qianhe Zhixuan Gaokong Hotel (Jiefangbei Hongyadong Branch): metro: duration 7, cost 8. taxi: duration 1, cost 11.0. walk: duration 11, cost 0.0. \nfrom Chongqing Two Rivers Cruise to Chongqing Guotai Art Center: taxi: duration 0, cost 11.0. walk: duration 3, cost 0.0. \nfrom Chongqing Two Rivers Cruise to At Yuli Chongqing Hot Pot (Jiefangbei Delicious Street Branch): metro: duration 12, cost 8. taxi: duration 2, cost 11.0. walk: duration 18, cost 0.0. \nfrom Chongqing Two Rivers Cruise to Wulong Natural Three Bridges: metro: duration 1255, cost 24. taxi: duration 179, cost 534.68. walk: duration 1439, cost 0.0. \nfrom Chongqing Two Rivers Cruise to General Ba's Intangible Cultural Heritage Original Flavor Hot Pot (Jiefangbei Branch): metro: duration 12, cost 8. taxi: duration 2, cost 11.0. walk: duration 18, cost 0.0. \nfrom Chongqing Two Rivers Cruise to Chongqing Zoo: metro: duration 27, cost 16. taxi: duration 14, cost 37.88. walk: duration 113, cost 0.0. \nfrom Chongqing Two Rivers Cruise to Hongya Cave: taxi: duration 0, cost 11.0. walk: duration 2, cost 0.0. \nfrom Chongqing Two Rivers Cruise to Chongqing WFC Xianlai Tower Observation Deck: taxi: duration 0, cost 11.0. walk: duration 4, cost 0.0. \nfrom Chongqing Two Rivers Cruise to Chongqing Two Rivers Cruise:  metro: empty.  taxi: empty.  walk: empty. \nfrom Chongqing Two Rivers Cruise to Dust Aroma (Chuanghui Shouzhuo Branch): metro: duration 12, cost 8. taxi: duration 2, cost 11.0. walk: duration 20, cost 0.0. \nfrom Chongqing Two Rivers Cruise to Chongqing Science and Technology Museum: metro: duration 22, cost 8. taxi: duration 1, cost 11.0. walk: duration 13, cost 0.0. \nfrom Chongqing Two Rivers Cruise to Yang Ji Long Fu (Liberation Monument Main Store): metro: duration 13, cost 8. taxi: duration 1, cost 11.0. walk: duration 11, cost 0.0. \nfrom Chongqing Two Rivers Cruise to Dazu Rock Carvings: metro: duration 635, cost 28. taxi: duration 121, cost 357.91. walk: duration 968, cost 0.0. \nfrom Chongqing Two Rivers Cruise to Chongqing People's Square: metro: duration 12, cost 8. taxi: duration 3, cost 12.89. walk: duration 28, cost 0.0. \nfrom Chongqing Two Rivers Cruise to Chongqing Jiangbei International Airport: metro: duration 53, cost 20. taxi: duration 27, cost 76.11. walk: duration 217, cost 0.0. \nfrom Chongqing Two Rivers Cruise to Chongqing Great Bombing 'June 5th' Tunnel Massacre Historical Exhibition Hall: metro: duration 7, cost 8. taxi: duration 1, cost 11.0. walk: duration 11, cost 0.0. \nfrom Chongqing Two Rivers Cruise to Chongqing Industrial Museum: metro: duration 54, cost 16. taxi: duration 19, cost 53.75. walk: duration 157, cost 0.0. \nfrom Chongqing Two Rivers Cruise to Instrument Factory Hot Pot (Jiefangbei Branch): metro: duration 11, cost 8. taxi: duration 2, cost 11.0. walk: duration 18, cost 0.0. \nfrom Chongqing Two Rivers Cruise to Chongqing West Railway Station: metro: duration 38, cost 20. taxi: duration 23, cost 66.56. walk: duration 191, cost 0.0. \nfrom Chongqing Two Rivers Cruise to Ci Qi Kou Ancient Town: metro: duration 47, cost 20. taxi: duration 18, cost 50.71. walk: duration 149, cost 0.0. \nfrom Chongqing Two Rivers Cruise to Chongqing North Railway Station Atour Hotel: metro: duration 20, cost 12. taxi: duration 7, cost 21.72. walk: duration 58, cost 0.0. \nfrom Chongqing Two Rivers Cruise to Chongqing North Railway Station: metro: duration 19, cost 12. taxi: duration 8, cost 23.62. walk: duration 64, cost 0.0. \nfrom Chongqing Two Rivers Cruise to Lavande Hotel (Chongqing Jiefangbei Center Pedestrian Street): metro: duration 10, cost 8. taxi: duration 2, cost 11.0. walk: duration 17, cost 0.0. \nfrom Chongqing Two Rivers Cruise to Liziba Light Rail Station: metro: duration 15, cost 12. taxi: duration 5, cost 18.39. walk: duration 46, cost 0.0. \nfrom Chongqing Two Rivers Cruise to Chongqing Huguang Guild Hall: taxi: duration 1, cost 11.0. walk: duration 13, cost 0.0. \nfrom Dust Aroma (Chuanghui Shouzhuo Branch) to Qianhe Zhixuan Gaokong Hotel (Jiefangbei Hongyadong Branch): metro: duration 7, cost 8. taxi: duration 1, cost 11.0. walk: duration 9, cost 0.0. \nfrom Dust Aroma (Chuanghui Shouzhuo Branch) to Chongqing Guotai Art Center: metro: duration 11, cost 8. taxi: duration 2, cost 11.0. walk: duration 17, cost 0.0. \nfrom Dust Aroma (Chuanghui Shouzhuo Branch) to At Yuli Chongqing Hot Pot (Jiefangbei Delicious Street Branch): taxi: duration 0, cost 11.0. walk: duration 2, cost 0.0. \nfrom Dust Aroma (Chuanghui Shouzhuo Branch) to Wulong Natural Three Bridges: metro: duration 1257, cost 24. taxi: duration 180, cost 536.14. walk: duration 1443, cost 0.0. \nfrom Dust Aroma (Chuanghui Shouzhuo Branch) to General Ba's Intangible Cultural Heritage Original Flavor Hot Pot (Jiefangbei Branch): metro: duration 9, cost 8. taxi: duration 0, cost 11.0. walk: duration 3, cost 0.0. \nfrom Dust Aroma (Chuanghui Shouzhuo Branch) to Chongqing Zoo: metro: duration 23, cost 12. taxi: duration 12, cost 32.78. walk: duration 96, cost 0.0. \nfrom Dust Aroma (Chuanghui Shouzhuo Branch) to Hongya Cave: metro: duration 10, cost 8. taxi: duration 2, cost 11.0. walk: duration 20, cost 0.0. \nfrom Dust Aroma (Chuanghui Shouzhuo Branch) to Chongqing WFC Xianlai Tower Observation Deck: metro: duration 11, cost 8. taxi: duration 2, cost 11.0. walk: duration 16, cost 0.0. \nfrom Dust Aroma (Chuanghui Shouzhuo Branch) to Chongqing Two Rivers Cruise: metro: duration 12, cost 8. taxi: duration 2, cost 11.0. walk: duration 20, cost 0.0. \nfrom Dust Aroma (Chuanghui Shouzhuo Branch) to Dust Aroma (Chuanghui Shouzhuo Branch):  metro: empty.  taxi: empty.  walk: empty. \nfrom Dust Aroma (Chuanghui Shouzhuo Branch) to Chongqing Science and Technology Museum: metro: duration 24, cost 8. taxi: duration 4, cost 14.51. walk: duration 33, cost 0.0. \nfrom Dust Aroma (Chuanghui Shouzhuo Branch) to Yang Ji Long Fu (Liberation Monument Main Store): metro: duration 10, cost 8. taxi: duration 1, cost 11.0. walk: duration 9, cost 0.0. \nfrom Dust Aroma (Chuanghui Shouzhuo Branch) to Dazu Rock Carvings: metro: duration 632, cost 28. taxi: duration 120, cost 357.69. walk: duration 967, cost 0.0. \nfrom Dust Aroma (Chuanghui Shouzhuo Branch) to Chongqing People's Square: metro: duration 10, cost 8. taxi: duration 3, cost 13.24. walk: duration 29, cost 0.0. \nfrom Dust Aroma (Chuanghui Shouzhuo Branch) to Chongqing Jiangbei International Airport: metro: duration 55, cost 20. taxi: duration 29, cost 83.8. walk: duration 237, cost 0.0. \nfrom Dust Aroma (Chuanghui Shouzhuo Branch) to Chongqing Great Bombing 'June 5th' Tunnel Massacre Historical Exhibition Hall: metro: duration 7, cost 8. taxi: duration 1, cost 11.0. walk: duration 9, cost 0.0. \nfrom Dust Aroma (Chuanghui Shouzhuo Branch) to Chongqing Industrial Museum: metro: duration 49, cost 16. taxi: duration 17, cost 46.64. walk: duration 138, cost 0.0. \nfrom Dust Aroma (Chuanghui Shouzhuo Branch) to Instrument Factory Hot Pot (Jiefangbei Branch): metro: duration 8, cost 8. taxi: duration 1, cost 11.0. walk: duration 10, cost 0.0. \nfrom Dust Aroma (Chuanghui Shouzhuo Branch) to Chongqing West Railway Station: metro: duration 33, cost 20. taxi: duration 22, cost 61.29. walk: duration 177, cost 0.0. \nfrom Dust Aroma (Chuanghui Shouzhuo Branch) to Ci Qi Kou Ancient Town: metro: duration 44, cost 16. taxi: duration 18, cost 50.27. walk: duration 148, cost 0.0. \nfrom Dust Aroma (Chuanghui Shouzhuo Branch) to Chongqing North Railway Station Atour Hotel: metro: duration 20, cost 12. taxi: duration 9, cost 25.84. walk: duration 72, cost 0.0. \nfrom Dust Aroma (Chuanghui Shouzhuo Branch) to Chongqing North Railway Station: metro: duration 19, cost 12. taxi: duration 9, cost 27.8. walk: duration 79, cost 0.0. \nfrom Dust Aroma (Chuanghui Shouzhuo Branch) to Lavande Hotel (Chongqing Jiefangbei Center Pedestrian Street): metro: duration 7, cost 8. taxi: duration 0, cost 11.0. walk: duration 5, cost 0.0. \nfrom Dust Aroma (Chuanghui Shouzhuo Branch) to Liziba Light Rail Station: metro: duration 12, cost 8. taxi: duration 4, cost 16.3. walk: duration 39, cost 0.0. \nfrom Dust Aroma (Chuanghui Shouzhuo Branch) to Chongqing Huguang Guild Hall: metro: duration 14, cost 8. taxi: duration 2, cost 11.25. walk: duration 22, cost 0.0. \nfrom Chongqing Science and Technology Museum to Qianhe Zhixuan Gaokong Hotel (Jiefangbei Hongyadong Branch): metro: duration 19, cost 8. taxi: duration 3, cost 11.95. walk: duration 24, cost 0.0. \nfrom Chongqing Science and Technology Museum to Chongqing Guotai Art Center: metro: duration 21, cost 8. taxi: duration 2, cost 11.0. walk: duration 16, cost 0.0. \nfrom Chongqing Science and Technology Museum to At Yuli Chongqing Hot Pot (Jiefangbei Delicious Street Branch): metro: duration 24, cost 8. taxi: duration 3, cost 13.92. walk: duration 31, cost 0.0. \nfrom Chongqing Science and Technology Museum to Wulong Natural Three Bridges: metro: duration 1260, cost 20. taxi: duration 179, cost 534.64. walk: duration 1439, cost 0.0. \nfrom Chongqing Science and Technology Museum to General Ba's Intangible Cultural Heritage Original Flavor Hot Pot (Jiefangbei Branch): metro: duration 24, cost 8. taxi: duration 3, cost 13.74. walk: duration 30, cost 0.0. \nfrom Chongqing Science and Technology Museum to Chongqing Zoo: metro: duration 39, cost 16. taxi: duration 15, cost 41.3. walk: duration 124, cost 0.0. \nfrom Chongqing Science and Technology Museum to Hongya Cave: metro: duration 20, cost 8. taxi: duration 1, cost 11.0. walk: duration 13, cost 0.0. \nfrom Chongqing Science and Technology Museum to Chongqing WFC Xianlai Tower Observation Deck: metro: duration 21, cost 8. taxi: duration 2, cost 11.0. walk: duration 17, cost 0.0. \nfrom Chongqing Science and Technology Museum to Chongqing Two Rivers Cruise: metro: duration 22, cost 8. taxi: duration 1, cost 11.0. walk: duration 13, cost 0.0. \nfrom Chongqing Science and Technology Museum to Dust Aroma (Chuanghui Shouzhuo Branch): metro: duration 24, cost 8. taxi: duration 4, cost 14.51. walk: duration 33, cost 0.0. \nfrom Chongqing Science and Technology Museum to Chongqing Science and Technology Museum:  metro: empty.  taxi: empty.  walk: empty. \nfrom Chongqing Science and Technology Museum to Yang Ji Long Fu (Liberation Monument Main Store): metro: duration 25, cost 8. taxi: duration 3, cost 11.78. walk: duration 24, cost 0.0. \nfrom Chongqing Science and Technology Museum to Dazu Rock Carvings: metro: duration 643, cost 28. taxi: duration 120, cost 357.29. walk: duration 966, cost 0.0. \nfrom Chongqing Science and Technology Museum to Chongqing People's Square: metro: duration 22, cost 8. taxi: duration 4, cost 14.22. walk: duration 32, cost 0.0. \nfrom Chongqing Science and Technology Museum to Chongqing Jiangbei International Airport: metro: duration 56, cost 20. taxi: duration 25, cost 71.36. walk: duration 204, cost 0.0. \nfrom Chongqing Science and Technology Museum to Chongqing Great Bombing 'June 5th' Tunnel Massacre Historical Exhibition Hall: metro: duration 19, cost 8. taxi: duration 3, cost 11.85. walk: duration 24, cost 0.0. \nfrom Chongqing Science and Technology Museum to Chongqing Industrial Museum: metro: duration 65, cost 20. taxi: duration 21, cost 58.02. walk: duration 168, cost 0.0. \nfrom Chongqing Science and Technology Museum to Instrument Factory Hot Pot (Jiefangbei Branch): metro: duration 23, cost 8. taxi: duration 3, cost 13.51. walk: duration 30, cost 0.0. \nfrom Chongqing Science and Technology Museum to Chongqing West Railway Station: metro: duration 49, cost 20. taxi: duration 24, cost 69.54. walk: duration 199, cost 0.0. \nfrom Chongqing Science and Technology Museum to Ci Qi Kou Ancient Town: metro: duration 55, cost 20. taxi: duration 18, cost 50.7. walk: duration 149, cost 0.0. \nfrom Chongqing Science and Technology Museum to Chongqing North Railway Station Atour Hotel: metro: duration 27, cost 12. taxi: duration 6, cost 19.18. walk: duration 49, cost 0.0. \nfrom Chongqing Science and Technology Museum to Chongqing North Railway Station: metro: duration 25, cost 12. taxi: duration 6, cost 20.98. walk: duration 55, cost 0.0. \nfrom Chongqing Science and Technology Museum to Lavande Hotel (Chongqing Jiefangbei Center Pedestrian Street): metro: duration 22, cost 8. taxi: duration 3, cost 13.46. walk: duration 30, cost 0.0. \nfrom Chongqing Science and Technology Museum to Liziba Light Rail Station: metro: duration 26, cost 12. taxi: duration 6, cost 20.3. walk: duration 53, cost 0.0. \nfrom Chongqing Science and Technology Museum to Chongqing Huguang Guild Hall: metro: duration 24, cost 8. taxi: duration 2, cost 11.08. walk: duration 21, cost 0.0. \nfrom Yang Ji Long Fu (Liberation Monument Main Store) to Qianhe Zhixuan Gaokong Hotel (Jiefangbei Hongyadong Branch): metro: duration 7, cost 8. taxi: duration 0, cost 11.0. walk: duration 5, cost 0.0. \nfrom Yang Ji Long Fu (Liberation Monument Main Store) to Chongqing Guotai Art Center: metro: duration 12, cost 8. taxi: duration 1, cost 11.0. walk: duration 9, cost 0.0. \nfrom Yang Ji Long Fu (Liberation Monument Main Store) to At Yuli Chongqing Hot Pot (Jiefangbei Delicious Street Branch): metro: duration 10, cost 8. taxi: duration 0, cost 11.0. walk: duration 7, cost 0.0. \nfrom Yang Ji Long Fu (Liberation Monument Main Store) to Wulong Natural Three Bridges: metro: duration 1258, cost 24. taxi: duration 180, cost 536.34. walk: duration 1444, cost 0.0. \nfrom Yang Ji Long Fu (Liberation Monument Main Store) to General Ba's Intangible Cultural Heritage Original Flavor Hot Pot (Jiefangbei Branch): taxi: duration 0, cost 11.0. walk: duration 6, cost 0.0. \nfrom Yang Ji Long Fu (Liberation Monument Main Store) to Chongqing Zoo: metro: duration 24, cost 12. taxi: duration 12, cost 34.67. walk: duration 102, cost 0.0. \nfrom Yang Ji Long Fu (Liberation Monument Main Store) to Hongya Cave: metro: duration 11, cost 8. taxi: duration 1, cost 11.0. walk: duration 12, cost 0.0. \nfrom Yang Ji Long Fu (Liberation Monument Main Store) to Chongqing WFC Xianlai Tower Observation Deck: metro: duration 12, cost 8. taxi: duration 1, cost 11.0. walk: duration 8, cost 0.0. \nfrom Yang Ji Long Fu (Liberation Monument Main Store) to Chongqing Two Rivers Cruise: metro: duration 13, cost 8. taxi: duration 1, cost 11.0. walk: duration 11, cost 0.0. \nfrom Yang Ji Long Fu (Liberation Monument Main Store) to Dust Aroma (Chuanghui Shouzhuo Branch): metro: duration 10, cost 8. taxi: duration 1, cost 11.0. walk: duration 9, cost 0.0. \nfrom Yang Ji Long Fu (Liberation Monument Main Store) to Chongqing Science and Technology Museum: metro: duration 25, cost 8. taxi: duration 3, cost 11.78. walk: duration 24, cost 0.0. \nfrom Yang Ji Long Fu (Liberation Monument Main Store) to Yang Ji Long Fu (Liberation Monument Main Store):  metro: empty.  taxi: empty.  walk: empty. \nfrom Yang Ji Long Fu (Liberation Monument Main Store) to Dazu Rock Carvings: metro: duration 633, cost 28. taxi: duration 120, cost 356.88. walk: duration 965, cost 0.0. \nfrom Yang Ji Long Fu (Liberation Monument Main Store) to Chongqing People's Square: metro: duration 10, cost 8. taxi: duration 3, cost 11.85. walk: duration 24, cost 0.0. \nfrom Yang Ji Long Fu (Liberation Monument Main Store) to Chongqing Jiangbei International Airport: metro: duration 55, cost 20. taxi: duration 28, cost 80.42. walk: duration 228, cost 0.0. \nfrom Yang Ji Long Fu (Liberation Monument Main Store) to Chongqing Great Bombing 'June 5th' Tunnel Massacre Historical Exhibition Hall: metro: duration 7, cost 8. taxi: duration 0, cost 11.0. walk: duration 4, cost 0.0. \nfrom Yang Ji Long Fu (Liberation Monument Main Store) to Chongqing Industrial Museum: metro: duration 51, cost 16. taxi: duration 18, cost 49.48. walk: duration 146, cost 0.0. \nfrom Yang Ji Long Fu (Liberation Monument Main Store) to Instrument Factory Hot Pot (Jiefangbei Branch): taxi: duration 1, cost 11.0. walk: duration 8, cost 0.0. \nfrom Yang Ji Long Fu (Liberation Monument Main Store) to Chongqing West Railway Station: metro: duration 35, cost 20. taxi: duration 22, cost 62.95. walk: duration 182, cost 0.0. \nfrom Yang Ji Long Fu (Liberation Monument Main Store) to Ci Qi Kou Ancient Town: metro: duration 45, cost 16. taxi: duration 18, cost 49.44. walk: duration 145, cost 0.0. \nfrom Yang Ji Long Fu (Liberation Monument Main Store) to Chongqing North Railway Station Atour Hotel: metro: duration 20, cost 12. taxi: duration 8, cost 23.37. walk: duration 64, cost 0.0. \nfrom Yang Ji Long Fu (Liberation Monument Main Store) to Chongqing North Railway Station: metro: duration 19, cost 12. taxi: duration 8, cost 25.32. walk: duration 70, cost 0.0. \nfrom Yang Ji Long Fu (Liberation Monument Main Store) to Lavande Hotel (Chongqing Jiefangbei Center Pedestrian Street): taxi: duration 0, cost 11.0. walk: duration 5, cost 0.0. \nfrom Yang Ji Long Fu (Liberation Monument Main Store) to Liziba Light Rail Station: metro: duration 13, cost 8. taxi: duration 4, cost 16.27. walk: duration 39, cost 0.0. \nfrom Yang Ji Long Fu (Liberation Monument Main Store) to Chongqing Huguang Guild Hall: metro: duration 15, cost 8. taxi: duration 2, cost 11.0. walk: duration 17, cost 0.0. \nfrom Dazu Rock Carvings to Qianhe Zhixuan Gaokong Hotel (Jiefangbei Hongyadong Branch): metro: duration 630, cost 28. taxi: duration 121, cost 358.8. walk: duration 970, cost 0.0. \nfrom Dazu Rock Carvings to Chongqing Guotai Art Center: metro: duration 634, cost 28. taxi: duration 121, cost 358.46. walk: duration 970, cost 0.0. \nfrom Dazu Rock Carvings to At Yuli Chongqing Hot Pot (Jiefangbei Delicious Street Branch): metro: duration 632, cost 28. taxi: duration 120, cost 357.19. walk: duration 966, cost 0.0. \nfrom Dazu Rock Carvings to Wulong Natural Three Bridges: metro: duration 1876, cost 36. taxi: duration 300, cost 895.62. walk: duration 2402, cost 0.0. \nfrom Dazu Rock Carvings to General Ba's Intangible Cultural Heritage Original Flavor Hot Pot (Jiefangbei Branch): metro: duration 632, cost 28. taxi: duration 120, cost 356.89. walk: duration 965, cost 0.0. \nfrom Dazu Rock Carvings to Chongqing Zoo: metro: duration 624, cost 28. taxi: duration 114, cost 337.74. walk: duration 914, cost 0.0. \nfrom Dazu Rock Carvings to Hongya Cave: metro: duration 633, cost 28. taxi: duration 121, cost 358.73. walk: duration 970, cost 0.0. \nfrom Dazu Rock Carvings to Chongqing WFC Xianlai Tower Observation Deck: metro: duration 634, cost 28. taxi: duration 121, cost 358.81. walk: duration 970, cost 0.0. \nfrom Dazu Rock Carvings to Chongqing Two Rivers Cruise: metro: duration 635, cost 28. taxi: duration 121, cost 357.91. walk: duration 968, cost 0.0. \nfrom Dazu Rock Carvings to Dust Aroma (Chuanghui Shouzhuo Branch): metro: duration 632, cost 28. taxi: duration 120, cost 357.69. walk: duration 967, cost 0.0. \nfrom Dazu Rock Carvings to Chongqing Science and Technology Museum: metro: duration 643, cost 28. taxi: duration 120, cost 357.29. walk: duration 966, cost 0.0. \nfrom Dazu Rock Carvings to Yang Ji Long Fu (Liberation Monument Main Store): metro: duration 633, cost 28. taxi: duration 120, cost 356.88. walk: duration 965, cost 0.0. \nfrom Dazu Rock Carvings to Dazu Rock Carvings:  metro: empty.  taxi: empty.  walk: empty. \nfrom Dazu Rock Carvings to Chongqing People's Square: metro: duration 626, cost 28. taxi: duration 117, cost 347.78. walk: duration 941, cost 0.0. \nfrom Dazu Rock Carvings to Chongqing Jiangbei International Airport: metro: duration 659, cost 32. taxi: duration 127, cost 377.39. walk: duration 1020, cost 0.0. \nfrom Dazu Rock Carvings to Chongqing Great Bombing 'June 5th' Tunnel Massacre Historical Exhibition Hall: metro: duration 630, cost 28. taxi: duration 121, cost 358.67. walk: duration 970, cost 0.0. \nfrom Dazu Rock Carvings to Chongqing Industrial Museum: metro: duration 640, cost 28. taxi: duration 114, cost 338.47. walk: duration 916, cost 0.0. \nfrom Dazu Rock Carvings to Instrument Factory Hot Pot (Jiefangbei Branch): metro: duration 631, cost 28. taxi: duration 119, cost 354.15. walk: duration 958, cost 0.0. \nfrom Dazu Rock Carvings to Chongqing West Railway Station: metro: duration 609, cost 24. taxi: duration 104, cost 309.33. walk: duration 839, cost 0.0. \nfrom Dazu Rock Carvings to Ci Qi Kou Ancient Town: metro: duration 616, cost 20. taxi: duration 102, cost 302.15. walk: duration 819, cost 0.0. \nfrom Dazu Rock Carvings to Chongqing North Railway Station Atour Hotel: metro: duration 627, cost 28. taxi: duration 115, cost 341.12. walk: duration 923, cost 0.0. \nfrom Dazu Rock Carvings to Chongqing North Railway Station: metro: duration 625, cost 28. taxi: duration 114, cost 339.69. walk: duration 919, cost 0.0. \nfrom Dazu Rock Carvings to Lavande Hotel (Chongqing Jiefangbei Center Pedestrian Street): metro: duration 630, cost 28. taxi: duration 120, cost 356.27. walk: duration 964, cost 0.0. \nfrom Dazu Rock Carvings to Liziba Light Rail Station: metro: duration 624, cost 28. taxi: duration 116, cost 342.86. walk: duration 928, cost 0.0. \nfrom Dazu Rock Carvings to Chongqing Huguang Guild Hall: metro: duration 637, cost 28. taxi: duration 122, cost 362.85. walk: duration 981, cost 0.0. \nfrom Chongqing People's Square to Qianhe Zhixuan Gaokong Hotel (Jiefangbei Hongyadong Branch): metro: duration 8, cost 8. taxi: duration 3, cost 13.34. walk: duration 29, cost 0.0. \nfrom Chongqing People's Square to Chongqing Guotai Art Center: metro: duration 11, cost 8. taxi: duration 3, cost 13.13. walk: duration 28, cost 0.0. \nfrom Chongqing People's Square to At Yuli Chongqing Hot Pot (Jiefangbei Delicious Street Branch): metro: duration 10, cost 8. taxi: duration 3, cost 12.65. walk: duration 27, cost 0.0. \nfrom Chongqing People's Square to Wulong Natural Three Bridges: metro: duration 1257, cost 24. taxi: duration 183, cost 545.13. walk: duration 1467, cost 0.0. \nfrom Chongqing People's Square to General Ba's Intangible Cultural Heritage Original Flavor Hot Pot (Jiefangbei Branch): metro: duration 9, cost 8. taxi: duration 3, cost 12.37. walk: duration 26, cost 0.0. \nfrom Chongqing People's Square to Chongqing Zoo: metro: duration 21, cost 12. taxi: duration 11, cost 32.47. walk: duration 95, cost 0.0. \nfrom Chongqing People's Square to Hongya Cave: metro: duration 10, cost 8. taxi: duration 3, cost 13.5. walk: duration 30, cost 0.0. \nfrom Chongqing People's Square to Chongqing WFC Xianlai Tower Observation Deck: metro: duration 11, cost 8. taxi: duration 3, cost 13.35. walk: duration 29, cost 0.0. \nfrom Chongqing People's Square to Chongqing Two Rivers Cruise: metro: duration 12, cost 8. taxi: duration 3, cost 12.89. walk: duration 28, cost 0.0. \nfrom Chongqing People's Square to Dust Aroma (Chuanghui Shouzhuo Branch): metro: duration 10, cost 8. taxi: duration 3, cost 13.24. walk: duration 29, cost 0.0. \nfrom Chongqing People's Square to Chongqing Science and Technology Museum: metro: duration 22, cost 8. taxi: duration 4, cost 14.22. walk: duration 32, cost 0.0. \nfrom Chongqing People's Square to Yang Ji Long Fu (Liberation Monument Main Store): metro: duration 10, cost 8. taxi: duration 3, cost 11.85. walk: duration 24, cost 0.0. \nfrom Chongqing People's Square to Dazu Rock Carvings: metro: duration 626, cost 28. taxi: duration 117, cost 347.78. walk: duration 941, cost 0.0. \nfrom Chongqing People's Square to Chongqing People's Square:  metro: empty.  taxi: empty.  walk: empty. \nfrom Chongqing People's Square to Chongqing Jiangbei International Airport: metro: duration 52, cost 20. taxi: duration 28, cost 80.82. walk: duration 229, cost 0.0. \nfrom Chongqing People's Square to Chongqing Great Bombing 'June 5th' Tunnel Massacre Historical Exhibition Hall: metro: duration 8, cost 8. taxi: duration 3, cost 13.23. walk: duration 29, cost 0.0. \nfrom Chongqing People's Square to Chongqing Industrial Museum: metro: duration 47, cost 16. taxi: duration 17, cost 47.71. walk: duration 141, cost 0.0. \nfrom Chongqing People's Square to Instrument Factory Hot Pot (Jiefangbei Branch): metro: duration 8, cost 8. taxi: duration 2, cost 11.0. walk: duration 18, cost 0.0. \nfrom Chongqing People's Square to Chongqing West Railway Station: metro: duration 30, cost 16. taxi: duration 20, cost 57.41. walk: duration 167, cost 0.0. \nfrom Chongqing People's Square to Ci Qi Kou Ancient Town: metro: duration 38, cost 16. taxi: duration 15, cost 40.4. walk: duration 121, cost 0.0. \nfrom Chongqing People's Square to Chongqing North Railway Station Atour Hotel: metro: duration 14, cost 8. taxi: duration 5, cost 18.64. walk: duration 47, cost 0.0. \nfrom Chongqing People's Square to Chongqing North Railway Station: metro: duration 14, cost 12. taxi: duration 6, cost 20.54. walk: duration 54, cost 0.0. \nfrom Chongqing People's Square to Lavande Hotel (Chongqing Jiefangbei Center Pedestrian Street): metro: duration 7, cost 8. taxi: duration 3, cost 11.81. walk: duration 24, cost 0.0. \nfrom Chongqing People's Square to Liziba Light Rail Station: metro: duration 7, cost 8. taxi: duration 2, cost 11.0. walk: duration 21, cost 0.0. \nfrom Chongqing People's Square to Chongqing Huguang Guild Hall: metro: duration 14, cost 8. taxi: duration 5, cost 16.5. walk: duration 40, cost 0.0. \nfrom Chongqing Jiangbei International Airport to Qianhe Zhixuan Gaokong Hotel (Jiefangbei Hongyadong Branch): metro: duration 50, cost 20. taxi: duration 28, cost 80.27. walk: duration 228, cost 0.0. \nfrom Chongqing Jiangbei International Airport to Chongqing Guotai Art Center: metro: duration 52, cost 20. taxi: duration 27, cost 77.1. walk: duration 219, cost 0.0. \nfrom Chongqing Jiangbei International Airport to At Yuli Chongqing Hot Pot (Jiefangbei Delicious Street Branch): metro: duration 55, cost 20. taxi: duration 29, cost 83.11. walk: duration 235, cost 0.0. \nfrom Chongqing Jiangbei International Airport to Wulong Natural Three Bridges: metro: duration 1251, cost 20. taxi: duration 174, cost 518.18. walk: duration 1395, cost 0.0. \nfrom Chongqing Jiangbei International Airport to General Ba's Intangible Cultural Heritage Original Flavor Hot Pot (Jiefangbei Branch): metro: duration 54, cost 20. taxi: duration 29, cost 82.91. walk: duration 235, cost 0.0. \nfrom Chongqing Jiangbei International Airport to Chongqing Zoo: metro: duration 70, cost 24. taxi: duration 40, cost 116.42. walk: duration 324, cost 0.0. \nfrom Chongqing Jiangbei International Airport to Hongya Cave: metro: duration 51, cost 20. taxi: duration 27, cost 76.03. walk: duration 216, cost 0.0. \nfrom Chongqing Jiangbei International Airport to Chongqing WFC Xianlai Tower Observation Deck: metro: duration 52, cost 20. taxi: duration 27, cost 77.52. walk: duration 220, cost 0.0. \nfrom Chongqing Jiangbei International Airport to Chongqing Two Rivers Cruise: metro: duration 53, cost 20. taxi: duration 27, cost 76.11. walk: duration 217, cost 0.0. \nfrom Chongqing Jiangbei International Airport to Dust Aroma (Chuanghui Shouzhuo Branch): metro: duration 55, cost 20. taxi: duration 29, cost 83.8. walk: duration 237, cost 0.0. \nfrom Chongqing Jiangbei International Airport to Chongqing Science and Technology Museum: metro: duration 56, cost 20. taxi: duration 25, cost 71.36. walk: duration 204, cost 0.0. \nfrom Chongqing Jiangbei International Airport to Yang Ji Long Fu (Liberation Monument Main Store): metro: duration 55, cost 20. taxi: duration 28, cost 80.42. walk: duration 228, cost 0.0. \nfrom Chongqing Jiangbei International Airport to Dazu Rock Carvings: metro: duration 659, cost 32. taxi: duration 127, cost 377.39. walk: duration 1020, cost 0.0. \nfrom Chongqing Jiangbei International Airport to Chongqing People's Square: metro: duration 52, cost 20. taxi: duration 28, cost 80.82. walk: duration 229, cost 0.0. \nfrom Chongqing Jiangbei International Airport to Chongqing Jiangbei International Airport:  metro: empty.  taxi: empty.  walk: empty. \nfrom Chongqing Jiangbei International Airport to Chongqing Great Bombing 'June 5th' Tunnel Massacre Historical Exhibition Hall: metro: duration 50, cost 20. taxi: duration 28, cost 80.18. walk: duration 227, cost 0.0. \nfrom Chongqing Jiangbei International Airport to Chongqing Industrial Museum: metro: duration 95, cost 28. taxi: duration 46, cost 133.83. walk: duration 371, cost 0.0. \nfrom Chongqing Jiangbei International Airport to Instrument Factory Hot Pot (Jiefangbei Branch): metro: duration 53, cost 20. taxi: duration 29, cost 82.6. walk: duration 234, cost 0.0. \nfrom Chongqing Jiangbei International Airport to Chongqing West Railway Station: metro: duration 77, cost 28. taxi: duration 48, cost 139.13. walk: duration 385, cost 0.0. \nfrom Chongqing Jiangbei International Airport to Ci Qi Kou Ancient Town: metro: duration 76, cost 24. taxi: duration 36, cost 103.17. walk: duration 289, cost 0.0. \nfrom Chongqing Jiangbei International Airport to Chongqing North Railway Station Atour Hotel: metro: duration 50, cost 20. taxi: duration 24, cost 67.28. walk: duration 193, cost 0.0. \nfrom Chongqing Jiangbei International Airport to Chongqing North Railway Station: metro: duration 47, cost 20. taxi: duration 23, cost 66.04. walk: duration 190, cost 0.0. \nfrom Chongqing Jiangbei International Airport to Lavande Hotel (Chongqing Jiefangbei Center Pedestrian Street): metro: duration 52, cost 20. taxi: duration 29, cost 82.61. walk: duration 234, cost 0.0. \nfrom Chongqing Jiangbei International Airport to Liziba Light Rail Station: metro: duration 55, cost 20. taxi: duration 31, cost 88.04. walk: duration 248, cost 0.0. \nfrom Chongqing Jiangbei International Airport to Chongqing Huguang Guild Hall: metro: duration 55, cost 20. taxi: duration 27, cost 76.71. walk: duration 218, cost 0.0. \nfrom Chongqing Great Bombing 'June 5th' Tunnel Massacre Historical Exhibition Hall to Qianhe Zhixuan Gaokong Hotel (Jiefangbei Hongyadong Branch): taxi: duration 0, cost 11.0. walk: duration 0, cost 0.0. \nfrom Chongqing Great Bombing 'June 5th' Tunnel Massacre Historical Exhibition Hall to Chongqing Guotai Art Center: metro: duration 6, cost 8. taxi: duration 1, cost 11.0. walk: duration 8, cost 0.0. \nfrom Chongqing Great Bombing 'June 5th' Tunnel Massacre Historical Exhibition Hall to At Yuli Chongqing Hot Pot (Jiefangbei Delicious Street Branch): metro: duration 7, cost 8. taxi: duration 1, cost 11.0. walk: duration 8, cost 0.0. \nfrom Chongqing Great Bombing 'June 5th' Tunnel Massacre Historical Exhibition Hall to Wulong Natural Three Bridges: metro: duration 1252, cost 24. taxi: duration 179, cost 534.57. walk: duration 1439, cost 0.0. \nfrom Chongqing Great Bombing 'June 5th' Tunnel Massacre Historical Exhibition Hall to General Ba's Intangible Cultural Heritage Original Flavor Hot Pot (Jiefangbei Branch): metro: duration 6, cost 8. taxi: duration 1, cost 11.0. walk: duration 8, cost 0.0. \nfrom Chongqing Great Bombing 'June 5th' Tunnel Massacre Historical Exhibition Hall to Chongqing Zoo: metro: duration 22, cost 12. taxi: duration 13, cost 35.46. walk: duration 105, cost 0.0. \nfrom Chongqing Great Bombing 'June 5th' Tunnel Massacre Historical Exhibition Hall to Hongya Cave: metro: duration 5, cost 8. taxi: duration 1, cost 11.0. walk: duration 11, cost 0.0. \nfrom Chongqing Great Bombing 'June 5th' Tunnel Massacre Historical Exhibition Hall to Chongqing WFC Xianlai Tower Observation Deck: metro: duration 6, cost 8. taxi: duration 0, cost 11.0. walk: duration 7, cost 0.0. \nfrom Chongqing Great Bombing 'June 5th' Tunnel Massacre Historical Exhibition Hall to Chongqing Two Rivers Cruise: metro: duration 7, cost 8. taxi: duration 1, cost 11.0. walk: duration 11, cost 0.0. \nfrom Chongqing Great Bombing 'June 5th' Tunnel Massacre Historical Exhibition Hall to Dust Aroma (Chuanghui Shouzhuo Branch): metro: duration 7, cost 8. taxi: duration 1, cost 11.0. walk: duration 9, cost 0.0. \nfrom Chongqing Great Bombing 'June 5th' Tunnel Massacre Historical Exhibition Hall to Chongqing Science and Technology Museum: metro: duration 19, cost 8. taxi: duration 3, cost 11.85. walk: duration 24, cost 0.0. \nfrom Chongqing Great Bombing 'June 5th' Tunnel Massacre Historical Exhibition Hall to Yang Ji Long Fu (Liberation Monument Main Store): metro: duration 7, cost 8. taxi: duration 0, cost 11.0. walk: duration 4, cost 0.0. \nfrom Chongqing Great Bombing 'June 5th' Tunnel Massacre Historical Exhibition Hall to Dazu Rock Carvings: metro: duration 630, cost 28. taxi: duration 121, cost 358.67. walk: duration 970, cost 0.0. \nfrom Chongqing Great Bombing 'June 5th' Tunnel Massacre Historical Exhibition Hall to Chongqing People's Square: metro: duration 8, cost 8. taxi: duration 3, cost 13.23. walk: duration 29, cost 0.0. \nfrom Chongqing Great Bombing 'June 5th' Tunnel Massacre Historical Exhibition Hall to Chongqing Jiangbei International Airport: metro: duration 50, cost 20. taxi: duration 28, cost 80.18. walk: duration 227, cost 0.0. \nfrom Chongqing Great Bombing 'June 5th' Tunnel Massacre Historical Exhibition Hall to Chongqing Great Bombing 'June 5th' Tunnel Massacre Historical Exhibition Hall:  metro: empty.  taxi: empty.  walk: empty. \nfrom Chongqing Great Bombing 'June 5th' Tunnel Massacre Historical Exhibition Hall to Chongqing Industrial Museum: metro: duration 48, cost 16. taxi: duration 18, cost 50.26. walk: duration 148, cost 0.0. \nfrom Chongqing Great Bombing 'June 5th' Tunnel Massacre Historical Exhibition Hall to Instrument Factory Hot Pot (Jiefangbei Branch): metro: duration 5, cost 8. taxi: duration 1, cost 11.0. walk: duration 13, cost 0.0. \nfrom Chongqing Great Bombing 'June 5th' Tunnel Massacre Historical Exhibition Hall to Chongqing West Railway Station: metro: duration 33, cost 20. taxi: duration 23, cost 64.32. walk: duration 185, cost 0.0. \nfrom Chongqing Great Bombing 'June 5th' Tunnel Massacre Historical Exhibition Hall to Ci Qi Kou Ancient Town: metro: duration 42, cost 16. taxi: duration 18, cost 51.24. walk: duration 150, cost 0.0. \nfrom Chongqing Great Bombing 'June 5th' Tunnel Massacre Historical Exhibition Hall to Chongqing North Railway Station Atour Hotel: metro: duration 17, cost 12. taxi: duration 8, cost 24.33. walk: duration 67, cost 0.0. \nfrom Chongqing Great Bombing 'June 5th' Tunnel Massacre Historical Exhibition Hall to Chongqing North Railway Station: metro: duration 16, cost 12. taxi: duration 9, cost 26.27. walk: duration 73, cost 0.0. \nfrom Chongqing Great Bombing 'June 5th' Tunnel Massacre Historical Exhibition Hall to Lavande Hotel (Chongqing Jiefangbei Center Pedestrian Street): metro: duration 4, cost 8. taxi: duration 1, cost 11.0. walk: duration 8, cost 0.0. \nfrom Chongqing Great Bombing 'June 5th' Tunnel Massacre Historical Exhibition Hall to Liziba Light Rail Station: metro: duration 10, cost 8. taxi: duration 5, cost 17.61. walk: duration 44, cost 0.0. \nfrom Chongqing Great Bombing 'June 5th' Tunnel Massacre Historical Exhibition Hall to Chongqing Huguang Guild Hall: metro: duration 9, cost 8. taxi: duration 1, cost 11.0. walk: duration 13, cost 0.0. \nfrom Chongqing Industrial Museum to Qianhe Zhixuan Gaokong Hotel (Jiefangbei Hongyadong Branch): metro: duration 48, cost 16. taxi: duration 18, cost 50.22. walk: duration 148, cost 0.0. \nfrom Chongqing Industrial Museum to Chongqing Guotai Art Center: metro: duration 53, cost 16. taxi: duration 19, cost 52.99. walk: duration 155, cost 0.0. \nfrom Chongqing Industrial Museum to At Yuli Chongqing Hot Pot (Jiefangbei Delicious Street Branch): metro: duration 49, cost 16. taxi: duration 17, cost 47.1. walk: duration 139, cost 0.0. \nfrom Chongqing Industrial Museum to Wulong Natural Three Bridges: metro: duration 1298, cost 28. taxi: duration 191, cost 568.13. walk: duration 1529, cost 0.0. \nfrom Chongqing Industrial Museum to General Ba's Intangible Cultural Heritage Original Flavor Hot Pot (Jiefangbei Branch): metro: duration 50, cost 16. taxi: duration 17, cost 47.19. walk: duration 139, cost 0.0. \nfrom Chongqing Industrial Museum to Chongqing Zoo: metro: duration 34, cost 8. taxi: duration 5, cost 18.44. walk: duration 47, cost 0.0. \nfrom Chongqing Industrial Museum to Hongya Cave: metro: duration 52, cost 16. taxi: duration 19, cost 54.06. walk: duration 158, cost 0.0. \nfrom Chongqing Industrial Museum to Chongqing WFC Xianlai Tower Observation Deck: metro: duration 53, cost 16. taxi: duration 19, cost 52.72. walk: duration 154, cost 0.0. \nfrom Chongqing Industrial Museum to Chongqing Two Rivers Cruise: metro: duration 54, cost 16. taxi: duration 19, cost 53.75. walk: duration 157, cost 0.0. \nfrom Chongqing Industrial Museum to Dust Aroma (Chuanghui Shouzhuo Branch): metro: duration 49, cost 16. taxi: duration 17, cost 46.64. walk: duration 138, cost 0.0. \nfrom Chongqing Industrial Museum to Chongqing Science and Technology Museum: metro: duration 65, cost 20. taxi: duration 21, cost 58.02. walk: duration 168, cost 0.0. \nfrom Chongqing Industrial Museum to Yang Ji Long Fu (Liberation Monument Main Store): metro: duration 51, cost 16. taxi: duration 18, cost 49.48. walk: duration 146, cost 0.0. \nfrom Chongqing Industrial Museum to Dazu Rock Carvings: metro: duration 640, cost 28. taxi: duration 114, cost 338.47. walk: duration 916, cost 0.0. \nfrom Chongqing Industrial Museum to Chongqing People's Square: metro: duration 47, cost 16. taxi: duration 17, cost 47.71. walk: duration 141, cost 0.0. \nfrom Chongqing Industrial Museum to Chongqing Jiangbei International Airport: metro: duration 95, cost 28. taxi: duration 46, cost 133.83. walk: duration 371, cost 0.0. \nfrom Chongqing Industrial Museum to Chongqing Great Bombing 'June 5th' Tunnel Massacre Historical Exhibition Hall: metro: duration 48, cost 16. taxi: duration 18, cost 50.26. walk: duration 148, cost 0.0. \nfrom Chongqing Industrial Museum to Chongqing Industrial Museum:  metro: empty.  taxi: empty.  walk: empty. \nfrom Chongqing Industrial Museum to Instrument Factory Hot Pot (Jiefangbei Branch): metro: duration 49, cost 16. taxi: duration 17, cost 46.75. walk: duration 138, cost 0.0. \nfrom Chongqing Industrial Museum to Chongqing West Railway Station: metro: duration 33, cost 12. taxi: duration 9, cost 27.36. walk: duration 77, cost 0.0. \nfrom Chongqing Industrial Museum to Ci Qi Kou Ancient Town: metro: duration 60, cost 16. taxi: duration 19, cost 53.43. walk: duration 156, cost 0.0. \nfrom Chongqing Industrial Museum to Chongqing North Railway Station Atour Hotel: metro: duration 55, cost 16. taxi: duration 22, cost 62.79. walk: duration 181, cost 0.0. \nfrom Chongqing Industrial Museum to Chongqing North Railway Station: metro: duration 54, cost 20. taxi: duration 23, cost 64.67. walk: duration 186, cost 0.0. \nfrom Chongqing Industrial Museum to Lavande Hotel (Chongqing Jiefangbei Center Pedestrian Street): metro: duration 48, cost 16. taxi: duration 17, cost 47.29. walk: duration 140, cost 0.0. \nfrom Chongqing Industrial Museum to Liziba Light Rail Station: metro: duration 44, cost 16. taxi: duration 15, cost 40.63. walk: duration 122, cost 0.0. \nfrom Chongqing Industrial Museum to Chongqing Huguang Guild Hall: metro: duration 56, cost 16. taxi: duration 20, cost 54.92. walk: duration 160, cost 0.0. \nfrom Instrument Factory Hot Pot (Jiefangbei Branch) to Qianhe Zhixuan Gaokong Hotel (Jiefangbei Hongyadong Branch): metro: duration 5, cost 8. taxi: duration 1, cost 11.0. walk: duration 13, cost 0.0. \nfrom Instrument Factory Hot Pot (Jiefangbei Branch) to Chongqing Guotai Art Center: metro: duration 10, cost 8. taxi: duration 2, cost 11.0. walk: duration 17, cost 0.0. \nfrom Instrument Factory Hot Pot (Jiefangbei Branch) to At Yuli Chongqing Hot Pot (Jiefangbei Delicious Street Branch): metro: duration 8, cost 8. taxi: duration 1, cost 11.0. walk: duration 8, cost 0.0. \nfrom Instrument Factory Hot Pot (Jiefangbei Branch) to Wulong Natural Three Bridges: metro: duration 1256, cost 24. taxi: duration 181, cost 539.34. walk: duration 1452, cost 0.0. \nfrom Instrument Factory Hot Pot (Jiefangbei Branch) to General Ba's Intangible Cultural Heritage Original Flavor Hot Pot (Jiefangbei Branch): taxi: duration 0, cost 11.0. walk: duration 7, cost 0.0. \nfrom Instrument Factory Hot Pot (Jiefangbei Branch) to Chongqing Zoo: metro: duration 22, cost 12. taxi: duration 11, cost 32.36. walk: duration 94, cost 0.0. \nfrom Instrument Factory Hot Pot (Jiefangbei Branch) to Hongya Cave: metro: duration 9, cost 8. taxi: duration 2, cost 11.0. walk: duration 20, cost 0.0. \nfrom Instrument Factory Hot Pot (Jiefangbei Branch) to Chongqing WFC Xianlai Tower Observation Deck: metro: duration 10, cost 8. taxi: duration 2, cost 11.0. walk: duration 17, cost 0.0. \nfrom Instrument Factory Hot Pot (Jiefangbei Branch) to Chongqing Two Rivers Cruise: metro: duration 11, cost 8. taxi: duration 2, cost 11.0. walk: duration 18, cost 0.0. \nfrom Instrument Factory Hot Pot (Jiefangbei Branch) to Dust Aroma (Chuanghui Shouzhuo Branch): metro: duration 8, cost 8. taxi: duration 1, cost 11.0. walk: duration 10, cost 0.0. \nfrom Instrument Factory Hot Pot (Jiefangbei Branch) to Chongqing Science and Technology Museum: metro: duration 23, cost 8. taxi: duration 3, cost 13.51. walk: duration 30, cost 0.0. \nfrom Instrument Factory Hot Pot (Jiefangbei Branch) to Yang Ji Long Fu (Liberation Monument Main Store): taxi: duration 1, cost 11.0. walk: duration 8, cost 0.0. \nfrom Instrument Factory Hot Pot (Jiefangbei Branch) to Dazu Rock Carvings: metro: duration 631, cost 28. taxi: duration 119, cost 354.15. walk: duration 958, cost 0.0. \nfrom Instrument Factory Hot Pot (Jiefangbei Branch) to Chongqing People's Square: metro: duration 8, cost 8. taxi: duration 2, cost 11.0. walk: duration 18, cost 0.0. \nfrom Instrument Factory Hot Pot (Jiefangbei Branch) to Chongqing Jiangbei International Airport: metro: duration 53, cost 20. taxi: duration 29, cost 82.6. walk: duration 234, cost 0.0. \nfrom Instrument Factory Hot Pot (Jiefangbei Branch) to Chongqing Great Bombing 'June 5th' Tunnel Massacre Historical Exhibition Hall: metro: duration 5, cost 8. taxi: duration 1, cost 11.0. walk: duration 13, cost 0.0. \nfrom Instrument Factory Hot Pot (Jiefangbei Branch) to Chongqing Industrial Museum: metro: duration 49, cost 16. taxi: duration 17, cost 46.75. walk: duration 138, cost 0.0. \nfrom Instrument Factory Hot Pot (Jiefangbei Branch) to Instrument Factory Hot Pot (Jiefangbei Branch):  metro: empty.  taxi: empty.  walk: empty. \nfrom Instrument Factory Hot Pot (Jiefangbei Branch) to Chongqing West Railway Station: metro: duration 33, cost 20. taxi: duration 21, cost 59.71. walk: duration 173, cost 0.0. \nfrom Instrument Factory Hot Pot (Jiefangbei Branch) to Ci Qi Kou Ancient Town: metro: duration 43, cost 16. taxi: duration 17, cost 46.7. walk: duration 138, cost 0.0. \nfrom Instrument Factory Hot Pot (Jiefangbei Branch) to Chongqing North Railway Station Atour Hotel: metro: duration 18, cost 12. taxi: duration 7, cost 23.15. walk: duration 63, cost 0.0. \nfrom Instrument Factory Hot Pot (Jiefangbei Branch) to Chongqing North Railway Station: metro: duration 17, cost 12. taxi: duration 8, cost 25.1. walk: duration 69, cost 0.0. \nfrom Instrument Factory Hot Pot (Jiefangbei Branch) to Lavande Hotel (Chongqing Jiefangbei Center Pedestrian Street): taxi: duration 0, cost 11.0. walk: duration 5, cost 0.0. \nfrom Instrument Factory Hot Pot (Jiefangbei Branch) to Liziba Light Rail Station: metro: duration 11, cost 8. taxi: duration 3, cost 13.82. walk: duration 31, cost 0.0. \nfrom Instrument Factory Hot Pot (Jiefangbei Branch) to Chongqing Huguang Guild Hall: metro: duration 13, cost 8. taxi: duration 3, cost 12.49. walk: duration 26, cost 0.0. \nfrom Chongqing West Railway Station to Qianhe Zhixuan Gaokong Hotel (Jiefangbei Hongyadong Branch): metro: duration 33, cost 20. taxi: duration 23, cost 64.35. walk: duration 185, cost 0.0. \nfrom Chongqing West Railway Station to Chongqing Guotai Art Center: metro: duration 37, cost 20. taxi: duration 23, cost 66.23. walk: duration 190, cost 0.0. \nfrom Chongqing West Railway Station to At Yuli Chongqing Hot Pot (Jiefangbei Delicious Street Branch): metro: duration 33, cost 20. taxi: duration 22, cost 61.38. walk: duration 177, cost 0.0. \nfrom Chongqing West Railway Station to Wulong Natural Three Bridges: metro: duration 1283, cost 32. taxi: duration 200, cost 595.05. walk: duration 1600, cost 0.0. \nfrom Chongqing West Railway Station to General Ba's Intangible Cultural Heritage Original Flavor Hot Pot (Jiefangbei Branch): metro: duration 34, cost 20. taxi: duration 22, cost 61.31. walk: duration 177, cost 0.0. \nfrom Chongqing West Railway Station to Chongqing Zoo: metro: duration 20, cost 12. taxi: duration 10, cost 30.26. walk: duration 87, cost 0.0. \nfrom Chongqing West Railway Station to Hongya Cave: metro: duration 36, cost 20. taxi: duration 24, cost 67.14. walk: duration 193, cost 0.0. \nfrom Chongqing West Railway Station to Chongqing WFC Xianlai Tower Observation Deck: metro: duration 37, cost 20. taxi: duration 23, cost 66.19. walk: duration 190, cost 0.0. \nfrom Chongqing West Railway Station to Chongqing Two Rivers Cruise: metro: duration 38, cost 20. taxi: duration 23, cost 66.56. walk: duration 191, cost 0.0. \nfrom Chongqing West Railway Station to Dust Aroma (Chuanghui Shouzhuo Branch): metro: duration 33, cost 20. taxi: duration 22, cost 61.29. walk: duration 177, cost 0.0. \nfrom Chongqing West Railway Station to Chongqing Science and Technology Museum: metro: duration 49, cost 20. taxi: duration 24, cost 69.54. walk: duration 199, cost 0.0. \nfrom Chongqing West Railway Station to Yang Ji Long Fu (Liberation Monument Main Store): metro: duration 35, cost 20. taxi: duration 22, cost 62.95. walk: duration 182, cost 0.0. \nfrom Chongqing West Railway Station to Dazu Rock Carvings: metro: duration 609, cost 24. taxi: duration 104, cost 309.33. walk: duration 839, cost 0.0. \nfrom Chongqing West Railway Station to Chongqing People's Square: metro: duration 30, cost 16. taxi: duration 20, cost 57.41. walk: duration 167, cost 0.0. \nfrom Chongqing West Railway Station to Chongqing Jiangbei International Airport: metro: duration 77, cost 28. taxi: duration 48, cost 139.13. walk: duration 385, cost 0.0. \nfrom Chongqing West Railway Station to Chongqing Great Bombing 'June 5th' Tunnel Massacre Historical Exhibition Hall: metro: duration 33, cost 20. taxi: duration 23, cost 64.32. walk: duration 185, cost 0.0. \nfrom Chongqing West Railway Station to Chongqing Industrial Museum: metro: duration 33, cost 12. taxi: duration 9, cost 27.36. walk: duration 77, cost 0.0. \nfrom Chongqing West Railway Station to Instrument Factory Hot Pot (Jiefangbei Branch): metro: duration 33, cost 20. taxi: duration 21, cost 59.71. walk: duration 173, cost 0.0. \nfrom Chongqing West Railway Station to Chongqing West Railway Station:  metro: empty.  taxi: empty.  walk: empty. \nfrom Chongqing West Railway Station to Ci Qi Kou Ancient Town: metro: duration 34, cost 16. taxi: duration 14, cost 39.22. walk: duration 118, cost 0.0. \nfrom Chongqing West Railway Station to Chongqing North Railway Station Atour Hotel: metro: duration 36, cost 20. taxi: duration 24, cost 66.8. walk: duration 192, cost 0.0. \nfrom Chongqing West Railway Station to Chongqing North Railway Station: metro: duration 35, cost 20. taxi: duration 24, cost 67.85. walk: duration 195, cost 0.0. \nfrom Chongqing West Railway Station to Lavande Hotel (Chongqing Jiefangbei Center Pedestrian Street): metro: duration 32, cost 20. taxi: duration 22, cost 61.09. walk: duration 177, cost 0.0. \nfrom Chongqing West Railway Station to Liziba Light Rail Station: metro: duration 27, cost 16. taxi: duration 18, cost 49.51. walk: duration 146, cost 0.0. \nfrom Chongqing West Railway Station to Chongqing Huguang Guild Hall: metro: duration 40, cost 20. taxi: duration 24, cost 69.52. walk: duration 199, cost 0.0. \nfrom Ci Qi Kou Ancient Town to Qianhe Zhixuan Gaokong Hotel (Jiefangbei Hongyadong Branch): metro: duration 42, cost 16. taxi: duration 18, cost 51.37. walk: duration 151, cost 0.0. \nfrom Ci Qi Kou Ancient Town to Chongqing Guotai Art Center: metro: duration 46, cost 20. taxi: duration 18, cost 51.17. walk: duration 150, cost 0.0. \nfrom Ci Qi Kou Ancient Town to At Yuli Chongqing Hot Pot (Jiefangbei Delicious Street Branch): metro: duration 44, cost 16. taxi: duration 18, cost 49.75. walk: duration 146, cost 0.0. \nfrom Ci Qi Kou Ancient Town to Wulong Natural Three Bridges: metro: duration 1289, cost 28. taxi: duration 198, cost 590.6. walk: duration 1589, cost 0.0. \nfrom Ci Qi Kou Ancient Town to General Ba's Intangible Cultural Heritage Original Flavor Hot Pot (Jiefangbei Branch): metro: duration 44, cost 16. taxi: duration 18, cost 49.45. walk: duration 145, cost 0.0. \nfrom Ci Qi Kou Ancient Town to Chongqing Zoo: metro: duration 40, cost 16. taxi: duration 15, cost 40.89. walk: duration 123, cost 0.0. \nfrom Ci Qi Kou Ancient Town to Hongya Cave: metro: duration 45, cost 20. taxi: duration 18, cost 51.52. walk: duration 151, cost 0.0. \nfrom Ci Qi Kou Ancient Town to Chongqing WFC Xianlai Tower Observation Deck: metro: duration 46, cost 20. taxi: duration 18, cost 51.49. walk: duration 151, cost 0.0. \nfrom Ci Qi Kou Ancient Town to Chongqing Two Rivers Cruise: metro: duration 47, cost 20. taxi: duration 18, cost 50.71. walk: duration 149, cost 0.0. \nfrom Ci Qi Kou Ancient Town to Dust Aroma (Chuanghui Shouzhuo Branch): metro: duration 44, cost 16. taxi: duration 18, cost 50.27. walk: duration 148, cost 0.0. \nfrom Ci Qi Kou Ancient Town to Chongqing Science and Technology Museum: metro: duration 55, cost 20. taxi: duration 18, cost 50.7. walk: duration 149, cost 0.0. \nfrom Ci Qi Kou Ancient Town to Yang Ji Long Fu (Liberation Monument Main Store): metro: duration 45, cost 16. taxi: duration 18, cost 49.44. walk: duration 145, cost 0.0. \nfrom Ci Qi Kou Ancient Town to Dazu Rock Carvings: metro: duration 616, cost 20. taxi: duration 102, cost 302.15. walk: duration 819, cost 0.0. \nfrom Ci Qi Kou Ancient Town to Chongqing People's Square: metro: duration 38, cost 16. taxi: duration 15, cost 40.4. walk: duration 121, cost 0.0. \nfrom Ci Qi Kou Ancient Town to Chongqing Jiangbei International Airport: metro: duration 76, cost 24. taxi: duration 36, cost 103.17. walk: duration 289, cost 0.0. \nfrom Ci Qi Kou Ancient Town to Chongqing Great Bombing 'June 5th' Tunnel Massacre Historical Exhibition Hall: metro: duration 42, cost 16. taxi: duration 18, cost 51.24. walk: duration 150, cost 0.0. \nfrom Ci Qi Kou Ancient Town to Chongqing Industrial Museum: metro: duration 60, cost 16. taxi: duration 19, cost 53.43. walk: duration 156, cost 0.0. \nfrom Ci Qi Kou Ancient Town to Instrument Factory Hot Pot (Jiefangbei Branch): metro: duration 43, cost 16. taxi: duration 17, cost 46.7. walk: duration 138, cost 0.0. \nfrom Ci Qi Kou Ancient Town to Chongqing West Railway Station: metro: duration 34, cost 16. taxi: duration 14, cost 39.22. walk: duration 118, cost 0.0. \nfrom Ci Qi Kou Ancient Town to Ci Qi Kou Ancient Town:  metro: empty.  taxi: empty.  walk: empty. \nfrom Ci Qi Kou Ancient Town to Chongqing North Railway Station Atour Hotel: metro: duration 39, cost 16. taxi: duration 14, cost 38.11. walk: duration 114, cost 0.0. \nfrom Ci Qi Kou Ancient Town to Chongqing North Railway Station: metro: duration 37, cost 16. taxi: duration 14, cost 37.78. walk: duration 113, cost 0.0. \nfrom Ci Qi Kou Ancient Town to Lavande Hotel (Chongqing Jiefangbei Center Pedestrian Street): metro: duration 42, cost 16. taxi: duration 18, cost 48.82. walk: duration 144, cost 0.0. \nfrom Ci Qi Kou Ancient Town to Liziba Light Rail Station: metro: duration 36, cost 16. taxi: duration 13, cost 36.46. walk: duration 108, cost 0.0. \nfrom Ci Qi Kou Ancient Town to Chongqing Huguang Guild Hall: metro: duration 49, cost 20. taxi: duration 20, cost 55.55. walk: duration 162, cost 0.0. \nfrom Chongqing North Railway Station Atour Hotel to Qianhe Zhixuan Gaokong Hotel (Jiefangbei Hongyadong Branch): metro: duration 17, cost 12. taxi: duration 8, cost 24.46. walk: duration 67, cost 0.0. \nfrom Chongqing North Railway Station Atour Hotel to Chongqing Guotai Art Center: metro: duration 19, cost 12. taxi: duration 7, cost 22.57. walk: duration 61, cost 0.0. \nfrom Chongqing North Railway Station Atour Hotel to At Yuli Chongqing Hot Pot (Jiefangbei Delicious Street Branch): metro: duration 20, cost 12. taxi: duration 8, cost 25.15. walk: duration 70, cost 0.0. \nfrom Chongqing North Railway Station Atour Hotel to Wulong Natural Three Bridges: metro: duration 1260, cost 24. taxi: duration 185, cost 549.82. walk: duration 1480, cost 0.0. \nfrom Chongqing North Railway Station Atour Hotel to General Ba's Intangible Cultural Heritage Original Flavor Hot Pot (Jiefangbei Branch): metro: duration 19, cost 12. taxi: duration 8, cost 24.86. walk: duration 69, cost 0.0. \nfrom Chongqing North Railway Station Atour Hotel to Chongqing Zoo: metro: duration 30, cost 16. taxi: duration 16, cost 45.12. walk: duration 134, cost 0.0. \nfrom Chongqing North Railway Station Atour Hotel to Hongya Cave: metro: duration 18, cost 12. taxi: duration 7, cost 22.23. walk: duration 60, cost 0.0. \nfrom Chongqing North Railway Station Atour Hotel to Chongqing WFC Xianlai Tower Observation Deck: metro: duration 19, cost 12. taxi: duration 7, cost 23.01. walk: duration 62, cost 0.0. \nfrom Chongqing North Railway Station Atour Hotel to Chongqing Two Rivers Cruise: metro: duration 20, cost 12. taxi: duration 7, cost 21.72. walk: duration 58, cost 0.0. \nfrom Chongqing North Railway Station Atour Hotel to Dust Aroma (Chuanghui Shouzhuo Branch): metro: duration 20, cost 12. taxi: duration 9, cost 25.84. walk: duration 72, cost 0.0. \nfrom Chongqing North Railway Station Atour Hotel to Chongqing Science and Technology Museum: metro: duration 27, cost 12. taxi: duration 6, cost 19.18. walk: duration 49, cost 0.0. \nfrom Chongqing North Railway Station Atour Hotel to Yang Ji Long Fu (Liberation Monument Main Store): metro: duration 20, cost 12. taxi: duration 8, cost 23.37. walk: duration 64, cost 0.0. \nfrom Chongqing North Railway Station Atour Hotel to Dazu Rock Carvings: metro: duration 627, cost 28. taxi: duration 115, cost 341.12. walk: duration 923, cost 0.0. \nfrom Chongqing North Railway Station Atour Hotel to Chongqing People's Square: metro: duration 14, cost 8. taxi: duration 5, cost 18.64. walk: duration 47, cost 0.0. \nfrom Chongqing North Railway Station Atour Hotel to Chongqing Jiangbei International Airport: metro: duration 50, cost 20. taxi: duration 24, cost 67.28. walk: duration 193, cost 0.0. \nfrom Chongqing North Railway Station Atour Hotel to Chongqing Great Bombing 'June 5th' Tunnel Massacre Historical Exhibition Hall: metro: duration 17, cost 12. taxi: duration 8, cost 24.33. walk: duration 67, cost 0.0. \nfrom Chongqing North Railway Station Atour Hotel to Chongqing Industrial Museum: metro: duration 55, cost 16. taxi: duration 22, cost 62.79. walk: duration 181, cost 0.0. \nfrom Chongqing North Railway Station Atour Hotel to Instrument Factory Hot Pot (Jiefangbei Branch): metro: duration 18, cost 12. taxi: duration 7, cost 23.15. walk: duration 63, cost 0.0. \nfrom Chongqing North Railway Station Atour Hotel to Chongqing West Railway Station: metro: duration 36, cost 20. taxi: duration 24, cost 66.8. walk: duration 192, cost 0.0. \nfrom Chongqing North Railway Station Atour Hotel to Ci Qi Kou Ancient Town: metro: duration 39, cost 16. taxi: duration 14, cost 38.11. walk: duration 114, cost 0.0. \nfrom Chongqing North Railway Station Atour Hotel to Chongqing North Railway Station Atour Hotel:  metro: empty.  taxi: empty.  walk: empty. \nfrom Chongqing North Railway Station Atour Hotel to Chongqing North Railway Station: metro: duration 9, cost 8. taxi: duration 0, cost 11.0. walk: duration 6, cost 0.0. \nfrom Chongqing North Railway Station Atour Hotel to Lavande Hotel (Chongqing Jiefangbei Center Pedestrian Street): metro: duration 17, cost 12. taxi: duration 8, cost 24.33. walk: duration 67, cost 0.0. \nfrom Chongqing North Railway Station Atour Hotel to Liziba Light Rail Station: metro: duration 16, cost 12. taxi: duration 7, cost 22.37. walk: duration 60, cost 0.0. \nfrom Chongqing North Railway Station Atour Hotel to Chongqing Huguang Guild Hall: metro: duration 22, cost 12. taxi: duration 8, cost 25.32. walk: duration 70, cost 0.0. \nfrom Chongqing North Railway Station to Qianhe Zhixuan Gaokong Hotel (Jiefangbei Hongyadong Branch): metro: duration 16, cost 12. taxi: duration 9, cost 26.4. walk: duration 74, cost 0.0. \nfrom Chongqing North Railway Station to Chongqing Guotai Art Center: metro: duration 18, cost 12. taxi: duration 8, cost 24.48. walk: duration 67, cost 0.0. \nfrom Chongqing North Railway Station to At Yuli Chongqing Hot Pot (Jiefangbei Delicious Street Branch): metro: duration 19, cost 12. taxi: duration 9, cost 27.11. walk: duration 76, cost 0.0. \nfrom Chongqing North Railway Station to Wulong Natural Three Bridges: metro: duration 1257, cost 24. taxi: duration 185, cost 551.1. walk: duration 1483, cost 0.0. \nfrom Chongqing North Railway Station to General Ba's Intangible Cultural Heritage Original Flavor Hot Pot (Jiefangbei Branch): metro: duration 18, cost 12. taxi: duration 9, cost 26.82. walk: duration 75, cost 0.0. \nfrom Chongqing North Railway Station to Chongqing Zoo: metro: duration 29, cost 16. taxi: duration 17, cost 47.0. walk: duration 139, cost 0.0. \nfrom Chongqing North Railway Station to Hongya Cave: metro: duration 17, cost 12. taxi: duration 8, cost 24.12. walk: duration 66, cost 0.0. \nfrom Chongqing North Railway Station to Chongqing WFC Xianlai Tower Observation Deck: metro: duration 18, cost 12. taxi: duration 8, cost 24.93. walk: duration 69, cost 0.0. \nfrom Chongqing North Railway Station to Chongqing Two Rivers Cruise: metro: duration 19, cost 12. taxi: duration 8, cost 23.62. walk: duration 64, cost 0.0. \nfrom Chongqing North Railway Station to Dust Aroma (Chuanghui Shouzhuo Branch): metro: duration 19, cost 12. taxi: duration 9, cost 27.8. walk: duration 79, cost 0.0. \nfrom Chongqing North Railway Station to Chongqing Science and Technology Museum: metro: duration 25, cost 12. taxi: duration 6, cost 20.98. walk: duration 55, cost 0.0. \nfrom Chongqing North Railway Station to Yang Ji Long Fu (Liberation Monument Main Store): metro: duration 19, cost 12. taxi: duration 8, cost 25.32. walk: duration 70, cost 0.0. \nfrom Chongqing North Railway Station to Dazu Rock Carvings: metro: duration 625, cost 28. taxi: duration 114, cost 339.69. walk: duration 919, cost 0.0. \nfrom Chongqing North Railway Station to Chongqing People's Square: metro: duration 14, cost 12. taxi: duration 6, cost 20.54. walk: duration 54, cost 0.0. \nfrom Chongqing North Railway Station to Chongqing Jiangbei International Airport: metro: duration 47, cost 20. taxi: duration 23, cost 66.04. walk: duration 190, cost 0.0. \nfrom Chongqing North Railway Station to Chongqing Great Bombing 'June 5th' Tunnel Massacre Historical Exhibition Hall: metro: duration 16, cost 12. taxi: duration 9, cost 26.27. walk: duration 73, cost 0.0. \nfrom Chongqing North Railway Station to Chongqing Industrial Museum: metro: duration 54, cost 20. taxi: duration 23, cost 64.67. walk: duration 186, cost 0.0. \nfrom Chongqing North Railway Station to Instrument Factory Hot Pot (Jiefangbei Branch): metro: duration 17, cost 12. taxi: duration 8, cost 25.1. walk: duration 69, cost 0.0. \nfrom Chongqing North Railway Station to Chongqing West Railway Station: metro: duration 35, cost 20. taxi: duration 24, cost 67.85. walk: duration 195, cost 0.0. \nfrom Chongqing North Railway Station to Ci Qi Kou Ancient Town: metro: duration 37, cost 16. taxi: duration 14, cost 37.78. walk: duration 113, cost 0.0. \nfrom Chongqing North Railway Station to Chongqing North Railway Station Atour Hotel: metro: duration 9, cost 8. taxi: duration 0, cost 11.0. walk: duration 6, cost 0.0. \nfrom Chongqing North Railway Station to Chongqing North Railway Station:  metro: empty.  taxi: empty.  walk: empty. \nfrom Chongqing North Railway Station to Lavande Hotel (Chongqing Jiefangbei Center Pedestrian Street): metro: duration 16, cost 12. taxi: duration 9, cost 26.28. walk: duration 73, cost 0.0. \nfrom Chongqing North Railway Station to Liziba Light Rail Station: metro: duration 15, cost 12. taxi: duration 8, cost 24.06. walk: duration 66, cost 0.0. \nfrom Chongqing North Railway Station to Chongqing Huguang Guild Hall: metro: duration 21, cost 12. taxi: duration 9, cost 27.18. walk: duration 77, cost 0.0. \nfrom Lavande Hotel (Chongqing Jiefangbei Center Pedestrian Street) to Qianhe Zhixuan Gaokong Hotel (Jiefangbei Hongyadong Branch): metro: duration 4, cost 8. taxi: duration 1, cost 11.0. walk: duration 8, cost 0.0. \nfrom Lavande Hotel (Chongqing Jiefangbei Center Pedestrian Street) to Chongqing Guotai Art Center: metro: duration 9, cost 8. taxi: duration 1, cost 11.0. walk: duration 15, cost 0.0. \nfrom Lavande Hotel (Chongqing Jiefangbei Center Pedestrian Street) to At Yuli Chongqing Hot Pot (Jiefangbei Delicious Street Branch): metro: duration 7, cost 8. taxi: duration 0, cost 11.0. walk: duration 2, cost 0.0. \nfrom Lavande Hotel (Chongqing Jiefangbei Center Pedestrian Street) to Wulong Natural Three Bridges: metro: duration 1255, cost 24. taxi: duration 180, cost 537.3. walk: duration 1446, cost 0.0. \nfrom Lavande Hotel (Chongqing Jiefangbei Center Pedestrian Street) to General Ba's Intangible Cultural Heritage Original Flavor Hot Pot (Jiefangbei Branch): taxi: duration 0, cost 11.0. walk: duration 1, cost 0.0. \nfrom Lavande Hotel (Chongqing Jiefangbei Center Pedestrian Street) to Chongqing Zoo: metro: duration 21, cost 12. taxi: duration 12, cost 33.02. walk: duration 97, cost 0.0. \nfrom Lavande Hotel (Chongqing Jiefangbei Center Pedestrian Street) to Hongya Cave: metro: duration 8, cost 8. taxi: duration 2, cost 11.0. walk: duration 18, cost 0.0. \nfrom Lavande Hotel (Chongqing Jiefangbei Center Pedestrian Street) to Chongqing WFC Xianlai Tower Observation Deck: metro: duration 9, cost 8. taxi: duration 1, cost 11.0. walk: duration 14, cost 0.0. \nfrom Lavande Hotel (Chongqing Jiefangbei Center Pedestrian Street) to Chongqing Two Rivers Cruise: metro: duration 10, cost 8. taxi: duration 2, cost 11.0. walk: duration 17, cost 0.0. \nfrom Lavande Hotel (Chongqing Jiefangbei Center Pedestrian Street) to Dust Aroma (Chuanghui Shouzhuo Branch): metro: duration 7, cost 8. taxi: duration 0, cost 11.0. walk: duration 5, cost 0.0. \nfrom Lavande Hotel (Chongqing Jiefangbei Center Pedestrian Street) to Chongqing Science and Technology Museum: metro: duration 22, cost 8. taxi: duration 3, cost 13.46. walk: duration 30, cost 0.0. \nfrom Lavande Hotel (Chongqing Jiefangbei Center Pedestrian Street) to Yang Ji Long Fu (Liberation Monument Main Store): taxi: duration 0, cost 11.0. walk: duration 5, cost 0.0. \nfrom Lavande Hotel (Chongqing Jiefangbei Center Pedestrian Street) to Dazu Rock Carvings: metro: duration 630, cost 28. taxi: duration 120, cost 356.27. walk: duration 964, cost 0.0. \nfrom Lavande Hotel (Chongqing Jiefangbei Center Pedestrian Street) to Chongqing People's Square: metro: duration 7, cost 8. taxi: duration 3, cost 11.81. walk: duration 24, cost 0.0. \nfrom Lavande Hotel (Chongqing Jiefangbei Center Pedestrian Street) to Chongqing Jiangbei International Airport: metro: duration 52, cost 20. taxi: duration 29, cost 82.61. walk: duration 234, cost 0.0. \nfrom Lavande Hotel (Chongqing Jiefangbei Center Pedestrian Street) to Chongqing Great Bombing 'June 5th' Tunnel Massacre Historical Exhibition Hall: metro: duration 4, cost 8. taxi: duration 1, cost 11.0. walk: duration 8, cost 0.0. \nfrom Lavande Hotel (Chongqing Jiefangbei Center Pedestrian Street) to Chongqing Industrial Museum: metro: duration 48, cost 16. taxi: duration 17, cost 47.29. walk: duration 140, cost 0.0. \nfrom Lavande Hotel (Chongqing Jiefangbei Center Pedestrian Street) to Instrument Factory Hot Pot (Jiefangbei Branch): taxi: duration 0, cost 11.0. walk: duration 5, cost 0.0. \nfrom Lavande Hotel (Chongqing Jiefangbei Center Pedestrian Street) to Chongqing West Railway Station: metro: duration 32, cost 20. taxi: duration 22, cost 61.09. walk: duration 177, cost 0.0. \nfrom Lavande Hotel (Chongqing Jiefangbei Center Pedestrian Street) to Ci Qi Kou Ancient Town: metro: duration 42, cost 16. taxi: duration 18, cost 48.82. walk: duration 144, cost 0.0. \nfrom Lavande Hotel (Chongqing Jiefangbei Center Pedestrian Street) to Chongqing North Railway Station Atour Hotel: metro: duration 17, cost 12. taxi: duration 8, cost 24.33. walk: duration 67, cost 0.0. \nfrom Lavande Hotel (Chongqing Jiefangbei Center Pedestrian Street) to Chongqing North Railway Station: metro: duration 16, cost 12. taxi: duration 9, cost 26.28. walk: duration 73, cost 0.0. \nfrom Lavande Hotel (Chongqing Jiefangbei Center Pedestrian Street) to Lavande Hotel (Chongqing Jiefangbei Center Pedestrian Street):  metro: empty.  taxi: empty.  walk: empty. \nfrom Lavande Hotel (Chongqing Jiefangbei Center Pedestrian Street) to Liziba Light Rail Station: metro: duration 10, cost 8. taxi: duration 4, cost 15.37. walk: duration 36, cost 0.0. \nfrom Lavande Hotel (Chongqing Jiefangbei Center Pedestrian Street) to Chongqing Huguang Guild Hall: metro: duration 12, cost 8. taxi: duration 2, cost 11.26. walk: duration 22, cost 0.0. \nfrom Liziba Light Rail Station to Qianhe Zhixuan Gaokong Hotel (Jiefangbei Hongyadong Branch): metro: duration 10, cost 8. taxi: duration 5, cost 17.68. walk: duration 44, cost 0.0. \nfrom Liziba Light Rail Station to Chongqing Guotai Art Center: metro: duration 14, cost 12. taxi: duration 5, cost 18.37. walk: duration 46, cost 0.0. \nfrom Liziba Light Rail Station to At Yuli Chongqing Hot Pot (Jiefangbei Delicious Street Branch): metro: duration 12, cost 8. taxi: duration 4, cost 15.99. walk: duration 38, cost 0.0. \nfrom Liziba Light Rail Station to Wulong Natural Three Bridges: metro: duration 1260, cost 24. taxi: duration 185, cost 551.01. walk: duration 1483, cost 0.0. \nfrom Liziba Light Rail Station to General Ba's Intangible Cultural Heritage Original Flavor Hot Pot (Jiefangbei Branch): metro: duration 12, cost 8. taxi: duration 4, cost 15.79. walk: duration 38, cost 0.0. \nfrom Liziba Light Rail Station to Chongqing Zoo: metro: duration 18, cost 12. taxi: duration 9, cost 26.78. walk: duration 75, cost 0.0. \nfrom Liziba Light Rail Station to Hongya Cave: metro: duration 13, cost 12. taxi: duration 6, cost 18.94. walk: duration 48, cost 0.0. \nfrom Liziba Light Rail Station to Chongqing WFC Xianlai Tower Observation Deck: metro: duration 14, cost 12. taxi: duration 5, cost 18.46. walk: duration 47, cost 0.0. \nfrom Liziba Light Rail Station to Chongqing Two Rivers Cruise: metro: duration 15, cost 12. taxi: duration 5, cost 18.39. walk: duration 46, cost 0.0. \nfrom Liziba Light Rail Station to Dust Aroma (Chuanghui Shouzhuo Branch): metro: duration 12, cost 8. taxi: duration 4, cost 16.3. walk: duration 39, cost 0.0. \nfrom Liziba Light Rail Station to Chongqing Science and Technology Museum: metro: duration 26, cost 12. taxi: duration 6, cost 20.3. walk: duration 53, cost 0.0. \nfrom Liziba Light Rail Station to Yang Ji Long Fu (Liberation Monument Main Store): metro: duration 13, cost 8. taxi: duration 4, cost 16.27. walk: duration 39, cost 0.0. \nfrom Liziba Light Rail Station to Dazu Rock Carvings: metro: duration 624, cost 28. taxi: duration 116, cost 342.86. walk: duration 928, cost 0.0. \nfrom Liziba Light Rail Station to Chongqing People's Square: metro: duration 7, cost 8. taxi: duration 2, cost 11.0. walk: duration 21, cost 0.0. \nfrom Liziba Light Rail Station to Chongqing Jiangbei International Airport: metro: duration 55, cost 20. taxi: duration 31, cost 88.04. walk: duration 248, cost 0.0. \nfrom Liziba Light Rail Station to Chongqing Great Bombing 'June 5th' Tunnel Massacre Historical Exhibition Hall: metro: duration 10, cost 8. taxi: duration 5, cost 17.61. walk: duration 44, cost 0.0. \nfrom Liziba Light Rail Station to Chongqing Industrial Museum: metro: duration 44, cost 16. taxi: duration 15, cost 40.63. walk: duration 122, cost 0.0. \nfrom Liziba Light Rail Station to Instrument Factory Hot Pot (Jiefangbei Branch): metro: duration 11, cost 8. taxi: duration 3, cost 13.82. walk: duration 31, cost 0.0. \nfrom Liziba Light Rail Station to Chongqing West Railway Station: metro: duration 27, cost 16. taxi: duration 18, cost 49.51. walk: duration 146, cost 0.0. \nfrom Liziba Light Rail Station to Ci Qi Kou Ancient Town: metro: duration 36, cost 16. taxi: duration 13, cost 36.46. walk: duration 108, cost 0.0. \nfrom Liziba Light Rail Station to Chongqing North Railway Station Atour Hotel: metro: duration 16, cost 12. taxi: duration 7, cost 22.37. walk: duration 60, cost 0.0. \nfrom Liziba Light Rail Station to Chongqing North Railway Station: metro: duration 15, cost 12. taxi: duration 8, cost 24.06. walk: duration 66, cost 0.0. \nfrom Liziba Light Rail Station to Lavande Hotel (Chongqing Jiefangbei Center Pedestrian Street): metro: duration 10, cost 8. taxi: duration 4, cost 15.37. walk: duration 36, cost 0.0. \nfrom Liziba Light Rail Station to Liziba Light Rail Station:  metro: empty.  taxi: empty.  walk: empty. \nfrom Liziba Light Rail Station to Chongqing Huguang Guild Hall: metro: duration 17, cost 12. taxi: duration 7, cost 21.48. walk: duration 57, cost 0.0. \nfrom Chongqing Huguang Guild Hall to Qianhe Zhixuan Gaokong Hotel (Jiefangbei Hongyadong Branch): metro: duration 9, cost 8. taxi: duration 1, cost 11.0. walk: duration 13, cost 0.0. \nfrom Chongqing Huguang Guild Hall to Chongqing Guotai Art Center: taxi: duration 1, cost 11.0. walk: duration 11, cost 0.0. \nfrom Chongqing Huguang Guild Hall to At Yuli Chongqing Hot Pot (Jiefangbei Delicious Street Branch): metro: duration 14, cost 8. taxi: duration 2, cost 11.06. walk: duration 21, cost 0.0. \nfrom Chongqing Huguang Guild Hall to Wulong Natural Three Bridges: metro: duration 1257, cost 24. taxi: duration 178, cost 529.96. walk: duration 1427, cost 0.0. \nfrom Chongqing Huguang Guild Hall to General Ba's Intangible Cultural Heritage Original Flavor Hot Pot (Jiefangbei Branch): metro: duration 14, cost 8. taxi: duration 2, cost 11.09. walk: duration 21, cost 0.0. \nfrom Chongqing Huguang Guild Hall to Chongqing Zoo: metro: duration 29, cost 16. taxi: duration 14, cost 39.33. walk: duration 118, cost 0.0. \nfrom Chongqing Huguang Guild Hall to Hongya Cave: taxi: duration 1, cost 11.0. walk: duration 11, cost 0.0. \nfrom Chongqing Huguang Guild Hall to Chongqing WFC Xianlai Tower Observation Deck: taxi: duration 1, cost 11.0. walk: duration 10, cost 0.0. \nfrom Chongqing Huguang Guild Hall to Chongqing Two Rivers Cruise: taxi: duration 1, cost 11.0. walk: duration 13, cost 0.0. \nfrom Chongqing Huguang Guild Hall to Dust Aroma (Chuanghui Shouzhuo Branch): metro: duration 14, cost 8. taxi: duration 2, cost 11.25. walk: duration 22, cost 0.0. \nfrom Chongqing Huguang Guild Hall to Chongqing Science and Technology Museum: metro: duration 24, cost 8. taxi: duration 2, cost 11.08. walk: duration 21, cost 0.0. \nfrom Chongqing Huguang Guild Hall to Yang Ji Long Fu (Liberation Monument Main Store): metro: duration 15, cost 8. taxi: duration 2, cost 11.0. walk: duration 17, cost 0.0. \nfrom Chongqing Huguang Guild Hall to Dazu Rock Carvings: metro: duration 637, cost 28. taxi: duration 122, cost 362.85. walk: duration 981, cost 0.0. \nfrom Chongqing Huguang Guild Hall to Chongqing People's Square: metro: duration 14, cost 8. taxi: duration 5, cost 16.5. walk: duration 40, cost 0.0. \nfrom Chongqing Huguang Guild Hall to Chongqing Jiangbei International Airport: metro: duration 55, cost 20. taxi: duration 27, cost 76.71. walk: duration 218, cost 0.0. \nfrom Chongqing Huguang Guild Hall to Chongqing Great Bombing 'June 5th' Tunnel Massacre Historical Exhibition Hall: metro: duration 9, cost 8. taxi: duration 1, cost 11.0. walk: duration 13, cost 0.0. \nfrom Chongqing Huguang Guild Hall to Chongqing Industrial Museum: metro: duration 56, cost 16. taxi: duration 20, cost 54.92. walk: duration 160, cost 0.0. \nfrom Chongqing Huguang Guild Hall to Instrument Factory Hot Pot (Jiefangbei Branch): metro: duration 13, cost 8. taxi: duration 3, cost 12.49. walk: duration 26, cost 0.0. \nfrom Chongqing Huguang Guild Hall to Chongqing West Railway Station: metro: duration 40, cost 20. taxi: duration 24, cost 69.52. walk: duration 199, cost 0.0. \nfrom Chongqing Huguang Guild Hall to Ci Qi Kou Ancient Town: metro: duration 49, cost 20. taxi: duration 20, cost 55.55. walk: duration 162, cost 0.0. \nfrom Chongqing Huguang Guild Hall to Chongqing North Railway Station Atour Hotel: metro: duration 22, cost 12. taxi: duration 8, cost 25.32. walk: duration 70, cost 0.0. \nfrom Chongqing Huguang Guild Hall to Chongqing North Railway Station: metro: duration 21, cost 12. taxi: duration 9, cost 27.18. walk: duration 77, cost 0.0. \nfrom Chongqing Huguang Guild Hall to Lavande Hotel (Chongqing Jiefangbei Center Pedestrian Street): metro: duration 12, cost 8. taxi: duration 2, cost 11.26. walk: duration 22, cost 0.0. \nfrom Chongqing Huguang Guild Hall to Liziba Light Rail Station: metro: duration 17, cost 12. taxi: duration 7, cost 21.48. walk: duration 57, cost 0.0. \nfrom Chongqing Huguang Guild Hall to Chongqing Huguang Guild Hall:  metro: empty.  taxi: empty.  walk: empty. \n"
+    },
+    "initial_verification": {
+      "commonsense_errors": [
+        "Incorrect duration information of given intercity transport from destination to origin FL338 [start_time -> end_time].",
+        "The attraction, Chongqing WFC Xianlai Tower Observation Deck in day 2, is closed when you visiting. Its open time is [09:30 -- 22:00]",
+        "The attraction, Chongqing Two Rivers Cruise in day 2, is closed when you visiting. Its open time is [12:00 -- 22:00]",
+        "Breakfast activity, Lanyuan Renjia Yucai Fang (Beibin Road branch), in day 2 is not valid in the provided information.",
+        "Unavailable Inner-City Transport information in 2, from Chongqing Two Rivers Cruise to Lanyuan Renjia Yucai Fang (Beibin Road branch), start_time 11:50, transport_type taxi",
+        "Unavailable Inner-City Transport information in 2, from Lanyuan Renjia Yucai Fang (Beibin Road branch) to Ci Qi Kou Ancient Town, start_time 13:10, transport_type metro",
+        "The type of the last activity on day 1 should be accommodation. Except for the last day of the trip, the last activity at night on other days should be returning to the hotel in the plan. ",
+        "The origin of the innercity-transport to Chongqing WFC Xianlai Tower Observation Deck must be equal to the position of the previous activity Yang Ji Long Fu (Liberation Monument Main Store)",
+        "The type of the last activity on day 2 should be accommodation. Except for the last day of the trip, the last activity at night on other days should be returning to the hotel in the plan. ",
+        "The origin of the innercity-transport to Chongqing Zoo must be equal to the position of the previous activity General Ba's Intangible Cultural Heritage Original Flavor Hot Pot (Jiefangbei Branch)"
+      ],
+      "personal_constraints": [
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      "category_normalization": [],
+      "personal_errors": [],
+      "evaluation_errors": [],
+      "translation_errors": [
+        "Transport translation failed for day 2 activity 'Lanyuan Renjia Yucai Fang (Beibin Road branch)'",
+        "Transport translation failed for day 2 activity 'Ci Qi Kou Ancient Town'"
+      ],
+      "error_info": [
+        "Incorrect duration information of given intercity transport from destination to origin FL338 [start_time -> end_time].",
+        "The attraction, Chongqing WFC Xianlai Tower Observation Deck in day 2, is closed when you visiting. Its open time is [09:30 -- 22:00]",
+        "The attraction, Chongqing Two Rivers Cruise in day 2, is closed when you visiting. Its open time is [12:00 -- 22:00]",
+        "Breakfast activity, Lanyuan Renjia Yucai Fang (Beibin Road branch), in day 2 is not valid in the provided information.",
+        "Unavailable Inner-City Transport information in 2, from Chongqing Two Rivers Cruise to Lanyuan Renjia Yucai Fang (Beibin Road branch), start_time 11:50, transport_type taxi",
+        "Unavailable Inner-City Transport information in 2, from Lanyuan Renjia Yucai Fang (Beibin Road branch) to Ci Qi Kou Ancient Town, start_time 13:10, transport_type metro",
+        "The type of the last activity on day 1 should be accommodation. Except for the last day of the trip, the last activity at night on other days should be returning to the hotel in the plan. ",
+        "The origin of the innercity-transport to Chongqing WFC Xianlai Tower Observation Deck must be equal to the position of the previous activity Yang Ji Long Fu (Liberation Monument Main Store)",
+        "The type of the last activity on day 2 should be accommodation. Except for the last day of the trip, the last activity at night on other days should be returning to the hotel in the plan. ",
+        "The origin of the innercity-transport to Chongqing Zoo must be equal to the position of the previous activity General Ba's Intangible Cultural Heritage Original Flavor Hot Pot (Jiefangbei Branch)"
+      ],
+      "passed": false,
+      "translated_plan": {
+        "people_number": 4,
+        "start_city": "Beijing",
+        "target_city": "Chongqing",
+        "itinerary": [
+          {
+            "day": 1,
+            "activities": [
+              {
+                "start_time": "06:55",
+                "end_time": "13:57",
+                "start": "Beijing West Railway Station",
+                "end": "Chongqing North Railway Station",
+                "price": 948.05,
+                "cost": 3792.2,
+                "TrainID": "G51",
+                "type": "train",
+                "tickets": 4,
+                "transports": []
+              },
+              {
+                "position": "Qianhe Zhixuan Gaokong Hotel (Jiefangbei Hongyadong Branch)",
+                "type": "accommodation",
+                "transports": [
+                  {
+                    "start": "Chongqing North Railway Station",
+                    "end": "Chongqing North Station South Square-Metro Station",
+                    "mode": "walk",
+                    "start_time": "13:57",
+                    "end_time": "14:00",
+                    "cost": 0,
+                    "distance": 0.27,
+                    "price": 0
+                  },
+                  {
+                    "start": "Chongqing North Station South Square-Metro Station",
+                    "end": "Xiaoshizi-Metro Station",
+                    "mode": "metro",
+                    "start_time": "14:00",
+                    "end_time": "14:12",
+                    "cost": 12,
+                    "distance": 6.15,
+                    "price": 3,
+                    "tickets": 4
+                  },
+                  {
+                    "start": "Xiaoshizi-Metro Station",
+                    "end": "Qianhe Zhixuan Gaokong Hotel (Jiefangbei Hongyadong Branch)",
+                    "mode": "walk",
+                    "start_time": "14:12",
+                    "end_time": "14:13",
+                    "cost": 0,
+                    "distance": 0.12,
+                    "price": 0
+                  }
+                ],
+                "room_type": 2,
+                "price": 208,
+                "cost": 416,
+                "start_time": "14:20",
+                "end_time": "24:00",
+                "rooms": 2
+              },
+              {
+                "position": "Hongya Cave",
+                "type": "attraction",
+                "transports": [
+                  {
+                    "start": "Qianhe Zhixuan Gaokong Hotel (Jiefangbei Hongyadong Branch)",
+                    "end": "Xiaoshizi-Metro Station",
+                    "mode": "walk",
+                    "start_time": "14:30",
+                    "end_time": "14:31",
+                    "cost": 0,
+                    "distance": 0.12,
+                    "price": 0
+                  },
+                  {
+                    "start": "Xiaoshizi-Metro Station",
+                    "end": "Chaotianmen-Metro Station",
+                    "mode": "metro",
+                    "start_time": "14:31",
+                    "end_time": "14:32",
+                    "cost": 8,
+                    "distance": 0.79,
+                    "price": 2,
+                    "tickets": 4
+                  },
+                  {
+                    "start": "Chaotianmen-Metro Station",
+                    "end": "Hongya Cave",
+                    "mode": "walk",
+                    "start_time": "14:32",
+                    "end_time": "14:35",
+                    "cost": 0,
+                    "distance": 0.32,
+                    "price": 0
+                  }
+                ],
+                "price": 0.0,
+                "cost": 0.0,
+                "tickets": 4,
+                "start_time": "14:40",
+                "end_time": "17:40"
+              },
+              {
+                "position": "Yang Ji Long Fu (Liberation Monument Main Store)",
+                "type": "dinner",
+                "transports": [
+                  {
+                    "start": "Hongya Cave",
+                    "end": "Chaotianmen-Metro Station",
+                    "mode": "walk",
+                    "start_time": "17:40",
+                    "end_time": "17:43",
+                    "cost": 0,
+                    "distance": 0.32,
+                    "price": 0
+                  },
+                  {
+                    "start": "Chaotianmen-Metro Station",
+                    "end": "Linjiangmen-Metro Station",
+                    "mode": "metro",
+                    "start_time": "17:43",
+                    "end_time": "17:46",
+                    "cost": 8,
+                    "distance": 1.55,
+                    "price": 2,
+                    "tickets": 4
+                  },
+                  {
+                    "start": "Linjiangmen-Metro Station",
+                    "end": "Yang Ji Long Fu (Liberation Monument Main Store)",
+                    "mode": "walk",
+                    "start_time": "17:46",
+                    "end_time": "17:51",
+                    "cost": 0,
+                    "distance": 0.49,
+                    "price": 0
+                  }
+                ],
+                "price": 96,
+                "cost": 384,
+                "start_time": "18:00",
+                "end_time": "19:00"
+              }
+            ]
+          },
+          {
+            "day": 2,
+            "activities": [
+              {
+                "position": "Chongqing WFC Xianlai Tower Observation Deck",
+                "type": "attraction",
+                "transports": [
+                  {
+                    "start": "Qianhe Zhixuan Gaokong Hotel (Jiefangbei Hongyadong Branch)",
+                    "end": "Xiaoshizi-Metro Station",
+                    "mode": "walk",
+                    "start_time": "09:00",
+                    "end_time": "09:01",
+                    "cost": 0,
+                    "distance": 0.12,
+                    "price": 0
+                  },
+                  {
+                    "start": "Xiaoshizi-Metro Station",
+                    "end": "Chaotianmen-Metro Station",
+                    "mode": "metro",
+                    "start_time": "09:01",
+                    "end_time": "09:02",
+                    "cost": 8,
+                    "distance": 0.79,
+                    "price": 2,
+                    "tickets": 4
+                  },
+                  {
+                    "start": "Chaotianmen-Metro Station",
+                    "end": "Chongqing WFC Xianlai Tower Observation Deck",
+                    "mode": "walk",
+                    "start_time": "09:02",
+                    "end_time": "09:06",
+                    "cost": 0,
+                    "distance": 0.34,
+                    "price": 0
+                  }
+                ],
+                "price": 118,
+                "cost": 472,
+                "tickets": 4,
+                "start_time": "09:10",
+                "end_time": "10:10"
+              },
+              {
+                "position": "Chongqing Two Rivers Cruise",
+                "type": "attraction",
+                "transports": [
+                  {
+                    "start": "Chongqing WFC Xianlai Tower Observation Deck",
+                    "end": "Chongqing Two Rivers Cruise",
+                    "mode": "taxi",
+                    "start_time": "10:10",
+                    "end_time": "10:10",
+                    "cost": 11,
+                    "distance": 0.39,
+                    "price": 11.0,
+                    "cars": 1
+                  }
+                ],
+                "price": 138,
+                "cost": 552,
+                "tickets": 4,
+                "start_time": "10:20",
+                "end_time": "11:50"
+              },
+              {
+                "position": "Lanyuan Renjia Yucai Fang (Beibin Road branch)",
+                "type": "lunch",
+                "transports": [],
+                "price": 100,
+                "cost": 400,
+                "start_time": "12:10",
+                "end_time": "13:10"
+              },
+              {
+                "position": "Ci Qi Kou Ancient Town",
+                "type": "attraction",
+                "transports": [],
+                "price": 0.0,
+                "cost": 0.0,
+                "tickets": 4,
+                "start_time": "14:00",
+                "end_time": "17:00"
+              },
+              {
+                "position": "General Ba's Intangible Cultural Heritage Original Flavor Hot Pot (Jiefangbei Branch)",
+                "type": "dinner",
+                "transports": [
+                  {
+                    "start": "Ci Qi Kou Ancient Town",
+                    "end": "Shijingpo-Metro Station",
+                    "mode": "walk",
+                    "start_time": "17:00",
+                    "end_time": "17:14",
+                    "cost": 0,
+                    "distance": 1.19,
+                    "price": 0
+                  },
+                  {
+                    "start": "Shijingpo-Metro Station",
+                    "end": "Linjiangmen-Metro Station",
+                    "mode": "metro",
+                    "start_time": "17:14",
+                    "end_time": "17:40",
+                    "cost": 16,
+                    "distance": 13.06,
+                    "price": 4,
+                    "tickets": 4
+                  },
+                  {
+                    "start": "Linjiangmen-Metro Station",
+                    "end": "General Ba's Intangible Cultural Heritage Original Flavor Hot Pot (Jiefangbei Branch)",
+                    "mode": "walk",
+                    "start_time": "17:40",
+                    "end_time": "17:44",
+                    "cost": 0,
+                    "distance": 0.34,
+                    "price": 0
+                  }
+                ],
+                "price": 89,
+                "cost": 356,
+                "start_time": "17:50",
+                "end_time": "18:50"
+              }
+            ]
+          },
+          {
+            "day": 3,
+            "activities": [
+              {
+                "position": "Chongqing Zoo",
+                "type": "attraction",
+                "transports": [
+                  {
+                    "start": "Qianhe Zhixuan Gaokong Hotel (Jiefangbei Hongyadong Branch)",
+                    "end": "Xiaoshizi-Metro Station",
+                    "mode": "walk",
+                    "start_time": "08:00",
+                    "end_time": "08:01",
+                    "cost": 0,
+                    "distance": 0.12,
+                    "price": 0
+                  },
+                  {
+                    "start": "Xiaoshizi-Metro Station",
+                    "end": "Yangjiaping-Metro Station",
+                    "mode": "metro",
+                    "start_time": "08:01",
+                    "end_time": "08:18",
+                    "cost": 12,
+                    "distance": 8.74,
+                    "price": 3,
+                    "tickets": 4
+                  },
+                  {
+                    "start": "Yangjiaping-Metro Station",
+                    "end": "Chongqing Zoo",
+                    "mode": "walk",
+                    "start_time": "08:18",
+                    "end_time": "08:22",
+                    "cost": 0,
+                    "distance": 0.35,
+                    "price": 0
+                  }
+                ],
+                "price": 24.5,
+                "cost": 98,
+                "tickets": 4,
+                "start_time": "08:30",
+                "end_time": "10:30"
+              },
+              {
+                "position": "Chongqing Huguang Guild Hall",
+                "type": "attraction",
+                "transports": [
+                  {
+                    "start": "Chongqing Zoo",
+                    "end": "Yangjiaping-Metro Station",
+                    "mode": "walk",
+                    "start_time": "10:30",
+                    "end_time": "10:34",
+                    "cost": 0,
+                    "distance": 0.35,
+                    "price": 0
+                  },
+                  {
+                    "start": "Yangjiaping-Metro Station",
+                    "end": "Chaotianmen-Metro Station",
+                    "mode": "metro",
+                    "start_time": "10:34",
+                    "end_time": "10:52",
+                    "cost": 16,
+                    "distance": 9.48,
+                    "price": 4,
+                    "tickets": 4
+                  },
+                  {
+                    "start": "Chaotianmen-Metro Station",
+                    "end": "Chongqing Huguang Guild Hall",
+                    "mode": "walk",
+                    "start_time": "10:52",
+                    "end_time": "10:59",
+                    "cost": 0,
+                    "distance": 0.63,
+                    "price": 0
+                  }
+                ],
+                "price": 25,
+                "cost": 100,
+                "tickets": 4,
+                "start_time": "11:00",
+                "end_time": "12:30"
+              },
+              {
+                "position": "Instrument Factory Hot Pot (Jiefangbei Branch)",
+                "type": "lunch",
+                "transports": [
+                  {
+                    "start": "Chongqing Huguang Guild Hall",
+                    "end": "Chaotianmen-Metro Station",
+                    "mode": "walk",
+                    "start_time": "12:30",
+                    "end_time": "12:37",
+                    "cost": 0,
+                    "distance": 0.63,
+                    "price": 0
+                  },
+                  {
+                    "start": "Chaotianmen-Metro Station",
+                    "end": "Linjiangmen-Metro Station",
+                    "mode": "metro",
+                    "start_time": "12:37",
+                    "end_time": "12:40",
+                    "cost": 8,
+                    "distance": 1.55,
+                    "price": 2,
+                    "tickets": 4
+                  },
+                  {
+                    "start": "Linjiangmen-Metro Station",
+                    "end": "Instrument Factory Hot Pot (Jiefangbei Branch)",
+                    "mode": "walk",
+                    "start_time": "12:40",
+                    "end_time": "12:43",
+                    "cost": 0,
+                    "distance": 0.32,
+                    "price": 0
+                  }
+                ],
+                "price": 100,
+                "cost": 400,
+                "start_time": "12:50",
+                "end_time": "13:50"
+              },
+              {
+                "start": "Chongqing Jiangbei International Airport",
+                "end": "Beijing Capital International Airport",
+                "start_time": "16:39",
+                "end_time": "18:21",
+                "FlightID": "FL338",
+                "type": "airplane",
+                "transports": [
+                  {
+                    "start": "Instrument Factory Hot Pot (Jiefangbei Branch)",
+                    "end": "Linjiangmen-Metro Station",
+                    "mode": "walk",
+                    "start_time": "13:50",
+                    "end_time": "13:53",
+                    "cost": 0,
+                    "distance": 0.32,
+                    "price": 0
+                  },
+                  {
+                    "start": "Linjiangmen-Metro Station",
+                    "end": "Jiangbei Airport Terminal 3-Metro Station",
+                    "mode": "metro",
+                    "start_time": "13:53",
+                    "end_time": "14:29",
+                    "cost": 20,
+                    "distance": 18.4,
+                    "price": 5,
+                    "tickets": 4
+                  },
+                  {
+                    "start": "Jiangbei Airport Terminal 3-Metro Station",
+                    "end": "Chongqing Jiangbei International Airport",
+                    "mode": "walk",
+                    "start_time": "14:29",
+                    "end_time": "14:43",
+                    "cost": 0,
+                    "distance": 1.21,
+                    "price": 0
+                  }
+                ],
+                "price": 762.95,
+                "cost": 3051.8,
+                "tickets": 4
+              }
+            ]
+          }
+        ]
+      },
+      "verifier_errors": [],
+      "schema_errors": [],
+      "translation_failures": [
+        "Transport translation failed for day 2 activity 'Lanyuan Renjia Yucai Fang (Beibin Road branch)'",
+        "Transport translation failed for day 2 activity 'Ci Qi Kou Ancient Town'"
+      ]
+    },
+    "environment_context": {
+      "lang": "en"
+    },
+    "generation_metadata": {
+      "raw_response": "[{\"day\": 1,```json\n{\n    \"day\": 1,\n    \"activities\": [\n        {\n            \"start_time\": \"06:55\",\n            \"end_time\": \"13:57\",\n            \"start\": \"Beijing West Railway Station\",\n            \"end\": \"Chongqing North Railway Station\",\n            \"price\": 948.05,\n            \"cost\": 3792.2,\n            \"TrainID\": \"G51\",\n            \"type\": \"train\",\n            \"tickets\": 4,\n            \"transports\": \"empty\"\n        },\n        {\n            \"position\": \"Qianhe Zhixuan Gaokong Hotel (Jiefangbei Hongyadong Branch)\",\n            \"type\": \"accommodation\",\n            \"transports\": {\n                \"from\": \"Chongqing North Railway Station\",\n                \"to\": \"Qianhe Zhixuan Gaokong Hotel (Jiefangbei Hongyadong Branch)\",\n                \"mode\": \"metro\",\n                \"start_time\": \"13:57\",\n                \"end_time\": \"14:13\",\n                \"cost\": 12\n            },\n            \"room_type\": 2,\n            \"price\": 208,\n            \"cost\": 416,\n            \"start_time\": \"14:20\",\n            \"end_time\": \"24:00\",\n            \"rooms\": 2\n        },\n        {\n            \"position\": \"Hongya Cave\",\n            \"type\": \"attraction\",\n            \"transports\": {\n                \"from\": \"Qianhe Zhixuan Gaokong Hotel (Jiefangbei Hongyadong Branch)\",\n                \"to\": \"Hongya Cave\",\n                \"mode\": \"metro\",\n                \"start_time\": \"14:30\",\n                \"end_time\": \"14:35\",\n                \"cost\": 8\n            },\n            \"price\": 0.0,\n            \"cost\": 0.0,\n            \"tickets\": 4,\n            \"start_time\": \"14:40\",\n            \"end_time\": \"17:40\"\n        },\n        {\n            \"position\": \"Yang Ji Long Fu (Liberation Monument Main Store)\",\n            \"type\": \"dinner\",\n            \"transports\": {\n                \"from\": \"Hongya Cave\",\n                \"to\": \"Yang Ji Long Fu (Liberation Monument Main Store)\",\n                \"mode\": \"metro\",\n                \"start_time\": \"17:40\",\n                \"end_time\": \"17:51\",\n                \"cost\": 8\n            },\n            \"price\": 96,\n            \"cost\": 384,\n            \"start_time\": \"18:00\",\n            \"end_time\": \"19:00\"\n        }\n    ]\n},\n{\n    \"day\": 2,\n    \"activities\": [\n        {\n            \"position\": \"Chongqing WFC Xianlai Tower Observation Deck\",\n            \"type\": \"attraction\",\n            \"transports\": {\n                \"from\": \"Qianhe Zhixuan Gaokong Hotel (Jiefangbei Hongyadong Branch)\",\n                \"to\": \"Chongqing WFC Xianlai Tower Observation Deck\",\n                \"mode\": \"metro\",\n                \"start_time\": \"09:00\",\n                \"end_time\": \"09:06\",\n                \"cost\": 8\n            },\n            \"price\": 118,\n            \"cost\": 472,\n            \"tickets\": 4,\n            \"start_time\": \"09:10\",\n            \"end_time\": \"10:10\"\n        },\n        {\n            \"position\": \"Chongqing Two Rivers Cruise\",\n            \"type\": \"attraction\",\n            \"transports\": {\n                \"from\": \"Chongqing WFC Xianlai Tower Observation Deck\",\n                \"to\": \"Chongqing Two Rivers Cruise\",\n                \"mode\": \"taxi\",\n                \"start_time\": \"10:10\",\n                \"end_time\": \"10:11\",\n                \"cost\": 11\n            },\n            \"price\": 138,\n            \"cost\": 552,\n            \"tickets\": 4,\n            \"start_time\": \"10:20\",\n            \"end_time\": \"11:50\"\n        },\n        {\n            \"position\": \"Lanyuan Renjia Yucai Fang (Beibin Road branch)\",\n            \"type\": \"lunch\",\n            \"transports\": {\n                \"from\": \"Chongqing Two Rivers Cruise\",\n                \"to\": \"Lanyuan Renjia Yucai Fang (Beibin Road branch)\",\n                \"mode\": \"taxi\",\n                \"start_time\": \"11:50\",\n                \"end_time\": \"12:00\",\n                \"cost\": 11\n            },\n            \"price\": 100,\n            \"cost\": 400,\n            \"start_time\": \"12:10\",\n            \"end_time\": \"13:10\"\n        },\n        {\n            \"position\": \"Ci Qi Kou Ancient Town\",\n            \"type\": \"attraction\",\n            \"transports\": {\n                \"from\": \"Lanyuan Renjia Yucai Fang (Beibin Road branch)\",\n                \"to\": \"Ci Qi Kou Ancient Town\",\n                \"mode\": \"metro\",\n                \"start_time\": \"13:10\",\n                \"end_time\": \"13:52\",\n                \"cost\": 16\n            },\n            \"price\": 0.0,\n            \"cost\": 0.0,\n            \"tickets\": 4,\n            \"start_time\": \"14:00\",\n            \"end_time\": \"17:00\"\n        },\n        {\n            \"position\": \"General Ba's Intangible Cultural Heritage Original Flavor Hot Pot (Jiefangbei Branch)\",\n            \"type\": \"dinner\",\n            \"transports\": {\n                \"from\": \"Ci Qi Kou Ancient Town\",\n                \"to\": \"General Ba's Intangible Cultural Heritage Original Flavor Hot Pot (Jiefangbei Branch)\",\n                \"mode\": \"metro\",\n                \"start_time\": \"17:00\",\n                \"end_time\": \"17:44\",\n                \"cost\": 16\n            },\n            \"price\": 89,\n            \"cost\": 356,\n            \"start_time\": \"17:50\",\n            \"end_time\": \"18:50\"\n        }\n    ]\n},\n{\n    \"day\": 3,\n    \"activities\": [\n        {\n            \"position\": \"Chongqing Zoo\",\n            \"type\": \"attraction\",\n            \"transports\": {\n                \"from\": \"Qianhe Zhixuan Gaokong Hotel (Jiefangbei Hongyadong Branch)\",\n                \"to\": \"Chongqing Zoo\",\n                \"mode\": \"metro\",\n                \"start_time\": \"08:00\",\n                \"end_time\": \"08:22\",\n                \"cost\": 12\n            },\n            \"price\": 24.5,\n            \"cost\": 98,\n            \"tickets\": 4,\n            \"start_time\": \"08:30\",\n            \"end_time\": \"10:30\"\n        },\n        {\n            \"position\": \"Chongqing Huguang Guild Hall\",\n            \"type\": \"attraction\",\n            \"transports\": {\n                \"from\": \"Chongqing Zoo\",\n                \"to\": \"Chongqing Huguang Guild Hall\",\n                \"mode\": \"metro\",\n                \"start_time\": \"10:30\",\n                \"end_time\": \"10:59\",\n                \"cost\": 16\n            },\n            \"price\": 25,\n            \"cost\": 100,\n            \"tickets\": 4,\n            \"start_time\": \"11:00\",\n            \"end_time\": \"12:30\"\n        },\n        {\n            \"position\": \"Instrument Factory Hot Pot (Jiefangbei Branch)\",\n            \"type\": \"lunch\",\n            \"transports\": {\n                \"from\": \"Chongqing Huguang Guild Hall\",\n                \"to\": \"Instrument Factory Hot Pot (Jiefangbei Branch)\",\n                \"mode\": \"metro\",\n                \"start_time\": \"12:30\",\n                \"end_time\": \"12:40\",\n                \"cost\": 8\n            },\n            \"price\": 100,\n            \"cost\": 400,\n            \"start_time\": \"12:50\",\n            \"end_time\": \"13:50\"\n        },\n        {\n            \"start\": \"Chongqing Jiangbei International Airport\",\n            \"end\": \"Beijing Capital International Airport\",\n            \"start_time\": \"16:39\",\n            \"end_time\": \"18:21\",\n            \"FlightID\": \"FL338\",\n            \"type\": \"airplane\",\n            \"transports\": {\n                \"from\": \"Instrument Factory Hot Pot (Jiefangbei Branch)\",\n                \"to\": \"Chongqing Jiangbei International Airport\",\n                \"mode\": \"metro\",\n                \"start_time\": \"13:50\",\n                \"end_time\": \"14:40\",\n                \"cost\": 20\n            },\n            \"price\": 762.95,\n            \"cost\": 3051.8,\n            \"tickets\": 4\n        }\n    ]\n}\n```",
+      "input_tokens": 96136,
+      "output_tokens": 2202,
+      "total_tokens": 98338,
+      "model_calls": 6,
+      "failed_model_calls": 0,
+      "elapsed_time_seconds": 45.41372752189636,
+      "llm_inference_time_seconds": 31.873827934265137,
+      "information_collection_time_seconds": 13.527910232543945,
+      "initial_generation_time_s": 45.415325699956156,
+      "initial_generation_tool_calls": 5530,
+      "initial_generation_tool_call_counts_by_type": {
+        "accommodations_select": 1,
+        "attractions_select": 1,
+        "goto": 1800,
+        "intercity_transport_select": 4,
+        "next_page": 123,
+        "poi_lat_lon_search": 3600,
+        "restaurants_select": 1
+      },
+      "shared_initialization_time_s": 45.766546400031075,
+      "shared_initialization_system_metrics": {
+        "tool_call_count": 5615,
+        "successful_tool_call_count": 5611,
+        "failed_tool_call_count": 4,
+        "verification_count": 1,
+        "tool_call_counts_by_type": {
+          "accommodations_select": 2,
+          "attractions_select": 7,
+          "goto": 1824,
+          "intercity_transport_select": 6,
+          "next_page": 123,
+          "poi_lat_lon_search": 3648,
+          "restaurants_select": 5
+        }
+      }
+    }
+  },
+  "initial_plan_hash": "863df5ac20b008f44f2bfa2374d607cfcf892084dacce6312d66fd2de89df7a5",
+  "initial_state_hash": "58f6e25065bbf2e23b0cdbd9a83667ed1d4b49723c12dbaf22033db3285daad2"
+}

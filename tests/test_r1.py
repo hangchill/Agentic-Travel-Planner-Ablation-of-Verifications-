@@ -5,7 +5,8 @@ from chinatravel.agent.nesy_verifier.repair_strategies.r1 import (
     find_candidate_slots, select_editable_slot, find_transport_slots, 
     replace_transport_slot, select_repair_target, localise_transport_error,
     lookup_transport_options, convert_transport_option, localise_transport_cost_error,
-    repair_commonsense_transport_cost, repair_commonsense_activity, is_within_opening_hours,)
+    repair_commonsense_transport_cost, repair_commonsense_activity, is_within_opening_hours,
+    find_budget_candidate_slots,)
 import json
 from unittest.mock import patch
 from copy import deepcopy
@@ -26,7 +27,7 @@ class TestR1(unittest.TestCase):
         self.assertIsNone(find_editable_slot(plan, "dining"))
  
     def test_classify_malformed_constraint(self):
-        problem = {"hard_logic_py": ["    result = True"]}
+        problem = {"hard_logic_py": ["result = True"]}
         family = classify_failed_constraint(problem, 1)
         self.assertIsNone(family)
 
@@ -780,6 +781,98 @@ class TestR1(unittest.TestCase):
         with self.assertRaises(ValueError):
             is_within_opening_hours(
                 "25:00", "26:00", "10:00", "21:00")
+
+    def test_find_budget_candidate_slots(self):
+        itinerary = [{
+            "day": 1,
+            "activities": [{
+                    "type": "accommodation",
+                    "position": "Hotel A",
+                    "cost": 500,},
+                {"type": "lunch",
+                 "position": "Restaurant A",
+                 "cost": 100,},
+                {"type": "attraction",
+                 "position": "Museum",
+                 "cost": 0,},],}]
+        result = find_budget_candidate_slots(itinerary)
+        self.assertEqual(result, [(0, 0), (0, 1)])
+
+    def test_budget_repair_reduces_cost(self):
+        problem = { "nature_language": "Stay within 400 yuan.",
+                   "hard_logic_py": [(
+                       "total_cost = 0\n"
+                       "for activity in allactivities(plan):\n"
+                       "    total_cost += activity_cost(activity)\n"
+                       "    total_cost += innercity_transport_cost("
+                       "activity_transports(activity))\n"
+                       "result = (total_cost <= 400)\n")],}
+        itinerary = [{
+            "day": 1,
+            "activities": [
+                {"type": "accommodation",
+                 "position": "Hotel A",
+                 "start_time": "20:00",
+                 "end_time": "23:00",
+                 "cost": 500,},
+                {"type": "lunch",
+                 "position": "Restaurant A",
+                 "start_time": "12:00",
+                 "end_time": "13:00",
+                 "cost": 100,},],}]
+        original = deepcopy(itinerary)
+        def mock_llm(messages, one_line=False, json_mode=False):
+            return json.dumps({
+                "type": "accommodation",
+                "position": "Hotel B",
+                "start_time": "20:00",
+                "end_time": "23:00",
+                "cost": 300,})
+        result = R1TargetedRepair().repair(
+            problem=problem, raw_plan=itinerary,
+            verification_results={
+                "personal_constraints": [False],
+                "commonsense_errors": [],},
+            context={}, llm=mock_llm,)
+        self.assertEqual(result.repaired_plan[0]["activities"][0]["cost"], 300,)
+        self.assertEqual(result.repaired_plan[0]["activities"][1],
+                         original[0]["activities"][1],)
+        self.assertEqual(itinerary, original)
+
+    def test_budget_repair_rejects_non_cheaper_replacement(self):
+        problem = {"nature_language": "Stay within 400 yuan.",
+                   "hard_logic_py": [
+                       ("total_cost = 0\n"
+                        "for activity in allactivities(plan):\n"
+                        "    total_cost += activity_cost(activity)\n"
+                        "    total_cost += innercity_transport_cost("
+                        "activity_transports(activity))\n"
+                        "result = (total_cost <= 400)\n")],}
+        itinerary = [{
+            "day": 1,
+            "activities": [{
+                "type": "accommodation",
+                "position": "Hotel A",
+                "start_time": "20:00",
+                "end_time": "23:00",
+                "cost": 500,}],}]
+        original = deepcopy(itinerary)
+        def mock_llm(messages, one_line=False, json_mode=False):
+            return json.dumps({
+                "type": "accommodation",
+                "position": "Hotel B",
+                "start_time": "20:00",
+                "end_time": "23:00",
+                "cost": 600,})
+        result = R1TargetedRepair().repair(
+            problem=problem, raw_plan=itinerary,
+            verification_results={
+                "personal_constraints": [False],
+                "commonsense_errors": [],},
+            context={}, llm=mock_llm,)
+        self.assertEqual(result.repaired_plan, original)
+        self.assertEqual(result.metadata["failure_reason"],
+                         "invalid_replacement",)
 
 if __name__ == "__main__":
     unittest.main()

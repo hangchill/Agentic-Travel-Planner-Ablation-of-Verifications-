@@ -1,0 +1,1554 @@
+{
+  "run_id": "subset_train-r3",
+  "query_uid": "e20241028161040968006",
+  "state": {
+    "query_uid": "e20241028161040968006",
+    "problem": {
+      "uid": "e20241028161040968006",
+      "tag": "medium",
+      "start_city": "Beijing",
+      "target_city": "Shanghai",
+      "days": 2,
+      "people_number": 2,
+      "limit_rooms": true,
+      "limits_room_type": true,
+      "hard_logic_py": [
+        "result=(day_count(plan)==2)",
+        "result=(people_count(plan)==2)",
+        "total_cost=0 \nfor activity in allactivities(plan):\n    total_cost+=activity_cost(activity)\n    total_cost += innercity_transport_cost(activity_transports(activity))\nresult=(total_cost<=5000)",
+        "innercity_transport_set=set()\nfor activity in allactivities(plan):\n  if activity_transports(activity)!=[]: innercity_transport_set.add(innercity_transport_type(activity_transports(activity)))\nresult=({'metro'}<=innercity_transport_set)",
+        "result=True\nfor activity in allactivities(plan):\n  if activity_type(activity) in ['attraction', 'airplane', 'train'] and activity_tickets(activity)!=2: result=False\n  if innercity_transport_type(activity_transports(activity))=='metro'and metro_tickets(activity_transports(activity))!=2: result=False",
+        "result=True\nfor activity in allactivities(plan):\n  if activity_type(activity)=='accommodation' and room_count(activity)!=1: result=False",
+        "result=True\nfor activity in allactivities(plan):\n  if activity_type(activity)=='accommodation' and room_type(activity)!=2: result=False",
+        "result=True\nfor activity in allactivities(plan):\n  if innercity_transport_type(activity_transports(activity))=='taxi'and taxi_cars(activity_transports(activity))!=1: result=False"
+      ],
+      "nature_language": "Current location: Beijing. Two of us are planning to visit Shanghai for two days. We will book a twin room with a budget of 5000 RMB, and mainly use the subway for transportation within the city. Please provide me with a travel plan.",
+      "nature_language_en": "Current location: Beijing. Two of us are planning to visit Shanghai for two days. We will book a twin room with a budget of 5000 RMB, and mainly use the subway for transportation within the city. Please provide me with a travel plan."
+    },
+    "raw_initial_plan": [
+      {
+        "day": 1,
+        "activities": [
+          {
+            "start_time": "07:00",
+            "end_time": "11:29",
+            "start": "Beijing South Railway Station",
+            "end": "Shanghai Station",
+            "price": 693.75,
+            "cost": 1387.5,
+            "TrainID": "G1",
+            "type": "train",
+            "tickets": 2,
+            "transports": "empty"
+          },
+          {
+            "position": "The Bund",
+            "type": "attraction",
+            "transports": {
+              "from": "Shanghai Station",
+              "to": "The Bund",
+              "mode": "metro",
+              "start_time": "11:29",
+              "end_time": "11:49",
+              "cost": 4
+            },
+            "price": 0.0,
+            "cost": 0.0,
+            "tickets": 2,
+            "start_time": "12:00",
+            "end_time": "13:30"
+          },
+          {
+            "position": "Shanghai Wang Bao He Grand Hotel · Shanghai Restaurant",
+            "type": "lunch",
+            "transports": {
+              "from": "The Bund",
+              "to": "Shanghai Wang Bao He Grand Hotel · Shanghai Restaurant",
+              "mode": "metro",
+              "start_time": "13:30",
+              "end_time": "13:39",
+              "cost": 4
+            },
+            "price": 290.0,
+            "cost": 580.0,
+            "start_time": "13:45",
+            "end_time": "14:45"
+          },
+          {
+            "position": "Yu Garden",
+            "type": "attraction",
+            "transports": {
+              "from": "Shanghai Wang Bao He Grand Hotel · Shanghai Restaurant",
+              "to": "Yu Garden",
+              "mode": "metro",
+              "start_time": "14:45",
+              "end_time": "14:59",
+              "cost": 4
+            },
+            "price": 40.0,
+            "cost": 80.0,
+            "tickets": 2,
+            "start_time": "15:00",
+            "end_time": "16:00"
+          },
+          {
+            "position": "Shanghai Tower Observation Deck",
+            "type": "attraction",
+            "transports": {
+              "from": "Yu Garden",
+              "to": "Shanghai Tower Observation Deck",
+              "mode": "metro",
+              "start_time": "16:00",
+              "end_time": "16:09",
+              "cost": 4
+            },
+            "price": 180.0,
+            "cost": 360.0,
+            "tickets": 2,
+            "start_time": "16:15",
+            "end_time": "18:15"
+          },
+          {
+            "position": "Shanghai Pudong Airport Chuansha Subway Station Atour Hotel",
+            "type": "accommodation",
+            "transports": {
+              "from": "Shanghai Tower Observation Deck",
+              "to": "Shanghai Pudong Airport Chuansha Subway Station Atour Hotel",
+              "mode": "metro",
+              "start_time": "18:15",
+              "end_time": "18:55",
+              "cost": 10
+            },
+            "room_type": 2,
+            "price": 552,
+            "cost": 552,
+            "start_time": "19:00",
+            "end_time": "24:00",
+            "rooms": 1
+          }
+        ]
+      },
+      {
+        "day": 2,
+        "activities": [
+          {
+            "position": "Shanghai Disney Resort",
+            "type": "attraction",
+            "transports": {
+              "from": "Shanghai Pudong Airport Chuansha Subway Station Atour Hotel",
+              "to": "Shanghai Disney Resort",
+              "mode": "metro",
+              "start_time": "08:30",
+              "end_time": "08:54",
+              "cost": 6
+            },
+            "price": 399.0,
+            "cost": 798.0,
+            "tickets": 2,
+            "start_time": "09:00",
+            "end_time": "12:00"
+          },
+          {
+            "position": "Oriental Pearl Tower Revolving Restaurant",
+            "type": "lunch",
+            "transports": {
+              "from": "Shanghai Disney Resort",
+              "to": "Oriental Pearl Tower Revolving Restaurant",
+              "mode": "metro",
+              "start_time": "12:00",
+              "end_time": "12:51",
+              "cost": 10
+            },
+            "price": 375.0,
+            "cost": 750.0,
+            "start_time": "13:00",
+            "end_time": "14:00"
+          },
+          {
+            "position": "Nanjing Road Pedestrian Street",
+            "type": "attraction",
+            "transports": {
+              "from": "Oriental Pearl Tower Revolving Restaurant",
+              "to": "Nanjing Road Pedestrian Street",
+              "mode": "metro",
+              "start_time": "14:00",
+              "end_time": "14:15",
+              "cost": 4
+            },
+            "price": 0.0,
+            "cost": 0.0,
+            "tickets": 2,
+            "start_time": "14:20",
+            "end_time": "15:20"
+          },
+          {
+            "position": "Shanghai Hongqiao Station",
+            "type": "train",
+            "transports": {
+              "from": "Nanjing Road Pedestrian Street",
+              "to": "Shanghai Hongqiao Station",
+              "mode": "metro",
+              "start_time": "15:20",
+              "end_time": "15:54",
+              "cost": 10
+            },
+            "start_time": "17:00",
+            "end_time": "21:33",
+            "TrainID": "G24",
+            "price": 693.75,
+            "cost": 1387.5,
+            "tickets": 2
+          }
+        ]
+      }
+    ],
+    "repair_context": {
+      "go_train_info": "TrainID\tTrainType\tFrom\tTo\tBeginTime\tEndTime\tDuration\tprice\r\nG1\tHigh-speed rail\tBeijing South Railway Station\tShanghai Station\t07:00\t11:29\t4.48\t693.75\r\nG3\tHigh-speed rail\tBeijing South Railway Station\tShanghai Station\t08:00\t12:32\t4.53\t693.75\r\nG5\tHigh-speed rail\tBeijing South Railway Station\tShanghai Hongqiao Station\t09:00\t13:37\t4.62\t693.75\r\nG7\tHigh-speed rail\tBeijing South Railway Station\tShanghai Hongqiao Station\t10:00\t14:35\t4.58\t693.75\r\n",
+      "go_flight_info": "FlightID\tFrom\tTo\tBeginTime\tEndTime\tDuration\tprice\r\nFL081\tBeijing Capital International Airport\tShanghai Pudong International Airport\t01:55\t03:14\t1.33\t485.15\r\n",
+      "back_train_info": "TrainID\tTrainType\tFrom\tTo\tBeginTime\tEndTime\tDuration\tprice\r\nG28\tHigh-speed rail\tShanghai Hongqiao Station\tBeijing South Railway Station\t19:00\t23:18\t4.3\t693.75\r\nG26\tHigh-speed rail\tShanghai Station\tBeijing South Railway Station\t17:55\t22:35\t4.67\t693.75\r\nG24\tHigh-speed rail\tShanghai Hongqiao Station\tBeijing South Railway Station\t17:00\t21:33\t4.55\t693.75\r\nG22\tHigh-speed rail\tShanghai Hongqiao Station\tBeijing South Railway Station\t16:00\t20:37\t4.62\t693.75\r\nG20\tHigh-speed rail\tShanghai Hongqiao Station\tBeijing South Railway Station\t15:00\t19:36\t4.6\t693.75\r\n",
+      "back_flight_info": "None",
+      "attraction_info": "name\ttype\tlat\tlon\topentime\tendtime\tprice\trecommendmintime\trecommendmaxtime\r\nThe Bund\tCultural Landscape\t31.243453\t121.497204\t00:00\t24:00\t0.0\t1.5\t2.0\r\nOriental Pearl Tower\tCultural Landscape\t31.245417\t121.50635\t09:00\t21:00\t199.0\t0.5\t2.0\r\nShanghai Disney Resort\tAmusement Park/Sports Entertainment\t31.148267\t121.671964\t08:30\t21:30\t399.0\t2.0\t3.5\r\nYu Garden\tCultural Tourism Area\t31.232431\t121.49909\t09:00\t16:30\t40.0\t0.5\t1.0\r\nShanghai Museum\tMuseum/Memorial Hall\t31.234149\t121.482358\t09:00\t17:00\t0.0\t0.5\t1.0\r\nNanjing Road Pedestrian Street\tcommercial district\t31.243231\t121.4907\t00:00\t24:00\t0.0\t1.0\t2.0\r\nHuangpu River Cruise (Shiliupu Wharf)\tAmusement Park/Sports Entertainment\t31.23371\t121.504723\t11:00\t22:00\t108.0\t2.0\t3.0\r\nShanghai Tower Observation Deck\tCultural Landscape\t31.239112\t121.512114\t08:30\t22:00\t180.0\t2.0\t3.0\r\nTianzifang\tcommercial district\t31.214113\t121.474974\t00:00\t24:00\t0.0\t2.5\t3.0\r\nZhujiajiao Ancient Town Scenic Area\tCultural Tourism Area\t31.115934\t121.060362\t08:30\t18:00\t0.0\t1.0\t2.5\r\nShanghai World Financial Center\tCultural Landscape\t31.241063\t121.513399\t07:00\t21:00\t180.0\t2.0\t3.5\r\nXintiandi\tcommercial district\t31.227165\t121.481244\t00:00\t24:00\t0.0\t0.5\t1.0\r\nShanghai Ocean Aquarium\tAmusement Park/Sports Entertainment\t31.246755\t121.508587\t09:00\t18:00\t155.0\t1.0\t2.5\r\nShanghai Natural History Museum\tMuseum/Memorial Hall\t31.241221\t121.469143\t09:00\t17:00\t0.0\t0.5\t1.0\r\nLujiazui\tcommercial district\t31.240944\t121.512267\t00:00\t24:00\t0.0\t1.5\t3.0\r\n",
+      "restaurant_info": "name\tlat\tlon\tprice\tcuisine\topentime\tendtime\trecommendedfood\r\nShanghai Wang Bao He Grand Hotel · Shanghai Restaurant\t31.2346516\t121.4804362\t290.0\tShanghai cuisine\t11:30\t22:00\tSignature Crab Roe, Chilled Crayfish, Wangbaohe Clear Water Hairy Crab, Black Pepper Pan-Fried Steak, Crab Roe Tofu, Crab Roe Soup Dumplings\r\nRenhe Hall (Zhaojiabang Road Branch)\t31.2017634\t121.45806\t203.0\tShanghai cuisine\t11:00\t21:30\tShanghai-style smoked fish, king oyster mushroom with pork neck, seasonal vegetables in superior broth, assorted cold appetizers, steamed turbot with soy sauce, baked scallop with cheese, old Shanghai-style stir-fried pork liver with sauce, tangerine peel chicken, crab roe with rice, honeycomb tofu\r\nOriental Pearl Tower Revolving Restaurant\t31.2398331\t121.4998212\t375.0\tbuffet\t11:00\t21:00\tEscargot, Grilled Lamb Chops, Cheese-Baked Lobster, Sizzling Beef Platter\r\nShanghai Old Restaurant (Yuyuan Branch)\t31.2276406\t121.4906449\t234.0\tShanghai cuisine\t11:00\t20:30\tOsmanthus Rice Cake, Eight-Treasure Duck, Sea Cucumber with Shrimp Roe, XO Eight-Treasure Spicy Sauce, Sautéed Crystal Shrimp, Old Shanghai-Style Quick-Fried Shrimp, Pork Intestines with Clover\r\nNanxiang Steamed Bun Restaurant (Yuyuan Branch)\t31.2266265\t121.4914483\t103.0\tSnacks\t09:00\t20:00\tTraditional Pork Soup Dumplings, Crab Roe Soup Dumplings, Spicy Crab Meat Soup Dumplings, Shrimp and Pork Soup Dumplings, Sweet and Sour Pork Ribs, Nanxiang Drunken Chicken\r\n",
+      "accommodation_info": "name\tfeaturehoteltype\tlat\tlon\tprice\tnumbed\r\nShanghai Best Boutique Hotel\tFree parking\t31.096668\t121.709423\t382\t2\r\nShanghai Ship Hotel\tSwimming Pool\t30.933777\t121.472719\t532\t1\r\nShanghai Pudong Airport Chuansha Subway Station Atour Hotel\tRobot Service\t31.189028\t121.699673\t552\t1\r\n",
+      "innercity_transport_info": "from Xintiandi to Xintiandi:  metro: empty.  taxi: empty.  walk: empty. \nfrom Xintiandi to Tianzifang: metro: duration 7, cost 4. taxi: duration 2, cost 11.0. walk: duration 18, cost 0.0. \nfrom Xintiandi to Shanghai Natural History Museum: metro: duration 8, cost 4. taxi: duration 2, cost 11.48. walk: duration 23, cost 0.0. \nfrom Xintiandi to Nanxiang Steamed Bun Restaurant (Yuyuan Branch): metro: duration 7, cost 4. taxi: duration 1, cost 11.0. walk: duration 11, cost 0.0. \nfrom Xintiandi to The Bund: metro: duration 14, cost 4. taxi: duration 3, cost 12.96. walk: duration 28, cost 0.0. \nfrom Xintiandi to Oriental Pearl Tower Revolving Restaurant: metro: duration 9, cost 4. taxi: duration 3, cost 12.61. walk: duration 27, cost 0.0. \nfrom Xintiandi to Shanghai Pudong International Airport: metro: duration 81, cost 14. taxi: duration 49, cost 143.33. walk: duration 396, cost 0.0. \nfrom Xintiandi to Shanghai Disney Resort: metro: duration 52, cost 10. taxi: duration 30, cost 85.48. walk: duration 242, cost 0.0. \nfrom Xintiandi to Shanghai World Financial Center: metro: duration 11, cost 4. taxi: duration 5, cost 16.7. walk: duration 41, cost 0.0. \nfrom Xintiandi to Shanghai Museum: metro: duration 9, cost 4. taxi: duration 1, cost 11.0. walk: duration 9, cost 0.0. \nfrom Xintiandi to Renhe Hall (Zhaojiabang Road Branch): metro: duration 11, cost 4. taxi: duration 5, cost 17.23. walk: duration 42, cost 0.0. \nfrom Xintiandi to Nanjing Road Pedestrian Street: metro: duration 14, cost 4. taxi: duration 2, cost 11.69. walk: duration 23, cost 0.0. \nfrom Xintiandi to Shanghai Pudong Airport Chuansha Subway Station Atour Hotel: metro: duration 47, cost 12. taxi: duration 31, cost 90.28. walk: duration 254, cost 0.0. \nfrom Xintiandi to Oriental Pearl Tower: metro: duration 16, cost 4. taxi: duration 4, cost 15.67. walk: duration 37, cost 0.0. \nfrom Xintiandi to Lujiazui: metro: duration 11, cost 4. taxi: duration 4, cost 16.34. walk: duration 39, cost 0.0. \nfrom Xintiandi to Huangpu River Cruise (Shiliupu Wharf): metro: duration 12, cost 4. taxi: duration 3, cost 12.93. walk: duration 28, cost 0.0. \nfrom Xintiandi to Shanghai Wang Bao He Grand Hotel · Shanghai Restaurant: metro: duration 9, cost 4. taxi: duration 1, cost 11.0. walk: duration 10, cost 0.0. \nfrom Xintiandi to Shanghai Tower Observation Deck: metro: duration 8, cost 4. taxi: duration 4, cost 15.99. walk: duration 38, cost 0.0. \nfrom Xintiandi to Shanghai Best Boutique Hotel: metro: duration 121, cost 14. taxi: duration 39, cost 112.27. walk: duration 313, cost 0.0. \nfrom Xintiandi to Zhujiajiao Ancient Town Scenic Area: metro: duration 112, cost 16. taxi: duration 62, cost 183.59. walk: duration 503, cost 0.0. \nfrom Xintiandi to Yu Garden: metro: duration 14, cost 4. taxi: duration 2, cost 11.0. walk: duration 21, cost 0.0. \nfrom Xintiandi to Shanghai Station: metro: duration 10, cost 4. taxi: duration 5, cost 16.86. walk: duration 41, cost 0.0. \nfrom Xintiandi to Shanghai Ship Hotel: metro: duration 78, cost 14. taxi: duration 48, cost 141.12. walk: duration 390, cost 0.0. \nfrom Xintiandi to Shanghai Hongqiao Station: metro: duration 34, cost 10. taxi: duration 23, cost 65.72. walk: duration 189, cost 0.0. \nfrom Xintiandi to Shanghai Ocean Aquarium: metro: duration 18, cost 4. taxi: duration 5, cost 16.57. walk: duration 40, cost 0.0. \nfrom Xintiandi to Shanghai Old Restaurant (Yuyuan Branch): metro: duration 6, cost 4. taxi: duration 1, cost 11.0. walk: duration 10, cost 0.0. \nfrom Tianzifang to Xintiandi: metro: duration 7, cost 4. taxi: duration 2, cost 11.0. walk: duration 18, cost 0.0. \nfrom Tianzifang to Tianzifang:  metro: empty.  taxi: empty.  walk: empty. \nfrom Tianzifang to Shanghai Natural History Museum: metro: duration 11, cost 4. taxi: duration 4, cost 15.4. walk: duration 36, cost 0.0. \nfrom Tianzifang to Nanxiang Steamed Bun Restaurant (Yuyuan Branch): metro: duration 10, cost 4. taxi: duration 3, cost 12.03. walk: duration 25, cost 0.0. \nfrom Tianzifang to The Bund: metro: duration 18, cost 4. taxi: duration 5, cost 18.29. walk: duration 46, cost 0.0. \nfrom Tianzifang to Oriental Pearl Tower Revolving Restaurant: metro: duration 13, cost 4. taxi: duration 5, cost 17.67. walk: duration 44, cost 0.0. \nfrom Tianzifang to Shanghai Pudong International Airport: metro: duration 82, cost 14. taxi: duration 49, cost 144.21. walk: duration 398, cost 0.0. \nfrom Tianzifang to Shanghai Disney Resort: metro: duration 53, cost 10. taxi: duration 30, cost 85.36. walk: duration 241, cost 0.0. \nfrom Tianzifang to Shanghai World Financial Center: metro: duration 14, cost 6. taxi: duration 7, cost 21.24. walk: duration 56, cost 0.0. \nfrom Tianzifang to Shanghai Museum: metro: duration 13, cost 4. taxi: duration 3, cost 12.86. walk: duration 27, cost 0.0. \nfrom Tianzifang to Renhe Hall (Zhaojiabang Road Branch): metro: duration 10, cost 4. taxi: duration 3, cost 12.1. walk: duration 25, cost 0.0. \nfrom Tianzifang to Nanjing Road Pedestrian Street: metro: duration 18, cost 4. taxi: duration 5, cost 17.16. walk: duration 42, cost 0.0. \nfrom Tianzifang to Shanghai Pudong Airport Chuansha Subway Station Atour Hotel: metro: duration 49, cost 12. taxi: duration 32, cost 91.87. walk: duration 259, cost 0.0. \nfrom Tianzifang to Oriental Pearl Tower: metro: duration 20, cost 4. taxi: duration 6, cost 20.73. walk: duration 54, cost 0.0. \nfrom Tianzifang to Lujiazui: metro: duration 14, cost 6. taxi: duration 6, cost 20.92. walk: duration 55, cost 0.0. \nfrom Tianzifang to Huangpu River Cruise (Shiliupu Wharf): metro: duration 16, cost 4. taxi: duration 5, cost 17.2. walk: duration 42, cost 0.0. \nfrom Tianzifang to Shanghai Wang Bao He Grand Hotel · Shanghai Restaurant: metro: duration 12, cost 4. taxi: duration 3, cost 12.88. walk: duration 28, cost 0.0. \nfrom Tianzifang to Shanghai Tower Observation Deck: metro: duration 11, cost 6. taxi: duration 6, cost 20.43. walk: duration 53, cost 0.0. \nfrom Tianzifang to Shanghai Best Boutique Hotel: metro: duration 121, cost 14. taxi: duration 38, cost 111.12. walk: duration 310, cost 0.0. \nfrom Tianzifang to Zhujiajiao Ancient Town Scenic Area: metro: duration 112, cost 16. taxi: duration 61, cost 179.2. walk: duration 492, cost 0.0. \nfrom Tianzifang to Yu Garden: metro: duration 18, cost 4. taxi: duration 4, cost 15.43. walk: duration 36, cost 0.0. \nfrom Tianzifang to Shanghai Station: metro: duration 13, cost 6. taxi: duration 6, cost 19.88. walk: duration 52, cost 0.0. \nfrom Tianzifang to Shanghai Ship Hotel: metro: duration 77, cost 14. taxi: duration 46, cost 134.57. walk: duration 372, cost 0.0. \nfrom Tianzifang to Shanghai Hongqiao Station: metro: duration 34, cost 10. taxi: duration 22, cost 61.83. walk: duration 179, cost 0.0. \nfrom Tianzifang to Shanghai Ocean Aquarium: metro: duration 22, cost 6. taxi: duration 7, cost 21.61. walk: duration 57, cost 0.0. \nfrom Tianzifang to Shanghai Old Restaurant (Yuyuan Branch): metro: duration 9, cost 4. taxi: duration 3, cost 12.11. walk: duration 25, cost 0.0. \nfrom Shanghai Natural History Museum to Xintiandi: metro: duration 8, cost 4. taxi: duration 2, cost 11.48. walk: duration 23, cost 0.0. \nfrom Shanghai Natural History Museum to Tianzifang: metro: duration 11, cost 4. taxi: duration 4, cost 15.4. walk: duration 36, cost 0.0. \nfrom Shanghai Natural History Museum to Shanghai Natural History Museum:  metro: empty.  taxi: empty.  walk: empty. \nfrom Shanghai Natural History Museum to Nanxiang Steamed Bun Restaurant (Yuyuan Branch): metro: duration 11, cost 4. taxi: duration 4, cost 14.05. walk: duration 32, cost 0.0. \nfrom Shanghai Natural History Museum to The Bund: metro: duration 16, cost 4. taxi: duration 4, cost 14.1. walk: duration 32, cost 0.0. \nfrom Shanghai Natural History Museum to Oriental Pearl Tower Revolving Restaurant: metro: duration 11, cost 4. taxi: duration 4, cost 14.94. walk: duration 35, cost 0.0. \nfrom Shanghai Natural History Museum to Shanghai Pudong International Airport: metro: duration 84, cost 14. taxi: duration 51, cost 150.4. walk: duration 415, cost 0.0. \nfrom Shanghai Natural History Museum to Shanghai Disney Resort: metro: duration 56, cost 12. taxi: duration 32, cost 93.28. walk: duration 262, cost 0.0. \nfrom Shanghai Natural History Museum to Shanghai World Financial Center: metro: duration 13, cost 4. taxi: duration 6, cost 19.46. walk: duration 50, cost 0.0. \nfrom Shanghai Natural History Museum to Shanghai Museum: metro: duration 10, cost 4. taxi: duration 2, cost 11.0. walk: duration 17, cost 0.0. \nfrom Shanghai Natural History Museum to Renhe Hall (Zhaojiabang Road Branch): metro: duration 14, cost 6. taxi: duration 6, cost 20.45. walk: duration 54, cost 0.0. \nfrom Shanghai Natural History Museum to Nanjing Road Pedestrian Street: metro: duration 14, cost 4. taxi: duration 3, cost 11.93. walk: duration 24, cost 0.0. \nfrom Shanghai Natural History Museum to Shanghai Pudong Airport Chuansha Subway Station Atour Hotel: metro: duration 50, cost 12. taxi: duration 34, cost 96.92. walk: duration 272, cost 0.0. \nfrom Shanghai Natural History Museum to Oriental Pearl Tower: metro: duration 18, cost 4. taxi: duration 5, cost 17.21. walk: duration 42, cost 0.0. \nfrom Shanghai Natural History Museum to Lujiazui: metro: duration 13, cost 4. taxi: duration 6, cost 19.08. walk: duration 49, cost 0.0. \nfrom Shanghai Natural History Museum to Huangpu River Cruise (Shiliupu Wharf): metro: duration 14, cost 4. taxi: duration 5, cost 16.92. walk: duration 41, cost 0.0. \nfrom Shanghai Natural History Museum to Shanghai Wang Bao He Grand Hotel · Shanghai Restaurant: metro: duration 11, cost 4. taxi: duration 1, cost 11.0. walk: duration 15, cost 0.0. \nfrom Shanghai Natural History Museum to Shanghai Tower Observation Deck: metro: duration 10, cost 4. taxi: duration 6, cost 19.05. walk: duration 49, cost 0.0. \nfrom Shanghai Natural History Museum to Shanghai Best Boutique Hotel: metro: duration 125, cost 14. taxi: duration 41, cost 120.51. walk: duration 335, cost 0.0. \nfrom Shanghai Natural History Museum to Zhujiajiao Ancient Town Scenic Area: metro: duration 113, cost 16. taxi: duration 62, cost 180.86. walk: duration 496, cost 0.0. \nfrom Shanghai Natural History Museum to Yu Garden: metro: duration 16, cost 4. taxi: duration 4, cost 15.25. walk: duration 36, cost 0.0. \nfrom Shanghai Natural History Museum to Shanghai Station: metro: duration 8, cost 4. taxi: duration 2, cost 11.0. walk: duration 18, cost 0.0. \nfrom Shanghai Natural History Museum to Shanghai Ship Hotel: metro: duration 83, cost 14. taxi: duration 51, cost 148.1. walk: duration 409, cost 0.0. \nfrom Shanghai Natural History Museum to Shanghai Hongqiao Station: metro: duration 34, cost 10. taxi: duration 22, cost 62.78. walk: duration 181, cost 0.0. \nfrom Shanghai Natural History Museum to Shanghai Ocean Aquarium: metro: duration 19, cost 4. taxi: duration 5, cost 18.03. walk: duration 45, cost 0.0. \nfrom Shanghai Natural History Museum to Shanghai Old Restaurant (Yuyuan Branch): metro: duration 10, cost 4. taxi: duration 3, cost 13.6. walk: duration 30, cost 0.0. \nfrom Nanxiang Steamed Bun Restaurant (Yuyuan Branch) to Xintiandi: metro: duration 7, cost 4. taxi: duration 1, cost 11.0. walk: duration 11, cost 0.0. \nfrom Nanxiang Steamed Bun Restaurant (Yuyuan Branch) to Tianzifang: metro: duration 10, cost 4. taxi: duration 3, cost 12.03. walk: duration 25, cost 0.0. \nfrom Nanxiang Steamed Bun Restaurant (Yuyuan Branch) to Shanghai Natural History Museum: metro: duration 11, cost 4. taxi: duration 4, cost 14.05. walk: duration 32, cost 0.0. \nfrom Nanxiang Steamed Bun Restaurant (Yuyuan Branch) to Nanxiang Steamed Bun Restaurant (Yuyuan Branch):  metro: empty.  taxi: empty.  walk: empty. \nfrom Nanxiang Steamed Bun Restaurant (Yuyuan Branch) to The Bund: metro: duration 15, cost 4. taxi: duration 2, cost 11.51. walk: duration 23, cost 0.0. \nfrom Nanxiang Steamed Bun Restaurant (Yuyuan Branch) to Oriental Pearl Tower Revolving Restaurant: metro: duration 10, cost 4. taxi: duration 2, cost 11.0. walk: duration 20, cost 0.0. \nfrom Nanxiang Steamed Bun Restaurant (Yuyuan Branch) to Shanghai Pudong International Airport: metro: duration 82, cost 14. taxi: duration 48, cost 139.07. walk: duration 384, cost 0.0. \nfrom Nanxiang Steamed Bun Restaurant (Yuyuan Branch) to Shanghai Disney Resort: metro: duration 53, cost 10. taxi: duration 28, cost 81.44. walk: duration 231, cost 0.0. \nfrom Nanxiang Steamed Bun Restaurant (Yuyuan Branch) to Shanghai World Financial Center: metro: duration 12, cost 4. taxi: duration 3, cost 13.92. walk: duration 31, cost 0.0. \nfrom Nanxiang Steamed Bun Restaurant (Yuyuan Branch) to Shanghai Museum: metro: duration 11, cost 4. taxi: duration 1, cost 11.0. walk: duration 14, cost 0.0. \nfrom Nanxiang Steamed Bun Restaurant (Yuyuan Branch) to Renhe Hall (Zhaojiabang Road Branch): metro: duration 14, cost 4. taxi: duration 6, cost 19.43. walk: duration 50, cost 0.0. \nfrom Nanxiang Steamed Bun Restaurant (Yuyuan Branch) to Nanjing Road Pedestrian Street: metro: duration 16, cost 4. taxi: duration 2, cost 11.15. walk: duration 22, cost 0.0. \nfrom Nanxiang Steamed Bun Restaurant (Yuyuan Branch) to Shanghai Pudong Airport Chuansha Subway Station Atour Hotel: metro: duration 48, cost 10. taxi: duration 30, cost 85.94. walk: duration 243, cost 0.0. \nfrom Nanxiang Steamed Bun Restaurant (Yuyuan Branch) to Oriental Pearl Tower: metro: duration 17, cost 4. taxi: duration 3, cost 13.52. walk: duration 30, cost 0.0. \nfrom Nanxiang Steamed Bun Restaurant (Yuyuan Branch) to Lujiazui: metro: duration 12, cost 4. taxi: duration 3, cost 13.59. walk: duration 30, cost 0.0. \nfrom Nanxiang Steamed Bun Restaurant (Yuyuan Branch) to Huangpu River Cruise (Shiliupu Wharf): metro: duration 13, cost 4. taxi: duration 2, cost 11.0. walk: duration 17, cost 0.0. \nfrom Nanxiang Steamed Bun Restaurant (Yuyuan Branch) to Shanghai Wang Bao He Grand Hotel · Shanghai Restaurant: metro: duration 12, cost 4. taxi: duration 2, cost 11.0. walk: duration 16, cost 0.0. \nfrom Nanxiang Steamed Bun Restaurant (Yuyuan Branch) to Shanghai Tower Observation Deck: metro: duration 9, cost 4. taxi: duration 3, cost 13.12. walk: duration 28, cost 0.0. \nfrom Nanxiang Steamed Bun Restaurant (Yuyuan Branch) to Shanghai Best Boutique Hotel: metro: duration 122, cost 14. taxi: duration 37, cost 108.5. walk: duration 303, cost 0.0. \nfrom Nanxiang Steamed Bun Restaurant (Yuyuan Branch) to Zhujiajiao Ancient Town Scenic Area: metro: duration 116, cost 16. taxi: duration 64, cost 187.71. walk: duration 514, cost 0.0. \nfrom Nanxiang Steamed Bun Restaurant (Yuyuan Branch) to Yu Garden: metro: duration 15, cost 4. taxi: duration 1, cost 11.0. walk: duration 11, cost 0.0. \nfrom Nanxiang Steamed Bun Restaurant (Yuyuan Branch) to Shanghai Station: metro: duration 13, cost 4. taxi: duration 6, cost 19.56. walk: duration 50, cost 0.0. \nfrom Nanxiang Steamed Bun Restaurant (Yuyuan Branch) to Shanghai Ship Hotel: metro: duration 80, cost 14. taxi: duration 48, cost 141.03. walk: duration 390, cost 0.0. \nfrom Nanxiang Steamed Bun Restaurant (Yuyuan Branch) to Shanghai Hongqiao Station: metro: duration 37, cost 10. taxi: duration 25, cost 69.92. walk: duration 200, cost 0.0. \nfrom Nanxiang Steamed Bun Restaurant (Yuyuan Branch) to Shanghai Ocean Aquarium: metro: duration 19, cost 4. taxi: duration 4, cost 14.38. walk: duration 33, cost 0.0. \nfrom Nanxiang Steamed Bun Restaurant (Yuyuan Branch) to Shanghai Old Restaurant (Yuyuan Branch): taxi: duration 0, cost 11.0. walk: duration 1, cost 0.0. \nfrom The Bund to Xintiandi: metro: duration 14, cost 4. taxi: duration 3, cost 12.96. walk: duration 28, cost 0.0. \nfrom The Bund to Tianzifang: metro: duration 18, cost 4. taxi: duration 5, cost 18.29. walk: duration 46, cost 0.0. \nfrom The Bund to Shanghai Natural History Museum: metro: duration 16, cost 4. taxi: duration 4, cost 14.1. walk: duration 32, cost 0.0. \nfrom The Bund to Nanxiang Steamed Bun Restaurant (Yuyuan Branch): metro: duration 15, cost 4. taxi: duration 2, cost 11.51. walk: duration 23, cost 0.0. \nfrom The Bund to The Bund:  metro: empty.  taxi: empty.  walk: empty. \nfrom The Bund to Oriental Pearl Tower Revolving Restaurant: taxi: duration 0, cost 11.0. walk: duration 5, cost 0.0. \nfrom The Bund to Shanghai Pudong International Airport: metro: duration 83, cost 14. taxi: duration 48, cost 139.43. walk: duration 385, cost 0.0. \nfrom The Bund to Shanghai Disney Resort: metro: duration 56, cost 10. taxi: duration 29, cost 83.43. walk: duration 236, cost 0.0. \nfrom The Bund to Shanghai World Financial Center: metro: duration 12, cost 4. taxi: duration 2, cost 11.0. walk: duration 18, cost 0.0. \nfrom The Bund to Shanghai Museum: metro: duration 16, cost 4. taxi: duration 2, cost 11.0. walk: duration 21, cost 0.0. \nfrom The Bund to Renhe Hall (Zhaojiabang Road Branch): metro: duration 22, cost 6. taxi: duration 8, cost 25.49. walk: duration 71, cost 0.0. \nfrom The Bund to Nanjing Road Pedestrian Street: metro: duration 20, cost 4. taxi: duration 0, cost 11.0. walk: duration 7, cost 0.0. \nfrom The Bund to Shanghai Pudong Airport Chuansha Subway Station Atour Hotel: metro: duration 50, cost 10. taxi: duration 30, cost 85.67. walk: duration 242, cost 0.0. \nfrom The Bund to Oriental Pearl Tower: taxi: duration 1, cost 11.0. walk: duration 10, cost 0.0. \nfrom The Bund to Lujiazui: metro: duration 12, cost 4. taxi: duration 2, cost 11.0. walk: duration 17, cost 0.0. \nfrom The Bund to Huangpu River Cruise (Shiliupu Wharf): taxi: duration 1, cost 11.0. walk: duration 15, cost 0.0. \nfrom The Bund to Shanghai Wang Bao He Grand Hotel · Shanghai Restaurant: metro: duration 19, cost 4. taxi: duration 2, cost 11.25. walk: duration 22, cost 0.0. \nfrom The Bund to Shanghai Tower Observation Deck: metro: duration 9, cost 4. taxi: duration 2, cost 11.0. walk: duration 17, cost 0.0. \nfrom The Bund to Shanghai Best Boutique Hotel: metro: duration 126, cost 14. taxi: duration 38, cost 111.54. walk: duration 311, cost 0.0. \nfrom The Bund to Zhujiajiao Ancient Town Scenic Area: metro: duration 123, cost 16. taxi: duration 65, cost 192.59. walk: duration 527, cost 0.0. \nfrom The Bund to Yu Garden: taxi: duration 1, cost 11.0. walk: duration 14, cost 0.0. \nfrom The Bund to Shanghai Station: metro: duration 18, cost 6. taxi: duration 6, cost 18.72. walk: duration 48, cost 0.0. \nfrom The Bund to Shanghai Ship Hotel: metro: duration 87, cost 14. taxi: duration 51, cost 149.56. walk: duration 412, cost 0.0. \nfrom The Bund to Shanghai Hongqiao Station: metro: duration 45, cost 10. taxi: duration 26, cost 74.51. walk: duration 212, cost 0.0. \nfrom The Bund to Shanghai Ocean Aquarium: metro: duration 20, cost 4. taxi: duration 1, cost 11.0. walk: duration 13, cost 0.0. \nfrom The Bund to Shanghai Old Restaurant (Yuyuan Branch): metro: duration 14, cost 4. taxi: duration 2, cost 11.21. walk: duration 22, cost 0.0. \nfrom Oriental Pearl Tower Revolving Restaurant to Xintiandi: metro: duration 9, cost 4. taxi: duration 3, cost 12.61. walk: duration 27, cost 0.0. \nfrom Oriental Pearl Tower Revolving Restaurant to Tianzifang: metro: duration 13, cost 4. taxi: duration 5, cost 17.67. walk: duration 44, cost 0.0. \nfrom Oriental Pearl Tower Revolving Restaurant to Shanghai Natural History Museum: metro: duration 11, cost 4. taxi: duration 4, cost 14.94. walk: duration 35, cost 0.0. \nfrom Oriental Pearl Tower Revolving Restaurant to Nanxiang Steamed Bun Restaurant (Yuyuan Branch): metro: duration 10, cost 4. taxi: duration 2, cost 11.0. walk: duration 20, cost 0.0. \nfrom Oriental Pearl Tower Revolving Restaurant to The Bund: taxi: duration 0, cost 11.0. walk: duration 5, cost 0.0. \nfrom Oriental Pearl Tower Revolving Restaurant to Oriental Pearl Tower Revolving Restaurant:  metro: empty.  taxi: empty.  walk: empty. \nfrom Oriental Pearl Tower Revolving Restaurant to Shanghai Pudong International Airport: metro: duration 78, cost 14. taxi: duration 47, cost 137.75. walk: duration 381, cost 0.0. \nfrom Oriental Pearl Tower Revolving Restaurant to Shanghai Disney Resort: metro: duration 51, cost 10. taxi: duration 28, cost 81.52. walk: duration 231, cost 0.0. \nfrom Oriental Pearl Tower Revolving Restaurant to Shanghai World Financial Center: metro: duration 7, cost 4. taxi: duration 1, cost 11.0. walk: duration 15, cost 0.0. \nfrom Oriental Pearl Tower Revolving Restaurant to Shanghai Museum: metro: duration 11, cost 4. taxi: duration 2, cost 11.0. walk: duration 21, cost 0.0. \nfrom Oriental Pearl Tower Revolving Restaurant to Renhe Hall (Zhaojiabang Road Branch): metro: duration 17, cost 6. taxi: duration 8, cost 25.0. walk: duration 69, cost 0.0. \nfrom Oriental Pearl Tower Revolving Restaurant to Nanjing Road Pedestrian Street: metro: duration 15, cost 4. taxi: duration 1, cost 11.0. walk: duration 11, cost 0.0. \nfrom Oriental Pearl Tower Revolving Restaurant to Shanghai Pudong Airport Chuansha Subway Station Atour Hotel: metro: duration 45, cost 10. taxi: duration 29, cost 84.07. walk: duration 238, cost 0.0. \nfrom Oriental Pearl Tower Revolving Restaurant to Oriental Pearl Tower: taxi: duration 1, cost 11.0. walk: duration 10, cost 0.0. \nfrom Oriental Pearl Tower Revolving Restaurant to Lujiazui: metro: duration 7, cost 4. taxi: duration 1, cost 11.0. walk: duration 14, cost 0.0. \nfrom Oriental Pearl Tower Revolving Restaurant to Huangpu River Cruise (Shiliupu Wharf): taxi: duration 1, cost 11.0. walk: duration 9, cost 0.0. \nfrom Oriental Pearl Tower Revolving Restaurant to Shanghai Wang Bao He Grand Hotel · Shanghai Restaurant: metro: duration 14, cost 4. taxi: duration 2, cost 11.47. walk: duration 23, cost 0.0. \nfrom Oriental Pearl Tower Revolving Restaurant to Shanghai Tower Observation Deck: metro: duration 4, cost 4. taxi: duration 1, cost 11.0. walk: duration 14, cost 0.0. \nfrom Oriental Pearl Tower Revolving Restaurant to Shanghai Best Boutique Hotel: metro: duration 121, cost 14. taxi: duration 38, cost 109.54. walk: duration 306, cost 0.0. \nfrom Oriental Pearl Tower Revolving Restaurant to Zhujiajiao Ancient Town Scenic Area: metro: duration 118, cost 16. taxi: duration 66, cost 193.09. walk: duration 529, cost 0.0. \nfrom Oriental Pearl Tower Revolving Restaurant to Yu Garden: taxi: duration 1, cost 11.0. walk: duration 9, cost 0.0. \nfrom Oriental Pearl Tower Revolving Restaurant to Shanghai Station: metro: duration 13, cost 6. taxi: duration 6, cost 19.87. walk: duration 52, cost 0.0. \nfrom Oriental Pearl Tower Revolving Restaurant to Shanghai Ship Hotel: metro: duration 82, cost 14. taxi: duration 51, cost 147.84. walk: duration 408, cost 0.0. \nfrom Oriental Pearl Tower Revolving Restaurant to Shanghai Hongqiao Station: metro: duration 40, cost 10. taxi: duration 26, cost 75.05. walk: duration 214, cost 0.0. \nfrom Oriental Pearl Tower Revolving Restaurant to Shanghai Ocean Aquarium: metro: duration 15, cost 4. taxi: duration 1, cost 11.0. walk: duration 13, cost 0.0. \nfrom Oriental Pearl Tower Revolving Restaurant to Shanghai Old Restaurant (Yuyuan Branch): metro: duration 9, cost 4. taxi: duration 2, cost 11.0. walk: duration 19, cost 0.0. \nfrom Shanghai Pudong International Airport to Xintiandi: metro: duration 81, cost 14. taxi: duration 49, cost 143.33. walk: duration 396, cost 0.0. \nfrom Shanghai Pudong International Airport to Tianzifang: metro: duration 82, cost 14. taxi: duration 49, cost 144.21. walk: duration 398, cost 0.0. \nfrom Shanghai Pudong International Airport to Shanghai Natural History Museum: metro: duration 84, cost 14. taxi: duration 51, cost 150.4. walk: duration 415, cost 0.0. \nfrom Shanghai Pudong International Airport to Nanxiang Steamed Bun Restaurant (Yuyuan Branch): metro: duration 82, cost 14. taxi: duration 48, cost 139.07. walk: duration 384, cost 0.0. \nfrom Shanghai Pudong International Airport to The Bund: metro: duration 83, cost 14. taxi: duration 48, cost 139.43. walk: duration 385, cost 0.0. \nfrom Shanghai Pudong International Airport to Oriental Pearl Tower Revolving Restaurant: metro: duration 78, cost 14. taxi: duration 47, cost 137.75. walk: duration 381, cost 0.0. \nfrom Shanghai Pudong International Airport to Shanghai Pudong International Airport:  metro: empty.  taxi: empty.  walk: empty. \nfrom Shanghai Pudong International Airport to Shanghai Disney Resort: metro: duration 51, cost 8. taxi: duration 20, cost 55.37. walk: duration 161, cost 0.0. \nfrom Shanghai Pudong International Airport to Shanghai World Financial Center: metro: duration 77, cost 14. taxi: duration 45, cost 132.52. walk: duration 367, cost 0.0. \nfrom Shanghai Pudong International Airport to Shanghai Museum: metro: duration 84, cost 14. taxi: duration 49, cost 143.91. walk: duration 397, cost 0.0. \nfrom Shanghai Pudong International Airport to Renhe Hall (Zhaojiabang Road Branch): metro: duration 84, cost 14. taxi: duration 51, cost 149.96. walk: duration 414, cost 0.0. \nfrom Shanghai Pudong International Airport to Nanjing Road Pedestrian Street: metro: duration 88, cost 14. taxi: duration 49, cost 142.01. walk: duration 392, cost 0.0. \nfrom Shanghai Pudong International Airport to Shanghai Pudong Airport Chuansha Subway Station Atour Hotel: metro: duration 39, cost 8. taxi: duration 18, cost 48.84. walk: duration 144, cost 0.0. \nfrom Shanghai Pudong International Airport to Oriental Pearl Tower: metro: duration 85, cost 14. taxi: duration 47, cost 136.12. walk: duration 377, cost 0.0. \nfrom Shanghai Pudong International Airport to Lujiazui: metro: duration 77, cost 14. taxi: duration 46, cost 132.95. walk: duration 368, cost 0.0. \nfrom Shanghai Pudong International Airport to Huangpu River Cruise (Shiliupu Wharf): metro: duration 81, cost 14. taxi: duration 46, cost 134.75. walk: duration 373, cost 0.0. \nfrom Shanghai Pudong International Airport to Shanghai Wang Bao He Grand Hotel · Shanghai Restaurant: metro: duration 86, cost 14. taxi: duration 50, cost 144.77. walk: duration 400, cost 0.0. \nfrom Shanghai Pudong International Airport to Shanghai Tower Observation Deck: metro: duration 74, cost 14. taxi: duration 45, cost 132.69. walk: duration 367, cost 0.0. \nfrom Shanghai Pudong International Airport to Shanghai Best Boutique Hotel: metro: duration 107, cost 10. taxi: duration 16, cost 44.52. walk: duration 132, cost 0.0. \nfrom Shanghai Pudong International Airport to Zhujiajiao Ancient Town Scenic Area: metro: duration 183, cost 20.0. taxi: duration 107, cost 318.03. walk: duration 862, cost 0.0. \nfrom Shanghai Pudong International Airport to Yu Garden: metro: duration 83, cost 14. taxi: duration 47, cost 136.83. walk: duration 379, cost 0.0. \nfrom Shanghai Pudong International Airport to Shanghai Station: metro: duration 86, cost 14. taxi: duration 54, cost 157.18. walk: duration 433, cost 0.0. \nfrom Shanghai Pudong International Airport to Shanghai Ship Hotel: metro: duration 107, cost 16. taxi: duration 59, cost 173.95. walk: duration 477, cost 0.0. \nfrom Shanghai Pudong International Airport to Shanghai Hongqiao Station: metro: duration 109, cost 16. taxi: duration 71, cost 207.78. walk: duration 568, cost 0.0. \nfrom Shanghai Pudong International Airport to Shanghai Ocean Aquarium: metro: duration 85, cost 14. taxi: duration 46, cost 135.47. walk: duration 375, cost 0.0. \nfrom Shanghai Pudong International Airport to Shanghai Old Restaurant (Yuyuan Branch): metro: duration 81, cost 14. taxi: duration 48, cost 139.55. walk: duration 386, cost 0.0. \nfrom Shanghai Disney Resort to Xintiandi: metro: duration 52, cost 10. taxi: duration 30, cost 85.48. walk: duration 242, cost 0.0. \nfrom Shanghai Disney Resort to Tianzifang: metro: duration 53, cost 10. taxi: duration 30, cost 85.36. walk: duration 241, cost 0.0. \nfrom Shanghai Disney Resort to Shanghai Natural History Museum: metro: duration 56, cost 12. taxi: duration 32, cost 93.28. walk: duration 262, cost 0.0. \nfrom Shanghai Disney Resort to Nanxiang Steamed Bun Restaurant (Yuyuan Branch): metro: duration 53, cost 10. taxi: duration 28, cost 81.44. walk: duration 231, cost 0.0. \nfrom Shanghai Disney Resort to The Bund: metro: duration 56, cost 10. taxi: duration 29, cost 83.43. walk: duration 236, cost 0.0. \nfrom Shanghai Disney Resort to Oriental Pearl Tower Revolving Restaurant: metro: duration 51, cost 10. taxi: duration 28, cost 81.52. walk: duration 231, cost 0.0. \nfrom Shanghai Disney Resort to Shanghai Pudong International Airport: metro: duration 51, cost 8. taxi: duration 20, cost 55.37. walk: duration 161, cost 0.0. \nfrom Shanghai Disney Resort to Shanghai Disney Resort:  metro: empty.  taxi: empty.  walk: empty. \nfrom Shanghai Disney Resort to Shanghai World Financial Center: metro: duration 49, cost 10. taxi: duration 27, cost 76.97. walk: duration 219, cost 0.0. \nfrom Shanghai Disney Resort to Shanghai Museum: metro: duration 56, cost 10. taxi: duration 30, cost 86.62. walk: duration 245, cost 0.0. \nfrom Shanghai Disney Resort to Renhe Hall (Zhaojiabang Road Branch): metro: duration 54, cost 10. taxi: duration 31, cost 90.26. walk: duration 254, cost 0.0. \nfrom Shanghai Disney Resort to Nanjing Road Pedestrian Street: metro: duration 61, cost 12. taxi: duration 30, cost 85.74. walk: duration 242, cost 0.0. \nfrom Shanghai Disney Resort to Shanghai Pudong Airport Chuansha Subway Station Atour Hotel: metro: duration 24, cost 6. taxi: duration 7, cost 23.02. walk: duration 62, cost 0.0. \nfrom Shanghai Disney Resort to Oriental Pearl Tower: metro: duration 58, cost 10. taxi: duration 28, cost 80.69. walk: duration 229, cost 0.0. \nfrom Shanghai Disney Resort to Lujiazui: metro: duration 49, cost 10. taxi: duration 27, cost 77.34. walk: duration 220, cost 0.0. \nfrom Shanghai Disney Resort to Huangpu River Cruise (Shiliupu Wharf): metro: duration 54, cost 10. taxi: duration 27, cost 78.14. walk: duration 222, cost 0.0. \nfrom Shanghai Disney Resort to Shanghai Wang Bao He Grand Hotel · Shanghai Restaurant: metro: duration 57, cost 10. taxi: duration 30, cost 87.47. walk: duration 247, cost 0.0. \nfrom Shanghai Disney Resort to Shanghai Tower Observation Deck: metro: duration 46, cost 10. taxi: duration 27, cost 76.89. walk: duration 219, cost 0.0. \nfrom Shanghai Disney Resort to Shanghai Best Boutique Hotel: metro: duration 93, cost 8. taxi: duration 10, cost 28.31. walk: duration 80, cost 0.0. \nfrom Shanghai Disney Resort to Zhujiajiao Ancient Town Scenic Area: metro: duration 152, cost 18. taxi: duration 87, cost 257.68. walk: duration 701, cost 0.0. \nfrom Shanghai Disney Resort to Yu Garden: metro: duration 56, cost 10. taxi: duration 28, cost 79.91. walk: duration 227, cost 0.0. \nfrom Shanghai Disney Resort to Shanghai Station: metro: duration 58, cost 12. taxi: duration 35, cost 100.31. walk: duration 281, cost 0.0. \nfrom Shanghai Disney Resort to Shanghai Ship Hotel: metro: duration 81, cost 14. taxi: duration 45, cost 131.73. walk: duration 365, cost 0.0. \nfrom Shanghai Disney Resort to Shanghai Hongqiao Station: metro: duration 78, cost 14. taxi: duration 50, cost 147.31. walk: duration 406, cost 0.0. \nfrom Shanghai Disney Resort to Shanghai Ocean Aquarium: metro: duration 58, cost 10. taxi: duration 28, cost 80.28. walk: duration 228, cost 0.0. \nfrom Shanghai Disney Resort to Shanghai Old Restaurant (Yuyuan Branch): metro: duration 52, cost 10. taxi: duration 29, cost 81.97. walk: duration 232, cost 0.0. \nfrom Shanghai World Financial Center to Xintiandi: metro: duration 11, cost 4. taxi: duration 5, cost 16.7. walk: duration 41, cost 0.0. \nfrom Shanghai World Financial Center to Tianzifang: metro: duration 14, cost 6. taxi: duration 7, cost 21.24. walk: duration 56, cost 0.0. \nfrom Shanghai World Financial Center to Shanghai Natural History Museum: metro: duration 13, cost 4. taxi: duration 6, cost 19.46. walk: duration 50, cost 0.0. \nfrom Shanghai World Financial Center to Nanxiang Steamed Bun Restaurant (Yuyuan Branch): metro: duration 12, cost 4. taxi: duration 3, cost 13.92. walk: duration 31, cost 0.0. \nfrom Shanghai World Financial Center to The Bund: metro: duration 12, cost 4. taxi: duration 2, cost 11.0. walk: duration 18, cost 0.0. \nfrom Shanghai World Financial Center to Oriental Pearl Tower Revolving Restaurant: metro: duration 7, cost 4. taxi: duration 1, cost 11.0. walk: duration 15, cost 0.0. \nfrom Shanghai World Financial Center to Shanghai Pudong International Airport: metro: duration 77, cost 14. taxi: duration 45, cost 132.52. walk: duration 367, cost 0.0. \nfrom Shanghai World Financial Center to Shanghai Disney Resort: metro: duration 49, cost 10. taxi: duration 27, cost 76.97. walk: duration 219, cost 0.0. \nfrom Shanghai World Financial Center to Shanghai World Financial Center:  metro: empty.  taxi: empty.  walk: empty. \nfrom Shanghai World Financial Center to Shanghai Museum: metro: duration 13, cost 4. taxi: duration 4, cost 15.39. walk: duration 36, cost 0.0. \nfrom Shanghai World Financial Center to Renhe Hall (Zhaojiabang Road Branch): metro: duration 18, cost 6. taxi: duration 10, cost 28.64. walk: duration 82, cost 0.0. \nfrom Shanghai World Financial Center to Nanjing Road Pedestrian Street: metro: duration 17, cost 4. taxi: duration 3, cost 12.31. walk: duration 26, cost 0.0. \nfrom Shanghai World Financial Center to Shanghai Pudong Airport Chuansha Subway Station Atour Hotel: metro: duration 43, cost 10. taxi: duration 27, cost 78.69. walk: duration 223, cost 0.0. \nfrom Shanghai World Financial Center to Oriental Pearl Tower: metro: duration 14, cost 4. taxi: duration 1, cost 11.0. walk: duration 9, cost 0.0. \nfrom Shanghai World Financial Center to Lujiazui: taxi: duration 0, cost 11.0. walk: duration 1, cost 0.0. \nfrom Shanghai World Financial Center to Huangpu River Cruise (Shiliupu Wharf): metro: duration 10, cost 4. taxi: duration 1, cost 11.0. walk: duration 13, cost 0.0. \nfrom Shanghai World Financial Center to Shanghai Wang Bao He Grand Hotel · Shanghai Restaurant: metro: duration 16, cost 4. taxi: duration 4, cost 15.97. walk: duration 38, cost 0.0. \nfrom Shanghai World Financial Center to Shanghai Tower Observation Deck: taxi: duration 0, cost 11.0. walk: duration 2, cost 0.0. \nfrom Shanghai World Financial Center to Shanghai Best Boutique Hotel: metro: duration 119, cost 12. taxi: duration 36, cost 105.44. walk: duration 295, cost 0.0. \nfrom Shanghai World Financial Center to Zhujiajiao Ancient Town Scenic Area: metro: duration 120, cost 16. taxi: duration 68, cost 198.82. walk: duration 544, cost 0.0. \nfrom Shanghai World Financial Center to Yu Garden: metro: duration 12, cost 4. taxi: duration 2, cost 11.0. walk: duration 19, cost 0.0. \nfrom Shanghai World Financial Center to Shanghai Station: metro: duration 15, cost 6. taxi: duration 8, cost 24.2. walk: duration 66, cost 0.0. \nfrom Shanghai World Financial Center to Shanghai Ship Hotel: metro: duration 82, cost 14. taxi: duration 51, cost 149.0. walk: duration 411, cost 0.0. \nfrom Shanghai World Financial Center to Shanghai Hongqiao Station: metro: duration 42, cost 10. taxi: duration 28, cost 80.81. walk: duration 229, cost 0.0. \nfrom Shanghai World Financial Center to Shanghai Ocean Aquarium: metro: duration 15, cost 4. taxi: duration 1, cost 11.0. walk: duration 9, cost 0.0. \nfrom Shanghai World Financial Center to Shanghai Old Restaurant (Yuyuan Branch): metro: duration 11, cost 4. taxi: duration 3, cost 13.9. walk: duration 31, cost 0.0. \nfrom Shanghai Museum to Xintiandi: metro: duration 9, cost 4. taxi: duration 1, cost 11.0. walk: duration 9, cost 0.0. \nfrom Shanghai Museum to Tianzifang: metro: duration 13, cost 4. taxi: duration 3, cost 12.86. walk: duration 27, cost 0.0. \nfrom Shanghai Museum to Shanghai Natural History Museum: metro: duration 10, cost 4. taxi: duration 2, cost 11.0. walk: duration 17, cost 0.0. \nfrom Shanghai Museum to Nanxiang Steamed Bun Restaurant (Yuyuan Branch): metro: duration 11, cost 4. taxi: duration 1, cost 11.0. walk: duration 14, cost 0.0. \nfrom Shanghai Museum to The Bund: metro: duration 16, cost 4. taxi: duration 2, cost 11.0. walk: duration 21, cost 0.0. \nfrom Shanghai Museum to Oriental Pearl Tower Revolving Restaurant: metro: duration 11, cost 4. taxi: duration 2, cost 11.0. walk: duration 21, cost 0.0. \nfrom Shanghai Museum to Shanghai Pudong International Airport: metro: duration 84, cost 14. taxi: duration 49, cost 143.91. walk: duration 397, cost 0.0. \nfrom Shanghai Museum to Shanghai Disney Resort: metro: duration 56, cost 10. taxi: duration 30, cost 86.62. walk: duration 245, cost 0.0. \nfrom Shanghai Museum to Shanghai World Financial Center: metro: duration 13, cost 4. taxi: duration 4, cost 15.39. walk: duration 36, cost 0.0. \nfrom Shanghai Museum to Shanghai Museum:  metro: empty.  taxi: empty.  walk: empty. \nfrom Shanghai Museum to Renhe Hall (Zhaojiabang Road Branch): metro: duration 17, cost 6. taxi: duration 6, cost 19.65. walk: duration 51, cost 0.0. \nfrom Shanghai Museum to Nanjing Road Pedestrian Street: metro: duration 15, cost 4. taxi: duration 1, cost 11.0. walk: duration 15, cost 0.0. \nfrom Shanghai Museum to Shanghai Pudong Airport Chuansha Subway Station Atour Hotel: metro: duration 50, cost 12. taxi: duration 31, cost 90.57. walk: duration 255, cost 0.0. \nfrom Shanghai Museum to Oriental Pearl Tower: metro: duration 18, cost 4. taxi: duration 3, cost 13.82. walk: duration 31, cost 0.0. \nfrom Shanghai Museum to Lujiazui: metro: duration 13, cost 4. taxi: duration 4, cost 15.02. walk: duration 35, cost 0.0. \nfrom Shanghai Museum to Huangpu River Cruise (Shiliupu Wharf): metro: duration 14, cost 4. taxi: duration 3, cost 12.16. walk: duration 25, cost 0.0. \nfrom Shanghai Museum to Shanghai Wang Bao He Grand Hotel · Shanghai Restaurant: metro: duration 13, cost 4. taxi: duration 0, cost 11.0. walk: duration 2, cost 0.0. \nfrom Shanghai Museum to Shanghai Tower Observation Deck: metro: duration 10, cost 4. taxi: duration 4, cost 14.81. walk: duration 34, cost 0.0. \nfrom Shanghai Museum to Shanghai Best Boutique Hotel: metro: duration 125, cost 14. taxi: duration 39, cost 113.84. walk: duration 317, cost 0.0. \nfrom Shanghai Museum to Zhujiajiao Ancient Town Scenic Area: metro: duration 117, cost 16. taxi: duration 63, cost 185.09. walk: duration 507, cost 0.0. \nfrom Shanghai Museum to Yu Garden: metro: duration 16, cost 4. taxi: duration 2, cost 11.0. walk: duration 19, cost 0.0. \nfrom Shanghai Museum to Shanghai Station: metro: duration 12, cost 4. taxi: duration 4, cost 15.4. walk: duration 36, cost 0.0. \nfrom Shanghai Museum to Shanghai Ship Hotel: metro: duration 84, cost 14. taxi: duration 49, cost 144.62. walk: duration 399, cost 0.0. \nfrom Shanghai Museum to Shanghai Hongqiao Station: metro: duration 39, cost 10. taxi: duration 24, cost 67.07. walk: duration 192, cost 0.0. \nfrom Shanghai Museum to Shanghai Ocean Aquarium: metro: duration 19, cost 4. taxi: duration 4, cost 14.72. walk: duration 34, cost 0.0. \nfrom Shanghai Museum to Shanghai Old Restaurant (Yuyuan Branch): metro: duration 10, cost 4. taxi: duration 1, cost 11.0. walk: duration 12, cost 0.0. \nfrom Renhe Hall (Zhaojiabang Road Branch) to Xintiandi: metro: duration 11, cost 4. taxi: duration 5, cost 17.23. walk: duration 42, cost 0.0. \nfrom Renhe Hall (Zhaojiabang Road Branch) to Tianzifang: metro: duration 10, cost 4. taxi: duration 3, cost 12.1. walk: duration 25, cost 0.0. \nfrom Renhe Hall (Zhaojiabang Road Branch) to Shanghai Natural History Museum: metro: duration 14, cost 6. taxi: duration 6, cost 20.45. walk: duration 54, cost 0.0. \nfrom Renhe Hall (Zhaojiabang Road Branch) to Nanxiang Steamed Bun Restaurant (Yuyuan Branch): metro: duration 14, cost 4. taxi: duration 6, cost 19.43. walk: duration 50, cost 0.0. \nfrom Renhe Hall (Zhaojiabang Road Branch) to The Bund: metro: duration 22, cost 6. taxi: duration 8, cost 25.49. walk: duration 71, cost 0.0. \nfrom Renhe Hall (Zhaojiabang Road Branch) to Oriental Pearl Tower Revolving Restaurant: metro: duration 17, cost 6. taxi: duration 8, cost 25.0. walk: duration 69, cost 0.0. \nfrom Renhe Hall (Zhaojiabang Road Branch) to Shanghai Pudong International Airport: metro: duration 84, cost 14. taxi: duration 51, cost 149.96. walk: duration 414, cost 0.0. \nfrom Renhe Hall (Zhaojiabang Road Branch) to Shanghai Disney Resort: metro: duration 54, cost 10. taxi: duration 31, cost 90.26. walk: duration 254, cost 0.0. \nfrom Renhe Hall (Zhaojiabang Road Branch) to Shanghai World Financial Center: metro: duration 18, cost 6. taxi: duration 10, cost 28.64. walk: duration 82, cost 0.0. \nfrom Renhe Hall (Zhaojiabang Road Branch) to Shanghai Museum: metro: duration 17, cost 6. taxi: duration 6, cost 19.65. walk: duration 51, cost 0.0. \nfrom Renhe Hall (Zhaojiabang Road Branch) to Renhe Hall (Zhaojiabang Road Branch):  metro: empty.  taxi: empty.  walk: empty. \nfrom Renhe Hall (Zhaojiabang Road Branch) to Nanjing Road Pedestrian Street: metro: duration 21, cost 6. taxi: duration 8, cost 24.13. walk: duration 66, cost 0.0. \nfrom Renhe Hall (Zhaojiabang Road Branch) to Shanghai Pudong Airport Chuansha Subway Station Atour Hotel: metro: duration 51, cost 12. taxi: duration 34, cost 98.52. walk: duration 276, cost 0.0. \nfrom Renhe Hall (Zhaojiabang Road Branch) to Oriental Pearl Tower: metro: duration 24, cost 6. taxi: duration 10, cost 28.07. walk: duration 80, cost 0.0. \nfrom Renhe Hall (Zhaojiabang Road Branch) to Lujiazui: metro: duration 18, cost 6. taxi: duration 10, cost 28.32. walk: duration 80, cost 0.0. \nfrom Renhe Hall (Zhaojiabang Road Branch) to Huangpu River Cruise (Shiliupu Wharf): metro: duration 20, cost 6. taxi: duration 8, cost 24.6. walk: duration 68, cost 0.0. \nfrom Renhe Hall (Zhaojiabang Road Branch) to Shanghai Wang Bao He Grand Hotel · Shanghai Restaurant: metro: duration 16, cost 4. taxi: duration 6, cost 19.48. walk: duration 50, cost 0.0. \nfrom Renhe Hall (Zhaojiabang Road Branch) to Shanghai Tower Observation Deck: metro: duration 15, cost 6. taxi: duration 9, cost 27.83. walk: duration 79, cost 0.0. \nfrom Renhe Hall (Zhaojiabang Road Branch) to Shanghai Best Boutique Hotel: metro: duration 121, cost 14. taxi: duration 39, cost 114.63. walk: duration 319, cost 0.0. \nfrom Renhe Hall (Zhaojiabang Road Branch) to Zhujiajiao Ancient Town Scenic Area: metro: duration 108, cost 16. taxi: duration 58, cost 170.63. walk: duration 469, cost 0.0. \nfrom Renhe Hall (Zhaojiabang Road Branch) to Yu Garden: metro: duration 22, cost 6. taxi: duration 7, cost 22.83. walk: duration 62, cost 0.0. \nfrom Renhe Hall (Zhaojiabang Road Branch) to Shanghai Station: metro: duration 15, cost 6. taxi: duration 7, cost 23.27. walk: duration 63, cost 0.0. \nfrom Renhe Hall (Zhaojiabang Road Branch) to Shanghai Ship Hotel: metro: duration 74, cost 14. taxi: duration 44, cost 128.55. walk: duration 356, cost 0.0. \nfrom Renhe Hall (Zhaojiabang Road Branch) to Shanghai Hongqiao Station: metro: duration 31, cost 8. taxi: duration 19, cost 53.95. walk: duration 158, cost 0.0. \nfrom Renhe Hall (Zhaojiabang Road Branch) to Shanghai Ocean Aquarium: metro: duration 26, cost 6. taxi: duration 10, cost 28.96. walk: duration 83, cost 0.0. \nfrom Renhe Hall (Zhaojiabang Road Branch) to Shanghai Old Restaurant (Yuyuan Branch): metro: duration 13, cost 4. taxi: duration 6, cost 19.5. walk: duration 50, cost 0.0. \nfrom Nanjing Road Pedestrian Street to Xintiandi: metro: duration 14, cost 4. taxi: duration 2, cost 11.69. walk: duration 23, cost 0.0. \nfrom Nanjing Road Pedestrian Street to Tianzifang: metro: duration 18, cost 4. taxi: duration 5, cost 17.16. walk: duration 42, cost 0.0. \nfrom Nanjing Road Pedestrian Street to Shanghai Natural History Museum: metro: duration 14, cost 4. taxi: duration 3, cost 11.93. walk: duration 24, cost 0.0. \nfrom Nanjing Road Pedestrian Street to Nanxiang Steamed Bun Restaurant (Yuyuan Branch): metro: duration 16, cost 4. taxi: duration 2, cost 11.15. walk: duration 22, cost 0.0. \nfrom Nanjing Road Pedestrian Street to The Bund: metro: duration 20, cost 4. taxi: duration 0, cost 11.0. walk: duration 7, cost 0.0. \nfrom Nanjing Road Pedestrian Street to Oriental Pearl Tower Revolving Restaurant: metro: duration 15, cost 4. taxi: duration 1, cost 11.0. walk: duration 11, cost 0.0. \nfrom Nanjing Road Pedestrian Street to Shanghai Pudong International Airport: metro: duration 88, cost 14. taxi: duration 49, cost 142.01. walk: duration 392, cost 0.0. \nfrom Nanjing Road Pedestrian Street to Shanghai Disney Resort: metro: duration 61, cost 12. taxi: duration 30, cost 85.74. walk: duration 242, cost 0.0. \nfrom Nanjing Road Pedestrian Street to Shanghai World Financial Center: metro: duration 17, cost 4. taxi: duration 3, cost 12.31. walk: duration 26, cost 0.0. \nfrom Nanjing Road Pedestrian Street to Shanghai Museum: metro: duration 15, cost 4. taxi: duration 1, cost 11.0. walk: duration 15, cost 0.0. \nfrom Nanjing Road Pedestrian Street to Renhe Hall (Zhaojiabang Road Branch): metro: duration 21, cost 6. taxi: duration 8, cost 24.13. walk: duration 66, cost 0.0. \nfrom Nanjing Road Pedestrian Street to Nanjing Road Pedestrian Street:  metro: empty.  taxi: empty.  walk: empty. \nfrom Nanjing Road Pedestrian Street to Shanghai Pudong Airport Chuansha Subway Station Atour Hotel: metro: duration 55, cost 12. taxi: duration 31, cost 88.3. walk: duration 249, cost 0.0. \nfrom Nanjing Road Pedestrian Street to Oriental Pearl Tower: metro: duration 22, cost 4. taxi: duration 2, cost 11.0. walk: duration 18, cost 0.0. \nfrom Nanjing Road Pedestrian Street to Lujiazui: metro: duration 17, cost 4. taxi: duration 3, cost 11.95. walk: duration 24, cost 0.0. \nfrom Nanjing Road Pedestrian Street to Huangpu River Cruise (Shiliupu Wharf): metro: duration 18, cost 4. taxi: duration 2, cost 11.0. walk: duration 20, cost 0.0. \nfrom Nanjing Road Pedestrian Street to Shanghai Wang Bao He Grand Hotel · Shanghai Restaurant: metro: duration 17, cost 4. taxi: duration 2, cost 11.0. walk: duration 16, cost 0.0. \nfrom Nanjing Road Pedestrian Street to Shanghai Tower Observation Deck: metro: duration 14, cost 4. taxi: duration 3, cost 12.02. walk: duration 25, cost 0.0. \nfrom Nanjing Road Pedestrian Street to Shanghai Best Boutique Hotel: metro: duration 130, cost 14. taxi: duration 39, cost 113.66. walk: duration 317, cost 0.0. \nfrom Nanjing Road Pedestrian Street to Zhujiajiao Ancient Town Scenic Area: metro: duration 121, cost 16. taxi: duration 65, cost 189.92. walk: duration 520, cost 0.0. \nfrom Nanjing Road Pedestrian Street to Yu Garden: metro: duration 20, cost 4. taxi: duration 2, cost 11.0. walk: duration 17, cost 0.0. \nfrom Nanjing Road Pedestrian Street to Shanghai Station: metro: duration 15, cost 4. taxi: duration 5, cost 16.61. walk: duration 40, cost 0.0. \nfrom Nanjing Road Pedestrian Street to Shanghai Ship Hotel: metro: duration 89, cost 14. taxi: duration 51, cost 149.29. walk: duration 412, cost 0.0. \nfrom Nanjing Road Pedestrian Street to Shanghai Hongqiao Station: metro: duration 43, cost 10. taxi: duration 25, cost 71.83. walk: duration 205, cost 0.0. \nfrom Nanjing Road Pedestrian Street to Shanghai Ocean Aquarium: metro: duration 23, cost 4. taxi: duration 2, cost 11.0. walk: duration 20, cost 0.0. \nfrom Nanjing Road Pedestrian Street to Shanghai Old Restaurant (Yuyuan Branch): metro: duration 15, cost 4. taxi: duration 2, cost 11.0. walk: duration 20, cost 0.0. \nfrom Shanghai Pudong Airport Chuansha Subway Station Atour Hotel to Xintiandi: metro: duration 47, cost 12. taxi: duration 31, cost 90.28. walk: duration 254, cost 0.0. \nfrom Shanghai Pudong Airport Chuansha Subway Station Atour Hotel to Tianzifang: metro: duration 49, cost 12. taxi: duration 32, cost 91.87. walk: duration 259, cost 0.0. \nfrom Shanghai Pudong Airport Chuansha Subway Station Atour Hotel to Shanghai Natural History Museum: metro: duration 50, cost 12. taxi: duration 34, cost 96.92. walk: duration 272, cost 0.0. \nfrom Shanghai Pudong Airport Chuansha Subway Station Atour Hotel to Nanxiang Steamed Bun Restaurant (Yuyuan Branch): metro: duration 48, cost 10. taxi: duration 30, cost 85.94. walk: duration 243, cost 0.0. \nfrom Shanghai Pudong Airport Chuansha Subway Station Atour Hotel to The Bund: metro: duration 50, cost 10. taxi: duration 30, cost 85.67. walk: duration 242, cost 0.0. \nfrom Shanghai Pudong Airport Chuansha Subway Station Atour Hotel to Oriental Pearl Tower Revolving Restaurant: metro: duration 45, cost 10. taxi: duration 29, cost 84.07. walk: duration 238, cost 0.0. \nfrom Shanghai Pudong Airport Chuansha Subway Station Atour Hotel to Shanghai Pudong International Airport: metro: duration 39, cost 8. taxi: duration 18, cost 48.84. walk: duration 144, cost 0.0. \nfrom Shanghai Pudong Airport Chuansha Subway Station Atour Hotel to Shanghai Disney Resort: metro: duration 24, cost 6. taxi: duration 7, cost 23.02. walk: duration 62, cost 0.0. \nfrom Shanghai Pudong Airport Chuansha Subway Station Atour Hotel to Shanghai World Financial Center: metro: duration 43, cost 10. taxi: duration 27, cost 78.69. walk: duration 223, cost 0.0. \nfrom Shanghai Pudong Airport Chuansha Subway Station Atour Hotel to Shanghai Museum: metro: duration 50, cost 12. taxi: duration 31, cost 90.57. walk: duration 255, cost 0.0. \nfrom Shanghai Pudong Airport Chuansha Subway Station Atour Hotel to Renhe Hall (Zhaojiabang Road Branch): metro: duration 51, cost 12. taxi: duration 34, cost 98.52. walk: duration 276, cost 0.0. \nfrom Shanghai Pudong Airport Chuansha Subway Station Atour Hotel to Nanjing Road Pedestrian Street: metro: duration 55, cost 12. taxi: duration 31, cost 88.3. walk: duration 249, cost 0.0. \nfrom Shanghai Pudong Airport Chuansha Subway Station Atour Hotel to Shanghai Pudong Airport Chuansha Subway Station Atour Hotel:  metro: empty.  taxi: empty.  walk: empty. \nfrom Shanghai Pudong Airport Chuansha Subway Station Atour Hotel to Oriental Pearl Tower: metro: duration 52, cost 10. taxi: duration 29, cost 82.24. walk: duration 233, cost 0.0. \nfrom Shanghai Pudong Airport Chuansha Subway Station Atour Hotel to Lujiazui: metro: duration 43, cost 10. taxi: duration 28, cost 79.13. walk: duration 225, cost 0.0. \nfrom Shanghai Pudong Airport Chuansha Subway Station Atour Hotel to Huangpu River Cruise (Shiliupu Wharf): metro: duration 48, cost 10. taxi: duration 28, cost 81.22. walk: duration 230, cost 0.0. \nfrom Shanghai Pudong Airport Chuansha Subway Station Atour Hotel to Shanghai Wang Bao He Grand Hotel · Shanghai Restaurant: metro: duration 52, cost 12. taxi: duration 32, cost 91.43. walk: duration 257, cost 0.0. \nfrom Shanghai Pudong Airport Chuansha Subway Station Atour Hotel to Shanghai Tower Observation Deck: metro: duration 40, cost 10. taxi: duration 28, cost 78.92. walk: duration 224, cost 0.0. \nfrom Shanghai Pudong Airport Chuansha Subway Station Atour Hotel to Shanghai Best Boutique Hotel: metro: duration 95, cost 10. taxi: duration 15, cost 40.97. walk: duration 123, cost 0.0. \nfrom Shanghai Pudong Airport Chuansha Subway Station Atour Hotel to Zhujiajiao Ancient Town Scenic Area: metro: duration 152, cost 20.0. taxi: duration 92, cost 271.43. walk: duration 737, cost 0.0. \nfrom Shanghai Pudong Airport Chuansha Subway Station Atour Hotel to Yu Garden: metro: duration 50, cost 10. taxi: duration 29, cost 83.4. walk: duration 236, cost 0.0. \nfrom Shanghai Pudong Airport Chuansha Subway Station Atour Hotel to Shanghai Station: metro: duration 52, cost 12. taxi: duration 36, cost 103.56. walk: duration 290, cost 0.0. \nfrom Shanghai Pudong Airport Chuansha Subway Station Atour Hotel to Shanghai Ship Hotel: metro: duration 86, cost 14. taxi: duration 53, cost 155.07. walk: duration 427, cost 0.0. \nfrom Shanghai Pudong Airport Chuansha Subway Station Atour Hotel to Shanghai Hongqiao Station: metro: duration 76, cost 14. taxi: duration 54, cost 157.48. walk: duration 434, cost 0.0. \nfrom Shanghai Pudong Airport Chuansha Subway Station Atour Hotel to Shanghai Ocean Aquarium: metro: duration 51, cost 10. taxi: duration 28, cost 81.55. walk: duration 231, cost 0.0. \nfrom Shanghai Pudong Airport Chuansha Subway Station Atour Hotel to Shanghai Old Restaurant (Yuyuan Branch): metro: duration 47, cost 10. taxi: duration 30, cost 86.38. walk: duration 244, cost 0.0. \nfrom Oriental Pearl Tower to Xintiandi: metro: duration 16, cost 4. taxi: duration 4, cost 15.67. walk: duration 37, cost 0.0. \nfrom Oriental Pearl Tower to Tianzifang: metro: duration 20, cost 4. taxi: duration 6, cost 20.73. walk: duration 54, cost 0.0. \nfrom Oriental Pearl Tower to Shanghai Natural History Museum: metro: duration 18, cost 4. taxi: duration 5, cost 17.21. walk: duration 42, cost 0.0. \nfrom Oriental Pearl Tower to Nanxiang Steamed Bun Restaurant (Yuyuan Branch): metro: duration 17, cost 4. taxi: duration 3, cost 13.52. walk: duration 30, cost 0.0. \nfrom Oriental Pearl Tower to The Bund: taxi: duration 1, cost 11.0. walk: duration 10, cost 0.0. \nfrom Oriental Pearl Tower to Oriental Pearl Tower Revolving Restaurant: taxi: duration 1, cost 11.0. walk: duration 10, cost 0.0. \nfrom Oriental Pearl Tower to Shanghai Pudong International Airport: metro: duration 85, cost 14. taxi: duration 47, cost 136.12. walk: duration 377, cost 0.0. \nfrom Oriental Pearl Tower to Shanghai Disney Resort: metro: duration 58, cost 10. taxi: duration 28, cost 80.69. walk: duration 229, cost 0.0. \nfrom Oriental Pearl Tower to Shanghai World Financial Center: metro: duration 14, cost 4. taxi: duration 1, cost 11.0. walk: duration 9, cost 0.0. \nfrom Oriental Pearl Tower to Shanghai Museum: metro: duration 18, cost 4. taxi: duration 3, cost 13.82. walk: duration 31, cost 0.0. \nfrom Oriental Pearl Tower to Renhe Hall (Zhaojiabang Road Branch): metro: duration 24, cost 6. taxi: duration 10, cost 28.07. walk: duration 80, cost 0.0. \nfrom Oriental Pearl Tower to Nanjing Road Pedestrian Street: metro: duration 22, cost 4. taxi: duration 2, cost 11.0. walk: duration 18, cost 0.0. \nfrom Oriental Pearl Tower to Shanghai Pudong Airport Chuansha Subway Station Atour Hotel: metro: duration 52, cost 10. taxi: duration 29, cost 82.24. walk: duration 233, cost 0.0. \nfrom Oriental Pearl Tower to Oriental Pearl Tower:  metro: empty.  taxi: empty.  walk: empty. \nfrom Oriental Pearl Tower to Lujiazui: metro: duration 14, cost 4. taxi: duration 1, cost 11.0. walk: duration 9, cost 0.0. \nfrom Oriental Pearl Tower to Huangpu River Cruise (Shiliupu Wharf): taxi: duration 1, cost 11.0. walk: duration 15, cost 0.0. \nfrom Oriental Pearl Tower to Shanghai Wang Bao He Grand Hotel · Shanghai Restaurant: metro: duration 21, cost 4. taxi: duration 4, cost 14.3. walk: duration 32, cost 0.0. \nfrom Oriental Pearl Tower to Shanghai Tower Observation Deck: metro: duration 11, cost 4. taxi: duration 1, cost 11.0. walk: duration 10, cost 0.0. \nfrom Oriental Pearl Tower to Shanghai Best Boutique Hotel: metro: duration 128, cost 14. taxi: duration 38, cost 109.14. walk: duration 305, cost 0.0. \nfrom Oriental Pearl Tower to Zhujiajiao Ancient Town Scenic Area: metro: duration 125, cost 16. taxi: duration 67, cost 196.62. walk: duration 538, cost 0.0. \nfrom Oriental Pearl Tower to Yu Garden: taxi: duration 2, cost 11.0. walk: duration 19, cost 0.0. \nfrom Oriental Pearl Tower to Shanghai Station: metro: duration 20, cost 6. taxi: duration 7, cost 21.65. walk: duration 58, cost 0.0. \nfrom Oriental Pearl Tower to Shanghai Ship Hotel: metro: duration 89, cost 14. taxi: duration 52, cost 150.85. walk: duration 416, cost 0.0. \nfrom Oriental Pearl Tower to Shanghai Hongqiao Station: metro: duration 47, cost 10. taxi: duration 27, cost 78.55. walk: duration 223, cost 0.0. \nfrom Oriental Pearl Tower to Shanghai Ocean Aquarium: metro: duration 22, cost 4. taxi: duration 0, cost 11.0. walk: duration 3, cost 0.0. \nfrom Oriental Pearl Tower to Shanghai Old Restaurant (Yuyuan Branch): metro: duration 16, cost 4. taxi: duration 3, cost 13.36. walk: duration 29, cost 0.0. \nfrom Lujiazui to Xintiandi: metro: duration 11, cost 4. taxi: duration 4, cost 16.34. walk: duration 39, cost 0.0. \nfrom Lujiazui to Tianzifang: metro: duration 14, cost 6. taxi: duration 6, cost 20.92. walk: duration 55, cost 0.0. \nfrom Lujiazui to Shanghai Natural History Museum: metro: duration 13, cost 4. taxi: duration 6, cost 19.08. walk: duration 49, cost 0.0. \nfrom Lujiazui to Nanxiang Steamed Bun Restaurant (Yuyuan Branch): metro: duration 12, cost 4. taxi: duration 3, cost 13.59. walk: duration 30, cost 0.0. \nfrom Lujiazui to The Bund: metro: duration 12, cost 4. taxi: duration 2, cost 11.0. walk: duration 17, cost 0.0. \nfrom Lujiazui to Oriental Pearl Tower Revolving Restaurant: metro: duration 7, cost 4. taxi: duration 1, cost 11.0. walk: duration 14, cost 0.0. \nfrom Lujiazui to Shanghai Pudong International Airport: metro: duration 77, cost 14. taxi: duration 46, cost 132.95. walk: duration 368, cost 0.0. \nfrom Lujiazui to Shanghai Disney Resort: metro: duration 49, cost 10. taxi: duration 27, cost 77.34. walk: duration 220, cost 0.0. \nfrom Lujiazui to Shanghai World Financial Center: taxi: duration 0, cost 11.0. walk: duration 1, cost 0.0. \nfrom Lujiazui to Shanghai Museum: metro: duration 13, cost 4. taxi: duration 4, cost 15.02. walk: duration 35, cost 0.0. \nfrom Lujiazui to Renhe Hall (Zhaojiabang Road Branch): metro: duration 18, cost 6. taxi: duration 10, cost 28.32. walk: duration 80, cost 0.0. \nfrom Lujiazui to Nanjing Road Pedestrian Street: metro: duration 17, cost 4. taxi: duration 3, cost 11.95. walk: duration 24, cost 0.0. \nfrom Lujiazui to Shanghai Pudong Airport Chuansha Subway Station Atour Hotel: metro: duration 43, cost 10. taxi: duration 28, cost 79.13. walk: duration 225, cost 0.0. \nfrom Lujiazui to Oriental Pearl Tower: metro: duration 14, cost 4. taxi: duration 1, cost 11.0. walk: duration 9, cost 0.0. \nfrom Lujiazui to Lujiazui:  metro: empty.  taxi: empty.  walk: empty. \nfrom Lujiazui to Huangpu River Cruise (Shiliupu Wharf): metro: duration 10, cost 4. taxi: duration 1, cost 11.0. walk: duration 12, cost 0.0. \nfrom Lujiazui to Shanghai Wang Bao He Grand Hotel · Shanghai Restaurant: metro: duration 16, cost 4. taxi: duration 4, cost 15.59. walk: duration 37, cost 0.0. \nfrom Lujiazui to Shanghai Tower Observation Deck: taxi: duration 0, cost 11.0. walk: duration 2, cost 0.0. \nfrom Lujiazui to Shanghai Best Boutique Hotel: metro: duration 119, cost 12. taxi: duration 37, cost 105.77. walk: duration 296, cost 0.0. \nfrom Lujiazui to Zhujiajiao Ancient Town Scenic Area: metro: duration 120, cost 16. taxi: duration 67, cost 198.34. walk: duration 543, cost 0.0. \nfrom Lujiazui to Yu Garden: metro: duration 12, cost 4. taxi: duration 2, cost 11.0. walk: duration 18, cost 0.0. \nfrom Lujiazui to Shanghai Station: metro: duration 15, cost 6. taxi: duration 8, cost 23.84. walk: duration 65, cost 0.0. \nfrom Lujiazui to Shanghai Ship Hotel: metro: duration 82, cost 14. taxi: duration 51, cost 148.89. walk: duration 411, cost 0.0. \nfrom Lujiazui to Shanghai Hongqiao Station: metro: duration 42, cost 10. taxi: duration 28, cost 80.33. walk: duration 228, cost 0.0. \nfrom Lujiazui to Shanghai Ocean Aquarium: metro: duration 15, cost 4. taxi: duration 1, cost 11.0. walk: duration 8, cost 0.0. \nfrom Lujiazui to Shanghai Old Restaurant (Yuyuan Branch): metro: duration 11, cost 4. taxi: duration 3, cost 13.57. walk: duration 30, cost 0.0. \nfrom Huangpu River Cruise (Shiliupu Wharf) to Xintiandi: metro: duration 12, cost 4. taxi: duration 3, cost 12.93. walk: duration 28, cost 0.0. \nfrom Huangpu River Cruise (Shiliupu Wharf) to Tianzifang: metro: duration 16, cost 4. taxi: duration 5, cost 17.2. walk: duration 42, cost 0.0. \nfrom Huangpu River Cruise (Shiliupu Wharf) to Shanghai Natural History Museum: metro: duration 14, cost 4. taxi: duration 5, cost 16.92. walk: duration 41, cost 0.0. \nfrom Huangpu River Cruise (Shiliupu Wharf) to Nanxiang Steamed Bun Restaurant (Yuyuan Branch): metro: duration 13, cost 4. taxi: duration 2, cost 11.0. walk: duration 17, cost 0.0. \nfrom Huangpu River Cruise (Shiliupu Wharf) to The Bund: taxi: duration 1, cost 11.0. walk: duration 15, cost 0.0. \nfrom Huangpu River Cruise (Shiliupu Wharf) to Oriental Pearl Tower Revolving Restaurant: taxi: duration 1, cost 11.0. walk: duration 9, cost 0.0. \nfrom Huangpu River Cruise (Shiliupu Wharf) to Shanghai Pudong International Airport: metro: duration 81, cost 14. taxi: duration 46, cost 134.75. walk: duration 373, cost 0.0. \nfrom Huangpu River Cruise (Shiliupu Wharf) to Shanghai Disney Resort: metro: duration 54, cost 10. taxi: duration 27, cost 78.14. walk: duration 222, cost 0.0. \nfrom Huangpu River Cruise (Shiliupu Wharf) to Shanghai World Financial Center: metro: duration 10, cost 4. taxi: duration 1, cost 11.0. walk: duration 13, cost 0.0. \nfrom Huangpu River Cruise (Shiliupu Wharf) to Shanghai Museum: metro: duration 14, cost 4. taxi: duration 3, cost 12.16. walk: duration 25, cost 0.0. \nfrom Huangpu River Cruise (Shiliupu Wharf) to Renhe Hall (Zhaojiabang Road Branch): metro: duration 20, cost 6. taxi: duration 8, cost 24.6. walk: duration 68, cost 0.0. \nfrom Huangpu River Cruise (Shiliupu Wharf) to Nanjing Road Pedestrian Street: metro: duration 18, cost 4. taxi: duration 2, cost 11.0. walk: duration 20, cost 0.0. \nfrom Huangpu River Cruise (Shiliupu Wharf) to Shanghai Pudong Airport Chuansha Subway Station Atour Hotel: metro: duration 48, cost 10. taxi: duration 28, cost 81.22. walk: duration 230, cost 0.0. \nfrom Huangpu River Cruise (Shiliupu Wharf) to Oriental Pearl Tower: taxi: duration 1, cost 11.0. walk: duration 15, cost 0.0. \nfrom Huangpu River Cruise (Shiliupu Wharf) to Lujiazui: metro: duration 10, cost 4. taxi: duration 1, cost 11.0. walk: duration 12, cost 0.0. \nfrom Huangpu River Cruise (Shiliupu Wharf) to Huangpu River Cruise (Shiliupu Wharf):  metro: empty.  taxi: empty.  walk: empty. \nfrom Huangpu River Cruise (Shiliupu Wharf) to Shanghai Wang Bao He Grand Hotel · Shanghai Restaurant: metro: duration 17, cost 4. taxi: duration 3, cost 12.81. walk: duration 27, cost 0.0. \nfrom Huangpu River Cruise (Shiliupu Wharf) to Shanghai Tower Observation Deck: metro: duration 7, cost 4. taxi: duration 1, cost 11.0. walk: duration 11, cost 0.0. \nfrom Huangpu River Cruise (Shiliupu Wharf) to Shanghai Best Boutique Hotel: metro: duration 124, cost 14. taxi: duration 37, cost 106.0. walk: duration 296, cost 0.0. \nfrom Huangpu River Cruise (Shiliupu Wharf) to Zhujiajiao Ancient Town Scenic Area: metro: duration 121, cost 16. taxi: duration 66, cost 194.17. walk: duration 531, cost 0.0. \nfrom Huangpu River Cruise (Shiliupu Wharf) to Yu Garden: taxi: duration 0, cost 11.0. walk: duration 6, cost 0.0. \nfrom Huangpu River Cruise (Shiliupu Wharf) to Shanghai Station: metro: duration 16, cost 6. taxi: duration 7, cost 22.15. walk: duration 59, cost 0.0. \nfrom Huangpu River Cruise (Shiliupu Wharf) to Shanghai Ship Hotel: metro: duration 85, cost 14. taxi: duration 50, cost 144.97. walk: duration 400, cost 0.0. \nfrom Huangpu River Cruise (Shiliupu Wharf) to Shanghai Hongqiao Station: metro: duration 43, cost 10. taxi: duration 27, cost 76.27. walk: duration 217, cost 0.0. \nfrom Huangpu River Cruise (Shiliupu Wharf) to Shanghai Ocean Aquarium: metro: duration 18, cost 4. taxi: duration 2, cost 11.0. walk: duration 17, cost 0.0. \nfrom Huangpu River Cruise (Shiliupu Wharf) to Shanghai Old Restaurant (Yuyuan Branch): metro: duration 12, cost 4. taxi: duration 2, cost 11.0. walk: duration 18, cost 0.0. \nfrom Shanghai Wang Bao He Grand Hotel · Shanghai Restaurant to Xintiandi: metro: duration 9, cost 4. taxi: duration 1, cost 11.0. walk: duration 10, cost 0.0. \nfrom Shanghai Wang Bao He Grand Hotel · Shanghai Restaurant to Tianzifang: metro: duration 12, cost 4. taxi: duration 3, cost 12.88. walk: duration 28, cost 0.0. \nfrom Shanghai Wang Bao He Grand Hotel · Shanghai Restaurant to Shanghai Natural History Museum: metro: duration 11, cost 4. taxi: duration 1, cost 11.0. walk: duration 15, cost 0.0. \nfrom Shanghai Wang Bao He Grand Hotel · Shanghai Restaurant to Nanxiang Steamed Bun Restaurant (Yuyuan Branch): metro: duration 12, cost 4. taxi: duration 2, cost 11.0. walk: duration 16, cost 0.0. \nfrom Shanghai Wang Bao He Grand Hotel · Shanghai Restaurant to The Bund: metro: duration 19, cost 4. taxi: duration 2, cost 11.25. walk: duration 22, cost 0.0. \nfrom Shanghai Wang Bao He Grand Hotel · Shanghai Restaurant to Oriental Pearl Tower Revolving Restaurant: metro: duration 14, cost 4. taxi: duration 2, cost 11.47. walk: duration 23, cost 0.0. \nfrom Shanghai Wang Bao He Grand Hotel · Shanghai Restaurant to Shanghai Pudong International Airport: metro: duration 86, cost 14. taxi: duration 50, cost 144.77. walk: duration 400, cost 0.0. \nfrom Shanghai Wang Bao He Grand Hotel · Shanghai Restaurant to Shanghai Disney Resort: metro: duration 57, cost 10. taxi: duration 30, cost 87.47. walk: duration 247, cost 0.0. \nfrom Shanghai Wang Bao He Grand Hotel · Shanghai Restaurant to Shanghai World Financial Center: metro: duration 16, cost 4. taxi: duration 4, cost 15.97. walk: duration 38, cost 0.0. \nfrom Shanghai Wang Bao He Grand Hotel · Shanghai Restaurant to Shanghai Museum: metro: duration 13, cost 4. taxi: duration 0, cost 11.0. walk: duration 2, cost 0.0. \nfrom Shanghai Wang Bao He Grand Hotel · Shanghai Restaurant to Renhe Hall (Zhaojiabang Road Branch): metro: duration 16, cost 4. taxi: duration 6, cost 19.48. walk: duration 50, cost 0.0. \nfrom Shanghai Wang Bao He Grand Hotel · Shanghai Restaurant to Nanjing Road Pedestrian Street: metro: duration 17, cost 4. taxi: duration 2, cost 11.0. walk: duration 16, cost 0.0. \nfrom Shanghai Wang Bao He Grand Hotel · Shanghai Restaurant to Shanghai Pudong Airport Chuansha Subway Station Atour Hotel: metro: duration 52, cost 12. taxi: duration 32, cost 91.43. walk: duration 257, cost 0.0. \nfrom Shanghai Wang Bao He Grand Hotel · Shanghai Restaurant to Oriental Pearl Tower: metro: duration 21, cost 4. taxi: duration 4, cost 14.3. walk: duration 32, cost 0.0. \nfrom Shanghai Wang Bao He Grand Hotel · Shanghai Restaurant to Lujiazui: metro: duration 16, cost 4. taxi: duration 4, cost 15.59. walk: duration 37, cost 0.0. \nfrom Shanghai Wang Bao He Grand Hotel · Shanghai Restaurant to Huangpu River Cruise (Shiliupu Wharf): metro: duration 17, cost 4. taxi: duration 3, cost 12.81. walk: duration 27, cost 0.0. \nfrom Shanghai Wang Bao He Grand Hotel · Shanghai Restaurant to Shanghai Wang Bao He Grand Hotel · Shanghai Restaurant:  metro: empty.  taxi: empty.  walk: empty. \nfrom Shanghai Wang Bao He Grand Hotel · Shanghai Restaurant to Shanghai Tower Observation Deck: metro: duration 13, cost 4. taxi: duration 4, cost 15.4. walk: duration 36, cost 0.0. \nfrom Shanghai Wang Bao He Grand Hotel · Shanghai Restaurant to Shanghai Best Boutique Hotel: metro: duration 126, cost 14. taxi: duration 39, cost 114.66. walk: duration 319, cost 0.0. \nfrom Shanghai Wang Bao He Grand Hotel · Shanghai Restaurant to Zhujiajiao Ancient Town Scenic Area: metro: duration 116, cost 16. taxi: duration 63, cost 184.39. walk: duration 505, cost 0.0. \nfrom Shanghai Wang Bao He Grand Hotel · Shanghai Restaurant to Yu Garden: metro: duration 19, cost 4. taxi: duration 2, cost 11.0. walk: duration 21, cost 0.0. \nfrom Shanghai Wang Bao He Grand Hotel · Shanghai Restaurant to Shanghai Station: metro: duration 12, cost 4. taxi: duration 4, cost 14.76. walk: duration 34, cost 0.0. \nfrom Shanghai Wang Bao He Grand Hotel · Shanghai Restaurant to Shanghai Ship Hotel: metro: duration 83, cost 14. taxi: duration 50, cost 144.85. walk: duration 400, cost 0.0. \nfrom Shanghai Wang Bao He Grand Hotel · Shanghai Restaurant to Shanghai Hongqiao Station: metro: duration 37, cost 10. taxi: duration 23, cost 66.35. walk: duration 191, cost 0.0. \nfrom Shanghai Wang Bao He Grand Hotel · Shanghai Restaurant to Shanghai Ocean Aquarium: metro: duration 22, cost 4. taxi: duration 4, cost 15.2. walk: duration 35, cost 0.0. \nfrom Shanghai Wang Bao He Grand Hotel · Shanghai Restaurant to Shanghai Old Restaurant (Yuyuan Branch): metro: duration 11, cost 4. taxi: duration 1, cost 11.0. walk: duration 14, cost 0.0. \nfrom Shanghai Tower Observation Deck to Xintiandi: metro: duration 8, cost 4. taxi: duration 4, cost 15.99. walk: duration 38, cost 0.0. \nfrom Shanghai Tower Observation Deck to Tianzifang: metro: duration 11, cost 6. taxi: duration 6, cost 20.43. walk: duration 53, cost 0.0. \nfrom Shanghai Tower Observation Deck to Shanghai Natural History Museum: metro: duration 10, cost 4. taxi: duration 6, cost 19.05. walk: duration 49, cost 0.0. \nfrom Shanghai Tower Observation Deck to Nanxiang Steamed Bun Restaurant (Yuyuan Branch): metro: duration 9, cost 4. taxi: duration 3, cost 13.12. walk: duration 28, cost 0.0. \nfrom Shanghai Tower Observation Deck to The Bund: metro: duration 9, cost 4. taxi: duration 2, cost 11.0. walk: duration 17, cost 0.0. \nfrom Shanghai Tower Observation Deck to Oriental Pearl Tower Revolving Restaurant: metro: duration 4, cost 4. taxi: duration 1, cost 11.0. walk: duration 14, cost 0.0. \nfrom Shanghai Tower Observation Deck to Shanghai Pudong International Airport: metro: duration 74, cost 14. taxi: duration 45, cost 132.69. walk: duration 367, cost 0.0. \nfrom Shanghai Tower Observation Deck to Shanghai Disney Resort: metro: duration 46, cost 10. taxi: duration 27, cost 76.89. walk: duration 219, cost 0.0. \nfrom Shanghai Tower Observation Deck to Shanghai World Financial Center: taxi: duration 0, cost 11.0. walk: duration 2, cost 0.0. \nfrom Shanghai Tower Observation Deck to Shanghai Museum: metro: duration 10, cost 4. taxi: duration 4, cost 14.81. walk: duration 34, cost 0.0. \nfrom Shanghai Tower Observation Deck to Renhe Hall (Zhaojiabang Road Branch): metro: duration 15, cost 6. taxi: duration 9, cost 27.83. walk: duration 79, cost 0.0. \nfrom Shanghai Tower Observation Deck to Nanjing Road Pedestrian Street: metro: duration 14, cost 4. taxi: duration 3, cost 12.02. walk: duration 25, cost 0.0. \nfrom Shanghai Tower Observation Deck to Shanghai Pudong Airport Chuansha Subway Station Atour Hotel: metro: duration 40, cost 10. taxi: duration 28, cost 78.92. walk: duration 224, cost 0.0. \nfrom Shanghai Tower Observation Deck to Oriental Pearl Tower: metro: duration 11, cost 4. taxi: duration 1, cost 11.0. walk: duration 10, cost 0.0. \nfrom Shanghai Tower Observation Deck to Lujiazui: taxi: duration 0, cost 11.0. walk: duration 2, cost 0.0. \nfrom Shanghai Tower Observation Deck to Huangpu River Cruise (Shiliupu Wharf): metro: duration 7, cost 4. taxi: duration 1, cost 11.0. walk: duration 11, cost 0.0. \nfrom Shanghai Tower Observation Deck to Shanghai Wang Bao He Grand Hotel · Shanghai Restaurant: metro: duration 13, cost 4. taxi: duration 4, cost 15.4. walk: duration 36, cost 0.0. \nfrom Shanghai Tower Observation Deck to Shanghai Tower Observation Deck:  metro: empty.  taxi: empty.  walk: empty. \nfrom Shanghai Tower Observation Deck to Shanghai Best Boutique Hotel: metro: duration 116, cost 12. taxi: duration 36, cost 105.23. walk: duration 294, cost 0.0. \nfrom Shanghai Tower Observation Deck to Zhujiajiao Ancient Town Scenic Area: metro: duration 117, cost 16. taxi: duration 67, cost 198.0. walk: duration 542, cost 0.0. \nfrom Shanghai Tower Observation Deck to Yu Garden: metro: duration 9, cost 4. taxi: duration 2, cost 11.0. walk: duration 17, cost 0.0. \nfrom Shanghai Tower Observation Deck to Shanghai Station: metro: duration 12, cost 6. taxi: duration 8, cost 23.93. walk: duration 65, cost 0.0. \nfrom Shanghai Tower Observation Deck to Shanghai Ship Hotel: metro: duration 79, cost 14. taxi: duration 51, cost 147.97. walk: duration 408, cost 0.0. \nfrom Shanghai Tower Observation Deck to Shanghai Hongqiao Station: metro: duration 39, cost 10. taxi: duration 28, cost 80.02. walk: duration 227, cost 0.0. \nfrom Shanghai Tower Observation Deck to Shanghai Ocean Aquarium: metro: duration 12, cost 4. taxi: duration 1, cost 11.0. walk: duration 10, cost 0.0. \nfrom Shanghai Tower Observation Deck to Shanghai Old Restaurant (Yuyuan Branch): metro: duration 8, cost 4. taxi: duration 3, cost 13.13. walk: duration 28, cost 0.0. \nfrom Shanghai Best Boutique Hotel to Xintiandi: metro: duration 121, cost 14. taxi: duration 39, cost 112.27. walk: duration 313, cost 0.0. \nfrom Shanghai Best Boutique Hotel to Tianzifang: metro: duration 121, cost 14. taxi: duration 38, cost 111.12. walk: duration 310, cost 0.0. \nfrom Shanghai Best Boutique Hotel to Shanghai Natural History Museum: metro: duration 125, cost 14. taxi: duration 41, cost 120.51. walk: duration 335, cost 0.0. \nfrom Shanghai Best Boutique Hotel to Nanxiang Steamed Bun Restaurant (Yuyuan Branch): metro: duration 122, cost 14. taxi: duration 37, cost 108.5. walk: duration 303, cost 0.0. \nfrom Shanghai Best Boutique Hotel to The Bund: metro: duration 126, cost 14. taxi: duration 38, cost 111.54. walk: duration 311, cost 0.0. \nfrom Shanghai Best Boutique Hotel to Oriental Pearl Tower Revolving Restaurant: metro: duration 121, cost 14. taxi: duration 38, cost 109.54. walk: duration 306, cost 0.0. \nfrom Shanghai Best Boutique Hotel to Shanghai Pudong International Airport: metro: duration 107, cost 10. taxi: duration 16, cost 44.52. walk: duration 132, cost 0.0. \nfrom Shanghai Best Boutique Hotel to Shanghai Disney Resort: metro: duration 93, cost 8. taxi: duration 10, cost 28.31. walk: duration 80, cost 0.0. \nfrom Shanghai Best Boutique Hotel to Shanghai World Financial Center: metro: duration 119, cost 12. taxi: duration 36, cost 105.44. walk: duration 295, cost 0.0. \nfrom Shanghai Best Boutique Hotel to Shanghai Museum: metro: duration 125, cost 14. taxi: duration 39, cost 113.84. walk: duration 317, cost 0.0. \nfrom Shanghai Best Boutique Hotel to Renhe Hall (Zhaojiabang Road Branch): metro: duration 121, cost 14. taxi: duration 39, cost 114.63. walk: duration 319, cost 0.0. \nfrom Shanghai Best Boutique Hotel to Nanjing Road Pedestrian Street: metro: duration 130, cost 14. taxi: duration 39, cost 113.66. walk: duration 317, cost 0.0. \nfrom Shanghai Best Boutique Hotel to Shanghai Pudong Airport Chuansha Subway Station Atour Hotel: metro: duration 95, cost 10. taxi: duration 15, cost 40.97. walk: duration 123, cost 0.0. \nfrom Shanghai Best Boutique Hotel to Oriental Pearl Tower: metro: duration 128, cost 14. taxi: duration 38, cost 109.14. walk: duration 305, cost 0.0. \nfrom Shanghai Best Boutique Hotel to Lujiazui: metro: duration 119, cost 12. taxi: duration 37, cost 105.77. walk: duration 296, cost 0.0. \nfrom Shanghai Best Boutique Hotel to Huangpu River Cruise (Shiliupu Wharf): metro: duration 124, cost 14. taxi: duration 37, cost 106.0. walk: duration 296, cost 0.0. \nfrom Shanghai Best Boutique Hotel to Shanghai Wang Bao He Grand Hotel · Shanghai Restaurant: metro: duration 126, cost 14. taxi: duration 39, cost 114.66. walk: duration 319, cost 0.0. \nfrom Shanghai Best Boutique Hotel to Shanghai Tower Observation Deck: metro: duration 116, cost 12. taxi: duration 36, cost 105.23. walk: duration 294, cost 0.0. \nfrom Shanghai Best Boutique Hotel to Shanghai Best Boutique Hotel:  metro: empty.  taxi: empty.  walk: empty. \nfrom Shanghai Best Boutique Hotel to Zhujiajiao Ancient Town Scenic Area: metro: duration 210, cost 20.0. taxi: duration 92, cost 273.5. walk: duration 743, cost 0.0. \nfrom Shanghai Best Boutique Hotel to Yu Garden: metro: duration 126, cost 14. taxi: duration 37, cost 107.53. walk: duration 300, cost 0.0. \nfrom Shanghai Best Boutique Hotel to Shanghai Station: metro: duration 127, cost 14. taxi: duration 44, cost 127.6. walk: duration 354, cost 0.0. \nfrom Shanghai Best Boutique Hotel to Shanghai Ship Hotel: metro: duration 125, cost 12. taxi: duration 43, cost 124.89. walk: duration 347, cost 0.0. \nfrom Shanghai Best Boutique Hotel to Shanghai Hongqiao Station: metro: duration 142, cost 16. taxi: duration 57, cost 168.63. walk: duration 463, cost 0.0. \nfrom Shanghai Best Boutique Hotel to Shanghai Ocean Aquarium: metro: duration 129, cost 14. taxi: duration 38, cost 108.85. walk: duration 304, cost 0.0. \nfrom Shanghai Best Boutique Hotel to Shanghai Old Restaurant (Yuyuan Branch): metro: duration 121, cost 14. taxi: duration 38, cost 109.07. walk: duration 304, cost 0.0. \nfrom Zhujiajiao Ancient Town Scenic Area to Xintiandi: metro: duration 112, cost 16. taxi: duration 62, cost 183.59. walk: duration 503, cost 0.0. \nfrom Zhujiajiao Ancient Town Scenic Area to Tianzifang: metro: duration 112, cost 16. taxi: duration 61, cost 179.2. walk: duration 492, cost 0.0. \nfrom Zhujiajiao Ancient Town Scenic Area to Shanghai Natural History Museum: metro: duration 113, cost 16. taxi: duration 62, cost 180.86. walk: duration 496, cost 0.0. \nfrom Zhujiajiao Ancient Town Scenic Area to Nanxiang Steamed Bun Restaurant (Yuyuan Branch): metro: duration 116, cost 16. taxi: duration 64, cost 187.71. walk: duration 514, cost 0.0. \nfrom Zhujiajiao Ancient Town Scenic Area to The Bund: metro: duration 123, cost 16. taxi: duration 65, cost 192.59. walk: duration 527, cost 0.0. \nfrom Zhujiajiao Ancient Town Scenic Area to Oriental Pearl Tower Revolving Restaurant: metro: duration 118, cost 16. taxi: duration 66, cost 193.09. walk: duration 529, cost 0.0. \nfrom Zhujiajiao Ancient Town Scenic Area to Shanghai Pudong International Airport: metro: duration 183, cost 20.0. taxi: duration 107, cost 318.03. walk: duration 862, cost 0.0. \nfrom Zhujiajiao Ancient Town Scenic Area to Shanghai Disney Resort: metro: duration 152, cost 18. taxi: duration 87, cost 257.68. walk: duration 701, cost 0.0. \nfrom Zhujiajiao Ancient Town Scenic Area to Shanghai World Financial Center: metro: duration 120, cost 16. taxi: duration 68, cost 198.82. walk: duration 544, cost 0.0. \nfrom Zhujiajiao Ancient Town Scenic Area to Shanghai Museum: metro: duration 117, cost 16. taxi: duration 63, cost 185.09. walk: duration 507, cost 0.0. \nfrom Zhujiajiao Ancient Town Scenic Area to Renhe Hall (Zhaojiabang Road Branch): metro: duration 108, cost 16. taxi: duration 58, cost 170.63. walk: duration 469, cost 0.0. \nfrom Zhujiajiao Ancient Town Scenic Area to Nanjing Road Pedestrian Street: metro: duration 121, cost 16. taxi: duration 65, cost 189.92. walk: duration 520, cost 0.0. \nfrom Zhujiajiao Ancient Town Scenic Area to Shanghai Pudong Airport Chuansha Subway Station Atour Hotel: metro: duration 152, cost 20.0. taxi: duration 92, cost 271.43. walk: duration 737, cost 0.0. \nfrom Zhujiajiao Ancient Town Scenic Area to Oriental Pearl Tower: metro: duration 125, cost 16. taxi: duration 67, cost 196.62. walk: duration 538, cost 0.0. \nfrom Zhujiajiao Ancient Town Scenic Area to Lujiazui: metro: duration 120, cost 16. taxi: duration 67, cost 198.34. walk: duration 543, cost 0.0. \nfrom Zhujiajiao Ancient Town Scenic Area to Huangpu River Cruise (Shiliupu Wharf): metro: duration 121, cost 16. taxi: duration 66, cost 194.17. walk: duration 531, cost 0.0. \nfrom Zhujiajiao Ancient Town Scenic Area to Shanghai Wang Bao He Grand Hotel · Shanghai Restaurant: metro: duration 116, cost 16. taxi: duration 63, cost 184.39. walk: duration 505, cost 0.0. \nfrom Zhujiajiao Ancient Town Scenic Area to Shanghai Tower Observation Deck: metro: duration 117, cost 16. taxi: duration 67, cost 198.0. walk: duration 542, cost 0.0. \nfrom Zhujiajiao Ancient Town Scenic Area to Shanghai Best Boutique Hotel: metro: duration 210, cost 20.0. taxi: duration 92, cost 273.5. walk: duration 743, cost 0.0. \nfrom Zhujiajiao Ancient Town Scenic Area to Zhujiajiao Ancient Town Scenic Area:  metro: empty.  taxi: empty.  walk: empty. \nfrom Zhujiajiao Ancient Town Scenic Area to Yu Garden: metro: duration 123, cost 16. taxi: duration 65, cost 191.68. walk: duration 525, cost 0.0. \nfrom Zhujiajiao Ancient Town Scenic Area to Shanghai Station: metro: duration 110, cost 16. taxi: duration 60, cost 176.94. walk: duration 485, cost 0.0. \nfrom Zhujiajiao Ancient Town Scenic Area to Shanghai Ship Hotel: metro: duration 122, cost 16. taxi: duration 66, cost 193.82. walk: duration 530, cost 0.0. \nfrom Zhujiajiao Ancient Town Scenic Area to Shanghai Hongqiao Station: metro: duration 80, cost 12. taxi: duration 39, cost 112.79. walk: duration 314, cost 0.0. \nfrom Zhujiajiao Ancient Town Scenic Area to Shanghai Ocean Aquarium: metro: duration 126, cost 16. taxi: duration 67, cost 197.74. walk: duration 541, cost 0.0. \nfrom Zhujiajiao Ancient Town Scenic Area to Shanghai Old Restaurant (Yuyuan Branch): metro: duration 115, cost 16. taxi: duration 64, cost 187.52. walk: duration 514, cost 0.0. \nfrom Yu Garden to Xintiandi: metro: duration 14, cost 4. taxi: duration 2, cost 11.0. walk: duration 21, cost 0.0. \nfrom Yu Garden to Tianzifang: metro: duration 18, cost 4. taxi: duration 4, cost 15.43. walk: duration 36, cost 0.0. \nfrom Yu Garden to Shanghai Natural History Museum: metro: duration 16, cost 4. taxi: duration 4, cost 15.25. walk: duration 36, cost 0.0. \nfrom Yu Garden to Nanxiang Steamed Bun Restaurant (Yuyuan Branch): metro: duration 15, cost 4. taxi: duration 1, cost 11.0. walk: duration 11, cost 0.0. \nfrom Yu Garden to The Bund: taxi: duration 1, cost 11.0. walk: duration 14, cost 0.0. \nfrom Yu Garden to Oriental Pearl Tower Revolving Restaurant: taxi: duration 1, cost 11.0. walk: duration 9, cost 0.0. \nfrom Yu Garden to Shanghai Pudong International Airport: metro: duration 83, cost 14. taxi: duration 47, cost 136.83. walk: duration 379, cost 0.0. \nfrom Yu Garden to Shanghai Disney Resort: metro: duration 56, cost 10. taxi: duration 28, cost 79.91. walk: duration 227, cost 0.0. \nfrom Yu Garden to Shanghai World Financial Center: metro: duration 12, cost 4. taxi: duration 2, cost 11.0. walk: duration 19, cost 0.0. \nfrom Yu Garden to Shanghai Museum: metro: duration 16, cost 4. taxi: duration 2, cost 11.0. walk: duration 19, cost 0.0. \nfrom Yu Garden to Renhe Hall (Zhaojiabang Road Branch): metro: duration 22, cost 6. taxi: duration 7, cost 22.83. walk: duration 62, cost 0.0. \nfrom Yu Garden to Nanjing Road Pedestrian Street: metro: duration 20, cost 4. taxi: duration 2, cost 11.0. walk: duration 17, cost 0.0. \nfrom Yu Garden to Shanghai Pudong Airport Chuansha Subway Station Atour Hotel: metro: duration 50, cost 10. taxi: duration 29, cost 83.4. walk: duration 236, cost 0.0. \nfrom Yu Garden to Oriental Pearl Tower: taxi: duration 2, cost 11.0. walk: duration 19, cost 0.0. \nfrom Yu Garden to Lujiazui: metro: duration 12, cost 4. taxi: duration 2, cost 11.0. walk: duration 18, cost 0.0. \nfrom Yu Garden to Huangpu River Cruise (Shiliupu Wharf): taxi: duration 0, cost 11.0. walk: duration 6, cost 0.0. \nfrom Yu Garden to Shanghai Wang Bao He Grand Hotel · Shanghai Restaurant: metro: duration 19, cost 4. taxi: duration 2, cost 11.0. walk: duration 21, cost 0.0. \nfrom Yu Garden to Shanghai Tower Observation Deck: metro: duration 9, cost 4. taxi: duration 2, cost 11.0. walk: duration 17, cost 0.0. \nfrom Yu Garden to Shanghai Best Boutique Hotel: metro: duration 126, cost 14. taxi: duration 37, cost 107.53. walk: duration 300, cost 0.0. \nfrom Yu Garden to Zhujiajiao Ancient Town Scenic Area: metro: duration 123, cost 16. taxi: duration 65, cost 191.68. walk: duration 525, cost 0.0. \nfrom Yu Garden to Yu Garden:  metro: empty.  taxi: empty.  walk: empty. \nfrom Yu Garden to Shanghai Station: metro: duration 18, cost 6. taxi: duration 6, cost 20.61. walk: duration 54, cost 0.0. \nfrom Yu Garden to Shanghai Ship Hotel: metro: duration 87, cost 14. taxi: duration 49, cost 144.13. walk: duration 398, cost 0.0. \nfrom Yu Garden to Shanghai Hongqiao Station: metro: duration 45, cost 10. taxi: duration 26, cost 73.78. walk: duration 210, cost 0.0. \nfrom Yu Garden to Shanghai Ocean Aquarium: metro: duration 20, cost 4. taxi: duration 2, cost 11.1. walk: duration 21, cost 0.0. \nfrom Yu Garden to Shanghai Old Restaurant (Yuyuan Branch): metro: duration 14, cost 4. taxi: duration 1, cost 11.0. walk: duration 11, cost 0.0. \nfrom Shanghai Station to Xintiandi: metro: duration 10, cost 4. taxi: duration 5, cost 16.86. walk: duration 41, cost 0.0. \nfrom Shanghai Station to Tianzifang: metro: duration 13, cost 6. taxi: duration 6, cost 19.88. walk: duration 52, cost 0.0. \nfrom Shanghai Station to Shanghai Natural History Museum: metro: duration 8, cost 4. taxi: duration 2, cost 11.0. walk: duration 18, cost 0.0. \nfrom Shanghai Station to Nanxiang Steamed Bun Restaurant (Yuyuan Branch): metro: duration 13, cost 4. taxi: duration 6, cost 19.56. walk: duration 50, cost 0.0. \nfrom Shanghai Station to The Bund: metro: duration 18, cost 6. taxi: duration 6, cost 18.72. walk: duration 48, cost 0.0. \nfrom Shanghai Station to Oriental Pearl Tower Revolving Restaurant: metro: duration 13, cost 6. taxi: duration 6, cost 19.87. walk: duration 52, cost 0.0. \nfrom Shanghai Station to Shanghai Pudong International Airport: metro: duration 86, cost 14. taxi: duration 54, cost 157.18. walk: duration 433, cost 0.0. \nfrom Shanghai Station to Shanghai Disney Resort: metro: duration 58, cost 12. taxi: duration 35, cost 100.31. walk: duration 281, cost 0.0. \nfrom Shanghai Station to Shanghai World Financial Center: metro: duration 15, cost 6. taxi: duration 8, cost 24.2. walk: duration 66, cost 0.0. \nfrom Shanghai Station to Shanghai Museum: metro: duration 12, cost 4. taxi: duration 4, cost 15.4. walk: duration 36, cost 0.0. \nfrom Shanghai Station to Renhe Hall (Zhaojiabang Road Branch): metro: duration 15, cost 6. taxi: duration 7, cost 23.27. walk: duration 63, cost 0.0. \nfrom Shanghai Station to Nanjing Road Pedestrian Street: metro: duration 15, cost 4. taxi: duration 5, cost 16.61. walk: duration 40, cost 0.0. \nfrom Shanghai Station to Shanghai Pudong Airport Chuansha Subway Station Atour Hotel: metro: duration 52, cost 12. taxi: duration 36, cost 103.56. walk: duration 290, cost 0.0. \nfrom Shanghai Station to Oriental Pearl Tower: metro: duration 20, cost 6. taxi: duration 7, cost 21.65. walk: duration 58, cost 0.0. \nfrom Shanghai Station to Lujiazui: metro: duration 15, cost 6. taxi: duration 8, cost 23.84. walk: duration 65, cost 0.0. \nfrom Shanghai Station to Huangpu River Cruise (Shiliupu Wharf): metro: duration 16, cost 6. taxi: duration 7, cost 22.15. walk: duration 59, cost 0.0. \nfrom Shanghai Station to Shanghai Wang Bao He Grand Hotel · Shanghai Restaurant: metro: duration 12, cost 4. taxi: duration 4, cost 14.76. walk: duration 34, cost 0.0. \nfrom Shanghai Station to Shanghai Tower Observation Deck: metro: duration 12, cost 6. taxi: duration 8, cost 23.93. walk: duration 65, cost 0.0. \nfrom Shanghai Station to Shanghai Best Boutique Hotel: metro: duration 127, cost 14. taxi: duration 44, cost 127.6. walk: duration 354, cost 0.0. \nfrom Shanghai Station to Zhujiajiao Ancient Town Scenic Area: metro: duration 110, cost 16. taxi: duration 60, cost 176.94. walk: duration 485, cost 0.0. \nfrom Shanghai Station to Yu Garden: metro: duration 18, cost 6. taxi: duration 6, cost 20.61. walk: duration 54, cost 0.0. \nfrom Shanghai Station to Shanghai Station:  metro: empty.  taxi: empty.  walk: empty. \nfrom Shanghai Station to Shanghai Ship Hotel: metro: duration 83, cost 14. taxi: duration 52, cost 152.42. walk: duration 420, cost 0.0. \nfrom Shanghai Station to Shanghai Hongqiao Station: metro: duration 32, cost 10. taxi: duration 21, cost 59.11. walk: duration 171, cost 0.0. \nfrom Shanghai Station to Shanghai Ocean Aquarium: metro: duration 20, cost 6. taxi: duration 7, cost 22.35. walk: duration 60, cost 0.0. \nfrom Shanghai Station to Shanghai Old Restaurant (Yuyuan Branch): metro: duration 12, cost 4. taxi: duration 6, cost 19.12. walk: duration 49, cost 0.0. \nfrom Shanghai Ship Hotel to Xintiandi: metro: duration 78, cost 14. taxi: duration 48, cost 141.12. walk: duration 390, cost 0.0. \nfrom Shanghai Ship Hotel to Tianzifang: metro: duration 77, cost 14. taxi: duration 46, cost 134.57. walk: duration 372, cost 0.0. \nfrom Shanghai Ship Hotel to Shanghai Natural History Museum: metro: duration 83, cost 14. taxi: duration 51, cost 148.1. walk: duration 409, cost 0.0. \nfrom Shanghai Ship Hotel to Nanxiang Steamed Bun Restaurant (Yuyuan Branch): metro: duration 80, cost 14. taxi: duration 48, cost 141.03. walk: duration 390, cost 0.0. \nfrom Shanghai Ship Hotel to The Bund: metro: duration 87, cost 14. taxi: duration 51, cost 149.56. walk: duration 412, cost 0.0. \nfrom Shanghai Ship Hotel to Oriental Pearl Tower Revolving Restaurant: metro: duration 82, cost 14. taxi: duration 51, cost 147.84. walk: duration 408, cost 0.0. \nfrom Shanghai Ship Hotel to Shanghai Pudong International Airport: metro: duration 107, cost 16. taxi: duration 59, cost 173.95. walk: duration 477, cost 0.0. \nfrom Shanghai Ship Hotel to Shanghai Disney Resort: metro: duration 81, cost 14. taxi: duration 45, cost 131.73. walk: duration 365, cost 0.0. \nfrom Shanghai Ship Hotel to Shanghai World Financial Center: metro: duration 82, cost 14. taxi: duration 51, cost 149.0. walk: duration 411, cost 0.0. \nfrom Shanghai Ship Hotel to Shanghai Museum: metro: duration 84, cost 14. taxi: duration 49, cost 144.62. walk: duration 399, cost 0.0. \nfrom Shanghai Ship Hotel to Renhe Hall (Zhaojiabang Road Branch): metro: duration 74, cost 14. taxi: duration 44, cost 128.55. walk: duration 356, cost 0.0. \nfrom Shanghai Ship Hotel to Nanjing Road Pedestrian Street: metro: duration 89, cost 14. taxi: duration 51, cost 149.29. walk: duration 412, cost 0.0. \nfrom Shanghai Ship Hotel to Shanghai Pudong Airport Chuansha Subway Station Atour Hotel: metro: duration 86, cost 14. taxi: duration 53, cost 155.07. walk: duration 427, cost 0.0. \nfrom Shanghai Ship Hotel to Oriental Pearl Tower: metro: duration 89, cost 14. taxi: duration 52, cost 150.85. walk: duration 416, cost 0.0. \nfrom Shanghai Ship Hotel to Lujiazui: metro: duration 82, cost 14. taxi: duration 51, cost 148.89. walk: duration 411, cost 0.0. \nfrom Shanghai Ship Hotel to Huangpu River Cruise (Shiliupu Wharf): metro: duration 85, cost 14. taxi: duration 50, cost 144.97. walk: duration 400, cost 0.0. \nfrom Shanghai Ship Hotel to Shanghai Wang Bao He Grand Hotel · Shanghai Restaurant: metro: duration 83, cost 14. taxi: duration 50, cost 144.85. walk: duration 400, cost 0.0. \nfrom Shanghai Ship Hotel to Shanghai Tower Observation Deck: metro: duration 79, cost 14. taxi: duration 51, cost 147.97. walk: duration 408, cost 0.0. \nfrom Shanghai Ship Hotel to Shanghai Best Boutique Hotel: metro: duration 125, cost 12. taxi: duration 43, cost 124.89. walk: duration 347, cost 0.0. \nfrom Shanghai Ship Hotel to Zhujiajiao Ancient Town Scenic Area: metro: duration 122, cost 16. taxi: duration 66, cost 193.82. walk: duration 530, cost 0.0. \nfrom Shanghai Ship Hotel to Yu Garden: metro: duration 87, cost 14. taxi: duration 49, cost 144.13. walk: duration 398, cost 0.0. \nfrom Shanghai Ship Hotel to Shanghai Station: metro: duration 83, cost 14. taxi: duration 52, cost 152.42. walk: duration 420, cost 0.0. \nfrom Shanghai Ship Hotel to Shanghai Ship Hotel:  metro: empty.  taxi: empty.  walk: empty. \nfrom Shanghai Ship Hotel to Shanghai Hongqiao Station: metro: duration 76, cost 14. taxi: duration 48, cost 140.09. walk: duration 387, cost 0.0. \nfrom Shanghai Ship Hotel to Shanghai Ocean Aquarium: metro: duration 91, cost 14. taxi: duration 52, cost 151.61. walk: duration 418, cost 0.0. \nfrom Shanghai Ship Hotel to Shanghai Old Restaurant (Yuyuan Branch): metro: duration 79, cost 14. taxi: duration 48, cost 141.52. walk: duration 391, cost 0.0. \nfrom Shanghai Hongqiao Station to Xintiandi: metro: duration 34, cost 10. taxi: duration 23, cost 65.72. walk: duration 189, cost 0.0. \nfrom Shanghai Hongqiao Station to Tianzifang: metro: duration 34, cost 10. taxi: duration 22, cost 61.83. walk: duration 179, cost 0.0. \nfrom Shanghai Hongqiao Station to Shanghai Natural History Museum: metro: duration 34, cost 10. taxi: duration 22, cost 62.78. walk: duration 181, cost 0.0. \nfrom Shanghai Hongqiao Station to Nanxiang Steamed Bun Restaurant (Yuyuan Branch): metro: duration 37, cost 10. taxi: duration 25, cost 69.92. walk: duration 200, cost 0.0. \nfrom Shanghai Hongqiao Station to The Bund: metro: duration 45, cost 10. taxi: duration 26, cost 74.51. walk: duration 212, cost 0.0. \nfrom Shanghai Hongqiao Station to Oriental Pearl Tower Revolving Restaurant: metro: duration 40, cost 10. taxi: duration 26, cost 75.05. walk: duration 214, cost 0.0. \nfrom Shanghai Hongqiao Station to Shanghai Pudong International Airport: metro: duration 109, cost 16. taxi: duration 71, cost 207.78. walk: duration 568, cost 0.0. \nfrom Shanghai Hongqiao Station to Shanghai Disney Resort: metro: duration 78, cost 14. taxi: duration 50, cost 147.31. walk: duration 406, cost 0.0. \nfrom Shanghai Hongqiao Station to Shanghai World Financial Center: metro: duration 42, cost 10. taxi: duration 28, cost 80.81. walk: duration 229, cost 0.0. \nfrom Shanghai Hongqiao Station to Shanghai Museum: metro: duration 39, cost 10. taxi: duration 24, cost 67.07. walk: duration 192, cost 0.0. \nfrom Shanghai Hongqiao Station to Renhe Hall (Zhaojiabang Road Branch): metro: duration 31, cost 8. taxi: duration 19, cost 53.95. walk: duration 158, cost 0.0. \nfrom Shanghai Hongqiao Station to Nanjing Road Pedestrian Street: metro: duration 43, cost 10. taxi: duration 25, cost 71.83. walk: duration 205, cost 0.0. \nfrom Shanghai Hongqiao Station to Shanghai Pudong Airport Chuansha Subway Station Atour Hotel: metro: duration 76, cost 14. taxi: duration 54, cost 157.48. walk: duration 434, cost 0.0. \nfrom Shanghai Hongqiao Station to Oriental Pearl Tower: metro: duration 47, cost 10. taxi: duration 27, cost 78.55. walk: duration 223, cost 0.0. \nfrom Shanghai Hongqiao Station to Lujiazui: metro: duration 42, cost 10. taxi: duration 28, cost 80.33. walk: duration 228, cost 0.0. \nfrom Shanghai Hongqiao Station to Huangpu River Cruise (Shiliupu Wharf): metro: duration 43, cost 10. taxi: duration 27, cost 76.27. walk: duration 217, cost 0.0. \nfrom Shanghai Hongqiao Station to Shanghai Wang Bao He Grand Hotel · Shanghai Restaurant: metro: duration 37, cost 10. taxi: duration 23, cost 66.35. walk: duration 191, cost 0.0. \nfrom Shanghai Hongqiao Station to Shanghai Tower Observation Deck: metro: duration 39, cost 10. taxi: duration 28, cost 80.02. walk: duration 227, cost 0.0. \nfrom Shanghai Hongqiao Station to Shanghai Best Boutique Hotel: metro: duration 142, cost 16. taxi: duration 57, cost 168.63. walk: duration 463, cost 0.0. \nfrom Shanghai Hongqiao Station to Zhujiajiao Ancient Town Scenic Area: metro: duration 80, cost 12. taxi: duration 39, cost 112.79. walk: duration 314, cost 0.0. \nfrom Shanghai Hongqiao Station to Yu Garden: metro: duration 45, cost 10. taxi: duration 26, cost 73.78. walk: duration 210, cost 0.0. \nfrom Shanghai Hongqiao Station to Shanghai Station: metro: duration 32, cost 10. taxi: duration 21, cost 59.11. walk: duration 171, cost 0.0. \nfrom Shanghai Hongqiao Station to Shanghai Ship Hotel: metro: duration 76, cost 14. taxi: duration 48, cost 140.09. walk: duration 387, cost 0.0. \nfrom Shanghai Hongqiao Station to Shanghai Hongqiao Station:  metro: empty.  taxi: empty.  walk: empty. \nfrom Shanghai Hongqiao Station to Shanghai Ocean Aquarium: metro: duration 48, cost 10. taxi: duration 28, cost 79.66. walk: duration 226, cost 0.0. \nfrom Shanghai Hongqiao Station to Shanghai Old Restaurant (Yuyuan Branch): metro: duration 36, cost 10. taxi: duration 24, cost 69.7. walk: duration 199, cost 0.0. \nfrom Shanghai Ocean Aquarium to Xintiandi: metro: duration 18, cost 4. taxi: duration 5, cost 16.57. walk: duration 40, cost 0.0. \nfrom Shanghai Ocean Aquarium to Tianzifang: metro: duration 22, cost 6. taxi: duration 7, cost 21.61. walk: duration 57, cost 0.0. \nfrom Shanghai Ocean Aquarium to Shanghai Natural History Museum: metro: duration 19, cost 4. taxi: duration 5, cost 18.03. walk: duration 45, cost 0.0. \nfrom Shanghai Ocean Aquarium to Nanxiang Steamed Bun Restaurant (Yuyuan Branch): metro: duration 19, cost 4. taxi: duration 4, cost 14.38. walk: duration 33, cost 0.0. \nfrom Shanghai Ocean Aquarium to The Bund: metro: duration 20, cost 4. taxi: duration 1, cost 11.0. walk: duration 13, cost 0.0. \nfrom Shanghai Ocean Aquarium to Oriental Pearl Tower Revolving Restaurant: metro: duration 15, cost 4. taxi: duration 1, cost 11.0. walk: duration 13, cost 0.0. \nfrom Shanghai Ocean Aquarium to Shanghai Pudong International Airport: metro: duration 85, cost 14. taxi: duration 46, cost 135.47. walk: duration 375, cost 0.0. \nfrom Shanghai Ocean Aquarium to Shanghai Disney Resort: metro: duration 58, cost 10. taxi: duration 28, cost 80.28. walk: duration 228, cost 0.0. \nfrom Shanghai Ocean Aquarium to Shanghai World Financial Center: metro: duration 15, cost 4. taxi: duration 1, cost 11.0. walk: duration 9, cost 0.0. \nfrom Shanghai Ocean Aquarium to Shanghai Museum: metro: duration 19, cost 4. taxi: duration 4, cost 14.72. walk: duration 34, cost 0.0. \nfrom Shanghai Ocean Aquarium to Renhe Hall (Zhaojiabang Road Branch): metro: duration 26, cost 6. taxi: duration 10, cost 28.96. walk: duration 83, cost 0.0. \nfrom Shanghai Ocean Aquarium to Nanjing Road Pedestrian Street: metro: duration 23, cost 4. taxi: duration 2, cost 11.0. walk: duration 20, cost 0.0. \nfrom Shanghai Ocean Aquarium to Shanghai Pudong Airport Chuansha Subway Station Atour Hotel: metro: duration 51, cost 10. taxi: duration 28, cost 81.55. walk: duration 231, cost 0.0. \nfrom Shanghai Ocean Aquarium to Oriental Pearl Tower: metro: duration 22, cost 4. taxi: duration 0, cost 11.0. walk: duration 3, cost 0.0. \nfrom Shanghai Ocean Aquarium to Lujiazui: metro: duration 15, cost 4. taxi: duration 1, cost 11.0. walk: duration 8, cost 0.0. \nfrom Shanghai Ocean Aquarium to Huangpu River Cruise (Shiliupu Wharf): metro: duration 18, cost 4. taxi: duration 2, cost 11.0. walk: duration 17, cost 0.0. \nfrom Shanghai Ocean Aquarium to Shanghai Wang Bao He Grand Hotel · Shanghai Restaurant: metro: duration 22, cost 4. taxi: duration 4, cost 15.2. walk: duration 35, cost 0.0. \nfrom Shanghai Ocean Aquarium to Shanghai Tower Observation Deck: metro: duration 12, cost 4. taxi: duration 1, cost 11.0. walk: duration 10, cost 0.0. \nfrom Shanghai Ocean Aquarium to Shanghai Best Boutique Hotel: metro: duration 129, cost 14. taxi: duration 38, cost 108.85. walk: duration 304, cost 0.0. \nfrom Shanghai Ocean Aquarium to Zhujiajiao Ancient Town Scenic Area: metro: duration 126, cost 16. taxi: duration 67, cost 197.74. walk: duration 541, cost 0.0. \nfrom Shanghai Ocean Aquarium to Yu Garden: metro: duration 20, cost 4. taxi: duration 2, cost 11.1. walk: duration 21, cost 0.0. \nfrom Shanghai Ocean Aquarium to Shanghai Station: metro: duration 20, cost 6. taxi: duration 7, cost 22.35. walk: duration 60, cost 0.0. \nfrom Shanghai Ocean Aquarium to Shanghai Ship Hotel: metro: duration 91, cost 14. taxi: duration 52, cost 151.61. walk: duration 418, cost 0.0. \nfrom Shanghai Ocean Aquarium to Shanghai Hongqiao Station: metro: duration 48, cost 10. taxi: duration 28, cost 79.66. walk: duration 226, cost 0.0. \nfrom Shanghai Ocean Aquarium to Shanghai Ocean Aquarium:  metro: empty.  taxi: empty.  walk: empty. \nfrom Shanghai Ocean Aquarium to Shanghai Old Restaurant (Yuyuan Branch): metro: duration 18, cost 4. taxi: duration 4, cost 14.23. walk: duration 32, cost 0.0. \nfrom Shanghai Old Restaurant (Yuyuan Branch) to Xintiandi: metro: duration 6, cost 4. taxi: duration 1, cost 11.0. walk: duration 10, cost 0.0. \nfrom Shanghai Old Restaurant (Yuyuan Branch) to Tianzifang: metro: duration 9, cost 4. taxi: duration 3, cost 12.11. walk: duration 25, cost 0.0. \nfrom Shanghai Old Restaurant (Yuyuan Branch) to Shanghai Natural History Museum: metro: duration 10, cost 4. taxi: duration 3, cost 13.6. walk: duration 30, cost 0.0. \nfrom Shanghai Old Restaurant (Yuyuan Branch) to Nanxiang Steamed Bun Restaurant (Yuyuan Branch): taxi: duration 0, cost 11.0. walk: duration 1, cost 0.0. \nfrom Shanghai Old Restaurant (Yuyuan Branch) to The Bund: metro: duration 14, cost 4. taxi: duration 2, cost 11.21. walk: duration 22, cost 0.0. \nfrom Shanghai Old Restaurant (Yuyuan Branch) to Oriental Pearl Tower Revolving Restaurant: metro: duration 9, cost 4. taxi: duration 2, cost 11.0. walk: duration 19, cost 0.0. \nfrom Shanghai Old Restaurant (Yuyuan Branch) to Shanghai Pudong International Airport: metro: duration 81, cost 14. taxi: duration 48, cost 139.55. walk: duration 386, cost 0.0. \nfrom Shanghai Old Restaurant (Yuyuan Branch) to Shanghai Disney Resort: metro: duration 52, cost 10. taxi: duration 29, cost 81.97. walk: duration 232, cost 0.0. \nfrom Shanghai Old Restaurant (Yuyuan Branch) to Shanghai World Financial Center: metro: duration 11, cost 4. taxi: duration 3, cost 13.9. walk: duration 31, cost 0.0. \nfrom Shanghai Old Restaurant (Yuyuan Branch) to Shanghai Museum: metro: duration 10, cost 4. taxi: duration 1, cost 11.0. walk: duration 12, cost 0.0. \nfrom Shanghai Old Restaurant (Yuyuan Branch) to Renhe Hall (Zhaojiabang Road Branch): metro: duration 13, cost 4. taxi: duration 6, cost 19.5. walk: duration 50, cost 0.0. \nfrom Shanghai Old Restaurant (Yuyuan Branch) to Nanjing Road Pedestrian Street: metro: duration 15, cost 4. taxi: duration 2, cost 11.0. walk: duration 20, cost 0.0. \nfrom Shanghai Old Restaurant (Yuyuan Branch) to Shanghai Pudong Airport Chuansha Subway Station Atour Hotel: metro: duration 47, cost 10. taxi: duration 30, cost 86.38. walk: duration 244, cost 0.0. \nfrom Shanghai Old Restaurant (Yuyuan Branch) to Oriental Pearl Tower: metro: duration 16, cost 4. taxi: duration 3, cost 13.36. walk: duration 29, cost 0.0. \nfrom Shanghai Old Restaurant (Yuyuan Branch) to Lujiazui: metro: duration 11, cost 4. taxi: duration 3, cost 13.57. walk: duration 30, cost 0.0. \nfrom Shanghai Old Restaurant (Yuyuan Branch) to Huangpu River Cruise (Shiliupu Wharf): metro: duration 12, cost 4. taxi: duration 2, cost 11.0. walk: duration 18, cost 0.0. \nfrom Shanghai Old Restaurant (Yuyuan Branch) to Shanghai Wang Bao He Grand Hotel · Shanghai Restaurant: metro: duration 11, cost 4. taxi: duration 1, cost 11.0. walk: duration 14, cost 0.0. \nfrom Shanghai Old Restaurant (Yuyuan Branch) to Shanghai Tower Observation Deck: metro: duration 8, cost 4. taxi: duration 3, cost 13.13. walk: duration 28, cost 0.0. \nfrom Shanghai Old Restaurant (Yuyuan Branch) to Shanghai Best Boutique Hotel: metro: duration 121, cost 14. taxi: duration 38, cost 109.07. walk: duration 304, cost 0.0. \nfrom Shanghai Old Restaurant (Yuyuan Branch) to Zhujiajiao Ancient Town Scenic Area: metro: duration 115, cost 16. taxi: duration 64, cost 187.52. walk: duration 514, cost 0.0. \nfrom Shanghai Old Restaurant (Yuyuan Branch) to Yu Garden: metro: duration 14, cost 4. taxi: duration 1, cost 11.0. walk: duration 11, cost 0.0. \nfrom Shanghai Old Restaurant (Yuyuan Branch) to Shanghai Station: metro: duration 12, cost 4. taxi: duration 6, cost 19.12. walk: duration 49, cost 0.0. \nfrom Shanghai Old Restaurant (Yuyuan Branch) to Shanghai Ship Hotel: metro: duration 79, cost 14. taxi: duration 48, cost 141.52. walk: duration 391, cost 0.0. \nfrom Shanghai Old Restaurant (Yuyuan Branch) to Shanghai Hongqiao Station: metro: duration 36, cost 10. taxi: duration 24, cost 69.7. walk: duration 199, cost 0.0. \nfrom Shanghai Old Restaurant (Yuyuan Branch) to Shanghai Ocean Aquarium: metro: duration 18, cost 4. taxi: duration 4, cost 14.23. walk: duration 32, cost 0.0. \nfrom Shanghai Old Restaurant (Yuyuan Branch) to Shanghai Old Restaurant (Yuyuan Branch):  metro: empty.  taxi: empty.  walk: empty. \n"
+    },
+    "initial_verification": {
+      "commonsense_errors": [
+        "Intercity-transport from destination to origin should provide start and end position.",
+        "Incorrect room_type infomation of accommodation activity, Shanghai Pudong Airport Chuansha Subway Station Atour Hotel in day 1. The room type should be an integer, equaling to the num_bed information of the selected accommodation.",
+        "Incorrect cost infomation of innercity transport in day 1, from Shanghai Station to The Bund, metro. [cost = price * people_number]"
+      ],
+      "personal_constraints": [
+        true,
+        true,
+        false,
+        true,
+        true,
+        true,
+        true,
+        true
+      ],
+      "category_normalization": [
+        {
+          "constraint_index": 4,
+          "category_domain": "transport",
+          "expression": "{'metro'}",
+          "raw_label": "metro",
+          "normalized_label": "metro"
+        },
+        {
+          "constraint_index": 4,
+          "category_domain": "transport",
+          "expression": "innercity_transport_set",
+          "raw_label": "metro",
+          "normalized_label": "metro"
+        },
+        {
+          "constraint_index": 5,
+          "category_domain": "activity",
+          "expression": "activity_type(activity)",
+          "raw_label": "train",
+          "normalized_label": "train"
+        },
+        {
+          "constraint_index": 5,
+          "category_domain": "activity",
+          "expression": "['attraction', 'airplane', 'train']",
+          "raw_label": "attraction",
+          "normalized_label": "attraction"
+        },
+        {
+          "constraint_index": 5,
+          "category_domain": "activity",
+          "expression": "['attraction', 'airplane', 'train']",
+          "raw_label": "airplane",
+          "normalized_label": "airplane"
+        },
+        {
+          "constraint_index": 5,
+          "category_domain": "activity",
+          "expression": "['attraction', 'airplane', 'train']",
+          "raw_label": "train",
+          "normalized_label": "train"
+        },
+        {
+          "constraint_index": 5,
+          "category_domain": "transport",
+          "expression": "innercity_transport_type(activity_transports(activity))",
+          "raw_label": "empty",
+          "normalized_label": "empty"
+        },
+        {
+          "constraint_index": 5,
+          "category_domain": "transport",
+          "expression": "'metro'",
+          "raw_label": "metro",
+          "normalized_label": "metro"
+        },
+        {
+          "constraint_index": 5,
+          "category_domain": "activity",
+          "expression": "activity_type(activity)",
+          "raw_label": "attraction",
+          "normalized_label": "attraction"
+        },
+        {
+          "constraint_index": 5,
+          "category_domain": "activity",
+          "expression": "['attraction', 'airplane', 'train']",
+          "raw_label": "attraction",
+          "normalized_label": "attraction"
+        },
+        {
+          "constraint_index": 5,
+          "category_domain": "activity",
+          "expression": "['attraction', 'airplane', 'train']",
+          "raw_label": "airplane",
+          "normalized_label": "airplane"
+        },
+        {
+          "constraint_index": 5,
+          "category_domain": "activity",
+          "expression": "['attraction', 'airplane', 'train']",
+          "raw_label": "train",
+          "normalized_label": "train"
+        },
+        {
+          "constraint_index": 5,
+          "category_domain": "transport",
+          "expression": "innercity_transport_type(activity_transports(activity))",
+          "raw_label": "metro",
+          "normalized_label": "metro"
+        },
+        {
+          "constraint_index": 5,
+          "category_domain": "transport",
+          "expression": "'metro'",
+          "raw_label": "metro",
+          "normalized_label": "metro"
+        },
+        {
+          "constraint_index": 5,
+          "category_domain": "activity",
+          "expression": "activity_type(activity)",
+          "raw_label": "lunch",
+          "normalized_label": "lunch"
+        },
+        {
+          "constraint_index": 5,
+          "category_domain": "activity",
+          "expression": "['attraction', 'airplane', 'train']",
+          "raw_label": "attraction",
+          "normalized_label": "attraction"
+        },
+        {
+          "constraint_index": 5,
+          "category_domain": "activity",
+          "expression": "['attraction', 'airplane', 'train']",
+          "raw_label": "airplane",
+          "normalized_label": "airplane"
+        },
+        {
+          "constraint_index": 5,
+          "category_domain": "activity",
+          "expression": "['attraction', 'airplane', 'train']",
+          "raw_label": "train",
+          "normalized_label": "train"
+        },
+        {
+          "constraint_index": 5,
+          "category_domain": "transport",
+          "expression": "innercity_transport_type(activity_transports(activity))",
+          "raw_label": "metro",
+          "normalized_label": "metro"
+        },
+        {
+          "constraint_index": 5,
+          "category_domain": "transport",
+          "expression": "'metro'",
+          "raw_label": "metro",
+          "normalized_label": "metro"
+        },
+        {
+          "constraint_index": 5,
+          "category_domain": "activity",
+          "expression": "activity_type(activity)",
+          "raw_label": "attraction",
+          "normalized_label": "attraction"
+        },
+        {
+          "constraint_index": 5,
+          "category_domain": "activity",
+          "expression": "['attraction', 'airplane', 'train']",
+          "raw_label": "attraction",
+          "normalized_label": "attraction"
+        },
+        {
+          "constraint_index": 5,
+          "category_domain": "activity",
+          "expression": "['attraction', 'airplane', 'train']",
+          "raw_label": "airplane",
+          "normalized_label": "airplane"
+        },
+        {
+          "constraint_index": 5,
+          "category_domain": "activity",
+          "expression": "['attraction', 'airplane', 'train']",
+          "raw_label": "train",
+          "normalized_label": "train"
+        },
+        {
+          "constraint_index": 5,
+          "category_domain": "transport",
+          "expression": "innercity_transport_type(activity_transports(activity))",
+          "raw_label": "metro",
+          "normalized_label": "metro"
+        },
+        {
+          "constraint_index": 5,
+          "category_domain": "transport",
+          "expression": "'metro'",
+          "raw_label": "metro",
+          "normalized_label": "metro"
+        },
+        {
+          "constraint_index": 5,
+          "category_domain": "activity",
+          "expression": "activity_type(activity)",
+          "raw_label": "attraction",
+          "normalized_label": "attraction"
+        },
+        {
+          "constraint_index": 5,
+          "category_domain": "activity",
+          "expression": "['attraction', 'airplane', 'train']",
+          "raw_label": "attraction",
+          "normalized_label": "attraction"
+        },
+        {
+          "constraint_index": 5,
+          "category_domain": "activity",
+          "expression": "['attraction', 'airplane', 'train']",
+          "raw_label": "airplane",
+          "normalized_label": "airplane"
+        },
+        {
+          "constraint_index": 5,
+          "category_domain": "activity",
+          "expression": "['attraction', 'airplane', 'train']",
+          "raw_label": "train",
+          "normalized_label": "train"
+        },
+        {
+          "constraint_index": 5,
+          "category_domain": "transport",
+          "expression": "innercity_transport_type(activity_transports(activity))",
+          "raw_label": "metro",
+          "normalized_label": "metro"
+        },
+        {
+          "constraint_index": 5,
+          "category_domain": "transport",
+          "expression": "'metro'",
+          "raw_label": "metro",
+          "normalized_label": "metro"
+        },
+        {
+          "constraint_index": 5,
+          "category_domain": "activity",
+          "expression": "activity_type(activity)",
+          "raw_label": "accommodation",
+          "normalized_label": "accommodation"
+        },
+        {
+          "constraint_index": 5,
+          "category_domain": "activity",
+          "expression": "['attraction', 'airplane', 'train']",
+          "raw_label": "attraction",
+          "normalized_label": "attraction"
+        },
+        {
+          "constraint_index": 5,
+          "category_domain": "activity",
+          "expression": "['attraction', 'airplane', 'train']",
+          "raw_label": "airplane",
+          "normalized_label": "airplane"
+        },
+        {
+          "constraint_index": 5,
+          "category_domain": "activity",
+          "expression": "['attraction', 'airplane', 'train']",
+          "raw_label": "train",
+          "normalized_label": "train"
+        },
+        {
+          "constraint_index": 5,
+          "category_domain": "transport",
+          "expression": "innercity_transport_type(activity_transports(activity))",
+          "raw_label": "metro",
+          "normalized_label": "metro"
+        },
+        {
+          "constraint_index": 5,
+          "category_domain": "transport",
+          "expression": "'metro'",
+          "raw_label": "metro",
+          "normalized_label": "metro"
+        },
+        {
+          "constraint_index": 5,
+          "category_domain": "activity",
+          "expression": "activity_type(activity)",
+          "raw_label": "attraction",
+          "normalized_label": "attraction"
+        },
+        {
+          "constraint_index": 5,
+          "category_domain": "activity",
+          "expression": "['attraction', 'airplane', 'train']",
+          "raw_label": "attraction",
+          "normalized_label": "attraction"
+        },
+        {
+          "constraint_index": 5,
+          "category_domain": "activity",
+          "expression": "['attraction', 'airplane', 'train']",
+          "raw_label": "airplane",
+          "normalized_label": "airplane"
+        },
+        {
+          "constraint_index": 5,
+          "category_domain": "activity",
+          "expression": "['attraction', 'airplane', 'train']",
+          "raw_label": "train",
+          "normalized_label": "train"
+        },
+        {
+          "constraint_index": 5,
+          "category_domain": "transport",
+          "expression": "innercity_transport_type(activity_transports(activity))",
+          "raw_label": "metro",
+          "normalized_label": "metro"
+        },
+        {
+          "constraint_index": 5,
+          "category_domain": "transport",
+          "expression": "'metro'",
+          "raw_label": "metro",
+          "normalized_label": "metro"
+        },
+        {
+          "constraint_index": 5,
+          "category_domain": "activity",
+          "expression": "activity_type(activity)",
+          "raw_label": "lunch",
+          "normalized_label": "lunch"
+        },
+        {
+          "constraint_index": 5,
+          "category_domain": "activity",
+          "expression": "['attraction', 'airplane', 'train']",
+          "raw_label": "attraction",
+          "normalized_label": "attraction"
+        },
+        {
+          "constraint_index": 5,
+          "category_domain": "activity",
+          "expression": "['attraction', 'airplane', 'train']",
+          "raw_label": "airplane",
+          "normalized_label": "airplane"
+        },
+        {
+          "constraint_index": 5,
+          "category_domain": "activity",
+          "expression": "['attraction', 'airplane', 'train']",
+          "raw_label": "train",
+          "normalized_label": "train"
+        },
+        {
+          "constraint_index": 5,
+          "category_domain": "transport",
+          "expression": "innercity_transport_type(activity_transports(activity))",
+          "raw_label": "metro",
+          "normalized_label": "metro"
+        },
+        {
+          "constraint_index": 5,
+          "category_domain": "transport",
+          "expression": "'metro'",
+          "raw_label": "metro",
+          "normalized_label": "metro"
+        },
+        {
+          "constraint_index": 5,
+          "category_domain": "activity",
+          "expression": "activity_type(activity)",
+          "raw_label": "attraction",
+          "normalized_label": "attraction"
+        },
+        {
+          "constraint_index": 5,
+          "category_domain": "activity",
+          "expression": "['attraction', 'airplane', 'train']",
+          "raw_label": "attraction",
+          "normalized_label": "attraction"
+        },
+        {
+          "constraint_index": 5,
+          "category_domain": "activity",
+          "expression": "['attraction', 'airplane', 'train']",
+          "raw_label": "airplane",
+          "normalized_label": "airplane"
+        },
+        {
+          "constraint_index": 5,
+          "category_domain": "activity",
+          "expression": "['attraction', 'airplane', 'train']",
+          "raw_label": "train",
+          "normalized_label": "train"
+        },
+        {
+          "constraint_index": 5,
+          "category_domain": "transport",
+          "expression": "innercity_transport_type(activity_transports(activity))",
+          "raw_label": "metro",
+          "normalized_label": "metro"
+        },
+        {
+          "constraint_index": 5,
+          "category_domain": "transport",
+          "expression": "'metro'",
+          "raw_label": "metro",
+          "normalized_label": "metro"
+        },
+        {
+          "constraint_index": 5,
+          "category_domain": "activity",
+          "expression": "activity_type(activity)",
+          "raw_label": "train",
+          "normalized_label": "train"
+        },
+        {
+          "constraint_index": 5,
+          "category_domain": "activity",
+          "expression": "['attraction', 'airplane', 'train']",
+          "raw_label": "attraction",
+          "normalized_label": "attraction"
+        },
+        {
+          "constraint_index": 5,
+          "category_domain": "activity",
+          "expression": "['attraction', 'airplane', 'train']",
+          "raw_label": "airplane",
+          "normalized_label": "airplane"
+        },
+        {
+          "constraint_index": 5,
+          "category_domain": "activity",
+          "expression": "['attraction', 'airplane', 'train']",
+          "raw_label": "train",
+          "normalized_label": "train"
+        },
+        {
+          "constraint_index": 5,
+          "category_domain": "transport",
+          "expression": "innercity_transport_type(activity_transports(activity))",
+          "raw_label": "metro",
+          "normalized_label": "metro"
+        },
+        {
+          "constraint_index": 5,
+          "category_domain": "transport",
+          "expression": "'metro'",
+          "raw_label": "metro",
+          "normalized_label": "metro"
+        },
+        {
+          "constraint_index": 6,
+          "category_domain": "activity",
+          "expression": "activity_type(activity)",
+          "raw_label": "train",
+          "normalized_label": "train"
+        },
+        {
+          "constraint_index": 6,
+          "category_domain": "activity",
+          "expression": "'accommodation'",
+          "raw_label": "accommodation",
+          "normalized_label": "accommodation"
+        },
+        {
+          "constraint_index": 6,
+          "category_domain": "activity",
+          "expression": "activity_type(activity)",
+          "raw_label": "attraction",
+          "normalized_label": "attraction"
+        },
+        {
+          "constraint_index": 6,
+          "category_domain": "activity",
+          "expression": "'accommodation'",
+          "raw_label": "accommodation",
+          "normalized_label": "accommodation"
+        },
+        {
+          "constraint_index": 6,
+          "category_domain": "activity",
+          "expression": "activity_type(activity)",
+          "raw_label": "lunch",
+          "normalized_label": "lunch"
+        },
+        {
+          "constraint_index": 6,
+          "category_domain": "activity",
+          "expression": "'accommodation'",
+          "raw_label": "accommodation",
+          "normalized_label": "accommodation"
+        },
+        {
+          "constraint_index": 6,
+          "category_domain": "activity",
+          "expression": "activity_type(activity)",
+          "raw_label": "attraction",
+          "normalized_label": "attraction"
+        },
+        {
+          "constraint_index": 6,
+          "category_domain": "activity",
+          "expression": "'accommodation'",
+          "raw_label": "accommodation",
+          "normalized_label": "accommodation"
+        },
+        {
+          "constraint_index": 6,
+          "category_domain": "activity",
+          "expression": "activity_type(activity)",
+          "raw_label": "attraction",
+          "normalized_label": "attraction"
+        },
+        {
+          "constraint_index": 6,
+          "category_domain": "activity",
+          "expression": "'accommodation'",
+          "raw_label": "accommodation",
+          "normalized_label": "accommodation"
+        },
+        {
+          "constraint_index": 6,
+          "category_domain": "activity",
+          "expression": "activity_type(activity)",
+          "raw_label": "accommodation",
+          "normalized_label": "accommodation"
+        },
+        {
+          "constraint_index": 6,
+          "category_domain": "activity",
+          "expression": "'accommodation'",
+          "raw_label": "accommodation",
+          "normalized_label": "accommodation"
+        },
+        {
+          "constraint_index": 6,
+          "category_domain": "activity",
+          "expression": "activity_type(activity)",
+          "raw_label": "attraction",
+          "normalized_label": "attraction"
+        },
+        {
+          "constraint_index": 6,
+          "category_domain": "activity",
+          "expression": "'accommodation'",
+          "raw_label": "accommodation",
+          "normalized_label": "accommodation"
+        },
+        {
+          "constraint_index": 6,
+          "category_domain": "activity",
+          "expression": "activity_type(activity)",
+          "raw_label": "lunch",
+          "normalized_label": "lunch"
+        },
+        {
+          "constraint_index": 6,
+          "category_domain": "activity",
+          "expression": "'accommodation'",
+          "raw_label": "accommodation",
+          "normalized_label": "accommodation"
+        },
+        {
+          "constraint_index": 6,
+          "category_domain": "activity",
+          "expression": "activity_type(activity)",
+          "raw_label": "attraction",
+          "normalized_label": "attraction"
+        },
+        {
+          "constraint_index": 6,
+          "category_domain": "activity",
+          "expression": "'accommodation'",
+          "raw_label": "accommodation",
+          "normalized_label": "accommodation"
+        },
+        {
+          "constraint_index": 6,
+          "category_domain": "activity",
+          "expression": "activity_type(activity)",
+          "raw_label": "train",
+          "normalized_label": "train"
+        },
+        {
+          "constraint_index": 6,
+          "category_domain": "activity",
+          "expression": "'accommodation'",
+          "raw_label": "accommodation",
+          "normalized_label": "accommodation"
+        },
+        {
+          "constraint_index": 7,
+          "category_domain": "activity",
+          "expression": "activity_type(activity)",
+          "raw_label": "train",
+          "normalized_label": "train"
+        },
+        {
+          "constraint_index": 7,
+          "category_domain": "activity",
+          "expression": "'accommodation'",
+          "raw_label": "accommodation",
+          "normalized_label": "accommodation"
+        },
+        {
+          "constraint_index": 7,
+          "category_domain": "activity",
+          "expression": "activity_type(activity)",
+          "raw_label": "attraction",
+          "normalized_label": "attraction"
+        },
+        {
+          "constraint_index": 7,
+          "category_domain": "activity",
+          "expression": "'accommodation'",
+          "raw_label": "accommodation",
+          "normalized_label": "accommodation"
+        },
+        {
+          "constraint_index": 7,
+          "category_domain": "activity",
+          "expression": "activity_type(activity)",
+          "raw_label": "lunch",
+          "normalized_label": "lunch"
+        },
+        {
+          "constraint_index": 7,
+          "category_domain": "activity",
+          "expression": "'accommodation'",
+          "raw_label": "accommodation",
+          "normalized_label": "accommodation"
+        },
+        {
+          "constraint_index": 7,
+          "category_domain": "activity",
+          "expression": "activity_type(activity)",
+          "raw_label": "attraction",
+          "normalized_label": "attraction"
+        },
+        {
+          "constraint_index": 7,
+          "category_domain": "activity",
+          "expression": "'accommodation'",
+          "raw_label": "accommodation",
+          "normalized_label": "accommodation"
+        },
+        {
+          "constraint_index": 7,
+          "category_domain": "activity",
+          "expression": "activity_type(activity)",
+          "raw_label": "attraction",
+          "normalized_label": "attraction"
+        },
+        {
+          "constraint_index": 7,
+          "category_domain": "activity",
+          "expression": "'accommodation'",
+          "raw_label": "accommodation",
+          "normalized_label": "accommodation"
+        },
+        {
+          "constraint_index": 7,
+          "category_domain": "activity",
+          "expression": "activity_type(activity)",
+          "raw_label": "accommodation",
+          "normalized_label": "accommodation"
+        },
+        {
+          "constraint_index": 7,
+          "category_domain": "activity",
+          "expression": "'accommodation'",
+          "raw_label": "accommodation",
+          "normalized_label": "accommodation"
+        },
+        {
+          "constraint_index": 7,
+          "category_domain": "activity",
+          "expression": "activity_type(activity)",
+          "raw_label": "attraction",
+          "normalized_label": "attraction"
+        },
+        {
+          "constraint_index": 7,
+          "category_domain": "activity",
+          "expression": "'accommodation'",
+          "raw_label": "accommodation",
+          "normalized_label": "accommodation"
+        },
+        {
+          "constraint_index": 7,
+          "category_domain": "activity",
+          "expression": "activity_type(activity)",
+          "raw_label": "lunch",
+          "normalized_label": "lunch"
+        },
+        {
+          "constraint_index": 7,
+          "category_domain": "activity",
+          "expression": "'accommodation'",
+          "raw_label": "accommodation",
+          "normalized_label": "accommodation"
+        },
+        {
+          "constraint_index": 7,
+          "category_domain": "activity",
+          "expression": "activity_type(activity)",
+          "raw_label": "attraction",
+          "normalized_label": "attraction"
+        },
+        {
+          "constraint_index": 7,
+          "category_domain": "activity",
+          "expression": "'accommodation'",
+          "raw_label": "accommodation",
+          "normalized_label": "accommodation"
+        },
+        {
+          "constraint_index": 7,
+          "category_domain": "activity",
+          "expression": "activity_type(activity)",
+          "raw_label": "train",
+          "normalized_label": "train"
+        },
+        {
+          "constraint_index": 7,
+          "category_domain": "activity",
+          "expression": "'accommodation'",
+          "raw_label": "accommodation",
+          "normalized_label": "accommodation"
+        },
+        {
+          "constraint_index": 8,
+          "category_domain": "transport",
+          "expression": "innercity_transport_type(activity_transports(activity))",
+          "raw_label": "empty",
+          "normalized_label": "empty"
+        },
+        {
+          "constraint_index": 8,
+          "category_domain": "transport",
+          "expression": "'taxi'",
+          "raw_label": "taxi",
+          "normalized_label": "taxi"
+        },
+        {
+          "constraint_index": 8,
+          "category_domain": "transport",
+          "expression": "innercity_transport_type(activity_transports(activity))",
+          "raw_label": "metro",
+          "normalized_label": "metro"
+        },
+        {
+          "constraint_index": 8,
+          "category_domain": "transport",
+          "expression": "'taxi'",
+          "raw_label": "taxi",
+          "normalized_label": "taxi"
+        },
+        {
+          "constraint_index": 8,
+          "category_domain": "transport",
+          "expression": "innercity_transport_type(activity_transports(activity))",
+          "raw_label": "metro",
+          "normalized_label": "metro"
+        },
+        {
+          "constraint_index": 8,
+          "category_domain": "transport",
+          "expression": "'taxi'",
+          "raw_label": "taxi",
+          "normalized_label": "taxi"
+        },
+        {
+          "constraint_index": 8,
+          "category_domain": "transport",
+          "expression": "innercity_transport_type(activity_transports(activity))",
+          "raw_label": "metro",
+          "normalized_label": "metro"
+        },
+        {
+          "constraint_index": 8,
+          "category_domain": "transport",
+          "expression": "'taxi'",
+          "raw_label": "taxi",
+          "normalized_label": "taxi"
+        },
+        {
+          "constraint_index": 8,
+          "category_domain": "transport",
+          "expression": "innercity_transport_type(activity_transports(activity))",
+          "raw_label": "metro",
+          "normalized_label": "metro"
+        },
+        {
+          "constraint_index": 8,
+          "category_domain": "transport",
+          "expression": "'taxi'",
+          "raw_label": "taxi",
+          "normalized_label": "taxi"
+        },
+        {
+          "constraint_index": 8,
+          "category_domain": "transport",
+          "expression": "innercity_transport_type(activity_transports(activity))",
+          "raw_label": "metro",
+          "normalized_label": "metro"
+        },
+        {
+          "constraint_index": 8,
+          "category_domain": "transport",
+          "expression": "'taxi'",
+          "raw_label": "taxi",
+          "normalized_label": "taxi"
+        },
+        {
+          "constraint_index": 8,
+          "category_domain": "transport",
+          "expression": "innercity_transport_type(activity_transports(activity))",
+          "raw_label": "metro",
+          "normalized_label": "metro"
+        },
+        {
+          "constraint_index": 8,
+          "category_domain": "transport",
+          "expression": "'taxi'",
+          "raw_label": "taxi",
+          "normalized_label": "taxi"
+        },
+        {
+          "constraint_index": 8,
+          "category_domain": "transport",
+          "expression": "innercity_transport_type(activity_transports(activity))",
+          "raw_label": "metro",
+          "normalized_label": "metro"
+        },
+        {
+          "constraint_index": 8,
+          "category_domain": "transport",
+          "expression": "'taxi'",
+          "raw_label": "taxi",
+          "normalized_label": "taxi"
+        },
+        {
+          "constraint_index": 8,
+          "category_domain": "transport",
+          "expression": "innercity_transport_type(activity_transports(activity))",
+          "raw_label": "metro",
+          "normalized_label": "metro"
+        },
+        {
+          "constraint_index": 8,
+          "category_domain": "transport",
+          "expression": "'taxi'",
+          "raw_label": "taxi",
+          "normalized_label": "taxi"
+        },
+        {
+          "constraint_index": 8,
+          "category_domain": "transport",
+          "expression": "innercity_transport_type(activity_transports(activity))",
+          "raw_label": "metro",
+          "normalized_label": "metro"
+        },
+        {
+          "constraint_index": 8,
+          "category_domain": "transport",
+          "expression": "'taxi'",
+          "raw_label": "taxi",
+          "normalized_label": "taxi"
+        }
+      ],
+      "personal_errors": [
+        "Personal constraint 3 failed: total_cost=0 \nfor activity in allactivities(plan):\n    total_cost+=activity_cost(activity)\n    total_cost += innercity_transport_cost(activity_transports(activity))\nresult=(total_cost<=5000)"
+      ],
+      "evaluation_errors": [],
+      "translation_errors": [],
+      "error_info": [
+        "Intercity-transport from destination to origin should provide start and end position.",
+        "Incorrect room_type infomation of accommodation activity, Shanghai Pudong Airport Chuansha Subway Station Atour Hotel in day 1. The room type should be an integer, equaling to the num_bed information of the selected accommodation.",
+        "Incorrect cost infomation of innercity transport in day 1, from Shanghai Station to The Bund, metro. [cost = price * people_number]",
+        "Personal constraint 3 failed: total_cost=0 \nfor activity in allactivities(plan):\n    total_cost+=activity_cost(activity)\n    total_cost += innercity_transport_cost(activity_transports(activity))\nresult=(total_cost<=5000)"
+      ],
+      "passed": false,
+      "translated_plan": {
+        "people_number": 2,
+        "start_city": "Beijing",
+        "target_city": "Shanghai",
+        "itinerary": [
+          {
+            "day": 1,
+            "activities": [
+              {
+                "start_time": "07:00",
+                "end_time": "11:29",
+                "start": "Beijing South Railway Station",
+                "end": "Shanghai Station",
+                "price": 693.75,
+                "cost": 1387.5,
+                "TrainID": "G1",
+                "type": "train",
+                "tickets": 2,
+                "transports": []
+              },
+              {
+                "position": "The Bund",
+                "type": "attraction",
+                "transports": [
+                  {
+                    "start": "Shanghai Station",
+                    "end": "Shanghai Railway Station-Metro Station",
+                    "mode": "walk",
+                    "start_time": "11:29",
+                    "end_time": "11:31",
+                    "cost": 0,
+                    "distance": 0.21,
+                    "price": 0
+                  },
+                  {
+                    "start": "Shanghai Railway Station-Metro Station",
+                    "end": "Lujiazui-Metro Station",
+                    "mode": "metro",
+                    "start_time": "11:31",
+                    "end_time": "11:39",
+                    "cost": 4,
+                    "distance": 4.39,
+                    "price": 3,
+                    "tickets": 2
+                  },
+                  {
+                    "start": "Lujiazui-Metro Station",
+                    "end": "The Bund",
+                    "mode": "walk",
+                    "start_time": "11:39",
+                    "end_time": "11:47",
+                    "cost": 0,
+                    "distance": 0.74,
+                    "price": 0
+                  }
+                ],
+                "price": 0.0,
+                "cost": 0.0,
+                "tickets": 2,
+                "start_time": "12:00",
+                "end_time": "13:30"
+              },
+              {
+                "position": "Shanghai Wang Bao He Grand Hotel · Shanghai Restaurant",
+                "type": "lunch",
+                "transports": [
+                  {
+                    "start": "The Bund",
+                    "end": "Lujiazui-Metro Station",
+                    "mode": "walk",
+                    "start_time": "13:30",
+                    "end_time": "13:38",
+                    "cost": 0,
+                    "distance": 0.74,
+                    "price": 0
+                  },
+                  {
+                    "start": "Lujiazui-Metro Station",
+                    "end": "People's Square-Metro Station",
+                    "mode": "metro",
+                    "start_time": "13:38",
+                    "end_time": "13:43",
+                    "cost": 4,
+                    "distance": 2.65,
+                    "price": 2,
+                    "tickets": 2
+                  },
+                  {
+                    "start": "People's Square-Metro Station",
+                    "end": "Shanghai Wang Bao He Grand Hotel · Shanghai Restaurant",
+                    "mode": "walk",
+                    "start_time": "13:43",
+                    "end_time": "13:49",
+                    "cost": 0,
+                    "distance": 0.55,
+                    "price": 0
+                  }
+                ],
+                "price": 290.0,
+                "cost": 580.0,
+                "start_time": "13:45",
+                "end_time": "14:45"
+              },
+              {
+                "position": "Yu Garden",
+                "type": "attraction",
+                "transports": [
+                  {
+                    "start": "Shanghai Wang Bao He Grand Hotel · Shanghai Restaurant",
+                    "end": "People's Square-Metro Station",
+                    "mode": "walk",
+                    "start_time": "14:45",
+                    "end_time": "14:51",
+                    "cost": 0,
+                    "distance": 0.55,
+                    "price": 0
+                  },
+                  {
+                    "start": "People's Square-Metro Station",
+                    "end": "Lujiazui-Metro Station",
+                    "mode": "metro",
+                    "start_time": "14:51",
+                    "end_time": "14:56",
+                    "cost": 4,
+                    "distance": 2.65,
+                    "price": 2,
+                    "tickets": 2
+                  },
+                  {
+                    "start": "Lujiazui-Metro Station",
+                    "end": "Yu Garden",
+                    "mode": "walk",
+                    "start_time": "14:56",
+                    "end_time": "15:04",
+                    "cost": 0,
+                    "distance": 0.71,
+                    "price": 0
+                  }
+                ],
+                "price": 40.0,
+                "cost": 80.0,
+                "tickets": 2,
+                "start_time": "15:00",
+                "end_time": "16:00"
+              },
+              {
+                "position": "Shanghai Tower Observation Deck",
+                "type": "attraction",
+                "transports": [
+                  {
+                    "start": "Yu Garden",
+                    "end": "Lujiazui-Metro Station",
+                    "mode": "walk",
+                    "start_time": "16:00",
+                    "end_time": "16:08",
+                    "cost": 0,
+                    "distance": 0.71,
+                    "price": 0
+                  },
+                  {
+                    "start": "Lujiazui-Metro Station",
+                    "end": "Pudong South Road-Metro Station",
+                    "mode": "metro",
+                    "start_time": "16:08",
+                    "end_time": "16:09",
+                    "cost": 4,
+                    "distance": 0.98,
+                    "price": 2,
+                    "tickets": 2
+                  },
+                  {
+                    "start": "Pudong South Road-Metro Station",
+                    "end": "Shanghai Tower Observation Deck",
+                    "mode": "walk",
+                    "start_time": "16:09",
+                    "end_time": "16:09",
+                    "cost": 0,
+                    "distance": 0.07,
+                    "price": 0
+                  }
+                ],
+                "price": 180.0,
+                "cost": 360.0,
+                "tickets": 2,
+                "start_time": "16:15",
+                "end_time": "18:15"
+              },
+              {
+                "position": "Shanghai Pudong Airport Chuansha Subway Station Atour Hotel",
+                "type": "accommodation",
+                "transports": [
+                  {
+                    "start": "Shanghai Tower Observation Deck",
+                    "end": "Pudong South Road-Metro Station",
+                    "mode": "walk",
+                    "start_time": "18:15",
+                    "end_time": "18:15",
+                    "cost": 0,
+                    "distance": 0.07,
+                    "price": 0
+                  },
+                  {
+                    "start": "Pudong South Road-Metro Station",
+                    "end": "Chuansha-Metro Station",
+                    "mode": "metro",
+                    "start_time": "18:15",
+                    "end_time": "18:52",
+                    "cost": 10,
+                    "distance": 18.61,
+                    "price": 5,
+                    "tickets": 2
+                  },
+                  {
+                    "start": "Chuansha-Metro Station",
+                    "end": "Shanghai Pudong Airport Chuansha Subway Station Atour Hotel",
+                    "mode": "walk",
+                    "start_time": "18:52",
+                    "end_time": "18:55",
+                    "cost": 0,
+                    "distance": 0.29,
+                    "price": 0
+                  }
+                ],
+                "room_type": 2,
+                "price": 552,
+                "cost": 552,
+                "start_time": "19:00",
+                "end_time": "24:00",
+                "rooms": 1
+              }
+            ]
+          },
+          {
+            "day": 2,
+            "activities": [
+              {
+                "position": "Shanghai Disney Resort",
+                "type": "attraction",
+                "transports": [
+                  {
+                    "start": "Shanghai Pudong Airport Chuansha Subway Station Atour Hotel",
+                    "end": "Chuansha-Metro Station",
+                    "mode": "walk",
+                    "start_time": "08:30",
+                    "end_time": "08:33",
+                    "cost": 0,
+                    "distance": 0.29,
+                    "price": 0
+                  },
+                  {
+                    "start": "Chuansha-Metro Station",
+                    "end": "Disney-Metro Station",
+                    "mode": "metro",
+                    "start_time": "08:33",
+                    "end_time": "08:44",
+                    "cost": 6,
+                    "distance": 5.81,
+                    "price": 3,
+                    "tickets": 2
+                  },
+                  {
+                    "start": "Disney-Metro Station",
+                    "end": "Shanghai Disney Resort",
+                    "mode": "walk",
+                    "start_time": "08:44",
+                    "end_time": "08:54",
+                    "cost": 0,
+                    "distance": 0.87,
+                    "price": 0
+                  }
+                ],
+                "price": 399.0,
+                "cost": 798.0,
+                "tickets": 2,
+                "start_time": "09:00",
+                "end_time": "12:00"
+              },
+              {
+                "position": "Oriental Pearl Tower Revolving Restaurant",
+                "type": "lunch",
+                "transports": [
+                  {
+                    "start": "Shanghai Disney Resort",
+                    "end": "Disney-Metro Station",
+                    "mode": "walk",
+                    "start_time": "12:00",
+                    "end_time": "12:10",
+                    "cost": 0,
+                    "distance": 0.87,
+                    "price": 0
+                  },
+                  {
+                    "start": "Disney-Metro Station",
+                    "end": "Lujiazui-Metro Station",
+                    "mode": "metro",
+                    "start_time": "12:10",
+                    "end_time": "12:48",
+                    "cost": 10,
+                    "distance": 19.12,
+                    "price": 5,
+                    "tickets": 2
+                  },
+                  {
+                    "start": "Lujiazui-Metro Station",
+                    "end": "Oriental Pearl Tower Revolving Restaurant",
+                    "mode": "walk",
+                    "start_time": "12:48",
+                    "end_time": "12:51",
+                    "cost": 0,
+                    "distance": 0.28,
+                    "price": 0
+                  }
+                ],
+                "price": 375.0,
+                "cost": 750.0,
+                "start_time": "13:00",
+                "end_time": "14:00"
+              },
+              {
+                "position": "Nanjing Road Pedestrian Street",
+                "type": "attraction",
+                "transports": [
+                  {
+                    "start": "Oriental Pearl Tower Revolving Restaurant",
+                    "end": "Lujiazui-Metro Station",
+                    "mode": "walk",
+                    "start_time": "14:00",
+                    "end_time": "14:03",
+                    "cost": 0,
+                    "distance": 0.28,
+                    "price": 0
+                  },
+                  {
+                    "start": "Lujiazui-Metro Station",
+                    "end": "Tiantong Road-Metro Station",
+                    "mode": "metro",
+                    "start_time": "14:03",
+                    "end_time": "14:06",
+                    "cost": 4,
+                    "distance": 1.98,
+                    "price": 2,
+                    "tickets": 2
+                  },
+                  {
+                    "start": "Tiantong Road-Metro Station",
+                    "end": "Nanjing Road Pedestrian Street",
+                    "mode": "walk",
+                    "start_time": "14:06",
+                    "end_time": "14:15",
+                    "cost": 0,
+                    "distance": 0.8,
+                    "price": 0
+                  }
+                ],
+                "price": 0.0,
+                "cost": 0.0,
+                "tickets": 2,
+                "start_time": "14:20",
+                "end_time": "15:20"
+              },
+              {
+                "position": "Shanghai Hongqiao Station",
+                "type": "train",
+                "transports": [
+                  {
+                    "start": "Nanjing Road Pedestrian Street",
+                    "end": "Tiantong Road-Metro Station",
+                    "mode": "walk",
+                    "start_time": "15:20",
+                    "end_time": "15:29",
+                    "cost": 0,
+                    "distance": 0.8,
+                    "price": 0
+                  },
+                  {
+                    "start": "Tiantong Road-Metro Station",
+                    "end": "Hongqiao Railway Station-Metro Station",
+                    "mode": "metro",
+                    "start_time": "15:29",
+                    "end_time": "16:02",
+                    "cost": 10,
+                    "distance": 16.52,
+                    "price": 5,
+                    "tickets": 2
+                  },
+                  {
+                    "start": "Hongqiao Railway Station-Metro Station",
+                    "end": "Shanghai Hongqiao Station",
+                    "mode": "walk",
+                    "start_time": "16:02",
+                    "end_time": "16:03",
+                    "cost": 0,
+                    "distance": 0.12,
+                    "price": 0
+                  }
+                ],
+                "start_time": "17:00",
+                "end_time": "21:33",
+                "TrainID": "G24",
+                "price": 693.75,
+                "cost": 1387.5,
+                "tickets": 2
+              }
+            ]
+          }
+        ]
+      },
+      "verifier_errors": [],
+      "schema_errors": [],
+      "translation_failures": []
+    },
+    "environment_context": {
+      "lang": "en"
+    },
+    "generation_metadata": {
+      "raw_response": "[{\"day\": 1,```json\n[\n    {\n        \"day\": 1,\n        \"activities\": [\n            {\n                \"start_time\": \"07:00\",\n                \"end_time\": \"11:29\",\n                \"start\": \"Beijing South Railway Station\",\n                \"end\": \"Shanghai Station\",\n                \"price\": 693.75,\n                \"cost\": 1387.5,\n                \"TrainID\": \"G1\",\n                \"type\": \"train\",\n                \"tickets\": 2,\n                \"transports\": \"empty\"\n            },\n            {\n                \"position\": \"The Bund\",\n                \"type\": \"attraction\",\n                \"transports\": {\n                    \"from\": \"Shanghai Station\",\n                    \"to\": \"The Bund\",\n                    \"mode\": \"metro\",\n                    \"start_time\": \"11:29\",\n                    \"end_time\": \"11:49\",\n                    \"cost\": 4\n                },\n                \"price\": 0.0,\n                \"cost\": 0.0,\n                \"tickets\": 2,\n                \"start_time\": \"12:00\",\n                \"end_time\": \"13:30\"\n            },\n            {\n                \"position\": \"Shanghai Wang Bao He Grand Hotel · Shanghai Restaurant\",\n                \"type\": \"lunch\",\n                \"transports\": {\n                    \"from\": \"The Bund\",\n                    \"to\": \"Shanghai Wang Bao He Grand Hotel · Shanghai Restaurant\",\n                    \"mode\": \"metro\",\n                    \"start_time\": \"13:30\",\n                    \"end_time\": \"13:39\",\n                    \"cost\": 4\n                },\n                \"price\": 290.0,\n                \"cost\": 580.0,\n                \"start_time\": \"13:45\",\n                \"end_time\": \"14:45\"\n            },\n            {\n                \"position\": \"Yu Garden\",\n                \"type\": \"attraction\",\n                \"transports\": {\n                    \"from\": \"Shanghai Wang Bao He Grand Hotel · Shanghai Restaurant\",\n                    \"to\": \"Yu Garden\",\n                    \"mode\": \"metro\",\n                    \"start_time\": \"14:45\",\n                    \"end_time\": \"14:59\",\n                    \"cost\": 4\n                },\n                \"price\": 40.0,\n                \"cost\": 80.0,\n                \"tickets\": 2,\n                \"start_time\": \"15:00\",\n                \"end_time\": \"16:00\"\n            },\n            {\n                \"position\": \"Shanghai Tower Observation Deck\",\n                \"type\": \"attraction\",\n                \"transports\": {\n                    \"from\": \"Yu Garden\",\n                    \"to\": \"Shanghai Tower Observation Deck\",\n                    \"mode\": \"metro\",\n                    \"start_time\": \"16:00\",\n                    \"end_time\": \"16:09\",\n                    \"cost\": 4\n                },\n                \"price\": 180.0,\n                \"cost\": 360.0,\n                \"tickets\": 2,\n                \"start_time\": \"16:15\",\n                \"end_time\": \"18:15\"\n            },\n            {\n                \"position\": \"Shanghai Pudong Airport Chuansha Subway Station Atour Hotel\",\n                \"type\": \"accommodation\",\n                \"transports\": {\n                    \"from\": \"Shanghai Tower Observation Deck\",\n                    \"to\": \"Shanghai Pudong Airport Chuansha Subway Station Atour Hotel\",\n                    \"mode\": \"metro\",\n                    \"start_time\": \"18:15\",\n                    \"end_time\": \"18:55\",\n                    \"cost\": 10\n                },\n                \"room_type\": 2,\n                \"price\": 552,\n                \"cost\": 552,\n                \"start_time\": \"19:00\",\n                \"end_time\": \"24:00\",\n                \"rooms\": 1\n            }\n        ]\n    },\n    {\n        \"day\": 2,\n        \"activities\": [\n            {\n                \"position\": \"Shanghai Disney Resort\",\n                \"type\": \"attraction\",\n                \"transports\": {\n                    \"from\": \"Shanghai Pudong Airport Chuansha Subway Station Atour Hotel\",\n                    \"to\": \"Shanghai Disney Resort\",\n                    \"mode\": \"metro\",\n                    \"start_time\": \"08:30\",\n                    \"end_time\": \"08:54\",\n                    \"cost\": 6\n                },\n                \"price\": 399.0,\n                \"cost\": 798.0,\n                \"tickets\": 2,\n                \"start_time\": \"09:00\",\n                \"end_time\": \"12:00\"\n            },\n            {\n                \"position\": \"Oriental Pearl Tower Revolving Restaurant\",\n                \"type\": \"lunch\",\n                \"transports\": {\n                    \"from\": \"Shanghai Disney Resort\",\n                    \"to\": \"Oriental Pearl Tower Revolving Restaurant\",\n                    \"mode\": \"metro\",\n                    \"start_time\": \"12:00\",\n                    \"end_time\": \"12:51\",\n                    \"cost\": 10\n                },\n                \"price\": 375.0,\n                \"cost\": 750.0,\n                \"start_time\": \"13:00\",\n                \"end_time\": \"14:00\"\n            },\n            {\n                \"position\": \"Nanjing Road Pedestrian Street\",\n                \"type\": \"attraction\",\n                \"transports\": {\n                    \"from\": \"Oriental Pearl Tower Revolving Restaurant\",\n                    \"to\": \"Nanjing Road Pedestrian Street\",\n                    \"mode\": \"metro\",\n                    \"start_time\": \"14:00\",\n                    \"end_time\": \"14:15\",\n                    \"cost\": 4\n                },\n                \"price\": 0.0,\n                \"cost\": 0.0,\n                \"tickets\": 2,\n                \"start_time\": \"14:20\",\n                \"end_time\": \"15:20\"\n            },\n            {\n                \"position\": \"Shanghai Hongqiao Station\",\n                \"type\": \"train\",\n                \"transports\": {\n                    \"from\": \"Nanjing Road Pedestrian Street\",\n                    \"to\": \"Shanghai Hongqiao Station\",\n                    \"mode\": \"metro\",\n                    \"start_time\": \"15:20\",\n                    \"end_time\": \"15:54\",\n                    \"cost\": 10\n                },\n                \"start_time\": \"17:00\",\n                \"end_time\": \"21:33\",\n                \"TrainID\": \"G24\",\n                \"price\": 693.75,\n                \"cost\": 1387.5,\n                \"tickets\": 2\n            }\n        ]\n    }\n]\n```",
+      "input_tokens": 105382,
+      "output_tokens": 1690,
+      "total_tokens": 107072,
+      "model_calls": 6,
+      "failed_model_calls": 0,
+      "elapsed_time_seconds": 50.07848048210144,
+      "llm_inference_time_seconds": 29.1457781791687,
+      "information_collection_time_seconds": 20.93113398551941,
+      "initial_generation_time_s": 50.07894920010585,
+      "initial_generation_tool_calls": 5996,
+      "initial_generation_tool_call_counts_by_type": {
+        "accommodations_select": 1,
+        "attractions_select": 1,
+        "goto": 1950,
+        "intercity_transport_select": 4,
+        "next_page": 139,
+        "poi_lat_lon_search": 3900,
+        "restaurants_select": 1
+      },
+      "shared_initialization_time_s": 50.402437999960966,
+      "shared_initialization_system_metrics": {
+        "tool_call_count": 6059,
+        "successful_tool_call_count": 6059,
+        "failed_tool_call_count": 0,
+        "verification_count": 1,
+        "tool_call_counts_by_type": {
+          "accommodations_select": 2,
+          "attractions_select": 6,
+          "goto": 1968,
+          "intercity_transport_select": 5,
+          "next_page": 139,
+          "poi_lat_lon_search": 3936,
+          "restaurants_select": 3
+        }
+      }
+    }
+  },
+  "initial_plan_hash": "0388d0ee769d2e162bbf027513b58e6c9700a231f8f871c42c048d4edefb9657",
+  "initial_state_hash": "7ea25208bd19de8dae93781ae97a63ff4ea7561e4b552d5f5507f26fefffbcb8"
+}

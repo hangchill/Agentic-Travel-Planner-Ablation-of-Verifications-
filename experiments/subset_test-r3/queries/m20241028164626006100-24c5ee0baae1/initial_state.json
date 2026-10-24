@@ -1,0 +1,1145 @@
+{
+  "run_id": "subset_test-r3",
+  "query_uid": "m20241028164626006100",
+  "state": {
+    "query_uid": "m20241028164626006100",
+    "problem": {
+      "uid": "m20241028164626006100",
+      "tag": "easy",
+      "start_city": "Beijing",
+      "target_city": "Chengdu",
+      "days": 2,
+      "people_number": 1,
+      "limit_rooms": false,
+      "limits_room_type": false,
+      "hard_logic_py": [
+        "result=(day_count(plan)==2)",
+        "result=(people_count(plan)==1)",
+        "result=True\nfor activity in allactivities(plan):\n  if activity_type(activity) in ['attraction', 'airplane', 'train'] and activity_tickets(activity)!=1: result=False\n  if innercity_transport_type(activity_transports(activity))=='metro'and metro_tickets(activity_transports(activity))!=1: result=False",
+        "attraction_type_set=set()\nfor activity in allactivities(plan):\n  if activity_type(activity)=='attraction': attraction_type_set.add(attraction_type(activity, target_city(plan)))\nresult=({'博物馆/纪念馆'}<=attraction_type_set)",
+        "result=True\nfor activity in allactivities(plan):\n  if innercity_transport_type(activity_transports(activity))=='taxi'and taxi_cars(activity_transports(activity))!=1: result=False"
+      ],
+      "nature_language": "Current location: Beijing. I want to travel alone to Chengdu for 2 days and visit some museums or memorials. Please provide me with a travel plan.",
+      "nature_language_en": "Current location: Beijing. I want to travel alone to Chengdu for 2 days and visit some museums or memorials. Please provide me with a travel plan."
+    },
+    "raw_initial_plan": [
+      {
+        "day": 1,
+        "activities": [
+          {
+            "start_time": "07:00",
+            "end_time": "14:33",
+            "start": "Beijing West Railway Station",
+            "end": "Chengdu East Railway Station",
+            "price": 990.94,
+            "cost": 990.94,
+            "TrainID": "G87",
+            "type": "train",
+            "tickets": 1,
+            "transports": "empty"
+          },
+          {
+            "position": "Jinsha Site Museum",
+            "type": "attraction",
+            "transports": {
+              "from": "Chengdu East Railway Station",
+              "to": "Jinsha Site Museum",
+              "mode": "metro",
+              "start_time": "14:33",
+              "end_time": "15:00",
+              "cost": 4
+            },
+            "price": 66.0,
+            "cost": 66.0,
+            "tickets": 1,
+            "start_time": "15:10",
+            "end_time": "17:40"
+          },
+          {
+            "position": "Chen Mapo Tofu (Flagship Store)",
+            "type": "dinner",
+            "transports": {
+              "from": "Jinsha Site Museum",
+              "to": "Chen Mapo Tofu (Flagship Store)",
+              "mode": "metro",
+              "start_time": "17:40",
+              "end_time": "17:56",
+              "cost": 2
+            },
+            "price": 74,
+            "cost": 74,
+            "start_time": "18:00",
+            "end_time": "19:00"
+          },
+          {
+            "position": "Celebrity City Hotel",
+            "type": "accommodation",
+            "transports": {
+              "from": "Chen Mapo Tofu (Flagship Store)",
+              "to": "Celebrity City Hotel",
+              "mode": "metro",
+              "start_time": "19:00",
+              "end_time": "19:07",
+              "cost": 2
+            },
+            "room_type": 2,
+            "price": 353,
+            "cost": 353,
+            "start_time": "19:10",
+            "end_time": "24:00",
+            "rooms": 1
+          }
+        ]
+      },
+      {
+        "day": 2,
+        "activities": [
+          {
+            "position": "Sichuan Museum",
+            "type": "attraction",
+            "transports": {
+              "from": "Celebrity City Hotel",
+              "to": "Sichuan Museum",
+              "mode": "metro",
+              "start_time": "08:00",
+              "end_time": "08:09",
+              "cost": 2
+            },
+            "price": 0.0,
+            "cost": 0.0,
+            "tickets": 1,
+            "start_time": "08:15",
+            "end_time": "10:15"
+          },
+          {
+            "position": "Du Fu Thatched Cottage Museum",
+            "type": "attraction",
+            "transports": {
+              "from": "Sichuan Museum",
+              "to": "Du Fu Thatched Cottage Museum",
+              "mode": "metro",
+              "start_time": "10:15",
+              "end_time": "10:51",
+              "cost": 6
+            },
+            "price": 0.0,
+            "cost": 0.0,
+            "tickets": 1,
+            "start_time": "11:00",
+            "end_time": "13:00"
+          },
+          {
+            "position": "Shu Daxia Hot Pot (Chunxi Branch)",
+            "type": "lunch",
+            "transports": {
+              "from": "Du Fu Thatched Cottage Museum",
+              "to": "Shu Daxia Hot Pot (Chunxi Branch)",
+              "mode": "metro",
+              "start_time": "13:00",
+              "end_time": "13:48",
+              "cost": 7
+            },
+            "price": 109,
+            "cost": 109,
+            "start_time": "13:50",
+            "end_time": "14:50"
+          },
+          {
+            "position": "Chengdu Shuangliu International Airport",
+            "type": "airplane",
+            "transports": {
+              "from": "Shu Daxia Hot Pot (Chunxi Branch)",
+              "to": "Chengdu Shuangliu International Airport",
+              "mode": "metro",
+              "start_time": "14:50",
+              "end_time": "15:36",
+              "cost": 5
+            },
+            "start_time": "16:04",
+            "end_time": "17:55",
+            "FlightID": "FL123",
+            "price": 750.67,
+            "cost": 750.67,
+            "tickets": 1
+          }
+        ]
+      }
+    ],
+    "repair_context": {
+      "go_train_info": "TrainID\tTrainType\tFrom\tTo\tBeginTime\tEndTime\tDuration\tprice\r\nG87\tHigh-speed rail\tBeijing West Railway Station\tChengdu East Railway Station\t07:00\t14:33\t7.55\t990.94\r\n",
+      "go_flight_info": "FlightID\tFrom\tTo\tBeginTime\tEndTime\tDuration\tprice\r\nFL123\tBeijing Daxing International Airport\tChengdu Shuangliu International Airport\t14:10\t16:04\t1.9100000000000001\t750.67\r\nFL127\tBeijing Capital International Airport\tChengdu Shuangliu International Airport\t15:49\t17:43\t1.9100000000000001\t715.52\r\nFL124\tBeijing Capital International Airport\tChengdu Shuangliu International Airport\t15:14\t17:08\t1.9100000000000001\t722.94\r\nFL126\tBeijing Daxing International Airport\tChengdu Shuangliu International Airport\t15:24\t17:18\t1.9100000000000001\t758.9\r\n",
+      "back_train_info": "TrainID\tTrainType\tFrom\tTo\tBeginTime\tEndTime\tDuration\tprice\r\nG90\tHigh-speed rail\tChengdu East Railway Station\tBeijing West Railway Station\t15:00\t22:32\t7.53\t990.94\r\nG388\tHigh-speed rail\tChengdu East Railway Station\tBeijing Fengtai Station\t10:22\t20:00\t9.77\t990.94\r\nG308\tHigh-speed rail\tChengdu East Railway Station\tBeijing West Railway Station\t10:56\t20:20\t9.4\t990.94\r\n",
+      "back_flight_info": "FlightID\tFrom\tTo\tBeginTime\tEndTime\tDuration\tprice\r\nFL420\tChengdu Tianfu International Airport\tBeijing Capital International Airport\t21:12\t23:06\t1.9100000000000001\t721.96\r\nFL416\tChengdu Tianfu International Airport\tBeijing Capital International Airport\t21:16\t23:10\t1.9100000000000001\t773.11\r\n",
+      "attraction_info": "name\ttype\tlat\tlon\topentime\tendtime\tprice\trecommendmintime\trecommendmaxtime\r\nJinsha Site Museum\tMuseum/Memorial Hall\t30.687728\t104.019188\t09:00\t18:00\t66.0\t2.5\t3.0\r\nChengdu Museum\tMuseum/Memorial Hall\t30.663457\t104.070226\t09:00\t17:00\t0.0\t1.0\t1.5\r\nSichuan Museum\tMuseum/Memorial Hall\t30.666735\t104.040142\t09:00\t17:00\t0.0\t2.0\t3.0\r\nChengdu Shu Brocade and Embroidery Museum\tMuseum/Memorial Hall\t30.663515\t104.043405\t09:00\t17:30\t0.0\t1.0\t2.0\r\nSichuan Science and Technology Museum\tMuseum/Memorial Hall\t30.666088\t104.072224\t09:00\t17:00\t0.0\t1.0\t1.5\r\nChengdu Natural History Museum\tMuseum/Memorial Hall\t30.684748\t104.150995\t09:00\t17:00\t20.0\t1.5\t3.0\r\nDu Fu Thatched Cottage Museum\tMuseum/Memorial Hall\t30.666397\t104.034848\t08:30\t19:00\t0.0\t2.0\t3.0\r\nMing Shu Prince Mausoleum Museum\tMuseum/Memorial Hall\t30.649089\t104.195407\t09:00\t17:00\t0.0\t2.5\t3.0\r\nSichuan Live Insect Museum\tMuseum/Memorial Hall\t30.74399\t103.998172\t10:00\t19:00\t78.0\t0.5\t1.0\r\nChina Teddy Bear Museum\tMuseum/Memorial Hall\t30.643965\t103.804057\t10:00\t17:00\t50.0\t1.0\t2.0\r\nChengdu Giant Panda Museum\tMuseum/Memorial Hall\t30.739731\t104.153051\t09:00\t17:00\t0.0\t1.0\t2.0\r\nPanda Science Exploration Museum\tMuseum/Memorial Hall\t30.740535\t104.150393\t07:30\t17:00\t0.0\t0.0\t1.0\r\nSichuan Provincial Library\tMuseum/Memorial Hall\t30.665029\t104.069908\t09:00\t21:00\t0.0\t3.0\t4.0\r\nChengdu Library\tMuseum/Memorial Hall\t30.658928\t104.067196\t09:00\t22:00\t0.0\t2.0\t3.5\r\nShu Opera World (Tianfu Square Branch)\tCultural Landscape\t30.66189\t104.073097\t10:00\t22:00\t0.0\t2.5\t4.0\r\n",
+      "restaurant_info": "name\tlat\tlon\tprice\tcuisine\topentime\tendtime\trecommendedfood\r\nChen Mapo Tofu (Flagship Store)\t30.6627136\t104.0341746\t74.0\tSichuan cuisine\t11:00\t21:00\tChen Mapo Tofu, Chen Mapo Twice-Cooked Pork, Couple's Sliced Beef and Ox Tripe in Chili Sauce, Kung Pao Chicken, Yu-Shiang Shredded Pork, Dan Dan Noodles\r\nGrandma Ye's Bobo Chicken (Taikoo Li Branch)\t30.6510074\t104.0845205\t57.0\tSnacks\t10:30\t21:30\tSpecialty minced pork egg fried rice, signature chicken soup rice, secret recipe beef, fermented glutinous rice poached egg, handmade thin pancakes, old brown sugar cold cake\r\nTongue Party: Sichuan Snack Collection (Taikoo Li Branch)\t30.6510277\t104.080237\t50.0\tSnacks\t11:00\t21:30\tNine-Square Grid 2.0, Cold Spicy Chicken Gizzards, Tea-Smoked Duck with Soy Sauce, Mouth-Watering Chicken, Steamed Beef in Small Bamboo Baskets, Cold Spicy Beef\r\nShu Daxia Hot Pot (Chunxi Branch)\t30.6540734\t104.0760104\t109.0\tHot pot\t11:00\t01:00\tImperial Concubine Beef, Tai Chi Double Slippery, Flower Thousand Bones, Glacier Goose Intestine, Hero Water Buffalo Tripe, Brown Sugar Glutinous Rice Cake\r\nLittle Dragon Turns the Great River · Hot Pot Aesthetics (Chunxi Branch)\t30.652993\t104.0791115\t169.0\tHot pot\t11:00\t23:00\tChunxi Drunken Tripe, Ribeye Beef, Divine Beef, Tai Chi Dual Pepper Beef, Bamboo Fungus Dragon Fish, Dragon Gate Secret Recipe Pork Ribs\r\n",
+      "accommodation_info": "name\tfeaturehoteltype\tlat\tlon\tprice\tnumbed\r\nCelebrity City Hotel\tSauna\t30.654071\t104.06535\t353\t2\r\nElegant Azure Hotel\tButler Service\t30.631369\t104.144984\t367\t1\r\nTraveling With Hotel (Chengdu Financial Global Center)\tSmart Room Control\t30.585958\t104.056659\t288\t1\r\n",
+      "innercity_transport_info": "from Little Dragon Turns the Great River · Hot Pot Aesthetics (Chunxi Branch) to Little Dragon Turns the Great River · Hot Pot Aesthetics (Chunxi Branch):  metro: empty.  taxi: empty.  walk: empty. \nfrom Little Dragon Turns the Great River · Hot Pot Aesthetics (Chunxi Branch) to Shu Opera World (Tianfu Square Branch): metro: duration 8, cost 2. taxi: duration 1, cost 11.0. walk: duration 13, cost 0.0. \nfrom Little Dragon Turns the Great River · Hot Pot Aesthetics (Chunxi Branch) to Jinsha Site Museum: metro: duration 16, cost 3. taxi: duration 10, cost 28.9. walk: duration 82, cost 0.0. \nfrom Little Dragon Turns the Great River · Hot Pot Aesthetics (Chunxi Branch) to Du Fu Thatched Cottage Museum: metro: duration 345, cost 7. taxi: duration 79, cost 232.69. walk: duration 634, cost 0.0. \nfrom Little Dragon Turns the Great River · Hot Pot Aesthetics (Chunxi Branch) to Tongue Party: Sichuan Snack Collection (Taikoo Li Branch): taxi: duration 0, cost 11.0. walk: duration 2, cost 0.0. \nfrom Little Dragon Turns the Great River · Hot Pot Aesthetics (Chunxi Branch) to Chengdu Library: metro: duration 5, cost 2. taxi: duration 1, cost 11.0. walk: duration 15, cost 0.0. \nfrom Little Dragon Turns the Great River · Hot Pot Aesthetics (Chunxi Branch) to Sichuan Provincial Library: metro: duration 10, cost 2. taxi: duration 2, cost 11.0. walk: duration 19, cost 0.0. \nfrom Little Dragon Turns the Great River · Hot Pot Aesthetics (Chunxi Branch) to Elegant Azure Hotel: metro: duration 19, cost 3. taxi: duration 10, cost 28.34. walk: duration 81, cost 0.0. \nfrom Little Dragon Turns the Great River · Hot Pot Aesthetics (Chunxi Branch) to Chengdu Shuangliu International Airport: metro: duration 46, cost 5. taxi: duration 24, cost 66.97. walk: duration 192, cost 0.0. \nfrom Little Dragon Turns the Great River · Hot Pot Aesthetics (Chunxi Branch) to Sichuan Science and Technology Museum: metro: duration 8, cost 2. taxi: duration 2, cost 11.0. walk: duration 19, cost 0.0. \nfrom Little Dragon Turns the Great River · Hot Pot Aesthetics (Chunxi Branch) to Chengdu East Railway Station: metro: duration 13, cost 3. taxi: duration 9, cost 27.08. walk: duration 76, cost 0.0. \nfrom Little Dragon Turns the Great River · Hot Pot Aesthetics (Chunxi Branch) to Traveling With Hotel (Chengdu Financial Global Center): metro: duration 24, cost 3. taxi: duration 11, cost 31.78. walk: duration 92, cost 0.0. \nfrom Little Dragon Turns the Great River · Hot Pot Aesthetics (Chunxi Branch) to Chengdu Giant Panda Museum: metro: duration 67, cost 4. taxi: duration 17, cost 48.45. walk: duration 143, cost 0.0. \nfrom Little Dragon Turns the Great River · Hot Pot Aesthetics (Chunxi Branch) to Ming Shu Prince Mausoleum Museum: metro: duration 710, cost 8. taxi: duration 118, cost 350.38. walk: duration 948, cost 0.0. \nfrom Little Dragon Turns the Great River · Hot Pot Aesthetics (Chunxi Branch) to Grandma Ye's Bobo Chicken (Taikoo Li Branch): metro: duration 6, cost 2. taxi: duration 0, cost 11.0. walk: duration 6, cost 0.0. \nfrom Little Dragon Turns the Great River · Hot Pot Aesthetics (Chunxi Branch) to Chengdu Museum: metro: duration 11, cost 2. taxi: duration 2, cost 11.0. walk: duration 17, cost 0.0. \nfrom Little Dragon Turns the Great River · Hot Pot Aesthetics (Chunxi Branch) to Chengdu Tianfu International Airport: metro: duration 148, cost 9. taxi: duration 80, cost 235.85. walk: duration 643, cost 0.0. \nfrom Little Dragon Turns the Great River · Hot Pot Aesthetics (Chunxi Branch) to Chengdu Shu Brocade and Embroidery Museum: metro: duration 13, cost 3. taxi: duration 5, cost 17.35. walk: duration 43, cost 0.0. \nfrom Little Dragon Turns the Great River · Hot Pot Aesthetics (Chunxi Branch) to Celebrity City Hotel: metro: duration 7, cost 2. taxi: duration 1, cost 11.0. walk: duration 15, cost 0.0. \nfrom Little Dragon Turns the Great River · Hot Pot Aesthetics (Chunxi Branch) to China Teddy Bear Museum: metro: duration 96, cost 6. taxi: duration 39, cost 113.43. walk: duration 316, cost 0.0. \nfrom Little Dragon Turns the Great River · Hot Pot Aesthetics (Chunxi Branch) to Sichuan Live Insect Museum: metro: duration 59, cost 5. taxi: duration 27, cost 75.8. walk: duration 216, cost 0.0. \nfrom Little Dragon Turns the Great River · Hot Pot Aesthetics (Chunxi Branch) to Sichuan Museum: metro: duration 9, cost 3. taxi: duration 6, cost 18.82. walk: duration 48, cost 0.0. \nfrom Little Dragon Turns the Great River · Hot Pot Aesthetics (Chunxi Branch) to Shu Daxia Hot Pot (Chunxi Branch): taxi: duration 0, cost 11.0. walk: duration 3, cost 0.0. \nfrom Little Dragon Turns the Great River · Hot Pot Aesthetics (Chunxi Branch) to Chen Mapo Tofu (Flagship Store): metro: duration 16, cost 2. taxi: duration 6, cost 20.24. walk: duration 53, cost 0.0. \nfrom Little Dragon Turns the Great River · Hot Pot Aesthetics (Chunxi Branch) to Chengdu Natural History Museum: metro: duration 24, cost 3. taxi: duration 11, cost 31.78. walk: duration 92, cost 0.0. \nfrom Little Dragon Turns the Great River · Hot Pot Aesthetics (Chunxi Branch) to Panda Science Exploration Museum: metro: duration 64, cost 4. taxi: duration 17, cost 48.1. walk: duration 142, cost 0.0. \nfrom Shu Opera World (Tianfu Square Branch) to Little Dragon Turns the Great River · Hot Pot Aesthetics (Chunxi Branch): metro: duration 8, cost 2. taxi: duration 1, cost 11.0. walk: duration 13, cost 0.0. \nfrom Shu Opera World (Tianfu Square Branch) to Shu Opera World (Tianfu Square Branch):  metro: empty.  taxi: empty.  walk: empty. \nfrom Shu Opera World (Tianfu Square Branch) to Jinsha Site Museum: metro: duration 18, cost 3. taxi: duration 8, cost 25.37. walk: duration 70, cost 0.0. \nfrom Shu Opera World (Tianfu Square Branch) to Du Fu Thatched Cottage Museum: metro: duration 347, cost 7. taxi: duration 77, cost 228.25. walk: duration 622, cost 0.0. \nfrom Shu Opera World (Tianfu Square Branch) to Tongue Party: Sichuan Snack Collection (Taikoo Li Branch): metro: duration 10, cost 2. taxi: duration 2, cost 11.0. walk: duration 16, cost 0.0. \nfrom Shu Opera World (Tianfu Square Branch) to Chengdu Library: metro: duration 9, cost 2. taxi: duration 0, cost 11.0. walk: duration 7, cost 0.0. \nfrom Shu Opera World (Tianfu Square Branch) to Sichuan Provincial Library: metro: duration 12, cost 2. taxi: duration 0, cost 11.0. walk: duration 5, cost 0.0. \nfrom Shu Opera World (Tianfu Square Branch) to Elegant Azure Hotel: metro: duration 25, cost 3. taxi: duration 11, cost 31.57. walk: duration 92, cost 0.0. \nfrom Shu Opera World (Tianfu Square Branch) to Chengdu Shuangliu International Airport: metro: duration 51, cost 5. taxi: duration 24, cost 68.04. walk: duration 195, cost 0.0. \nfrom Shu Opera World (Tianfu Square Branch) to Sichuan Science and Technology Museum: taxi: duration 0, cost 11.0. walk: duration 5, cost 0.0. \nfrom Shu Opera World (Tianfu Square Branch) to Chengdu East Railway Station: metro: duration 19, cost 3. taxi: duration 11, cost 30.44. walk: duration 88, cost 0.0. \nfrom Shu Opera World (Tianfu Square Branch) to Traveling With Hotel (Chengdu Financial Global Center): metro: duration 30, cost 3. taxi: duration 12, cost 34.68. walk: duration 102, cost 0.0. \nfrom Shu Opera World (Tianfu Square Branch) to Chengdu Giant Panda Museum: metro: duration 69, cost 4. taxi: duration 17, cost 46.62. walk: duration 138, cost 0.0. \nfrom Shu Opera World (Tianfu Square Branch) to Ming Shu Prince Mausoleum Museum: metro: duration 716, cost 8. taxi: duration 117, cost 348.4. walk: duration 943, cost 0.0. \nfrom Shu Opera World (Tianfu Square Branch) to Grandma Ye's Bobo Chicken (Taikoo Li Branch): metro: duration 13, cost 2. taxi: duration 2, cost 11.0. walk: duration 19, cost 0.0. \nfrom Shu Opera World (Tianfu Square Branch) to Chengdu Museum: metro: duration 13, cost 2. taxi: duration 0, cost 11.0. walk: duration 3, cost 0.0. \nfrom Shu Opera World (Tianfu Square Branch) to Chengdu Tianfu International Airport: metro: duration 154, cost 9. taxi: duration 82, cost 240.93. walk: duration 656, cost 0.0. \nfrom Shu Opera World (Tianfu Square Branch) to Chengdu Shu Brocade and Embroidery Museum: metro: duration 15, cost 2. taxi: duration 4, cost 14.68. walk: duration 34, cost 0.0. \nfrom Shu Opera World (Tianfu Square Branch) to Celebrity City Hotel: metro: duration 11, cost 2. taxi: duration 1, cost 11.0. walk: duration 13, cost 0.0. \nfrom Shu Opera World (Tianfu Square Branch) to China Teddy Bear Museum: metro: duration 99, cost 6. taxi: duration 38, cost 111.09. walk: duration 310, cost 0.0. \nfrom Shu Opera World (Tianfu Square Branch) to Sichuan Live Insect Museum: metro: duration 62, cost 5. taxi: duration 25, cost 72.29. walk: duration 206, cost 0.0. \nfrom Shu Opera World (Tianfu Square Branch) to Sichuan Museum: metro: duration 11, cost 2. taxi: duration 4, cost 15.91. walk: duration 38, cost 0.0. \nfrom Shu Opera World (Tianfu Square Branch) to Shu Daxia Hot Pot (Chunxi Branch): metro: duration 11, cost 2. taxi: duration 1, cost 11.0. walk: duration 10, cost 0.0. \nfrom Shu Opera World (Tianfu Square Branch) to Chen Mapo Tofu (Flagship Store): metro: duration 19, cost 2. taxi: duration 5, cost 17.76. walk: duration 44, cost 0.0. \nfrom Shu Opera World (Tianfu Square Branch) to Chengdu Natural History Museum: metro: duration 28, cost 3. taxi: duration 11, cost 32.29. walk: duration 94, cost 0.0. \nfrom Shu Opera World (Tianfu Square Branch) to Panda Science Exploration Museum: metro: duration 66, cost 4. taxi: duration 17, cost 46.18. walk: duration 137, cost 0.0. \nfrom Jinsha Site Museum to Little Dragon Turns the Great River · Hot Pot Aesthetics (Chunxi Branch): metro: duration 16, cost 3. taxi: duration 10, cost 28.9. walk: duration 82, cost 0.0. \nfrom Jinsha Site Museum to Shu Opera World (Tianfu Square Branch): metro: duration 18, cost 3. taxi: duration 8, cost 25.37. walk: duration 70, cost 0.0. \nfrom Jinsha Site Museum to Jinsha Site Museum:  metro: empty.  taxi: empty.  walk: empty. \nfrom Jinsha Site Museum to Du Fu Thatched Cottage Museum: metro: duration 331, cost 6. taxi: duration 68, cost 201.67. walk: duration 551, cost 0.0. \nfrom Jinsha Site Museum to Tongue Party: Sichuan Snack Collection (Taikoo Li Branch): metro: duration 18, cost 3. taxi: duration 10, cost 29.64. walk: duration 85, cost 0.0. \nfrom Jinsha Site Museum to Chengdu Library: metro: duration 14, cost 3. taxi: duration 8, cost 24.3. walk: duration 67, cost 0.0. \nfrom Jinsha Site Museum to Sichuan Provincial Library: metro: duration 16, cost 3. taxi: duration 8, cost 23.86. walk: duration 65, cost 0.0. \nfrom Jinsha Site Museum to Elegant Azure Hotel: metro: duration 33, cost 4. taxi: duration 20, cost 55.81. walk: duration 162, cost 0.0. \nfrom Jinsha Site Museum to Chengdu Shuangliu International Airport: metro: duration 45, cost 5. taxi: duration 23, cost 65.19. walk: duration 187, cost 0.0. \nfrom Jinsha Site Museum to Sichuan Science and Technology Museum: metro: duration 18, cost 3. taxi: duration 8, cost 24.37. walk: duration 67, cost 0.0. \nfrom Jinsha Site Museum to Chengdu East Railway Station: metro: duration 27, cost 4. taxi: duration 19, cost 54.38. walk: duration 159, cost 0.0. \nfrom Jinsha Site Museum to Traveling With Hotel (Chengdu Financial Global Center): metro: duration 31, cost 4. taxi: duration 17, cost 47.98. walk: duration 142, cost 0.0. \nfrom Jinsha Site Museum to Chengdu Giant Panda Museum: metro: duration 67, cost 4. taxi: duration 21, cost 57.97. walk: duration 168, cost 0.0. \nfrom Jinsha Site Museum to Ming Shu Prince Mausoleum Museum: metro: duration 709, cost 8. taxi: duration 110, cost 327.58. walk: duration 887, cost 0.0. \nfrom Jinsha Site Museum to Grandma Ye's Bobo Chicken (Taikoo Li Branch): metro: duration 20, cost 3. taxi: duration 11, cost 30.84. walk: duration 89, cost 0.0. \nfrom Jinsha Site Museum to Chengdu Museum: metro: duration 17, cost 3. taxi: duration 8, cost 24.24. walk: duration 66, cost 0.0. \nfrom Jinsha Site Museum to Chengdu Tianfu International Airport: metro: duration 161, cost 9. taxi: duration 90, cost 265.8. walk: duration 722, cost 0.0. \nfrom Jinsha Site Museum to Chengdu Shu Brocade and Embroidery Museum: metro: duration 11, cost 2. taxi: duration 5, cost 17.12. walk: duration 42, cost 0.0. \nfrom Jinsha Site Museum to Celebrity City Hotel: metro: duration 16, cost 3. taxi: duration 8, cost 24.96. walk: duration 69, cost 0.0. \nfrom Jinsha Site Museum to China Teddy Bear Museum: metro: duration 84, cost 5. taxi: duration 31, cost 90.01. walk: duration 254, cost 0.0. \nfrom Jinsha Site Museum to Sichuan Live Insect Museum: metro: duration 48, cost 4. taxi: duration 17, cost 47.57. walk: duration 140, cost 0.0. \nfrom Jinsha Site Museum to Sichuan Museum: metro: duration 7, cost 2. taxi: duration 4, cost 15.46. walk: duration 36, cost 0.0. \nfrom Jinsha Site Museum to Shu Daxia Hot Pot (Chunxi Branch): metro: duration 19, cost 3. taxi: duration 9, cost 27.8. walk: duration 79, cost 0.0. \nfrom Jinsha Site Museum to Chen Mapo Tofu (Flagship Store): metro: duration 16, cost 2. taxi: duration 4, cost 15.63. walk: duration 37, cost 0.0. \nfrom Jinsha Site Museum to Chengdu Natural History Museum: metro: duration 34, cost 4. taxi: duration 18, cost 51.55. walk: duration 151, cost 0.0. \nfrom Jinsha Site Museum to Panda Science Exploration Museum: metro: duration 64, cost 4. taxi: duration 20, cost 57.09. walk: duration 166, cost 0.0. \nfrom Du Fu Thatched Cottage Museum to Little Dragon Turns the Great River · Hot Pot Aesthetics (Chunxi Branch): metro: duration 345, cost 7. taxi: duration 79, cost 232.69. walk: duration 634, cost 0.0. \nfrom Du Fu Thatched Cottage Museum to Shu Opera World (Tianfu Square Branch): metro: duration 347, cost 7. taxi: duration 77, cost 228.25. walk: duration 622, cost 0.0. \nfrom Du Fu Thatched Cottage Museum to Jinsha Site Museum: metro: duration 331, cost 6. taxi: duration 68, cost 201.67. walk: duration 551, cost 0.0. \nfrom Du Fu Thatched Cottage Museum to Du Fu Thatched Cottage Museum:  metro: empty.  taxi: empty.  walk: empty. \nfrom Du Fu Thatched Cottage Museum to Tongue Party: Sichuan Snack Collection (Taikoo Li Branch): metro: duration 347, cost 7. taxi: duration 79, cost 233.6. walk: duration 637, cost 0.0. \nfrom Du Fu Thatched Cottage Museum to Chengdu Library: metro: duration 343, cost 7. taxi: duration 77, cost 226.76. walk: duration 618, cost 0.0. \nfrom Du Fu Thatched Cottage Museum to Sichuan Provincial Library: metro: duration 345, cost 6. taxi: duration 77, cost 226.29. walk: duration 617, cost 0.0. \nfrom Du Fu Thatched Cottage Museum to Elegant Azure Hotel: metro: duration 362, cost 7. taxi: duration 89, cost 262.76. walk: duration 714, cost 0.0. \nfrom Du Fu Thatched Cottage Museum to Chengdu Shuangliu International Airport: metro: duration 351, cost 6. taxi: duration 74, cost 218.63. walk: duration 597, cost 0.0. \nfrom Du Fu Thatched Cottage Museum to Sichuan Science and Technology Museum: metro: duration 347, cost 7. taxi: duration 77, cost 226.91. walk: duration 619, cost 0.0. \nfrom Du Fu Thatched Cottage Museum to Chengdu East Railway Station: metro: duration 356, cost 7. taxi: duration 88, cost 261.35. walk: duration 711, cost 0.0. \nfrom Du Fu Thatched Cottage Museum to Traveling With Hotel (Chengdu Financial Global Center): metro: duration 354, cost 7. taxi: duration 82, cost 243.17. walk: duration 662, cost 0.0. \nfrom Du Fu Thatched Cottage Museum to Chengdu Giant Panda Museum: metro: duration 391, cost 7. taxi: duration 83, cost 244.68. walk: duration 666, cost 0.0. \nfrom Du Fu Thatched Cottage Museum to Ming Shu Prince Mausoleum Museum: metro: duration 993, cost 8. taxi: duration 72, cost 213.7. walk: duration 583, cost 0.0. \nfrom Du Fu Thatched Cottage Museum to Grandma Ye's Bobo Chicken (Taikoo Li Branch): metro: duration 350, cost 7. taxi: duration 80, cost 235.21. walk: duration 641, cost 0.0. \nfrom Du Fu Thatched Cottage Museum to Chengdu Museum: metro: duration 346, cost 6. taxi: duration 77, cost 226.79. walk: duration 618, cost 0.0. \nfrom Du Fu Thatched Cottage Museum to Chengdu Tianfu International Airport: metro: duration 488, cost 11.0. taxi: duration 157, cost 465.9. walk: duration 1256, cost 0.0. \nfrom Du Fu Thatched Cottage Museum to Chengdu Shu Brocade and Embroidery Museum: metro: duration 340, cost 6. taxi: duration 74, cost 216.73. walk: duration 592, cost 0.0. \nfrom Du Fu Thatched Cottage Museum to Celebrity City Hotel: metro: duration 345, cost 7. taxi: duration 77, cost 227.28. walk: duration 620, cost 0.0. \nfrom Du Fu Thatched Cottage Museum to China Teddy Bear Museum: metro: duration 348, cost 4. taxi: duration 50, cost 145.42. walk: duration 401, cost 0.0. \nfrom Du Fu Thatched Cottage Museum to Sichuan Live Insect Museum: metro: duration 332, cost 4. taxi: duration 53, cost 156.05. walk: duration 430, cost 0.0. \nfrom Du Fu Thatched Cottage Museum to Sichuan Museum: metro: duration 336, cost 6. taxi: duration 73, cost 214.71. walk: duration 586, cost 0.0. \nfrom Du Fu Thatched Cottage Museum to Shu Daxia Hot Pot (Chunxi Branch): metro: duration 348, cost 7. taxi: duration 78, cost 231.26. walk: duration 630, cost 0.0. \nfrom Du Fu Thatched Cottage Museum to Chen Mapo Tofu (Flagship Store): metro: duration 344, cost 6. taxi: duration 72, cost 213.52. walk: duration 583, cost 0.0. \nfrom Du Fu Thatched Cottage Museum to Chengdu Natural History Museum: metro: duration 364, cost 7. taxi: duration 86, cost 253.4. walk: duration 689, cost 0.0. \nfrom Du Fu Thatched Cottage Museum to Panda Science Exploration Museum: metro: duration 388, cost 7. taxi: duration 82, cost 243.46. walk: duration 663, cost 0.0. \nfrom Tongue Party: Sichuan Snack Collection (Taikoo Li Branch) to Little Dragon Turns the Great River · Hot Pot Aesthetics (Chunxi Branch): taxi: duration 0, cost 11.0. walk: duration 2, cost 0.0. \nfrom Tongue Party: Sichuan Snack Collection (Taikoo Li Branch) to Shu Opera World (Tianfu Square Branch): metro: duration 10, cost 2. taxi: duration 2, cost 11.0. walk: duration 16, cost 0.0. \nfrom Tongue Party: Sichuan Snack Collection (Taikoo Li Branch) to Jinsha Site Museum: metro: duration 18, cost 3. taxi: duration 10, cost 29.64. walk: duration 85, cost 0.0. \nfrom Tongue Party: Sichuan Snack Collection (Taikoo Li Branch) to Du Fu Thatched Cottage Museum: metro: duration 347, cost 7. taxi: duration 79, cost 233.6. walk: duration 637, cost 0.0. \nfrom Tongue Party: Sichuan Snack Collection (Taikoo Li Branch) to Tongue Party: Sichuan Snack Collection (Taikoo Li Branch):  metro: empty.  taxi: empty.  walk: empty. \nfrom Tongue Party: Sichuan Snack Collection (Taikoo Li Branch) to Chengdu Library: metro: duration 7, cost 2. taxi: duration 2, cost 11.0. walk: duration 18, cost 0.0. \nfrom Tongue Party: Sichuan Snack Collection (Taikoo Li Branch) to Sichuan Provincial Library: metro: duration 12, cost 2. taxi: duration 2, cost 11.14. walk: duration 22, cost 0.0. \nfrom Tongue Party: Sichuan Snack Collection (Taikoo Li Branch) to Elegant Azure Hotel: metro: duration 21, cost 3. taxi: duration 9, cost 27.72. walk: duration 78, cost 0.0. \nfrom Tongue Party: Sichuan Snack Collection (Taikoo Li Branch) to Chengdu Shuangliu International Airport: metro: duration 48, cost 5. taxi: duration 24, cost 66.71. walk: duration 192, cost 0.0. \nfrom Tongue Party: Sichuan Snack Collection (Taikoo Li Branch) to Sichuan Science and Technology Museum: metro: duration 10, cost 2. taxi: duration 2, cost 11.13. walk: duration 22, cost 0.0. \nfrom Tongue Party: Sichuan Snack Collection (Taikoo Li Branch) to Chengdu East Railway Station: metro: duration 15, cost 3. taxi: duration 9, cost 26.43. walk: duration 74, cost 0.0. \nfrom Tongue Party: Sichuan Snack Collection (Taikoo Li Branch) to Traveling With Hotel (Chengdu Financial Global Center): metro: duration 26, cost 3. taxi: duration 11, cost 31.16. walk: duration 90, cost 0.0. \nfrom Tongue Party: Sichuan Snack Collection (Taikoo Li Branch) to Chengdu Giant Panda Museum: metro: duration 69, cost 4. taxi: duration 18, cost 48.96. walk: duration 144, cost 0.0. \nfrom Tongue Party: Sichuan Snack Collection (Taikoo Li Branch) to Ming Shu Prince Mausoleum Museum: metro: duration 712, cost 8. taxi: duration 118, cost 350.73. walk: duration 949, cost 0.0. \nfrom Tongue Party: Sichuan Snack Collection (Taikoo Li Branch) to Grandma Ye's Bobo Chicken (Taikoo Li Branch): metro: duration 8, cost 2. taxi: duration 0, cost 11.0. walk: duration 4, cost 0.0. \nfrom Tongue Party: Sichuan Snack Collection (Taikoo Li Branch) to Chengdu Museum: metro: duration 13, cost 2. taxi: duration 2, cost 11.0. walk: duration 20, cost 0.0. \nfrom Tongue Party: Sichuan Snack Collection (Taikoo Li Branch) to Chengdu Tianfu International Airport: metro: duration 150, cost 9. taxi: duration 80, cost 234.79. walk: duration 640, cost 0.0. \nfrom Tongue Party: Sichuan Snack Collection (Taikoo Li Branch) to Chengdu Shu Brocade and Embroidery Museum: metro: duration 15, cost 3. taxi: duration 5, cost 17.97. walk: duration 45, cost 0.0. \nfrom Tongue Party: Sichuan Snack Collection (Taikoo Li Branch) to Celebrity City Hotel: metro: duration 9, cost 2. taxi: duration 2, cost 11.0. walk: duration 17, cost 0.0. \nfrom Tongue Party: Sichuan Snack Collection (Taikoo Li Branch) to China Teddy Bear Museum: metro: duration 98, cost 6. taxi: duration 39, cost 113.88. walk: duration 317, cost 0.0. \nfrom Tongue Party: Sichuan Snack Collection (Taikoo Li Branch) to Sichuan Live Insect Museum: metro: duration 61, cost 5. taxi: duration 27, cost 76.52. walk: duration 218, cost 0.0. \nfrom Tongue Party: Sichuan Snack Collection (Taikoo Li Branch) to Sichuan Museum: metro: duration 11, cost 3. taxi: duration 6, cost 19.47. walk: duration 50, cost 0.0. \nfrom Tongue Party: Sichuan Snack Collection (Taikoo Li Branch) to Shu Daxia Hot Pot (Chunxi Branch): taxi: duration 0, cost 11.0. walk: duration 6, cost 0.0. \nfrom Tongue Party: Sichuan Snack Collection (Taikoo Li Branch) to Chen Mapo Tofu (Flagship Store): metro: duration 18, cost 2. taxi: duration 6, cost 20.8. walk: duration 55, cost 0.0. \nfrom Tongue Party: Sichuan Snack Collection (Taikoo Li Branch) to Chengdu Natural History Museum: metro: duration 26, cost 3. taxi: duration 11, cost 31.8. walk: duration 92, cost 0.0. \nfrom Tongue Party: Sichuan Snack Collection (Taikoo Li Branch) to Panda Science Exploration Museum: metro: duration 66, cost 4. taxi: duration 17, cost 48.63. walk: duration 143, cost 0.0. \nfrom Chengdu Library to Little Dragon Turns the Great River · Hot Pot Aesthetics (Chunxi Branch): metro: duration 5, cost 2. taxi: duration 1, cost 11.0. walk: duration 15, cost 0.0. \nfrom Chengdu Library to Shu Opera World (Tianfu Square Branch): metro: duration 9, cost 2. taxi: duration 0, cost 11.0. walk: duration 7, cost 0.0. \nfrom Chengdu Library to Jinsha Site Museum: metro: duration 14, cost 3. taxi: duration 8, cost 24.3. walk: duration 67, cost 0.0. \nfrom Chengdu Library to Du Fu Thatched Cottage Museum: metro: duration 343, cost 7. taxi: duration 77, cost 226.76. walk: duration 618, cost 0.0. \nfrom Chengdu Library to Tongue Party: Sichuan Snack Collection (Taikoo Li Branch): metro: duration 7, cost 2. taxi: duration 2, cost 11.0. walk: duration 18, cost 0.0. \nfrom Chengdu Library to Chengdu Library:  metro: empty.  taxi: empty.  walk: empty. \nfrom Chengdu Library to Sichuan Provincial Library: metro: duration 9, cost 2. taxi: duration 1, cost 11.0. walk: duration 8, cost 0.0. \nfrom Chengdu Library to Elegant Azure Hotel: metro: duration 23, cost 3. taxi: duration 12, cost 32.9. walk: duration 96, cost 0.0. \nfrom Chengdu Library to Chengdu Shuangliu International Airport: metro: duration 45, cost 5. taxi: duration 23, cost 65.19. walk: duration 187, cost 0.0. \nfrom Chengdu Library to Sichuan Science and Technology Museum: metro: duration 9, cost 2. taxi: duration 1, cost 11.0. walk: duration 11, cost 0.0. \nfrom Chengdu Library to Chengdu East Railway Station: metro: duration 17, cost 3. taxi: duration 11, cost 31.68. walk: duration 92, cost 0.0. \nfrom Chengdu Library to Traveling With Hotel (Chengdu Financial Global Center): metro: duration 25, cost 3. taxi: duration 12, cost 33.23. walk: duration 97, cost 0.0. \nfrom Chengdu Library to Chengdu Giant Panda Museum: metro: duration 68, cost 4. taxi: duration 18, cost 49.43. walk: duration 145, cost 0.0. \nfrom Chengdu Library to Ming Shu Prince Mausoleum Museum: metro: duration 710, cost 8. taxi: duration 116, cost 345.67. walk: duration 935, cost 0.0. \nfrom Chengdu Library to Grandma Ye's Bobo Chicken (Taikoo Li Branch): metro: duration 10, cost 2. taxi: duration 2, cost 11.27. walk: duration 22, cost 0.0. \nfrom Chengdu Library to Chengdu Museum: metro: duration 10, cost 2. taxi: duration 0, cost 11.0. walk: duration 6, cost 0.0. \nfrom Chengdu Library to Chengdu Tianfu International Airport: metro: duration 151, cost 9. taxi: duration 82, cost 241.41. walk: duration 657, cost 0.0. \nfrom Chengdu Library to Chengdu Shu Brocade and Embroidery Museum: metro: duration 11, cost 2. taxi: duration 3, cost 12.88. walk: duration 28, cost 0.0. \nfrom Chengdu Library to Celebrity City Hotel: taxi: duration 0, cost 11.0. walk: duration 6, cost 0.0. \nfrom Chengdu Library to China Teddy Bear Museum: metro: duration 94, cost 6. taxi: duration 37, cost 108.44. walk: duration 303, cost 0.0. \nfrom Chengdu Library to Sichuan Live Insect Museum: metro: duration 58, cost 5. taxi: duration 25, cost 70.11. walk: duration 201, cost 0.0. \nfrom Chengdu Library to Sichuan Museum: metro: duration 7, cost 2. taxi: duration 4, cost 14.27. walk: duration 32, cost 0.0. \nfrom Chengdu Library to Shu Daxia Hot Pot (Chunxi Branch): metro: duration 8, cost 2. taxi: duration 1, cost 11.0. walk: duration 12, cost 0.0. \nfrom Chengdu Library to Chen Mapo Tofu (Flagship Store): metro: duration 14, cost 2. taxi: duration 4, cost 15.87. walk: duration 38, cost 0.0. \nfrom Chengdu Library to Chengdu Natural History Museum: metro: duration 27, cost 3. taxi: duration 12, cost 34.54. walk: duration 102, cost 0.0. \nfrom Chengdu Library to Panda Science Exploration Museum: metro: duration 65, cost 4. taxi: duration 18, cost 48.96. walk: duration 144, cost 0.0. \nfrom Sichuan Provincial Library to Little Dragon Turns the Great River · Hot Pot Aesthetics (Chunxi Branch): metro: duration 10, cost 2. taxi: duration 2, cost 11.0. walk: duration 19, cost 0.0. \nfrom Sichuan Provincial Library to Shu Opera World (Tianfu Square Branch): metro: duration 12, cost 2. taxi: duration 0, cost 11.0. walk: duration 5, cost 0.0. \nfrom Sichuan Provincial Library to Jinsha Site Museum: metro: duration 16, cost 3. taxi: duration 8, cost 23.86. walk: duration 65, cost 0.0. \nfrom Sichuan Provincial Library to Du Fu Thatched Cottage Museum: metro: duration 345, cost 6. taxi: duration 77, cost 226.29. walk: duration 617, cost 0.0. \nfrom Sichuan Provincial Library to Tongue Party: Sichuan Snack Collection (Taikoo Li Branch): metro: duration 12, cost 2. taxi: duration 2, cost 11.14. walk: duration 22, cost 0.0. \nfrom Sichuan Provincial Library to Chengdu Library: metro: duration 9, cost 2. taxi: duration 1, cost 11.0. walk: duration 8, cost 0.0. \nfrom Sichuan Provincial Library to Sichuan Provincial Library:  metro: empty.  taxi: empty.  walk: empty. \nfrom Sichuan Provincial Library to Elegant Azure Hotel: metro: duration 27, cost 3. taxi: duration 12, cost 33.07. walk: duration 97, cost 0.0. \nfrom Sichuan Provincial Library to Chengdu Shuangliu International Airport: metro: duration 49, cost 5. taxi: duration 24, cost 68.18. walk: duration 195, cost 0.0. \nfrom Sichuan Provincial Library to Sichuan Science and Technology Museum: metro: duration 12, cost 2. taxi: duration 0, cost 11.0. walk: duration 3, cost 0.0. \nfrom Sichuan Provincial Library to Chengdu East Railway Station: metro: duration 21, cost 3. taxi: duration 11, cost 31.98. walk: duration 93, cost 0.0. \nfrom Sichuan Provincial Library to Traveling With Hotel (Chengdu Financial Global Center): metro: duration 30, cost 3. taxi: duration 13, cost 35.7. walk: duration 106, cost 0.0. \nfrom Sichuan Provincial Library to Chengdu Giant Panda Museum: metro: duration 69, cost 4. taxi: duration 17, cost 46.41. walk: duration 137, cost 0.0. \nfrom Sichuan Provincial Library to Ming Shu Prince Mausoleum Museum: metro: duration 715, cost 8. taxi: duration 117, cost 347.26. walk: duration 940, cost 0.0. \nfrom Sichuan Provincial Library to Grandma Ye's Bobo Chicken (Taikoo Li Branch): metro: duration 14, cost 2. taxi: duration 3, cost 12.02. walk: duration 25, cost 0.0. \nfrom Sichuan Provincial Library to Chengdu Museum: taxi: duration 0, cost 11.0. walk: duration 2, cost 0.0. \nfrom Sichuan Provincial Library to Chengdu Tianfu International Airport: metro: duration 156, cost 9. taxi: duration 82, cost 243.01. walk: duration 662, cost 0.0. \nfrom Sichuan Provincial Library to Chengdu Shu Brocade and Embroidery Museum: metro: duration 13, cost 2. taxi: duration 3, cost 13.61. walk: duration 30, cost 0.0. \nfrom Sichuan Provincial Library to Celebrity City Hotel: metro: duration 11, cost 2. taxi: duration 1, cost 11.0. walk: duration 15, cost 0.0. \nfrom Sichuan Provincial Library to China Teddy Bear Museum: metro: duration 97, cost 6. taxi: duration 38, cost 109.84. walk: duration 307, cost 0.0. \nfrom Sichuan Provincial Library to Sichuan Live Insect Museum: metro: duration 60, cost 5. taxi: duration 25, cost 70.64. walk: duration 202, cost 0.0. \nfrom Sichuan Provincial Library to Sichuan Museum: metro: duration 9, cost 2. taxi: duration 4, cost 14.71. walk: duration 34, cost 0.0. \nfrom Sichuan Provincial Library to Shu Daxia Hot Pot (Chunxi Branch): metro: duration 13, cost 2. taxi: duration 2, cost 11.0. walk: duration 16, cost 0.0. \nfrom Sichuan Provincial Library to Chen Mapo Tofu (Flagship Store): metro: duration 17, cost 2. taxi: duration 5, cost 16.72. walk: duration 41, cost 0.0. \nfrom Sichuan Provincial Library to Chengdu Natural History Museum: metro: duration 30, cost 3. taxi: duration 12, cost 32.95. walk: duration 96, cost 0.0. \nfrom Sichuan Provincial Library to Panda Science Exploration Museum: metro: duration 66, cost 4. taxi: duration 17, cost 45.91. walk: duration 136, cost 0.0. \nfrom Elegant Azure Hotel to Little Dragon Turns the Great River · Hot Pot Aesthetics (Chunxi Branch): metro: duration 19, cost 3. taxi: duration 10, cost 28.34. walk: duration 81, cost 0.0. \nfrom Elegant Azure Hotel to Shu Opera World (Tianfu Square Branch): metro: duration 25, cost 3. taxi: duration 11, cost 31.57. walk: duration 92, cost 0.0. \nfrom Elegant Azure Hotel to Jinsha Site Museum: metro: duration 33, cost 4. taxi: duration 20, cost 55.81. walk: duration 162, cost 0.0. \nfrom Elegant Azure Hotel to Du Fu Thatched Cottage Museum: metro: duration 362, cost 7. taxi: duration 89, cost 262.76. walk: duration 714, cost 0.0. \nfrom Elegant Azure Hotel to Tongue Party: Sichuan Snack Collection (Taikoo Li Branch): metro: duration 21, cost 3. taxi: duration 9, cost 27.72. walk: duration 78, cost 0.0. \nfrom Elegant Azure Hotel to Chengdu Library: metro: duration 23, cost 3. taxi: duration 12, cost 32.9. walk: duration 96, cost 0.0. \nfrom Elegant Azure Hotel to Sichuan Provincial Library: metro: duration 27, cost 3. taxi: duration 12, cost 33.07. walk: duration 97, cost 0.0. \nfrom Elegant Azure Hotel to Elegant Azure Hotel:  metro: empty.  taxi: empty.  walk: empty. \nfrom Elegant Azure Hotel to Chengdu Shuangliu International Airport: metro: duration 58, cost 5. taxi: duration 30, cost 85.62. walk: duration 242, cost 0.0. \nfrom Elegant Azure Hotel to Sichuan Science and Technology Museum: metro: duration 25, cost 3. taxi: duration 11, cost 32.58. walk: duration 95, cost 0.0. \nfrom Elegant Azure Hotel to Chengdu East Railway Station: taxi: duration 0, cost 11.0. walk: duration 6, cost 0.0. \nfrom Elegant Azure Hotel to Traveling With Hotel (Chengdu Financial Global Center): metro: duration 33, cost 4. taxi: duration 14, cost 39.19. walk: duration 118, cost 0.0. \nfrom Elegant Azure Hotel to Chengdu Giant Panda Museum: metro: duration 77, cost 4. taxi: duration 18, cost 48.87. walk: duration 144, cost 0.0. \nfrom Elegant Azure Hotel to Ming Shu Prince Mausoleum Museum: metro: duration 721, cost 8. taxi: duration 127, cost 377.46. walk: duration 1020, cost 0.0. \nfrom Elegant Azure Hotel to Grandma Ye's Bobo Chicken (Taikoo Li Branch): metro: duration 20, cost 3. taxi: duration 9, cost 26.37. walk: duration 74, cost 0.0. \nfrom Elegant Azure Hotel to Chengdu Museum: metro: duration 28, cost 3. taxi: duration 12, cost 32.7. walk: duration 96, cost 0.0. \nfrom Elegant Azure Hotel to Chengdu Tianfu International Airport: metro: duration 141, cost 8. taxi: duration 71, cost 210.02. walk: duration 574, cost 0.0. \nfrom Elegant Azure Hotel to Chengdu Shu Brocade and Embroidery Museum: metro: duration 30, cost 4. taxi: duration 15, cost 41.36. walk: duration 124, cost 0.0. \nfrom Elegant Azure Hotel to Celebrity City Hotel: metro: duration 25, cost 3. taxi: duration 12, cost 32.83. walk: duration 96, cost 0.0. \nfrom Elegant Azure Hotel to China Teddy Bear Museum: metro: duration 113, cost 7. taxi: duration 49, cost 141.91. walk: duration 392, cost 0.0. \nfrom Elegant Azure Hotel to Sichuan Live Insect Museum: metro: duration 77, cost 6. taxi: duration 37, cost 106.05. walk: duration 296, cost 0.0. \nfrom Elegant Azure Hotel to Sichuan Museum: metro: duration 26, cost 4. taxi: duration 16, cost 43.24. walk: duration 129, cost 0.0. \nfrom Elegant Azure Hotel to Shu Daxia Hot Pot (Chunxi Branch): metro: duration 22, cost 3. taxi: duration 10, cost 29.46. walk: duration 84, cost 0.0. \nfrom Elegant Azure Hotel to Chen Mapo Tofu (Flagship Store): metro: duration 34, cost 4. taxi: duration 16, cost 44.99. walk: duration 134, cost 0.0. \nfrom Elegant Azure Hotel to Chengdu Natural History Museum: metro: duration 27, cost 3. taxi: duration 8, cost 25.51. walk: duration 71, cost 0.0. \nfrom Elegant Azure Hotel to Panda Science Exploration Museum: metro: duration 74, cost 4. taxi: duration 18, cost 49.21. walk: duration 145, cost 0.0. \nfrom Chengdu Shuangliu International Airport to Little Dragon Turns the Great River · Hot Pot Aesthetics (Chunxi Branch): metro: duration 46, cost 5. taxi: duration 24, cost 66.97. walk: duration 192, cost 0.0. \nfrom Chengdu Shuangliu International Airport to Shu Opera World (Tianfu Square Branch): metro: duration 51, cost 5. taxi: duration 24, cost 68.04. walk: duration 195, cost 0.0. \nfrom Chengdu Shuangliu International Airport to Jinsha Site Museum: metro: duration 45, cost 5. taxi: duration 23, cost 65.19. walk: duration 187, cost 0.0. \nfrom Chengdu Shuangliu International Airport to Du Fu Thatched Cottage Museum: metro: duration 351, cost 6. taxi: duration 74, cost 218.63. walk: duration 597, cost 0.0. \nfrom Chengdu Shuangliu International Airport to Tongue Party: Sichuan Snack Collection (Taikoo Li Branch): metro: duration 48, cost 5. taxi: duration 24, cost 66.71. walk: duration 192, cost 0.0. \nfrom Chengdu Shuangliu International Airport to Chengdu Library: metro: duration 45, cost 5. taxi: duration 23, cost 65.19. walk: duration 187, cost 0.0. \nfrom Chengdu Shuangliu International Airport to Sichuan Provincial Library: metro: duration 49, cost 5. taxi: duration 24, cost 68.18. walk: duration 195, cost 0.0. \nfrom Chengdu Shuangliu International Airport to Elegant Azure Hotel: metro: duration 58, cost 5. taxi: duration 30, cost 85.62. walk: duration 242, cost 0.0. \nfrom Chengdu Shuangliu International Airport to Chengdu Shuangliu International Airport:  metro: empty.  taxi: empty.  walk: empty. \nfrom Chengdu Shuangliu International Airport to Sichuan Science and Technology Museum: metro: duration 51, cost 5. taxi: duration 24, cost 69.26. walk: duration 198, cost 0.0. \nfrom Chengdu Shuangliu International Airport to Chengdu East Railway Station: metro: duration 52, cost 5. taxi: duration 29, cost 83.23. walk: duration 236, cost 0.0. \nfrom Chengdu Shuangliu International Airport to Traveling With Hotel (Chengdu Financial Global Center): metro: duration 41, cost 4. taxi: duration 15, cost 42.0. walk: duration 126, cost 0.0. \nfrom Chengdu Shuangliu International Airport to Chengdu Giant Panda Museum: metro: duration 109, cost 6. taxi: duration 41, cost 119.89. walk: duration 333, cost 0.0. \nfrom Chengdu Shuangliu International Airport to Ming Shu Prince Mausoleum Museum: metro: duration 695, cost 6. taxi: duration 99, cost 292.44. walk: duration 793, cost 0.0. \nfrom Chengdu Shuangliu International Airport to Grandma Ye's Bobo Chicken (Taikoo Li Branch): metro: duration 49, cost 5. taxi: duration 24, cost 68.14. walk: duration 195, cost 0.0. \nfrom Chengdu Shuangliu International Airport to Chengdu Museum: metro: duration 50, cost 5. taxi: duration 24, cost 67.72. walk: duration 194, cost 0.0. \nfrom Chengdu Shuangliu International Airport to Chengdu Tianfu International Airport: metro: duration 168, cost 9. taxi: duration 83, cost 245.27. walk: duration 668, cost 0.0. \nfrom Chengdu Shuangliu International Airport to Chengdu Shu Brocade and Embroidery Museum: metro: duration 45, cost 4. taxi: duration 21, cost 60.15. walk: duration 174, cost 0.0. \nfrom Chengdu Shuangliu International Airport to Celebrity City Hotel: metro: duration 47, cost 5. taxi: duration 22, cost 62.93. walk: duration 181, cost 0.0. \nfrom Chengdu Shuangliu International Airport to China Teddy Bear Museum: metro: duration 95, cost 5. taxi: duration 25, cost 71.15. walk: duration 203, cost 0.0. \nfrom Chengdu Shuangliu International Airport to Sichuan Live Insect Museum: metro: duration 64, cost 4. taxi: duration 23, cost 65.35. walk: duration 188, cost 0.0. \nfrom Chengdu Shuangliu International Airport to Sichuan Museum: metro: duration 41, cost 4. taxi: duration 21, cost 60.61. walk: duration 175, cost 0.0. \nfrom Chengdu Shuangliu International Airport to Shu Daxia Hot Pot (Chunxi Branch): metro: duration 49, cost 5. taxi: duration 23, cost 66.31. walk: duration 190, cost 0.0. \nfrom Chengdu Shuangliu International Airport to Chen Mapo Tofu (Flagship Store): metro: duration 48, cost 4. taxi: duration 20, cost 57.49. walk: duration 167, cost 0.0. \nfrom Chengdu Shuangliu International Airport to Chengdu Natural History Museum: metro: duration 68, cost 6. taxi: duration 35, cost 101.15. walk: duration 283, cost 0.0. \nfrom Chengdu Shuangliu International Airport to Panda Science Exploration Museum: metro: duration 106, cost 6. taxi: duration 41, cost 119.39. walk: duration 332, cost 0.0. \nfrom Sichuan Science and Technology Museum to Little Dragon Turns the Great River · Hot Pot Aesthetics (Chunxi Branch): metro: duration 8, cost 2. taxi: duration 2, cost 11.0. walk: duration 19, cost 0.0. \nfrom Sichuan Science and Technology Museum to Shu Opera World (Tianfu Square Branch): taxi: duration 0, cost 11.0. walk: duration 5, cost 0.0. \nfrom Sichuan Science and Technology Museum to Jinsha Site Museum: metro: duration 18, cost 3. taxi: duration 8, cost 24.37. walk: duration 67, cost 0.0. \nfrom Sichuan Science and Technology Museum to Du Fu Thatched Cottage Museum: metro: duration 347, cost 7. taxi: duration 77, cost 226.91. walk: duration 619, cost 0.0. \nfrom Sichuan Science and Technology Museum to Tongue Party: Sichuan Snack Collection (Taikoo Li Branch): metro: duration 10, cost 2. taxi: duration 2, cost 11.13. walk: duration 22, cost 0.0. \nfrom Sichuan Science and Technology Museum to Chengdu Library: metro: duration 9, cost 2. taxi: duration 1, cost 11.0. walk: duration 11, cost 0.0. \nfrom Sichuan Science and Technology Museum to Sichuan Provincial Library: metro: duration 12, cost 2. taxi: duration 0, cost 11.0. walk: duration 3, cost 0.0. \nfrom Sichuan Science and Technology Museum to Elegant Azure Hotel: metro: duration 25, cost 3. taxi: duration 11, cost 32.58. walk: duration 95, cost 0.0. \nfrom Sichuan Science and Technology Museum to Chengdu Shuangliu International Airport: metro: duration 51, cost 5. taxi: duration 24, cost 69.26. walk: duration 198, cost 0.0. \nfrom Sichuan Science and Technology Museum to Sichuan Science and Technology Museum:  metro: empty.  taxi: empty.  walk: empty. \nfrom Sichuan Science and Technology Museum to Chengdu East Railway Station: metro: duration 19, cost 3. taxi: duration 11, cost 31.53. walk: duration 91, cost 0.0. \nfrom Sichuan Science and Technology Museum to Traveling With Hotel (Chengdu Financial Global Center): metro: duration 30, cost 3. taxi: duration 13, cost 36.23. walk: duration 108, cost 0.0. \nfrom Sichuan Science and Technology Museum to Chengdu Giant Panda Museum: metro: duration 69, cost 4. taxi: duration 16, cost 45.34. walk: duration 135, cost 0.0. \nfrom Sichuan Science and Technology Museum to Ming Shu Prince Mausoleum Museum: metro: duration 716, cost 8. taxi: duration 117, cost 348.33. walk: duration 943, cost 0.0. \nfrom Sichuan Science and Technology Museum to Grandma Ye's Bobo Chicken (Taikoo Li Branch): metro: duration 13, cost 2. taxi: duration 3, cost 11.86. walk: duration 24, cost 0.0. \nfrom Sichuan Science and Technology Museum to Chengdu Museum: metro: duration 13, cost 2. taxi: duration 0, cost 11.0. walk: duration 4, cost 0.0. \nfrom Sichuan Science and Technology Museum to Chengdu Tianfu International Airport: metro: duration 154, cost 9. taxi: duration 82, cost 242.8. walk: duration 661, cost 0.0. \nfrom Sichuan Science and Technology Museum to Chengdu Shu Brocade and Embroidery Museum: metro: duration 15, cost 2. taxi: duration 4, cost 14.42. walk: duration 33, cost 0.0. \nfrom Sichuan Science and Technology Museum to Celebrity City Hotel: metro: duration 11, cost 2. taxi: duration 2, cost 11.0. walk: duration 17, cost 0.0. \nfrom Sichuan Science and Technology Museum to China Teddy Bear Museum: metro: duration 99, cost 6. taxi: duration 38, cost 110.89. walk: duration 309, cost 0.0. \nfrom Sichuan Science and Technology Museum to Sichuan Live Insect Museum: metro: duration 62, cost 5. taxi: duration 25, cost 71.53. walk: duration 204, cost 0.0. \nfrom Sichuan Science and Technology Museum to Sichuan Museum: metro: duration 11, cost 2. taxi: duration 4, cost 15.46. walk: duration 36, cost 0.0. \nfrom Sichuan Science and Technology Museum to Shu Daxia Hot Pot (Chunxi Branch): metro: duration 11, cost 2. taxi: duration 2, cost 11.0. walk: duration 16, cost 0.0. \nfrom Sichuan Science and Technology Museum to Chen Mapo Tofu (Flagship Store): metro: duration 19, cost 2. taxi: duration 5, cost 17.53. walk: duration 43, cost 0.0. \nfrom Sichuan Science and Technology Museum to Chengdu Natural History Museum: metro: duration 28, cost 3. taxi: duration 11, cost 32.09. walk: duration 93, cost 0.0. \nfrom Sichuan Science and Technology Museum to Panda Science Exploration Museum: metro: duration 66, cost 4. taxi: duration 16, cost 44.85. walk: duration 133, cost 0.0. \nfrom Chengdu East Railway Station to Little Dragon Turns the Great River · Hot Pot Aesthetics (Chunxi Branch): metro: duration 13, cost 3. taxi: duration 9, cost 27.08. walk: duration 76, cost 0.0. \nfrom Chengdu East Railway Station to Shu Opera World (Tianfu Square Branch): metro: duration 19, cost 3. taxi: duration 11, cost 30.44. walk: duration 88, cost 0.0. \nfrom Chengdu East Railway Station to Jinsha Site Museum: metro: duration 27, cost 4. taxi: duration 19, cost 54.38. walk: duration 159, cost 0.0. \nfrom Chengdu East Railway Station to Du Fu Thatched Cottage Museum: metro: duration 356, cost 7. taxi: duration 88, cost 261.35. walk: duration 711, cost 0.0. \nfrom Chengdu East Railway Station to Tongue Party: Sichuan Snack Collection (Taikoo Li Branch): metro: duration 15, cost 3. taxi: duration 9, cost 26.43. walk: duration 74, cost 0.0. \nfrom Chengdu East Railway Station to Chengdu Library: metro: duration 17, cost 3. taxi: duration 11, cost 31.68. walk: duration 92, cost 0.0. \nfrom Chengdu East Railway Station to Sichuan Provincial Library: metro: duration 21, cost 3. taxi: duration 11, cost 31.98. walk: duration 93, cost 0.0. \nfrom Chengdu East Railway Station to Elegant Azure Hotel: taxi: duration 0, cost 11.0. walk: duration 6, cost 0.0. \nfrom Chengdu East Railway Station to Chengdu Shuangliu International Airport: metro: duration 52, cost 5. taxi: duration 29, cost 83.23. walk: duration 236, cost 0.0. \nfrom Chengdu East Railway Station to Sichuan Science and Technology Museum: metro: duration 19, cost 3. taxi: duration 11, cost 31.53. walk: duration 91, cost 0.0. \nfrom Chengdu East Railway Station to Chengdu East Railway Station:  metro: empty.  taxi: empty.  walk: empty. \nfrom Chengdu East Railway Station to Traveling With Hotel (Chengdu Financial Global Center): metro: duration 27, cost 4. taxi: duration 13, cost 37.33. walk: duration 111, cost 0.0. \nfrom Chengdu East Railway Station to Chengdu Giant Panda Museum: metro: duration 71, cost 4. taxi: duration 18, cost 50.07. walk: duration 147, cost 0.0. \nfrom Chengdu East Railway Station to Ming Shu Prince Mausoleum Museum: metro: duration 715, cost 8. taxi: duration 126, cost 375.21. walk: duration 1014, cost 0.0. \nfrom Chengdu East Railway Station to Grandma Ye's Bobo Chicken (Taikoo Li Branch): metro: duration 14, cost 3. taxi: duration 8, cost 25.11. walk: duration 69, cost 0.0. \nfrom Chengdu East Railway Station to Chengdu Museum: metro: duration 22, cost 3. taxi: duration 11, cost 31.58. walk: duration 92, cost 0.0. \nfrom Chengdu East Railway Station to Chengdu Tianfu International Airport: metro: duration 135, cost 8. taxi: duration 71, cost 210.46. walk: duration 575, cost 0.0. \nfrom Chengdu East Railway Station to Chengdu Shu Brocade and Embroidery Museum: metro: duration 24, cost 4. taxi: duration 15, cost 39.7. walk: duration 120, cost 0.0. \nfrom Chengdu East Railway Station to Celebrity City Hotel: metro: duration 19, cost 3. taxi: duration 11, cost 31.51. walk: duration 91, cost 0.0. \nfrom Chengdu East Railway Station to China Teddy Bear Museum: metro: duration 107, cost 7. taxi: duration 48, cost 139.78. walk: duration 386, cost 0.0. \nfrom Chengdu East Railway Station to Sichuan Live Insect Museum: metro: duration 71, cost 6. taxi: duration 36, cost 104.25. walk: duration 292, cost 0.0. \nfrom Chengdu East Railway Station to Sichuan Museum: metro: duration 20, cost 4. taxi: duration 15, cost 41.62. walk: duration 125, cost 0.0. \nfrom Chengdu East Railway Station to Shu Daxia Hot Pot (Chunxi Branch): metro: duration 16, cost 3. taxi: duration 10, cost 28.2. walk: duration 80, cost 0.0. \nfrom Chengdu East Railway Station to Chen Mapo Tofu (Flagship Store): metro: duration 28, cost 4. taxi: duration 16, cost 43.27. walk: duration 129, cost 0.0. \nfrom Chengdu East Railway Station to Chengdu Natural History Museum: metro: duration 21, cost 3. taxi: duration 9, cost 26.52. walk: duration 74, cost 0.0. \nfrom Chengdu East Railway Station to Panda Science Exploration Museum: metro: duration 68, cost 4. taxi: duration 18, cost 50.36. walk: duration 148, cost 0.0. \nfrom Traveling With Hotel (Chengdu Financial Global Center) to Little Dragon Turns the Great River · Hot Pot Aesthetics (Chunxi Branch): metro: duration 24, cost 3. taxi: duration 11, cost 31.78. walk: duration 92, cost 0.0. \nfrom Traveling With Hotel (Chengdu Financial Global Center) to Shu Opera World (Tianfu Square Branch): metro: duration 30, cost 3. taxi: duration 12, cost 34.68. walk: duration 102, cost 0.0. \nfrom Traveling With Hotel (Chengdu Financial Global Center) to Jinsha Site Museum: metro: duration 31, cost 4. taxi: duration 17, cost 47.98. walk: duration 142, cost 0.0. \nfrom Traveling With Hotel (Chengdu Financial Global Center) to Du Fu Thatched Cottage Museum: metro: duration 354, cost 7. taxi: duration 82, cost 243.17. walk: duration 662, cost 0.0. \nfrom Traveling With Hotel (Chengdu Financial Global Center) to Tongue Party: Sichuan Snack Collection (Taikoo Li Branch): metro: duration 26, cost 3. taxi: duration 11, cost 31.16. walk: duration 90, cost 0.0. \nfrom Traveling With Hotel (Chengdu Financial Global Center) to Chengdu Library: metro: duration 25, cost 3. taxi: duration 12, cost 33.23. walk: duration 97, cost 0.0. \nfrom Traveling With Hotel (Chengdu Financial Global Center) to Sichuan Provincial Library: metro: duration 30, cost 3. taxi: duration 13, cost 35.7. walk: duration 106, cost 0.0. \nfrom Traveling With Hotel (Chengdu Financial Global Center) to Elegant Azure Hotel: metro: duration 33, cost 4. taxi: duration 14, cost 39.19. walk: duration 118, cost 0.0. \nfrom Traveling With Hotel (Chengdu Financial Global Center) to Chengdu Shuangliu International Airport: metro: duration 41, cost 4. taxi: duration 15, cost 42.0. walk: duration 126, cost 0.0. \nfrom Traveling With Hotel (Chengdu Financial Global Center) to Sichuan Science and Technology Museum: metro: duration 30, cost 3. taxi: duration 13, cost 36.23. walk: duration 108, cost 0.0. \nfrom Traveling With Hotel (Chengdu Financial Global Center) to Chengdu East Railway Station: metro: duration 27, cost 4. taxi: duration 13, cost 37.33. walk: duration 111, cost 0.0. \nfrom Traveling With Hotel (Chengdu Financial Global Center) to Traveling With Hotel (Chengdu Financial Global Center):  metro: empty.  taxi: empty.  walk: empty. \nfrom Traveling With Hotel (Chengdu Financial Global Center) to Chengdu Giant Panda Museum: metro: duration 89, cost 5. taxi: duration 29, cost 81.95. walk: duration 232, cost 0.0. \nfrom Traveling With Hotel (Chengdu Financial Global Center) to Ming Shu Prince Mausoleum Museum: metro: duration 704, cost 7. taxi: duration 114, cost 338.0. walk: duration 915, cost 0.0. \nfrom Traveling With Hotel (Chengdu Financial Global Center) to Grandma Ye's Bobo Chicken (Taikoo Li Branch): metro: duration 26, cost 3. taxi: duration 11, cost 31.62. walk: duration 92, cost 0.0. \nfrom Traveling With Hotel (Chengdu Financial Global Center) to Chengdu Museum: metro: duration 31, cost 3. taxi: duration 13, cost 35.11. walk: duration 104, cost 0.0. \nfrom Traveling With Hotel (Chengdu Financial Global Center) to Chengdu Tianfu International Airport: metro: duration 149, cost 9. taxi: duration 74, cost 218.01. walk: duration 595, cost 0.0. \nfrom Traveling With Hotel (Chengdu Financial Global Center) to Chengdu Shu Brocade and Embroidery Museum: metro: duration 29, cost 3. taxi: duration 13, cost 35.12. walk: duration 104, cost 0.0. \nfrom Traveling With Hotel (Chengdu Financial Global Center) to Celebrity City Hotel: metro: duration 27, cost 3. taxi: duration 11, cost 31.29. walk: duration 91, cost 0.0. \nfrom Traveling With Hotel (Chengdu Financial Global Center) to China Teddy Bear Museum: metro: duration 101, cost 6. taxi: duration 37, cost 107.47. walk: duration 300, cost 0.0. \nfrom Traveling With Hotel (Chengdu Financial Global Center) to Sichuan Live Insect Museum: metro: duration 66, cost 5. taxi: duration 29, cost 81.82. walk: duration 232, cost 0.0. \nfrom Traveling With Hotel (Chengdu Financial Global Center) to Sichuan Museum: metro: duration 25, cost 3. taxi: duration 13, cost 36.53. walk: duration 109, cost 0.0. \nfrom Traveling With Hotel (Chengdu Financial Global Center) to Shu Daxia Hot Pot (Chunxi Branch): metro: duration 27, cost 3. taxi: duration 11, cost 31.92. walk: duration 93, cost 0.0. \nfrom Traveling With Hotel (Chengdu Financial Global Center) to Chen Mapo Tofu (Flagship Store): metro: duration 31, cost 3. taxi: duration 13, cost 35.42. walk: duration 105, cost 0.0. \nfrom Traveling With Hotel (Chengdu Financial Global Center) to Chengdu Natural History Museum: metro: duration 44, cost 4. taxi: duration 21, cost 58.62. walk: duration 170, cost 0.0. \nfrom Traveling With Hotel (Chengdu Financial Global Center) to Panda Science Exploration Museum: metro: duration 86, cost 5. taxi: duration 29, cost 81.77. walk: duration 232, cost 0.0. \nfrom Chengdu Giant Panda Museum to Little Dragon Turns the Great River · Hot Pot Aesthetics (Chunxi Branch): metro: duration 67, cost 4. taxi: duration 17, cost 48.45. walk: duration 143, cost 0.0. \nfrom Chengdu Giant Panda Museum to Shu Opera World (Tianfu Square Branch): metro: duration 69, cost 4. taxi: duration 17, cost 46.62. walk: duration 138, cost 0.0. \nfrom Chengdu Giant Panda Museum to Jinsha Site Museum: metro: duration 67, cost 4. taxi: duration 21, cost 57.97. walk: duration 168, cost 0.0. \nfrom Chengdu Giant Panda Museum to Du Fu Thatched Cottage Museum: metro: duration 391, cost 7. taxi: duration 83, cost 244.68. walk: duration 666, cost 0.0. \nfrom Chengdu Giant Panda Museum to Tongue Party: Sichuan Snack Collection (Taikoo Li Branch): metro: duration 69, cost 4. taxi: duration 18, cost 48.96. walk: duration 144, cost 0.0. \nfrom Chengdu Giant Panda Museum to Chengdu Library: metro: duration 68, cost 4. taxi: duration 18, cost 49.43. walk: duration 145, cost 0.0. \nfrom Chengdu Giant Panda Museum to Sichuan Provincial Library: metro: duration 69, cost 4. taxi: duration 17, cost 46.41. walk: duration 137, cost 0.0. \nfrom Chengdu Giant Panda Museum to Elegant Azure Hotel: metro: duration 77, cost 4. taxi: duration 18, cost 48.87. walk: duration 144, cost 0.0. \nfrom Chengdu Giant Panda Museum to Chengdu Shuangliu International Airport: metro: duration 109, cost 6. taxi: duration 41, cost 119.89. walk: duration 333, cost 0.0. \nfrom Chengdu Giant Panda Museum to Sichuan Science and Technology Museum: metro: duration 69, cost 4. taxi: duration 16, cost 45.34. walk: duration 135, cost 0.0. \nfrom Chengdu Giant Panda Museum to Chengdu East Railway Station: metro: duration 71, cost 4. taxi: duration 18, cost 50.07. walk: duration 147, cost 0.0. \nfrom Chengdu Giant Panda Museum to Traveling With Hotel (Chengdu Financial Global Center): metro: duration 89, cost 5. taxi: duration 29, cost 81.95. walk: duration 232, cost 0.0. \nfrom Chengdu Giant Panda Museum to Chengdu Giant Panda Museum:  metro: empty.  taxi: empty.  walk: empty. \nfrom Chengdu Giant Panda Museum to Ming Shu Prince Mausoleum Museum: metro: duration 774, cost 9. taxi: duration 131, cost 389.4. walk: duration 1052, cost 0.0. \nfrom Chengdu Giant Panda Museum to Grandma Ye's Bobo Chicken (Taikoo Li Branch): metro: duration 71, cost 4. taxi: duration 17, cost 47.92. walk: duration 141, cost 0.0. \nfrom Chengdu Giant Panda Museum to Chengdu Museum: metro: duration 70, cost 4. taxi: duration 17, cost 46.88. walk: duration 139, cost 0.0. \nfrom Chengdu Giant Panda Museum to Chengdu Tianfu International Airport: metro: duration 204, cost 9. taxi: duration 86, cost 254.36. walk: duration 692, cost 0.0. \nfrom Chengdu Giant Panda Museum to Chengdu Shu Brocade and Embroidery Museum: metro: duration 71, cost 4. taxi: duration 20, cost 55.36. walk: duration 161, cost 0.0. \nfrom Chengdu Giant Panda Museum to Celebrity City Hotel: metro: duration 70, cost 4. taxi: duration 19, cost 51.76. walk: duration 152, cost 0.0. \nfrom Chengdu Giant Panda Museum to China Teddy Bear Museum: metro: duration 148, cost 7. taxi: duration 52, cost 152.57. walk: duration 420, cost 0.0. \nfrom Chengdu Giant Panda Museum to Sichuan Live Insect Museum: metro: duration 112, cost 6. taxi: duration 37, cost 107.68. walk: duration 301, cost 0.0. \nfrom Chengdu Giant Panda Museum to Sichuan Museum: metro: duration 67, cost 4. taxi: duration 20, cost 55.49. walk: duration 162, cost 0.0. \nfrom Chengdu Giant Panda Museum to Shu Daxia Hot Pot (Chunxi Branch): metro: duration 70, cost 4. taxi: duration 18, cost 48.82. walk: duration 144, cost 0.0. \nfrom Chengdu Giant Panda Museum to Chen Mapo Tofu (Flagship Store): metro: duration 76, cost 4. taxi: duration 21, cost 58.75. walk: duration 170, cost 0.0. \nfrom Chengdu Giant Panda Museum to Chengdu Natural History Museum: metro: duration 70, cost 3. taxi: duration 9, cost 26.05. walk: duration 73, cost 0.0. \nfrom Chengdu Giant Panda Museum to Panda Science Exploration Museum: taxi: duration 0, cost 11.0. walk: duration 3, cost 0.0. \nfrom Ming Shu Prince Mausoleum Museum to Little Dragon Turns the Great River · Hot Pot Aesthetics (Chunxi Branch): metro: duration 710, cost 8. taxi: duration 118, cost 350.38. walk: duration 948, cost 0.0. \nfrom Ming Shu Prince Mausoleum Museum to Shu Opera World (Tianfu Square Branch): metro: duration 716, cost 8. taxi: duration 117, cost 348.4. walk: duration 943, cost 0.0. \nfrom Ming Shu Prince Mausoleum Museum to Jinsha Site Museum: metro: duration 709, cost 8. taxi: duration 110, cost 327.58. walk: duration 887, cost 0.0. \nfrom Ming Shu Prince Mausoleum Museum to Du Fu Thatched Cottage Museum: metro: duration 993, cost 8. taxi: duration 72, cost 213.7. walk: duration 583, cost 0.0. \nfrom Ming Shu Prince Mausoleum Museum to Tongue Party: Sichuan Snack Collection (Taikoo Li Branch): metro: duration 712, cost 8. taxi: duration 118, cost 350.73. walk: duration 949, cost 0.0. \nfrom Ming Shu Prince Mausoleum Museum to Chengdu Library: metro: duration 710, cost 8. taxi: duration 116, cost 345.67. walk: duration 935, cost 0.0. \nfrom Ming Shu Prince Mausoleum Museum to Sichuan Provincial Library: metro: duration 715, cost 8. taxi: duration 117, cost 347.26. walk: duration 940, cost 0.0. \nfrom Ming Shu Prince Mausoleum Museum to Elegant Azure Hotel: metro: duration 721, cost 8. taxi: duration 127, cost 377.46. walk: duration 1020, cost 0.0. \nfrom Ming Shu Prince Mausoleum Museum to Chengdu Shuangliu International Airport: metro: duration 695, cost 6. taxi: duration 99, cost 292.44. walk: duration 793, cost 0.0. \nfrom Ming Shu Prince Mausoleum Museum to Sichuan Science and Technology Museum: metro: duration 716, cost 8. taxi: duration 117, cost 348.33. walk: duration 943, cost 0.0. \nfrom Ming Shu Prince Mausoleum Museum to Chengdu East Railway Station: metro: duration 715, cost 8. taxi: duration 126, cost 375.21. walk: duration 1014, cost 0.0. \nfrom Ming Shu Prince Mausoleum Museum to Traveling With Hotel (Chengdu Financial Global Center): metro: duration 704, cost 7. taxi: duration 114, cost 338.0. walk: duration 915, cost 0.0. \nfrom Ming Shu Prince Mausoleum Museum to Chengdu Giant Panda Museum: metro: duration 774, cost 9. taxi: duration 131, cost 389.4. walk: duration 1052, cost 0.0. \nfrom Ming Shu Prince Mausoleum Museum to Ming Shu Prince Mausoleum Museum:  metro: empty.  taxi: empty.  walk: empty. \nfrom Ming Shu Prince Mausoleum Museum to Grandma Ye's Bobo Chicken (Taikoo Li Branch): metro: duration 714, cost 8. taxi: duration 119, cost 352.57. walk: duration 954, cost 0.0. \nfrom Ming Shu Prince Mausoleum Museum to Chengdu Museum: metro: duration 716, cost 8. taxi: duration 117, cost 347.28. walk: duration 940, cost 0.0. \nfrom Ming Shu Prince Mausoleum Museum to Chengdu Tianfu International Airport: metro: duration 804, cost 10.0. taxi: duration 175, cost 519.87. walk: duration 1400, cost 0.0. \nfrom Ming Shu Prince Mausoleum Museum to Chengdu Shu Brocade and Embroidery Museum: metro: duration 710, cost 8. taxi: duration 113, cost 335.84. walk: duration 909, cost 0.0. \nfrom Ming Shu Prince Mausoleum Museum to Celebrity City Hotel: metro: duration 712, cost 8. taxi: duration 116, cost 344.56. walk: duration 932, cost 0.0. \nfrom Ming Shu Prince Mausoleum Museum to China Teddy Bear Museum: metro: duration 735, cost 7. taxi: duration 79, cost 232.38. walk: duration 633, cost 0.0. \nfrom Ming Shu Prince Mausoleum Museum to Sichuan Live Insect Museum: metro: duration 716, cost 7. taxi: duration 93, cost 276.44. walk: duration 751, cost 0.0. \nfrom Ming Shu Prince Mausoleum Museum to Sichuan Museum: metro: duration 706, cost 8. taxi: duration 113, cost 334.69. walk: duration 906, cost 0.0. \nfrom Ming Shu Prince Mausoleum Museum to Shu Daxia Hot Pot (Chunxi Branch): metro: duration 713, cost 8. taxi: duration 118, cost 349.12. walk: duration 945, cost 0.0. \nfrom Ming Shu Prince Mausoleum Museum to Chen Mapo Tofu (Flagship Store): metro: duration 713, cost 8. taxi: duration 112, cost 331.85. walk: duration 899, cost 0.0. \nfrom Ming Shu Prince Mausoleum Museum to Chengdu Natural History Museum: metro: duration 732, cost 8. taxi: duration 129, cost 383.31. walk: duration 1036, cost 0.0. \nfrom Ming Shu Prince Mausoleum Museum to Panda Science Exploration Museum: metro: duration 771, cost 9. taxi: duration 131, cost 388.37. walk: duration 1049, cost 0.0. \nfrom Grandma Ye's Bobo Chicken (Taikoo Li Branch) to Little Dragon Turns the Great River · Hot Pot Aesthetics (Chunxi Branch): metro: duration 6, cost 2. taxi: duration 0, cost 11.0. walk: duration 6, cost 0.0. \nfrom Grandma Ye's Bobo Chicken (Taikoo Li Branch) to Shu Opera World (Tianfu Square Branch): metro: duration 13, cost 2. taxi: duration 2, cost 11.0. walk: duration 19, cost 0.0. \nfrom Grandma Ye's Bobo Chicken (Taikoo Li Branch) to Jinsha Site Museum: metro: duration 20, cost 3. taxi: duration 11, cost 30.84. walk: duration 89, cost 0.0. \nfrom Grandma Ye's Bobo Chicken (Taikoo Li Branch) to Du Fu Thatched Cottage Museum: metro: duration 350, cost 7. taxi: duration 80, cost 235.21. walk: duration 641, cost 0.0. \nfrom Grandma Ye's Bobo Chicken (Taikoo Li Branch) to Tongue Party: Sichuan Snack Collection (Taikoo Li Branch): metro: duration 8, cost 2. taxi: duration 0, cost 11.0. walk: duration 4, cost 0.0. \nfrom Grandma Ye's Bobo Chicken (Taikoo Li Branch) to Chengdu Library: metro: duration 10, cost 2. taxi: duration 2, cost 11.27. walk: duration 22, cost 0.0. \nfrom Grandma Ye's Bobo Chicken (Taikoo Li Branch) to Sichuan Provincial Library: metro: duration 14, cost 2. taxi: duration 3, cost 12.02. walk: duration 25, cost 0.0. \nfrom Grandma Ye's Bobo Chicken (Taikoo Li Branch) to Elegant Azure Hotel: metro: duration 20, cost 3. taxi: duration 9, cost 26.37. walk: duration 74, cost 0.0. \nfrom Grandma Ye's Bobo Chicken (Taikoo Li Branch) to Chengdu Shuangliu International Airport: metro: duration 49, cost 5. taxi: duration 24, cost 68.14. walk: duration 195, cost 0.0. \nfrom Grandma Ye's Bobo Chicken (Taikoo Li Branch) to Sichuan Science and Technology Museum: metro: duration 13, cost 2. taxi: duration 3, cost 11.86. walk: duration 24, cost 0.0. \nfrom Grandma Ye's Bobo Chicken (Taikoo Li Branch) to Chengdu East Railway Station: metro: duration 14, cost 3. taxi: duration 8, cost 25.11. walk: duration 69, cost 0.0. \nfrom Grandma Ye's Bobo Chicken (Taikoo Li Branch) to Traveling With Hotel (Chengdu Financial Global Center): metro: duration 26, cost 3. taxi: duration 11, cost 31.62. walk: duration 92, cost 0.0. \nfrom Grandma Ye's Bobo Chicken (Taikoo Li Branch) to Chengdu Giant Panda Museum: metro: duration 71, cost 4. taxi: duration 17, cost 47.92. walk: duration 141, cost 0.0. \nfrom Grandma Ye's Bobo Chicken (Taikoo Li Branch) to Ming Shu Prince Mausoleum Museum: metro: duration 714, cost 8. taxi: duration 119, cost 352.57. walk: duration 954, cost 0.0. \nfrom Grandma Ye's Bobo Chicken (Taikoo Li Branch) to Grandma Ye's Bobo Chicken (Taikoo Li Branch):  metro: empty.  taxi: empty.  walk: empty. \nfrom Grandma Ye's Bobo Chicken (Taikoo Li Branch) to Chengdu Museum: metro: duration 15, cost 2. taxi: duration 2, cost 11.51. walk: duration 23, cost 0.0. \nfrom Grandma Ye's Bobo Chicken (Taikoo Li Branch) to Chengdu Tianfu International Airport: metro: duration 149, cost 9. taxi: duration 79, cost 233.61. walk: duration 637, cost 0.0. \nfrom Grandma Ye's Bobo Chicken (Taikoo Li Branch) to Chengdu Shu Brocade and Embroidery Museum: metro: duration 17, cost 3. taxi: duration 6, cost 19.32. walk: duration 50, cost 0.0. \nfrom Grandma Ye's Bobo Chicken (Taikoo Li Branch) to Celebrity City Hotel: metro: duration 12, cost 2. taxi: duration 2, cost 11.24. walk: duration 22, cost 0.0. \nfrom Grandma Ye's Bobo Chicken (Taikoo Li Branch) to China Teddy Bear Museum: metro: duration 100, cost 6. taxi: duration 40, cost 115.73. walk: duration 322, cost 0.0. \nfrom Grandma Ye's Bobo Chicken (Taikoo Li Branch) to Sichuan Live Insect Museum: metro: duration 64, cost 5. taxi: duration 27, cost 78.31. walk: duration 222, cost 0.0. \nfrom Grandma Ye's Bobo Chicken (Taikoo Li Branch) to Sichuan Museum: metro: duration 13, cost 3. taxi: duration 6, cost 20.79. walk: duration 55, cost 0.0. \nfrom Grandma Ye's Bobo Chicken (Taikoo Li Branch) to Shu Daxia Hot Pot (Chunxi Branch): metro: duration 9, cost 2. taxi: duration 1, cost 11.0. walk: duration 10, cost 0.0. \nfrom Grandma Ye's Bobo Chicken (Taikoo Li Branch) to Chen Mapo Tofu (Flagship Store): metro: duration 21, cost 3. taxi: duration 7, cost 22.19. walk: duration 59, cost 0.0. \nfrom Grandma Ye's Bobo Chicken (Taikoo Li Branch) to Chengdu Natural History Museum: metro: duration 26, cost 3. taxi: duration 11, cost 30.56. walk: duration 88, cost 0.0. \nfrom Grandma Ye's Bobo Chicken (Taikoo Li Branch) to Panda Science Exploration Museum: metro: duration 68, cost 4. taxi: duration 17, cost 47.63. walk: duration 141, cost 0.0. \nfrom Chengdu Museum to Little Dragon Turns the Great River · Hot Pot Aesthetics (Chunxi Branch): metro: duration 11, cost 2. taxi: duration 2, cost 11.0. walk: duration 17, cost 0.0. \nfrom Chengdu Museum to Shu Opera World (Tianfu Square Branch): metro: duration 13, cost 2. taxi: duration 0, cost 11.0. walk: duration 3, cost 0.0. \nfrom Chengdu Museum to Jinsha Site Museum: metro: duration 17, cost 3. taxi: duration 8, cost 24.24. walk: duration 66, cost 0.0. \nfrom Chengdu Museum to Du Fu Thatched Cottage Museum: metro: duration 346, cost 6. taxi: duration 77, cost 226.79. walk: duration 618, cost 0.0. \nfrom Chengdu Museum to Tongue Party: Sichuan Snack Collection (Taikoo Li Branch): metro: duration 13, cost 2. taxi: duration 2, cost 11.0. walk: duration 20, cost 0.0. \nfrom Chengdu Museum to Chengdu Library: metro: duration 10, cost 2. taxi: duration 0, cost 11.0. walk: duration 6, cost 0.0. \nfrom Chengdu Museum to Sichuan Provincial Library: taxi: duration 0, cost 11.0. walk: duration 2, cost 0.0. \nfrom Chengdu Museum to Elegant Azure Hotel: metro: duration 28, cost 3. taxi: duration 12, cost 32.7. walk: duration 96, cost 0.0. \nfrom Chengdu Museum to Chengdu Shuangliu International Airport: metro: duration 50, cost 5. taxi: duration 24, cost 67.72. walk: duration 194, cost 0.0. \nfrom Chengdu Museum to Sichuan Science and Technology Museum: metro: duration 13, cost 2. taxi: duration 0, cost 11.0. walk: duration 4, cost 0.0. \nfrom Chengdu Museum to Chengdu East Railway Station: metro: duration 22, cost 3. taxi: duration 11, cost 31.58. walk: duration 92, cost 0.0. \nfrom Chengdu Museum to Traveling With Hotel (Chengdu Financial Global Center): metro: duration 31, cost 3. taxi: duration 13, cost 35.11. walk: duration 104, cost 0.0. \nfrom Chengdu Museum to Chengdu Giant Panda Museum: metro: duration 70, cost 4. taxi: duration 17, cost 46.88. walk: duration 139, cost 0.0. \nfrom Chengdu Museum to Ming Shu Prince Mausoleum Museum: metro: duration 716, cost 8. taxi: duration 117, cost 347.28. walk: duration 940, cost 0.0. \nfrom Chengdu Museum to Grandma Ye's Bobo Chicken (Taikoo Li Branch): metro: duration 15, cost 2. taxi: duration 2, cost 11.51. walk: duration 23, cost 0.0. \nfrom Chengdu Museum to Chengdu Museum:  metro: empty.  taxi: empty.  walk: empty. \nfrom Chengdu Museum to Chengdu Tianfu International Airport: metro: duration 157, cost 9. taxi: duration 82, cost 242.32. walk: duration 660, cost 0.0. \nfrom Chengdu Museum to Chengdu Shu Brocade and Embroidery Museum: metro: duration 14, cost 2. taxi: duration 3, cost 13.7. walk: duration 30, cost 0.0. \nfrom Chengdu Museum to Celebrity City Hotel: metro: duration 12, cost 2. taxi: duration 1, cost 11.0. walk: duration 13, cost 0.0. \nfrom Chengdu Museum to China Teddy Bear Museum: metro: duration 98, cost 6. taxi: duration 38, cost 109.91. walk: duration 307, cost 0.0. \nfrom Chengdu Museum to Sichuan Live Insect Museum: metro: duration 61, cost 5. taxi: duration 25, cost 70.92. walk: duration 203, cost 0.0. \nfrom Chengdu Museum to Sichuan Museum: metro: duration 10, cost 2. taxi: duration 4, cost 14.87. walk: duration 34, cost 0.0. \nfrom Chengdu Museum to Shu Daxia Hot Pot (Chunxi Branch): metro: duration 14, cost 2. taxi: duration 1, cost 11.0. walk: duration 14, cost 0.0. \nfrom Chengdu Museum to Chen Mapo Tofu (Flagship Store): metro: duration 18, cost 2. taxi: duration 5, cost 16.8. walk: duration 41, cost 0.0. \nfrom Chengdu Museum to Chengdu Natural History Museum: metro: duration 31, cost 3. taxi: duration 12, cost 33.02. walk: duration 97, cost 0.0. \nfrom Chengdu Museum to Panda Science Exploration Museum: metro: duration 67, cost 4. taxi: duration 17, cost 46.4. walk: duration 137, cost 0.0. \nfrom Chengdu Tianfu International Airport to Little Dragon Turns the Great River · Hot Pot Aesthetics (Chunxi Branch): metro: duration 148, cost 9. taxi: duration 80, cost 235.85. walk: duration 643, cost 0.0. \nfrom Chengdu Tianfu International Airport to Shu Opera World (Tianfu Square Branch): metro: duration 154, cost 9. taxi: duration 82, cost 240.93. walk: duration 656, cost 0.0. \nfrom Chengdu Tianfu International Airport to Jinsha Site Museum: metro: duration 161, cost 9. taxi: duration 90, cost 265.8. walk: duration 722, cost 0.0. \nfrom Chengdu Tianfu International Airport to Du Fu Thatched Cottage Museum: metro: duration 488, cost 11.0. taxi: duration 157, cost 465.9. walk: duration 1256, cost 0.0. \nfrom Chengdu Tianfu International Airport to Tongue Party: Sichuan Snack Collection (Taikoo Li Branch): metro: duration 150, cost 9. taxi: duration 80, cost 234.79. walk: duration 640, cost 0.0. \nfrom Chengdu Tianfu International Airport to Chengdu Library: metro: duration 151, cost 9. taxi: duration 82, cost 241.41. walk: duration 657, cost 0.0. \nfrom Chengdu Tianfu International Airport to Sichuan Provincial Library: metro: duration 156, cost 9. taxi: duration 82, cost 243.01. walk: duration 662, cost 0.0. \nfrom Chengdu Tianfu International Airport to Elegant Azure Hotel: metro: duration 141, cost 8. taxi: duration 71, cost 210.02. walk: duration 574, cost 0.0. \nfrom Chengdu Tianfu International Airport to Chengdu Shuangliu International Airport: metro: duration 168, cost 9. taxi: duration 83, cost 245.27. walk: duration 668, cost 0.0. \nfrom Chengdu Tianfu International Airport to Sichuan Science and Technology Museum: metro: duration 154, cost 9. taxi: duration 82, cost 242.8. walk: duration 661, cost 0.0. \nfrom Chengdu Tianfu International Airport to Chengdu East Railway Station: metro: duration 135, cost 8. taxi: duration 71, cost 210.46. walk: duration 575, cost 0.0. \nfrom Chengdu Tianfu International Airport to Traveling With Hotel (Chengdu Financial Global Center): metro: duration 149, cost 9. taxi: duration 74, cost 218.01. walk: duration 595, cost 0.0. \nfrom Chengdu Tianfu International Airport to Chengdu Giant Panda Museum: metro: duration 204, cost 9. taxi: duration 86, cost 254.36. walk: duration 692, cost 0.0. \nfrom Chengdu Tianfu International Airport to Ming Shu Prince Mausoleum Museum: metro: duration 804, cost 10.0. taxi: duration 175, cost 519.87. walk: duration 1400, cost 0.0. \nfrom Chengdu Tianfu International Airport to Grandma Ye's Bobo Chicken (Taikoo Li Branch): metro: duration 149, cost 9. taxi: duration 79, cost 233.61. walk: duration 637, cost 0.0. \nfrom Chengdu Tianfu International Airport to Chengdu Museum: metro: duration 157, cost 9. taxi: duration 82, cost 242.32. walk: duration 660, cost 0.0. \nfrom Chengdu Tianfu International Airport to Chengdu Tianfu International Airport:  metro: empty.  taxi: empty.  walk: empty. \nfrom Chengdu Tianfu International Airport to Chengdu Shu Brocade and Embroidery Museum: metro: duration 158, cost 9. taxi: duration 85, cost 249.83. walk: duration 680, cost 0.0. \nfrom Chengdu Tianfu International Airport to Celebrity City Hotel: metro: duration 153, cost 9. taxi: duration 81, cost 240.07. walk: duration 654, cost 0.0. \nfrom Chengdu Tianfu International Airport to China Teddy Bear Museum: metro: duration 233, cost 10.0. taxi: duration 109, cost 321.72. walk: duration 872, cost 0.0. \nfrom Chengdu Tianfu International Airport to Sichuan Live Insect Museum: metro: duration 199, cost 10.0. taxi: duration 103, cost 304.83. walk: duration 827, cost 0.0. \nfrom Chengdu Tianfu International Airport to Sichuan Museum: metro: duration 154, cost 9. taxi: duration 85, cost 251.96. walk: duration 686, cost 0.0. \nfrom Chengdu Tianfu International Airport to Shu Daxia Hot Pot (Chunxi Branch): metro: duration 151, cost 9. taxi: duration 80, cost 237.12. walk: duration 646, cost 0.0. \nfrom Chengdu Tianfu International Airport to Chen Mapo Tofu (Flagship Store): metro: duration 161, cost 9. taxi: duration 85, cost 252.18. walk: duration 686, cost 0.0. \nfrom Chengdu Tianfu International Airport to Chengdu Natural History Museum: metro: duration 153, cost 9. taxi: duration 78, cost 230.9. walk: duration 629, cost 0.0. \nfrom Chengdu Tianfu International Airport to Panda Science Exploration Museum: metro: duration 201, cost 9. taxi: duration 86, cost 255.25. walk: duration 694, cost 0.0. \nfrom Chengdu Shu Brocade and Embroidery Museum to Little Dragon Turns the Great River · Hot Pot Aesthetics (Chunxi Branch): metro: duration 13, cost 3. taxi: duration 5, cost 17.35. walk: duration 43, cost 0.0. \nfrom Chengdu Shu Brocade and Embroidery Museum to Shu Opera World (Tianfu Square Branch): metro: duration 15, cost 2. taxi: duration 4, cost 14.68. walk: duration 34, cost 0.0. \nfrom Chengdu Shu Brocade and Embroidery Museum to Jinsha Site Museum: metro: duration 11, cost 2. taxi: duration 5, cost 17.12. walk: duration 42, cost 0.0. \nfrom Chengdu Shu Brocade and Embroidery Museum to Du Fu Thatched Cottage Museum: metro: duration 340, cost 6. taxi: duration 74, cost 216.73. walk: duration 592, cost 0.0. \nfrom Chengdu Shu Brocade and Embroidery Museum to Tongue Party: Sichuan Snack Collection (Taikoo Li Branch): metro: duration 15, cost 3. taxi: duration 5, cost 17.97. walk: duration 45, cost 0.0. \nfrom Chengdu Shu Brocade and Embroidery Museum to Chengdu Library: metro: duration 11, cost 2. taxi: duration 3, cost 12.88. walk: duration 28, cost 0.0. \nfrom Chengdu Shu Brocade and Embroidery Museum to Sichuan Provincial Library: metro: duration 13, cost 2. taxi: duration 3, cost 13.61. walk: duration 30, cost 0.0. \nfrom Chengdu Shu Brocade and Embroidery Museum to Elegant Azure Hotel: metro: duration 30, cost 4. taxi: duration 15, cost 41.36. walk: duration 124, cost 0.0. \nfrom Chengdu Shu Brocade and Embroidery Museum to Chengdu Shuangliu International Airport: metro: duration 45, cost 4. taxi: duration 21, cost 60.15. walk: duration 174, cost 0.0. \nfrom Chengdu Shu Brocade and Embroidery Museum to Sichuan Science and Technology Museum: metro: duration 15, cost 2. taxi: duration 4, cost 14.42. walk: duration 33, cost 0.0. \nfrom Chengdu Shu Brocade and Embroidery Museum to Chengdu East Railway Station: metro: duration 24, cost 4. taxi: duration 15, cost 39.7. walk: duration 120, cost 0.0. \nfrom Chengdu Shu Brocade and Embroidery Museum to Traveling With Hotel (Chengdu Financial Global Center): metro: duration 29, cost 3. taxi: duration 13, cost 35.12. walk: duration 104, cost 0.0. \nfrom Chengdu Shu Brocade and Embroidery Museum to Chengdu Giant Panda Museum: metro: duration 71, cost 4. taxi: duration 20, cost 55.36. walk: duration 161, cost 0.0. \nfrom Chengdu Shu Brocade and Embroidery Museum to Ming Shu Prince Mausoleum Museum: metro: duration 710, cost 8. taxi: duration 113, cost 335.84. walk: duration 909, cost 0.0. \nfrom Chengdu Shu Brocade and Embroidery Museum to Grandma Ye's Bobo Chicken (Taikoo Li Branch): metro: duration 17, cost 3. taxi: duration 6, cost 19.32. walk: duration 50, cost 0.0. \nfrom Chengdu Shu Brocade and Embroidery Museum to Chengdu Museum: metro: duration 14, cost 2. taxi: duration 3, cost 13.7. walk: duration 30, cost 0.0. \nfrom Chengdu Shu Brocade and Embroidery Museum to Chengdu Tianfu International Airport: metro: duration 158, cost 9. taxi: duration 85, cost 249.83. walk: duration 680, cost 0.0. \nfrom Chengdu Shu Brocade and Embroidery Museum to Chengdu Shu Brocade and Embroidery Museum:  metro: empty.  taxi: empty.  walk: empty. \nfrom Chengdu Shu Brocade and Embroidery Museum to Celebrity City Hotel: metro: duration 13, cost 2. taxi: duration 3, cost 12.92. walk: duration 28, cost 0.0. \nfrom Chengdu Shu Brocade and Embroidery Museum to China Teddy Bear Museum: metro: duration 91, cost 6. taxi: duration 34, cost 98.39. walk: duration 276, cost 0.0. \nfrom Chengdu Shu Brocade and Embroidery Museum to Sichuan Live Insect Museum: metro: duration 55, cost 5. taxi: duration 21, cost 59.6. walk: duration 173, cost 0.0. \nfrom Chengdu Shu Brocade and Embroidery Museum to Sichuan Museum: taxi: duration 0, cost 11.0. walk: duration 5, cost 0.0. \nfrom Chengdu Shu Brocade and Embroidery Museum to Shu Daxia Hot Pot (Chunxi Branch): metro: duration 16, cost 3. taxi: duration 4, cost 16.23. walk: duration 39, cost 0.0. \nfrom Chengdu Shu Brocade and Embroidery Museum to Chen Mapo Tofu (Flagship Store): metro: duration 13, cost 2. taxi: duration 1, cost 11.0. walk: duration 10, cost 0.0. \nfrom Chengdu Shu Brocade and Embroidery Museum to Chengdu Natural History Museum: metro: duration 34, cost 4. taxi: duration 15, cost 42.29. walk: duration 126, cost 0.0. \nfrom Chengdu Shu Brocade and Embroidery Museum to Panda Science Exploration Museum: metro: duration 68, cost 4. taxi: duration 20, cost 54.73. walk: duration 160, cost 0.0. \nfrom Celebrity City Hotel to Little Dragon Turns the Great River · Hot Pot Aesthetics (Chunxi Branch): metro: duration 7, cost 2. taxi: duration 1, cost 11.0. walk: duration 15, cost 0.0. \nfrom Celebrity City Hotel to Shu Opera World (Tianfu Square Branch): metro: duration 11, cost 2. taxi: duration 1, cost 11.0. walk: duration 13, cost 0.0. \nfrom Celebrity City Hotel to Jinsha Site Museum: metro: duration 16, cost 3. taxi: duration 8, cost 24.96. walk: duration 69, cost 0.0. \nfrom Celebrity City Hotel to Du Fu Thatched Cottage Museum: metro: duration 345, cost 7. taxi: duration 77, cost 227.28. walk: duration 620, cost 0.0. \nfrom Celebrity City Hotel to Tongue Party: Sichuan Snack Collection (Taikoo Li Branch): metro: duration 9, cost 2. taxi: duration 2, cost 11.0. walk: duration 17, cost 0.0. \nfrom Celebrity City Hotel to Chengdu Library: taxi: duration 0, cost 11.0. walk: duration 6, cost 0.0. \nfrom Celebrity City Hotel to Sichuan Provincial Library: metro: duration 11, cost 2. taxi: duration 1, cost 11.0. walk: duration 15, cost 0.0. \nfrom Celebrity City Hotel to Elegant Azure Hotel: metro: duration 25, cost 3. taxi: duration 12, cost 32.83. walk: duration 96, cost 0.0. \nfrom Celebrity City Hotel to Chengdu Shuangliu International Airport: metro: duration 47, cost 5. taxi: duration 22, cost 62.93. walk: duration 181, cost 0.0. \nfrom Celebrity City Hotel to Sichuan Science and Technology Museum: metro: duration 11, cost 2. taxi: duration 2, cost 11.0. walk: duration 17, cost 0.0. \nfrom Celebrity City Hotel to Chengdu East Railway Station: metro: duration 19, cost 3. taxi: duration 11, cost 31.51. walk: duration 91, cost 0.0. \nfrom Celebrity City Hotel to Traveling With Hotel (Chengdu Financial Global Center): metro: duration 27, cost 3. taxi: duration 11, cost 31.29. walk: duration 91, cost 0.0. \nfrom Celebrity City Hotel to Chengdu Giant Panda Museum: metro: duration 70, cost 4. taxi: duration 19, cost 51.76. walk: duration 152, cost 0.0. \nfrom Celebrity City Hotel to Ming Shu Prince Mausoleum Museum: metro: duration 712, cost 8. taxi: duration 116, cost 344.56. walk: duration 932, cost 0.0. \nfrom Celebrity City Hotel to Grandma Ye's Bobo Chicken (Taikoo Li Branch): metro: duration 12, cost 2. taxi: duration 2, cost 11.24. walk: duration 22, cost 0.0. \nfrom Celebrity City Hotel to Chengdu Museum: metro: duration 12, cost 2. taxi: duration 1, cost 11.0. walk: duration 13, cost 0.0. \nfrom Celebrity City Hotel to Chengdu Tianfu International Airport: metro: duration 153, cost 9. taxi: duration 81, cost 240.07. walk: duration 654, cost 0.0. \nfrom Celebrity City Hotel to Chengdu Shu Brocade and Embroidery Museum: metro: duration 13, cost 2. taxi: duration 3, cost 12.92. walk: duration 28, cost 0.0. \nfrom Celebrity City Hotel to Celebrity City Hotel:  metro: empty.  taxi: empty.  walk: empty. \nfrom Celebrity City Hotel to China Teddy Bear Museum: metro: duration 96, cost 6. taxi: duration 37, cost 107.52. walk: duration 300, cost 0.0. \nfrom Celebrity City Hotel to Sichuan Live Insect Museum: metro: duration 60, cost 5. taxi: duration 25, cost 69.92. walk: duration 200, cost 0.0. \nfrom Celebrity City Hotel to Sichuan Museum: metro: duration 9, cost 2. taxi: duration 4, cost 14.48. walk: duration 33, cost 0.0. \nfrom Celebrity City Hotel to Shu Daxia Hot Pot (Chunxi Branch): metro: duration 10, cost 2. taxi: duration 1, cost 11.0. walk: duration 12, cost 0.0. \nfrom Celebrity City Hotel to Chen Mapo Tofu (Flagship Store): metro: duration 16, cost 2. taxi: duration 4, cost 15.68. walk: duration 37, cost 0.0. \nfrom Celebrity City Hotel to Chengdu Natural History Museum: metro: duration 29, cost 3. taxi: duration 13, cost 35.79. walk: duration 106, cost 0.0. \nfrom Celebrity City Hotel to Panda Science Exploration Museum: metro: duration 67, cost 4. taxi: duration 18, cost 51.31. walk: duration 150, cost 0.0. \nfrom China Teddy Bear Museum to Little Dragon Turns the Great River · Hot Pot Aesthetics (Chunxi Branch): metro: duration 96, cost 6. taxi: duration 39, cost 113.43. walk: duration 316, cost 0.0. \nfrom China Teddy Bear Museum to Shu Opera World (Tianfu Square Branch): metro: duration 99, cost 6. taxi: duration 38, cost 111.09. walk: duration 310, cost 0.0. \nfrom China Teddy Bear Museum to Jinsha Site Museum: metro: duration 84, cost 5. taxi: duration 31, cost 90.01. walk: duration 254, cost 0.0. \nfrom China Teddy Bear Museum to Du Fu Thatched Cottage Museum: metro: duration 348, cost 4. taxi: duration 50, cost 145.42. walk: duration 401, cost 0.0. \nfrom China Teddy Bear Museum to Tongue Party: Sichuan Snack Collection (Taikoo Li Branch): metro: duration 98, cost 6. taxi: duration 39, cost 113.88. walk: duration 317, cost 0.0. \nfrom China Teddy Bear Museum to Chengdu Library: metro: duration 94, cost 6. taxi: duration 37, cost 108.44. walk: duration 303, cost 0.0. \nfrom China Teddy Bear Museum to Sichuan Provincial Library: metro: duration 97, cost 6. taxi: duration 38, cost 109.84. walk: duration 307, cost 0.0. \nfrom China Teddy Bear Museum to Elegant Azure Hotel: metro: duration 113, cost 7. taxi: duration 49, cost 141.91. walk: duration 392, cost 0.0. \nfrom China Teddy Bear Museum to Chengdu Shuangliu International Airport: metro: duration 95, cost 5. taxi: duration 25, cost 71.15. walk: duration 203, cost 0.0. \nfrom China Teddy Bear Museum to Sichuan Science and Technology Museum: metro: duration 99, cost 6. taxi: duration 38, cost 110.89. walk: duration 309, cost 0.0. \nfrom China Teddy Bear Museum to Chengdu East Railway Station: metro: duration 107, cost 7. taxi: duration 48, cost 139.78. walk: duration 386, cost 0.0. \nfrom China Teddy Bear Museum to Traveling With Hotel (Chengdu Financial Global Center): metro: duration 101, cost 6. taxi: duration 37, cost 107.47. walk: duration 300, cost 0.0. \nfrom China Teddy Bear Museum to Chengdu Giant Panda Museum: metro: duration 148, cost 7. taxi: duration 52, cost 152.57. walk: duration 420, cost 0.0. \nfrom China Teddy Bear Museum to Ming Shu Prince Mausoleum Museum: metro: duration 735, cost 7. taxi: duration 79, cost 232.38. walk: duration 633, cost 0.0. \nfrom China Teddy Bear Museum to Grandma Ye's Bobo Chicken (Taikoo Li Branch): metro: duration 100, cost 6. taxi: duration 40, cost 115.73. walk: duration 322, cost 0.0. \nfrom China Teddy Bear Museum to Chengdu Museum: metro: duration 98, cost 6. taxi: duration 38, cost 109.91. walk: duration 307, cost 0.0. \nfrom China Teddy Bear Museum to Chengdu Tianfu International Airport: metro: duration 233, cost 10.0. taxi: duration 109, cost 321.72. walk: duration 872, cost 0.0. \nfrom China Teddy Bear Museum to Chengdu Shu Brocade and Embroidery Museum: metro: duration 91, cost 6. taxi: duration 34, cost 98.39. walk: duration 276, cost 0.0. \nfrom China Teddy Bear Museum to Celebrity City Hotel: metro: duration 96, cost 6. taxi: duration 37, cost 107.52. walk: duration 300, cost 0.0. \nfrom China Teddy Bear Museum to China Teddy Bear Museum:  metro: empty.  taxi: empty.  walk: empty. \nfrom China Teddy Bear Museum to Sichuan Live Insect Museum: metro: duration 80, cost 3. taxi: duration 15, cost 41.42. walk: duration 124, cost 0.0. \nfrom China Teddy Bear Museum to Sichuan Museum: metro: duration 87, cost 6. taxi: duration 34, cost 97.16. walk: duration 273, cost 0.0. \nfrom China Teddy Bear Museum to Shu Daxia Hot Pot (Chunxi Branch): metro: duration 99, cost 6. taxi: duration 39, cost 112.11. walk: duration 313, cost 0.0. \nfrom China Teddy Bear Museum to Chen Mapo Tofu (Flagship Store): metro: duration 95, cost 6. taxi: duration 33, cost 94.39. walk: duration 265, cost 0.0. \nfrom China Teddy Bear Museum to Chengdu Natural History Museum: metro: duration 117, cost 7. taxi: duration 50, cost 145.7. walk: duration 402, cost 0.0. \nfrom China Teddy Bear Museum to Panda Science Exploration Museum: metro: duration 145, cost 7. taxi: duration 52, cost 151.6. walk: duration 418, cost 0.0. \nfrom Sichuan Live Insect Museum to Little Dragon Turns the Great River · Hot Pot Aesthetics (Chunxi Branch): metro: duration 59, cost 5. taxi: duration 27, cost 75.8. walk: duration 216, cost 0.0. \nfrom Sichuan Live Insect Museum to Shu Opera World (Tianfu Square Branch): metro: duration 62, cost 5. taxi: duration 25, cost 72.29. walk: duration 206, cost 0.0. \nfrom Sichuan Live Insect Museum to Jinsha Site Museum: metro: duration 48, cost 4. taxi: duration 17, cost 47.57. walk: duration 140, cost 0.0. \nfrom Sichuan Live Insect Museum to Du Fu Thatched Cottage Museum: metro: duration 332, cost 4. taxi: duration 53, cost 156.05. walk: duration 430, cost 0.0. \nfrom Sichuan Live Insect Museum to Tongue Party: Sichuan Snack Collection (Taikoo Li Branch): metro: duration 61, cost 5. taxi: duration 27, cost 76.52. walk: duration 218, cost 0.0. \nfrom Sichuan Live Insect Museum to Chengdu Library: metro: duration 58, cost 5. taxi: duration 25, cost 70.11. walk: duration 201, cost 0.0. \nfrom Sichuan Live Insect Museum to Sichuan Provincial Library: metro: duration 60, cost 5. taxi: duration 25, cost 70.64. walk: duration 202, cost 0.0. \nfrom Sichuan Live Insect Museum to Elegant Azure Hotel: metro: duration 77, cost 6. taxi: duration 37, cost 106.05. walk: duration 296, cost 0.0. \nfrom Sichuan Live Insect Museum to Chengdu Shuangliu International Airport: metro: duration 64, cost 4. taxi: duration 23, cost 65.35. walk: duration 188, cost 0.0. \nfrom Sichuan Live Insect Museum to Sichuan Science and Technology Museum: metro: duration 62, cost 5. taxi: duration 25, cost 71.53. walk: duration 204, cost 0.0. \nfrom Sichuan Live Insect Museum to Chengdu East Railway Station: metro: duration 71, cost 6. taxi: duration 36, cost 104.25. walk: duration 292, cost 0.0. \nfrom Sichuan Live Insect Museum to Traveling With Hotel (Chengdu Financial Global Center): metro: duration 66, cost 5. taxi: duration 29, cost 81.82. walk: duration 232, cost 0.0. \nfrom Sichuan Live Insect Museum to Chengdu Giant Panda Museum: metro: duration 112, cost 6. taxi: duration 37, cost 107.68. walk: duration 301, cost 0.0. \nfrom Sichuan Live Insect Museum to Ming Shu Prince Mausoleum Museum: metro: duration 716, cost 7. taxi: duration 93, cost 276.44. walk: duration 751, cost 0.0. \nfrom Sichuan Live Insect Museum to Grandma Ye's Bobo Chicken (Taikoo Li Branch): metro: duration 64, cost 5. taxi: duration 27, cost 78.31. walk: duration 222, cost 0.0. \nfrom Sichuan Live Insect Museum to Chengdu Museum: metro: duration 61, cost 5. taxi: duration 25, cost 70.92. walk: duration 203, cost 0.0. \nfrom Sichuan Live Insect Museum to Chengdu Tianfu International Airport: metro: duration 199, cost 10.0. taxi: duration 103, cost 304.83. walk: duration 827, cost 0.0. \nfrom Sichuan Live Insect Museum to Chengdu Shu Brocade and Embroidery Museum: metro: duration 55, cost 5. taxi: duration 21, cost 59.6. walk: duration 173, cost 0.0. \nfrom Sichuan Live Insect Museum to Celebrity City Hotel: metro: duration 60, cost 5. taxi: duration 25, cost 69.92. walk: duration 200, cost 0.0. \nfrom Sichuan Live Insect Museum to China Teddy Bear Museum: metro: duration 80, cost 3. taxi: duration 15, cost 41.42. walk: duration 124, cost 0.0. \nfrom Sichuan Live Insect Museum to Sichuan Live Insect Museum:  metro: empty.  taxi: empty.  walk: empty. \nfrom Sichuan Live Insect Museum to Sichuan Museum: metro: duration 51, cost 5. taxi: duration 21, cost 57.88. walk: duration 168, cost 0.0. \nfrom Sichuan Live Insect Museum to Shu Daxia Hot Pot (Chunxi Branch): metro: duration 62, cost 5. taxi: duration 26, cost 74.37. walk: duration 212, cost 0.0. \nfrom Sichuan Live Insect Museum to Chen Mapo Tofu (Flagship Store): metro: duration 59, cost 5. taxi: duration 20, cost 55.82. walk: duration 162, cost 0.0. \nfrom Sichuan Live Insect Museum to Chengdu Natural History Museum: metro: duration 80, cost 6. taxi: duration 36, cost 104.41. walk: duration 292, cost 0.0. \nfrom Sichuan Live Insect Museum to Panda Science Exploration Museum: metro: duration 109, cost 6. taxi: duration 37, cost 106.65. walk: duration 298, cost 0.0. \nfrom Sichuan Museum to Little Dragon Turns the Great River · Hot Pot Aesthetics (Chunxi Branch): metro: duration 9, cost 3. taxi: duration 6, cost 18.82. walk: duration 48, cost 0.0. \nfrom Sichuan Museum to Shu Opera World (Tianfu Square Branch): metro: duration 11, cost 2. taxi: duration 4, cost 15.91. walk: duration 38, cost 0.0. \nfrom Sichuan Museum to Jinsha Site Museum: metro: duration 7, cost 2. taxi: duration 4, cost 15.46. walk: duration 36, cost 0.0. \nfrom Sichuan Museum to Du Fu Thatched Cottage Museum: metro: duration 336, cost 6. taxi: duration 73, cost 214.71. walk: duration 586, cost 0.0. \nfrom Sichuan Museum to Tongue Party: Sichuan Snack Collection (Taikoo Li Branch): metro: duration 11, cost 3. taxi: duration 6, cost 19.47. walk: duration 50, cost 0.0. \nfrom Sichuan Museum to Chengdu Library: metro: duration 7, cost 2. taxi: duration 4, cost 14.27. walk: duration 32, cost 0.0. \nfrom Sichuan Museum to Sichuan Provincial Library: metro: duration 9, cost 2. taxi: duration 4, cost 14.71. walk: duration 34, cost 0.0. \nfrom Sichuan Museum to Elegant Azure Hotel: metro: duration 26, cost 4. taxi: duration 16, cost 43.24. walk: duration 129, cost 0.0. \nfrom Sichuan Museum to Chengdu Shuangliu International Airport: metro: duration 41, cost 4. taxi: duration 21, cost 60.61. walk: duration 175, cost 0.0. \nfrom Sichuan Museum to Sichuan Science and Technology Museum: metro: duration 11, cost 2. taxi: duration 4, cost 15.46. walk: duration 36, cost 0.0. \nfrom Sichuan Museum to Chengdu East Railway Station: metro: duration 20, cost 4. taxi: duration 15, cost 41.62. walk: duration 125, cost 0.0. \nfrom Sichuan Museum to Traveling With Hotel (Chengdu Financial Global Center): metro: duration 25, cost 3. taxi: duration 13, cost 36.53. walk: duration 109, cost 0.0. \nfrom Sichuan Museum to Chengdu Giant Panda Museum: metro: duration 67, cost 4. taxi: duration 20, cost 55.49. walk: duration 162, cost 0.0. \nfrom Sichuan Museum to Ming Shu Prince Mausoleum Museum: metro: duration 706, cost 8. taxi: duration 113, cost 334.69. walk: duration 906, cost 0.0. \nfrom Sichuan Museum to Grandma Ye's Bobo Chicken (Taikoo Li Branch): metro: duration 13, cost 3. taxi: duration 6, cost 20.79. walk: duration 55, cost 0.0. \nfrom Sichuan Museum to Chengdu Museum: metro: duration 10, cost 2. taxi: duration 4, cost 14.87. walk: duration 34, cost 0.0. \nfrom Sichuan Museum to Chengdu Tianfu International Airport: metro: duration 154, cost 9. taxi: duration 85, cost 251.96. walk: duration 686, cost 0.0. \nfrom Sichuan Museum to Chengdu Shu Brocade and Embroidery Museum: taxi: duration 0, cost 11.0. walk: duration 5, cost 0.0. \nfrom Sichuan Museum to Celebrity City Hotel: metro: duration 9, cost 2. taxi: duration 4, cost 14.48. walk: duration 33, cost 0.0. \nfrom Sichuan Museum to China Teddy Bear Museum: metro: duration 87, cost 6. taxi: duration 34, cost 97.16. walk: duration 273, cost 0.0. \nfrom Sichuan Museum to Sichuan Live Insect Museum: metro: duration 51, cost 5. taxi: duration 21, cost 57.88. walk: duration 168, cost 0.0. \nfrom Sichuan Museum to Sichuan Museum:  metro: empty.  taxi: empty.  walk: empty. \nfrom Sichuan Museum to Shu Daxia Hot Pot (Chunxi Branch): metro: duration 12, cost 3. taxi: duration 5, cost 17.7. walk: duration 44, cost 0.0. \nfrom Sichuan Museum to Chen Mapo Tofu (Flagship Store): metro: duration 9, cost 2. taxi: duration 1, cost 11.0. walk: duration 8, cost 0.0. \nfrom Sichuan Museum to Chengdu Natural History Museum: metro: duration 30, cost 4. taxi: duration 16, cost 43.34. walk: duration 129, cost 0.0. \nfrom Sichuan Museum to Panda Science Exploration Museum: metro: duration 64, cost 4. taxi: duration 20, cost 54.82. walk: duration 160, cost 0.0. \nfrom Shu Daxia Hot Pot (Chunxi Branch) to Little Dragon Turns the Great River · Hot Pot Aesthetics (Chunxi Branch): taxi: duration 0, cost 11.0. walk: duration 3, cost 0.0. \nfrom Shu Daxia Hot Pot (Chunxi Branch) to Shu Opera World (Tianfu Square Branch): metro: duration 11, cost 2. taxi: duration 1, cost 11.0. walk: duration 10, cost 0.0. \nfrom Shu Daxia Hot Pot (Chunxi Branch) to Jinsha Site Museum: metro: duration 19, cost 3. taxi: duration 9, cost 27.8. walk: duration 79, cost 0.0. \nfrom Shu Daxia Hot Pot (Chunxi Branch) to Du Fu Thatched Cottage Museum: metro: duration 348, cost 7. taxi: duration 78, cost 231.26. walk: duration 630, cost 0.0. \nfrom Shu Daxia Hot Pot (Chunxi Branch) to Tongue Party: Sichuan Snack Collection (Taikoo Li Branch): taxi: duration 0, cost 11.0. walk: duration 6, cost 0.0. \nfrom Shu Daxia Hot Pot (Chunxi Branch) to Chengdu Library: metro: duration 8, cost 2. taxi: duration 1, cost 11.0. walk: duration 12, cost 0.0. \nfrom Shu Daxia Hot Pot (Chunxi Branch) to Sichuan Provincial Library: metro: duration 13, cost 2. taxi: duration 2, cost 11.0. walk: duration 16, cost 0.0. \nfrom Shu Daxia Hot Pot (Chunxi Branch) to Elegant Azure Hotel: metro: duration 22, cost 3. taxi: duration 10, cost 29.46. walk: duration 84, cost 0.0. \nfrom Shu Daxia Hot Pot (Chunxi Branch) to Chengdu Shuangliu International Airport: metro: duration 49, cost 5. taxi: duration 23, cost 66.31. walk: duration 190, cost 0.0. \nfrom Shu Daxia Hot Pot (Chunxi Branch) to Sichuan Science and Technology Museum: metro: duration 11, cost 2. taxi: duration 2, cost 11.0. walk: duration 16, cost 0.0. \nfrom Shu Daxia Hot Pot (Chunxi Branch) to Chengdu East Railway Station: metro: duration 16, cost 3. taxi: duration 10, cost 28.2. walk: duration 80, cost 0.0. \nfrom Shu Daxia Hot Pot (Chunxi Branch) to Traveling With Hotel (Chengdu Financial Global Center): metro: duration 27, cost 3. taxi: duration 11, cost 31.92. walk: duration 93, cost 0.0. \nfrom Shu Daxia Hot Pot (Chunxi Branch) to Chengdu Giant Panda Museum: metro: duration 70, cost 4. taxi: duration 18, cost 48.82. walk: duration 144, cost 0.0. \nfrom Shu Daxia Hot Pot (Chunxi Branch) to Ming Shu Prince Mausoleum Museum: metro: duration 713, cost 8. taxi: duration 118, cost 349.12. walk: duration 945, cost 0.0. \nfrom Shu Daxia Hot Pot (Chunxi Branch) to Grandma Ye's Bobo Chicken (Taikoo Li Branch): metro: duration 9, cost 2. taxi: duration 1, cost 11.0. walk: duration 10, cost 0.0. \nfrom Shu Daxia Hot Pot (Chunxi Branch) to Chengdu Museum: metro: duration 14, cost 2. taxi: duration 1, cost 11.0. walk: duration 14, cost 0.0. \nfrom Shu Daxia Hot Pot (Chunxi Branch) to Chengdu Tianfu International Airport: metro: duration 151, cost 9. taxi: duration 80, cost 237.12. walk: duration 646, cost 0.0. \nfrom Shu Daxia Hot Pot (Chunxi Branch) to Chengdu Shu Brocade and Embroidery Museum: metro: duration 16, cost 3. taxi: duration 4, cost 16.23. walk: duration 39, cost 0.0. \nfrom Shu Daxia Hot Pot (Chunxi Branch) to Celebrity City Hotel: metro: duration 10, cost 2. taxi: duration 1, cost 11.0. walk: duration 12, cost 0.0. \nfrom Shu Daxia Hot Pot (Chunxi Branch) to China Teddy Bear Museum: metro: duration 99, cost 6. taxi: duration 39, cost 112.11. walk: duration 313, cost 0.0. \nfrom Shu Daxia Hot Pot (Chunxi Branch) to Sichuan Live Insect Museum: metro: duration 62, cost 5. taxi: duration 26, cost 74.37. walk: duration 212, cost 0.0. \nfrom Shu Daxia Hot Pot (Chunxi Branch) to Sichuan Museum: metro: duration 12, cost 3. taxi: duration 5, cost 17.7. walk: duration 44, cost 0.0. \nfrom Shu Daxia Hot Pot (Chunxi Branch) to Shu Daxia Hot Pot (Chunxi Branch):  metro: empty.  taxi: empty.  walk: empty. \nfrom Shu Daxia Hot Pot (Chunxi Branch) to Chen Mapo Tofu (Flagship Store): metro: duration 19, cost 2. taxi: duration 6, cost 19.13. walk: duration 49, cost 0.0. \nfrom Shu Daxia Hot Pot (Chunxi Branch) to Chengdu Natural History Museum: metro: duration 27, cost 3. taxi: duration 11, cost 32.52. walk: duration 95, cost 0.0. \nfrom Shu Daxia Hot Pot (Chunxi Branch) to Panda Science Exploration Museum: metro: duration 67, cost 4. taxi: duration 17, cost 48.45. walk: duration 143, cost 0.0. \nfrom Chen Mapo Tofu (Flagship Store) to Little Dragon Turns the Great River · Hot Pot Aesthetics (Chunxi Branch): metro: duration 16, cost 2. taxi: duration 6, cost 20.24. walk: duration 53, cost 0.0. \nfrom Chen Mapo Tofu (Flagship Store) to Shu Opera World (Tianfu Square Branch): metro: duration 19, cost 2. taxi: duration 5, cost 17.76. walk: duration 44, cost 0.0. \nfrom Chen Mapo Tofu (Flagship Store) to Jinsha Site Museum: metro: duration 16, cost 2. taxi: duration 4, cost 15.63. walk: duration 37, cost 0.0. \nfrom Chen Mapo Tofu (Flagship Store) to Du Fu Thatched Cottage Museum: metro: duration 344, cost 6. taxi: duration 72, cost 213.52. walk: duration 583, cost 0.0. \nfrom Chen Mapo Tofu (Flagship Store) to Tongue Party: Sichuan Snack Collection (Taikoo Li Branch): metro: duration 18, cost 2. taxi: duration 6, cost 20.8. walk: duration 55, cost 0.0. \nfrom Chen Mapo Tofu (Flagship Store) to Chengdu Library: metro: duration 14, cost 2. taxi: duration 4, cost 15.87. walk: duration 38, cost 0.0. \nfrom Chen Mapo Tofu (Flagship Store) to Sichuan Provincial Library: metro: duration 17, cost 2. taxi: duration 5, cost 16.72. walk: duration 41, cost 0.0. \nfrom Chen Mapo Tofu (Flagship Store) to Elegant Azure Hotel: metro: duration 34, cost 4. taxi: duration 16, cost 44.99. walk: duration 134, cost 0.0. \nfrom Chen Mapo Tofu (Flagship Store) to Chengdu Shuangliu International Airport: metro: duration 48, cost 4. taxi: duration 20, cost 57.49. walk: duration 167, cost 0.0. \nfrom Chen Mapo Tofu (Flagship Store) to Sichuan Science and Technology Museum: metro: duration 19, cost 2. taxi: duration 5, cost 17.53. walk: duration 43, cost 0.0. \nfrom Chen Mapo Tofu (Flagship Store) to Chengdu East Railway Station: metro: duration 28, cost 4. taxi: duration 16, cost 43.27. walk: duration 129, cost 0.0. \nfrom Chen Mapo Tofu (Flagship Store) to Traveling With Hotel (Chengdu Financial Global Center): metro: duration 31, cost 3. taxi: duration 13, cost 35.42. walk: duration 105, cost 0.0. \nfrom Chen Mapo Tofu (Flagship Store) to Chengdu Giant Panda Museum: metro: duration 76, cost 4. taxi: duration 21, cost 58.75. walk: duration 170, cost 0.0. \nfrom Chen Mapo Tofu (Flagship Store) to Ming Shu Prince Mausoleum Museum: metro: duration 713, cost 8. taxi: duration 112, cost 331.85. walk: duration 899, cost 0.0. \nfrom Chen Mapo Tofu (Flagship Store) to Grandma Ye's Bobo Chicken (Taikoo Li Branch): metro: duration 21, cost 3. taxi: duration 7, cost 22.19. walk: duration 59, cost 0.0. \nfrom Chen Mapo Tofu (Flagship Store) to Chengdu Museum: metro: duration 18, cost 2. taxi: duration 5, cost 16.8. walk: duration 41, cost 0.0. \nfrom Chen Mapo Tofu (Flagship Store) to Chengdu Tianfu International Airport: metro: duration 161, cost 9. taxi: duration 85, cost 252.18. walk: duration 686, cost 0.0. \nfrom Chen Mapo Tofu (Flagship Store) to Chengdu Shu Brocade and Embroidery Museum: metro: duration 13, cost 2. taxi: duration 1, cost 11.0. walk: duration 10, cost 0.0. \nfrom Chen Mapo Tofu (Flagship Store) to Celebrity City Hotel: metro: duration 16, cost 2. taxi: duration 4, cost 15.68. walk: duration 37, cost 0.0. \nfrom Chen Mapo Tofu (Flagship Store) to China Teddy Bear Museum: metro: duration 95, cost 6. taxi: duration 33, cost 94.39. walk: duration 265, cost 0.0. \nfrom Chen Mapo Tofu (Flagship Store) to Sichuan Live Insect Museum: metro: duration 59, cost 5. taxi: duration 20, cost 55.82. walk: duration 162, cost 0.0. \nfrom Chen Mapo Tofu (Flagship Store) to Sichuan Museum: metro: duration 9, cost 2. taxi: duration 1, cost 11.0. walk: duration 8, cost 0.0. \nfrom Chen Mapo Tofu (Flagship Store) to Shu Daxia Hot Pot (Chunxi Branch): metro: duration 19, cost 2. taxi: duration 6, cost 19.13. walk: duration 49, cost 0.0. \nfrom Chen Mapo Tofu (Flagship Store) to Chen Mapo Tofu (Flagship Store):  metro: empty.  taxi: empty.  walk: empty. \nfrom Chen Mapo Tofu (Flagship Store) to Chengdu Natural History Museum: metro: duration 38, cost 4. taxi: duration 17, cost 46.26. walk: duration 137, cost 0.0. \nfrom Chen Mapo Tofu (Flagship Store) to Panda Science Exploration Museum: metro: duration 73, cost 4. taxi: duration 21, cost 58.08. walk: duration 169, cost 0.0. \nfrom Chengdu Natural History Museum to Little Dragon Turns the Great River · Hot Pot Aesthetics (Chunxi Branch): metro: duration 24, cost 3. taxi: duration 11, cost 31.78. walk: duration 92, cost 0.0. \nfrom Chengdu Natural History Museum to Shu Opera World (Tianfu Square Branch): metro: duration 28, cost 3. taxi: duration 11, cost 32.29. walk: duration 94, cost 0.0. \nfrom Chengdu Natural History Museum to Jinsha Site Museum: metro: duration 34, cost 4. taxi: duration 18, cost 51.55. walk: duration 151, cost 0.0. \nfrom Chengdu Natural History Museum to Du Fu Thatched Cottage Museum: metro: duration 364, cost 7. taxi: duration 86, cost 253.4. walk: duration 689, cost 0.0. \nfrom Chengdu Natural History Museum to Tongue Party: Sichuan Snack Collection (Taikoo Li Branch): metro: duration 26, cost 3. taxi: duration 11, cost 31.8. walk: duration 92, cost 0.0. \nfrom Chengdu Natural History Museum to Chengdu Library: metro: duration 27, cost 3. taxi: duration 12, cost 34.54. walk: duration 102, cost 0.0. \nfrom Chengdu Natural History Museum to Sichuan Provincial Library: metro: duration 30, cost 3. taxi: duration 12, cost 32.95. walk: duration 96, cost 0.0. \nfrom Chengdu Natural History Museum to Elegant Azure Hotel: metro: duration 27, cost 3. taxi: duration 8, cost 25.51. walk: duration 71, cost 0.0. \nfrom Chengdu Natural History Museum to Chengdu Shuangliu International Airport: metro: duration 68, cost 6. taxi: duration 35, cost 101.15. walk: duration 283, cost 0.0. \nfrom Chengdu Natural History Museum to Sichuan Science and Technology Museum: metro: duration 28, cost 3. taxi: duration 11, cost 32.09. walk: duration 93, cost 0.0. \nfrom Chengdu Natural History Museum to Chengdu East Railway Station: metro: duration 21, cost 3. taxi: duration 9, cost 26.52. walk: duration 74, cost 0.0. \nfrom Chengdu Natural History Museum to Traveling With Hotel (Chengdu Financial Global Center): metro: duration 44, cost 4. taxi: duration 21, cost 58.62. walk: duration 170, cost 0.0. \nfrom Chengdu Natural History Museum to Chengdu Giant Panda Museum: metro: duration 70, cost 3. taxi: duration 9, cost 26.05. walk: duration 73, cost 0.0. \nfrom Chengdu Natural History Museum to Ming Shu Prince Mausoleum Museum: metro: duration 732, cost 8. taxi: duration 129, cost 383.31. walk: duration 1036, cost 0.0. \nfrom Chengdu Natural History Museum to Grandma Ye's Bobo Chicken (Taikoo Li Branch): metro: duration 26, cost 3. taxi: duration 11, cost 30.56. walk: duration 88, cost 0.0. \nfrom Chengdu Natural History Museum to Chengdu Museum: metro: duration 31, cost 3. taxi: duration 12, cost 33.02. walk: duration 97, cost 0.0. \nfrom Chengdu Natural History Museum to Chengdu Tianfu International Airport: metro: duration 153, cost 9. taxi: duration 78, cost 230.9. walk: duration 629, cost 0.0. \nfrom Chengdu Natural History Museum to Chengdu Shu Brocade and Embroidery Museum: metro: duration 34, cost 4. taxi: duration 15, cost 42.29. walk: duration 126, cost 0.0. \nfrom Chengdu Natural History Museum to Celebrity City Hotel: metro: duration 29, cost 3. taxi: duration 13, cost 35.79. walk: duration 106, cost 0.0. \nfrom Chengdu Natural History Museum to China Teddy Bear Museum: metro: duration 117, cost 7. taxi: duration 50, cost 145.7. walk: duration 402, cost 0.0. \nfrom Chengdu Natural History Museum to Sichuan Live Insect Museum: metro: duration 80, cost 6. taxi: duration 36, cost 104.41. walk: duration 292, cost 0.0. \nfrom Chengdu Natural History Museum to Sichuan Museum: metro: duration 30, cost 4. taxi: duration 16, cost 43.34. walk: duration 129, cost 0.0. \nfrom Chengdu Natural History Museum to Shu Daxia Hot Pot (Chunxi Branch): metro: duration 27, cost 3. taxi: duration 11, cost 32.52. walk: duration 95, cost 0.0. \nfrom Chengdu Natural History Museum to Chen Mapo Tofu (Flagship Store): metro: duration 38, cost 4. taxi: duration 17, cost 46.26. walk: duration 137, cost 0.0. \nfrom Chengdu Natural History Museum to Chengdu Natural History Museum:  metro: empty.  taxi: empty.  walk: empty. \nfrom Chengdu Natural History Museum to Panda Science Exploration Museum: metro: duration 67, cost 3. taxi: duration 9, cost 26.35. walk: duration 74, cost 0.0. \nfrom Panda Science Exploration Museum to Little Dragon Turns the Great River · Hot Pot Aesthetics (Chunxi Branch): metro: duration 64, cost 4. taxi: duration 17, cost 48.1. walk: duration 142, cost 0.0. \nfrom Panda Science Exploration Museum to Shu Opera World (Tianfu Square Branch): metro: duration 66, cost 4. taxi: duration 17, cost 46.18. walk: duration 137, cost 0.0. \nfrom Panda Science Exploration Museum to Jinsha Site Museum: metro: duration 64, cost 4. taxi: duration 20, cost 57.09. walk: duration 166, cost 0.0. \nfrom Panda Science Exploration Museum to Du Fu Thatched Cottage Museum: metro: duration 388, cost 7. taxi: duration 82, cost 243.46. walk: duration 663, cost 0.0. \nfrom Panda Science Exploration Museum to Tongue Party: Sichuan Snack Collection (Taikoo Li Branch): metro: duration 66, cost 4. taxi: duration 17, cost 48.63. walk: duration 143, cost 0.0. \nfrom Panda Science Exploration Museum to Chengdu Library: metro: duration 65, cost 4. taxi: duration 18, cost 48.96. walk: duration 144, cost 0.0. \nfrom Panda Science Exploration Museum to Sichuan Provincial Library: metro: duration 66, cost 4. taxi: duration 17, cost 45.91. walk: duration 136, cost 0.0. \nfrom Panda Science Exploration Museum to Elegant Azure Hotel: metro: duration 74, cost 4. taxi: duration 18, cost 49.21. walk: duration 145, cost 0.0. \nfrom Panda Science Exploration Museum to Chengdu Shuangliu International Airport: metro: duration 106, cost 6. taxi: duration 41, cost 119.39. walk: duration 332, cost 0.0. \nfrom Panda Science Exploration Museum to Sichuan Science and Technology Museum: metro: duration 66, cost 4. taxi: duration 16, cost 44.85. walk: duration 133, cost 0.0. \nfrom Panda Science Exploration Museum to Chengdu East Railway Station: metro: duration 68, cost 4. taxi: duration 18, cost 50.36. walk: duration 148, cost 0.0. \nfrom Panda Science Exploration Museum to Traveling With Hotel (Chengdu Financial Global Center): metro: duration 86, cost 5. taxi: duration 29, cost 81.77. walk: duration 232, cost 0.0. \nfrom Panda Science Exploration Museum to Chengdu Giant Panda Museum: taxi: duration 0, cost 11.0. walk: duration 3, cost 0.0. \nfrom Panda Science Exploration Museum to Ming Shu Prince Mausoleum Museum: metro: duration 771, cost 9. taxi: duration 131, cost 388.37. walk: duration 1049, cost 0.0. \nfrom Panda Science Exploration Museum to Grandma Ye's Bobo Chicken (Taikoo Li Branch): metro: duration 68, cost 4. taxi: duration 17, cost 47.63. walk: duration 141, cost 0.0. \nfrom Panda Science Exploration Museum to Chengdu Museum: metro: duration 67, cost 4. taxi: duration 17, cost 46.4. walk: duration 137, cost 0.0. \nfrom Panda Science Exploration Museum to Chengdu Tianfu International Airport: metro: duration 201, cost 9. taxi: duration 86, cost 255.25. walk: duration 694, cost 0.0. \nfrom Panda Science Exploration Museum to Chengdu Shu Brocade and Embroidery Museum: metro: duration 68, cost 4. taxi: duration 20, cost 54.73. walk: duration 160, cost 0.0. \nfrom Panda Science Exploration Museum to Celebrity City Hotel: metro: duration 67, cost 4. taxi: duration 18, cost 51.31. walk: duration 150, cost 0.0. \nfrom Panda Science Exploration Museum to China Teddy Bear Museum: metro: duration 145, cost 7. taxi: duration 52, cost 151.6. walk: duration 418, cost 0.0. \nfrom Panda Science Exploration Museum to Sichuan Live Insect Museum: metro: duration 109, cost 6. taxi: duration 37, cost 106.65. walk: duration 298, cost 0.0. \nfrom Panda Science Exploration Museum to Sichuan Museum: metro: duration 64, cost 4. taxi: duration 20, cost 54.82. walk: duration 160, cost 0.0. \nfrom Panda Science Exploration Museum to Shu Daxia Hot Pot (Chunxi Branch): metro: duration 67, cost 4. taxi: duration 17, cost 48.45. walk: duration 143, cost 0.0. \nfrom Panda Science Exploration Museum to Chen Mapo Tofu (Flagship Store): metro: duration 73, cost 4. taxi: duration 21, cost 58.08. walk: duration 169, cost 0.0. \nfrom Panda Science Exploration Museum to Chengdu Natural History Museum: metro: duration 67, cost 3. taxi: duration 9, cost 26.35. walk: duration 74, cost 0.0. \nfrom Panda Science Exploration Museum to Panda Science Exploration Museum:  metro: empty.  taxi: empty.  walk: empty. \n"
+    },
+    "initial_verification": {
+      "commonsense_errors": [
+        "Intercity-transport from destination to origin should provide start and end position.",
+        "The attraction, Sichuan Museum in day 2, is closed when you visiting. Its open time is [09:00 -- 17:00]"
+      ],
+      "personal_constraints": [
+        true,
+        true,
+        true,
+        true,
+        true
+      ],
+      "category_normalization": [
+        {
+          "constraint_index": 3,
+          "category_domain": "activity",
+          "expression": "activity_type(activity)",
+          "raw_label": "train",
+          "normalized_label": "train"
+        },
+        {
+          "constraint_index": 3,
+          "category_domain": "activity",
+          "expression": "['attraction', 'airplane', 'train']",
+          "raw_label": "attraction",
+          "normalized_label": "attraction"
+        },
+        {
+          "constraint_index": 3,
+          "category_domain": "activity",
+          "expression": "['attraction', 'airplane', 'train']",
+          "raw_label": "airplane",
+          "normalized_label": "airplane"
+        },
+        {
+          "constraint_index": 3,
+          "category_domain": "activity",
+          "expression": "['attraction', 'airplane', 'train']",
+          "raw_label": "train",
+          "normalized_label": "train"
+        },
+        {
+          "constraint_index": 3,
+          "category_domain": "transport",
+          "expression": "innercity_transport_type(activity_transports(activity))",
+          "raw_label": "empty",
+          "normalized_label": "empty"
+        },
+        {
+          "constraint_index": 3,
+          "category_domain": "transport",
+          "expression": "'metro'",
+          "raw_label": "metro",
+          "normalized_label": "metro"
+        },
+        {
+          "constraint_index": 3,
+          "category_domain": "activity",
+          "expression": "activity_type(activity)",
+          "raw_label": "attraction",
+          "normalized_label": "attraction"
+        },
+        {
+          "constraint_index": 3,
+          "category_domain": "activity",
+          "expression": "['attraction', 'airplane', 'train']",
+          "raw_label": "attraction",
+          "normalized_label": "attraction"
+        },
+        {
+          "constraint_index": 3,
+          "category_domain": "activity",
+          "expression": "['attraction', 'airplane', 'train']",
+          "raw_label": "airplane",
+          "normalized_label": "airplane"
+        },
+        {
+          "constraint_index": 3,
+          "category_domain": "activity",
+          "expression": "['attraction', 'airplane', 'train']",
+          "raw_label": "train",
+          "normalized_label": "train"
+        },
+        {
+          "constraint_index": 3,
+          "category_domain": "transport",
+          "expression": "innercity_transport_type(activity_transports(activity))",
+          "raw_label": "metro",
+          "normalized_label": "metro"
+        },
+        {
+          "constraint_index": 3,
+          "category_domain": "transport",
+          "expression": "'metro'",
+          "raw_label": "metro",
+          "normalized_label": "metro"
+        },
+        {
+          "constraint_index": 3,
+          "category_domain": "activity",
+          "expression": "activity_type(activity)",
+          "raw_label": "dinner",
+          "normalized_label": "dinner"
+        },
+        {
+          "constraint_index": 3,
+          "category_domain": "activity",
+          "expression": "['attraction', 'airplane', 'train']",
+          "raw_label": "attraction",
+          "normalized_label": "attraction"
+        },
+        {
+          "constraint_index": 3,
+          "category_domain": "activity",
+          "expression": "['attraction', 'airplane', 'train']",
+          "raw_label": "airplane",
+          "normalized_label": "airplane"
+        },
+        {
+          "constraint_index": 3,
+          "category_domain": "activity",
+          "expression": "['attraction', 'airplane', 'train']",
+          "raw_label": "train",
+          "normalized_label": "train"
+        },
+        {
+          "constraint_index": 3,
+          "category_domain": "transport",
+          "expression": "innercity_transport_type(activity_transports(activity))",
+          "raw_label": "metro",
+          "normalized_label": "metro"
+        },
+        {
+          "constraint_index": 3,
+          "category_domain": "transport",
+          "expression": "'metro'",
+          "raw_label": "metro",
+          "normalized_label": "metro"
+        },
+        {
+          "constraint_index": 3,
+          "category_domain": "activity",
+          "expression": "activity_type(activity)",
+          "raw_label": "accommodation",
+          "normalized_label": "accommodation"
+        },
+        {
+          "constraint_index": 3,
+          "category_domain": "activity",
+          "expression": "['attraction', 'airplane', 'train']",
+          "raw_label": "attraction",
+          "normalized_label": "attraction"
+        },
+        {
+          "constraint_index": 3,
+          "category_domain": "activity",
+          "expression": "['attraction', 'airplane', 'train']",
+          "raw_label": "airplane",
+          "normalized_label": "airplane"
+        },
+        {
+          "constraint_index": 3,
+          "category_domain": "activity",
+          "expression": "['attraction', 'airplane', 'train']",
+          "raw_label": "train",
+          "normalized_label": "train"
+        },
+        {
+          "constraint_index": 3,
+          "category_domain": "transport",
+          "expression": "innercity_transport_type(activity_transports(activity))",
+          "raw_label": "metro",
+          "normalized_label": "metro"
+        },
+        {
+          "constraint_index": 3,
+          "category_domain": "transport",
+          "expression": "'metro'",
+          "raw_label": "metro",
+          "normalized_label": "metro"
+        },
+        {
+          "constraint_index": 3,
+          "category_domain": "activity",
+          "expression": "activity_type(activity)",
+          "raw_label": "attraction",
+          "normalized_label": "attraction"
+        },
+        {
+          "constraint_index": 3,
+          "category_domain": "activity",
+          "expression": "['attraction', 'airplane', 'train']",
+          "raw_label": "attraction",
+          "normalized_label": "attraction"
+        },
+        {
+          "constraint_index": 3,
+          "category_domain": "activity",
+          "expression": "['attraction', 'airplane', 'train']",
+          "raw_label": "airplane",
+          "normalized_label": "airplane"
+        },
+        {
+          "constraint_index": 3,
+          "category_domain": "activity",
+          "expression": "['attraction', 'airplane', 'train']",
+          "raw_label": "train",
+          "normalized_label": "train"
+        },
+        {
+          "constraint_index": 3,
+          "category_domain": "transport",
+          "expression": "innercity_transport_type(activity_transports(activity))",
+          "raw_label": "metro",
+          "normalized_label": "metro"
+        },
+        {
+          "constraint_index": 3,
+          "category_domain": "transport",
+          "expression": "'metro'",
+          "raw_label": "metro",
+          "normalized_label": "metro"
+        },
+        {
+          "constraint_index": 3,
+          "category_domain": "activity",
+          "expression": "activity_type(activity)",
+          "raw_label": "attraction",
+          "normalized_label": "attraction"
+        },
+        {
+          "constraint_index": 3,
+          "category_domain": "activity",
+          "expression": "['attraction', 'airplane', 'train']",
+          "raw_label": "attraction",
+          "normalized_label": "attraction"
+        },
+        {
+          "constraint_index": 3,
+          "category_domain": "activity",
+          "expression": "['attraction', 'airplane', 'train']",
+          "raw_label": "airplane",
+          "normalized_label": "airplane"
+        },
+        {
+          "constraint_index": 3,
+          "category_domain": "activity",
+          "expression": "['attraction', 'airplane', 'train']",
+          "raw_label": "train",
+          "normalized_label": "train"
+        },
+        {
+          "constraint_index": 3,
+          "category_domain": "transport",
+          "expression": "innercity_transport_type(activity_transports(activity))",
+          "raw_label": "metro",
+          "normalized_label": "metro"
+        },
+        {
+          "constraint_index": 3,
+          "category_domain": "transport",
+          "expression": "'metro'",
+          "raw_label": "metro",
+          "normalized_label": "metro"
+        },
+        {
+          "constraint_index": 3,
+          "category_domain": "activity",
+          "expression": "activity_type(activity)",
+          "raw_label": "lunch",
+          "normalized_label": "lunch"
+        },
+        {
+          "constraint_index": 3,
+          "category_domain": "activity",
+          "expression": "['attraction', 'airplane', 'train']",
+          "raw_label": "attraction",
+          "normalized_label": "attraction"
+        },
+        {
+          "constraint_index": 3,
+          "category_domain": "activity",
+          "expression": "['attraction', 'airplane', 'train']",
+          "raw_label": "airplane",
+          "normalized_label": "airplane"
+        },
+        {
+          "constraint_index": 3,
+          "category_domain": "activity",
+          "expression": "['attraction', 'airplane', 'train']",
+          "raw_label": "train",
+          "normalized_label": "train"
+        },
+        {
+          "constraint_index": 3,
+          "category_domain": "transport",
+          "expression": "innercity_transport_type(activity_transports(activity))",
+          "raw_label": "metro",
+          "normalized_label": "metro"
+        },
+        {
+          "constraint_index": 3,
+          "category_domain": "transport",
+          "expression": "'metro'",
+          "raw_label": "metro",
+          "normalized_label": "metro"
+        },
+        {
+          "constraint_index": 3,
+          "category_domain": "activity",
+          "expression": "activity_type(activity)",
+          "raw_label": "airplane",
+          "normalized_label": "airplane"
+        },
+        {
+          "constraint_index": 3,
+          "category_domain": "activity",
+          "expression": "['attraction', 'airplane', 'train']",
+          "raw_label": "attraction",
+          "normalized_label": "attraction"
+        },
+        {
+          "constraint_index": 3,
+          "category_domain": "activity",
+          "expression": "['attraction', 'airplane', 'train']",
+          "raw_label": "airplane",
+          "normalized_label": "airplane"
+        },
+        {
+          "constraint_index": 3,
+          "category_domain": "activity",
+          "expression": "['attraction', 'airplane', 'train']",
+          "raw_label": "train",
+          "normalized_label": "train"
+        },
+        {
+          "constraint_index": 3,
+          "category_domain": "transport",
+          "expression": "innercity_transport_type(activity_transports(activity))",
+          "raw_label": "metro",
+          "normalized_label": "metro"
+        },
+        {
+          "constraint_index": 3,
+          "category_domain": "transport",
+          "expression": "'metro'",
+          "raw_label": "metro",
+          "normalized_label": "metro"
+        },
+        {
+          "constraint_index": 4,
+          "category_domain": "activity",
+          "expression": "activity_type(activity)",
+          "raw_label": "train",
+          "normalized_label": "train"
+        },
+        {
+          "constraint_index": 4,
+          "category_domain": "activity",
+          "expression": "'attraction'",
+          "raw_label": "attraction",
+          "normalized_label": "attraction"
+        },
+        {
+          "constraint_index": 4,
+          "category_domain": "activity",
+          "expression": "activity_type(activity)",
+          "raw_label": "attraction",
+          "normalized_label": "attraction"
+        },
+        {
+          "constraint_index": 4,
+          "category_domain": "activity",
+          "expression": "'attraction'",
+          "raw_label": "attraction",
+          "normalized_label": "attraction"
+        },
+        {
+          "constraint_index": 4,
+          "category_domain": "activity",
+          "expression": "activity_type(activity)",
+          "raw_label": "dinner",
+          "normalized_label": "dinner"
+        },
+        {
+          "constraint_index": 4,
+          "category_domain": "activity",
+          "expression": "'attraction'",
+          "raw_label": "attraction",
+          "normalized_label": "attraction"
+        },
+        {
+          "constraint_index": 4,
+          "category_domain": "activity",
+          "expression": "activity_type(activity)",
+          "raw_label": "accommodation",
+          "normalized_label": "accommodation"
+        },
+        {
+          "constraint_index": 4,
+          "category_domain": "activity",
+          "expression": "'attraction'",
+          "raw_label": "attraction",
+          "normalized_label": "attraction"
+        },
+        {
+          "constraint_index": 4,
+          "category_domain": "activity",
+          "expression": "activity_type(activity)",
+          "raw_label": "attraction",
+          "normalized_label": "attraction"
+        },
+        {
+          "constraint_index": 4,
+          "category_domain": "activity",
+          "expression": "'attraction'",
+          "raw_label": "attraction",
+          "normalized_label": "attraction"
+        },
+        {
+          "constraint_index": 4,
+          "category_domain": "activity",
+          "expression": "activity_type(activity)",
+          "raw_label": "attraction",
+          "normalized_label": "attraction"
+        },
+        {
+          "constraint_index": 4,
+          "category_domain": "activity",
+          "expression": "'attraction'",
+          "raw_label": "attraction",
+          "normalized_label": "attraction"
+        },
+        {
+          "constraint_index": 4,
+          "category_domain": "activity",
+          "expression": "activity_type(activity)",
+          "raw_label": "lunch",
+          "normalized_label": "lunch"
+        },
+        {
+          "constraint_index": 4,
+          "category_domain": "activity",
+          "expression": "'attraction'",
+          "raw_label": "attraction",
+          "normalized_label": "attraction"
+        },
+        {
+          "constraint_index": 4,
+          "category_domain": "activity",
+          "expression": "activity_type(activity)",
+          "raw_label": "airplane",
+          "normalized_label": "airplane"
+        },
+        {
+          "constraint_index": 4,
+          "category_domain": "activity",
+          "expression": "'attraction'",
+          "raw_label": "attraction",
+          "normalized_label": "attraction"
+        },
+        {
+          "constraint_index": 4,
+          "category_domain": "attraction",
+          "expression": "{'博物馆/纪念馆'}",
+          "raw_label": "博物馆/纪念馆",
+          "normalized_label": "Museum/Memorial Hall"
+        },
+        {
+          "constraint_index": 4,
+          "category_domain": "attraction",
+          "expression": "attraction_type_set",
+          "raw_label": "Museum/Memorial Hall",
+          "normalized_label": "Museum/Memorial Hall"
+        },
+        {
+          "constraint_index": 5,
+          "category_domain": "transport",
+          "expression": "innercity_transport_type(activity_transports(activity))",
+          "raw_label": "empty",
+          "normalized_label": "empty"
+        },
+        {
+          "constraint_index": 5,
+          "category_domain": "transport",
+          "expression": "'taxi'",
+          "raw_label": "taxi",
+          "normalized_label": "taxi"
+        },
+        {
+          "constraint_index": 5,
+          "category_domain": "transport",
+          "expression": "innercity_transport_type(activity_transports(activity))",
+          "raw_label": "metro",
+          "normalized_label": "metro"
+        },
+        {
+          "constraint_index": 5,
+          "category_domain": "transport",
+          "expression": "'taxi'",
+          "raw_label": "taxi",
+          "normalized_label": "taxi"
+        },
+        {
+          "constraint_index": 5,
+          "category_domain": "transport",
+          "expression": "innercity_transport_type(activity_transports(activity))",
+          "raw_label": "metro",
+          "normalized_label": "metro"
+        },
+        {
+          "constraint_index": 5,
+          "category_domain": "transport",
+          "expression": "'taxi'",
+          "raw_label": "taxi",
+          "normalized_label": "taxi"
+        },
+        {
+          "constraint_index": 5,
+          "category_domain": "transport",
+          "expression": "innercity_transport_type(activity_transports(activity))",
+          "raw_label": "metro",
+          "normalized_label": "metro"
+        },
+        {
+          "constraint_index": 5,
+          "category_domain": "transport",
+          "expression": "'taxi'",
+          "raw_label": "taxi",
+          "normalized_label": "taxi"
+        },
+        {
+          "constraint_index": 5,
+          "category_domain": "transport",
+          "expression": "innercity_transport_type(activity_transports(activity))",
+          "raw_label": "metro",
+          "normalized_label": "metro"
+        },
+        {
+          "constraint_index": 5,
+          "category_domain": "transport",
+          "expression": "'taxi'",
+          "raw_label": "taxi",
+          "normalized_label": "taxi"
+        },
+        {
+          "constraint_index": 5,
+          "category_domain": "transport",
+          "expression": "innercity_transport_type(activity_transports(activity))",
+          "raw_label": "metro",
+          "normalized_label": "metro"
+        },
+        {
+          "constraint_index": 5,
+          "category_domain": "transport",
+          "expression": "'taxi'",
+          "raw_label": "taxi",
+          "normalized_label": "taxi"
+        },
+        {
+          "constraint_index": 5,
+          "category_domain": "transport",
+          "expression": "innercity_transport_type(activity_transports(activity))",
+          "raw_label": "metro",
+          "normalized_label": "metro"
+        },
+        {
+          "constraint_index": 5,
+          "category_domain": "transport",
+          "expression": "'taxi'",
+          "raw_label": "taxi",
+          "normalized_label": "taxi"
+        },
+        {
+          "constraint_index": 5,
+          "category_domain": "transport",
+          "expression": "innercity_transport_type(activity_transports(activity))",
+          "raw_label": "metro",
+          "normalized_label": "metro"
+        },
+        {
+          "constraint_index": 5,
+          "category_domain": "transport",
+          "expression": "'taxi'",
+          "raw_label": "taxi",
+          "normalized_label": "taxi"
+        }
+      ],
+      "personal_errors": [],
+      "evaluation_errors": [],
+      "translation_errors": [],
+      "error_info": [
+        "Intercity-transport from destination to origin should provide start and end position.",
+        "The attraction, Sichuan Museum in day 2, is closed when you visiting. Its open time is [09:00 -- 17:00]"
+      ],
+      "passed": false,
+      "translated_plan": {
+        "people_number": 1,
+        "start_city": "Beijing",
+        "target_city": "Chengdu",
+        "itinerary": [
+          {
+            "day": 1,
+            "activities": [
+              {
+                "start_time": "07:00",
+                "end_time": "14:33",
+                "start": "Beijing West Railway Station",
+                "end": "Chengdu East Railway Station",
+                "price": 990.94,
+                "cost": 990.94,
+                "TrainID": "G87",
+                "type": "train",
+                "tickets": 1,
+                "transports": []
+              },
+              {
+                "position": "Jinsha Site Museum",
+                "type": "attraction",
+                "transports": [
+                  {
+                    "start": "Chengdu East Railway Station",
+                    "end": "Chengdu East Railway Station-Metro Station",
+                    "mode": "walk",
+                    "start_time": "14:33",
+                    "end_time": "14:33",
+                    "cost": 0,
+                    "distance": 0.0,
+                    "price": 0
+                  },
+                  {
+                    "start": "Chengdu East Railway Station-Metro Station",
+                    "end": "Yipintianxia-Metro Station",
+                    "mode": "metro",
+                    "start_time": "14:33",
+                    "end_time": "14:59",
+                    "cost": 4,
+                    "distance": 13.29,
+                    "price": 4,
+                    "tickets": 1
+                  },
+                  {
+                    "start": "Yipintianxia-Metro Station",
+                    "end": "Jinsha Site Museum",
+                    "mode": "walk",
+                    "start_time": "14:59",
+                    "end_time": "15:00",
+                    "cost": 0,
+                    "distance": 0.14,
+                    "price": 0
+                  }
+                ],
+                "price": 66.0,
+                "cost": 66.0,
+                "tickets": 1,
+                "start_time": "15:10",
+                "end_time": "17:40"
+              },
+              {
+                "position": "Chen Mapo Tofu (Flagship Store)",
+                "type": "dinner",
+                "transports": [
+                  {
+                    "start": "Jinsha Site Museum",
+                    "end": "Yipintianxia-Metro Station",
+                    "mode": "walk",
+                    "start_time": "17:40",
+                    "end_time": "17:41",
+                    "cost": 0,
+                    "distance": 0.14,
+                    "price": 0
+                  },
+                  {
+                    "start": "Yipintianxia-Metro Station",
+                    "end": "Green Goat Palace-Metro Station",
+                    "mode": "metro",
+                    "start_time": "17:41",
+                    "end_time": "17:48",
+                    "cost": 2,
+                    "distance": 3.79,
+                    "price": 2,
+                    "tickets": 1
+                  },
+                  {
+                    "start": "Green Goat Palace-Metro Station",
+                    "end": "Chen Mapo Tofu (Flagship Store)",
+                    "mode": "walk",
+                    "start_time": "17:48",
+                    "end_time": "17:56",
+                    "cost": 0,
+                    "distance": 0.7,
+                    "price": 0
+                  }
+                ],
+                "price": 74,
+                "cost": 74,
+                "start_time": "18:00",
+                "end_time": "19:00"
+              },
+              {
+                "position": "Celebrity City Hotel",
+                "type": "accommodation",
+                "transports": [
+                  {
+                    "start": "Chen Mapo Tofu (Flagship Store)",
+                    "end": "Green Goat Palace-Metro Station",
+                    "mode": "walk",
+                    "start_time": "19:00",
+                    "end_time": "19:08",
+                    "cost": 0,
+                    "distance": 0.7,
+                    "price": 0
+                  },
+                  {
+                    "start": "Green Goat Palace-Metro Station",
+                    "end": "Tianfu Square-Metro Station",
+                    "mode": "metro",
+                    "start_time": "19:08",
+                    "end_time": "19:12",
+                    "cost": 2,
+                    "distance": 2.41,
+                    "price": 2,
+                    "tickets": 1
+                  },
+                  {
+                    "start": "Tianfu Square-Metro Station",
+                    "end": "Celebrity City Hotel",
+                    "mode": "walk",
+                    "start_time": "19:12",
+                    "end_time": "19:16",
+                    "cost": 0,
+                    "distance": 0.38,
+                    "price": 0
+                  }
+                ],
+                "room_type": 2,
+                "price": 353,
+                "cost": 353,
+                "start_time": "19:10",
+                "end_time": "24:00",
+                "rooms": 1
+              }
+            ]
+          },
+          {
+            "day": 2,
+            "activities": [
+              {
+                "position": "Sichuan Museum",
+                "type": "attraction",
+                "transports": [
+                  {
+                    "start": "Celebrity City Hotel",
+                    "end": "Tianfu Square-Metro Station",
+                    "mode": "walk",
+                    "start_time": "08:00",
+                    "end_time": "08:04",
+                    "cost": 0,
+                    "distance": 0.38,
+                    "price": 0
+                  },
+                  {
+                    "start": "Tianfu Square-Metro Station",
+                    "end": "University of Traditional Chinese Medicine · Provincial Hospital-Metro Station",
+                    "mode": "metro",
+                    "start_time": "08:04",
+                    "end_time": "08:09",
+                    "cost": 2,
+                    "distance": 2.59,
+                    "price": 2,
+                    "tickets": 1
+                  },
+                  {
+                    "start": "University of Traditional Chinese Medicine · Provincial Hospital-Metro Station",
+                    "end": "Sichuan Museum",
+                    "mode": "walk",
+                    "start_time": "08:09",
+                    "end_time": "08:09",
+                    "cost": 0,
+                    "distance": 0.08,
+                    "price": 0
+                  }
+                ],
+                "price": 0.0,
+                "cost": 0.0,
+                "tickets": 1,
+                "start_time": "08:15",
+                "end_time": "10:15"
+              },
+              {
+                "position": "Du Fu Thatched Cottage Museum",
+                "type": "attraction",
+                "transports": [
+                  {
+                    "start": "Sichuan Museum",
+                    "end": "University of Traditional Chinese Medicine · Provincial Hospital-Metro Station",
+                    "mode": "walk",
+                    "start_time": "10:15",
+                    "end_time": "10:15",
+                    "cost": 0,
+                    "distance": 0.08,
+                    "price": 0
+                  },
+                  {
+                    "start": "University of Traditional Chinese Medicine · Provincial Hospital-Metro Station",
+                    "end": "Venus-Metro Station",
+                    "mode": "metro",
+                    "start_time": "10:15",
+                    "end_time": "11:06",
+                    "cost": 6,
+                    "distance": 25.64,
+                    "price": 6,
+                    "tickets": 1
+                  },
+                  {
+                    "start": "Venus-Metro Station",
+                    "end": "Du Fu Thatched Cottage Museum",
+                    "mode": "walk",
+                    "start_time": "11:06",
+                    "end_time": "15:51",
+                    "cost": 0,
+                    "distance": 23.76,
+                    "price": 0
+                  }
+                ],
+                "price": 0.0,
+                "cost": 0.0,
+                "tickets": 1,
+                "start_time": "11:00",
+                "end_time": "13:00"
+              },
+              {
+                "position": "Shu Daxia Hot Pot (Chunxi Branch)",
+                "type": "lunch",
+                "transports": [
+                  {
+                    "start": "Du Fu Thatched Cottage Museum",
+                    "end": "Venus-Metro Station",
+                    "mode": "walk",
+                    "start_time": "13:00",
+                    "end_time": "17:45",
+                    "cost": 0,
+                    "distance": 23.76,
+                    "price": 0
+                  },
+                  {
+                    "start": "Venus-Metro Station",
+                    "end": "Chunxi Road-Metro Station",
+                    "mode": "metro",
+                    "start_time": "17:45",
+                    "end_time": "18:44",
+                    "cost": 7,
+                    "distance": 29.67,
+                    "price": 7,
+                    "tickets": 1
+                  },
+                  {
+                    "start": "Chunxi Road-Metro Station",
+                    "end": "Shu Daxia Hot Pot (Chunxi Branch)",
+                    "mode": "walk",
+                    "start_time": "18:44",
+                    "end_time": "18:48",
+                    "cost": 0,
+                    "distance": 0.39,
+                    "price": 0
+                  }
+                ],
+                "price": 109,
+                "cost": 109,
+                "start_time": "13:50",
+                "end_time": "14:50"
+              },
+              {
+                "position": "Chengdu Shuangliu International Airport",
+                "type": "airplane",
+                "transports": [
+                  {
+                    "start": "Shu Daxia Hot Pot (Chunxi Branch)",
+                    "end": "Chunxi Road-Metro Station",
+                    "mode": "walk",
+                    "start_time": "14:50",
+                    "end_time": "14:54",
+                    "cost": 0,
+                    "distance": 0.39,
+                    "price": 0
+                  },
+                  {
+                    "start": "Chunxi Road-Metro Station",
+                    "end": "Shuangliu Airport Terminal 2 East-Metro Station",
+                    "mode": "metro",
+                    "start_time": "14:54",
+                    "end_time": "15:24",
+                    "cost": 5,
+                    "distance": 15.01,
+                    "price": 5,
+                    "tickets": 1
+                  },
+                  {
+                    "start": "Shuangliu Airport Terminal 2 East-Metro Station",
+                    "end": "Chengdu Shuangliu International Airport",
+                    "mode": "walk",
+                    "start_time": "15:24",
+                    "end_time": "15:39",
+                    "cost": 0,
+                    "distance": 1.25,
+                    "price": 0
+                  }
+                ],
+                "start_time": "16:04",
+                "end_time": "17:55",
+                "FlightID": "FL123",
+                "price": 750.67,
+                "cost": 750.67,
+                "tickets": 1
+              }
+            ]
+          }
+        ]
+      },
+      "verifier_errors": [],
+      "schema_errors": [],
+      "translation_failures": []
+    },
+    "environment_context": {
+      "lang": "en"
+    },
+    "generation_metadata": {
+      "raw_response": "[{\"day\": 1,```json\n{\n    \"day\": 1,\n    \"activities\": [\n        {\n            \"start_time\": \"07:00\",\n            \"end_time\": \"14:33\",\n            \"start\": \"Beijing West Railway Station\",\n            \"end\": \"Chengdu East Railway Station\",\n            \"price\": 990.94,\n            \"cost\": 990.94,\n            \"TrainID\": \"G87\",\n            \"type\": \"train\",\n            \"tickets\": 1,\n            \"transports\": \"empty\"\n        },\n        {\n            \"position\": \"Jinsha Site Museum\",\n            \"type\": \"attraction\",\n            \"transports\": {\"from\": \"Chengdu East Railway Station\", \"to\": \"Jinsha Site Museum\", \"mode\": \"metro\", \"start_time\": \"14:33\", \"end_time\": \"15:00\", \"cost\": 4},\n            \"price\": 66.0,\n            \"cost\": 66.0,\n            \"tickets\": 1,\n            \"start_time\": \"15:10\",\n            \"end_time\": \"17:40\"\n        },\n        {\n            \"position\": \"Chen Mapo Tofu (Flagship Store)\",\n            \"type\": \"dinner\",\n            \"transports\": {\"from\": \"Jinsha Site Museum\", \"to\": \"Chen Mapo Tofu (Flagship Store)\", \"mode\": \"metro\", \"start_time\": \"17:40\", \"end_time\": \"17:56\", \"cost\": 2},\n            \"price\": 74,\n            \"cost\": 74,\n            \"start_time\": \"18:00\",\n            \"end_time\": \"19:00\"\n        },\n        {\n            \"position\": \"Celebrity City Hotel\",\n            \"type\": \"accommodation\",\n            \"transports\": {\"from\": \"Chen Mapo Tofu (Flagship Store)\", \"to\": \"Celebrity City Hotel\", \"mode\": \"metro\", \"start_time\": \"19:00\", \"end_time\": \"19:07\", \"cost\": 2},\n            \"room_type\": 2,\n            \"price\": 353,\n            \"cost\": 353,\n            \"start_time\": \"19:10\",\n            \"end_time\": \"24:00\",\n            \"rooms\": 1\n        }\n    ]\n},\n{\n    \"day\": 2,\n    \"activities\": [\n        {\n            \"position\": \"Sichuan Museum\",\n            \"type\": \"attraction\",\n            \"transports\": {\"from\": \"Celebrity City Hotel\", \"to\": \"Sichuan Museum\", \"mode\": \"metro\", \"start_time\": \"08:00\", \"end_time\": \"08:09\", \"cost\": 2},\n            \"price\": 0.0,\n            \"cost\": 0.0,\n            \"tickets\": 1,\n            \"start_time\": \"08:15\",\n            \"end_time\": \"10:15\"\n        },\n        {\n            \"position\": \"Du Fu Thatched Cottage Museum\",\n            \"type\": \"attraction\",\n            \"transports\": {\"from\": \"Sichuan Museum\", \"to\": \"Du Fu Thatched Cottage Museum\", \"mode\": \"metro\", \"start_time\": \"10:15\", \"end_time\": \"10:51\", \"cost\": 6},\n            \"price\": 0.0,\n            \"cost\": 0.0,\n            \"tickets\": 1,\n            \"start_time\": \"11:00\",\n            \"end_time\": \"13:00\"\n        },\n        {\n            \"position\": \"Shu Daxia Hot Pot (Chunxi Branch)\",\n            \"type\": \"lunch\",\n            \"transports\": {\"from\": \"Du Fu Thatched Cottage Museum\", \"to\": \"Shu Daxia Hot Pot (Chunxi Branch)\", \"mode\": \"metro\", \"start_time\": \"13:00\", \"end_time\": \"13:48\", \"cost\": 7},\n            \"price\": 109,\n            \"cost\": 109,\n            \"start_time\": \"13:50\",\n            \"end_time\": \"14:50\"\n        },\n        {\n            \"position\": \"Chengdu Shuangliu International Airport\",\n            \"type\": \"airplane\",\n            \"transports\": {\"from\": \"Shu Daxia Hot Pot (Chunxi Branch)\", \"to\": \"Chengdu Shuangliu International Airport\", \"mode\": \"metro\", \"start_time\": \"14:50\", \"end_time\": \"15:36\", \"cost\": 5},\n            \"start_time\": \"16:04\",\n            \"end_time\": \"17:55\",\n            \"FlightID\": \"FL123\",\n            \"price\": 750.67,\n            \"cost\": 750.67,\n            \"tickets\": 1\n        }\n    ]\n}\n```",
+      "input_tokens": 103364,
+      "output_tokens": 1303,
+      "total_tokens": 104667,
+      "model_calls": 6,
+      "failed_model_calls": 0,
+      "elapsed_time_seconds": 39.7458930015564,
+      "llm_inference_time_seconds": 23.938815116882324,
+      "information_collection_time_seconds": 15.804026126861572,
+      "initial_generation_time_s": 39.74592469993513,
+      "initial_generation_tool_calls": 5982,
+      "initial_generation_tool_call_counts_by_type": {
+        "accommodations_select": 1,
+        "attractions_select": 1,
+        "goto": 1950,
+        "intercity_transport_select": 4,
+        "next_page": 125,
+        "poi_lat_lon_search": 3900,
+        "restaurants_select": 1
+      },
+      "shared_initialization_time_s": 40.10423229995649,
+      "shared_initialization_system_metrics": {
+        "tool_call_count": 6034,
+        "successful_tool_call_count": 6034,
+        "failed_tool_call_count": 0,
+        "verification_count": 1,
+        "tool_call_counts_by_type": {
+          "accommodations_select": 2,
+          "attractions_select": 7,
+          "goto": 1964,
+          "intercity_transport_select": 5,
+          "next_page": 125,
+          "poi_lat_lon_search": 3928,
+          "restaurants_select": 3
+        }
+      }
+    }
+  },
+  "initial_plan_hash": "455faf6e3e8c6faf14425b341fae4d8004e0985c49d81bbec3baf95abbb1f8ee",
+  "initial_state_hash": "619ac4d428c836aee42f6ae68ec90f2c7fb5437a992127fb97ec8682238bbc6a"
+}
