@@ -1,0 +1,20 @@
+{
+  "uid": "h20241029143820591758",
+  "tag": "human",
+  "start_city": "Shanghai",
+  "target_city": "Shenzhen",
+  "days": 4,
+  "people_number": 3,
+  "limit_rooms": false,
+  "limits_room_type": false,
+  "hard_logic_py": [
+    "intercity_transport_set=set()\nfor activity in allactivities(plan):\n  if activity_type(activity) in ['train', 'airplane']: intercity_transport_set.add(intercity_transport_type(activity))\nresult=({'airplane'}==intercity_transport_set)",
+    "total_cost=0 \nfor activity in allactivities(plan):\n    total_cost+=activity_cost(activity)\n    total_cost += innercity_transport_cost(activity_transports(activity))\nresult=(total_cost<=12000)",
+    "attraction_type_set=set()\nfor activity in allactivities(plan):\n  if activity_type(activity)=='attraction': attraction_type_set.add(attraction_type(activity, target_city(plan)))\nresult=({'公园'}<=attraction_type_set)",
+    "result=(day_count(plan)==4)",
+    "result=(people_count(plan)==3)",
+    "result=True\nfor activity in allactivities(plan):\n  if innercity_transport_type(activity_transports(activity))=='taxi'and taxi_cars(activity_transports(activity))!=1: result=False"
+  ],
+  "nature_language": "[Current location: Shanghai, Destination: Shenzhen, Number of travelers: 3, Number of travel days: 4] My grandparents and I are planning to fly from Shanghai to Shenzhen for a 4-day trip, with a budget of no more than 12,000 RMB. We hope to experience parks, so please help recommend an itinerary and accommodation.",
+  "nature_language_en": "[Current location: Shanghai, Destination: Shenzhen, Number of travelers: 3, Number of travel days: 4] My grandparents and I are planning to fly from Shanghai to Shenzhen for a 4-day trip, with a budget of no more than 12,000 RMB. We hope to experience parks, so please help recommend an itinerary and accommodation."
+}
