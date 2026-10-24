@@ -85,33 +85,8 @@ class R2ProtectedRepair(R0WholePlanRepair):
             "protected_constraint_indices": _passing_personal_indices(verification_results),
             "remembered_broken_constraint_indices": sorted(self._broken_constraints),
         }
-        # Early stop on the shared loop's no-progress signal. After a reply
-        # that returned the accepted plan unchanged, a personal prompt would be
-        # identical, and a near-deterministic model answers it the same way, so
-        # R2 keeps the plan without an LLM call. The skipped attempts use up the
-        # personal budget, so the loop still schedules the commonsense step
-        # (a different prompt, never skipped); an unchanged commonsense reply
-        # makes the personal recovery attempts after it skip too. A Case 4
-        # failure also keeps the plan but is not an echo, so it does not count.
-        if (
-            context.get("repair_phase") == "personal"
-            and context.get("last_attempt_no_progress")
-            and self._last_result is not None
-            and (self._last_result.metadata.get("early_stopped")
-                 or not self._last_result.metadata.get("failure_reason"))
-        ):
-            failed_indices, _ = self._build_feedback(problem, verification_results, context)
-            result = RepairResult(deepcopy(raw_plan), {
-                **r2_metadata,
-                "target_constraint_indices": failed_indices,
-                "editable_scope": "plan",
-                "early_stopped": True,
-                "decision_reason": "no_progress_early_stop",
-                "no_progress_streak": context.get("no_progress_streak"),
-                "llm_inference_time": 0.0,
-            })
-            self._last_result = result
-            return result
+        # R2 has no skip rule of its own: an exact repeat request is served by
+        # the shared loop's per-query cache, the same for every strategy.
         # Case 4: R0 raises on an unparsable reply. R2 instead keeps the
         # current plan for this attempt, as does a candidate that is not a
         # usable itinerary of the requested length.

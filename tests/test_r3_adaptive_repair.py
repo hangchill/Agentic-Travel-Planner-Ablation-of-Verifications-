@@ -848,7 +848,6 @@ class SharedR3SchedulingTests(unittest.TestCase):
                                           max_steps=6, initial_verification=state(initial))
         records = [RepairAttemptRecord.from_dict(entry['repair_attempt']) for entry in output['history'][1:]]
         self.assertEqual([r.repair_phase for r in records], executed)
-        self.assertLessEqual(executed.count('commonsense'), 1)
         rung_for_step = ['slot', 'slot', 'day', 'day', 'plan', 'plan']
         for record in records:
             self.assertNotIn('repair_phase', record.repair_metadata)
@@ -924,11 +923,15 @@ class SharedR3SchedulingTests(unittest.TestCase):
         self.assertEqual([r.editable_scope for r in records],
                          ['slot', 'slot', 'day', 'day', 'plan', 'plan'])
 
-    def test_recovery_and_no_second_commonsense(self):
+    def test_recovery_then_second_commonsense(self):
+        # Commonsense at step 2 breaks the personal constraint -> personal recovery
+        # at steps 3-4 -> commonsense errors remain, so commonsense again at 5-6.
         phases, records = self.run_scheduled((False, True),
-            [(True, True), (False, True), (False, True), (True, True)])
-        self.assertEqual(phases, ['personal', 'commonsense', 'personal', 'personal'])
-        self.assertEqual([r.editable_scope for r in records], ['slot', 'slot', 'day', 'day'])
+            [(True, True), (False, True), (False, True), (True, True), (True, True), (True, True)])
+        self.assertEqual(phases, ['personal', 'commonsense', 'personal', 'personal',
+                                  'commonsense', 'commonsense'])
+        self.assertEqual([r.editable_scope for r in records],
+                         ['slot', 'slot', 'day', 'day', 'plan', 'plan'])
 
     def test_commonsense_at_step_three_then_recovery(self):
         # Personal passes after step 2 -> step 3 commonsense at day scope; it
@@ -940,10 +943,13 @@ class SharedR3SchedulingTests(unittest.TestCase):
         self.assertEqual([r.editable_scope for r in records],
                          ['slot', 'slot', 'day', 'day', 'plan', 'plan'])
 
-    def test_commonsense_only_from_start_is_one_slot_step(self):
-        phases, records = self.run_scheduled((True, True), [(True, True)])
-        self.assertEqual(phases, ['commonsense'])
-        self.assertEqual(records[0].editable_scope, 'slot')
+    def test_commonsense_only_from_start_climbs_ladder(self):
+        # Personal passes from the start and commonsense errors never clear:
+        # six commonsense rounds, widening slot -> day -> plan.
+        phases, records = self.run_scheduled((True, True), [(True, True)] * 6)
+        self.assertEqual(phases, ['commonsense'] * 6)
+        self.assertEqual([r.editable_scope for r in records],
+                         ['slot', 'slot', 'day', 'day', 'plan', 'plan'])
 
 
 if __name__ == "__main__":

@@ -184,7 +184,12 @@ class R0IntentTests(unittest.TestCase):
         self.assertEqual(value["before_personal_constraints"], [False, None])
         self.assertIsNone(value["input_tokens_delta"])
         self.assertEqual(value["target_constraint_indices"], [1])
-        self.assertEqual(value["repair_metadata"], {"prompt": "debug"})
+        # Strategy debug keys pass through; the loop adds only its cache counters.
+        metadata = dict(value["repair_metadata"])
+        self.assertEqual({k: metadata.pop(k) for k in list(metadata) if k.startswith("llm_cache_")},
+                         {"llm_cache_hits": 0, "llm_cache_saved_input_tokens": 0,
+                          "llm_cache_saved_output_tokens": 0, "llm_cache_saved_unknown": 0})
+        self.assertEqual(metadata, {"prompt": "debug"})
 
 
 class ScopeMatrixTests(unittest.TestCase):

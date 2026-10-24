@@ -77,12 +77,14 @@ See [paired storage/resume](REPAIR_COMPARISON.md), [metrics](REPAIR_METRICS.md),
 and the [matrix definition](REGRESSION_MATRIX.md). Operational changed-slot
 semantics are defined in the metrics document.
 
-### Shared 5+1 scheduling
+### Shared scheduling
 
 The shared loop respects `min(max_steps, 6)` total proposals, including rejected
 and unchanged proposals. Default experiment/LLM-modulo repair budgets are six;
-explicit smaller budgets are not increased. At most five proposals are personal
-repairs and at most one is a scheduled commonsense repair.
+explicit smaller budgets are not increased. A run uses the whole budget unless it
+stops early, which happens only when the plan passes or when every personal
+constraint is True and no commonsense failures remain. At most five proposals are
+personal repairs; commonsense repairs may repeat.
 
 `context["repair_phase"]` explicitly selects `personal` or `commonsense` without
 changing the strategy method signature. Full verification is retained as context.
@@ -92,18 +94,31 @@ personal failures remain. R0 filters its feedback accordingly; R1 selects its
 commonsense transport handler explicitly. Direct calls without phase context
 retain historical strategy behavior.
 
-Before commonsense has been attempted, all-True personal states trigger it early
-if commonsense failures exist; otherwise personal proposals continue up to five.
-UNKNOWN is not True. At five personal proposals the next available proposal is
-commonsense, if needed; absent commonsense failures cause a stop. Following the
-one commonsense proposal, remaining budget may recover personal False/UNKNOWN
-states, still subject to the five-personal and six-total limits. No second
-commonsense proposal is scheduled. Accepted state determines every transition.
+Each proposal's phase is chosen from the current accepted state:
 
-R1 unchanged personal proposals retain the reserved commonsense opportunity when
-commonsense failures remain. After commonsense, unchanged proposals cannot suppress personal recovery while
-personal False/UNKNOWN states and budget remain. Every recovery no-op consumes
-a proposal; no-progress stopping otherwise remains active.
+- a personal constraint is False or UNKNOWN (UNKNOWN is not True) and fewer than
+  five personal proposals were made → `personal`;
+- otherwise, commonsense failures exist → `commonsense` (repeated while they
+  remain; after five personal proposals the remaining proposal goes here);
+- personal still False/UNKNOWN after five personal proposals and no commonsense
+  failures → `personal` again (the budget is still used);
+- otherwise (all personal True, no commonsense failures) → stop.
+
+So personal repair has priority; commonsense repair follows once personal
+constraints pass; a commonsense proposal that breaks a personal constraint sends
+the next proposal, if budget remains, back to personal repair. Accepted state
+determines every transition.
+
+The loop never stops a run because a strategy made no progress: unchanged
+proposals (including R1 no-ops) are recorded and each consumes a proposal.
+
+Every strategy calls the model through the loop's per-query repeat-request cache
+(`RepeatRequestCache`): a request identical to one already sent for the query
+(same messages and options) reuses the earlier reply without a model call. No
+strategy has a skip rule of its own. Each attempt's `repair_metadata` records
+`llm_cache_hits`, `llm_cache_saved_input_tokens`, `llm_cache_saved_output_tokens`
+and `llm_cache_saved_unknown`; `scripts/build_repair_summary.py` summarises them
+per query in `llm_cache_hits.csv`.
 Exceptions remain recorded and raised, rather than spending further proposals.
 
 Attempt JSON adds nullable `repair_phase` (historical default `None`) and
@@ -115,11 +130,11 @@ failures remain separately recorded. They count normally in summaries and costs,
 but remain zero-target exclusions from the unchanged primary directional matrix.
 
 
-The shared 5+1 policy applies to **all registered strategies** executed through
+The shared scheduling policy applies to **all registered strategies** executed through
 `shared_repair_loop`, including R3. R3 takes its phase from the loop; a direct
 call without a phase shows all failures. Every step, commonsense included,
 advances R3's ladder, so the rung follows the step number (steps 1-2 slot, 3-4
-day, 5-6 plan) and the protected commonsense step uses the current rung. The
+day, 5-6 plan) and each commonsense step uses the current rung. The
 former R3P variant (an internal phase
 selector) is removed because the shared loop now does that scheduling.
 Registered strategies share the same total cap of six.

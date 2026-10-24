@@ -72,7 +72,7 @@ class TestR1SharedLoop(unittest.TestCase):
         self.assertEqual(record["editable_scope"], "slot")
         self.assertEqual(record["changed_slot_count"], 1)
 
-    def test_r1_stops_after_no_progress(self):
+    def test_r1_no_progress_uses_full_budget(self):
         problem = {"uid": "offline_no_progress",
                    "people_number": 1,
                    "start_city": "Beijing",
@@ -99,8 +99,10 @@ class TestR1SharedLoop(unittest.TestCase):
                 context={}, llm=None,
                 translate_fn=None, max_steps=5,)
 
-        # initial state + one no-progress attempt
-        self.assertEqual(len(output["history"]), 2)
+        # The loop no longer stops R1 on a no-op: initial state + 5 no-progress attempts.
+        self.assertEqual(len(output["history"]), 6)
+        self.assertTrue(all(entry["repair_attempt"]["repair_phase"] == "commonsense"
+                            for entry in output["history"][1:]))
         attempt = output["history"][1]["repair_attempt"]
         self.assertEqual(attempt["changed_slot_count"], 0)
         self.assertEqual(

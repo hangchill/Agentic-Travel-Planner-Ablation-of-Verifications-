@@ -4,7 +4,7 @@
 | --- | --- | --- | --- |
 | 1 | Run strategy | `python run_experiments.py --strategy <STRATEGY> --splits <SPLIT> --llm deepseek/deepseek-chat --lang en --max-steps <MAX_STEPS> --output-dir experiments --run-id <RUN_ID>` | Run folder `experiments/<RUN_ID>/` (`queries/`, `attempts.jsonl`, `run_manifest.json`) |
 | 2 | Benchmark eval | `python scripts/evaluate_repair_run.py --run-dir experiments/<RUN_ID>` | `experiments/<RUN_ID>/benchmark_eval/` (`schema`, `commonsense`, `logical_py` CSVs) |
-| 3 | Summaries | `python scripts/build_repair_summary.py --input experiments/<RUN_ID>` | `experiments/<RUN_ID>/summaries.csv` (per query), `phase_outcomes.csv` (per query: result at step 5 and what the commonsense step did) and `pass_rates.csv` (per strategy totals of both; also printed) |
+| 3 | Summaries | `python scripts/build_repair_summary.py --input experiments/<RUN_ID>` | `experiments/<RUN_ID>/summaries.csv` (per query), `phase_outcomes.csv` (per query: result at step 5 and what the commonsense rounds did), `pass_rates.csv` (per strategy totals of both; also printed) and `llm_cache_hits.csv` (per query: how many requests were exact repeats served by the shared cache, and tokens spent vs saved; strategy totals printed) |
 | 4 | Regression matrix | `python scripts/build_regression_matrix.py --input experiments/<RUN_ID>/attempts.jsonl --output-dir experiments/<RUN_ID>/regression_matrix --repair-strategy <STRATEGY>` | `experiments/<RUN_ID>/regression_matrix/` CSVs |
 
 On Windows, run `$env:PYTHONUTF8 = "1"` in the terminal first, or step 2 fails to read the saved JSON.
