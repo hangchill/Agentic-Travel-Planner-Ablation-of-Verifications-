@@ -138,8 +138,13 @@ class R0IntentTests(unittest.TestCase):
             self.assertNotIn("scope", metadata)
             self.assertFalse(set(INTENT_FIELDS + DERIVED_FIELDS) & metadata.keys())
         analysis = build_regression_matrix([value])
-        self.assertEqual(cell(analysis)["eligible_count"], 1)
+        # ver 2 excludes unchanged candidates from matrix eligibility
+        self.assertEqual(value.changed_slot_count, 0)
+        self.assertEqual(cell(analysis)["eligible_count"], 0)
+        self.assertEqual(analysis["coverage"]["unchanged_attempts"], 1)
         row = contribution(analysis)
+        self.assertEqual(row["exclusion_reason"], "unchanged_candidate")
+
         self.assertEqual(row["editable_scope"], "plan")
         self.assertEqual(row["target_count"], 1)
         self.assertEqual(row["concurrent_failed_count"], 1)

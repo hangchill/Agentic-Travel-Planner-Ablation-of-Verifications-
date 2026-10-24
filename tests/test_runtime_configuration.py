@@ -64,7 +64,7 @@ class RuntimeConfigurationTests(unittest.TestCase):
             config_path = Path(temp_name) / "config.json"
             write_api_config(config_path)
 
-            with patch.dict(os.environ, {"HOME": temp_name}):
+            with patch.dict(os.environ, {"HOME": temp_name, "USERPROFILE": temp_name},):                
                 loaded_path, config = (
                     build_translation_assets.load_translation_api_config(
                         "~/config.json"
