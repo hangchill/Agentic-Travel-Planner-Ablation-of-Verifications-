@@ -1,0 +1,2255 @@
+{
+  "run_id": "subset_train-r0",
+  "query_uid": "e20241028160913165493",
+  "state": {
+    "query_uid": "e20241028160913165493",
+    "problem": {
+      "uid": "e20241028160913165493",
+      "tag": "medium",
+      "start_city": "Hangzhou",
+      "target_city": "Beijing",
+      "days": 3,
+      "people_number": 2,
+      "limit_rooms": true,
+      "limits_room_type": true,
+      "hard_logic_py": [
+        "result=(day_count(plan)==3)",
+        "result=(people_count(plan)==2)",
+        "total_cost=0 \nfor activity in allactivities(plan):\n    total_cost+=activity_cost(activity)\n    total_cost += innercity_transport_cost(activity_transports(activity))\nresult=(total_cost<=8000)",
+        "intercity_transport_set=set()\nfor activity in allactivities(plan):\n  if activity_type(activity) in ['train', 'airplane']: intercity_transport_set.add(intercity_transport_type(activity))\nresult=({'airplane'}==intercity_transport_set)",
+        "result=True\nfor activity in allactivities(plan):\n  if activity_type(activity) in ['attraction', 'airplane', 'train'] and activity_tickets(activity)!=2: result=False\n  if innercity_transport_type(activity_transports(activity))=='metro'and metro_tickets(activity_transports(activity))!=2: result=False",
+        "result=True\nfor activity in allactivities(plan):\n  if activity_type(activity)=='accommodation' and room_count(activity)!=1: result=False",
+        "result=True\nfor activity in allactivities(plan):\n  if activity_type(activity)=='accommodation' and room_type(activity)!=2: result=False",
+        "result=True\nfor activity in allactivities(plan):\n  if innercity_transport_type(activity_transports(activity))=='taxi'and taxi_cars(activity_transports(activity))!=1: result=False"
+      ],
+      "nature_language": "Current location: Hangzhou. My friend and I are planning to visit Beijing for three days. We have chosen to travel by plane and have a budget of 8,000 RMB. We will book a twin room. Please provide me with a travel itinerary.",
+      "nature_language_en": "Current location: Hangzhou. My friend and I are planning to visit Beijing for three days. We have chosen to travel by plane and have a budget of 8,000 RMB. We will book a twin room. Please provide me with a travel itinerary."
+    },
+    "raw_initial_plan": [
+      {
+        "day": 1,
+        "activities": [
+          {
+            "start_time": "12:41",
+            "end_time": "14:05",
+            "start": "Hangzhou Xiaoshan International Airport",
+            "end": "Beijing Capital International Airport",
+            "price": 546.16,
+            "cost": 1092.32,
+            "FlightID": "FL492",
+            "type": "airplane",
+            "tickets": 2,
+            "transports": "empty"
+          },
+          {
+            "position": "The Palace Museum",
+            "type": "attraction",
+            "transports": {
+              "from": "Beijing Capital International Airport",
+              "to": "The Palace Museum",
+              "mode": "metro",
+              "start_time": "14:05",
+              "end_time": "15:17",
+              "cost": 12
+            },
+            "price": 0.0,
+            "cost": 0.0,
+            "tickets": 2,
+            "start_time": "15:30",
+            "end_time": "17:00"
+          },
+          {
+            "position": "Four Seasons Minfu Roast Duck Restaurant (Forbidden City Branch)",
+            "type": "dinner",
+            "transports": {
+              "from": "The Palace Museum",
+              "to": "Four Seasons Minfu Roast Duck Restaurant (Forbidden City Branch)",
+              "mode": "metro",
+              "start_time": "17:00",
+              "end_time": "17:16",
+              "cost": 4
+            },
+            "price": 180,
+            "cost": 360,
+            "start_time": "17:30",
+            "end_time": "18:30"
+          },
+          {
+            "position": "Beijing Xinyuan Hotel",
+            "type": "accommodation",
+            "transports": {
+              "from": "Four Seasons Minfu Roast Duck Restaurant (Forbidden City Branch)",
+              "to": "Beijing Xinyuan Hotel",
+              "mode": "metro",
+              "start_time": "18:30",
+              "end_time": "18:56",
+              "cost": 6
+            },
+            "room_type": 2,
+            "price": 637,
+            "cost": 637,
+            "start_time": "19:00",
+            "end_time": "24:00",
+            "rooms": 1
+          }
+        ]
+      },
+      {
+        "day": 2,
+        "activities": [
+          {
+            "position": "Badaling Great Wall",
+            "type": "attraction",
+            "transports": {
+              "from": "Beijing Xinyuan Hotel",
+              "to": "Badaling Great Wall",
+              "mode": "metro",
+              "start_time": "08:00",
+              "end_time": "09:15",
+              "cost": 16
+            },
+            "price": 40.0,
+            "cost": 80.0,
+            "tickets": 2,
+            "start_time": "09:30",
+            "end_time": "12:00"
+          },
+          {
+            "position": "Huguosi Snacks (Huguosi Main Store)",
+            "type": "lunch",
+            "transports": {
+              "from": "Badaling Great Wall",
+              "to": "Huguosi Snacks (Huguosi Main Store)",
+              "mode": "metro",
+              "start_time": "12:00",
+              "end_time": "13:12",
+              "cost": 16
+            },
+            "price": 32,
+            "cost": 64,
+            "start_time": "13:30",
+            "end_time": "14:30"
+          },
+          {
+            "position": "Tiananmen Square",
+            "type": "attraction",
+            "transports": {
+              "from": "Huguosi Snacks (Huguosi Main Store)",
+              "to": "Tiananmen Square",
+              "mode": "metro",
+              "start_time": "14:30",
+              "end_time": "14:43",
+              "cost": 4
+            },
+            "price": 0.0,
+            "cost": 0.0,
+            "tickets": 2,
+            "start_time": "15:00",
+            "end_time": "16:00"
+          },
+          {
+            "position": "Beijing Quanjude (Qianmen Branch)",
+            "type": "dinner",
+            "transports": {
+              "from": "Tiananmen Square",
+              "to": "Beijing Quanjude (Qianmen Branch)",
+              "mode": "metro",
+              "start_time": "16:00",
+              "end_time": "16:09",
+              "cost": 4
+            },
+            "price": 184,
+            "cost": 368,
+            "start_time": "16:30",
+            "end_time": "17:30"
+          },
+          {
+            "position": "Beijing Xinyuan Hotel",
+            "type": "accommodation",
+            "transports": {
+              "from": "Beijing Quanjude (Qianmen Branch)",
+              "to": "Beijing Xinyuan Hotel",
+              "mode": "metro",
+              "start_time": "17:30",
+              "end_time": "17:49",
+              "cost": 6
+            },
+            "room_type": 2,
+            "price": 637,
+            "cost": 637,
+            "start_time": "18:00",
+            "end_time": "24:00",
+            "rooms": 1
+          }
+        ]
+      },
+      {
+        "day": 3,
+        "activities": [
+          {
+            "position": "Summer Palace",
+            "type": "attraction",
+            "transports": {
+              "from": "Beijing Xinyuan Hotel",
+              "to": "Summer Palace",
+              "mode": "metro",
+              "start_time": "08:00",
+              "end_time": "08:32",
+              "cost": 8
+            },
+            "price": 30.0,
+            "cost": 60.0,
+            "tickets": 2,
+            "start_time": "09:00",
+            "end_time": "11:00"
+          },
+          {
+            "position": "Doorframe Alley Century Stewed Offal (Xinjiekou Branch)",
+            "type": "lunch",
+            "transports": {
+              "from": "Summer Palace",
+              "to": "Doorframe Alley Century Stewed Offal (Xinjiekou Branch)",
+              "mode": "metro",
+              "start_time": "11:00",
+              "end_time": "11:29",
+              "cost": 8
+            },
+            "price": 53,
+            "cost": 106,
+            "start_time": "12:00",
+            "end_time": "13:00"
+          },
+          {
+            "position": "798 Art District",
+            "type": "attraction",
+            "transports": {
+              "from": "Doorframe Alley Century Stewed Offal (Xinjiekou Branch)",
+              "to": "798 Art District",
+              "mode": "metro",
+              "start_time": "13:00",
+              "end_time": "13:43",
+              "cost": 8
+            },
+            "price": 0.0,
+            "cost": 0.0,
+            "tickets": 2,
+            "start_time": "14:00",
+            "end_time": "16:00"
+          },
+          {
+            "start": "Beijing Capital International Airport",
+            "end": "Hangzhou Xiaoshan International Airport",
+            "start_time": "22:21",
+            "end_time": "23:45",
+            "FlightID": "FL131",
+            "type": "airplane",
+            "transports": {
+              "from": "798 Art District",
+              "to": "Beijing Capital International Airport",
+              "mode": "metro",
+              "start_time": "16:00",
+              "end_time": "16:59",
+              "cost": 10
+            },
+            "price": 518.45,
+            "cost": 1036.9,
+            "tickets": 2
+          }
+        ]
+      }
+    ],
+    "repair_context": {
+      "go_train_info": "None",
+      "go_flight_info": "FlightID\tFrom\tTo\tBeginTime\tEndTime\tDuration\tprice\r\nFL498\tHangzhou Xiaoshan International Airport\tBeijing Daxing International Airport\t19:23\t20:47\t1.4\t541.94\r\nFL492\tHangzhou Xiaoshan International Airport\tBeijing Capital International Airport\t12:41\t14:05\t1.4\t546.16\r\nFL497\tHangzhou Xiaoshan International Airport\tBeijing Capital International Airport\t04:53\t06:17\t1.4\t524.92\r\nFL500\tHangzhou Xiaoshan International Airport\tBeijing Daxing International Airport\t07:45\t09:09\t1.4\t611.21\r\nFL499\tHangzhou Xiaoshan International Airport\tBeijing Daxing International Airport\t00:05\t01:29\t1.4\t563.58\r\n",
+      "back_train_info": "None",
+      "back_flight_info": "FlightID\tFrom\tTo\tBeginTime\tEndTime\tDuration\tprice\r\nFL131\tBeijing Capital International Airport\tHangzhou Xiaoshan International Airport\t22:21\t23:45\t1.4\t518.45\r\nFL140\tBeijing Daxing International Airport\tHangzhou Xiaoshan International Airport\t22:57\t00:21\t1.4\t529.77\r\nFL139\tBeijing Daxing International Airport\tHangzhou Xiaoshan International Airport\t17:18\t18:42\t1.4\t516.02\r\nFL136\tBeijing Capital International Airport\tHangzhou Xiaoshan International Airport\t14:04\t15:28\t1.4\t552.25\r\nFL138\tBeijing Capital International Airport\tHangzhou Xiaoshan International Airport\t12:14\t13:38\t1.4\t561.89\r\n",
+      "attraction_info": "name\ttype\tlat\tlon\topentime\tendtime\tprice\trecommendmintime\trecommendmaxtime\r\nThe Palace Museum\thistorical site\t39.924091\t116.403414\t08:30\t17:00\t0.0\t0.5\t1.0\r\nBadaling Great Wall\thistorical site\t40.362639\t116.024067\t06:30\t16:30\t40.0\t1.0\t2.5\r\nSummer Palace\tCultural Tourism Area\t40.008817\t116.280234\t06:00\t20:00\t30.0\t0.5\t1.0\r\nTemple of Heaven\thistorical site\t39.889918\t116.419289\t06:00\t22:00\t34.0\t2.5\t4.0\r\nMutianyu Great Wall\thistorical site\t40.440146\t116.575896\t07:30\t18:00\t45.0\t0.5\t1.5\r\nBeijing Zoo\tpark\t39.947726\t116.342331\t07:30\t19:00\t15.0\t1.0\t2.0\r\nOlympic Park\tAmusement Park/Sports Entertainment\t39.999245\t116.399206\t06:30\t22:00\t0.0\t2.5\t4.0\r\nTiananmen Square\tCultural Landscape\t39.910095\t116.404091\t00:00\t22:00\t0.0\t0.5\t1.0\r\nYonghe Temple\tCultural Tourism Area\t39.953314\t116.423776\t09:00\t17:00\t0.0\t1.0\t2.5\r\nShichahai\tCultural Landscape\t39.948373\t116.391243\t00:00\t24:00\t0.0\t1.5\t3.0\r\nJingshan Park\tpark\t39.932136\t116.402966\t06:00\t21:00\t0.0\t2.0\t3.0\r\nBeihai Park\tpark\t39.934167\t116.395006\t06:00\t21:00\t0.0\t2.5\t4.0\r\nNanluoguxiang\tcommercial district\t39.943166\t116.4095\t00:00\t24:00\t0.0\t1.0\t2.5\r\nPrince Gong's Mansion\thistorical site\t39.943381\t116.392599\t08:30\t17:00\t40.0\t1.0\t2.0\r\n798 Art District\tArt museum\t39.991061\t116.501104\t00:00\t24:00\t0.0\t2.5\t4.0\r\n",
+      "restaurant_info": "name\tlat\tlon\tprice\tcuisine\topentime\tendtime\trecommendedfood\r\nHuguosi Snacks (Huguosi Main Store)\t39.9351306\t116.374839\t32.0\tSnacks\t06:00\t21:00\tTofu pudding, sweet fried dough twists, savory pancake with vegetables, fermented mung bean juice, meat pie, pine meat (fried meat strips), fried dough nuggets, premium glutinous rice rolls with red bean paste, crispy fried dough rings, lamb offal soup\r\nDoorframe Alley Century Stewed Offal (Xinjiekou Branch)\t39.9404877\t116.3688519\t53.0\tSnacks\t09:30\t02:00\tLu Zhu Huo Shao (Beijing-style stewed offal with baked wheat cakes), Old Beijing Fried Sausage, Old Beijing Lamb Skewers, Old Beijing Quick-Fried Tripe, Old Beijing Fried Geda (crispy fried dough twists), Old Beijing Zhajiangmian (noodles with fried bean sauce)\r\nBeijing Quanjude (Qianmen Branch)\t39.8966303\t116.3983652\t184.0\tBeijing cuisine\t11:00\t21:00\tPeking Duck, Duck Feet with Mustard, Salted Duck Liver, Flambéed Duck Heart\r\nFour Seasons Minfu Roast Duck Restaurant (Forbidden City Branch)\t39.9145249\t116.4028728\t180.0\tBeijing cuisine\t10:30\t21:30\tRecommended dishes\r\nSouth Gate Hot Pot (Temple of Heaven Branch)\t39.8737951\t116.4135705\t101.0\tHalal cuisine\t06:30\t22:30\tCrispy Aromatic Beef Brisket, Hongyuan Hand-Torn Lamb, Fresh Lamb, Fried Sesame Pancakes, Sweet Pickled Garlic, Beef Tripe, Mackerel Balls, Fresh Beef Tripe, Lamb, Shrimp Paste\r\n",
+      "accommodation_info": "name\tfeaturehoteltype\tlat\tlon\tprice\tnumbed\r\nBeijing Xinyuan Hotel\tSwimming Pool\t39.898089\t116.31215\t637\t2\r\nGrand Metropark Longxi Conference Center Beijing\thot spring\t39.624784\t116.302285\t639\t2\r\nHoliday Inn Beijing Deshengmen\tFitness Room\t39.957588\t116.378635\t718\t2\r\n",
+      "innercity_transport_info": "from Grand Metropark Longxi Conference Center Beijing to Grand Metropark Longxi Conference Center Beijing:  metro: empty.  taxi: empty.  walk: empty. \nfrom Grand Metropark Longxi Conference Center Beijing to Badaling Great Wall: metro: duration 427, cost 20.0. taxi: duration 127, cost 378.56. walk: duration 1023, cost 0.0. \nfrom Grand Metropark Longxi Conference Center Beijing to Doorframe Alley Century Stewed Offal (Xinjiekou Branch): metro: duration 124, cost 14. taxi: duration 53, cost 154.51. walk: duration 426, cost 0.0. \nfrom Grand Metropark Longxi Conference Center Beijing to Beijing Zoo: metro: duration 135, cost 14. taxi: duration 54, cost 156.79. walk: duration 432, cost 0.0. \nfrom Grand Metropark Longxi Conference Center Beijing to Jingshan Park: metro: duration 125, cost 14. taxi: duration 52, cost 153.09. walk: duration 422, cost 0.0. \nfrom Grand Metropark Longxi Conference Center Beijing to Holiday Inn Beijing Deshengmen: metro: duration 138, cost 14. taxi: duration 56, cost 163.57. walk: duration 450, cost 0.0. \nfrom Grand Metropark Longxi Conference Center Beijing to Tiananmen Square: metro: duration 121, cost 12. taxi: duration 49, cost 142.56. walk: duration 394, cost 0.0. \nfrom Grand Metropark Longxi Conference Center Beijing to Nanluoguxiang: metro: duration 134, cost 14. taxi: duration 54, cost 159.06. walk: duration 438, cost 0.0. \nfrom Grand Metropark Longxi Conference Center Beijing to Beijing Daxing International Airport: metro: duration 113, cost 10. taxi: duration 25, cost 70.49. walk: duration 202, cost 0.0. \nfrom Grand Metropark Longxi Conference Center Beijing to Four Seasons Minfu Roast Duck Restaurant (Forbidden City Branch): metro: duration 127, cost 14. taxi: duration 49, cost 144.57. walk: duration 399, cost 0.0. \nfrom Grand Metropark Longxi Conference Center Beijing to Mutianyu Great Wall: metro: duration 592, cost 18. taxi: duration 140, cost 415.44. walk: duration 1121, cost 0.0. \nfrom Grand Metropark Longxi Conference Center Beijing to Beijing Quanjude (Qianmen Branch): metro: duration 119, cost 12. taxi: duration 46, cost 135.49. walk: duration 375, cost 0.0. \nfrom Grand Metropark Longxi Conference Center Beijing to 798 Art District: metro: duration 159, cost 16. taxi: duration 66, cost 193.1. walk: duration 529, cost 0.0. \nfrom Grand Metropark Longxi Conference Center Beijing to Beijing Xinyuan Hotel: metro: duration 114, cost 12. taxi: duration 45, cost 131.31. walk: duration 364, cost 0.0. \nfrom Grand Metropark Longxi Conference Center Beijing to Beihai Park: metro: duration 127, cost 14. taxi: duration 52, cost 153.36. walk: duration 423, cost 0.0. \nfrom Grand Metropark Longxi Conference Center Beijing to Beijing Capital International Airport: metro: duration 175, cost 18. taxi: duration 85, cost 250.17. walk: duration 681, cost 0.0. \nfrom Grand Metropark Longxi Conference Center Beijing to Prince Gong's Mansion: metro: duration 133, cost 14. taxi: duration 54, cost 157.65. walk: duration 434, cost 0.0. \nfrom Grand Metropark Longxi Conference Center Beijing to Olympic Park: metro: duration 145, cost 16. taxi: duration 63, cost 185.49. walk: duration 508, cost 0.0. \nfrom Grand Metropark Longxi Conference Center Beijing to Summer Palace: metro: duration 145, cost 16. taxi: duration 64, cost 186.77. walk: duration 512, cost 0.0. \nfrom Grand Metropark Longxi Conference Center Beijing to Temple of Heaven: metro: duration 119, cost 12. taxi: duration 46, cost 134.64. walk: duration 373, cost 0.0. \nfrom Grand Metropark Longxi Conference Center Beijing to The Palace Museum: metro: duration 128, cost 14. taxi: duration 51, cost 149.24. walk: duration 412, cost 0.0. \nfrom Grand Metropark Longxi Conference Center Beijing to Shichahai: metro: duration 128, cost 14. taxi: duration 55, cost 159.97. walk: duration 440, cost 0.0. \nfrom Grand Metropark Longxi Conference Center Beijing to South Gate Hot Pot (Temple of Heaven Branch): metro: duration 120, cost 12. taxi: duration 43, cost 126.31. walk: duration 350, cost 0.0. \nfrom Grand Metropark Longxi Conference Center Beijing to Yonghe Temple: metro: duration 135, cost 14. taxi: duration 56, cost 165.4. walk: duration 455, cost 0.0. \nfrom Grand Metropark Longxi Conference Center Beijing to Huguosi Snacks (Huguosi Main Store): metro: duration 124, cost 14. taxi: duration 52, cost 152.26. walk: duration 420, cost 0.0. \nfrom Badaling Great Wall to Grand Metropark Longxi Conference Center Beijing: metro: duration 427, cost 20.0. taxi: duration 127, cost 378.56. walk: duration 1023, cost 0.0. \nfrom Badaling Great Wall to Badaling Great Wall:  metro: empty.  taxi: empty.  walk: empty. \nfrom Badaling Great Wall to Doorframe Alley Century Stewed Offal (Xinjiekou Branch): metro: duration 309, cost 14. taxi: duration 82, cost 243.64. walk: duration 663, cost 0.0. \nfrom Badaling Great Wall to Beijing Zoo: metro: duration 320, cost 14. taxi: duration 80, cost 235.26. walk: duration 641, cost 0.0. \nfrom Badaling Great Wall to Jingshan Park: metro: duration 314, cost 16. taxi: duration 86, cost 254.28. walk: duration 692, cost 0.0. \nfrom Badaling Great Wall to Holiday Inn Beijing Deshengmen: metro: duration 320, cost 14. taxi: duration 81, cost 238.5. walk: duration 650, cost 0.0. \nfrom Badaling Great Wall to Tiananmen Square: metro: duration 321, cost 16. taxi: duration 89, cost 263.72. walk: duration 717, cost 0.0. \nfrom Badaling Great Wall to Nanluoguxiang: metro: duration 317, cost 16. taxi: duration 85, cost 251.16. walk: duration 683, cost 0.0. \nfrom Badaling Great Wall to Beijing Daxing International Airport: metro: duration 413, cost 22.0. taxi: duration 151, cost 450.21. walk: duration 1214, cost 0.0. \nfrom Badaling Great Wall to Four Seasons Minfu Roast Duck Restaurant (Forbidden City Branch): metro: duration 324, cost 16. taxi: duration 88, cost 261.6. walk: duration 711, cost 0.0. \nfrom Badaling Great Wall to Mutianyu Great Wall: metro: duration 726, cost 16. taxi: duration 71, cost 209.03. walk: duration 571, cost 0.0. \nfrom Badaling Great Wall to Beijing Quanjude (Qianmen Branch): metro: duration 322, cost 16. taxi: duration 91, cost 268.25. walk: duration 729, cost 0.0. \nfrom Badaling Great Wall to 798 Art District: metro: duration 331, cost 16. taxi: duration 86, cost 255.28. walk: duration 694, cost 0.0. \nfrom Badaling Great Wall to Beijing Xinyuan Hotel: metro: duration 315, cost 16. taxi: duration 85, cost 251.78. walk: duration 685, cost 0.0. \nfrom Badaling Great Wall to Beihai Park: metro: duration 315, cost 16. taxi: duration 85, cost 251.73. walk: duration 685, cost 0.0. \nfrom Badaling Great Wall to Beijing Capital International Airport: metro: duration 322, cost 16. taxi: duration 87, cost 257.47. walk: duration 700, cost 0.0. \nfrom Badaling Great Wall to Prince Gong's Mansion: metro: duration 315, cost 14. taxi: duration 84, cost 247.39. walk: duration 673, cost 0.0. \nfrom Badaling Great Wall to Olympic Park: metro: duration 306, cost 14. taxi: duration 77, cost 226.31. walk: duration 617, cost 0.0. \nfrom Badaling Great Wall to Summer Palace: metro: duration 298, cost 12. taxi: duration 67, cost 196.92. walk: duration 539, cost 0.0. \nfrom Badaling Great Wall to Temple of Heaven: metro: duration 325, cost 16. taxi: duration 93, cost 275.36. walk: duration 748, cost 0.0. \nfrom Badaling Great Wall to The Palace Museum: metro: duration 322, cost 16. taxi: duration 87, cost 257.72. walk: duration 701, cost 0.0. \nfrom Badaling Great Wall to Shichahai: metro: duration 310, cost 14. taxi: duration 83, cost 245.03. walk: duration 667, cost 0.0. \nfrom Badaling Great Wall to South Gate Hot Pot (Temple of Heaven Branch): metro: duration 337, cost 16. taxi: duration 95, cost 281.03. walk: duration 763, cost 0.0. \nfrom Badaling Great Wall to Yonghe Temple: metro: duration 318, cost 16. taxi: duration 85, cost 250.27. walk: duration 681, cost 0.0. \nfrom Badaling Great Wall to Huguosi Snacks (Huguosi Main Store): metro: duration 312, cost 16. taxi: duration 84, cost 247.13. walk: duration 673, cost 0.0. \nfrom Doorframe Alley Century Stewed Offal (Xinjiekou Branch) to Grand Metropark Longxi Conference Center Beijing: metro: duration 124, cost 14. taxi: duration 53, cost 154.51. walk: duration 426, cost 0.0. \nfrom Doorframe Alley Century Stewed Offal (Xinjiekou Branch) to Badaling Great Wall: metro: duration 309, cost 14. taxi: duration 82, cost 243.64. walk: duration 663, cost 0.0. \nfrom Doorframe Alley Century Stewed Offal (Xinjiekou Branch) to Doorframe Alley Century Stewed Offal (Xinjiekou Branch):  metro: empty.  taxi: empty.  walk: empty. \nfrom Doorframe Alley Century Stewed Offal (Xinjiekou Branch) to Beijing Zoo: metro: duration 18, cost 4. taxi: duration 3, cost 13.12. walk: duration 28, cost 0.0. \nfrom Doorframe Alley Century Stewed Offal (Xinjiekou Branch) to Jingshan Park: metro: duration 9, cost 4. taxi: duration 4, cost 15.41. walk: duration 36, cost 0.0. \nfrom Doorframe Alley Century Stewed Offal (Xinjiekou Branch) to Holiday Inn Beijing Deshengmen: metro: duration 15, cost 4. taxi: duration 3, cost 11.96. walk: duration 24, cost 0.0. \nfrom Doorframe Alley Century Stewed Offal (Xinjiekou Branch) to Tiananmen Square: metro: duration 14, cost 6. taxi: duration 6, cost 20.53. walk: duration 54, cost 0.0. \nfrom Doorframe Alley Century Stewed Offal (Xinjiekou Branch) to Nanluoguxiang: metro: duration 16, cost 4. taxi: duration 5, cost 16.9. walk: duration 41, cost 0.0. \nfrom Doorframe Alley Century Stewed Offal (Xinjiekou Branch) to Beijing Daxing International Airport: metro: duration 107, cost 16. taxi: duration 73, cost 213.98. walk: duration 584, cost 0.0. \nfrom Doorframe Alley Century Stewed Offal (Xinjiekou Branch) to Four Seasons Minfu Roast Duck Restaurant (Forbidden City Branch): metro: duration 18, cost 6. taxi: duration 6, cost 19.03. walk: duration 49, cost 0.0. \nfrom Doorframe Alley Century Stewed Offal (Xinjiekou Branch) to Mutianyu Great Wall: metro: duration 475, cost 14. taxi: duration 87, cost 256.67. walk: duration 698, cost 0.0. \nfrom Doorframe Alley Century Stewed Offal (Xinjiekou Branch) to Beijing Quanjude (Qianmen Branch): metro: duration 15, cost 6. taxi: duration 8, cost 23.9. walk: duration 65, cost 0.0. \nfrom Doorframe Alley Century Stewed Offal (Xinjiekou Branch) to 798 Art District: metro: duration 43, cost 8. taxi: duration 18, cost 51.48. walk: duration 151, cost 0.0. \nfrom Doorframe Alley Century Stewed Offal (Xinjiekou Branch) to Beijing Xinyuan Hotel: metro: duration 15, cost 6. taxi: duration 10, cost 28.35. walk: duration 81, cost 0.0. \nfrom Doorframe Alley Century Stewed Offal (Xinjiekou Branch) to Beihai Park: metro: duration 9, cost 4. taxi: duration 3, cost 12.9. walk: duration 28, cost 0.0. \nfrom Doorframe Alley Century Stewed Offal (Xinjiekou Branch) to Beijing Capital International Airport: metro: duration 60, cost 12. taxi: duration 37, cost 108.68. walk: duration 303, cost 0.0. \nfrom Doorframe Alley Century Stewed Offal (Xinjiekou Branch) to Prince Gong's Mansion: metro: duration 12, cost 4. taxi: duration 3, cost 11.89. walk: duration 24, cost 0.0. \nfrom Doorframe Alley Century Stewed Offal (Xinjiekou Branch) to Olympic Park: metro: duration 23, cost 6. taxi: duration 10, cost 29.27. walk: duration 84, cost 0.0. \nfrom Doorframe Alley Century Stewed Offal (Xinjiekou Branch) to Summer Palace: metro: duration 29, cost 8. taxi: duration 16, cost 42.93. walk: duration 128, cost 0.0. \nfrom Doorframe Alley Century Stewed Offal (Xinjiekou Branch) to Temple of Heaven: metro: duration 18, cost 6. taxi: duration 10, cost 29.48. walk: duration 84, cost 0.0. \nfrom Doorframe Alley Century Stewed Offal (Xinjiekou Branch) to The Palace Museum: metro: duration 16, cost 6. taxi: duration 5, cost 16.85. walk: duration 41, cost 0.0. \nfrom Doorframe Alley Century Stewed Offal (Xinjiekou Branch) to Shichahai: metro: duration 7, cost 4. taxi: duration 3, cost 12.07. walk: duration 25, cost 0.0. \nfrom Doorframe Alley Century Stewed Offal (Xinjiekou Branch) to South Gate Hot Pot (Temple of Heaven Branch): metro: duration 30, cost 8. taxi: duration 12, cost 33.87. walk: duration 100, cost 0.0. \nfrom Doorframe Alley Century Stewed Offal (Xinjiekou Branch) to Yonghe Temple: metro: duration 17, cost 6. taxi: duration 7, cost 21.87. walk: duration 58, cost 0.0. \nfrom Doorframe Alley Century Stewed Offal (Xinjiekou Branch) to Huguosi Snacks (Huguosi Main Store): metro: duration 4, cost 4. taxi: duration 1, cost 11.0. walk: duration 9, cost 0.0. \nfrom Beijing Zoo to Grand Metropark Longxi Conference Center Beijing: metro: duration 135, cost 14. taxi: duration 54, cost 156.79. walk: duration 432, cost 0.0. \nfrom Beijing Zoo to Badaling Great Wall: metro: duration 320, cost 14. taxi: duration 80, cost 235.26. walk: duration 641, cost 0.0. \nfrom Beijing Zoo to Doorframe Alley Century Stewed Offal (Xinjiekou Branch): metro: duration 18, cost 4. taxi: duration 3, cost 13.12. walk: duration 28, cost 0.0. \nfrom Beijing Zoo to Beijing Zoo:  metro: empty.  taxi: empty.  walk: empty. \nfrom Beijing Zoo to Jingshan Park: metro: duration 26, cost 6. taxi: duration 8, cost 23.82. walk: duration 65, cost 0.0. \nfrom Beijing Zoo to Holiday Inn Beijing Deshengmen: metro: duration 32, cost 4. taxi: duration 4, cost 16.21. walk: duration 39, cost 0.0. \nfrom Beijing Zoo to Tiananmen Square: metro: duration 29, cost 6. taxi: duration 10, cost 28.26. walk: duration 80, cost 0.0. \nfrom Beijing Zoo to Nanluoguxiang: metro: duration 33, cost 6. taxi: duration 8, cost 24.87. walk: duration 69, cost 0.0. \nfrom Beijing Zoo to Beijing Daxing International Airport: metro: duration 119, cost 16. taxi: duration 74, cost 218.71. walk: duration 597, cost 0.0. \nfrom Beijing Zoo to Four Seasons Minfu Roast Duck Restaurant (Forbidden City Branch): metro: duration 34, cost 6. taxi: duration 9, cost 26.94. walk: duration 76, cost 0.0. \nfrom Beijing Zoo to Mutianyu Great Wall: metro: duration 491, cost 14. taxi: duration 87, cost 256.52. walk: duration 698, cost 0.0. \nfrom Beijing Zoo to Beijing Quanjude (Qianmen Branch): metro: duration 30, cost 6. taxi: duration 11, cost 30.69. walk: duration 89, cost 0.0. \nfrom Beijing Zoo to 798 Art District: metro: duration 60, cost 8. taxi: duration 21, cost 59.47. walk: duration 172, cost 0.0. \nfrom Beijing Zoo to Beijing Xinyuan Hotel: metro: duration 24, cost 6. taxi: duration 9, cost 26.0. walk: duration 73, cost 0.0. \nfrom Beijing Zoo to Beihai Park: metro: duration 26, cost 6. taxi: duration 7, cost 21.31. walk: duration 56, cost 0.0. \nfrom Beijing Zoo to Beijing Capital International Airport: metro: duration 76, cost 12. taxi: duration 40, cost 114.85. walk: duration 320, cost 0.0. \nfrom Beijing Zoo to Prince Gong's Mansion: metro: duration 29, cost 6. taxi: duration 6, cost 19.83. walk: duration 51, cost 0.0. \nfrom Beijing Zoo to Olympic Park: metro: duration 37, cost 6. taxi: duration 11, cost 30.97. walk: duration 90, cost 0.0. \nfrom Beijing Zoo to Summer Palace: metro: duration 38, cost 6. taxi: duration 12, cost 34.84. walk: duration 103, cost 0.0. \nfrom Beijing Zoo to Temple of Heaven: metro: duration 34, cost 6. taxi: duration 13, cost 36.87. walk: duration 110, cost 0.0. \nfrom Beijing Zoo to The Palace Museum: metro: duration 32, cost 6. taxi: duration 8, cost 25.15. walk: duration 70, cost 0.0. \nfrom Beijing Zoo to Shichahai: metro: duration 24, cost 6. taxi: duration 6, cost 19.33. walk: duration 50, cost 0.0. \nfrom Beijing Zoo to South Gate Hot Pot (Temple of Heaven Branch): metro: duration 44, cost 8. taxi: duration 15, cost 40.7. walk: duration 122, cost 0.0. \nfrom Beijing Zoo to Yonghe Temple: metro: duration 34, cost 6. taxi: duration 10, cost 29.16. walk: duration 83, cost 0.0. \nfrom Beijing Zoo to Huguosi Snacks (Huguosi Main Store): metro: duration 20, cost 4. taxi: duration 4, cost 15.59. walk: duration 37, cost 0.0. \nfrom Jingshan Park to Grand Metropark Longxi Conference Center Beijing: metro: duration 125, cost 14. taxi: duration 52, cost 153.09. walk: duration 422, cost 0.0. \nfrom Jingshan Park to Badaling Great Wall: metro: duration 314, cost 16. taxi: duration 86, cost 254.28. walk: duration 692, cost 0.0. \nfrom Jingshan Park to Doorframe Alley Century Stewed Offal (Xinjiekou Branch): metro: duration 9, cost 4. taxi: duration 4, cost 15.41. walk: duration 36, cost 0.0. \nfrom Jingshan Park to Beijing Zoo: metro: duration 26, cost 6. taxi: duration 8, cost 23.82. walk: duration 65, cost 0.0. \nfrom Jingshan Park to Jingshan Park:  metro: empty.  taxi: empty.  walk: empty. \nfrom Jingshan Park to Holiday Inn Beijing Deshengmen: metro: duration 21, cost 4. taxi: duration 5, cost 16.98. walk: duration 42, cost 0.0. \nfrom Jingshan Park to Tiananmen Square: metro: duration 11, cost 4. taxi: duration 3, cost 13.27. walk: duration 29, cost 0.0. \nfrom Jingshan Park to Nanluoguxiang: metro: duration 13, cost 4. taxi: duration 2, cost 11.0. walk: duration 16, cost 0.0. \nfrom Jingshan Park to Beijing Daxing International Airport: metro: duration 106, cost 16. taxi: duration 71, cost 209.02. walk: duration 571, cost 0.0. \nfrom Jingshan Park to Four Seasons Minfu Roast Duck Restaurant (Forbidden City Branch): metro: duration 14, cost 4. taxi: duration 2, cost 11.54. walk: duration 23, cost 0.0. \nfrom Jingshan Park to Mutianyu Great Wall: metro: duration 473, cost 12. taxi: duration 87, cost 257.05. walk: duration 699, cost 0.0. \nfrom Jingshan Park to Beijing Quanjude (Qianmen Branch): metro: duration 13, cost 4. taxi: duration 5, cost 18.57. walk: duration 47, cost 0.0. \nfrom Jingshan Park to 798 Art District: metro: duration 40, cost 6. taxi: duration 15, cost 42.56. walk: duration 127, cost 0.0. \nfrom Jingshan Park to Beijing Xinyuan Hotel: metro: duration 20, cost 6. taxi: duration 12, cost 34.93. walk: duration 103, cost 0.0. \nfrom Jingshan Park to Beihai Park: metro: duration 7, cost 4. taxi: duration 1, cost 11.0. walk: duration 8, cost 0.0. \nfrom Jingshan Park to Beijing Capital International Airport: metro: duration 57, cost 12. taxi: duration 35, cost 101.5. walk: duration 284, cost 0.0. \nfrom Jingshan Park to Prince Gong's Mansion: metro: duration 12, cost 4. taxi: duration 2, cost 11.0. walk: duration 18, cost 0.0. \nfrom Jingshan Park to Olympic Park: metro: duration 25, cost 6. taxi: duration 11, cost 30.8. walk: duration 89, cost 0.0. \nfrom Jingshan Park to Summer Palace: metro: duration 36, cost 8. taxi: duration 20, cost 55.48. walk: duration 162, cost 0.0. \nfrom Jingshan Park to Temple of Heaven: metro: duration 15, cost 6. taxi: duration 7, cost 21.82. walk: duration 58, cost 0.0. \nfrom Jingshan Park to The Palace Museum: metro: duration 11, cost 4. taxi: duration 1, cost 11.0. walk: duration 10, cost 0.0. \nfrom Jingshan Park to Shichahai: metro: duration 7, cost 4. taxi: duration 3, cost 11.92. walk: duration 24, cost 0.0. \nfrom Jingshan Park to South Gate Hot Pot (Temple of Heaven Branch): metro: duration 28, cost 6. taxi: duration 9, cost 27.59. walk: duration 78, cost 0.0. \nfrom Jingshan Park to Yonghe Temple: metro: duration 14, cost 4. taxi: duration 4, cost 15.02. walk: duration 35, cost 0.0. \nfrom Jingshan Park to Huguosi Snacks (Huguosi Main Store): metro: duration 9, cost 4. taxi: duration 3, cost 13.19. walk: duration 29, cost 0.0. \nfrom Holiday Inn Beijing Deshengmen to Grand Metropark Longxi Conference Center Beijing: metro: duration 138, cost 14. taxi: duration 56, cost 163.57. walk: duration 450, cost 0.0. \nfrom Holiday Inn Beijing Deshengmen to Badaling Great Wall: metro: duration 320, cost 14. taxi: duration 81, cost 238.5. walk: duration 650, cost 0.0. \nfrom Holiday Inn Beijing Deshengmen to Doorframe Alley Century Stewed Offal (Xinjiekou Branch): metro: duration 15, cost 4. taxi: duration 3, cost 11.96. walk: duration 24, cost 0.0. \nfrom Holiday Inn Beijing Deshengmen to Beijing Zoo: metro: duration 32, cost 4. taxi: duration 4, cost 16.21. walk: duration 39, cost 0.0. \nfrom Holiday Inn Beijing Deshengmen to Jingshan Park: metro: duration 21, cost 4. taxi: duration 5, cost 16.98. walk: duration 42, cost 0.0. \nfrom Holiday Inn Beijing Deshengmen to Holiday Inn Beijing Deshengmen:  metro: empty.  taxi: empty.  walk: empty. \nfrom Holiday Inn Beijing Deshengmen to Tiananmen Square: metro: duration 27, cost 6. taxi: duration 8, cost 24.67. walk: duration 68, cost 0.0. \nfrom Holiday Inn Beijing Deshengmen to Nanluoguxiang: metro: duration 27, cost 4. taxi: duration 4, cost 15.5. walk: duration 37, cost 0.0. \nfrom Holiday Inn Beijing Deshengmen to Beijing Daxing International Airport: metro: duration 121, cost 18. taxi: duration 75, cost 222.19. walk: duration 606, cost 0.0. \nfrom Holiday Inn Beijing Deshengmen to Four Seasons Minfu Roast Duck Restaurant (Forbidden City Branch): metro: duration 30, cost 6. taxi: duration 7, cost 22.94. walk: duration 62, cost 0.0. \nfrom Holiday Inn Beijing Deshengmen to Mutianyu Great Wall: metro: duration 485, cost 14. taxi: duration 84, cost 247.39. walk: duration 673, cost 0.0. \nfrom Holiday Inn Beijing Deshengmen to Beijing Quanjude (Qianmen Branch): metro: duration 28, cost 6. taxi: duration 10, cost 29.11. walk: duration 83, cost 0.0. \nfrom Holiday Inn Beijing Deshengmen to 798 Art District: metro: duration 54, cost 8. taxi: duration 16, cost 44.66. walk: duration 133, cost 0.0. \nfrom Holiday Inn Beijing Deshengmen to Beijing Xinyuan Hotel: metro: duration 29, cost 6. taxi: duration 13, cost 35.2. walk: duration 104, cost 0.0. \nfrom Holiday Inn Beijing Deshengmen to Beihai Park: metro: duration 21, cost 4. taxi: duration 4, cost 15.04. walk: duration 35, cost 0.0. \nfrom Holiday Inn Beijing Deshengmen to Beijing Capital International Airport: metro: duration 70, cost 12. taxi: duration 35, cost 100.55. walk: duration 282, cost 0.0. \nfrom Holiday Inn Beijing Deshengmen to Prince Gong's Mansion: metro: duration 23, cost 4. taxi: duration 2, cost 11.62. walk: duration 23, cost 0.0. \nfrom Holiday Inn Beijing Deshengmen to Olympic Park: metro: duration 33, cost 6. taxi: duration 7, cost 22.02. walk: duration 59, cost 0.0. \nfrom Holiday Inn Beijing Deshengmen to Summer Palace: metro: duration 41, cost 8. taxi: duration 15, cost 40.37. walk: duration 121, cost 0.0. \nfrom Holiday Inn Beijing Deshengmen to Temple of Heaven: metro: duration 31, cost 6. taxi: duration 12, cost 33.67. walk: duration 99, cost 0.0. \nfrom Holiday Inn Beijing Deshengmen to The Palace Museum: metro: duration 28, cost 6. taxi: duration 6, cost 19.68. walk: duration 51, cost 0.0. \nfrom Holiday Inn Beijing Deshengmen to Shichahai: metro: duration 18, cost 4. taxi: duration 2, cost 11.0. walk: duration 17, cost 0.0. \nfrom Holiday Inn Beijing Deshengmen to South Gate Hot Pot (Temple of Heaven Branch): metro: duration 43, cost 8. taxi: duration 14, cost 38.9. walk: duration 117, cost 0.0. \nfrom Holiday Inn Beijing Deshengmen to Yonghe Temple: metro: duration 28, cost 4. taxi: duration 5, cost 18.3. walk: duration 46, cost 0.0. \nfrom Holiday Inn Beijing Deshengmen to Huguosi Snacks (Huguosi Main Store): metro: duration 18, cost 4. taxi: duration 3, cost 13.5. walk: duration 30, cost 0.0. \nfrom Tiananmen Square to Grand Metropark Longxi Conference Center Beijing: metro: duration 121, cost 12. taxi: duration 49, cost 142.56. walk: duration 394, cost 0.0. \nfrom Tiananmen Square to Badaling Great Wall: metro: duration 321, cost 16. taxi: duration 89, cost 263.72. walk: duration 717, cost 0.0. \nfrom Tiananmen Square to Doorframe Alley Century Stewed Offal (Xinjiekou Branch): metro: duration 14, cost 6. taxi: duration 6, cost 20.53. walk: duration 54, cost 0.0. \nfrom Tiananmen Square to Beijing Zoo: metro: duration 29, cost 6. taxi: duration 10, cost 28.26. walk: duration 80, cost 0.0. \nfrom Tiananmen Square to Jingshan Park: metro: duration 11, cost 4. taxi: duration 3, cost 13.27. walk: duration 29, cost 0.0. \nfrom Tiananmen Square to Holiday Inn Beijing Deshengmen: metro: duration 27, cost 6. taxi: duration 8, cost 24.67. walk: duration 68, cost 0.0. \nfrom Tiananmen Square to Tiananmen Square:  metro: empty.  taxi: empty.  walk: empty. \nfrom Tiananmen Square to Nanluoguxiang: metro: duration 21, cost 6. taxi: duration 5, cost 17.65. walk: duration 44, cost 0.0. \nfrom Tiananmen Square to Beijing Daxing International Airport: metro: duration 103, cost 16. taxi: duration 67, cost 198.0. walk: duration 542, cost 0.0. \nfrom Tiananmen Square to Four Seasons Minfu Roast Duck Restaurant (Forbidden City Branch): metro: duration 14, cost 4. taxi: duration 0, cost 11.0. walk: duration 6, cost 0.0. \nfrom Tiananmen Square to Mutianyu Great Wall: metro: duration 480, cost 14. taxi: duration 90, cost 267.61. walk: duration 727, cost 0.0. \nfrom Tiananmen Square to Beijing Quanjude (Qianmen Branch): metro: duration 9, cost 4. taxi: duration 2, cost 11.0. walk: duration 18, cost 0.0. \nfrom Tiananmen Square to 798 Art District: metro: duration 46, cost 8. taxi: duration 18, cost 49.73. walk: duration 146, cost 0.0. \nfrom Tiananmen Square to Beijing Xinyuan Hotel: metro: duration 20, cost 6. taxi: duration 11, cost 32.61. walk: duration 95, cost 0.0. \nfrom Tiananmen Square to Beihai Park: metro: duration 14, cost 4. taxi: duration 4, cost 14.44. walk: duration 33, cost 0.0. \nfrom Tiananmen Square to Beijing Capital International Airport: metro: duration 64, cost 12. taxi: duration 38, cost 109.14. walk: duration 305, cost 0.0. \nfrom Tiananmen Square to Prince Gong's Mansion: metro: duration 20, cost 6. taxi: duration 5, cost 18.08. walk: duration 45, cost 0.0. \nfrom Tiananmen Square to Olympic Park: metro: duration 33, cost 8. taxi: duration 14, cost 39.38. walk: duration 118, cost 0.0. \nfrom Tiananmen Square to Summer Palace: metro: duration 41, cost 10. taxi: duration 22, cost 63.26. walk: duration 182, cost 0.0. \nfrom Tiananmen Square to Temple of Heaven: metro: duration 12, cost 4. taxi: duration 3, cost 13.77. walk: duration 31, cost 0.0. \nfrom Tiananmen Square to The Palace Museum: metro: duration 14, cost 4. taxi: duration 2, cost 11.0. walk: duration 18, cost 0.0. \nfrom Tiananmen Square to Shichahai: metro: duration 15, cost 6. taxi: duration 6, cost 20.06. walk: duration 52, cost 0.0. \nfrom Tiananmen Square to South Gate Hot Pot (Temple of Heaven Branch): metro: duration 24, cost 6. taxi: duration 6, cost 19.09. walk: duration 49, cost 0.0. \nfrom Tiananmen Square to Yonghe Temple: metro: duration 21, cost 6. taxi: duration 7, cost 22.5. walk: duration 61, cost 0.0. \nfrom Tiananmen Square to Huguosi Snacks (Huguosi Main Store): metro: duration 13, cost 4. taxi: duration 5, cost 17.79. walk: duration 44, cost 0.0. \nfrom Nanluoguxiang to Grand Metropark Longxi Conference Center Beijing: metro: duration 134, cost 14. taxi: duration 54, cost 159.06. walk: duration 438, cost 0.0. \nfrom Nanluoguxiang to Badaling Great Wall: metro: duration 317, cost 16. taxi: duration 85, cost 251.16. walk: duration 683, cost 0.0. \nfrom Nanluoguxiang to Doorframe Alley Century Stewed Offal (Xinjiekou Branch): metro: duration 16, cost 4. taxi: duration 5, cost 16.9. walk: duration 41, cost 0.0. \nfrom Nanluoguxiang to Beijing Zoo: metro: duration 33, cost 6. taxi: duration 8, cost 24.87. walk: duration 69, cost 0.0. \nfrom Nanluoguxiang to Jingshan Park: metro: duration 13, cost 4. taxi: duration 2, cost 11.0. walk: duration 16, cost 0.0. \nfrom Nanluoguxiang to Holiday Inn Beijing Deshengmen: metro: duration 27, cost 4. taxi: duration 4, cost 15.5. walk: duration 37, cost 0.0. \nfrom Nanluoguxiang to Tiananmen Square: metro: duration 21, cost 6. taxi: duration 5, cost 17.65. walk: duration 44, cost 0.0. \nfrom Nanluoguxiang to Nanluoguxiang:  metro: empty.  taxi: empty.  walk: empty. \nfrom Nanluoguxiang to Beijing Daxing International Airport: metro: duration 116, cost 18. taxi: duration 73, cost 214.47. walk: duration 586, cost 0.0. \nfrom Nanluoguxiang to Four Seasons Minfu Roast Duck Restaurant (Forbidden City Branch): metro: duration 23, cost 4. taxi: duration 4, cost 16.01. walk: duration 38, cost 0.0. \nfrom Nanluoguxiang to Mutianyu Great Wall: metro: duration 476, cost 12. taxi: duration 85, cost 251.08. walk: duration 683, cost 0.0. \nfrom Nanluoguxiang to Beijing Quanjude (Qianmen Branch): metro: duration 23, cost 6. taxi: duration 7, cost 23.09. walk: duration 63, cost 0.0. \nfrom Nanluoguxiang to 798 Art District: metro: duration 43, cost 6. taxi: duration 14, cost 37.82. walk: duration 113, cost 0.0. \nfrom Nanluoguxiang to Beijing Xinyuan Hotel: metro: duration 29, cost 8. taxi: duration 14, cost 38.69. walk: duration 116, cost 0.0. \nfrom Nanluoguxiang to Beihai Park: metro: duration 15, cost 4. taxi: duration 2, cost 11.0. walk: duration 19, cost 0.0. \nfrom Nanluoguxiang to Beijing Capital International Airport: metro: duration 60, cost 12. taxi: duration 33, cost 95.89. walk: duration 269, cost 0.0. \nfrom Nanluoguxiang to Prince Gong's Mansion: metro: duration 17, cost 4. taxi: duration 2, cost 11.0. walk: duration 17, cost 0.0. \nfrom Nanluoguxiang to Olympic Park: metro: duration 28, cost 6. taxi: duration 9, cost 26.71. walk: duration 75, cost 0.0. \nfrom Nanluoguxiang to Summer Palace: metro: duration 41, cost 8. taxi: duration 19, cost 54.24. walk: duration 158, cost 0.0. \nfrom Nanluoguxiang to Temple of Heaven: metro: duration 24, cost 6. taxi: duration 8, cost 25.6. walk: duration 71, cost 0.0. \nfrom Nanluoguxiang to The Palace Museum: metro: duration 20, cost 4. taxi: duration 3, cost 12.33. walk: duration 26, cost 0.0. \nfrom Nanluoguxiang to Shichahai: metro: duration 12, cost 4. taxi: duration 2, cost 11.0. walk: duration 19, cost 0.0. \nfrom Nanluoguxiang to South Gate Hot Pot (Temple of Heaven Branch): metro: duration 37, cost 8. taxi: duration 11, cost 31.69. walk: duration 92, cost 0.0. \nfrom Nanluoguxiang to Yonghe Temple: metro: duration 17, cost 4. taxi: duration 2, cost 11.0. walk: duration 19, cost 0.0. \nfrom Nanluoguxiang to Huguosi Snacks (Huguosi Main Store): metro: duration 16, cost 4. taxi: duration 4, cost 15.53. walk: duration 37, cost 0.0. \nfrom Beijing Daxing International Airport to Grand Metropark Longxi Conference Center Beijing: metro: duration 113, cost 10. taxi: duration 25, cost 70.49. walk: duration 202, cost 0.0. \nfrom Beijing Daxing International Airport to Badaling Great Wall: metro: duration 413, cost 22.0. taxi: duration 151, cost 450.21. walk: duration 1214, cost 0.0. \nfrom Beijing Daxing International Airport to Doorframe Alley Century Stewed Offal (Xinjiekou Branch): metro: duration 107, cost 16. taxi: duration 73, cost 213.98. walk: duration 584, cost 0.0. \nfrom Beijing Daxing International Airport to Beijing Zoo: metro: duration 119, cost 16. taxi: duration 74, cost 218.71. walk: duration 597, cost 0.0. \nfrom Beijing Daxing International Airport to Jingshan Park: metro: duration 106, cost 16. taxi: duration 71, cost 209.02. walk: duration 571, cost 0.0. \nfrom Beijing Daxing International Airport to Holiday Inn Beijing Deshengmen: metro: duration 121, cost 18. taxi: duration 75, cost 222.19. walk: duration 606, cost 0.0. \nfrom Beijing Daxing International Airport to Tiananmen Square: metro: duration 103, cost 16. taxi: duration 67, cost 198.0. walk: duration 542, cost 0.0. \nfrom Beijing Daxing International Airport to Nanluoguxiang: metro: duration 116, cost 18. taxi: duration 73, cost 214.47. walk: duration 586, cost 0.0. \nfrom Beijing Daxing International Airport to Beijing Daxing International Airport:  metro: empty.  taxi: empty.  walk: empty. \nfrom Beijing Daxing International Airport to Four Seasons Minfu Roast Duck Restaurant (Forbidden City Branch): metro: duration 108, cost 16. taxi: duration 68, cost 200.22. walk: duration 548, cost 0.0. \nfrom Beijing Daxing International Airport to Mutianyu Great Wall: metro: duration 567, cost 20.0. taxi: duration 157, cost 466.59. walk: duration 1258, cost 0.0. \nfrom Beijing Daxing International Airport to Beijing Quanjude (Qianmen Branch): metro: duration 101, cost 16. taxi: duration 65, cost 191.35. walk: duration 524, cost 0.0. \nfrom Beijing Daxing International Airport to 798 Art District: metro: duration 137, cost 18. taxi: duration 81, cost 240.37. walk: duration 655, cost 0.0. \nfrom Beijing Daxing International Airport to Beijing Xinyuan Hotel: metro: duration 99, cost 16. taxi: duration 67, cost 196.24. walk: duration 537, cost 0.0. \nfrom Beijing Daxing International Airport to Beihai Park: metro: duration 109, cost 16. taxi: duration 71, cost 210.15. walk: duration 574, cost 0.0. \nfrom Beijing Daxing International Airport to Beijing Capital International Airport: metro: duration 150, cost 20.0. taxi: duration 98, cost 291.59. walk: duration 791, cost 0.0. \nfrom Beijing Daxing International Airport to Prince Gong's Mansion: metro: duration 115, cost 18. taxi: duration 73, cost 214.79. walk: duration 586, cost 0.0. \nfrom Beijing Daxing International Airport to Olympic Park: metro: duration 128, cost 18. taxi: duration 82, cost 242.58. walk: duration 661, cost 0.0. \nfrom Beijing Daxing International Airport to Summer Palace: metro: duration 130, cost 18. taxi: duration 86, cost 252.91. walk: duration 688, cost 0.0. \nfrom Beijing Daxing International Airport to Temple of Heaven: metro: duration 99, cost 16. taxi: duration 64, cost 187.83. walk: duration 515, cost 0.0. \nfrom Beijing Daxing International Airport to The Palace Museum: metro: duration 109, cost 16. taxi: duration 70, cost 205.0. walk: duration 560, cost 0.0. \nfrom Beijing Daxing International Airport to Shichahai: metro: duration 110, cost 18. taxi: duration 74, cost 217.31. walk: duration 593, cost 0.0. \nfrom Beijing Daxing International Airport to South Gate Hot Pot (Temple of Heaven Branch): metro: duration 100, cost 16. taxi: duration 61, cost 179.79. walk: duration 493, cost 0.0. \nfrom Beijing Daxing International Airport to Yonghe Temple: metro: duration 116, cost 18. taxi: duration 74, cost 219.51. walk: duration 599, cost 0.0. \nfrom Beijing Daxing International Airport to Huguosi Snacks (Huguosi Main Store): metro: duration 107, cost 16. taxi: duration 72, cost 211.11. walk: duration 577, cost 0.0. \nfrom Four Seasons Minfu Roast Duck Restaurant (Forbidden City Branch) to Grand Metropark Longxi Conference Center Beijing: metro: duration 127, cost 14. taxi: duration 49, cost 144.57. walk: duration 399, cost 0.0. \nfrom Four Seasons Minfu Roast Duck Restaurant (Forbidden City Branch) to Badaling Great Wall: metro: duration 324, cost 16. taxi: duration 88, cost 261.6. walk: duration 711, cost 0.0. \nfrom Four Seasons Minfu Roast Duck Restaurant (Forbidden City Branch) to Doorframe Alley Century Stewed Offal (Xinjiekou Branch): metro: duration 18, cost 6. taxi: duration 6, cost 19.03. walk: duration 49, cost 0.0. \nfrom Four Seasons Minfu Roast Duck Restaurant (Forbidden City Branch) to Beijing Zoo: metro: duration 34, cost 6. taxi: duration 9, cost 26.94. walk: duration 76, cost 0.0. \nfrom Four Seasons Minfu Roast Duck Restaurant (Forbidden City Branch) to Jingshan Park: metro: duration 14, cost 4. taxi: duration 2, cost 11.54. walk: duration 23, cost 0.0. \nfrom Four Seasons Minfu Roast Duck Restaurant (Forbidden City Branch) to Holiday Inn Beijing Deshengmen: metro: duration 30, cost 6. taxi: duration 7, cost 22.94. walk: duration 62, cost 0.0. \nfrom Four Seasons Minfu Roast Duck Restaurant (Forbidden City Branch) to Tiananmen Square: metro: duration 14, cost 4. taxi: duration 0, cost 11.0. walk: duration 6, cost 0.0. \nfrom Four Seasons Minfu Roast Duck Restaurant (Forbidden City Branch) to Nanluoguxiang: metro: duration 23, cost 4. taxi: duration 4, cost 16.01. walk: duration 38, cost 0.0. \nfrom Four Seasons Minfu Roast Duck Restaurant (Forbidden City Branch) to Beijing Daxing International Airport: metro: duration 108, cost 16. taxi: duration 68, cost 200.22. walk: duration 548, cost 0.0. \nfrom Four Seasons Minfu Roast Duck Restaurant (Forbidden City Branch) to Four Seasons Minfu Roast Duck Restaurant (Forbidden City Branch):  metro: empty.  taxi: empty.  walk: empty. \nfrom Four Seasons Minfu Roast Duck Restaurant (Forbidden City Branch) to Mutianyu Great Wall: metro: duration 482, cost 14. taxi: duration 90, cost 265.58. walk: duration 722, cost 0.0. \nfrom Four Seasons Minfu Roast Duck Restaurant (Forbidden City Branch) to Beijing Quanjude (Qianmen Branch): metro: duration 16, cost 4. taxi: duration 3, cost 11.78. walk: duration 24, cost 0.0. \nfrom Four Seasons Minfu Roast Duck Restaurant (Forbidden City Branch) to 798 Art District: metro: duration 48, cost 8. taxi: duration 17, cost 48.45. walk: duration 143, cost 0.0. \nfrom Four Seasons Minfu Roast Duck Restaurant (Forbidden City Branch) to Beijing Xinyuan Hotel: metro: duration 26, cost 6. taxi: duration 11, cost 32.59. walk: duration 95, cost 0.0. \nfrom Four Seasons Minfu Roast Duck Restaurant (Forbidden City Branch) to Beihai Park: metro: duration 17, cost 4. taxi: duration 3, cost 12.69. walk: duration 27, cost 0.0. \nfrom Four Seasons Minfu Roast Duck Restaurant (Forbidden City Branch) to Beijing Capital International Airport: metro: duration 65, cost 12. taxi: duration 37, cost 107.82. walk: duration 301, cost 0.0. \nfrom Four Seasons Minfu Roast Duck Restaurant (Forbidden City Branch) to Prince Gong's Mansion: metro: duration 23, cost 6. taxi: duration 4, cost 16.33. walk: duration 39, cost 0.0. \nfrom Four Seasons Minfu Roast Duck Restaurant (Forbidden City Branch) to Olympic Park: metro: duration 35, cost 8. taxi: duration 14, cost 37.64. walk: duration 112, cost 0.0. \nfrom Four Seasons Minfu Roast Duck Restaurant (Forbidden City Branch) to Summer Palace: metro: duration 45, cost 10. taxi: duration 22, cost 61.36. walk: duration 177, cost 0.0. \nfrom Four Seasons Minfu Roast Duck Restaurant (Forbidden City Branch) to Temple of Heaven: metro: duration 17, cost 4. taxi: duration 4, cost 15.45. walk: duration 36, cost 0.0. \nfrom Four Seasons Minfu Roast Duck Restaurant (Forbidden City Branch) to The Palace Museum: metro: duration 16, cost 4. taxi: duration 1, cost 11.0. walk: duration 12, cost 0.0. \nfrom Four Seasons Minfu Roast Duck Restaurant (Forbidden City Branch) to Shichahai: metro: duration 18, cost 6. taxi: duration 5, cost 18.31. walk: duration 46, cost 0.0. \nfrom Four Seasons Minfu Roast Duck Restaurant (Forbidden City Branch) to South Gate Hot Pot (Temple of Heaven Branch): metro: duration 30, cost 6. taxi: duration 6, cost 20.85. walk: duration 55, cost 0.0. \nfrom Four Seasons Minfu Roast Duck Restaurant (Forbidden City Branch) to Yonghe Temple: metro: duration 23, cost 4. taxi: duration 6, cost 21.02. walk: duration 55, cost 0.0. \nfrom Four Seasons Minfu Roast Duck Restaurant (Forbidden City Branch) to Huguosi Snacks (Huguosi Main Store): metro: duration 17, cost 4. taxi: duration 4, cost 16.3. walk: duration 39, cost 0.0. \nfrom Mutianyu Great Wall to Grand Metropark Longxi Conference Center Beijing: metro: duration 592, cost 18. taxi: duration 140, cost 415.44. walk: duration 1121, cost 0.0. \nfrom Mutianyu Great Wall to Badaling Great Wall: metro: duration 726, cost 16. taxi: duration 71, cost 209.03. walk: duration 571, cost 0.0. \nfrom Mutianyu Great Wall to Doorframe Alley Century Stewed Offal (Xinjiekou Branch): metro: duration 475, cost 14. taxi: duration 87, cost 256.67. walk: duration 698, cost 0.0. \nfrom Mutianyu Great Wall to Beijing Zoo: metro: duration 491, cost 14. taxi: duration 87, cost 256.52. walk: duration 698, cost 0.0. \nfrom Mutianyu Great Wall to Jingshan Park: metro: duration 473, cost 12. taxi: duration 87, cost 257.05. walk: duration 699, cost 0.0. \nfrom Mutianyu Great Wall to Holiday Inn Beijing Deshengmen: metro: duration 485, cost 14. taxi: duration 84, cost 247.39. walk: duration 673, cost 0.0. \nfrom Mutianyu Great Wall to Tiananmen Square: metro: duration 480, cost 14. taxi: duration 90, cost 267.61. walk: duration 727, cost 0.0. \nfrom Mutianyu Great Wall to Nanluoguxiang: metro: duration 476, cost 12. taxi: duration 85, cost 251.08. walk: duration 683, cost 0.0. \nfrom Mutianyu Great Wall to Beijing Daxing International Airport: metro: duration 567, cost 20.0. taxi: duration 157, cost 466.59. walk: duration 1258, cost 0.0. \nfrom Mutianyu Great Wall to Four Seasons Minfu Roast Duck Restaurant (Forbidden City Branch): metro: duration 482, cost 14. taxi: duration 90, cost 265.58. walk: duration 722, cost 0.0. \nfrom Mutianyu Great Wall to Mutianyu Great Wall:  metro: empty.  taxi: empty.  walk: empty. \nfrom Mutianyu Great Wall to Beijing Quanjude (Qianmen Branch): metro: duration 482, cost 14. taxi: duration 93, cost 274.68. walk: duration 746, cost 0.0. \nfrom Mutianyu Great Wall to 798 Art District: metro: duration 475, cost 10. taxi: duration 75, cost 220.92. walk: duration 603, cost 0.0. \nfrom Mutianyu Great Wall to Beijing Xinyuan Hotel: metro: duration 489, cost 14. taxi: duration 96, cost 283.8. walk: duration 770, cost 0.0. \nfrom Mutianyu Great Wall to Beihai Park: metro: duration 475, cost 12. taxi: duration 87, cost 256.85. walk: duration 699, cost 0.0. \nfrom Mutianyu Great Wall to Beijing Capital International Airport: metro: duration 437, cost 6. taxi: duration 59, cost 174.69. walk: duration 479, cost 0.0. \nfrom Mutianyu Great Wall to Prince Gong's Mansion: metro: duration 477, cost 12. taxi: duration 85, cost 252.67. walk: duration 687, cost 0.0. \nfrom Mutianyu Great Wall to Olympic Park: metro: duration 470, cost 12. taxi: duration 76, cost 225.17. walk: duration 614, cost 0.0. \nfrom Mutianyu Great Wall to Summer Palace: metro: duration 487, cost 14. taxi: duration 81, cost 238.16. walk: duration 649, cost 0.0. \nfrom Mutianyu Great Wall to Temple of Heaven: metro: duration 481, cost 14. taxi: duration 93, cost 276.11. walk: duration 750, cost 0.0. \nfrom Mutianyu Great Wall to The Palace Museum: metro: duration 479, cost 14. taxi: duration 88, cost 260.9. walk: duration 709, cost 0.0. \nfrom Mutianyu Great Wall to Shichahai: metro: duration 472, cost 12. taxi: duration 85, cost 250.41. walk: duration 681, cost 0.0. \nfrom Mutianyu Great Wall to South Gate Hot Pot (Temple of Heaven Branch): metro: duration 494, cost 14. taxi: duration 96, cost 284.45. walk: duration 772, cost 0.0. \nfrom Mutianyu Great Wall to Yonghe Temple: metro: duration 475, cost 12. taxi: duration 83, cost 244.84. walk: duration 667, cost 0.0. \nfrom Mutianyu Great Wall to Huguosi Snacks (Huguosi Main Store): metro: duration 477, cost 14. taxi: duration 87, cost 258.54. walk: duration 703, cost 0.0. \nfrom Beijing Quanjude (Qianmen Branch) to Grand Metropark Longxi Conference Center Beijing: metro: duration 119, cost 12. taxi: duration 46, cost 135.49. walk: duration 375, cost 0.0. \nfrom Beijing Quanjude (Qianmen Branch) to Badaling Great Wall: metro: duration 322, cost 16. taxi: duration 91, cost 268.25. walk: duration 729, cost 0.0. \nfrom Beijing Quanjude (Qianmen Branch) to Doorframe Alley Century Stewed Offal (Xinjiekou Branch): metro: duration 15, cost 6. taxi: duration 8, cost 23.9. walk: duration 65, cost 0.0. \nfrom Beijing Quanjude (Qianmen Branch) to Beijing Zoo: metro: duration 30, cost 6. taxi: duration 11, cost 30.69. walk: duration 89, cost 0.0. \nfrom Beijing Quanjude (Qianmen Branch) to Jingshan Park: metro: duration 13, cost 4. taxi: duration 5, cost 18.57. walk: duration 47, cost 0.0. \nfrom Beijing Quanjude (Qianmen Branch) to Holiday Inn Beijing Deshengmen: metro: duration 28, cost 6. taxi: duration 10, cost 29.11. walk: duration 83, cost 0.0. \nfrom Beijing Quanjude (Qianmen Branch) to Tiananmen Square: metro: duration 9, cost 4. taxi: duration 2, cost 11.0. walk: duration 18, cost 0.0. \nfrom Beijing Quanjude (Qianmen Branch) to Nanluoguxiang: metro: duration 23, cost 6. taxi: duration 7, cost 23.09. walk: duration 63, cost 0.0. \nfrom Beijing Quanjude (Qianmen Branch) to Beijing Daxing International Airport: metro: duration 101, cost 16. taxi: duration 65, cost 191.35. walk: duration 524, cost 0.0. \nfrom Beijing Quanjude (Qianmen Branch) to Four Seasons Minfu Roast Duck Restaurant (Forbidden City Branch): metro: duration 16, cost 4. taxi: duration 3, cost 11.78. walk: duration 24, cost 0.0. \nfrom Beijing Quanjude (Qianmen Branch) to Mutianyu Great Wall: metro: duration 482, cost 14. taxi: duration 93, cost 274.68. walk: duration 746, cost 0.0. \nfrom Beijing Quanjude (Qianmen Branch) to Beijing Quanjude (Qianmen Branch):  metro: empty.  taxi: empty.  walk: empty. \nfrom Beijing Quanjude (Qianmen Branch) to 798 Art District: metro: duration 48, cost 8. taxi: duration 20, cost 56.24. walk: duration 164, cost 0.0. \nfrom Beijing Quanjude (Qianmen Branch) to Beijing Xinyuan Hotel: metro: duration 19, cost 6. taxi: duration 11, cost 30.51. walk: duration 88, cost 0.0. \nfrom Beijing Quanjude (Qianmen Branch) to Beihai Park: metro: duration 16, cost 6. taxi: duration 6, cost 19.32. walk: duration 50, cost 0.0. \nfrom Beijing Quanjude (Qianmen Branch) to Beijing Capital International Airport: metro: duration 65, cost 12. taxi: duration 40, cost 115.66. walk: duration 322, cost 0.0. \nfrom Beijing Quanjude (Qianmen Branch) to Prince Gong's Mansion: metro: duration 21, cost 6. taxi: duration 7, cost 22.95. walk: duration 62, cost 0.0. \nfrom Beijing Quanjude (Qianmen Branch) to Olympic Park: metro: duration 34, cost 8. taxi: duration 17, cost 45.97. walk: duration 136, cost 0.0. \nfrom Beijing Quanjude (Qianmen Branch) to Summer Palace: metro: duration 42, cost 10. taxi: duration 24, cost 66.85. walk: duration 192, cost 0.0. \nfrom Beijing Quanjude (Qianmen Branch) to Temple of Heaven: metro: duration 12, cost 4. taxi: duration 2, cost 11.48. walk: duration 23, cost 0.0. \nfrom Beijing Quanjude (Qianmen Branch) to The Palace Museum: metro: duration 16, cost 4. taxi: duration 4, cost 15.48. walk: duration 36, cost 0.0. \nfrom Beijing Quanjude (Qianmen Branch) to Shichahai: metro: duration 16, cost 6. taxi: duration 8, cost 24.92. walk: duration 69, cost 0.0. \nfrom Beijing Quanjude (Qianmen Branch) to South Gate Hot Pot (Temple of Heaven Branch): metro: duration 23, cost 6. taxi: duration 4, cost 14.67. walk: duration 34, cost 0.0. \nfrom Beijing Quanjude (Qianmen Branch) to Yonghe Temple: metro: duration 23, cost 6. taxi: duration 9, cost 28.0. walk: duration 79, cost 0.0. \nfrom Beijing Quanjude (Qianmen Branch) to Huguosi Snacks (Huguosi Main Store): metro: duration 14, cost 6. taxi: duration 7, cost 21.24. walk: duration 56, cost 0.0. \nfrom 798 Art District to Grand Metropark Longxi Conference Center Beijing: metro: duration 159, cost 16. taxi: duration 66, cost 193.1. walk: duration 529, cost 0.0. \nfrom 798 Art District to Badaling Great Wall: metro: duration 331, cost 16. taxi: duration 86, cost 255.28. walk: duration 694, cost 0.0. \nfrom 798 Art District to Doorframe Alley Century Stewed Offal (Xinjiekou Branch): metro: duration 43, cost 8. taxi: duration 18, cost 51.48. walk: duration 151, cost 0.0. \nfrom 798 Art District to Beijing Zoo: metro: duration 60, cost 8. taxi: duration 21, cost 59.47. walk: duration 172, cost 0.0. \nfrom 798 Art District to Jingshan Park: metro: duration 40, cost 6. taxi: duration 15, cost 42.56. walk: duration 127, cost 0.0. \nfrom 798 Art District to Holiday Inn Beijing Deshengmen: metro: duration 54, cost 8. taxi: duration 16, cost 44.66. walk: duration 133, cost 0.0. \nfrom 798 Art District to Tiananmen Square: metro: duration 46, cost 8. taxi: duration 18, cost 49.73. walk: duration 146, cost 0.0. \nfrom 798 Art District to Nanluoguxiang: metro: duration 43, cost 6. taxi: duration 14, cost 37.82. walk: duration 113, cost 0.0. \nfrom 798 Art District to Beijing Daxing International Airport: metro: duration 137, cost 18. taxi: duration 81, cost 240.37. walk: duration 655, cost 0.0. \nfrom 798 Art District to Four Seasons Minfu Roast Duck Restaurant (Forbidden City Branch): metro: duration 48, cost 8. taxi: duration 17, cost 48.45. walk: duration 143, cost 0.0. \nfrom 798 Art District to Mutianyu Great Wall: metro: duration 475, cost 10. taxi: duration 75, cost 220.92. walk: duration 603, cost 0.0. \nfrom 798 Art District to Beijing Quanjude (Qianmen Branch): metro: duration 48, cost 8. taxi: duration 20, cost 56.24. walk: duration 164, cost 0.0. \nfrom 798 Art District to 798 Art District:  metro: empty.  taxi: empty.  walk: empty. \nfrom 798 Art District to Beijing Xinyuan Hotel: metro: duration 57, cost 10. taxi: duration 28, cost 80.95. walk: duration 229, cost 0.0. \nfrom 798 Art District to Beihai Park: metro: duration 42, cost 6. taxi: duration 16, cost 44.42. walk: duration 132, cost 0.0. \nfrom 798 Art District to Beijing Capital International Airport: metro: duration 59, cost 10. taxi: duration 19, cost 54.12. walk: duration 158, cost 0.0. \nfrom 798 Art District to Prince Gong's Mansion: metro: duration 45, cost 6. taxi: duration 16, cost 42.74. walk: duration 128, cost 0.0. \nfrom 798 Art District to Olympic Park: metro: duration 44, cost 6. taxi: duration 13, cost 35.32. walk: duration 104, cost 0.0. \nfrom 798 Art District to Summer Palace: metro: duration 64, cost 10. taxi: duration 28, cost 80.04. walk: duration 227, cost 0.0. \nfrom 798 Art District to Temple of Heaven: metro: duration 47, cost 8. taxi: duration 19, cost 54.23. walk: duration 158, cost 0.0. \nfrom 798 Art District to The Palace Museum: metro: duration 46, cost 8. taxi: duration 16, cost 45.01. walk: duration 134, cost 0.0. \nfrom 798 Art District to Shichahai: metro: duration 40, cost 6. taxi: duration 15, cost 42.02. walk: duration 126, cost 0.0. \nfrom 798 Art District to South Gate Hot Pot (Temple of Heaven Branch): metro: duration 61, cost 10. taxi: duration 22, cost 62.28. walk: duration 180, cost 0.0. \nfrom 798 Art District to Yonghe Temple: metro: duration 42, cost 6. taxi: duration 11, cost 32.08. walk: duration 93, cost 0.0. \nfrom 798 Art District to Huguosi Snacks (Huguosi Main Store): metro: duration 44, cost 8. taxi: duration 18, cost 50.72. walk: duration 149, cost 0.0. \nfrom Beijing Xinyuan Hotel to Grand Metropark Longxi Conference Center Beijing: metro: duration 114, cost 12. taxi: duration 45, cost 131.31. walk: duration 364, cost 0.0. \nfrom Beijing Xinyuan Hotel to Badaling Great Wall: metro: duration 315, cost 16. taxi: duration 85, cost 251.78. walk: duration 685, cost 0.0. \nfrom Beijing Xinyuan Hotel to Doorframe Alley Century Stewed Offal (Xinjiekou Branch): metro: duration 15, cost 6. taxi: duration 10, cost 28.35. walk: duration 81, cost 0.0. \nfrom Beijing Xinyuan Hotel to Beijing Zoo: metro: duration 24, cost 6. taxi: duration 9, cost 26.0. walk: duration 73, cost 0.0. \nfrom Beijing Xinyuan Hotel to Jingshan Park: metro: duration 20, cost 6. taxi: duration 12, cost 34.93. walk: duration 103, cost 0.0. \nfrom Beijing Xinyuan Hotel to Holiday Inn Beijing Deshengmen: metro: duration 29, cost 6. taxi: duration 13, cost 35.2. walk: duration 104, cost 0.0. \nfrom Beijing Xinyuan Hotel to Tiananmen Square: metro: duration 20, cost 6. taxi: duration 11, cost 32.61. walk: duration 95, cost 0.0. \nfrom Beijing Xinyuan Hotel to Nanluoguxiang: metro: duration 29, cost 8. taxi: duration 14, cost 38.69. walk: duration 116, cost 0.0. \nfrom Beijing Xinyuan Hotel to Beijing Daxing International Airport: metro: duration 99, cost 16. taxi: duration 67, cost 196.24. walk: duration 537, cost 0.0. \nfrom Beijing Xinyuan Hotel to Four Seasons Minfu Roast Duck Restaurant (Forbidden City Branch): metro: duration 26, cost 6. taxi: duration 11, cost 32.59. walk: duration 95, cost 0.0. \nfrom Beijing Xinyuan Hotel to Mutianyu Great Wall: metro: duration 489, cost 14. taxi: duration 96, cost 283.8. walk: duration 770, cost 0.0. \nfrom Beijing Xinyuan Hotel to Beijing Quanjude (Qianmen Branch): metro: duration 19, cost 6. taxi: duration 11, cost 30.51. walk: duration 88, cost 0.0. \nfrom Beijing Xinyuan Hotel to 798 Art District: metro: duration 57, cost 10. taxi: duration 28, cost 80.95. walk: duration 229, cost 0.0. \nfrom Beijing Xinyuan Hotel to Beijing Xinyuan Hotel:  metro: empty.  taxi: empty.  walk: empty. \nfrom Beijing Xinyuan Hotel to Beihai Park: metro: duration 22, cost 6. taxi: duration 12, cost 33.18. walk: duration 97, cost 0.0. \nfrom Beijing Xinyuan Hotel to Beijing Capital International Airport: metro: duration 73, cost 14. taxi: duration 48, cost 138.95. walk: duration 384, cost 0.0. \nfrom Beijing Xinyuan Hotel to Prince Gong's Mansion: metro: duration 26, cost 8. taxi: duration 12, cost 34.52. walk: duration 102, cost 0.0. \nfrom Beijing Xinyuan Hotel to Olympic Park: metro: duration 36, cost 8. taxi: duration 20, cost 55.32. walk: duration 161, cost 0.0. \nfrom Beijing Xinyuan Hotel to Summer Palace: metro: duration 32, cost 8. taxi: duration 18, cost 51.37. walk: duration 151, cost 0.0. \nfrom Beijing Xinyuan Hotel to Temple of Heaven: metro: duration 23, cost 8. taxi: duration 13, cost 36.93. walk: duration 110, cost 0.0. \nfrom Beijing Xinyuan Hotel to The Palace Museum: metro: duration 26, cost 8. taxi: duration 12, cost 33.82. walk: duration 99, cost 0.0. \nfrom Beijing Xinyuan Hotel to Shichahai: metro: duration 21, cost 8. taxi: duration 13, cost 35.39. walk: duration 105, cost 0.0. \nfrom Beijing Xinyuan Hotel to South Gate Hot Pot (Temple of Heaven Branch): metro: duration 30, cost 8. taxi: duration 13, cost 36.5. walk: duration 109, cost 0.0. \nfrom Beijing Xinyuan Hotel to Yonghe Temple: metro: duration 30, cost 8. taxi: duration 17, cost 45.74. walk: duration 136, cost 0.0. \nfrom Beijing Xinyuan Hotel to Huguosi Snacks (Huguosi Main Store): metro: duration 16, cost 6. taxi: duration 10, cost 28.35. walk: duration 81, cost 0.0. \nfrom Beihai Park to Grand Metropark Longxi Conference Center Beijing: metro: duration 127, cost 14. taxi: duration 52, cost 153.36. walk: duration 423, cost 0.0. \nfrom Beihai Park to Badaling Great Wall: metro: duration 315, cost 16. taxi: duration 85, cost 251.73. walk: duration 685, cost 0.0. \nfrom Beihai Park to Doorframe Alley Century Stewed Offal (Xinjiekou Branch): metro: duration 9, cost 4. taxi: duration 3, cost 12.9. walk: duration 28, cost 0.0. \nfrom Beihai Park to Beijing Zoo: metro: duration 26, cost 6. taxi: duration 7, cost 21.31. walk: duration 56, cost 0.0. \nfrom Beihai Park to Jingshan Park: metro: duration 7, cost 4. taxi: duration 1, cost 11.0. walk: duration 8, cost 0.0. \nfrom Beihai Park to Holiday Inn Beijing Deshengmen: metro: duration 21, cost 4. taxi: duration 4, cost 15.04. walk: duration 35, cost 0.0. \nfrom Beihai Park to Tiananmen Square: metro: duration 14, cost 4. taxi: duration 4, cost 14.44. walk: duration 33, cost 0.0. \nfrom Beihai Park to Nanluoguxiang: metro: duration 15, cost 4. taxi: duration 2, cost 11.0. walk: duration 19, cost 0.0. \nfrom Beihai Park to Beijing Daxing International Airport: metro: duration 109, cost 16. taxi: duration 71, cost 210.15. walk: duration 574, cost 0.0. \nfrom Beihai Park to Four Seasons Minfu Roast Duck Restaurant (Forbidden City Branch): metro: duration 17, cost 4. taxi: duration 3, cost 12.69. walk: duration 27, cost 0.0. \nfrom Beihai Park to Mutianyu Great Wall: metro: duration 475, cost 12. taxi: duration 87, cost 256.85. walk: duration 699, cost 0.0. \nfrom Beihai Park to Beijing Quanjude (Qianmen Branch): metro: duration 16, cost 6. taxi: duration 6, cost 19.32. walk: duration 50, cost 0.0. \nfrom Beihai Park to 798 Art District: metro: duration 42, cost 6. taxi: duration 16, cost 44.42. walk: duration 132, cost 0.0. \nfrom Beihai Park to Beijing Xinyuan Hotel: metro: duration 22, cost 6. taxi: duration 12, cost 33.18. walk: duration 97, cost 0.0. \nfrom Beihai Park to Beihai Park:  metro: empty.  taxi: empty.  walk: empty. \nfrom Beihai Park to Beijing Capital International Airport: metro: duration 60, cost 12. taxi: duration 36, cost 103.04. walk: duration 288, cost 0.0. \nfrom Beihai Park to Prince Gong's Mansion: metro: duration 13, cost 4. taxi: duration 1, cost 11.0. walk: duration 12, cost 0.0. \nfrom Beihai Park to Olympic Park: metro: duration 26, cost 6. taxi: duration 10, cost 30.02. walk: duration 86, cost 0.0. \nfrom Beihai Park to Summer Palace: metro: duration 36, cost 8. taxi: duration 19, cost 52.48. walk: duration 154, cost 0.0. \nfrom Beihai Park to Temple of Heaven: metro: duration 18, cost 6. taxi: duration 8, cost 23.37. walk: duration 64, cost 0.0. \nfrom Beihai Park to The Palace Museum: metro: duration 14, cost 4. taxi: duration 1, cost 11.0. walk: duration 15, cost 0.0. \nfrom Beihai Park to Shichahai: metro: duration 8, cost 4. taxi: duration 2, cost 11.0. walk: duration 19, cost 0.0. \nfrom Beihai Park to South Gate Hot Pot (Temple of Heaven Branch): metro: duration 31, cost 6. taxi: duration 10, cost 28.81. walk: duration 82, cost 0.0. \nfrom Beihai Park to Yonghe Temple: metro: duration 16, cost 4. taxi: duration 4, cost 16.08. walk: duration 39, cost 0.0. \nfrom Beihai Park to Huguosi Snacks (Huguosi Main Store): metro: duration 10, cost 4. taxi: duration 2, cost 11.0. walk: duration 20, cost 0.0. \nfrom Beijing Capital International Airport to Grand Metropark Longxi Conference Center Beijing: metro: duration 175, cost 18. taxi: duration 85, cost 250.17. walk: duration 681, cost 0.0. \nfrom Beijing Capital International Airport to Badaling Great Wall: metro: duration 322, cost 16. taxi: duration 87, cost 257.47. walk: duration 700, cost 0.0. \nfrom Beijing Capital International Airport to Doorframe Alley Century Stewed Offal (Xinjiekou Branch): metro: duration 60, cost 12. taxi: duration 37, cost 108.68. walk: duration 303, cost 0.0. \nfrom Beijing Capital International Airport to Beijing Zoo: metro: duration 76, cost 12. taxi: duration 40, cost 114.85. walk: duration 320, cost 0.0. \nfrom Beijing Capital International Airport to Jingshan Park: metro: duration 57, cost 12. taxi: duration 35, cost 101.5. walk: duration 284, cost 0.0. \nfrom Beijing Capital International Airport to Holiday Inn Beijing Deshengmen: metro: duration 70, cost 12. taxi: duration 35, cost 100.55. walk: duration 282, cost 0.0. \nfrom Beijing Capital International Airport to Tiananmen Square: metro: duration 64, cost 12. taxi: duration 38, cost 109.14. walk: duration 305, cost 0.0. \nfrom Beijing Capital International Airport to Nanluoguxiang: metro: duration 60, cost 12. taxi: duration 33, cost 95.89. walk: duration 269, cost 0.0. \nfrom Beijing Capital International Airport to Beijing Daxing International Airport: metro: duration 150, cost 20.0. taxi: duration 98, cost 291.59. walk: duration 791, cost 0.0. \nfrom Beijing Capital International Airport to Four Seasons Minfu Roast Duck Restaurant (Forbidden City Branch): metro: duration 65, cost 12. taxi: duration 37, cost 107.82. walk: duration 301, cost 0.0. \nfrom Beijing Capital International Airport to Mutianyu Great Wall: metro: duration 437, cost 6. taxi: duration 59, cost 174.69. walk: duration 479, cost 0.0. \nfrom Beijing Capital International Airport to Beijing Quanjude (Qianmen Branch): metro: duration 65, cost 12. taxi: duration 40, cost 115.66. walk: duration 322, cost 0.0. \nfrom Beijing Capital International Airport to 798 Art District: metro: duration 59, cost 10. taxi: duration 19, cost 54.12. walk: duration 158, cost 0.0. \nfrom Beijing Capital International Airport to Beijing Xinyuan Hotel: metro: duration 73, cost 14. taxi: duration 48, cost 138.95. walk: duration 384, cost 0.0. \nfrom Beijing Capital International Airport to Beihai Park: metro: duration 60, cost 12. taxi: duration 36, cost 103.04. walk: duration 288, cost 0.0. \nfrom Beijing Capital International Airport to Beijing Capital International Airport:  metro: empty.  taxi: empty.  walk: empty. \nfrom Beijing Capital International Airport to Prince Gong's Mansion: metro: duration 61, cost 12. taxi: duration 35, cost 100.68. walk: duration 282, cost 0.0. \nfrom Beijing Capital International Airport to Olympic Park: metro: duration 56, cost 10. taxi: duration 29, cost 82.89. walk: duration 235, cost 0.0. \nfrom Beijing Capital International Airport to Summer Palace: metro: duration 74, cost 14. taxi: duration 43, cost 123.74. walk: duration 344, cost 0.0. \nfrom Beijing Capital International Airport to Temple of Heaven: metro: duration 64, cost 12. taxi: duration 39, cost 113.27. walk: duration 316, cost 0.0. \nfrom Beijing Capital International Airport to The Palace Museum: metro: duration 63, cost 12. taxi: duration 36, cost 104.22. walk: duration 292, cost 0.0. \nfrom Beijing Capital International Airport to Shichahai: metro: duration 56, cost 12. taxi: duration 34, cost 99.49. walk: duration 279, cost 0.0. \nfrom Beijing Capital International Airport to South Gate Hot Pot (Temple of Heaven Branch): metro: duration 77, cost 14. taxi: duration 42, cost 121.09. walk: duration 337, cost 0.0. \nfrom Beijing Capital International Airport to Yonghe Temple: metro: duration 59, cost 10. taxi: duration 31, cost 88.42. walk: duration 249, cost 0.0. \nfrom Beijing Capital International Airport to Huguosi Snacks (Huguosi Main Store): metro: duration 61, cost 12. taxi: duration 37, cost 108.57. walk: duration 303, cost 0.0. \nfrom Prince Gong's Mansion to Grand Metropark Longxi Conference Center Beijing: metro: duration 133, cost 14. taxi: duration 54, cost 157.65. walk: duration 434, cost 0.0. \nfrom Prince Gong's Mansion to Badaling Great Wall: metro: duration 315, cost 14. taxi: duration 84, cost 247.39. walk: duration 673, cost 0.0. \nfrom Prince Gong's Mansion to Doorframe Alley Century Stewed Offal (Xinjiekou Branch): metro: duration 12, cost 4. taxi: duration 3, cost 11.89. walk: duration 24, cost 0.0. \nfrom Prince Gong's Mansion to Beijing Zoo: metro: duration 29, cost 6. taxi: duration 6, cost 19.83. walk: duration 51, cost 0.0. \nfrom Prince Gong's Mansion to Jingshan Park: metro: duration 12, cost 4. taxi: duration 2, cost 11.0. walk: duration 18, cost 0.0. \nfrom Prince Gong's Mansion to Holiday Inn Beijing Deshengmen: metro: duration 23, cost 4. taxi: duration 2, cost 11.62. walk: duration 23, cost 0.0. \nfrom Prince Gong's Mansion to Tiananmen Square: metro: duration 20, cost 6. taxi: duration 5, cost 18.08. walk: duration 45, cost 0.0. \nfrom Prince Gong's Mansion to Nanluoguxiang: metro: duration 17, cost 4. taxi: duration 2, cost 11.0. walk: duration 17, cost 0.0. \nfrom Prince Gong's Mansion to Beijing Daxing International Airport: metro: duration 115, cost 18. taxi: duration 73, cost 214.79. walk: duration 586, cost 0.0. \nfrom Prince Gong's Mansion to Four Seasons Minfu Roast Duck Restaurant (Forbidden City Branch): metro: duration 23, cost 6. taxi: duration 4, cost 16.33. walk: duration 39, cost 0.0. \nfrom Prince Gong's Mansion to Mutianyu Great Wall: metro: duration 477, cost 12. taxi: duration 85, cost 252.67. walk: duration 687, cost 0.0. \nfrom Prince Gong's Mansion to Beijing Quanjude (Qianmen Branch): metro: duration 21, cost 6. taxi: duration 7, cost 22.95. walk: duration 62, cost 0.0. \nfrom Prince Gong's Mansion to 798 Art District: metro: duration 45, cost 6. taxi: duration 16, cost 42.74. walk: duration 128, cost 0.0. \nfrom Prince Gong's Mansion to Beijing Xinyuan Hotel: metro: duration 26, cost 8. taxi: duration 12, cost 34.52. walk: duration 102, cost 0.0. \nfrom Prince Gong's Mansion to Beihai Park: metro: duration 13, cost 4. taxi: duration 1, cost 11.0. walk: duration 12, cost 0.0. \nfrom Prince Gong's Mansion to Beijing Capital International Airport: metro: duration 61, cost 12. taxi: duration 35, cost 100.68. walk: duration 282, cost 0.0. \nfrom Prince Gong's Mansion to Prince Gong's Mansion:  metro: empty.  taxi: empty.  walk: empty. \nfrom Prince Gong's Mansion to Olympic Park: metro: duration 26, cost 6. taxi: duration 9, cost 26.5. walk: duration 74, cost 0.0. \nfrom Prince Gong's Mansion to Summer Palace: metro: duration 38, cost 8. taxi: duration 18, cost 48.87. walk: duration 144, cost 0.0. \nfrom Prince Gong's Mansion to Temple of Heaven: metro: duration 24, cost 6. taxi: duration 9, cost 26.96. walk: duration 76, cost 0.0. \nfrom Prince Gong's Mansion to The Palace Museum: metro: duration 20, cost 4. taxi: duration 3, cost 12.86. walk: duration 27, cost 0.0. \nfrom Prince Gong's Mansion to Shichahai: taxi: duration 0, cost 11.0. walk: duration 6, cost 0.0. \nfrom Prince Gong's Mansion to South Gate Hot Pot (Temple of Heaven Branch): metro: duration 36, cost 8. taxi: duration 11, cost 32.46. walk: duration 95, cost 0.0. \nfrom Prince Gong's Mansion to Yonghe Temple: metro: duration 18, cost 4. taxi: duration 4, cost 14.79. walk: duration 34, cost 0.0. \nfrom Prince Gong's Mansion to Huguosi Snacks (Huguosi Main Store): metro: duration 13, cost 4. taxi: duration 2, cost 11.0. walk: duration 21, cost 0.0. \nfrom Olympic Park to Grand Metropark Longxi Conference Center Beijing: metro: duration 145, cost 16. taxi: duration 63, cost 185.49. walk: duration 508, cost 0.0. \nfrom Olympic Park to Badaling Great Wall: metro: duration 306, cost 14. taxi: duration 77, cost 226.31. walk: duration 617, cost 0.0. \nfrom Olympic Park to Doorframe Alley Century Stewed Offal (Xinjiekou Branch): metro: duration 23, cost 6. taxi: duration 10, cost 29.27. walk: duration 84, cost 0.0. \nfrom Olympic Park to Beijing Zoo: metro: duration 37, cost 6. taxi: duration 11, cost 30.97. walk: duration 90, cost 0.0. \nfrom Olympic Park to Jingshan Park: metro: duration 25, cost 6. taxi: duration 11, cost 30.8. walk: duration 89, cost 0.0. \nfrom Olympic Park to Holiday Inn Beijing Deshengmen: metro: duration 33, cost 6. taxi: duration 7, cost 22.02. walk: duration 59, cost 0.0. \nfrom Olympic Park to Tiananmen Square: metro: duration 33, cost 8. taxi: duration 14, cost 39.38. walk: duration 118, cost 0.0. \nfrom Olympic Park to Nanluoguxiang: metro: duration 28, cost 6. taxi: duration 9, cost 26.71. walk: duration 75, cost 0.0. \nfrom Olympic Park to Beijing Daxing International Airport: metro: duration 128, cost 18. taxi: duration 82, cost 242.58. walk: duration 661, cost 0.0. \nfrom Olympic Park to Four Seasons Minfu Roast Duck Restaurant (Forbidden City Branch): metro: duration 35, cost 8. taxi: duration 14, cost 37.64. walk: duration 112, cost 0.0. \nfrom Olympic Park to Mutianyu Great Wall: metro: duration 470, cost 12. taxi: duration 76, cost 225.17. walk: duration 614, cost 0.0. \nfrom Olympic Park to Beijing Quanjude (Qianmen Branch): metro: duration 34, cost 8. taxi: duration 17, cost 45.97. walk: duration 136, cost 0.0. \nfrom Olympic Park to 798 Art District: metro: duration 44, cost 6. taxi: duration 13, cost 35.32. walk: duration 104, cost 0.0. \nfrom Olympic Park to Beijing Xinyuan Hotel: metro: duration 36, cost 8. taxi: duration 20, cost 55.32. walk: duration 161, cost 0.0. \nfrom Olympic Park to Beihai Park: metro: duration 26, cost 6. taxi: duration 10, cost 30.02. walk: duration 86, cost 0.0. \nfrom Olympic Park to Beijing Capital International Airport: metro: duration 56, cost 10. taxi: duration 29, cost 82.89. walk: duration 235, cost 0.0. \nfrom Olympic Park to Prince Gong's Mansion: metro: duration 26, cost 6. taxi: duration 9, cost 26.5. walk: duration 74, cost 0.0. \nfrom Olympic Park to Olympic Park:  metro: empty.  taxi: empty.  walk: empty. \nfrom Olympic Park to Summer Palace: metro: duration 35, cost 8. taxi: duration 15, cost 40.66. walk: duration 122, cost 0.0. \nfrom Olympic Park to Temple of Heaven: metro: duration 36, cost 8. taxi: duration 18, cost 49.87. walk: duration 147, cost 0.0. \nfrom Olympic Park to The Palace Museum: metro: duration 32, cost 6. taxi: duration 12, cost 33.93. walk: duration 100, cost 0.0. \nfrom Olympic Park to Shichahai: metro: duration 21, cost 6. taxi: duration 8, cost 24.61. walk: duration 68, cost 0.0. \nfrom Olympic Park to South Gate Hot Pot (Temple of Heaven Branch): metro: duration 49, cost 10. taxi: duration 20, cost 57.62. walk: duration 167, cost 0.0. \nfrom Olympic Park to Yonghe Temple: metro: duration 28, cost 6. taxi: duration 8, cost 24.0. walk: duration 66, cost 0.0. \nfrom Olympic Park to Huguosi Snacks (Huguosi Main Store): metro: duration 25, cost 6. taxi: duration 11, cost 30.66. walk: duration 89, cost 0.0. \nfrom Summer Palace to Grand Metropark Longxi Conference Center Beijing: metro: duration 145, cost 16. taxi: duration 64, cost 186.77. walk: duration 512, cost 0.0. \nfrom Summer Palace to Badaling Great Wall: metro: duration 298, cost 12. taxi: duration 67, cost 196.92. walk: duration 539, cost 0.0. \nfrom Summer Palace to Doorframe Alley Century Stewed Offal (Xinjiekou Branch): metro: duration 29, cost 8. taxi: duration 16, cost 42.93. walk: duration 128, cost 0.0. \nfrom Summer Palace to Beijing Zoo: metro: duration 38, cost 6. taxi: duration 12, cost 34.84. walk: duration 103, cost 0.0. \nfrom Summer Palace to Jingshan Park: metro: duration 36, cost 8. taxi: duration 20, cost 55.48. walk: duration 162, cost 0.0. \nfrom Summer Palace to Holiday Inn Beijing Deshengmen: metro: duration 41, cost 8. taxi: duration 15, cost 40.37. walk: duration 121, cost 0.0. \nfrom Summer Palace to Tiananmen Square: metro: duration 41, cost 10. taxi: duration 22, cost 63.26. walk: duration 182, cost 0.0. \nfrom Summer Palace to Nanluoguxiang: metro: duration 41, cost 8. taxi: duration 19, cost 54.24. walk: duration 158, cost 0.0. \nfrom Summer Palace to Beijing Daxing International Airport: metro: duration 130, cost 18. taxi: duration 86, cost 252.91. walk: duration 688, cost 0.0. \nfrom Summer Palace to Four Seasons Minfu Roast Duck Restaurant (Forbidden City Branch): metro: duration 45, cost 10. taxi: duration 22, cost 61.36. walk: duration 177, cost 0.0. \nfrom Summer Palace to Mutianyu Great Wall: metro: duration 487, cost 14. taxi: duration 81, cost 238.16. walk: duration 649, cost 0.0. \nfrom Summer Palace to Beijing Quanjude (Qianmen Branch): metro: duration 42, cost 10. taxi: duration 24, cost 66.85. walk: duration 192, cost 0.0. \nfrom Summer Palace to 798 Art District: metro: duration 64, cost 10. taxi: duration 28, cost 80.04. walk: duration 227, cost 0.0. \nfrom Summer Palace to Beijing Xinyuan Hotel: metro: duration 32, cost 8. taxi: duration 18, cost 51.37. walk: duration 151, cost 0.0. \nfrom Summer Palace to Beihai Park: metro: duration 36, cost 8. taxi: duration 19, cost 52.48. walk: duration 154, cost 0.0. \nfrom Summer Palace to Beijing Capital International Airport: metro: duration 74, cost 14. taxi: duration 43, cost 123.74. walk: duration 344, cost 0.0. \nfrom Summer Palace to Prince Gong's Mansion: metro: duration 38, cost 8. taxi: duration 18, cost 48.87. walk: duration 144, cost 0.0. \nfrom Summer Palace to Olympic Park: metro: duration 35, cost 8. taxi: duration 15, cost 40.66. walk: duration 122, cost 0.0. \nfrom Summer Palace to Summer Palace:  metro: empty.  taxi: empty.  walk: empty. \nfrom Summer Palace to Temple of Heaven: metro: duration 46, cost 10. taxi: duration 26, cost 74.63. walk: duration 213, cost 0.0. \nfrom Summer Palace to The Palace Museum: metro: duration 43, cost 10. taxi: duration 21, cost 58.22. walk: duration 169, cost 0.0. \nfrom Summer Palace to Shichahai: metro: duration 33, cost 8. taxi: duration 17, cost 46.98. walk: duration 139, cost 0.0. \nfrom Summer Palace to South Gate Hot Pot (Temple of Heaven Branch): metro: duration 57, cost 10. taxi: duration 28, cost 79.44. walk: duration 225, cost 0.0. \nfrom Summer Palace to Yonghe Temple: metro: duration 42, cost 8. taxi: duration 20, cost 56.45. walk: duration 164, cost 0.0. \nfrom Summer Palace to Huguosi Snacks (Huguosi Main Store): metro: duration 32, cost 8. taxi: duration 17, cost 46.45. walk: duration 138, cost 0.0. \nfrom Temple of Heaven to Grand Metropark Longxi Conference Center Beijing: metro: duration 119, cost 12. taxi: duration 46, cost 134.64. walk: duration 373, cost 0.0. \nfrom Temple of Heaven to Badaling Great Wall: metro: duration 325, cost 16. taxi: duration 93, cost 275.36. walk: duration 748, cost 0.0. \nfrom Temple of Heaven to Doorframe Alley Century Stewed Offal (Xinjiekou Branch): metro: duration 18, cost 6. taxi: duration 10, cost 29.48. walk: duration 84, cost 0.0. \nfrom Temple of Heaven to Beijing Zoo: metro: duration 34, cost 6. taxi: duration 13, cost 36.87. walk: duration 110, cost 0.0. \nfrom Temple of Heaven to Jingshan Park: metro: duration 15, cost 6. taxi: duration 7, cost 21.82. walk: duration 58, cost 0.0. \nfrom Temple of Heaven to Holiday Inn Beijing Deshengmen: metro: duration 31, cost 6. taxi: duration 12, cost 33.67. walk: duration 99, cost 0.0. \nfrom Temple of Heaven to Tiananmen Square: metro: duration 12, cost 4. taxi: duration 3, cost 13.77. walk: duration 31, cost 0.0. \nfrom Temple of Heaven to Nanluoguxiang: metro: duration 24, cost 6. taxi: duration 8, cost 25.6. walk: duration 71, cost 0.0. \nfrom Temple of Heaven to Beijing Daxing International Airport: metro: duration 99, cost 16. taxi: duration 64, cost 187.83. walk: duration 515, cost 0.0. \nfrom Temple of Heaven to Four Seasons Minfu Roast Duck Restaurant (Forbidden City Branch): metro: duration 17, cost 4. taxi: duration 4, cost 15.45. walk: duration 36, cost 0.0. \nfrom Temple of Heaven to Mutianyu Great Wall: metro: duration 481, cost 14. taxi: duration 93, cost 276.11. walk: duration 750, cost 0.0. \nfrom Temple of Heaven to Beijing Quanjude (Qianmen Branch): metro: duration 12, cost 4. taxi: duration 2, cost 11.48. walk: duration 23, cost 0.0. \nfrom Temple of Heaven to 798 Art District: metro: duration 47, cost 8. taxi: duration 19, cost 54.23. walk: duration 158, cost 0.0. \nfrom Temple of Heaven to Beijing Xinyuan Hotel: metro: duration 23, cost 8. taxi: duration 13, cost 36.93. walk: duration 110, cost 0.0. \nfrom Temple of Heaven to Beihai Park: metro: duration 18, cost 6. taxi: duration 8, cost 23.37. walk: duration 64, cost 0.0. \nfrom Temple of Heaven to Beijing Capital International Airport: metro: duration 64, cost 12. taxi: duration 39, cost 113.27. walk: duration 316, cost 0.0. \nfrom Temple of Heaven to Prince Gong's Mansion: metro: duration 24, cost 6. taxi: duration 9, cost 26.96. walk: duration 76, cost 0.0. \nfrom Temple of Heaven to Olympic Park: metro: duration 36, cost 8. taxi: duration 18, cost 49.87. walk: duration 147, cost 0.0. \nfrom Temple of Heaven to Summer Palace: metro: duration 46, cost 10. taxi: duration 26, cost 74.63. walk: duration 213, cost 0.0. \nfrom Temple of Heaven to Temple of Heaven:  metro: empty.  taxi: empty.  walk: empty. \nfrom Temple of Heaven to The Palace Museum: metro: duration 17, cost 4. taxi: duration 6, cost 18.8. walk: duration 48, cost 0.0. \nfrom Temple of Heaven to Shichahai: metro: duration 19, cost 6. taxi: duration 10, cost 28.92. walk: duration 83, cost 0.0. \nfrom Temple of Heaven to South Gate Hot Pot (Temple of Heaven Branch): metro: duration 21, cost 4. taxi: duration 2, cost 11.2. walk: duration 22, cost 0.0. \nfrom Temple of Heaven to Yonghe Temple: metro: duration 24, cost 6. taxi: duration 10, cost 29.37. walk: duration 84, cost 0.0. \nfrom Temple of Heaven to Huguosi Snacks (Huguosi Main Store): metro: duration 18, cost 6. taxi: duration 9, cost 26.74. walk: duration 75, cost 0.0. \nfrom The Palace Museum to Grand Metropark Longxi Conference Center Beijing: metro: duration 128, cost 14. taxi: duration 51, cost 149.24. walk: duration 412, cost 0.0. \nfrom The Palace Museum to Badaling Great Wall: metro: duration 322, cost 16. taxi: duration 87, cost 257.72. walk: duration 701, cost 0.0. \nfrom The Palace Museum to Doorframe Alley Century Stewed Offal (Xinjiekou Branch): metro: duration 16, cost 6. taxi: duration 5, cost 16.85. walk: duration 41, cost 0.0. \nfrom The Palace Museum to Beijing Zoo: metro: duration 32, cost 6. taxi: duration 8, cost 25.15. walk: duration 70, cost 0.0. \nfrom The Palace Museum to Jingshan Park: metro: duration 11, cost 4. taxi: duration 1, cost 11.0. walk: duration 10, cost 0.0. \nfrom The Palace Museum to Holiday Inn Beijing Deshengmen: metro: duration 28, cost 6. taxi: duration 6, cost 19.68. walk: duration 51, cost 0.0. \nfrom The Palace Museum to Tiananmen Square: metro: duration 14, cost 4. taxi: duration 2, cost 11.0. walk: duration 18, cost 0.0. \nfrom The Palace Museum to Nanluoguxiang: metro: duration 20, cost 4. taxi: duration 3, cost 12.33. walk: duration 26, cost 0.0. \nfrom The Palace Museum to Beijing Daxing International Airport: metro: duration 109, cost 16. taxi: duration 70, cost 205.0. walk: duration 560, cost 0.0. \nfrom The Palace Museum to Four Seasons Minfu Roast Duck Restaurant (Forbidden City Branch): metro: duration 16, cost 4. taxi: duration 1, cost 11.0. walk: duration 12, cost 0.0. \nfrom The Palace Museum to Mutianyu Great Wall: metro: duration 479, cost 14. taxi: duration 88, cost 260.9. walk: duration 709, cost 0.0. \nfrom The Palace Museum to Beijing Quanjude (Qianmen Branch): metro: duration 16, cost 4. taxi: duration 4, cost 15.48. walk: duration 36, cost 0.0. \nfrom The Palace Museum to 798 Art District: metro: duration 46, cost 8. taxi: duration 16, cost 45.01. walk: duration 134, cost 0.0. \nfrom The Palace Museum to Beijing Xinyuan Hotel: metro: duration 26, cost 8. taxi: duration 12, cost 33.82. walk: duration 99, cost 0.0. \nfrom The Palace Museum to Beihai Park: metro: duration 14, cost 4. taxi: duration 1, cost 11.0. walk: duration 15, cost 0.0. \nfrom The Palace Museum to Beijing Capital International Airport: metro: duration 63, cost 12. taxi: duration 36, cost 104.22. walk: duration 292, cost 0.0. \nfrom The Palace Museum to Prince Gong's Mansion: metro: duration 20, cost 4. taxi: duration 3, cost 12.86. walk: duration 27, cost 0.0. \nfrom The Palace Museum to Olympic Park: metro: duration 32, cost 6. taxi: duration 12, cost 33.93. walk: duration 100, cost 0.0. \nfrom The Palace Museum to Summer Palace: metro: duration 43, cost 10. taxi: duration 21, cost 58.22. walk: duration 169, cost 0.0. \nfrom The Palace Museum to Temple of Heaven: metro: duration 17, cost 4. taxi: duration 6, cost 18.8. walk: duration 48, cost 0.0. \nfrom The Palace Museum to The Palace Museum:  metro: empty.  taxi: empty.  walk: empty. \nfrom The Palace Museum to Shichahai: metro: duration 15, cost 4. taxi: duration 4, cost 14.81. walk: duration 34, cost 0.0. \nfrom The Palace Museum to South Gate Hot Pot (Temple of Heaven Branch): metro: duration 30, cost 6. taxi: duration 8, cost 24.48. walk: duration 67, cost 0.0. \nfrom The Palace Museum to Yonghe Temple: metro: duration 20, cost 4. taxi: duration 5, cost 17.59. walk: duration 44, cost 0.0. \nfrom The Palace Museum to Huguosi Snacks (Huguosi Main Store): metro: duration 15, cost 4. taxi: duration 4, cost 14.27. walk: duration 32, cost 0.0. \nfrom Shichahai to Grand Metropark Longxi Conference Center Beijing: metro: duration 128, cost 14. taxi: duration 55, cost 159.97. walk: duration 440, cost 0.0. \nfrom Shichahai to Badaling Great Wall: metro: duration 310, cost 14. taxi: duration 83, cost 245.03. walk: duration 667, cost 0.0. \nfrom Shichahai to Doorframe Alley Century Stewed Offal (Xinjiekou Branch): metro: duration 7, cost 4. taxi: duration 3, cost 12.07. walk: duration 25, cost 0.0. \nfrom Shichahai to Beijing Zoo: metro: duration 24, cost 6. taxi: duration 6, cost 19.33. walk: duration 50, cost 0.0. \nfrom Shichahai to Jingshan Park: metro: duration 7, cost 4. taxi: duration 3, cost 11.92. walk: duration 24, cost 0.0. \nfrom Shichahai to Holiday Inn Beijing Deshengmen: metro: duration 18, cost 4. taxi: duration 2, cost 11.0. walk: duration 17, cost 0.0. \nfrom Shichahai to Tiananmen Square: metro: duration 15, cost 6. taxi: duration 6, cost 20.06. walk: duration 52, cost 0.0. \nfrom Shichahai to Nanluoguxiang: metro: duration 12, cost 4. taxi: duration 2, cost 11.0. walk: duration 19, cost 0.0. \nfrom Shichahai to Beijing Daxing International Airport: metro: duration 110, cost 18. taxi: duration 74, cost 217.31. walk: duration 593, cost 0.0. \nfrom Shichahai to Four Seasons Minfu Roast Duck Restaurant (Forbidden City Branch): metro: duration 18, cost 6. taxi: duration 5, cost 18.31. walk: duration 46, cost 0.0. \nfrom Shichahai to Mutianyu Great Wall: metro: duration 472, cost 12. taxi: duration 85, cost 250.41. walk: duration 681, cost 0.0. \nfrom Shichahai to Beijing Quanjude (Qianmen Branch): metro: duration 16, cost 6. taxi: duration 8, cost 24.92. walk: duration 69, cost 0.0. \nfrom Shichahai to 798 Art District: metro: duration 40, cost 6. taxi: duration 15, cost 42.02. walk: duration 126, cost 0.0. \nfrom Shichahai to Beijing Xinyuan Hotel: metro: duration 21, cost 8. taxi: duration 13, cost 35.39. walk: duration 105, cost 0.0. \nfrom Shichahai to Beihai Park: metro: duration 8, cost 4. taxi: duration 2, cost 11.0. walk: duration 19, cost 0.0. \nfrom Shichahai to Beijing Capital International Airport: metro: duration 56, cost 12. taxi: duration 34, cost 99.49. walk: duration 279, cost 0.0. \nfrom Shichahai to Prince Gong's Mansion: taxi: duration 0, cost 11.0. walk: duration 6, cost 0.0. \nfrom Shichahai to Olympic Park: metro: duration 21, cost 6. taxi: duration 8, cost 24.61. walk: duration 68, cost 0.0. \nfrom Shichahai to Summer Palace: metro: duration 33, cost 8. taxi: duration 17, cost 46.98. walk: duration 139, cost 0.0. \nfrom Shichahai to Temple of Heaven: metro: duration 19, cost 6. taxi: duration 10, cost 28.92. walk: duration 83, cost 0.0. \nfrom Shichahai to The Palace Museum: metro: duration 15, cost 4. taxi: duration 4, cost 14.81. walk: duration 34, cost 0.0. \nfrom Shichahai to Shichahai:  metro: empty.  taxi: empty.  walk: empty. \nfrom Shichahai to South Gate Hot Pot (Temple of Heaven Branch): metro: duration 31, cost 8. taxi: duration 12, cost 34.44. walk: duration 101, cost 0.0. \nfrom Shichahai to Yonghe Temple: metro: duration 13, cost 4. taxi: duration 4, cost 14.62. walk: duration 34, cost 0.0. \nfrom Shichahai to Huguosi Snacks (Huguosi Main Store): metro: duration 8, cost 4. taxi: duration 3, cost 11.81. walk: duration 24, cost 0.0. \nfrom South Gate Hot Pot (Temple of Heaven Branch) to Grand Metropark Longxi Conference Center Beijing: metro: duration 120, cost 12. taxi: duration 43, cost 126.31. walk: duration 350, cost 0.0. \nfrom South Gate Hot Pot (Temple of Heaven Branch) to Badaling Great Wall: metro: duration 337, cost 16. taxi: duration 95, cost 281.03. walk: duration 763, cost 0.0. \nfrom South Gate Hot Pot (Temple of Heaven Branch) to Doorframe Alley Century Stewed Offal (Xinjiekou Branch): metro: duration 30, cost 8. taxi: duration 12, cost 33.87. walk: duration 100, cost 0.0. \nfrom South Gate Hot Pot (Temple of Heaven Branch) to Beijing Zoo: metro: duration 44, cost 8. taxi: duration 15, cost 40.7. walk: duration 122, cost 0.0. \nfrom South Gate Hot Pot (Temple of Heaven Branch) to Jingshan Park: metro: duration 28, cost 6. taxi: duration 9, cost 27.59. walk: duration 78, cost 0.0. \nfrom South Gate Hot Pot (Temple of Heaven Branch) to Holiday Inn Beijing Deshengmen: metro: duration 43, cost 8. taxi: duration 14, cost 38.9. walk: duration 117, cost 0.0. \nfrom South Gate Hot Pot (Temple of Heaven Branch) to Tiananmen Square: metro: duration 24, cost 6. taxi: duration 6, cost 19.09. walk: duration 49, cost 0.0. \nfrom South Gate Hot Pot (Temple of Heaven Branch) to Nanluoguxiang: metro: duration 37, cost 8. taxi: duration 11, cost 31.69. walk: duration 92, cost 0.0. \nfrom South Gate Hot Pot (Temple of Heaven Branch) to Beijing Daxing International Airport: metro: duration 100, cost 16. taxi: duration 61, cost 179.79. walk: duration 493, cost 0.0. \nfrom South Gate Hot Pot (Temple of Heaven Branch) to Four Seasons Minfu Roast Duck Restaurant (Forbidden City Branch): metro: duration 30, cost 6. taxi: duration 6, cost 20.85. walk: duration 55, cost 0.0. \nfrom South Gate Hot Pot (Temple of Heaven Branch) to Mutianyu Great Wall: metro: duration 494, cost 14. taxi: duration 96, cost 284.45. walk: duration 772, cost 0.0. \nfrom South Gate Hot Pot (Temple of Heaven Branch) to Beijing Quanjude (Qianmen Branch): metro: duration 23, cost 6. taxi: duration 4, cost 14.67. walk: duration 34, cost 0.0. \nfrom South Gate Hot Pot (Temple of Heaven Branch) to 798 Art District: metro: duration 61, cost 10. taxi: duration 22, cost 62.28. walk: duration 180, cost 0.0. \nfrom South Gate Hot Pot (Temple of Heaven Branch) to Beijing Xinyuan Hotel: metro: duration 30, cost 8. taxi: duration 13, cost 36.5. walk: duration 109, cost 0.0. \nfrom South Gate Hot Pot (Temple of Heaven Branch) to Beihai Park: metro: duration 31, cost 6. taxi: duration 10, cost 28.81. walk: duration 82, cost 0.0. \nfrom South Gate Hot Pot (Temple of Heaven Branch) to Beijing Capital International Airport: metro: duration 77, cost 14. taxi: duration 42, cost 121.09. walk: duration 337, cost 0.0. \nfrom South Gate Hot Pot (Temple of Heaven Branch) to Prince Gong's Mansion: metro: duration 36, cost 8. taxi: duration 11, cost 32.46. walk: duration 95, cost 0.0. \nfrom South Gate Hot Pot (Temple of Heaven Branch) to Olympic Park: metro: duration 49, cost 10. taxi: duration 20, cost 57.62. walk: duration 167, cost 0.0. \nfrom South Gate Hot Pot (Temple of Heaven Branch) to Summer Palace: metro: duration 57, cost 10. taxi: duration 28, cost 79.44. walk: duration 225, cost 0.0. \nfrom South Gate Hot Pot (Temple of Heaven Branch) to Temple of Heaven: metro: duration 21, cost 4. taxi: duration 2, cost 11.2. walk: duration 22, cost 0.0. \nfrom South Gate Hot Pot (Temple of Heaven Branch) to The Palace Museum: metro: duration 30, cost 6. taxi: duration 8, cost 24.48. walk: duration 67, cost 0.0. \nfrom South Gate Hot Pot (Temple of Heaven Branch) to Shichahai: metro: duration 31, cost 8. taxi: duration 12, cost 34.44. walk: duration 101, cost 0.0. \nfrom South Gate Hot Pot (Temple of Heaven Branch) to South Gate Hot Pot (Temple of Heaven Branch):  metro: empty.  taxi: empty.  walk: empty. \nfrom South Gate Hot Pot (Temple of Heaven Branch) to Yonghe Temple: metro: duration 37, cost 8. taxi: duration 13, cost 35.75. walk: duration 106, cost 0.0. \nfrom South Gate Hot Pot (Temple of Heaven Branch) to Huguosi Snacks (Huguosi Main Store): metro: duration 29, cost 6. taxi: duration 11, cost 31.21. walk: duration 90, cost 0.0. \nfrom Yonghe Temple to Grand Metropark Longxi Conference Center Beijing: metro: duration 135, cost 14. taxi: duration 56, cost 165.4. walk: duration 455, cost 0.0. \nfrom Yonghe Temple to Badaling Great Wall: metro: duration 318, cost 16. taxi: duration 85, cost 250.27. walk: duration 681, cost 0.0. \nfrom Yonghe Temple to Doorframe Alley Century Stewed Offal (Xinjiekou Branch): metro: duration 17, cost 6. taxi: duration 7, cost 21.87. walk: duration 58, cost 0.0. \nfrom Yonghe Temple to Beijing Zoo: metro: duration 34, cost 6. taxi: duration 10, cost 29.16. walk: duration 83, cost 0.0. \nfrom Yonghe Temple to Jingshan Park: metro: duration 14, cost 4. taxi: duration 4, cost 15.02. walk: duration 35, cost 0.0. \nfrom Yonghe Temple to Holiday Inn Beijing Deshengmen: metro: duration 28, cost 4. taxi: duration 5, cost 18.3. walk: duration 46, cost 0.0. \nfrom Yonghe Temple to Tiananmen Square: metro: duration 21, cost 6. taxi: duration 7, cost 22.5. walk: duration 61, cost 0.0. \nfrom Yonghe Temple to Nanluoguxiang: metro: duration 17, cost 4. taxi: duration 2, cost 11.0. walk: duration 19, cost 0.0. \nfrom Yonghe Temple to Beijing Daxing International Airport: metro: duration 116, cost 18. taxi: duration 74, cost 219.51. walk: duration 599, cost 0.0. \nfrom Yonghe Temple to Four Seasons Minfu Roast Duck Restaurant (Forbidden City Branch): metro: duration 23, cost 4. taxi: duration 6, cost 21.02. walk: duration 55, cost 0.0. \nfrom Yonghe Temple to Mutianyu Great Wall: metro: duration 475, cost 12. taxi: duration 83, cost 244.84. walk: duration 667, cost 0.0. \nfrom Yonghe Temple to Beijing Quanjude (Qianmen Branch): metro: duration 23, cost 6. taxi: duration 9, cost 28.0. walk: duration 79, cost 0.0. \nfrom Yonghe Temple to 798 Art District: metro: duration 42, cost 6. taxi: duration 11, cost 32.08. walk: duration 93, cost 0.0. \nfrom Yonghe Temple to Beijing Xinyuan Hotel: metro: duration 30, cost 8. taxi: duration 17, cost 45.74. walk: duration 136, cost 0.0. \nfrom Yonghe Temple to Beihai Park: metro: duration 16, cost 4. taxi: duration 4, cost 16.08. walk: duration 39, cost 0.0. \nfrom Yonghe Temple to Beijing Capital International Airport: metro: duration 59, cost 10. taxi: duration 31, cost 88.42. walk: duration 249, cost 0.0. \nfrom Yonghe Temple to Prince Gong's Mansion: metro: duration 18, cost 4. taxi: duration 4, cost 14.79. walk: duration 34, cost 0.0. \nfrom Yonghe Temple to Olympic Park: metro: duration 28, cost 6. taxi: duration 8, cost 24.0. walk: duration 66, cost 0.0. \nfrom Yonghe Temple to Summer Palace: metro: duration 42, cost 8. taxi: duration 20, cost 56.45. walk: duration 164, cost 0.0. \nfrom Yonghe Temple to Temple of Heaven: metro: duration 24, cost 6. taxi: duration 10, cost 29.37. walk: duration 84, cost 0.0. \nfrom Yonghe Temple to The Palace Museum: metro: duration 20, cost 4. taxi: duration 5, cost 17.59. walk: duration 44, cost 0.0. \nfrom Yonghe Temple to Shichahai: metro: duration 13, cost 4. taxi: duration 4, cost 14.62. walk: duration 34, cost 0.0. \nfrom Yonghe Temple to South Gate Hot Pot (Temple of Heaven Branch): metro: duration 37, cost 8. taxi: duration 13, cost 35.75. walk: duration 106, cost 0.0. \nfrom Yonghe Temple to Yonghe Temple:  metro: empty.  taxi: empty.  walk: empty. \nfrom Yonghe Temple to Huguosi Snacks (Huguosi Main Store): metro: duration 18, cost 6. taxi: duration 6, cost 20.95. walk: duration 55, cost 0.0. \nfrom Huguosi Snacks (Huguosi Main Store) to Grand Metropark Longxi Conference Center Beijing: metro: duration 124, cost 14. taxi: duration 52, cost 152.26. walk: duration 420, cost 0.0. \nfrom Huguosi Snacks (Huguosi Main Store) to Badaling Great Wall: metro: duration 312, cost 16. taxi: duration 84, cost 247.13. walk: duration 673, cost 0.0. \nfrom Huguosi Snacks (Huguosi Main Store) to Doorframe Alley Century Stewed Offal (Xinjiekou Branch): metro: duration 4, cost 4. taxi: duration 1, cost 11.0. walk: duration 9, cost 0.0. \nfrom Huguosi Snacks (Huguosi Main Store) to Beijing Zoo: metro: duration 20, cost 4. taxi: duration 4, cost 15.59. walk: duration 37, cost 0.0. \nfrom Huguosi Snacks (Huguosi Main Store) to Jingshan Park: metro: duration 9, cost 4. taxi: duration 3, cost 13.19. walk: duration 29, cost 0.0. \nfrom Huguosi Snacks (Huguosi Main Store) to Holiday Inn Beijing Deshengmen: metro: duration 18, cost 4. taxi: duration 3, cost 13.5. walk: duration 30, cost 0.0. \nfrom Huguosi Snacks (Huguosi Main Store) to Tiananmen Square: metro: duration 13, cost 4. taxi: duration 5, cost 17.79. walk: duration 44, cost 0.0. \nfrom Huguosi Snacks (Huguosi Main Store) to Nanluoguxiang: metro: duration 16, cost 4. taxi: duration 4, cost 15.53. walk: duration 37, cost 0.0. \nfrom Huguosi Snacks (Huguosi Main Store) to Beijing Daxing International Airport: metro: duration 107, cost 16. taxi: duration 72, cost 211.11. walk: duration 577, cost 0.0. \nfrom Huguosi Snacks (Huguosi Main Store) to Four Seasons Minfu Roast Duck Restaurant (Forbidden City Branch): metro: duration 17, cost 4. taxi: duration 4, cost 16.3. walk: duration 39, cost 0.0. \nfrom Huguosi Snacks (Huguosi Main Store) to Mutianyu Great Wall: metro: duration 477, cost 14. taxi: duration 87, cost 258.54. walk: duration 703, cost 0.0. \nfrom Huguosi Snacks (Huguosi Main Store) to Beijing Quanjude (Qianmen Branch): metro: duration 14, cost 6. taxi: duration 7, cost 21.24. walk: duration 56, cost 0.0. \nfrom Huguosi Snacks (Huguosi Main Store) to 798 Art District: metro: duration 44, cost 8. taxi: duration 18, cost 50.72. walk: duration 149, cost 0.0. \nfrom Huguosi Snacks (Huguosi Main Store) to Beijing Xinyuan Hotel: metro: duration 16, cost 6. taxi: duration 10, cost 28.35. walk: duration 81, cost 0.0. \nfrom Huguosi Snacks (Huguosi Main Store) to Beihai Park: metro: duration 10, cost 4. taxi: duration 2, cost 11.0. walk: duration 20, cost 0.0. \nfrom Huguosi Snacks (Huguosi Main Store) to Beijing Capital International Airport: metro: duration 61, cost 12. taxi: duration 37, cost 108.57. walk: duration 303, cost 0.0. \nfrom Huguosi Snacks (Huguosi Main Store) to Prince Gong's Mansion: metro: duration 13, cost 4. taxi: duration 2, cost 11.0. walk: duration 21, cost 0.0. \nfrom Huguosi Snacks (Huguosi Main Store) to Olympic Park: metro: duration 25, cost 6. taxi: duration 11, cost 30.66. walk: duration 89, cost 0.0. \nfrom Huguosi Snacks (Huguosi Main Store) to Summer Palace: metro: duration 32, cost 8. taxi: duration 17, cost 46.45. walk: duration 138, cost 0.0. \nfrom Huguosi Snacks (Huguosi Main Store) to Temple of Heaven: metro: duration 18, cost 6. taxi: duration 9, cost 26.74. walk: duration 75, cost 0.0. \nfrom Huguosi Snacks (Huguosi Main Store) to The Palace Museum: metro: duration 15, cost 4. taxi: duration 4, cost 14.27. walk: duration 32, cost 0.0. \nfrom Huguosi Snacks (Huguosi Main Store) to Shichahai: metro: duration 8, cost 4. taxi: duration 3, cost 11.81. walk: duration 24, cost 0.0. \nfrom Huguosi Snacks (Huguosi Main Store) to South Gate Hot Pot (Temple of Heaven Branch): metro: duration 29, cost 6. taxi: duration 11, cost 31.21. walk: duration 90, cost 0.0. \nfrom Huguosi Snacks (Huguosi Main Store) to Yonghe Temple: metro: duration 18, cost 6. taxi: duration 6, cost 20.95. walk: duration 55, cost 0.0. \nfrom Huguosi Snacks (Huguosi Main Store) to Huguosi Snacks (Huguosi Main Store):  metro: empty.  taxi: empty.  walk: empty. \n"
+    },
+    "initial_verification": {
+      "commonsense_errors": [],
+      "personal_constraints": [
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true
+      ],
+      "category_normalization": [
+        {
+          "constraint_index": 4,
+          "category_domain": "activity",
+          "expression": "activity_type(activity)",
+          "raw_label": "airplane",
+          "normalized_label": "airplane"
+        },
+        {
+          "constraint_index": 4,
+          "category_domain": "activity",
+          "expression": "['train', 'airplane']",
+          "raw_label": "train",
+          "normalized_label": "train"
+        },
+        {
+          "constraint_index": 4,
+          "category_domain": "activity",
+          "expression": "['train', 'airplane']",
+          "raw_label": "airplane",
+          "normalized_label": "airplane"
+        },
+        {
+          "constraint_index": 4,
+          "category_domain": "activity",
+          "expression": "activity_type(activity)",
+          "raw_label": "attraction",
+          "normalized_label": "attraction"
+        },
+        {
+          "constraint_index": 4,
+          "category_domain": "activity",
+          "expression": "['train', 'airplane']",
+          "raw_label": "train",
+          "normalized_label": "train"
+        },
+        {
+          "constraint_index": 4,
+          "category_domain": "activity",
+          "expression": "['train', 'airplane']",
+          "raw_label": "airplane",
+          "normalized_label": "airplane"
+        },
+        {
+          "constraint_index": 4,
+          "category_domain": "activity",
+          "expression": "activity_type(activity)",
+          "raw_label": "dinner",
+          "normalized_label": "dinner"
+        },
+        {
+          "constraint_index": 4,
+          "category_domain": "activity",
+          "expression": "['train', 'airplane']",
+          "raw_label": "train",
+          "normalized_label": "train"
+        },
+        {
+          "constraint_index": 4,
+          "category_domain": "activity",
+          "expression": "['train', 'airplane']",
+          "raw_label": "airplane",
+          "normalized_label": "airplane"
+        },
+        {
+          "constraint_index": 4,
+          "category_domain": "activity",
+          "expression": "activity_type(activity)",
+          "raw_label": "accommodation",
+          "normalized_label": "accommodation"
+        },
+        {
+          "constraint_index": 4,
+          "category_domain": "activity",
+          "expression": "['train', 'airplane']",
+          "raw_label": "train",
+          "normalized_label": "train"
+        },
+        {
+          "constraint_index": 4,
+          "category_domain": "activity",
+          "expression": "['train', 'airplane']",
+          "raw_label": "airplane",
+          "normalized_label": "airplane"
+        },
+        {
+          "constraint_index": 4,
+          "category_domain": "activity",
+          "expression": "activity_type(activity)",
+          "raw_label": "attraction",
+          "normalized_label": "attraction"
+        },
+        {
+          "constraint_index": 4,
+          "category_domain": "activity",
+          "expression": "['train', 'airplane']",
+          "raw_label": "train",
+          "normalized_label": "train"
+        },
+        {
+          "constraint_index": 4,
+          "category_domain": "activity",
+          "expression": "['train', 'airplane']",
+          "raw_label": "airplane",
+          "normalized_label": "airplane"
+        },
+        {
+          "constraint_index": 4,
+          "category_domain": "activity",
+          "expression": "activity_type(activity)",
+          "raw_label": "lunch",
+          "normalized_label": "lunch"
+        },
+        {
+          "constraint_index": 4,
+          "category_domain": "activity",
+          "expression": "['train', 'airplane']",
+          "raw_label": "train",
+          "normalized_label": "train"
+        },
+        {
+          "constraint_index": 4,
+          "category_domain": "activity",
+          "expression": "['train', 'airplane']",
+          "raw_label": "airplane",
+          "normalized_label": "airplane"
+        },
+        {
+          "constraint_index": 4,
+          "category_domain": "activity",
+          "expression": "activity_type(activity)",
+          "raw_label": "attraction",
+          "normalized_label": "attraction"
+        },
+        {
+          "constraint_index": 4,
+          "category_domain": "activity",
+          "expression": "['train', 'airplane']",
+          "raw_label": "train",
+          "normalized_label": "train"
+        },
+        {
+          "constraint_index": 4,
+          "category_domain": "activity",
+          "expression": "['train', 'airplane']",
+          "raw_label": "airplane",
+          "normalized_label": "airplane"
+        },
+        {
+          "constraint_index": 4,
+          "category_domain": "activity",
+          "expression": "activity_type(activity)",
+          "raw_label": "dinner",
+          "normalized_label": "dinner"
+        },
+        {
+          "constraint_index": 4,
+          "category_domain": "activity",
+          "expression": "['train', 'airplane']",
+          "raw_label": "train",
+          "normalized_label": "train"
+        },
+        {
+          "constraint_index": 4,
+          "category_domain": "activity",
+          "expression": "['train', 'airplane']",
+          "raw_label": "airplane",
+          "normalized_label": "airplane"
+        },
+        {
+          "constraint_index": 4,
+          "category_domain": "activity",
+          "expression": "activity_type(activity)",
+          "raw_label": "accommodation",
+          "normalized_label": "accommodation"
+        },
+        {
+          "constraint_index": 4,
+          "category_domain": "activity",
+          "expression": "['train', 'airplane']",
+          "raw_label": "train",
+          "normalized_label": "train"
+        },
+        {
+          "constraint_index": 4,
+          "category_domain": "activity",
+          "expression": "['train', 'airplane']",
+          "raw_label": "airplane",
+          "normalized_label": "airplane"
+        },
+        {
+          "constraint_index": 4,
+          "category_domain": "activity",
+          "expression": "activity_type(activity)",
+          "raw_label": "attraction",
+          "normalized_label": "attraction"
+        },
+        {
+          "constraint_index": 4,
+          "category_domain": "activity",
+          "expression": "['train', 'airplane']",
+          "raw_label": "train",
+          "normalized_label": "train"
+        },
+        {
+          "constraint_index": 4,
+          "category_domain": "activity",
+          "expression": "['train', 'airplane']",
+          "raw_label": "airplane",
+          "normalized_label": "airplane"
+        },
+        {
+          "constraint_index": 4,
+          "category_domain": "activity",
+          "expression": "activity_type(activity)",
+          "raw_label": "lunch",
+          "normalized_label": "lunch"
+        },
+        {
+          "constraint_index": 4,
+          "category_domain": "activity",
+          "expression": "['train', 'airplane']",
+          "raw_label": "train",
+          "normalized_label": "train"
+        },
+        {
+          "constraint_index": 4,
+          "category_domain": "activity",
+          "expression": "['train', 'airplane']",
+          "raw_label": "airplane",
+          "normalized_label": "airplane"
+        },
+        {
+          "constraint_index": 4,
+          "category_domain": "activity",
+          "expression": "activity_type(activity)",
+          "raw_label": "attraction",
+          "normalized_label": "attraction"
+        },
+        {
+          "constraint_index": 4,
+          "category_domain": "activity",
+          "expression": "['train', 'airplane']",
+          "raw_label": "train",
+          "normalized_label": "train"
+        },
+        {
+          "constraint_index": 4,
+          "category_domain": "activity",
+          "expression": "['train', 'airplane']",
+          "raw_label": "airplane",
+          "normalized_label": "airplane"
+        },
+        {
+          "constraint_index": 4,
+          "category_domain": "activity",
+          "expression": "activity_type(activity)",
+          "raw_label": "airplane",
+          "normalized_label": "airplane"
+        },
+        {
+          "constraint_index": 4,
+          "category_domain": "activity",
+          "expression": "['train', 'airplane']",
+          "raw_label": "train",
+          "normalized_label": "train"
+        },
+        {
+          "constraint_index": 4,
+          "category_domain": "activity",
+          "expression": "['train', 'airplane']",
+          "raw_label": "airplane",
+          "normalized_label": "airplane"
+        },
+        {
+          "constraint_index": 4,
+          "category_domain": "transport",
+          "expression": "{'airplane'}",
+          "raw_label": "airplane",
+          "normalized_label": "airplane"
+        },
+        {
+          "constraint_index": 4,
+          "category_domain": "transport",
+          "expression": "intercity_transport_set",
+          "raw_label": "airplane",
+          "normalized_label": "airplane"
+        },
+        {
+          "constraint_index": 5,
+          "category_domain": "activity",
+          "expression": "activity_type(activity)",
+          "raw_label": "airplane",
+          "normalized_label": "airplane"
+        },
+        {
+          "constraint_index": 5,
+          "category_domain": "activity",
+          "expression": "['attraction', 'airplane', 'train']",
+          "raw_label": "attraction",
+          "normalized_label": "attraction"
+        },
+        {
+          "constraint_index": 5,
+          "category_domain": "activity",
+          "expression": "['attraction', 'airplane', 'train']",
+          "raw_label": "airplane",
+          "normalized_label": "airplane"
+        },
+        {
+          "constraint_index": 5,
+          "category_domain": "activity",
+          "expression": "['attraction', 'airplane', 'train']",
+          "raw_label": "train",
+          "normalized_label": "train"
+        },
+        {
+          "constraint_index": 5,
+          "category_domain": "transport",
+          "expression": "innercity_transport_type(activity_transports(activity))",
+          "raw_label": "empty",
+          "normalized_label": "empty"
+        },
+        {
+          "constraint_index": 5,
+          "category_domain": "transport",
+          "expression": "'metro'",
+          "raw_label": "metro",
+          "normalized_label": "metro"
+        },
+        {
+          "constraint_index": 5,
+          "category_domain": "activity",
+          "expression": "activity_type(activity)",
+          "raw_label": "attraction",
+          "normalized_label": "attraction"
+        },
+        {
+          "constraint_index": 5,
+          "category_domain": "activity",
+          "expression": "['attraction', 'airplane', 'train']",
+          "raw_label": "attraction",
+          "normalized_label": "attraction"
+        },
+        {
+          "constraint_index": 5,
+          "category_domain": "activity",
+          "expression": "['attraction', 'airplane', 'train']",
+          "raw_label": "airplane",
+          "normalized_label": "airplane"
+        },
+        {
+          "constraint_index": 5,
+          "category_domain": "activity",
+          "expression": "['attraction', 'airplane', 'train']",
+          "raw_label": "train",
+          "normalized_label": "train"
+        },
+        {
+          "constraint_index": 5,
+          "category_domain": "transport",
+          "expression": "innercity_transport_type(activity_transports(activity))",
+          "raw_label": "metro",
+          "normalized_label": "metro"
+        },
+        {
+          "constraint_index": 5,
+          "category_domain": "transport",
+          "expression": "'metro'",
+          "raw_label": "metro",
+          "normalized_label": "metro"
+        },
+        {
+          "constraint_index": 5,
+          "category_domain": "activity",
+          "expression": "activity_type(activity)",
+          "raw_label": "dinner",
+          "normalized_label": "dinner"
+        },
+        {
+          "constraint_index": 5,
+          "category_domain": "activity",
+          "expression": "['attraction', 'airplane', 'train']",
+          "raw_label": "attraction",
+          "normalized_label": "attraction"
+        },
+        {
+          "constraint_index": 5,
+          "category_domain": "activity",
+          "expression": "['attraction', 'airplane', 'train']",
+          "raw_label": "airplane",
+          "normalized_label": "airplane"
+        },
+        {
+          "constraint_index": 5,
+          "category_domain": "activity",
+          "expression": "['attraction', 'airplane', 'train']",
+          "raw_label": "train",
+          "normalized_label": "train"
+        },
+        {
+          "constraint_index": 5,
+          "category_domain": "transport",
+          "expression": "innercity_transport_type(activity_transports(activity))",
+          "raw_label": "metro",
+          "normalized_label": "metro"
+        },
+        {
+          "constraint_index": 5,
+          "category_domain": "transport",
+          "expression": "'metro'",
+          "raw_label": "metro",
+          "normalized_label": "metro"
+        },
+        {
+          "constraint_index": 5,
+          "category_domain": "activity",
+          "expression": "activity_type(activity)",
+          "raw_label": "accommodation",
+          "normalized_label": "accommodation"
+        },
+        {
+          "constraint_index": 5,
+          "category_domain": "activity",
+          "expression": "['attraction', 'airplane', 'train']",
+          "raw_label": "attraction",
+          "normalized_label": "attraction"
+        },
+        {
+          "constraint_index": 5,
+          "category_domain": "activity",
+          "expression": "['attraction', 'airplane', 'train']",
+          "raw_label": "airplane",
+          "normalized_label": "airplane"
+        },
+        {
+          "constraint_index": 5,
+          "category_domain": "activity",
+          "expression": "['attraction', 'airplane', 'train']",
+          "raw_label": "train",
+          "normalized_label": "train"
+        },
+        {
+          "constraint_index": 5,
+          "category_domain": "transport",
+          "expression": "innercity_transport_type(activity_transports(activity))",
+          "raw_label": "metro",
+          "normalized_label": "metro"
+        },
+        {
+          "constraint_index": 5,
+          "category_domain": "transport",
+          "expression": "'metro'",
+          "raw_label": "metro",
+          "normalized_label": "metro"
+        },
+        {
+          "constraint_index": 5,
+          "category_domain": "activity",
+          "expression": "activity_type(activity)",
+          "raw_label": "attraction",
+          "normalized_label": "attraction"
+        },
+        {
+          "constraint_index": 5,
+          "category_domain": "activity",
+          "expression": "['attraction', 'airplane', 'train']",
+          "raw_label": "attraction",
+          "normalized_label": "attraction"
+        },
+        {
+          "constraint_index": 5,
+          "category_domain": "activity",
+          "expression": "['attraction', 'airplane', 'train']",
+          "raw_label": "airplane",
+          "normalized_label": "airplane"
+        },
+        {
+          "constraint_index": 5,
+          "category_domain": "activity",
+          "expression": "['attraction', 'airplane', 'train']",
+          "raw_label": "train",
+          "normalized_label": "train"
+        },
+        {
+          "constraint_index": 5,
+          "category_domain": "transport",
+          "expression": "innercity_transport_type(activity_transports(activity))",
+          "raw_label": "metro",
+          "normalized_label": "metro"
+        },
+        {
+          "constraint_index": 5,
+          "category_domain": "transport",
+          "expression": "'metro'",
+          "raw_label": "metro",
+          "normalized_label": "metro"
+        },
+        {
+          "constraint_index": 5,
+          "category_domain": "activity",
+          "expression": "activity_type(activity)",
+          "raw_label": "lunch",
+          "normalized_label": "lunch"
+        },
+        {
+          "constraint_index": 5,
+          "category_domain": "activity",
+          "expression": "['attraction', 'airplane', 'train']",
+          "raw_label": "attraction",
+          "normalized_label": "attraction"
+        },
+        {
+          "constraint_index": 5,
+          "category_domain": "activity",
+          "expression": "['attraction', 'airplane', 'train']",
+          "raw_label": "airplane",
+          "normalized_label": "airplane"
+        },
+        {
+          "constraint_index": 5,
+          "category_domain": "activity",
+          "expression": "['attraction', 'airplane', 'train']",
+          "raw_label": "train",
+          "normalized_label": "train"
+        },
+        {
+          "constraint_index": 5,
+          "category_domain": "transport",
+          "expression": "innercity_transport_type(activity_transports(activity))",
+          "raw_label": "metro",
+          "normalized_label": "metro"
+        },
+        {
+          "constraint_index": 5,
+          "category_domain": "transport",
+          "expression": "'metro'",
+          "raw_label": "metro",
+          "normalized_label": "metro"
+        },
+        {
+          "constraint_index": 5,
+          "category_domain": "activity",
+          "expression": "activity_type(activity)",
+          "raw_label": "attraction",
+          "normalized_label": "attraction"
+        },
+        {
+          "constraint_index": 5,
+          "category_domain": "activity",
+          "expression": "['attraction', 'airplane', 'train']",
+          "raw_label": "attraction",
+          "normalized_label": "attraction"
+        },
+        {
+          "constraint_index": 5,
+          "category_domain": "activity",
+          "expression": "['attraction', 'airplane', 'train']",
+          "raw_label": "airplane",
+          "normalized_label": "airplane"
+        },
+        {
+          "constraint_index": 5,
+          "category_domain": "activity",
+          "expression": "['attraction', 'airplane', 'train']",
+          "raw_label": "train",
+          "normalized_label": "train"
+        },
+        {
+          "constraint_index": 5,
+          "category_domain": "transport",
+          "expression": "innercity_transport_type(activity_transports(activity))",
+          "raw_label": "metro",
+          "normalized_label": "metro"
+        },
+        {
+          "constraint_index": 5,
+          "category_domain": "transport",
+          "expression": "'metro'",
+          "raw_label": "metro",
+          "normalized_label": "metro"
+        },
+        {
+          "constraint_index": 5,
+          "category_domain": "activity",
+          "expression": "activity_type(activity)",
+          "raw_label": "dinner",
+          "normalized_label": "dinner"
+        },
+        {
+          "constraint_index": 5,
+          "category_domain": "activity",
+          "expression": "['attraction', 'airplane', 'train']",
+          "raw_label": "attraction",
+          "normalized_label": "attraction"
+        },
+        {
+          "constraint_index": 5,
+          "category_domain": "activity",
+          "expression": "['attraction', 'airplane', 'train']",
+          "raw_label": "airplane",
+          "normalized_label": "airplane"
+        },
+        {
+          "constraint_index": 5,
+          "category_domain": "activity",
+          "expression": "['attraction', 'airplane', 'train']",
+          "raw_label": "train",
+          "normalized_label": "train"
+        },
+        {
+          "constraint_index": 5,
+          "category_domain": "transport",
+          "expression": "innercity_transport_type(activity_transports(activity))",
+          "raw_label": "metro",
+          "normalized_label": "metro"
+        },
+        {
+          "constraint_index": 5,
+          "category_domain": "transport",
+          "expression": "'metro'",
+          "raw_label": "metro",
+          "normalized_label": "metro"
+        },
+        {
+          "constraint_index": 5,
+          "category_domain": "activity",
+          "expression": "activity_type(activity)",
+          "raw_label": "accommodation",
+          "normalized_label": "accommodation"
+        },
+        {
+          "constraint_index": 5,
+          "category_domain": "activity",
+          "expression": "['attraction', 'airplane', 'train']",
+          "raw_label": "attraction",
+          "normalized_label": "attraction"
+        },
+        {
+          "constraint_index": 5,
+          "category_domain": "activity",
+          "expression": "['attraction', 'airplane', 'train']",
+          "raw_label": "airplane",
+          "normalized_label": "airplane"
+        },
+        {
+          "constraint_index": 5,
+          "category_domain": "activity",
+          "expression": "['attraction', 'airplane', 'train']",
+          "raw_label": "train",
+          "normalized_label": "train"
+        },
+        {
+          "constraint_index": 5,
+          "category_domain": "transport",
+          "expression": "innercity_transport_type(activity_transports(activity))",
+          "raw_label": "metro",
+          "normalized_label": "metro"
+        },
+        {
+          "constraint_index": 5,
+          "category_domain": "transport",
+          "expression": "'metro'",
+          "raw_label": "metro",
+          "normalized_label": "metro"
+        },
+        {
+          "constraint_index": 5,
+          "category_domain": "activity",
+          "expression": "activity_type(activity)",
+          "raw_label": "attraction",
+          "normalized_label": "attraction"
+        },
+        {
+          "constraint_index": 5,
+          "category_domain": "activity",
+          "expression": "['attraction', 'airplane', 'train']",
+          "raw_label": "attraction",
+          "normalized_label": "attraction"
+        },
+        {
+          "constraint_index": 5,
+          "category_domain": "activity",
+          "expression": "['attraction', 'airplane', 'train']",
+          "raw_label": "airplane",
+          "normalized_label": "airplane"
+        },
+        {
+          "constraint_index": 5,
+          "category_domain": "activity",
+          "expression": "['attraction', 'airplane', 'train']",
+          "raw_label": "train",
+          "normalized_label": "train"
+        },
+        {
+          "constraint_index": 5,
+          "category_domain": "transport",
+          "expression": "innercity_transport_type(activity_transports(activity))",
+          "raw_label": "metro",
+          "normalized_label": "metro"
+        },
+        {
+          "constraint_index": 5,
+          "category_domain": "transport",
+          "expression": "'metro'",
+          "raw_label": "metro",
+          "normalized_label": "metro"
+        },
+        {
+          "constraint_index": 5,
+          "category_domain": "activity",
+          "expression": "activity_type(activity)",
+          "raw_label": "lunch",
+          "normalized_label": "lunch"
+        },
+        {
+          "constraint_index": 5,
+          "category_domain": "activity",
+          "expression": "['attraction', 'airplane', 'train']",
+          "raw_label": "attraction",
+          "normalized_label": "attraction"
+        },
+        {
+          "constraint_index": 5,
+          "category_domain": "activity",
+          "expression": "['attraction', 'airplane', 'train']",
+          "raw_label": "airplane",
+          "normalized_label": "airplane"
+        },
+        {
+          "constraint_index": 5,
+          "category_domain": "activity",
+          "expression": "['attraction', 'airplane', 'train']",
+          "raw_label": "train",
+          "normalized_label": "train"
+        },
+        {
+          "constraint_index": 5,
+          "category_domain": "transport",
+          "expression": "innercity_transport_type(activity_transports(activity))",
+          "raw_label": "metro",
+          "normalized_label": "metro"
+        },
+        {
+          "constraint_index": 5,
+          "category_domain": "transport",
+          "expression": "'metro'",
+          "raw_label": "metro",
+          "normalized_label": "metro"
+        },
+        {
+          "constraint_index": 5,
+          "category_domain": "activity",
+          "expression": "activity_type(activity)",
+          "raw_label": "attraction",
+          "normalized_label": "attraction"
+        },
+        {
+          "constraint_index": 5,
+          "category_domain": "activity",
+          "expression": "['attraction', 'airplane', 'train']",
+          "raw_label": "attraction",
+          "normalized_label": "attraction"
+        },
+        {
+          "constraint_index": 5,
+          "category_domain": "activity",
+          "expression": "['attraction', 'airplane', 'train']",
+          "raw_label": "airplane",
+          "normalized_label": "airplane"
+        },
+        {
+          "constraint_index": 5,
+          "category_domain": "activity",
+          "expression": "['attraction', 'airplane', 'train']",
+          "raw_label": "train",
+          "normalized_label": "train"
+        },
+        {
+          "constraint_index": 5,
+          "category_domain": "transport",
+          "expression": "innercity_transport_type(activity_transports(activity))",
+          "raw_label": "metro",
+          "normalized_label": "metro"
+        },
+        {
+          "constraint_index": 5,
+          "category_domain": "transport",
+          "expression": "'metro'",
+          "raw_label": "metro",
+          "normalized_label": "metro"
+        },
+        {
+          "constraint_index": 5,
+          "category_domain": "activity",
+          "expression": "activity_type(activity)",
+          "raw_label": "airplane",
+          "normalized_label": "airplane"
+        },
+        {
+          "constraint_index": 5,
+          "category_domain": "activity",
+          "expression": "['attraction', 'airplane', 'train']",
+          "raw_label": "attraction",
+          "normalized_label": "attraction"
+        },
+        {
+          "constraint_index": 5,
+          "category_domain": "activity",
+          "expression": "['attraction', 'airplane', 'train']",
+          "raw_label": "airplane",
+          "normalized_label": "airplane"
+        },
+        {
+          "constraint_index": 5,
+          "category_domain": "activity",
+          "expression": "['attraction', 'airplane', 'train']",
+          "raw_label": "train",
+          "normalized_label": "train"
+        },
+        {
+          "constraint_index": 5,
+          "category_domain": "transport",
+          "expression": "innercity_transport_type(activity_transports(activity))",
+          "raw_label": "metro",
+          "normalized_label": "metro"
+        },
+        {
+          "constraint_index": 5,
+          "category_domain": "transport",
+          "expression": "'metro'",
+          "raw_label": "metro",
+          "normalized_label": "metro"
+        },
+        {
+          "constraint_index": 6,
+          "category_domain": "activity",
+          "expression": "activity_type(activity)",
+          "raw_label": "airplane",
+          "normalized_label": "airplane"
+        },
+        {
+          "constraint_index": 6,
+          "category_domain": "activity",
+          "expression": "'accommodation'",
+          "raw_label": "accommodation",
+          "normalized_label": "accommodation"
+        },
+        {
+          "constraint_index": 6,
+          "category_domain": "activity",
+          "expression": "activity_type(activity)",
+          "raw_label": "attraction",
+          "normalized_label": "attraction"
+        },
+        {
+          "constraint_index": 6,
+          "category_domain": "activity",
+          "expression": "'accommodation'",
+          "raw_label": "accommodation",
+          "normalized_label": "accommodation"
+        },
+        {
+          "constraint_index": 6,
+          "category_domain": "activity",
+          "expression": "activity_type(activity)",
+          "raw_label": "dinner",
+          "normalized_label": "dinner"
+        },
+        {
+          "constraint_index": 6,
+          "category_domain": "activity",
+          "expression": "'accommodation'",
+          "raw_label": "accommodation",
+          "normalized_label": "accommodation"
+        },
+        {
+          "constraint_index": 6,
+          "category_domain": "activity",
+          "expression": "activity_type(activity)",
+          "raw_label": "accommodation",
+          "normalized_label": "accommodation"
+        },
+        {
+          "constraint_index": 6,
+          "category_domain": "activity",
+          "expression": "'accommodation'",
+          "raw_label": "accommodation",
+          "normalized_label": "accommodation"
+        },
+        {
+          "constraint_index": 6,
+          "category_domain": "activity",
+          "expression": "activity_type(activity)",
+          "raw_label": "attraction",
+          "normalized_label": "attraction"
+        },
+        {
+          "constraint_index": 6,
+          "category_domain": "activity",
+          "expression": "'accommodation'",
+          "raw_label": "accommodation",
+          "normalized_label": "accommodation"
+        },
+        {
+          "constraint_index": 6,
+          "category_domain": "activity",
+          "expression": "activity_type(activity)",
+          "raw_label": "lunch",
+          "normalized_label": "lunch"
+        },
+        {
+          "constraint_index": 6,
+          "category_domain": "activity",
+          "expression": "'accommodation'",
+          "raw_label": "accommodation",
+          "normalized_label": "accommodation"
+        },
+        {
+          "constraint_index": 6,
+          "category_domain": "activity",
+          "expression": "activity_type(activity)",
+          "raw_label": "attraction",
+          "normalized_label": "attraction"
+        },
+        {
+          "constraint_index": 6,
+          "category_domain": "activity",
+          "expression": "'accommodation'",
+          "raw_label": "accommodation",
+          "normalized_label": "accommodation"
+        },
+        {
+          "constraint_index": 6,
+          "category_domain": "activity",
+          "expression": "activity_type(activity)",
+          "raw_label": "dinner",
+          "normalized_label": "dinner"
+        },
+        {
+          "constraint_index": 6,
+          "category_domain": "activity",
+          "expression": "'accommodation'",
+          "raw_label": "accommodation",
+          "normalized_label": "accommodation"
+        },
+        {
+          "constraint_index": 6,
+          "category_domain": "activity",
+          "expression": "activity_type(activity)",
+          "raw_label": "accommodation",
+          "normalized_label": "accommodation"
+        },
+        {
+          "constraint_index": 6,
+          "category_domain": "activity",
+          "expression": "'accommodation'",
+          "raw_label": "accommodation",
+          "normalized_label": "accommodation"
+        },
+        {
+          "constraint_index": 6,
+          "category_domain": "activity",
+          "expression": "activity_type(activity)",
+          "raw_label": "attraction",
+          "normalized_label": "attraction"
+        },
+        {
+          "constraint_index": 6,
+          "category_domain": "activity",
+          "expression": "'accommodation'",
+          "raw_label": "accommodation",
+          "normalized_label": "accommodation"
+        },
+        {
+          "constraint_index": 6,
+          "category_domain": "activity",
+          "expression": "activity_type(activity)",
+          "raw_label": "lunch",
+          "normalized_label": "lunch"
+        },
+        {
+          "constraint_index": 6,
+          "category_domain": "activity",
+          "expression": "'accommodation'",
+          "raw_label": "accommodation",
+          "normalized_label": "accommodation"
+        },
+        {
+          "constraint_index": 6,
+          "category_domain": "activity",
+          "expression": "activity_type(activity)",
+          "raw_label": "attraction",
+          "normalized_label": "attraction"
+        },
+        {
+          "constraint_index": 6,
+          "category_domain": "activity",
+          "expression": "'accommodation'",
+          "raw_label": "accommodation",
+          "normalized_label": "accommodation"
+        },
+        {
+          "constraint_index": 6,
+          "category_domain": "activity",
+          "expression": "activity_type(activity)",
+          "raw_label": "airplane",
+          "normalized_label": "airplane"
+        },
+        {
+          "constraint_index": 6,
+          "category_domain": "activity",
+          "expression": "'accommodation'",
+          "raw_label": "accommodation",
+          "normalized_label": "accommodation"
+        },
+        {
+          "constraint_index": 7,
+          "category_domain": "activity",
+          "expression": "activity_type(activity)",
+          "raw_label": "airplane",
+          "normalized_label": "airplane"
+        },
+        {
+          "constraint_index": 7,
+          "category_domain": "activity",
+          "expression": "'accommodation'",
+          "raw_label": "accommodation",
+          "normalized_label": "accommodation"
+        },
+        {
+          "constraint_index": 7,
+          "category_domain": "activity",
+          "expression": "activity_type(activity)",
+          "raw_label": "attraction",
+          "normalized_label": "attraction"
+        },
+        {
+          "constraint_index": 7,
+          "category_domain": "activity",
+          "expression": "'accommodation'",
+          "raw_label": "accommodation",
+          "normalized_label": "accommodation"
+        },
+        {
+          "constraint_index": 7,
+          "category_domain": "activity",
+          "expression": "activity_type(activity)",
+          "raw_label": "dinner",
+          "normalized_label": "dinner"
+        },
+        {
+          "constraint_index": 7,
+          "category_domain": "activity",
+          "expression": "'accommodation'",
+          "raw_label": "accommodation",
+          "normalized_label": "accommodation"
+        },
+        {
+          "constraint_index": 7,
+          "category_domain": "activity",
+          "expression": "activity_type(activity)",
+          "raw_label": "accommodation",
+          "normalized_label": "accommodation"
+        },
+        {
+          "constraint_index": 7,
+          "category_domain": "activity",
+          "expression": "'accommodation'",
+          "raw_label": "accommodation",
+          "normalized_label": "accommodation"
+        },
+        {
+          "constraint_index": 7,
+          "category_domain": "activity",
+          "expression": "activity_type(activity)",
+          "raw_label": "attraction",
+          "normalized_label": "attraction"
+        },
+        {
+          "constraint_index": 7,
+          "category_domain": "activity",
+          "expression": "'accommodation'",
+          "raw_label": "accommodation",
+          "normalized_label": "accommodation"
+        },
+        {
+          "constraint_index": 7,
+          "category_domain": "activity",
+          "expression": "activity_type(activity)",
+          "raw_label": "lunch",
+          "normalized_label": "lunch"
+        },
+        {
+          "constraint_index": 7,
+          "category_domain": "activity",
+          "expression": "'accommodation'",
+          "raw_label": "accommodation",
+          "normalized_label": "accommodation"
+        },
+        {
+          "constraint_index": 7,
+          "category_domain": "activity",
+          "expression": "activity_type(activity)",
+          "raw_label": "attraction",
+          "normalized_label": "attraction"
+        },
+        {
+          "constraint_index": 7,
+          "category_domain": "activity",
+          "expression": "'accommodation'",
+          "raw_label": "accommodation",
+          "normalized_label": "accommodation"
+        },
+        {
+          "constraint_index": 7,
+          "category_domain": "activity",
+          "expression": "activity_type(activity)",
+          "raw_label": "dinner",
+          "normalized_label": "dinner"
+        },
+        {
+          "constraint_index": 7,
+          "category_domain": "activity",
+          "expression": "'accommodation'",
+          "raw_label": "accommodation",
+          "normalized_label": "accommodation"
+        },
+        {
+          "constraint_index": 7,
+          "category_domain": "activity",
+          "expression": "activity_type(activity)",
+          "raw_label": "accommodation",
+          "normalized_label": "accommodation"
+        },
+        {
+          "constraint_index": 7,
+          "category_domain": "activity",
+          "expression": "'accommodation'",
+          "raw_label": "accommodation",
+          "normalized_label": "accommodation"
+        },
+        {
+          "constraint_index": 7,
+          "category_domain": "activity",
+          "expression": "activity_type(activity)",
+          "raw_label": "attraction",
+          "normalized_label": "attraction"
+        },
+        {
+          "constraint_index": 7,
+          "category_domain": "activity",
+          "expression": "'accommodation'",
+          "raw_label": "accommodation",
+          "normalized_label": "accommodation"
+        },
+        {
+          "constraint_index": 7,
+          "category_domain": "activity",
+          "expression": "activity_type(activity)",
+          "raw_label": "lunch",
+          "normalized_label": "lunch"
+        },
+        {
+          "constraint_index": 7,
+          "category_domain": "activity",
+          "expression": "'accommodation'",
+          "raw_label": "accommodation",
+          "normalized_label": "accommodation"
+        },
+        {
+          "constraint_index": 7,
+          "category_domain": "activity",
+          "expression": "activity_type(activity)",
+          "raw_label": "attraction",
+          "normalized_label": "attraction"
+        },
+        {
+          "constraint_index": 7,
+          "category_domain": "activity",
+          "expression": "'accommodation'",
+          "raw_label": "accommodation",
+          "normalized_label": "accommodation"
+        },
+        {
+          "constraint_index": 7,
+          "category_domain": "activity",
+          "expression": "activity_type(activity)",
+          "raw_label": "airplane",
+          "normalized_label": "airplane"
+        },
+        {
+          "constraint_index": 7,
+          "category_domain": "activity",
+          "expression": "'accommodation'",
+          "raw_label": "accommodation",
+          "normalized_label": "accommodation"
+        },
+        {
+          "constraint_index": 8,
+          "category_domain": "transport",
+          "expression": "innercity_transport_type(activity_transports(activity))",
+          "raw_label": "empty",
+          "normalized_label": "empty"
+        },
+        {
+          "constraint_index": 8,
+          "category_domain": "transport",
+          "expression": "'taxi'",
+          "raw_label": "taxi",
+          "normalized_label": "taxi"
+        },
+        {
+          "constraint_index": 8,
+          "category_domain": "transport",
+          "expression": "innercity_transport_type(activity_transports(activity))",
+          "raw_label": "metro",
+          "normalized_label": "metro"
+        },
+        {
+          "constraint_index": 8,
+          "category_domain": "transport",
+          "expression": "'taxi'",
+          "raw_label": "taxi",
+          "normalized_label": "taxi"
+        },
+        {
+          "constraint_index": 8,
+          "category_domain": "transport",
+          "expression": "innercity_transport_type(activity_transports(activity))",
+          "raw_label": "metro",
+          "normalized_label": "metro"
+        },
+        {
+          "constraint_index": 8,
+          "category_domain": "transport",
+          "expression": "'taxi'",
+          "raw_label": "taxi",
+          "normalized_label": "taxi"
+        },
+        {
+          "constraint_index": 8,
+          "category_domain": "transport",
+          "expression": "innercity_transport_type(activity_transports(activity))",
+          "raw_label": "metro",
+          "normalized_label": "metro"
+        },
+        {
+          "constraint_index": 8,
+          "category_domain": "transport",
+          "expression": "'taxi'",
+          "raw_label": "taxi",
+          "normalized_label": "taxi"
+        },
+        {
+          "constraint_index": 8,
+          "category_domain": "transport",
+          "expression": "innercity_transport_type(activity_transports(activity))",
+          "raw_label": "metro",
+          "normalized_label": "metro"
+        },
+        {
+          "constraint_index": 8,
+          "category_domain": "transport",
+          "expression": "'taxi'",
+          "raw_label": "taxi",
+          "normalized_label": "taxi"
+        },
+        {
+          "constraint_index": 8,
+          "category_domain": "transport",
+          "expression": "innercity_transport_type(activity_transports(activity))",
+          "raw_label": "metro",
+          "normalized_label": "metro"
+        },
+        {
+          "constraint_index": 8,
+          "category_domain": "transport",
+          "expression": "'taxi'",
+          "raw_label": "taxi",
+          "normalized_label": "taxi"
+        },
+        {
+          "constraint_index": 8,
+          "category_domain": "transport",
+          "expression": "innercity_transport_type(activity_transports(activity))",
+          "raw_label": "metro",
+          "normalized_label": "metro"
+        },
+        {
+          "constraint_index": 8,
+          "category_domain": "transport",
+          "expression": "'taxi'",
+          "raw_label": "taxi",
+          "normalized_label": "taxi"
+        },
+        {
+          "constraint_index": 8,
+          "category_domain": "transport",
+          "expression": "innercity_transport_type(activity_transports(activity))",
+          "raw_label": "metro",
+          "normalized_label": "metro"
+        },
+        {
+          "constraint_index": 8,
+          "category_domain": "transport",
+          "expression": "'taxi'",
+          "raw_label": "taxi",
+          "normalized_label": "taxi"
+        },
+        {
+          "constraint_index": 8,
+          "category_domain": "transport",
+          "expression": "innercity_transport_type(activity_transports(activity))",
+          "raw_label": "metro",
+          "normalized_label": "metro"
+        },
+        {
+          "constraint_index": 8,
+          "category_domain": "transport",
+          "expression": "'taxi'",
+          "raw_label": "taxi",
+          "normalized_label": "taxi"
+        },
+        {
+          "constraint_index": 8,
+          "category_domain": "transport",
+          "expression": "innercity_transport_type(activity_transports(activity))",
+          "raw_label": "metro",
+          "normalized_label": "metro"
+        },
+        {
+          "constraint_index": 8,
+          "category_domain": "transport",
+          "expression": "'taxi'",
+          "raw_label": "taxi",
+          "normalized_label": "taxi"
+        },
+        {
+          "constraint_index": 8,
+          "category_domain": "transport",
+          "expression": "innercity_transport_type(activity_transports(activity))",
+          "raw_label": "metro",
+          "normalized_label": "metro"
+        },
+        {
+          "constraint_index": 8,
+          "category_domain": "transport",
+          "expression": "'taxi'",
+          "raw_label": "taxi",
+          "normalized_label": "taxi"
+        },
+        {
+          "constraint_index": 8,
+          "category_domain": "transport",
+          "expression": "innercity_transport_type(activity_transports(activity))",
+          "raw_label": "metro",
+          "normalized_label": "metro"
+        },
+        {
+          "constraint_index": 8,
+          "category_domain": "transport",
+          "expression": "'taxi'",
+          "raw_label": "taxi",
+          "normalized_label": "taxi"
+        },
+        {
+          "constraint_index": 8,
+          "category_domain": "transport",
+          "expression": "innercity_transport_type(activity_transports(activity))",
+          "raw_label": "metro",
+          "normalized_label": "metro"
+        },
+        {
+          "constraint_index": 8,
+          "category_domain": "transport",
+          "expression": "'taxi'",
+          "raw_label": "taxi",
+          "normalized_label": "taxi"
+        }
+      ],
+      "personal_errors": [],
+      "evaluation_errors": [],
+      "translation_errors": [],
+      "error_info": [],
+      "passed": true,
+      "translated_plan": {
+        "people_number": 2,
+        "start_city": "Hangzhou",
+        "target_city": "Beijing",
+        "itinerary": [
+          {
+            "day": 1,
+            "activities": [
+              {
+                "start_time": "12:41",
+                "end_time": "14:05",
+                "start": "Hangzhou Xiaoshan International Airport",
+                "end": "Beijing Capital International Airport",
+                "price": 546.16,
+                "cost": 1092.32,
+                "FlightID": "FL492",
+                "type": "airplane",
+                "tickets": 2,
+                "transports": []
+              },
+              {
+                "position": "The Palace Museum",
+                "type": "attraction",
+                "transports": [
+                  {
+                    "start": "Beijing Capital International Airport",
+                    "end": "Terminal 2-Metro Station",
+                    "mode": "walk",
+                    "start_time": "14:05",
+                    "end_time": "14:15",
+                    "cost": 0,
+                    "distance": 0.88,
+                    "price": 0
+                  },
+                  {
+                    "start": "Terminal 2-Metro Station",
+                    "end": "National Art Museum of China-Metro Station",
+                    "mode": "metro",
+                    "start_time": "14:15",
+                    "end_time": "15:01",
+                    "cost": 12,
+                    "distance": 23.24,
+                    "price": 6,
+                    "tickets": 2
+                  },
+                  {
+                    "start": "National Art Museum of China-Metro Station",
+                    "end": "The Palace Museum",
+                    "mode": "walk",
+                    "start_time": "15:01",
+                    "end_time": "15:08",
+                    "cost": 0,
+                    "distance": 0.63,
+                    "price": 0
+                  }
+                ],
+                "price": 0.0,
+                "cost": 0.0,
+                "tickets": 2,
+                "start_time": "15:30",
+                "end_time": "17:00"
+              },
+              {
+                "position": "Four Seasons Minfu Roast Duck Restaurant (Forbidden City Branch)",
+                "type": "dinner",
+                "transports": [
+                  {
+                    "start": "The Palace Museum",
+                    "end": "National Art Museum of China-Metro Station",
+                    "mode": "walk",
+                    "start_time": "17:00",
+                    "end_time": "17:07",
+                    "cost": 0,
+                    "distance": 0.63,
+                    "price": 0
+                  },
+                  {
+                    "start": "National Art Museum of China-Metro Station",
+                    "end": "Goldfish Alley-Metro Station",
+                    "mode": "metro",
+                    "start_time": "17:07",
+                    "end_time": "17:08",
+                    "cost": 4,
+                    "distance": 0.92,
+                    "price": 2,
+                    "tickets": 2
+                  },
+                  {
+                    "start": "Goldfish Alley-Metro Station",
+                    "end": "Four Seasons Minfu Roast Duck Restaurant (Forbidden City Branch)",
+                    "mode": "walk",
+                    "start_time": "17:08",
+                    "end_time": "17:16",
+                    "cost": 0,
+                    "distance": 0.72,
+                    "price": 0
+                  }
+                ],
+                "price": 180,
+                "cost": 360,
+                "start_time": "17:30",
+                "end_time": "18:30"
+              },
+              {
+                "position": "Beijing Xinyuan Hotel",
+                "type": "accommodation",
+                "transports": [
+                  {
+                    "start": "Four Seasons Minfu Roast Duck Restaurant (Forbidden City Branch)",
+                    "end": "Goldfish Alley-Metro Station",
+                    "mode": "walk",
+                    "start_time": "18:30",
+                    "end_time": "18:38",
+                    "cost": 0,
+                    "distance": 0.72,
+                    "price": 0
+                  },
+                  {
+                    "start": "Goldfish Alley-Metro Station",
+                    "end": "Lianhua Bridge-Metro Station",
+                    "mode": "metro",
+                    "start_time": "18:38",
+                    "end_time": "18:55",
+                    "cost": 6,
+                    "distance": 8.84,
+                    "price": 3,
+                    "tickets": 2
+                  },
+                  {
+                    "start": "Lianhua Bridge-Metro Station",
+                    "end": "Beijing Xinyuan Hotel",
+                    "mode": "walk",
+                    "start_time": "18:55",
+                    "end_time": "18:56",
+                    "cost": 0,
+                    "distance": 0.16,
+                    "price": 0
+                  }
+                ],
+                "room_type": 2,
+                "price": 637,
+                "cost": 637,
+                "start_time": "19:00",
+                "end_time": "24:00",
+                "rooms": 1
+              }
+            ]
+          },
+          {
+            "day": 2,
+            "activities": [
+              {
+                "position": "Badaling Great Wall",
+                "type": "attraction",
+                "transports": [
+                  {
+                    "start": "Beijing Xinyuan Hotel",
+                    "end": "Lianhua Bridge-Metro Station",
+                    "mode": "walk",
+                    "start_time": "08:00",
+                    "end_time": "08:01",
+                    "cost": 0,
+                    "distance": 0.16,
+                    "price": 0
+                  },
+                  {
+                    "start": "Lianhua Bridge-Metro Station",
+                    "end": "Changping Xishankou-Metro Station",
+                    "mode": "metro",
+                    "start_time": "08:01",
+                    "end_time": "09:20",
+                    "cost": 16,
+                    "distance": 39.73,
+                    "price": 8,
+                    "tickets": 2
+                  },
+                  {
+                    "start": "Changping Xishankou-Metro Station",
+                    "end": "Badaling Great Wall",
+                    "mode": "walk",
+                    "start_time": "09:20",
+                    "end_time": "13:15",
+                    "cost": 0,
+                    "distance": 19.59,
+                    "price": 0
+                  }
+                ],
+                "price": 40.0,
+                "cost": 80.0,
+                "tickets": 2,
+                "start_time": "09:30",
+                "end_time": "12:00"
+              },
+              {
+                "position": "Huguosi Snacks (Huguosi Main Store)",
+                "type": "lunch",
+                "transports": [
+                  {
+                    "start": "Badaling Great Wall",
+                    "end": "Changping Xishankou-Metro Station",
+                    "mode": "walk",
+                    "start_time": "12:00",
+                    "end_time": "15:55",
+                    "cost": 0,
+                    "distance": 19.59,
+                    "price": 0
+                  },
+                  {
+                    "start": "Changping Xishankou-Metro Station",
+                    "end": "Ping'anli-Metro Station",
+                    "mode": "metro",
+                    "start_time": "15:55",
+                    "end_time": "17:10",
+                    "cost": 16,
+                    "distance": 37.67,
+                    "price": 8,
+                    "tickets": 2
+                  },
+                  {
+                    "start": "Ping'anli-Metro Station",
+                    "end": "Huguosi Snacks (Huguosi Main Store)",
+                    "mode": "walk",
+                    "start_time": "17:10",
+                    "end_time": "17:12",
+                    "cost": 0,
+                    "distance": 0.21,
+                    "price": 0
+                  }
+                ],
+                "price": 32,
+                "cost": 64,
+                "start_time": "13:30",
+                "end_time": "14:30"
+              },
+              {
+                "position": "Tiananmen Square",
+                "type": "attraction",
+                "transports": [
+                  {
+                    "start": "Huguosi Snacks (Huguosi Main Store)",
+                    "end": "Ping'anli-Metro Station",
+                    "mode": "walk",
+                    "start_time": "14:30",
+                    "end_time": "14:32",
+                    "cost": 0,
+                    "distance": 0.21,
+                    "price": 0
+                  },
+                  {
+                    "start": "Ping'anli-Metro Station",
+                    "end": "Tiananmen East-Metro Station",
+                    "mode": "metro",
+                    "start_time": "14:32",
+                    "end_time": "14:39",
+                    "cost": 4,
+                    "distance": 3.78,
+                    "price": 2,
+                    "tickets": 2
+                  },
+                  {
+                    "start": "Tiananmen East-Metro Station",
+                    "end": "Tiananmen Square",
+                    "mode": "walk",
+                    "start_time": "14:39",
+                    "end_time": "14:43",
+                    "cost": 0,
+                    "distance": 0.36,
+                    "price": 0
+                  }
+                ],
+                "price": 0.0,
+                "cost": 0.0,
+                "tickets": 2,
+                "start_time": "15:00",
+                "end_time": "16:00"
+              },
+              {
+                "position": "Beijing Quanjude (Qianmen Branch)",
+                "type": "dinner",
+                "transports": [
+                  {
+                    "start": "Tiananmen Square",
+                    "end": "Tiananmen East-Metro Station",
+                    "mode": "walk",
+                    "start_time": "16:00",
+                    "end_time": "16:04",
+                    "cost": 0,
+                    "distance": 0.36,
+                    "price": 0
+                  },
+                  {
+                    "start": "Tiananmen East-Metro Station",
+                    "end": "Qianmen-Metro Station",
+                    "mode": "metro",
+                    "start_time": "16:04",
+                    "end_time": "16:05",
+                    "cost": 4,
+                    "distance": 0.89,
+                    "price": 2,
+                    "tickets": 2
+                  },
+                  {
+                    "start": "Qianmen-Metro Station",
+                    "end": "Beijing Quanjude (Qianmen Branch)",
+                    "mode": "walk",
+                    "start_time": "16:05",
+                    "end_time": "16:09",
+                    "cost": 0,
+                    "distance": 0.4,
+                    "price": 0
+                  }
+                ],
+                "price": 184,
+                "cost": 368,
+                "start_time": "16:30",
+                "end_time": "17:30"
+              },
+              {
+                "position": "Beijing Xinyuan Hotel",
+                "type": "accommodation",
+                "transports": [
+                  {
+                    "start": "Beijing Quanjude (Qianmen Branch)",
+                    "end": "Qianmen-Metro Station",
+                    "mode": "walk",
+                    "start_time": "17:30",
+                    "end_time": "17:34",
+                    "cost": 0,
+                    "distance": 0.4,
+                    "price": 0
+                  },
+                  {
+                    "start": "Qianmen-Metro Station",
+                    "end": "Lianhua Bridge-Metro Station",
+                    "mode": "metro",
+                    "start_time": "17:34",
+                    "end_time": "17:48",
+                    "cost": 6,
+                    "distance": 7.5,
+                    "price": 3,
+                    "tickets": 2
+                  },
+                  {
+                    "start": "Lianhua Bridge-Metro Station",
+                    "end": "Beijing Xinyuan Hotel",
+                    "mode": "walk",
+                    "start_time": "17:48",
+                    "end_time": "17:49",
+                    "cost": 0,
+                    "distance": 0.16,
+                    "price": 0
+                  }
+                ],
+                "room_type": 2,
+                "price": 637,
+                "cost": 637,
+                "start_time": "18:00",
+                "end_time": "24:00",
+                "rooms": 1
+              }
+            ]
+          },
+          {
+            "day": 3,
+            "activities": [
+              {
+                "position": "Summer Palace",
+                "type": "attraction",
+                "transports": [
+                  {
+                    "start": "Beijing Xinyuan Hotel",
+                    "end": "Lianhua Bridge-Metro Station",
+                    "mode": "walk",
+                    "start_time": "08:00",
+                    "end_time": "08:01",
+                    "cost": 0,
+                    "distance": 0.16,
+                    "price": 0
+                  },
+                  {
+                    "start": "Lianhua Bridge-Metro Station",
+                    "end": "Beigongmen-Metro Station",
+                    "mode": "metro",
+                    "start_time": "08:01",
+                    "end_time": "08:24",
+                    "cost": 8,
+                    "distance": 11.94,
+                    "price": 4,
+                    "tickets": 2
+                  },
+                  {
+                    "start": "Beigongmen-Metro Station",
+                    "end": "Summer Palace",
+                    "mode": "walk",
+                    "start_time": "08:24",
+                    "end_time": "08:32",
+                    "cost": 0,
+                    "distance": 0.75,
+                    "price": 0
+                  }
+                ],
+                "price": 30.0,
+                "cost": 60.0,
+                "tickets": 2,
+                "start_time": "09:00",
+                "end_time": "11:00"
+              },
+              {
+                "position": "Doorframe Alley Century Stewed Offal (Xinjiekou Branch)",
+                "type": "lunch",
+                "transports": [
+                  {
+                    "start": "Summer Palace",
+                    "end": "Beigongmen-Metro Station",
+                    "mode": "walk",
+                    "start_time": "11:00",
+                    "end_time": "11:08",
+                    "cost": 0,
+                    "distance": 0.75,
+                    "price": 0
+                  },
+                  {
+                    "start": "Beigongmen-Metro Station",
+                    "end": "Xinjiekou-Metro Station",
+                    "mode": "metro",
+                    "start_time": "11:08",
+                    "end_time": "11:28",
+                    "cost": 8,
+                    "distance": 10.3,
+                    "price": 4,
+                    "tickets": 2
+                  },
+                  {
+                    "start": "Xinjiekou-Metro Station",
+                    "end": "Doorframe Alley Century Stewed Offal (Xinjiekou Branch)",
+                    "mode": "walk",
+                    "start_time": "11:28",
+                    "end_time": "11:29",
+                    "cost": 0,
+                    "distance": 0.1,
+                    "price": 0
+                  }
+                ],
+                "price": 53,
+                "cost": 106,
+                "start_time": "12:00",
+                "end_time": "13:00"
+              },
+              {
+                "position": "798 Art District",
+                "type": "attraction",
+                "transports": [
+                  {
+                    "start": "Doorframe Alley Century Stewed Offal (Xinjiekou Branch)",
+                    "end": "Xinjiekou-Metro Station",
+                    "mode": "walk",
+                    "start_time": "13:00",
+                    "end_time": "13:01",
+                    "cost": 0,
+                    "distance": 0.1,
+                    "price": 0
+                  },
+                  {
+                    "start": "Xinjiekou-Metro Station",
+                    "end": "Wangjing South-Metro Station",
+                    "mode": "metro",
+                    "start_time": "13:01",
+                    "end_time": "13:22",
+                    "cost": 8,
+                    "distance": 10.91,
+                    "price": 4,
+                    "tickets": 2
+                  },
+                  {
+                    "start": "Wangjing South-Metro Station",
+                    "end": "798 Art District",
+                    "mode": "walk",
+                    "start_time": "13:22",
+                    "end_time": "13:43",
+                    "cost": 0,
+                    "distance": 1.79,
+                    "price": 0
+                  }
+                ],
+                "price": 0.0,
+                "cost": 0.0,
+                "tickets": 2,
+                "start_time": "14:00",
+                "end_time": "16:00"
+              },
+              {
+                "start": "Beijing Capital International Airport",
+                "end": "Hangzhou Xiaoshan International Airport",
+                "start_time": "22:21",
+                "end_time": "23:45",
+                "FlightID": "FL131",
+                "type": "airplane",
+                "transports": [
+                  {
+                    "start": "798 Art District",
+                    "end": "Wangjing South-Metro Station",
+                    "mode": "walk",
+                    "start_time": "16:00",
+                    "end_time": "16:21",
+                    "cost": 0,
+                    "distance": 1.79,
+                    "price": 0
+                  },
+                  {
+                    "start": "Wangjing South-Metro Station",
+                    "end": "Terminal 2-Metro Station",
+                    "mode": "metro",
+                    "start_time": "16:21",
+                    "end_time": "16:49",
+                    "cost": 10,
+                    "distance": 14.14,
+                    "price": 5,
+                    "tickets": 2
+                  },
+                  {
+                    "start": "Terminal 2-Metro Station",
+                    "end": "Beijing Capital International Airport",
+                    "mode": "walk",
+                    "start_time": "16:49",
+                    "end_time": "16:59",
+                    "cost": 0,
+                    "distance": 0.88,
+                    "price": 0
+                  }
+                ],
+                "price": 518.45,
+                "cost": 1036.9,
+                "tickets": 2
+              }
+            ]
+          }
+        ]
+      },
+      "verifier_errors": [],
+      "schema_errors": [],
+      "translation_failures": []
+    },
+    "environment_context": {
+      "lang": "en"
+    },
+    "generation_metadata": {
+      "raw_response": "[{\"day\": 1,```json\n{\n    \"day\": 1,\n    \"activities\": [\n        {\n            \"start_time\": \"12:41\",\n            \"end_time\": \"14:05\",\n            \"start\": \"Hangzhou Xiaoshan International Airport\",\n            \"end\": \"Beijing Capital International Airport\",\n            \"price\": 546.16,\n            \"cost\": 1092.32,\n            \"FlightID\": \"FL492\",\n            \"type\": \"airplane\",\n            \"tickets\": 2,\n            \"transports\": \"empty\"\n        },\n        {\n            \"position\": \"The Palace Museum\",\n            \"type\": \"attraction\",\n            \"transports\": {\"from\": \"Beijing Capital International Airport\", \"to\": \"The Palace Museum\", \"mode\": \"metro\", \"start_time\": \"14:05\", \"end_time\": \"15:17\", \"cost\": 12},\n            \"price\": 0.0,\n            \"cost\": 0.0,\n            \"tickets\": 2,\n            \"start_time\": \"15:30\",\n            \"end_time\": \"17:00\"\n        },\n        {\n            \"position\": \"Four Seasons Minfu Roast Duck Restaurant (Forbidden City Branch)\",\n            \"type\": \"dinner\",\n            \"transports\": {\"from\": \"The Palace Museum\", \"to\": \"Four Seasons Minfu Roast Duck Restaurant (Forbidden City Branch)\", \"mode\": \"metro\", \"start_time\": \"17:00\", \"end_time\": \"17:16\", \"cost\": 4},\n            \"price\": 180,\n            \"cost\": 360,\n            \"start_time\": \"17:30\",\n            \"end_time\": \"18:30\"\n        },\n        {\n            \"position\": \"Beijing Xinyuan Hotel\",\n            \"type\": \"accommodation\",\n            \"transports\": {\"from\": \"Four Seasons Minfu Roast Duck Restaurant (Forbidden City Branch)\", \"to\": \"Beijing Xinyuan Hotel\", \"mode\": \"metro\", \"start_time\": \"18:30\", \"end_time\": \"18:56\", \"cost\": 6},\n            \"room_type\": 2,\n            \"price\": 637,\n            \"cost\": 637,\n            \"start_time\": \"19:00\",\n            \"end_time\": \"24:00\",\n            \"rooms\": 1\n        }\n    ]\n},\n{\n    \"day\": 2,\n    \"activities\": [\n        {\n            \"position\": \"Badaling Great Wall\",\n            \"type\": \"attraction\",\n            \"transports\": {\"from\": \"Beijing Xinyuan Hotel\", \"to\": \"Badaling Great Wall\", \"mode\": \"metro\", \"start_time\": \"08:00\", \"end_time\": \"09:15\", \"cost\": 16},\n            \"price\": 40.0,\n            \"cost\": 80.0,\n            \"tickets\": 2,\n            \"start_time\": \"09:30\",\n            \"end_time\": \"12:00\"\n        },\n        {\n            \"position\": \"Huguosi Snacks (Huguosi Main Store)\",\n            \"type\": \"lunch\",\n            \"transports\": {\"from\": \"Badaling Great Wall\", \"to\": \"Huguosi Snacks (Huguosi Main Store)\", \"mode\": \"metro\", \"start_time\": \"12:00\", \"end_time\": \"13:12\", \"cost\": 16},\n            \"price\": 32,\n            \"cost\": 64,\n            \"start_time\": \"13:30\",\n            \"end_time\": \"14:30\"\n        },\n        {\n            \"position\": \"Tiananmen Square\",\n            \"type\": \"attraction\",\n            \"transports\": {\"from\": \"Huguosi Snacks (Huguosi Main Store)\", \"to\": \"Tiananmen Square\", \"mode\": \"metro\", \"start_time\": \"14:30\", \"end_time\": \"14:43\", \"cost\": 4},\n            \"price\": 0.0,\n            \"cost\": 0.0,\n            \"tickets\": 2,\n            \"start_time\": \"15:00\",\n            \"end_time\": \"16:00\"\n        },\n        {\n            \"position\": \"Beijing Quanjude (Qianmen Branch)\",\n            \"type\": \"dinner\",\n            \"transports\": {\"from\": \"Tiananmen Square\", \"to\": \"Beijing Quanjude (Qianmen Branch)\", \"mode\": \"metro\", \"start_time\": \"16:00\", \"end_time\": \"16:09\", \"cost\": 4},\n            \"price\": 184,\n            \"cost\": 368,\n            \"start_time\": \"16:30\",\n            \"end_time\": \"17:30\"\n        },\n        {\n            \"position\": \"Beijing Xinyuan Hotel\",\n            \"type\": \"accommodation\",\n            \"transports\": {\"from\": \"Beijing Quanjude (Qianmen Branch)\", \"to\": \"Beijing Xinyuan Hotel\", \"mode\": \"metro\", \"start_time\": \"17:30\", \"end_time\": \"17:49\", \"cost\": 6},\n            \"room_type\": 2,\n            \"price\": 637,\n            \"cost\": 637,\n            \"start_time\": \"18:00\",\n            \"end_time\": \"24:00\",\n            \"rooms\": 1\n        }\n    ]\n},\n{\n    \"day\": 3,\n    \"activities\": [\n        {\n            \"position\": \"Summer Palace\",\n            \"type\": \"attraction\",\n            \"transports\": {\"from\": \"Beijing Xinyuan Hotel\", \"to\": \"Summer Palace\", \"mode\": \"metro\", \"start_time\": \"08:00\", \"end_time\": \"08:32\", \"cost\": 8},\n            \"price\": 30.0,\n            \"cost\": 60.0,\n            \"tickets\": 2,\n            \"start_time\": \"09:00\",\n            \"end_time\": \"11:00\"\n        },\n        {\n            \"position\": \"Doorframe Alley Century Stewed Offal (Xinjiekou Branch)\",\n            \"type\": \"lunch\",\n            \"transports\": {\"from\": \"Summer Palace\", \"to\": \"Doorframe Alley Century Stewed Offal (Xinjiekou Branch)\", \"mode\": \"metro\", \"start_time\": \"11:00\", \"end_time\": \"11:29\", \"cost\": 8},\n            \"price\": 53,\n            \"cost\": 106,\n            \"start_time\": \"12:00\",\n            \"end_time\": \"13:00\"\n        },\n        {\n            \"position\": \"798 Art District\",\n            \"type\": \"attraction\",\n            \"transports\": {\"from\": \"Doorframe Alley Century Stewed Offal (Xinjiekou Branch)\", \"to\": \"798 Art District\", \"mode\": \"metro\", \"start_time\": \"13:00\", \"end_time\": \"13:43\", \"cost\": 8},\n            \"price\": 0.0,\n            \"cost\": 0.0,\n            \"tickets\": 2,\n            \"start_time\": \"14:00\",\n            \"end_time\": \"16:00\"\n        },\n        {\n            \"start\": \"Beijing Capital International Airport\",\n            \"end\": \"Hangzhou Xiaoshan International Airport\",\n            \"start_time\": \"22:21\",\n            \"end_time\": \"23:45\",\n            \"FlightID\": \"FL131\",\n            \"type\": \"airplane\",\n            \"transports\": {\"from\": \"798 Art District\", \"to\": \"Beijing Capital International Airport\", \"mode\": \"metro\", \"start_time\": \"16:00\", \"end_time\": \"16:59\", \"cost\": 10},\n            \"price\": 518.45,\n            \"cost\": 1036.9,\n            \"tickets\": 2\n        }\n    ]\n}\n```",
+      "input_tokens": 98127,
+      "output_tokens": 1968,
+      "total_tokens": 100095,
+      "model_calls": 6,
+      "failed_model_calls": 0,
+      "elapsed_time_seconds": 55.50690150260925,
+      "llm_inference_time_seconds": 40.97926926612854,
+      "information_collection_time_seconds": 14.52446436882019,
+      "initial_generation_time_s": 55.50857420000102,
+      "initial_generation_tool_calls": 5537,
+      "initial_generation_tool_call_counts_by_type": {
+        "accommodations_select": 1,
+        "attractions_select": 1,
+        "goto": 1800,
+        "intercity_transport_select": 4,
+        "next_page": 130,
+        "poi_lat_lon_search": 3600,
+        "restaurants_select": 1
+      },
+      "shared_initialization_time_s": 56.07636289999937,
+      "shared_initialization_system_metrics": {
+        "tool_call_count": 5622,
+        "successful_tool_call_count": 5622,
+        "failed_tool_call_count": 0,
+        "verification_count": 1,
+        "tool_call_counts_by_type": {
+          "accommodations_select": 3,
+          "attractions_select": 6,
+          "goto": 1824,
+          "intercity_transport_select": 6,
+          "next_page": 130,
+          "poi_lat_lon_search": 3648,
+          "restaurants_select": 5
+        }
+      }
+    }
+  },
+  "initial_plan_hash": "250506dab8ccfd29b58cdea781d218f3c412a6f7e13c80d35f958825f6019b0a",
+  "initial_state_hash": "8ec33b52f08101e2b650b95f33f13e059048eae9709e599a5a8f0e318d279b83"
+}
