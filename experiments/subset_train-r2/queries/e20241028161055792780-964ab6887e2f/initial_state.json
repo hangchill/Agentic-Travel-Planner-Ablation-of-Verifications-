@@ -1,0 +1,1657 @@
+{
+  "run_id": "subset_train-r2",
+  "query_uid": "e20241028161055792780",
+  "state": {
+    "query_uid": "e20241028161055792780",
+    "problem": {
+      "uid": "e20241028161055792780",
+      "tag": "medium",
+      "start_city": "Chengdu",
+      "target_city": "Nanjing",
+      "days": 2,
+      "people_number": 4,
+      "limit_rooms": true,
+      "limits_room_type": true,
+      "hard_logic_py": [
+        "result=(day_count(plan)==2)",
+        "result=(people_count(plan)==4)",
+        "total_cost=0 \nfor activity in allactivities(plan):\n    total_cost+=activity_cost(activity)\n    total_cost += innercity_transport_cost(activity_transports(activity))\nresult=(total_cost<=7400)",
+        "restaurant_type_set=set()\nfor activity in allactivities(plan):\n  if activity_type(activity) in ['breakfast', 'lunch', 'dinner']: restaurant_type_set.add(restaurant_type(activity, target_city(plan)))\nresult=({'川菜'}<=restaurant_type_set)",
+        "result=True\nfor activity in allactivities(plan):\n  if activity_type(activity) in ['attraction', 'airplane', 'train'] and activity_tickets(activity)!=4: result=False\n  if innercity_transport_type(activity_transports(activity))=='metro'and metro_tickets(activity_transports(activity))!=4: result=False",
+        "result=True\nfor activity in allactivities(plan):\n  if activity_type(activity)=='accommodation' and room_count(activity)!=2: result=False",
+        "result=True\nfor activity in allactivities(plan):\n  if activity_type(activity)=='accommodation' and room_type(activity)!=2: result=False",
+        "result=True\nfor activity in allactivities(plan):\n  if innercity_transport_type(activity_transports(activity))=='taxi'and taxi_cars(activity_transports(activity))!=1: result=False"
+      ],
+      "nature_language": "Current location: Chengdu. Four of us are planning to visit Nanjing for two days, with a budget not exceeding 7,400 RMB. We want to eat Sichuan cuisine and book two twin rooms. Please provide me with a travel plan.",
+      "nature_language_en": "Current location: Chengdu. Four of us are planning to visit Nanjing for two days, with a budget not exceeding 7,400 RMB. We want to eat Sichuan cuisine and book two twin rooms. Please provide me with a travel plan."
+    },
+    "raw_initial_plan": [
+      {
+        "day": 1,
+        "activities": [
+          {
+            "start_time": "07:13",
+            "end_time": "18:14",
+            "start": "Chengdu East Railway Station",
+            "end": "Nanjing South Railway Station",
+            "price": 915.14,
+            "cost": 3660.56,
+            "TrainID": "G1475",
+            "type": "train",
+            "tickets": 4,
+            "transports": "empty"
+          },
+          {
+            "position": "Nanjing Zhongshan Hotel (Jiangsu Conference Center)",
+            "type": "accommodation",
+            "transports": {
+              "from": "Nanjing South Railway Station",
+              "to": "Nanjing Zhongshan Hotel (Jiangsu Conference Center)",
+              "mode": "metro",
+              "start_time": "18:14",
+              "end_time": "18:26",
+              "cost": 2
+            },
+            "room_type": 2,
+            "price": 369,
+            "cost": 738,
+            "start_time": "18:30",
+            "end_time": "24:00",
+            "rooms": 2
+          },
+          {
+            "position": "Sichuan Restaurant (Taiping South Road Branch)",
+            "type": "dinner",
+            "transports": {
+              "from": "Nanjing Zhongshan Hotel (Jiangsu Conference Center)",
+              "to": "Sichuan Restaurant (Taiping South Road Branch)",
+              "mode": "metro",
+              "start_time": "18:30",
+              "end_time": "18:42",
+              "cost": 2
+            },
+            "price": 55,
+            "cost": 220,
+            "start_time": "19:00",
+            "end_time": "20:00"
+          }
+        ]
+      },
+      {
+        "day": 2,
+        "activities": [
+          {
+            "position": "Nanjing Museum",
+            "type": "attraction",
+            "transports": {
+              "from": "Nanjing Zhongshan Hotel (Jiangsu Conference Center)",
+              "to": "Nanjing Museum",
+              "mode": "metro",
+              "start_time": "08:00",
+              "end_time": "08:20",
+              "cost": 2
+            },
+            "price": 0.0,
+            "cost": 0.0,
+            "tickets": 4,
+            "start_time": "08:30",
+            "end_time": "10:00"
+          },
+          {
+            "position": "Chengdu Baby Garden Restaurant & Lounge",
+            "type": "lunch",
+            "transports": {
+              "from": "Nanjing Museum",
+              "to": "Chengdu Baby Garden Restaurant & Lounge",
+              "mode": "metro",
+              "start_time": "10:00",
+              "end_time": "10:25",
+              "cost": 2
+            },
+            "price": 119,
+            "cost": 476,
+            "start_time": "12:00",
+            "end_time": "13:00"
+          },
+          {
+            "position": "Confucius Temple",
+            "type": "attraction",
+            "transports": {
+              "from": "Chengdu Baby Garden Restaurant & Lounge",
+              "to": "Confucius Temple",
+              "mode": "metro",
+              "start_time": "13:00",
+              "end_time": "13:18",
+              "cost": 2
+            },
+            "price": 0.0,
+            "cost": 0.0,
+            "tickets": 4,
+            "start_time": "13:30",
+            "end_time": "15:00"
+          },
+          {
+            "position": "Qinhuai River Painted Boat",
+            "type": "attraction",
+            "transports": {
+              "from": "Confucius Temple",
+              "to": "Qinhuai River Painted Boat",
+              "mode": "walk",
+              "start_time": "15:00",
+              "end_time": "15:01",
+              "cost": 0
+            },
+            "price": 100.0,
+            "cost": 400.0,
+            "tickets": 4,
+            "start_time": "15:10",
+            "end_time": "16:10"
+          },
+          {
+            "position": "Chongqing Frog Restaurant (Changjiang Garden Branch)",
+            "type": "dinner",
+            "transports": {
+              "from": "Qinhuai River Painted Boat",
+              "to": "Chongqing Frog Restaurant (Changjiang Garden Branch)",
+              "mode": "metro",
+              "start_time": "16:10",
+              "end_time": "16:33",
+              "cost": 3
+            },
+            "price": 102,
+            "cost": 408,
+            "start_time": "17:00",
+            "end_time": "18:00"
+          },
+          {
+            "start": "Nanjing South Railway Station",
+            "end": "Chengdu East Railway Station",
+            "start_time": "20:02",
+            "end_time": "23:18",
+            "TrainID": "G28",
+            "type": "train",
+            "transports": {
+              "from": "Chongqing Frog Restaurant (Changjiang Garden Branch)",
+              "to": "Nanjing South Railway Station",
+              "mode": "metro",
+              "start_time": "18:00",
+              "end_time": "18:26",
+              "cost": 3
+            },
+            "price": 844.74,
+            "cost": 3378.96,
+            "tickets": 4
+          }
+        ]
+      }
+    ],
+    "repair_context": {
+      "go_train_info": "TrainID\tTrainType\tFrom\tTo\tBeginTime\tEndTime\tDuration\tprice\r\nG1475\tHigh-speed rail\tChengdu East Railway Station\tNanjing South Railway Station\t07:13\t18:14\t11.02\t915.14\r\nG1976\tHigh-speed rail\tChengdu East Railway Station\tNanjing South Railway Station\t11:01\t20:55\t10.03\t915.14\r\n",
+      "go_flight_info": "FlightID\tFrom\tTo\tBeginTime\tEndTime\tDuration\tprice\r\nFL476\tChengdu Shuangliu International Airport\tNanjing Lukou International Airport\t07:54\t09:39\t1.76\t656.91\r\nFL477\tChengdu Tianfu International Airport\tNanjing Lukou International Airport\t09:50\t11:35\t1.76\t656.61\r\nFL475\tChengdu Shuangliu International Airport\tNanjing Lukou International Airport\t13:20\t15:05\t1.76\t662.57\r\n",
+      "back_train_info": "TrainID\tTrainType\tFrom\tTo\tBeginTime\tEndTime\tDuration\tprice\r\nG1974\tHigh-speed rail\tNanjing South Railway Station\tChengdu East Railway Station\t08:46\t18:28\t9.8\t915.14\r\nG1476\tHigh-speed rail\tNanjing South Railway Station\tChengdu East Railway Station\t11:32\t22:25\t10.93\t915.14\r\nD953\tEMU (Electric Multiple Unit)\tNanjing South Railway Station\tChengdu East Railway Station\t10:14\t20:52\t10.67\t844.74\r\nD2222\tEMU (Electric Multiple Unit)\tNanjing South Railway Station\tChengdu East Railway Station\t09:49\t21:58\t12.22\t844.74\r\n",
+      "back_flight_info": "FlightID\tFrom\tTo\tBeginTime\tEndTime\tDuration\tprice\r\nFL692\tNanjing Lukou International Airport\tChengdu Shuangliu International Airport\t17:30\t19:15\t1.76\t662.51\r\n",
+      "attraction_info": "name\ttype\tlat\tlon\topentime\tendtime\tprice\trecommendmintime\trecommendmaxtime\r\nConfucius Temple\tCultural Tourism Area\t32.026937\t118.795273\t00:00\t24:00\t0.0\t1.0\t2.5\r\nMing Xiaoling Mausoleum\thistorical site\t32.052625\t118.841221\t06:30\t18:30\t65.0\t3.0\t4.0\r\nNanjing Museum\tMuseum/Memorial Hall\t32.046791\t118.831617\t09:00\t17:00\t0.0\t1.5\t3.0\r\nSun Yat-sen Mausoleum Scenic Area\tRed tourism sites\t32.060275\t118.86104\t08:00\t17:00\t0.0\t1.5\t3.0\r\nQinhuai River Painted Boat\tCultural Tourism Area\t32.026295\t118.796311\t09:00\t22:00\t100.0\t1.0\t1.5\r\nXuanwu Lake Scenic Area\tpark\t32.079619\t118.803872\t00:00\t24:00\t0.0\t2.0\t3.0\r\nNanjing Presidential Palace\thistorical site\t32.050564\t118.803834\t08:30\t18:00\t0.0\t3.0\t4.0\r\nZhongshan Scenic Area\tnatural scenery\t32.069291\t118.859406\t00:00\t24:00\t0.0\t0.5\t1.0\r\nQixia Mountain\tnatural scenery\t32.163868\t118.976369\t07:00\t17:00\t47.0\t2.0\t3.0\r\nNanjing City Wall\thistorical site\t32.068991\t118.802812\t08:30\t17:00\t0.0\t2.5\t3.0\r\nConfucius Temple and Qinhuai River Scenic Area\tCultural Tourism Area\t32.026208\t118.795961\t00:00\t24:00\t0.0\t1.0\t2.5\r\nHongshan Forest Zoo\tAmusement Park/Sports Entertainment\t32.098132\t118.808087\t08:30\t16:30\t39.0\t2.5\t3.0\r\nGreat Bao'en Temple Ruins Scenic Area\thistorical site\t32.015453\t118.789543\t08:30\t19:30\t87.0\t2.0\t2.5\r\nTaiping Heavenly Kingdom History Museum (Zhan Garden)\tMuseum/Memorial Hall\t32.027215\t118.791411\t08:30\t17:00\t27.0\t2.0\t3.5\r\nSix Dynasties Museum\tMuseum/Memorial Hall\t32.04937\t118.805632\t09:00\t17:30\t27.0\t3.0\t4.0\r\n",
+      "restaurant_info": "name\tlat\tlon\tprice\tcuisine\topentime\tendtime\trecommendedfood\r\nSichuan Restaurant (Taiping South Road Branch)\t32.0366746\t118.7936397\t55.0\tSichuan cuisine\t06:00\t20:00\tFish-fragrant shredded pork, Mapo tofu rice, Sour soup fish slices, Squirrel-shaped mandarin fish, Mao Xue Wang (duck blood and tripe stew), Kung Pao chicken\r\nChengdu Baby Garden Restaurant & Lounge\t32.055745\t118.7750086\t119.0\tSichuan cuisine\t11:00\t20:30\tBoss's Beef, Brown Sugar Glutinous Rice Cake, Spicy Chicken, Dan Dan Noodles, Lemon Lotus Root Slices, White Celery Stir-fried with Dried Tofu, Sichuan Pepper Boiled Fish, Passionate Fish and Frog Love, Numbing Pepper and Agastache Fish, Boiled Duck Tongues\r\nUncle Liu's Fragrant Frog Restaurant\t31.9438275\t118.7883675\t75.0\tSichuan cuisine\t11:00\t23:30\tRecommended dishes\r\nFirst Step Tavern (Shuiyoucheng Branch)\t32.0240486\t118.7864437\t85.0\tSichuan cuisine\t11:00\t21:30\tRecommended dishes\r\nChongqing Frog Restaurant (Changjiang Garden Branch)\t32.0469194\t118.7866053\t102.0\tSichuan cuisine\t10:30\t03:00\tRecommended dishes\r\n",
+      "accommodation_info": "name\tfeaturehoteltype\tlat\tlon\tprice\tnumbed\r\nHoliday Inn Express Nanjing Jiangbei Wonhall Mall, an IHG Hotel\tGreat view from the window\t32.062755\t118.657286\t349\t2\r\nNanjing Zhongshan Hotel (Jiangsu Conference Center)\tSwimming Pool\t32.040498\t118.811714\t369\t2\r\nDingye New Century Hotel Nanjing\tSwimming Pool\t32.060854\t118.631036\t378\t2\r\n",
+      "innercity_transport_info": "from Qixia Mountain to Qixia Mountain:  metro: empty.  taxi: empty.  walk: empty. \nfrom Qixia Mountain to Nanjing City Wall: metro: duration 151, cost 28. taxi: duration 45, cost 130.31. walk: duration 361, cost 0.0. \nfrom Qixia Mountain to Chengdu Baby Garden Restaurant & Lounge: metro: duration 101, cost 24. taxi: duration 33, cost 95.82. walk: duration 269, cost 0.0. \nfrom Qixia Mountain to Confucius Temple: metro: duration 104, cost 24. taxi: duration 34, cost 97.59. walk: duration 274, cost 0.0. \nfrom Qixia Mountain to Holiday Inn Express Nanjing Jiangbei Wonhall Mall, an IHG Hotel: metro: duration 119, cost 28. taxi: duration 48, cost 139.3. walk: duration 385, cost 0.0. \nfrom Qixia Mountain to Six Dynasties Museum: metro: duration 102, cost 20. taxi: duration 30, cost 87.02. walk: duration 246, cost 0.0. \nfrom Qixia Mountain to Uncle Liu's Fragrant Frog Restaurant: metro: duration 114, cost 28. taxi: duration 45, cost 130.49. walk: duration 362, cost 0.0. \nfrom Qixia Mountain to Great Bao'en Temple Ruins Scenic Area: metro: duration 104, cost 24. taxi: duration 36, cost 103.25. walk: duration 289, cost 0.0. \nfrom Qixia Mountain to Chongqing Frog Restaurant (Changjiang Garden Branch): metro: duration 102, cost 24. taxi: duration 33, cost 94.21. walk: duration 265, cost 0.0. \nfrom Qixia Mountain to Confucius Temple and Qinhuai River Scenic Area: metro: duration 104, cost 24. taxi: duration 34, cost 97.61. walk: duration 274, cost 0.0. \nfrom Qixia Mountain to Sichuan Restaurant (Taiping South Road Branch): metro: duration 100, cost 24. taxi: duration 33, cost 94.96. walk: duration 267, cost 0.0. \nfrom Qixia Mountain to Nanjing Lukou International Airport: metro: duration 147, cost 32. taxi: duration 73, cost 215.05. walk: duration 587, cost 0.0. \nfrom Qixia Mountain to Dingye New Century Hotel Nanjing: metro: duration 130, cost 28. taxi: duration 51, cost 150.11. walk: duration 414, cost 0.0. \nfrom Qixia Mountain to Nanjing South Railway Station: metro: duration 107, cost 24. taxi: duration 41, cost 117.93. walk: duration 328, cost 0.0. \nfrom Qixia Mountain to Nanjing Museum: metro: duration 98, cost 20. taxi: duration 28, cost 79.51. walk: duration 226, cost 0.0. \nfrom Qixia Mountain to First Step Tavern (Shuiyoucheng Branch): metro: duration 103, cost 24. taxi: duration 35, cost 101.36. walk: duration 284, cost 0.0. \nfrom Qixia Mountain to Hongshan Forest Zoo: metro: duration 94, cost 20. taxi: duration 26, cost 73.32. walk: duration 209, cost 0.0. \nfrom Qixia Mountain to Ming Xiaoling Mausoleum: metro: duration 106, cost 20. taxi: duration 26, cost 74.55. walk: duration 212, cost 0.0. \nfrom Qixia Mountain to Sun Yat-sen Mausoleum Scenic Area: metro: duration 113, cost 20. taxi: duration 23, cost 65.91. walk: duration 189, cost 0.0. \nfrom Qixia Mountain to Nanjing Presidential Palace: metro: duration 103, cost 20. taxi: duration 30, cost 87.26. walk: duration 246, cost 0.0. \nfrom Qixia Mountain to Nanjing Zhongshan Hotel (Jiangsu Conference Center): metro: duration 99, cost 20. taxi: duration 31, cost 87.87. walk: duration 248, cost 0.0. \nfrom Qixia Mountain to Taiping Heavenly Kingdom History Museum (Zhan Garden): metro: duration 102, cost 24. taxi: duration 34, cost 98.73. walk: duration 277, cost 0.0. \nfrom Qixia Mountain to Qinhuai River Painted Boat: metro: duration 104, cost 24. taxi: duration 34, cost 97.47. walk: duration 274, cost 0.0. \nfrom Qixia Mountain to Zhongshan Scenic Area: metro: duration 116, cost 20. taxi: duration 22, cost 63.22. walk: duration 182, cost 0.0. \nfrom Qixia Mountain to Xuanwu Lake Scenic Area: metro: duration 98, cost 20. taxi: duration 28, cost 79.16. walk: duration 225, cost 0.0. \nfrom Nanjing City Wall to Qixia Mountain: metro: duration 151, cost 28. taxi: duration 45, cost 130.31. walk: duration 361, cost 0.0. \nfrom Nanjing City Wall to Nanjing City Wall:  metro: empty.  taxi: empty.  walk: empty. \nfrom Nanjing City Wall to Chengdu Baby Garden Restaurant & Lounge: metro: duration 70, cost 20. taxi: duration 21, cost 59.28. walk: duration 172, cost 0.0. \nfrom Nanjing City Wall to Confucius Temple: metro: duration 80, cost 20. taxi: duration 26, cost 75.3. walk: duration 214, cost 0.0. \nfrom Nanjing City Wall to Holiday Inn Express Nanjing Jiangbei Wonhall Mall, an IHG Hotel: metro: duration 59, cost 16. taxi: duration 12, cost 34.18. walk: duration 101, cost 0.0. \nfrom Nanjing City Wall to Six Dynasties Museum: metro: duration 80, cost 20. taxi: duration 25, cost 71.54. walk: duration 204, cost 0.0. \nfrom Nanjing City Wall to Uncle Liu's Fragrant Frog Restaurant: metro: duration 93, cost 24. taxi: duration 37, cost 106.55. walk: duration 298, cost 0.0. \nfrom Nanjing City Wall to Great Bao'en Temple Ruins Scenic Area: metro: duration 82, cost 20. taxi: duration 27, cost 77.71. walk: duration 221, cost 0.0. \nfrom Nanjing City Wall to Chongqing Frog Restaurant (Changjiang Garden Branch): metro: duration 74, cost 20. taxi: duration 23, cost 65.89. walk: duration 189, cost 0.0. \nfrom Nanjing City Wall to Confucius Temple and Qinhuai River Scenic Area: metro: duration 80, cost 20. taxi: duration 27, cost 75.76. walk: duration 216, cost 0.0. \nfrom Nanjing City Wall to Sichuan Restaurant (Taiping South Road Branch): metro: duration 76, cost 20. taxi: duration 25, cost 71.49. walk: duration 204, cost 0.0. \nfrom Nanjing City Wall to Nanjing Lukou International Airport: metro: duration 142, cost 36. taxi: duration 74, cost 217.16. walk: duration 593, cost 0.0. \nfrom Nanjing City Wall to Dingye New Century Hotel Nanjing: metro: duration 67, cost 16. taxi: duration 13, cost 36.23. walk: duration 108, cost 0.0. \nfrom Nanjing City Wall to Nanjing South Railway Station: metro: duration 87, cost 24. taxi: duration 34, cost 98.33. walk: duration 276, cost 0.0. \nfrom Nanjing City Wall to Nanjing Museum: metro: duration 86, cost 20. taxi: duration 28, cost 81.44. walk: duration 231, cost 0.0. \nfrom Nanjing City Wall to First Step Tavern (Shuiyoucheng Branch): metro: duration 79, cost 20. taxi: duration 26, cost 73.67. walk: duration 210, cost 0.0. \nfrom Nanjing City Wall to Hongshan Forest Zoo: metro: duration 71, cost 20. taxi: duration 22, cost 61.45. walk: duration 178, cost 0.0. \nfrom Nanjing City Wall to Ming Xiaoling Mausoleum: metro: duration 94, cost 20. taxi: duration 29, cost 83.48. walk: duration 236, cost 0.0. \nfrom Nanjing City Wall to Sun Yat-sen Mausoleum Scenic Area: metro: duration 111, cost 24. taxi: duration 31, cost 89.29. walk: duration 252, cost 0.0. \nfrom Nanjing City Wall to Nanjing Presidential Palace: metro: duration 79, cost 20. taxi: duration 25, cost 70.57. walk: duration 202, cost 0.0. \nfrom Nanjing City Wall to Nanjing Zhongshan Hotel (Jiangsu Conference Center): metro: duration 79, cost 20. taxi: duration 27, cost 76.24. walk: duration 217, cost 0.0. \nfrom Nanjing City Wall to Taiping Heavenly Kingdom History Museum (Zhan Garden): metro: duration 78, cost 20. taxi: duration 26, cost 74.03. walk: duration 211, cost 0.0. \nfrom Nanjing City Wall to Qinhuai River Painted Boat: metro: duration 80, cost 20. taxi: duration 27, cost 75.84. walk: duration 216, cost 0.0. \nfrom Nanjing City Wall to Zhongshan Scenic Area: metro: duration 103, cost 20. taxi: duration 30, cost 86.87. walk: duration 245, cost 0.0. \nfrom Nanjing City Wall to Xuanwu Lake Scenic Area: metro: duration 76, cost 20. taxi: duration 22, cost 63.2. walk: duration 182, cost 0.0. \nfrom Chengdu Baby Garden Restaurant & Lounge to Qixia Mountain: metro: duration 101, cost 24. taxi: duration 33, cost 95.82. walk: duration 269, cost 0.0. \nfrom Chengdu Baby Garden Restaurant & Lounge to Nanjing City Wall: metro: duration 70, cost 20. taxi: duration 21, cost 59.28. walk: duration 172, cost 0.0. \nfrom Chengdu Baby Garden Restaurant & Lounge to Chengdu Baby Garden Restaurant & Lounge:  metro: empty.  taxi: empty.  walk: empty. \nfrom Chengdu Baby Garden Restaurant & Lounge to Confucius Temple: metro: duration 18, cost 12. taxi: duration 5, cost 17.73. walk: duration 44, cost 0.0. \nfrom Chengdu Baby Garden Restaurant & Lounge to Holiday Inn Express Nanjing Jiangbei Wonhall Mall, an IHG Hotel: metro: duration 27, cost 16. taxi: duration 16, cost 44.85. walk: duration 133, cost 0.0. \nfrom Chengdu Baby Garden Restaurant & Lounge to Six Dynasties Museum: metro: duration 19, cost 8. taxi: duration 4, cost 15.12. walk: duration 35, cost 0.0. \nfrom Chengdu Baby Garden Restaurant & Lounge to Uncle Liu's Fragrant Frog Restaurant: metro: duration 33, cost 16. taxi: duration 18, cost 50.83. walk: duration 149, cost 0.0. \nfrom Chengdu Baby Garden Restaurant & Lounge to Great Bao'en Temple Ruins Scenic Area: metro: duration 20, cost 12. taxi: duration 7, cost 21.06. walk: duration 56, cost 0.0. \nfrom Chengdu Baby Garden Restaurant & Lounge to Chongqing Frog Restaurant (Changjiang Garden Branch): metro: duration 12, cost 8. taxi: duration 2, cost 11.0. walk: duration 17, cost 0.0. \nfrom Chengdu Baby Garden Restaurant & Lounge to Confucius Temple and Qinhuai River Scenic Area: metro: duration 18, cost 12. taxi: duration 5, cost 18.09. walk: duration 45, cost 0.0. \nfrom Chengdu Baby Garden Restaurant & Lounge to Sichuan Restaurant (Taiping South Road Branch): metro: duration 14, cost 8. taxi: duration 4, cost 14.33. walk: duration 33, cost 0.0. \nfrom Chengdu Baby Garden Restaurant & Lounge to Nanjing Lukou International Airport: metro: duration 82, cost 32. taxi: duration 55, cost 161.6. walk: duration 445, cost 0.0. \nfrom Chengdu Baby Garden Restaurant & Lounge to Dingye New Century Hotel Nanjing: metro: duration 37, cost 16. taxi: duration 20, cost 55.93. walk: duration 163, cost 0.0. \nfrom Chengdu Baby Garden Restaurant & Lounge to Nanjing South Railway Station: metro: duration 26, cost 16. taxi: duration 14, cost 39.33. walk: duration 118, cost 0.0. \nfrom Chengdu Baby Garden Restaurant & Lounge to Nanjing Museum: metro: duration 25, cost 12. taxi: duration 8, cost 23.73. walk: duration 65, cost 0.0. \nfrom Chengdu Baby Garden Restaurant & Lounge to First Step Tavern (Shuiyoucheng Branch): metro: duration 17, cost 12. taxi: duration 5, cost 17.57. walk: duration 44, cost 0.0. \nfrom Chengdu Baby Garden Restaurant & Lounge to Hongshan Forest Zoo: metro: duration 21, cost 12. taxi: duration 8, cost 24.45. walk: duration 67, cost 0.0. \nfrom Chengdu Baby Garden Restaurant & Lounge to Ming Xiaoling Mausoleum: metro: duration 33, cost 12. taxi: duration 9, cost 26.62. walk: duration 75, cost 0.0. \nfrom Chengdu Baby Garden Restaurant & Lounge to Sun Yat-sen Mausoleum Scenic Area: metro: duration 51, cost 16. taxi: duration 12, cost 33.19. walk: duration 97, cost 0.0. \nfrom Chengdu Baby Garden Restaurant & Lounge to Nanjing Presidential Palace: metro: duration 17, cost 8. taxi: duration 4, cost 14.44. walk: duration 33, cost 0.0. \nfrom Chengdu Baby Garden Restaurant & Lounge to Nanjing Zhongshan Hotel (Jiangsu Conference Center): metro: duration 17, cost 8. taxi: duration 5, cost 18.2. walk: duration 46, cost 0.0. \nfrom Chengdu Baby Garden Restaurant & Lounge to Taiping Heavenly Kingdom History Museum (Zhan Garden): metro: duration 16, cost 12. taxi: duration 5, cost 17.03. walk: duration 42, cost 0.0. \nfrom Chengdu Baby Garden Restaurant & Lounge to Qinhuai River Painted Boat: metro: duration 18, cost 12. taxi: duration 5, cost 18.12. walk: duration 46, cost 0.0. \nfrom Chengdu Baby Garden Restaurant & Lounge to Zhongshan Scenic Area: metro: duration 49, cost 12. taxi: duration 12, cost 33.08. walk: duration 97, cost 0.0. \nfrom Chengdu Baby Garden Restaurant & Lounge to Xuanwu Lake Scenic Area: metro: duration 19, cost 8. taxi: duration 5, cost 18.0. walk: duration 45, cost 0.0. \nfrom Confucius Temple to Qixia Mountain: metro: duration 104, cost 24. taxi: duration 34, cost 97.59. walk: duration 274, cost 0.0. \nfrom Confucius Temple to Nanjing City Wall: metro: duration 80, cost 20. taxi: duration 26, cost 75.3. walk: duration 214, cost 0.0. \nfrom Confucius Temple to Chengdu Baby Garden Restaurant & Lounge: metro: duration 18, cost 12. taxi: duration 5, cost 17.73. walk: duration 44, cost 0.0. \nfrom Confucius Temple to Confucius Temple:  metro: empty.  taxi: empty.  walk: empty. \nfrom Confucius Temple to Holiday Inn Express Nanjing Jiangbei Wonhall Mall, an IHG Hotel: metro: duration 33, cost 16. taxi: duration 20, cost 56.01. walk: duration 163, cost 0.0. \nfrom Confucius Temple to Six Dynasties Museum: metro: duration 23, cost 8. taxi: duration 4, cost 14.06. walk: duration 32, cost 0.0. \nfrom Confucius Temple to Uncle Liu's Fragrant Frog Restaurant: metro: duration 28, cost 16. taxi: duration 13, cost 37.04. walk: duration 110, cost 0.0. \nfrom Confucius Temple to Great Bao'en Temple Ruins Scenic Area: metro: duration 14, cost 8. taxi: duration 2, cost 11.0. walk: duration 16, cost 0.0. \nfrom Confucius Temple to Chongqing Frog Restaurant (Changjiang Garden Branch): metro: duration 18, cost 8. taxi: duration 3, cost 12.97. walk: duration 28, cost 0.0. \nfrom Confucius Temple to Confucius Temple and Qinhuai River Scenic Area: taxi: duration 0, cost 11.0. walk: duration 1, cost 0.0. \nfrom Confucius Temple to Sichuan Restaurant (Taiping South Road Branch): metro: duration 12, cost 8. taxi: duration 1, cost 11.0. walk: duration 13, cost 0.0. \nfrom Confucius Temple to Nanjing Lukou International Airport: metro: duration 76, cost 28. taxi: duration 50, cost 145.62. walk: duration 402, cost 0.0. \nfrom Confucius Temple to Dingye New Century Hotel Nanjing: metro: duration 43, cost 20. taxi: duration 23, cost 66.53. walk: duration 191, cost 0.0. \nfrom Confucius Temple to Nanjing South Railway Station: metro: duration 20, cost 12. taxi: duration 9, cost 27.29. walk: duration 77, cost 0.0. \nfrom Confucius Temple to Nanjing Museum: metro: duration 24, cost 12. taxi: duration 6, cost 18.97. walk: duration 48, cost 0.0. \nfrom Confucius Temple to First Step Tavern (Shuiyoucheng Branch): taxi: duration 1, cost 11.0. walk: duration 10, cost 0.0. \nfrom Confucius Temple to Hongshan Forest Zoo: metro: duration 29, cost 12. taxi: duration 11, cost 32.65. walk: duration 95, cost 0.0. \nfrom Confucius Temple to Ming Xiaoling Mausoleum: metro: duration 32, cost 12. taxi: duration 7, cost 22.87. walk: duration 62, cost 0.0. \nfrom Confucius Temple to Sun Yat-sen Mausoleum Scenic Area: metro: duration 50, cost 12. taxi: duration 10, cost 30.0. walk: duration 86, cost 0.0. \nfrom Confucius Temple to Nanjing Presidential Palace: metro: duration 20, cost 8. taxi: duration 4, cost 14.3. walk: duration 32, cost 0.0. \nfrom Confucius Temple to Nanjing Zhongshan Hotel (Jiangsu Conference Center): metro: duration 16, cost 8. taxi: duration 3, cost 12.27. walk: duration 25, cost 0.0. \nfrom Confucius Temple to Taiping Heavenly Kingdom History Museum (Zhan Garden): taxi: duration 0, cost 11.0. walk: duration 4, cost 0.0. \nfrom Confucius Temple to Qinhuai River Painted Boat: taxi: duration 0, cost 11.0. walk: duration 1, cost 0.0. \nfrom Confucius Temple to Zhongshan Scenic Area: metro: duration 54, cost 12. taxi: duration 11, cost 31.53. walk: duration 91, cost 0.0. \nfrom Confucius Temple to Xuanwu Lake Scenic Area: metro: duration 26, cost 12. taxi: duration 8, cost 25.34. walk: duration 70, cost 0.0. \nfrom Holiday Inn Express Nanjing Jiangbei Wonhall Mall, an IHG Hotel to Qixia Mountain: metro: duration 119, cost 28. taxi: duration 48, cost 139.3. walk: duration 385, cost 0.0. \nfrom Holiday Inn Express Nanjing Jiangbei Wonhall Mall, an IHG Hotel to Nanjing City Wall: metro: duration 59, cost 16. taxi: duration 12, cost 34.18. walk: duration 101, cost 0.0. \nfrom Holiday Inn Express Nanjing Jiangbei Wonhall Mall, an IHG Hotel to Chengdu Baby Garden Restaurant & Lounge: metro: duration 27, cost 16. taxi: duration 16, cost 44.85. walk: duration 133, cost 0.0. \nfrom Holiday Inn Express Nanjing Jiangbei Wonhall Mall, an IHG Hotel to Confucius Temple: metro: duration 33, cost 16. taxi: duration 20, cost 56.01. walk: duration 163, cost 0.0. \nfrom Holiday Inn Express Nanjing Jiangbei Wonhall Mall, an IHG Hotel to Holiday Inn Express Nanjing Jiangbei Wonhall Mall, an IHG Hotel:  metro: empty.  taxi: empty.  walk: empty. \nfrom Holiday Inn Express Nanjing Jiangbei Wonhall Mall, an IHG Hotel to Six Dynasties Museum: metro: duration 39, cost 20. taxi: duration 21, cost 58.09. walk: duration 169, cost 0.0. \nfrom Holiday Inn Express Nanjing Jiangbei Wonhall Mall, an IHG Hotel to Uncle Liu's Fragrant Frog Restaurant: metro: duration 40, cost 20. taxi: duration 27, cost 76.11. walk: duration 217, cost 0.0. \nfrom Holiday Inn Express Nanjing Jiangbei Wonhall Mall, an IHG Hotel to Great Bao'en Temple Ruins Scenic Area: metro: duration 35, cost 20. taxi: duration 20, cost 55.67. walk: duration 162, cost 0.0. \nfrom Holiday Inn Express Nanjing Jiangbei Wonhall Mall, an IHG Hotel to Chongqing Frog Restaurant (Changjiang Garden Branch): metro: duration 31, cost 16. taxi: duration 18, cost 50.22. walk: duration 148, cost 0.0. \nfrom Holiday Inn Express Nanjing Jiangbei Wonhall Mall, an IHG Hotel to Confucius Temple and Qinhuai River Scenic Area: metro: duration 33, cost 16. taxi: duration 20, cost 56.4. walk: duration 164, cost 0.0. \nfrom Holiday Inn Express Nanjing Jiangbei Wonhall Mall, an IHG Hotel to Sichuan Restaurant (Taiping South Road Branch): metro: duration 31, cost 16. taxi: duration 19, cost 54.09. walk: duration 158, cost 0.0. \nfrom Holiday Inn Express Nanjing Jiangbei Wonhall Mall, an IHG Hotel to Nanjing Lukou International Airport: metro: duration 88, cost 32. taxi: duration 62, cost 183.41. walk: duration 503, cost 0.0. \nfrom Holiday Inn Express Nanjing Jiangbei Wonhall Mall, an IHG Hotel to Dingye New Century Hotel Nanjing: metro: duration 12, cost 8. taxi: duration 3, cost 13.41. walk: duration 29, cost 0.0. \nfrom Holiday Inn Express Nanjing Jiangbei Wonhall Mall, an IHG Hotel to Nanjing South Railway Station: metro: duration 37, cost 20. taxi: duration 25, cost 70.89. walk: duration 203, cost 0.0. \nfrom Holiday Inn Express Nanjing Jiangbei Wonhall Mall, an IHG Hotel to Nanjing Museum: metro: duration 43, cost 20. taxi: duration 24, cost 69.21. walk: duration 198, cost 0.0. \nfrom Holiday Inn Express Nanjing Jiangbei Wonhall Mall, an IHG Hotel to First Step Tavern (Shuiyoucheng Branch): metro: duration 32, cost 16. taxi: duration 19, cost 52.89. walk: duration 155, cost 0.0. \nfrom Holiday Inn Express Nanjing Jiangbei Wonhall Mall, an IHG Hotel to Hongshan Forest Zoo: metro: duration 37, cost 20. taxi: duration 22, cost 61.15. walk: duration 177, cost 0.0. \nfrom Holiday Inn Express Nanjing Jiangbei Wonhall Mall, an IHG Hotel to Ming Xiaoling Mausoleum: metro: duration 51, cost 20. taxi: duration 26, cost 73.03. walk: duration 208, cost 0.0. \nfrom Holiday Inn Express Nanjing Jiangbei Wonhall Mall, an IHG Hotel to Sun Yat-sen Mausoleum Scenic Area: metro: duration 70, cost 20. taxi: duration 28, cost 81.29. walk: duration 230, cost 0.0. \nfrom Holiday Inn Express Nanjing Jiangbei Wonhall Mall, an IHG Hotel to Nanjing Presidential Palace: metro: duration 36, cost 16. taxi: duration 20, cost 57.27. walk: duration 166, cost 0.0. \nfrom Holiday Inn Express Nanjing Jiangbei Wonhall Mall, an IHG Hotel to Nanjing Zhongshan Hotel (Jiangsu Conference Center): metro: duration 35, cost 20. taxi: duration 22, cost 61.26. walk: duration 177, cost 0.0. \nfrom Holiday Inn Express Nanjing Jiangbei Wonhall Mall, an IHG Hotel to Taiping Heavenly Kingdom History Museum (Zhan Garden): metro: duration 31, cost 16. taxi: duration 19, cost 54.4. walk: duration 159, cost 0.0. \nfrom Holiday Inn Express Nanjing Jiangbei Wonhall Mall, an IHG Hotel to Qinhuai River Painted Boat: metro: duration 33, cost 16. taxi: duration 20, cost 56.52. walk: duration 164, cost 0.0. \nfrom Holiday Inn Express Nanjing Jiangbei Wonhall Mall, an IHG Hotel to Zhongshan Scenic Area: metro: duration 67, cost 20. taxi: duration 28, cost 80.65. walk: duration 229, cost 0.0. \nfrom Holiday Inn Express Nanjing Jiangbei Wonhall Mall, an IHG Hotel to Xuanwu Lake Scenic Area: metro: duration 38, cost 20. taxi: duration 20, cost 57.55. walk: duration 167, cost 0.0. \nfrom Six Dynasties Museum to Qixia Mountain: metro: duration 102, cost 20. taxi: duration 30, cost 87.02. walk: duration 246, cost 0.0. \nfrom Six Dynasties Museum to Nanjing City Wall: metro: duration 80, cost 20. taxi: duration 25, cost 71.54. walk: duration 204, cost 0.0. \nfrom Six Dynasties Museum to Chengdu Baby Garden Restaurant & Lounge: metro: duration 19, cost 8. taxi: duration 4, cost 15.12. walk: duration 35, cost 0.0. \nfrom Six Dynasties Museum to Confucius Temple: metro: duration 23, cost 8. taxi: duration 4, cost 14.06. walk: duration 32, cost 0.0. \nfrom Six Dynasties Museum to Holiday Inn Express Nanjing Jiangbei Wonhall Mall, an IHG Hotel: metro: duration 39, cost 20. taxi: duration 21, cost 58.09. walk: duration 169, cost 0.0. \nfrom Six Dynasties Museum to Six Dynasties Museum:  metro: empty.  taxi: empty.  walk: empty. \nfrom Six Dynasties Museum to Uncle Liu's Fragrant Frog Restaurant: metro: duration 39, cost 16. taxi: duration 17, cost 47.87. walk: duration 141, cost 0.0. \nfrom Six Dynasties Museum to Great Bao'en Temple Ruins Scenic Area: metro: duration 25, cost 12. taxi: duration 6, cost 18.9. walk: duration 48, cost 0.0. \nfrom Six Dynasties Museum to Chongqing Frog Restaurant (Changjiang Garden Branch): metro: duration 20, cost 8. taxi: duration 2, cost 11.06. walk: duration 21, cost 0.0. \nfrom Six Dynasties Museum to Confucius Temple and Qinhuai River Scenic Area: metro: duration 23, cost 8. taxi: duration 4, cost 14.24. walk: duration 32, cost 0.0. \nfrom Six Dynasties Museum to Sichuan Restaurant (Taiping South Road Branch): metro: duration 19, cost 8. taxi: duration 2, cost 11.02. walk: duration 21, cost 0.0. \nfrom Six Dynasties Museum to Nanjing Lukou International Airport: metro: duration 86, cost 28. taxi: duration 53, cost 155.75. walk: duration 429, cost 0.0. \nfrom Six Dynasties Museum to Dingye New Century Hotel Nanjing: metro: duration 49, cost 20. taxi: duration 24, cost 69.12. walk: duration 198, cost 0.0. \nfrom Six Dynasties Museum to Nanjing South Railway Station: metro: duration 32, cost 16. taxi: duration 13, cost 36.06. walk: duration 107, cost 0.0. \nfrom Six Dynasties Museum to Nanjing Museum: metro: duration 25, cost 8. taxi: duration 3, cost 13.35. walk: duration 29, cost 0.0. \nfrom Six Dynasties Museum to First Step Tavern (Shuiyoucheng Branch): metro: duration 22, cost 8. taxi: duration 5, cost 16.4. walk: duration 40, cost 0.0. \nfrom Six Dynasties Museum to Hongshan Forest Zoo: metro: duration 26, cost 12. taxi: duration 8, cost 23.64. walk: duration 64, cost 0.0. \nfrom Six Dynasties Museum to Ming Xiaoling Mausoleum: metro: duration 33, cost 8. taxi: duration 5, cost 16.53. walk: duration 40, cost 0.0. \nfrom Six Dynasties Museum to Sun Yat-sen Mausoleum Scenic Area: metro: duration 51, cost 12. taxi: duration 8, cost 23.5. walk: duration 64, cost 0.0. \nfrom Six Dynasties Museum to Nanjing Presidential Palace: metro: duration 21, cost 8. taxi: duration 0, cost 11.0. walk: duration 2, cost 0.0. \nfrom Six Dynasties Museum to Nanjing Zhongshan Hotel (Jiangsu Conference Center): metro: duration 19, cost 8. taxi: duration 1, cost 11.0. walk: duration 13, cost 0.0. \nfrom Six Dynasties Museum to Taiping Heavenly Kingdom History Museum (Zhan Garden): metro: duration 21, cost 8. taxi: duration 4, cost 14.5. walk: duration 33, cost 0.0. \nfrom Six Dynasties Museum to Qinhuai River Painted Boat: metro: duration 23, cost 8. taxi: duration 4, cost 14.17. walk: duration 32, cost 0.0. \nfrom Six Dynasties Museum to Zhongshan Scenic Area: metro: duration 50, cost 12. taxi: duration 8, cost 24.08. walk: duration 66, cost 0.0. \nfrom Six Dynasties Museum to Xuanwu Lake Scenic Area: metro: duration 22, cost 8. taxi: duration 5, cost 16.45. walk: duration 40, cost 0.0. \nfrom Uncle Liu's Fragrant Frog Restaurant to Qixia Mountain: metro: duration 114, cost 28. taxi: duration 45, cost 130.49. walk: duration 362, cost 0.0. \nfrom Uncle Liu's Fragrant Frog Restaurant to Nanjing City Wall: metro: duration 93, cost 24. taxi: duration 37, cost 106.55. walk: duration 298, cost 0.0. \nfrom Uncle Liu's Fragrant Frog Restaurant to Chengdu Baby Garden Restaurant & Lounge: metro: duration 33, cost 16. taxi: duration 18, cost 50.83. walk: duration 149, cost 0.0. \nfrom Uncle Liu's Fragrant Frog Restaurant to Confucius Temple: metro: duration 28, cost 16. taxi: duration 13, cost 37.04. walk: duration 110, cost 0.0. \nfrom Uncle Liu's Fragrant Frog Restaurant to Holiday Inn Express Nanjing Jiangbei Wonhall Mall, an IHG Hotel: metro: duration 40, cost 20. taxi: duration 27, cost 76.11. walk: duration 217, cost 0.0. \nfrom Uncle Liu's Fragrant Frog Restaurant to Six Dynasties Museum: metro: duration 39, cost 16. taxi: duration 17, cost 47.87. walk: duration 141, cost 0.0. \nfrom Uncle Liu's Fragrant Frog Restaurant to Uncle Liu's Fragrant Frog Restaurant:  metro: empty.  taxi: empty.  walk: empty. \nfrom Uncle Liu's Fragrant Frog Restaurant to Great Bao'en Temple Ruins Scenic Area: metro: duration 25, cost 12. taxi: duration 11, cost 32.5. walk: duration 95, cost 0.0. \nfrom Uncle Liu's Fragrant Frog Restaurant to Chongqing Frog Restaurant (Changjiang Garden Branch): metro: duration 34, cost 16. taxi: duration 17, cost 46.15. walk: duration 137, cost 0.0. \nfrom Uncle Liu's Fragrant Frog Restaurant to Confucius Temple and Qinhuai River Scenic Area: metro: duration 28, cost 16. taxi: duration 13, cost 36.77. walk: duration 109, cost 0.0. \nfrom Uncle Liu's Fragrant Frog Restaurant to Sichuan Restaurant (Taiping South Road Branch): metro: duration 28, cost 16. taxi: duration 15, cost 41.08. walk: duration 123, cost 0.0. \nfrom Uncle Liu's Fragrant Frog Restaurant to Nanjing Lukou International Airport: metro: duration 57, cost 24. taxi: duration 37, cost 106.37. walk: duration 297, cost 0.0. \nfrom Uncle Liu's Fragrant Frog Restaurant to Dingye New Century Hotel Nanjing: metro: duration 49, cost 20. taxi: duration 29, cost 83.5. walk: duration 236, cost 0.0. \nfrom Uncle Liu's Fragrant Frog Restaurant to Nanjing South Railway Station: metro: duration 13, cost 8. taxi: duration 4, cost 14.96. walk: duration 35, cost 0.0. \nfrom Uncle Liu's Fragrant Frog Restaurant to Nanjing Museum: metro: duration 36, cost 16. taxi: duration 18, cost 49.27. walk: duration 145, cost 0.0. \nfrom Uncle Liu's Fragrant Frog Restaurant to First Step Tavern (Shuiyoucheng Branch): metro: duration 27, cost 16. taxi: duration 13, cost 35.84. walk: duration 106, cost 0.0. \nfrom Uncle Liu's Fragrant Frog Restaurant to Hongshan Forest Zoo: metro: duration 45, cost 20. taxi: duration 25, cost 72.15. walk: duration 206, cost 0.0. \nfrom Uncle Liu's Fragrant Frog Restaurant to Ming Xiaoling Mausoleum: metro: duration 44, cost 16. taxi: duration 19, cost 53.46. walk: duration 156, cost 0.0. \nfrom Uncle Liu's Fragrant Frog Restaurant to Sun Yat-sen Mausoleum Scenic Area: metro: duration 59, cost 16. taxi: duration 21, cost 60.51. walk: duration 175, cost 0.0. \nfrom Uncle Liu's Fragrant Frog Restaurant to Nanjing Presidential Palace: metro: duration 36, cost 16. taxi: duration 17, cost 48.37. walk: duration 143, cost 0.0. \nfrom Uncle Liu's Fragrant Frog Restaurant to Nanjing Zhongshan Hotel (Jiangsu Conference Center): metro: duration 32, cost 16. taxi: duration 16, cost 43.95. walk: duration 131, cost 0.0. \nfrom Uncle Liu's Fragrant Frog Restaurant to Taiping Heavenly Kingdom History Museum (Zhan Garden): metro: duration 26, cost 16. taxi: duration 13, cost 37.08. walk: duration 111, cost 0.0. \nfrom Uncle Liu's Fragrant Frog Restaurant to Qinhuai River Painted Boat: metro: duration 28, cost 16. taxi: duration 13, cost 36.81. walk: duration 110, cost 0.0. \nfrom Uncle Liu's Fragrant Frog Restaurant to Zhongshan Scenic Area: metro: duration 69, cost 20. taxi: duration 23, cost 64.21. walk: duration 185, cost 0.0. \nfrom Uncle Liu's Fragrant Frog Restaurant to Xuanwu Lake Scenic Area: metro: duration 42, cost 20. taxi: duration 22, cost 62.78. walk: duration 181, cost 0.0. \nfrom Great Bao'en Temple Ruins Scenic Area to Qixia Mountain: metro: duration 104, cost 24. taxi: duration 36, cost 103.25. walk: duration 289, cost 0.0. \nfrom Great Bao'en Temple Ruins Scenic Area to Nanjing City Wall: metro: duration 82, cost 20. taxi: duration 27, cost 77.71. walk: duration 221, cost 0.0. \nfrom Great Bao'en Temple Ruins Scenic Area to Chengdu Baby Garden Restaurant & Lounge: metro: duration 20, cost 12. taxi: duration 7, cost 21.06. walk: duration 56, cost 0.0. \nfrom Great Bao'en Temple Ruins Scenic Area to Confucius Temple: metro: duration 14, cost 8. taxi: duration 2, cost 11.0. walk: duration 16, cost 0.0. \nfrom Great Bao'en Temple Ruins Scenic Area to Holiday Inn Express Nanjing Jiangbei Wonhall Mall, an IHG Hotel: metro: duration 35, cost 20. taxi: duration 20, cost 55.67. walk: duration 162, cost 0.0. \nfrom Great Bao'en Temple Ruins Scenic Area to Six Dynasties Museum: metro: duration 25, cost 12. taxi: duration 6, cost 18.9. walk: duration 48, cost 0.0. \nfrom Great Bao'en Temple Ruins Scenic Area to Uncle Liu's Fragrant Frog Restaurant: metro: duration 25, cost 12. taxi: duration 11, cost 32.5. walk: duration 95, cost 0.0. \nfrom Great Bao'en Temple Ruins Scenic Area to Great Bao'en Temple Ruins Scenic Area:  metro: empty.  taxi: empty.  walk: empty. \nfrom Great Bao'en Temple Ruins Scenic Area to Chongqing Frog Restaurant (Changjiang Garden Branch): metro: duration 20, cost 12. taxi: duration 5, cost 16.95. walk: duration 42, cost 0.0. \nfrom Great Bao'en Temple Ruins Scenic Area to Confucius Temple and Qinhuai River Scenic Area: metro: duration 14, cost 8. taxi: duration 2, cost 11.0. walk: duration 16, cost 0.0. \nfrom Great Bao'en Temple Ruins Scenic Area to Sichuan Restaurant (Taiping South Road Branch): metro: duration 14, cost 8. taxi: duration 3, cost 13.05. walk: duration 28, cost 0.0. \nfrom Great Bao'en Temple Ruins Scenic Area to Nanjing Lukou International Airport: metro: duration 73, cost 28. taxi: duration 48, cost 140.59. walk: duration 389, cost 0.0. \nfrom Great Bao'en Temple Ruins Scenic Area to Dingye New Century Hotel Nanjing: metro: duration 45, cost 20. taxi: duration 23, cost 65.78. walk: duration 189, cost 0.0. \nfrom Great Bao'en Temple Ruins Scenic Area to Nanjing South Railway Station: metro: duration 18, cost 12. taxi: duration 7, cost 23.05. walk: duration 62, cost 0.0. \nfrom Great Bao'en Temple Ruins Scenic Area to Nanjing Museum: metro: duration 24, cost 12. taxi: duration 7, cost 23.18. walk: duration 63, cost 0.0. \nfrom Great Bao'en Temple Ruins Scenic Area to First Step Tavern (Shuiyoucheng Branch): metro: duration 13, cost 8. taxi: duration 1, cost 11.0. walk: duration 11, cost 0.0. \nfrom Great Bao'en Temple Ruins Scenic Area to Hongshan Forest Zoo: metro: duration 31, cost 16. taxi: duration 14, cost 37.37. walk: duration 112, cost 0.0. \nfrom Great Bao'en Temple Ruins Scenic Area to Ming Xiaoling Mausoleum: metro: duration 32, cost 12. taxi: duration 9, cost 27.06. walk: duration 76, cost 0.0. \nfrom Great Bao'en Temple Ruins Scenic Area to Sun Yat-sen Mausoleum Scenic Area: metro: duration 50, cost 12. taxi: duration 12, cost 34.05. walk: duration 100, cost 0.0. \nfrom Great Bao'en Temple Ruins Scenic Area to Nanjing Presidential Palace: metro: duration 22, cost 8. taxi: duration 6, cost 19.12. walk: duration 49, cost 0.0. \nfrom Great Bao'en Temple Ruins Scenic Area to Nanjing Zhongshan Hotel (Jiangsu Conference Center): metro: duration 18, cost 8. taxi: duration 5, cost 16.87. walk: duration 41, cost 0.0. \nfrom Great Bao'en Temple Ruins Scenic Area to Taiping Heavenly Kingdom History Museum (Zhan Garden): metro: duration 12, cost 8. taxi: duration 1, cost 11.0. walk: duration 15, cost 0.0. \nfrom Great Bao'en Temple Ruins Scenic Area to Qinhuai River Painted Boat: metro: duration 14, cost 8. taxi: duration 2, cost 11.0. walk: duration 16, cost 0.0. \nfrom Great Bao'en Temple Ruins Scenic Area to Zhongshan Scenic Area: metro: duration 55, cost 12. taxi: duration 13, cost 35.84. walk: duration 106, cost 0.0. \nfrom Great Bao'en Temple Ruins Scenic Area to Xuanwu Lake Scenic Area: metro: duration 28, cost 12. taxi: duration 10, cost 30.05. walk: duration 86, cost 0.0. \nfrom Chongqing Frog Restaurant (Changjiang Garden Branch) to Qixia Mountain: metro: duration 102, cost 24. taxi: duration 33, cost 94.21. walk: duration 265, cost 0.0. \nfrom Chongqing Frog Restaurant (Changjiang Garden Branch) to Nanjing City Wall: metro: duration 74, cost 20. taxi: duration 23, cost 65.89. walk: duration 189, cost 0.0. \nfrom Chongqing Frog Restaurant (Changjiang Garden Branch) to Chengdu Baby Garden Restaurant & Lounge: metro: duration 12, cost 8. taxi: duration 2, cost 11.0. walk: duration 17, cost 0.0. \nfrom Chongqing Frog Restaurant (Changjiang Garden Branch) to Confucius Temple: metro: duration 18, cost 8. taxi: duration 3, cost 12.97. walk: duration 28, cost 0.0. \nfrom Chongqing Frog Restaurant (Changjiang Garden Branch) to Holiday Inn Express Nanjing Jiangbei Wonhall Mall, an IHG Hotel: metro: duration 31, cost 16. taxi: duration 18, cost 50.22. walk: duration 148, cost 0.0. \nfrom Chongqing Frog Restaurant (Changjiang Garden Branch) to Six Dynasties Museum: metro: duration 20, cost 8. taxi: duration 2, cost 11.06. walk: duration 21, cost 0.0. \nfrom Chongqing Frog Restaurant (Changjiang Garden Branch) to Uncle Liu's Fragrant Frog Restaurant: metro: duration 34, cost 16. taxi: duration 17, cost 46.15. walk: duration 137, cost 0.0. \nfrom Chongqing Frog Restaurant (Changjiang Garden Branch) to Great Bao'en Temple Ruins Scenic Area: metro: duration 20, cost 12. taxi: duration 5, cost 16.95. walk: duration 42, cost 0.0. \nfrom Chongqing Frog Restaurant (Changjiang Garden Branch) to Chongqing Frog Restaurant (Changjiang Garden Branch):  metro: empty.  taxi: empty.  walk: empty. \nfrom Chongqing Frog Restaurant (Changjiang Garden Branch) to Confucius Temple and Qinhuai River Scenic Area: metro: duration 18, cost 8. taxi: duration 3, cost 13.31. walk: duration 29, cost 0.0. \nfrom Chongqing Frog Restaurant (Changjiang Garden Branch) to Sichuan Restaurant (Taiping South Road Branch): metro: duration 14, cost 8. taxi: duration 1, cost 11.0. walk: duration 15, cost 0.0. \nfrom Chongqing Frog Restaurant (Changjiang Garden Branch) to Nanjing Lukou International Airport: metro: duration 82, cost 28. taxi: duration 53, cost 156.16. walk: duration 430, cost 0.0. \nfrom Chongqing Frog Restaurant (Changjiang Garden Branch) to Dingye New Century Hotel Nanjing: metro: duration 41, cost 20. taxi: duration 22, cost 61.18. walk: duration 177, cost 0.0. \nfrom Chongqing Frog Restaurant (Changjiang Garden Branch) to Nanjing South Railway Station: metro: duration 26, cost 12. taxi: duration 13, cost 35.28. walk: duration 104, cost 0.0. \nfrom Chongqing Frog Restaurant (Changjiang Garden Branch) to Nanjing Museum: metro: duration 24, cost 12. taxi: duration 6, cost 19.58. walk: duration 51, cost 0.0. \nfrom Chongqing Frog Restaurant (Changjiang Garden Branch) to First Step Tavern (Shuiyoucheng Branch): metro: duration 17, cost 8. taxi: duration 3, cost 13.58. walk: duration 30, cost 0.0. \nfrom Chongqing Frog Restaurant (Changjiang Garden Branch) to Hongshan Forest Zoo: metro: duration 24, cost 12. taxi: duration 9, cost 25.81. walk: duration 72, cost 0.0. \nfrom Chongqing Frog Restaurant (Changjiang Garden Branch) to Ming Xiaoling Mausoleum: metro: duration 32, cost 12. taxi: duration 7, cost 22.89. walk: duration 62, cost 0.0. \nfrom Chongqing Frog Restaurant (Changjiang Garden Branch) to Sun Yat-sen Mausoleum Scenic Area: metro: duration 51, cost 12. taxi: duration 10, cost 29.84. walk: duration 86, cost 0.0. \nfrom Chongqing Frog Restaurant (Changjiang Garden Branch) to Nanjing Presidential Palace: metro: duration 17, cost 8. taxi: duration 2, cost 11.0. walk: duration 20, cost 0.0. \nfrom Chongqing Frog Restaurant (Changjiang Garden Branch) to Nanjing Zhongshan Hotel (Jiangsu Conference Center): metro: duration 16, cost 8. taxi: duration 3, cost 13.37. walk: duration 29, cost 0.0. \nfrom Chongqing Frog Restaurant (Changjiang Garden Branch) to Taiping Heavenly Kingdom History Museum (Zhan Garden): metro: duration 16, cost 8. taxi: duration 3, cost 12.51. walk: duration 26, cost 0.0. \nfrom Chongqing Frog Restaurant (Changjiang Garden Branch) to Qinhuai River Painted Boat: metro: duration 18, cost 8. taxi: duration 3, cost 13.32. walk: duration 29, cost 0.0. \nfrom Chongqing Frog Restaurant (Changjiang Garden Branch) to Zhongshan Scenic Area: metro: duration 50, cost 12. taxi: duration 10, cost 30.28. walk: duration 87, cost 0.0. \nfrom Chongqing Frog Restaurant (Changjiang Garden Branch) to Xuanwu Lake Scenic Area: metro: duration 21, cost 8. taxi: duration 5, cost 18.61. walk: duration 47, cost 0.0. \nfrom Confucius Temple and Qinhuai River Scenic Area to Qixia Mountain: metro: duration 104, cost 24. taxi: duration 34, cost 97.61. walk: duration 274, cost 0.0. \nfrom Confucius Temple and Qinhuai River Scenic Area to Nanjing City Wall: metro: duration 80, cost 20. taxi: duration 27, cost 75.76. walk: duration 216, cost 0.0. \nfrom Confucius Temple and Qinhuai River Scenic Area to Chengdu Baby Garden Restaurant & Lounge: metro: duration 18, cost 12. taxi: duration 5, cost 18.09. walk: duration 45, cost 0.0. \nfrom Confucius Temple and Qinhuai River Scenic Area to Confucius Temple: taxi: duration 0, cost 11.0. walk: duration 1, cost 0.0. \nfrom Confucius Temple and Qinhuai River Scenic Area to Holiday Inn Express Nanjing Jiangbei Wonhall Mall, an IHG Hotel: metro: duration 33, cost 16. taxi: duration 20, cost 56.4. walk: duration 164, cost 0.0. \nfrom Confucius Temple and Qinhuai River Scenic Area to Six Dynasties Museum: metro: duration 23, cost 8. taxi: duration 4, cost 14.24. walk: duration 32, cost 0.0. \nfrom Confucius Temple and Qinhuai River Scenic Area to Uncle Liu's Fragrant Frog Restaurant: metro: duration 28, cost 16. taxi: duration 13, cost 36.77. walk: duration 109, cost 0.0. \nfrom Confucius Temple and Qinhuai River Scenic Area to Great Bao'en Temple Ruins Scenic Area: metro: duration 14, cost 8. taxi: duration 2, cost 11.0. walk: duration 16, cost 0.0. \nfrom Confucius Temple and Qinhuai River Scenic Area to Chongqing Frog Restaurant (Changjiang Garden Branch): metro: duration 18, cost 8. taxi: duration 3, cost 13.31. walk: duration 29, cost 0.0. \nfrom Confucius Temple and Qinhuai River Scenic Area to Confucius Temple and Qinhuai River Scenic Area:  metro: empty.  taxi: empty.  walk: empty. \nfrom Confucius Temple and Qinhuai River Scenic Area to Sichuan Restaurant (Taiping South Road Branch): metro: duration 12, cost 8. taxi: duration 1, cost 11.0. walk: duration 14, cost 0.0. \nfrom Confucius Temple and Qinhuai River Scenic Area to Nanjing Lukou International Airport: metro: duration 76, cost 28. taxi: duration 50, cost 145.21. walk: duration 401, cost 0.0. \nfrom Confucius Temple and Qinhuai River Scenic Area to Dingye New Century Hotel Nanjing: metro: duration 43, cost 20. taxi: duration 24, cost 66.9. walk: duration 192, cost 0.0. \nfrom Confucius Temple and Qinhuai River Scenic Area to Nanjing South Railway Station: metro: duration 20, cost 12. taxi: duration 9, cost 27.0. walk: duration 76, cost 0.0. \nfrom Confucius Temple and Qinhuai River Scenic Area to Nanjing Museum: metro: duration 24, cost 12. taxi: duration 6, cost 18.94. walk: duration 48, cost 0.0. \nfrom Confucius Temple and Qinhuai River Scenic Area to First Step Tavern (Shuiyoucheng Branch): taxi: duration 1, cost 11.0. walk: duration 11, cost 0.0. \nfrom Confucius Temple and Qinhuai River Scenic Area to Hongshan Forest Zoo: metro: duration 29, cost 12. taxi: duration 12, cost 32.9. walk: duration 96, cost 0.0. \nfrom Confucius Temple and Qinhuai River Scenic Area to Ming Xiaoling Mausoleum: metro: duration 32, cost 12. taxi: duration 7, cost 22.84. walk: duration 62, cost 0.0. \nfrom Confucius Temple and Qinhuai River Scenic Area to Sun Yat-sen Mausoleum Scenic Area: metro: duration 50, cost 12. taxi: duration 10, cost 29.95. walk: duration 86, cost 0.0. \nfrom Confucius Temple and Qinhuai River Scenic Area to Nanjing Presidential Palace: metro: duration 20, cost 8. taxi: duration 4, cost 14.5. walk: duration 33, cost 0.0. \nfrom Confucius Temple and Qinhuai River Scenic Area to Nanjing Zhongshan Hotel (Jiangsu Conference Center): metro: duration 16, cost 8. taxi: duration 3, cost 12.31. walk: duration 26, cost 0.0. \nfrom Confucius Temple and Qinhuai River Scenic Area to Taiping Heavenly Kingdom History Museum (Zhan Garden): taxi: duration 0, cost 11.0. walk: duration 5, cost 0.0. \nfrom Confucius Temple and Qinhuai River Scenic Area to Qinhuai River Painted Boat: taxi: duration 0, cost 11.0. walk: duration 0, cost 0.0. \nfrom Confucius Temple and Qinhuai River Scenic Area to Zhongshan Scenic Area: metro: duration 54, cost 12. taxi: duration 11, cost 31.52. walk: duration 91, cost 0.0. \nfrom Confucius Temple and Qinhuai River Scenic Area to Xuanwu Lake Scenic Area: metro: duration 26, cost 12. taxi: duration 8, cost 25.59. walk: duration 71, cost 0.0. \nfrom Sichuan Restaurant (Taiping South Road Branch) to Qixia Mountain: metro: duration 100, cost 24. taxi: duration 33, cost 94.96. walk: duration 267, cost 0.0. \nfrom Sichuan Restaurant (Taiping South Road Branch) to Nanjing City Wall: metro: duration 76, cost 20. taxi: duration 25, cost 71.49. walk: duration 204, cost 0.0. \nfrom Sichuan Restaurant (Taiping South Road Branch) to Chengdu Baby Garden Restaurant & Lounge: metro: duration 14, cost 8. taxi: duration 4, cost 14.33. walk: duration 33, cost 0.0. \nfrom Sichuan Restaurant (Taiping South Road Branch) to Confucius Temple: metro: duration 12, cost 8. taxi: duration 1, cost 11.0. walk: duration 13, cost 0.0. \nfrom Sichuan Restaurant (Taiping South Road Branch) to Holiday Inn Express Nanjing Jiangbei Wonhall Mall, an IHG Hotel: metro: duration 31, cost 16. taxi: duration 19, cost 54.09. walk: duration 158, cost 0.0. \nfrom Sichuan Restaurant (Taiping South Road Branch) to Six Dynasties Museum: metro: duration 19, cost 8. taxi: duration 2, cost 11.02. walk: duration 21, cost 0.0. \nfrom Sichuan Restaurant (Taiping South Road Branch) to Uncle Liu's Fragrant Frog Restaurant: metro: duration 28, cost 16. taxi: duration 15, cost 41.08. walk: duration 123, cost 0.0. \nfrom Sichuan Restaurant (Taiping South Road Branch) to Great Bao'en Temple Ruins Scenic Area: metro: duration 14, cost 8. taxi: duration 3, cost 13.05. walk: duration 28, cost 0.0. \nfrom Sichuan Restaurant (Taiping South Road Branch) to Chongqing Frog Restaurant (Changjiang Garden Branch): metro: duration 14, cost 8. taxi: duration 1, cost 11.0. walk: duration 15, cost 0.0. \nfrom Sichuan Restaurant (Taiping South Road Branch) to Confucius Temple and Qinhuai River Scenic Area: metro: duration 12, cost 8. taxi: duration 1, cost 11.0. walk: duration 14, cost 0.0. \nfrom Sichuan Restaurant (Taiping South Road Branch) to Sichuan Restaurant (Taiping South Road Branch):  metro: empty.  taxi: empty.  walk: empty. \nfrom Sichuan Restaurant (Taiping South Road Branch) to Nanjing Lukou International Airport: metro: duration 75, cost 28. taxi: duration 51, cost 150.52. walk: duration 415, cost 0.0. \nfrom Sichuan Restaurant (Taiping South Road Branch) to Dingye New Century Hotel Nanjing: metro: duration 41, cost 20. taxi: duration 23, cost 64.85. walk: duration 187, cost 0.0. \nfrom Sichuan Restaurant (Taiping South Road Branch) to Nanjing South Railway Station: metro: duration 20, cost 12. taxi: duration 11, cost 31.1. walk: duration 90, cost 0.0. \nfrom Sichuan Restaurant (Taiping South Road Branch) to Nanjing Museum: metro: duration 21, cost 12. taxi: duration 5, cost 17.85. walk: duration 45, cost 0.0. \nfrom Sichuan Restaurant (Taiping South Road Branch) to First Step Tavern (Shuiyoucheng Branch): metro: duration 11, cost 8. taxi: duration 2, cost 11.0. walk: duration 18, cost 0.0. \nfrom Sichuan Restaurant (Taiping South Road Branch) to Hongshan Forest Zoo: metro: duration 25, cost 12. taxi: duration 10, cost 29.03. walk: duration 83, cost 0.0. \nfrom Sichuan Restaurant (Taiping South Road Branch) to Ming Xiaoling Mausoleum: metro: duration 29, cost 12. taxi: duration 7, cost 21.6. walk: duration 57, cost 0.0. \nfrom Sichuan Restaurant (Taiping South Road Branch) to Sun Yat-sen Mausoleum Scenic Area: metro: duration 47, cost 12. taxi: duration 10, cost 28.79. walk: duration 82, cost 0.0. \nfrom Sichuan Restaurant (Taiping South Road Branch) to Nanjing Presidential Palace: metro: duration 16, cost 8. taxi: duration 2, cost 11.06. walk: duration 21, cost 0.0. \nfrom Sichuan Restaurant (Taiping South Road Branch) to Nanjing Zhongshan Hotel (Jiangsu Conference Center): metro: duration 12, cost 8. taxi: duration 2, cost 11.0. walk: duration 21, cost 0.0. \nfrom Sichuan Restaurant (Taiping South Road Branch) to Taiping Heavenly Kingdom History Museum (Zhan Garden): metro: duration 10, cost 8. taxi: duration 1, cost 11.0. walk: duration 12, cost 0.0. \nfrom Sichuan Restaurant (Taiping South Road Branch) to Qinhuai River Painted Boat: metro: duration 12, cost 8. taxi: duration 1, cost 11.0. walk: duration 14, cost 0.0. \nfrom Sichuan Restaurant (Taiping South Road Branch) to Zhongshan Scenic Area: metro: duration 50, cost 12. taxi: duration 10, cost 29.86. walk: duration 86, cost 0.0. \nfrom Sichuan Restaurant (Taiping South Road Branch) to Xuanwu Lake Scenic Area: metro: duration 22, cost 12. taxi: duration 7, cost 21.71. walk: duration 58, cost 0.0. \nfrom Nanjing Lukou International Airport to Qixia Mountain: metro: duration 147, cost 32. taxi: duration 73, cost 215.05. walk: duration 587, cost 0.0. \nfrom Nanjing Lukou International Airport to Nanjing City Wall: metro: duration 142, cost 36. taxi: duration 74, cost 217.16. walk: duration 593, cost 0.0. \nfrom Nanjing Lukou International Airport to Chengdu Baby Garden Restaurant & Lounge: metro: duration 82, cost 32. taxi: duration 55, cost 161.6. walk: duration 445, cost 0.0. \nfrom Nanjing Lukou International Airport to Confucius Temple: metro: duration 76, cost 28. taxi: duration 50, cost 145.62. walk: duration 402, cost 0.0. \nfrom Nanjing Lukou International Airport to Holiday Inn Express Nanjing Jiangbei Wonhall Mall, an IHG Hotel: metro: duration 88, cost 32. taxi: duration 62, cost 183.41. walk: duration 503, cost 0.0. \nfrom Nanjing Lukou International Airport to Six Dynasties Museum: metro: duration 86, cost 28. taxi: duration 53, cost 155.75. walk: duration 429, cost 0.0. \nfrom Nanjing Lukou International Airport to Uncle Liu's Fragrant Frog Restaurant: metro: duration 57, cost 24. taxi: duration 37, cost 106.37. walk: duration 297, cost 0.0. \nfrom Nanjing Lukou International Airport to Great Bao'en Temple Ruins Scenic Area: metro: duration 73, cost 28. taxi: duration 48, cost 140.59. walk: duration 389, cost 0.0. \nfrom Nanjing Lukou International Airport to Chongqing Frog Restaurant (Changjiang Garden Branch): metro: duration 82, cost 28. taxi: duration 53, cost 156.16. walk: duration 430, cost 0.0. \nfrom Nanjing Lukou International Airport to Confucius Temple and Qinhuai River Scenic Area: metro: duration 76, cost 28. taxi: duration 50, cost 145.21. walk: duration 401, cost 0.0. \nfrom Nanjing Lukou International Airport to Sichuan Restaurant (Taiping South Road Branch): metro: duration 75, cost 28. taxi: duration 51, cost 150.52. walk: duration 415, cost 0.0. \nfrom Nanjing Lukou International Airport to Nanjing Lukou International Airport:  metro: empty.  taxi: empty.  walk: empty. \nfrom Nanjing Lukou International Airport to Dingye New Century Hotel Nanjing: metro: duration 95, cost 32. taxi: duration 64, cost 188.24. walk: duration 516, cost 0.0. \nfrom Nanjing Lukou International Airport to Nanjing South Railway Station: metro: duration 61, cost 24. taxi: duration 40, cost 117.08. walk: duration 326, cost 0.0. \nfrom Nanjing Lukou International Airport to Nanjing Museum: metro: duration 81, cost 28. taxi: duration 52, cost 152.93. walk: duration 421, cost 0.0. \nfrom Nanjing Lukou International Airport to First Step Tavern (Shuiyoucheng Branch): metro: duration 75, cost 28. taxi: duration 50, cost 145.07. walk: duration 400, cost 0.0. \nfrom Nanjing Lukou International Airport to Hongshan Forest Zoo: metro: duration 92, cost 32. taxi: duration 61, cost 179.61. walk: duration 493, cost 0.0. \nfrom Nanjing Lukou International Airport to Ming Xiaoling Mausoleum: metro: duration 89, cost 28. taxi: duration 53, cost 155.45. walk: duration 428, cost 0.0. \nfrom Nanjing Lukou International Airport to Sun Yat-sen Mausoleum Scenic Area: metro: duration 100, cost 28. taxi: duration 54, cost 158.82. walk: duration 437, cost 0.0. \nfrom Nanjing Lukou International Airport to Nanjing Presidential Palace: metro: duration 84, cost 28. taxi: duration 53, cost 156.47. walk: duration 431, cost 0.0. \nfrom Nanjing Lukou International Airport to Nanjing Zhongshan Hotel (Jiangsu Conference Center): metro: duration 78, cost 28. taxi: duration 52, cost 150.96. walk: duration 416, cost 0.0. \nfrom Nanjing Lukou International Airport to Taiping Heavenly Kingdom History Museum (Zhan Garden): metro: duration 74, cost 28. taxi: duration 50, cost 146.12. walk: duration 403, cost 0.0. \nfrom Nanjing Lukou International Airport to Qinhuai River Painted Boat: metro: duration 76, cost 28. taxi: duration 50, cost 145.22. walk: duration 401, cost 0.0. \nfrom Nanjing Lukou International Airport to Zhongshan Scenic Area: metro: duration 114, cost 32. taxi: duration 56, cost 163.34. walk: duration 449, cost 0.0. \nfrom Nanjing Lukou International Airport to Xuanwu Lake Scenic Area: metro: duration 88, cost 32. taxi: duration 58, cost 170.76. walk: duration 469, cost 0.0. \nfrom Dingye New Century Hotel Nanjing to Qixia Mountain: metro: duration 130, cost 28. taxi: duration 51, cost 150.11. walk: duration 414, cost 0.0. \nfrom Dingye New Century Hotel Nanjing to Nanjing City Wall: metro: duration 67, cost 16. taxi: duration 13, cost 36.23. walk: duration 108, cost 0.0. \nfrom Dingye New Century Hotel Nanjing to Chengdu Baby Garden Restaurant & Lounge: metro: duration 37, cost 16. taxi: duration 20, cost 55.93. walk: duration 163, cost 0.0. \nfrom Dingye New Century Hotel Nanjing to Confucius Temple: metro: duration 43, cost 20. taxi: duration 23, cost 66.53. walk: duration 191, cost 0.0. \nfrom Dingye New Century Hotel Nanjing to Holiday Inn Express Nanjing Jiangbei Wonhall Mall, an IHG Hotel: metro: duration 12, cost 8. taxi: duration 3, cost 13.41. walk: duration 29, cost 0.0. \nfrom Dingye New Century Hotel Nanjing to Six Dynasties Museum: metro: duration 49, cost 20. taxi: duration 24, cost 69.12. walk: duration 198, cost 0.0. \nfrom Dingye New Century Hotel Nanjing to Uncle Liu's Fragrant Frog Restaurant: metro: duration 49, cost 20. taxi: duration 29, cost 83.5. walk: duration 236, cost 0.0. \nfrom Dingye New Century Hotel Nanjing to Great Bao'en Temple Ruins Scenic Area: metro: duration 45, cost 20. taxi: duration 23, cost 65.78. walk: duration 189, cost 0.0. \nfrom Dingye New Century Hotel Nanjing to Chongqing Frog Restaurant (Changjiang Garden Branch): metro: duration 41, cost 20. taxi: duration 22, cost 61.18. walk: duration 177, cost 0.0. \nfrom Dingye New Century Hotel Nanjing to Confucius Temple and Qinhuai River Scenic Area: metro: duration 43, cost 20. taxi: duration 24, cost 66.9. walk: duration 192, cost 0.0. \nfrom Dingye New Century Hotel Nanjing to Sichuan Restaurant (Taiping South Road Branch): metro: duration 41, cost 20. taxi: duration 23, cost 64.85. walk: duration 187, cost 0.0. \nfrom Dingye New Century Hotel Nanjing to Nanjing Lukou International Airport: metro: duration 95, cost 32. taxi: duration 64, cost 188.24. walk: duration 516, cost 0.0. \nfrom Dingye New Century Hotel Nanjing to Dingye New Century Hotel Nanjing:  metro: empty.  taxi: empty.  walk: empty. \nfrom Dingye New Century Hotel Nanjing to Nanjing South Railway Station: metro: duration 46, cost 20. taxi: duration 28, cost 79.45. walk: duration 225, cost 0.0. \nfrom Dingye New Century Hotel Nanjing to Nanjing Museum: metro: duration 54, cost 20. taxi: duration 28, cost 80.23. walk: duration 228, cost 0.0. \nfrom Dingye New Century Hotel Nanjing to First Step Tavern (Shuiyoucheng Branch): metro: duration 42, cost 20. taxi: duration 22, cost 63.26. walk: duration 182, cost 0.0. \nfrom Dingye New Century Hotel Nanjing to Hongshan Forest Zoo: metro: duration 47, cost 20. taxi: duration 25, cost 72.19. walk: duration 206, cost 0.0. \nfrom Dingye New Century Hotel Nanjing to Ming Xiaoling Mausoleum: metro: duration 62, cost 20. taxi: duration 29, cost 84.11. walk: duration 238, cost 0.0. \nfrom Dingye New Century Hotel Nanjing to Sun Yat-sen Mausoleum Scenic Area: metro: duration 81, cost 24. taxi: duration 32, cost 92.44. walk: duration 260, cost 0.0. \nfrom Dingye New Century Hotel Nanjing to Nanjing Presidential Palace: metro: duration 47, cost 20. taxi: duration 24, cost 68.31. walk: duration 196, cost 0.0. \nfrom Dingye New Century Hotel Nanjing to Nanjing Zhongshan Hotel (Jiangsu Conference Center): metro: duration 46, cost 20. taxi: duration 25, cost 72.15. walk: duration 206, cost 0.0. \nfrom Dingye New Century Hotel Nanjing to Taiping Heavenly Kingdom History Museum (Zhan Garden): metro: duration 41, cost 20. taxi: duration 23, cost 64.9. walk: duration 187, cost 0.0. \nfrom Dingye New Century Hotel Nanjing to Qinhuai River Painted Boat: metro: duration 43, cost 20. taxi: duration 24, cost 67.03. walk: duration 192, cost 0.0. \nfrom Dingye New Century Hotel Nanjing to Zhongshan Scenic Area: metro: duration 78, cost 20. taxi: duration 32, cost 91.83. walk: duration 259, cost 0.0. \nfrom Dingye New Century Hotel Nanjing to Xuanwu Lake Scenic Area: metro: duration 48, cost 20. taxi: duration 24, cost 68.73. walk: duration 197, cost 0.0. \nfrom Nanjing South Railway Station to Qixia Mountain: metro: duration 107, cost 24. taxi: duration 41, cost 117.93. walk: duration 328, cost 0.0. \nfrom Nanjing South Railway Station to Nanjing City Wall: metro: duration 87, cost 24. taxi: duration 34, cost 98.33. walk: duration 276, cost 0.0. \nfrom Nanjing South Railway Station to Chengdu Baby Garden Restaurant & Lounge: metro: duration 26, cost 16. taxi: duration 14, cost 39.33. walk: duration 118, cost 0.0. \nfrom Nanjing South Railway Station to Confucius Temple: metro: duration 20, cost 12. taxi: duration 9, cost 27.29. walk: duration 77, cost 0.0. \nfrom Nanjing South Railway Station to Holiday Inn Express Nanjing Jiangbei Wonhall Mall, an IHG Hotel: metro: duration 37, cost 20. taxi: duration 25, cost 70.89. walk: duration 203, cost 0.0. \nfrom Nanjing South Railway Station to Six Dynasties Museum: metro: duration 32, cost 16. taxi: duration 13, cost 36.06. walk: duration 107, cost 0.0. \nfrom Nanjing South Railway Station to Uncle Liu's Fragrant Frog Restaurant: metro: duration 13, cost 8. taxi: duration 4, cost 14.96. walk: duration 35, cost 0.0. \nfrom Nanjing South Railway Station to Great Bao'en Temple Ruins Scenic Area: metro: duration 18, cost 12. taxi: duration 7, cost 23.05. walk: duration 62, cost 0.0. \nfrom Nanjing South Railway Station to Chongqing Frog Restaurant (Changjiang Garden Branch): metro: duration 26, cost 12. taxi: duration 13, cost 35.28. walk: duration 104, cost 0.0. \nfrom Nanjing South Railway Station to Confucius Temple and Qinhuai River Scenic Area: metro: duration 20, cost 12. taxi: duration 9, cost 27.0. walk: duration 76, cost 0.0. \nfrom Nanjing South Railway Station to Sichuan Restaurant (Taiping South Road Branch): metro: duration 20, cost 12. taxi: duration 11, cost 31.1. walk: duration 90, cost 0.0. \nfrom Nanjing South Railway Station to Nanjing Lukou International Airport: metro: duration 61, cost 24. taxi: duration 40, cost 117.08. walk: duration 326, cost 0.0. \nfrom Nanjing South Railway Station to Dingye New Century Hotel Nanjing: metro: duration 46, cost 20. taxi: duration 28, cost 79.45. walk: duration 225, cost 0.0. \nfrom Nanjing South Railway Station to Nanjing South Railway Station:  metro: empty.  taxi: empty.  walk: empty. \nfrom Nanjing South Railway Station to Nanjing Museum: metro: duration 29, cost 12. taxi: duration 13, cost 36.89. walk: duration 110, cost 0.0. \nfrom Nanjing South Railway Station to First Step Tavern (Shuiyoucheng Branch): metro: duration 19, cost 12. taxi: duration 9, cost 26.52. walk: duration 74, cost 0.0. \nfrom Nanjing South Railway Station to Hongshan Forest Zoo: metro: duration 38, cost 20. taxi: duration 21, cost 59.37. walk: duration 172, cost 0.0. \nfrom Nanjing South Railway Station to Ming Xiaoling Mausoleum: metro: duration 37, cost 12. taxi: duration 15, cost 40.3. walk: duration 121, cost 0.0. \nfrom Nanjing South Railway Station to Sun Yat-sen Mausoleum Scenic Area: metro: duration 52, cost 16. taxi: duration 17, cost 47.52. walk: duration 140, cost 0.0. \nfrom Nanjing South Railway Station to Nanjing Presidential Palace: metro: duration 29, cost 12. taxi: duration 13, cost 36.49. walk: duration 108, cost 0.0. \nfrom Nanjing South Railway Station to Nanjing Zhongshan Hotel (Jiangsu Conference Center): metro: duration 24, cost 12. taxi: duration 12, cost 32.87. walk: duration 96, cost 0.0. \nfrom Nanjing South Railway Station to Taiping Heavenly Kingdom History Museum (Zhan Garden): metro: duration 18, cost 12. taxi: duration 9, cost 27.5. walk: duration 78, cost 0.0. \nfrom Nanjing South Railway Station to Qinhuai River Painted Boat: metro: duration 20, cost 12. taxi: duration 9, cost 27.03. walk: duration 76, cost 0.0. \nfrom Nanjing South Railway Station to Zhongshan Scenic Area: metro: duration 61, cost 16. taxi: duration 18, cost 51.13. walk: duration 150, cost 0.0. \nfrom Nanjing South Railway Station to Xuanwu Lake Scenic Area: metro: duration 34, cost 16. taxi: duration 18, cost 50.05. walk: duration 147, cost 0.0. \nfrom Nanjing Museum to Qixia Mountain: metro: duration 98, cost 20. taxi: duration 28, cost 79.51. walk: duration 226, cost 0.0. \nfrom Nanjing Museum to Nanjing City Wall: metro: duration 86, cost 20. taxi: duration 28, cost 81.44. walk: duration 231, cost 0.0. \nfrom Nanjing Museum to Chengdu Baby Garden Restaurant & Lounge: metro: duration 25, cost 12. taxi: duration 8, cost 23.73. walk: duration 65, cost 0.0. \nfrom Nanjing Museum to Confucius Temple: metro: duration 24, cost 12. taxi: duration 6, cost 18.97. walk: duration 48, cost 0.0. \nfrom Nanjing Museum to Holiday Inn Express Nanjing Jiangbei Wonhall Mall, an IHG Hotel: metro: duration 43, cost 20. taxi: duration 24, cost 69.21. walk: duration 198, cost 0.0. \nfrom Nanjing Museum to Six Dynasties Museum: metro: duration 25, cost 8. taxi: duration 3, cost 13.35. walk: duration 29, cost 0.0. \nfrom Nanjing Museum to Uncle Liu's Fragrant Frog Restaurant: metro: duration 36, cost 16. taxi: duration 18, cost 49.27. walk: duration 145, cost 0.0. \nfrom Nanjing Museum to Great Bao'en Temple Ruins Scenic Area: metro: duration 24, cost 12. taxi: duration 7, cost 23.18. walk: duration 63, cost 0.0. \nfrom Nanjing Museum to Chongqing Frog Restaurant (Changjiang Garden Branch): metro: duration 24, cost 12. taxi: duration 6, cost 19.58. walk: duration 51, cost 0.0. \nfrom Nanjing Museum to Confucius Temple and Qinhuai River Scenic Area: metro: duration 24, cost 12. taxi: duration 6, cost 18.94. walk: duration 48, cost 0.0. \nfrom Nanjing Museum to Sichuan Restaurant (Taiping South Road Branch): metro: duration 21, cost 12. taxi: duration 5, cost 17.85. walk: duration 45, cost 0.0. \nfrom Nanjing Museum to Nanjing Lukou International Airport: metro: duration 81, cost 28. taxi: duration 52, cost 152.93. walk: duration 421, cost 0.0. \nfrom Nanjing Museum to Dingye New Century Hotel Nanjing: metro: duration 54, cost 20. taxi: duration 28, cost 80.23. walk: duration 228, cost 0.0. \nfrom Nanjing Museum to Nanjing South Railway Station: metro: duration 29, cost 12. taxi: duration 13, cost 36.89. walk: duration 110, cost 0.0. \nfrom Nanjing Museum to Nanjing Museum:  metro: empty.  taxi: empty.  walk: empty. \nfrom Nanjing Museum to First Step Tavern (Shuiyoucheng Branch): metro: duration 23, cost 12. taxi: duration 7, cost 22.05. walk: duration 59, cost 0.0. \nfrom Nanjing Museum to Hongshan Forest Zoo: metro: duration 29, cost 12. taxi: duration 9, cost 26.09. walk: duration 73, cost 0.0. \nfrom Nanjing Museum to Ming Xiaoling Mausoleum: taxi: duration 1, cost 11.0. walk: duration 13, cost 0.0. \nfrom Nanjing Museum to Sun Yat-sen Mausoleum Scenic Area: metro: duration 44, cost 8. taxi: duration 4, cost 15.74. walk: duration 37, cost 0.0. \nfrom Nanjing Museum to Nanjing Presidential Palace: metro: duration 25, cost 8. taxi: duration 3, cost 14.0. walk: duration 31, cost 0.0. \nfrom Nanjing Museum to Nanjing Zhongshan Hotel (Jiangsu Conference Center): metro: duration 20, cost 8. taxi: duration 3, cost 11.72. walk: duration 24, cost 0.0. \nfrom Nanjing Museum to Taiping Heavenly Kingdom History Museum (Zhan Garden): metro: duration 22, cost 12. taxi: duration 6, cost 20.01. walk: duration 52, cost 0.0. \nfrom Nanjing Museum to Qinhuai River Painted Boat: metro: duration 24, cost 12. taxi: duration 6, cost 18.82. walk: duration 48, cost 0.0. \nfrom Nanjing Museum to Zhongshan Scenic Area: metro: duration 50, cost 12. taxi: duration 5, cost 17.37. walk: duration 43, cost 0.0. \nfrom Nanjing Museum to Xuanwu Lake Scenic Area: metro: duration 26, cost 12. taxi: duration 6, cost 20.4. walk: duration 53, cost 0.0. \nfrom First Step Tavern (Shuiyoucheng Branch) to Qixia Mountain: metro: duration 103, cost 24. taxi: duration 35, cost 101.36. walk: duration 284, cost 0.0. \nfrom First Step Tavern (Shuiyoucheng Branch) to Nanjing City Wall: metro: duration 79, cost 20. taxi: duration 26, cost 73.67. walk: duration 210, cost 0.0. \nfrom First Step Tavern (Shuiyoucheng Branch) to Chengdu Baby Garden Restaurant & Lounge: metro: duration 17, cost 12. taxi: duration 5, cost 17.57. walk: duration 44, cost 0.0. \nfrom First Step Tavern (Shuiyoucheng Branch) to Confucius Temple: taxi: duration 1, cost 11.0. walk: duration 10, cost 0.0. \nfrom First Step Tavern (Shuiyoucheng Branch) to Holiday Inn Express Nanjing Jiangbei Wonhall Mall, an IHG Hotel: metro: duration 32, cost 16. taxi: duration 19, cost 52.89. walk: duration 155, cost 0.0. \nfrom First Step Tavern (Shuiyoucheng Branch) to Six Dynasties Museum: metro: duration 22, cost 8. taxi: duration 5, cost 16.4. walk: duration 40, cost 0.0. \nfrom First Step Tavern (Shuiyoucheng Branch) to Uncle Liu's Fragrant Frog Restaurant: metro: duration 27, cost 16. taxi: duration 13, cost 35.84. walk: duration 106, cost 0.0. \nfrom First Step Tavern (Shuiyoucheng Branch) to Great Bao'en Temple Ruins Scenic Area: metro: duration 13, cost 8. taxi: duration 1, cost 11.0. walk: duration 11, cost 0.0. \nfrom First Step Tavern (Shuiyoucheng Branch) to Chongqing Frog Restaurant (Changjiang Garden Branch): metro: duration 17, cost 8. taxi: duration 3, cost 13.58. walk: duration 30, cost 0.0. \nfrom First Step Tavern (Shuiyoucheng Branch) to Confucius Temple and Qinhuai River Scenic Area: taxi: duration 1, cost 11.0. walk: duration 11, cost 0.0. \nfrom First Step Tavern (Shuiyoucheng Branch) to Sichuan Restaurant (Taiping South Road Branch): metro: duration 11, cost 8. taxi: duration 2, cost 11.0. walk: duration 18, cost 0.0. \nfrom First Step Tavern (Shuiyoucheng Branch) to Nanjing Lukou International Airport: metro: duration 75, cost 28. taxi: duration 50, cost 145.07. walk: duration 400, cost 0.0. \nfrom First Step Tavern (Shuiyoucheng Branch) to Dingye New Century Hotel Nanjing: metro: duration 42, cost 20. taxi: duration 22, cost 63.26. walk: duration 182, cost 0.0. \nfrom First Step Tavern (Shuiyoucheng Branch) to Nanjing South Railway Station: metro: duration 19, cost 12. taxi: duration 9, cost 26.52. walk: duration 74, cost 0.0. \nfrom First Step Tavern (Shuiyoucheng Branch) to Nanjing Museum: metro: duration 23, cost 12. taxi: duration 7, cost 22.05. walk: duration 59, cost 0.0. \nfrom First Step Tavern (Shuiyoucheng Branch) to First Step Tavern (Shuiyoucheng Branch):  metro: empty.  taxi: empty.  walk: empty. \nfrom First Step Tavern (Shuiyoucheng Branch) to Hongshan Forest Zoo: metro: duration 28, cost 12. taxi: duration 12, cost 34.33. walk: duration 101, cost 0.0. \nfrom First Step Tavern (Shuiyoucheng Branch) to Ming Xiaoling Mausoleum: metro: duration 31, cost 12. taxi: duration 9, cost 25.94. walk: duration 72, cost 0.0. \nfrom First Step Tavern (Shuiyoucheng Branch) to Sun Yat-sen Mausoleum Scenic Area: metro: duration 49, cost 12. taxi: duration 12, cost 33.09. walk: duration 97, cost 0.0. \nfrom First Step Tavern (Shuiyoucheng Branch) to Nanjing Presidential Palace: metro: duration 19, cost 8. taxi: duration 5, cost 16.49. walk: duration 40, cost 0.0. \nfrom First Step Tavern (Shuiyoucheng Branch) to Nanjing Zhongshan Hotel (Jiangsu Conference Center): metro: duration 15, cost 8. taxi: duration 4, cost 15.21. walk: duration 36, cost 0.0. \nfrom First Step Tavern (Shuiyoucheng Branch) to Taiping Heavenly Kingdom History Museum (Zhan Garden): taxi: duration 0, cost 11.0. walk: duration 7, cost 0.0. \nfrom First Step Tavern (Shuiyoucheng Branch) to Qinhuai River Painted Boat: taxi: duration 1, cost 11.0. walk: duration 11, cost 0.0. \nfrom First Step Tavern (Shuiyoucheng Branch) to Zhongshan Scenic Area: metro: duration 53, cost 12. taxi: duration 12, cost 34.53. walk: duration 102, cost 0.0. \nfrom First Step Tavern (Shuiyoucheng Branch) to Xuanwu Lake Scenic Area: metro: duration 25, cost 12. taxi: duration 9, cost 27.02. walk: duration 76, cost 0.0. \nfrom Hongshan Forest Zoo to Qixia Mountain: metro: duration 94, cost 20. taxi: duration 26, cost 73.32. walk: duration 209, cost 0.0. \nfrom Hongshan Forest Zoo to Nanjing City Wall: metro: duration 71, cost 20. taxi: duration 22, cost 61.45. walk: duration 178, cost 0.0. \nfrom Hongshan Forest Zoo to Chengdu Baby Garden Restaurant & Lounge: metro: duration 21, cost 12. taxi: duration 8, cost 24.45. walk: duration 67, cost 0.0. \nfrom Hongshan Forest Zoo to Confucius Temple: metro: duration 29, cost 12. taxi: duration 11, cost 32.65. walk: duration 95, cost 0.0. \nfrom Hongshan Forest Zoo to Holiday Inn Express Nanjing Jiangbei Wonhall Mall, an IHG Hotel: metro: duration 37, cost 20. taxi: duration 22, cost 61.15. walk: duration 177, cost 0.0. \nfrom Hongshan Forest Zoo to Six Dynasties Museum: metro: duration 26, cost 12. taxi: duration 8, cost 23.64. walk: duration 64, cost 0.0. \nfrom Hongshan Forest Zoo to Uncle Liu's Fragrant Frog Restaurant: metro: duration 45, cost 20. taxi: duration 25, cost 72.15. walk: duration 206, cost 0.0. \nfrom Hongshan Forest Zoo to Great Bao'en Temple Ruins Scenic Area: metro: duration 31, cost 16. taxi: duration 14, cost 37.37. walk: duration 112, cost 0.0. \nfrom Hongshan Forest Zoo to Chongqing Frog Restaurant (Changjiang Garden Branch): metro: duration 24, cost 12. taxi: duration 9, cost 25.81. walk: duration 72, cost 0.0. \nfrom Hongshan Forest Zoo to Confucius Temple and Qinhuai River Scenic Area: metro: duration 29, cost 12. taxi: duration 12, cost 32.9. walk: duration 96, cost 0.0. \nfrom Hongshan Forest Zoo to Sichuan Restaurant (Taiping South Road Branch): metro: duration 25, cost 12. taxi: duration 10, cost 29.03. walk: duration 83, cost 0.0. \nfrom Hongshan Forest Zoo to Nanjing Lukou International Airport: metro: duration 92, cost 32. taxi: duration 61, cost 179.61. walk: duration 493, cost 0.0. \nfrom Hongshan Forest Zoo to Dingye New Century Hotel Nanjing: metro: duration 47, cost 20. taxi: duration 25, cost 72.19. walk: duration 206, cost 0.0. \nfrom Hongshan Forest Zoo to Nanjing South Railway Station: metro: duration 38, cost 20. taxi: duration 21, cost 59.37. walk: duration 172, cost 0.0. \nfrom Hongshan Forest Zoo to Nanjing Museum: metro: duration 29, cost 12. taxi: duration 9, cost 26.09. walk: duration 73, cost 0.0. \nfrom Hongshan Forest Zoo to First Step Tavern (Shuiyoucheng Branch): metro: duration 28, cost 12. taxi: duration 12, cost 34.33. walk: duration 101, cost 0.0. \nfrom Hongshan Forest Zoo to Hongshan Forest Zoo:  metro: empty.  taxi: empty.  walk: empty. \nfrom Hongshan Forest Zoo to Ming Xiaoling Mausoleum: metro: duration 37, cost 12. taxi: duration 8, cost 25.48. walk: duration 71, cost 0.0. \nfrom Hongshan Forest Zoo to Sun Yat-sen Mausoleum Scenic Area: metro: duration 53, cost 16. taxi: duration 9, cost 27.55. walk: duration 78, cost 0.0. \nfrom Hongshan Forest Zoo to Nanjing Presidential Palace: metro: duration 27, cost 12. taxi: duration 7, cost 23.21. walk: duration 63, cost 0.0. \nfrom Hongshan Forest Zoo to Nanjing Zhongshan Hotel (Jiangsu Conference Center): metro: duration 25, cost 12. taxi: duration 9, cost 27.1. walk: duration 76, cost 0.0. \nfrom Hongshan Forest Zoo to Taiping Heavenly Kingdom History Museum (Zhan Garden): metro: duration 27, cost 12. taxi: duration 12, cost 32.77. walk: duration 96, cost 0.0. \nfrom Hongshan Forest Zoo to Qinhuai River Painted Boat: metro: duration 29, cost 12. taxi: duration 12, cost 32.85. walk: duration 96, cost 0.0. \nfrom Hongshan Forest Zoo to Zhongshan Scenic Area: metro: duration 44, cost 8. taxi: duration 8, cost 25.02. walk: duration 69, cost 0.0. \nfrom Hongshan Forest Zoo to Xuanwu Lake Scenic Area: metro: duration 19, cost 8. taxi: duration 3, cost 12.02. walk: duration 25, cost 0.0. \nfrom Ming Xiaoling Mausoleum to Qixia Mountain: metro: duration 106, cost 20. taxi: duration 26, cost 74.55. walk: duration 212, cost 0.0. \nfrom Ming Xiaoling Mausoleum to Nanjing City Wall: metro: duration 94, cost 20. taxi: duration 29, cost 83.48. walk: duration 236, cost 0.0. \nfrom Ming Xiaoling Mausoleum to Chengdu Baby Garden Restaurant & Lounge: metro: duration 33, cost 12. taxi: duration 9, cost 26.62. walk: duration 75, cost 0.0. \nfrom Ming Xiaoling Mausoleum to Confucius Temple: metro: duration 32, cost 12. taxi: duration 7, cost 22.87. walk: duration 62, cost 0.0. \nfrom Ming Xiaoling Mausoleum to Holiday Inn Express Nanjing Jiangbei Wonhall Mall, an IHG Hotel: metro: duration 51, cost 20. taxi: duration 26, cost 73.03. walk: duration 208, cost 0.0. \nfrom Ming Xiaoling Mausoleum to Six Dynasties Museum: metro: duration 33, cost 8. taxi: duration 5, cost 16.53. walk: duration 40, cost 0.0. \nfrom Ming Xiaoling Mausoleum to Uncle Liu's Fragrant Frog Restaurant: metro: duration 44, cost 16. taxi: duration 19, cost 53.46. walk: duration 156, cost 0.0. \nfrom Ming Xiaoling Mausoleum to Great Bao'en Temple Ruins Scenic Area: metro: duration 32, cost 12. taxi: duration 9, cost 27.06. walk: duration 76, cost 0.0. \nfrom Ming Xiaoling Mausoleum to Chongqing Frog Restaurant (Changjiang Garden Branch): metro: duration 32, cost 12. taxi: duration 7, cost 22.89. walk: duration 62, cost 0.0. \nfrom Ming Xiaoling Mausoleum to Confucius Temple and Qinhuai River Scenic Area: metro: duration 32, cost 12. taxi: duration 7, cost 22.84. walk: duration 62, cost 0.0. \nfrom Ming Xiaoling Mausoleum to Sichuan Restaurant (Taiping South Road Branch): metro: duration 29, cost 12. taxi: duration 7, cost 21.6. walk: duration 57, cost 0.0. \nfrom Ming Xiaoling Mausoleum to Nanjing Lukou International Airport: metro: duration 89, cost 28. taxi: duration 53, cost 155.45. walk: duration 428, cost 0.0. \nfrom Ming Xiaoling Mausoleum to Dingye New Century Hotel Nanjing: metro: duration 62, cost 20. taxi: duration 29, cost 84.11. walk: duration 238, cost 0.0. \nfrom Ming Xiaoling Mausoleum to Nanjing South Railway Station: metro: duration 37, cost 12. taxi: duration 15, cost 40.3. walk: duration 121, cost 0.0. \nfrom Ming Xiaoling Mausoleum to Nanjing Museum: taxi: duration 1, cost 11.0. walk: duration 13, cost 0.0. \nfrom Ming Xiaoling Mausoleum to First Step Tavern (Shuiyoucheng Branch): metro: duration 31, cost 12. taxi: duration 9, cost 25.94. walk: duration 72, cost 0.0. \nfrom Ming Xiaoling Mausoleum to Hongshan Forest Zoo: metro: duration 37, cost 12. taxi: duration 8, cost 25.48. walk: duration 71, cost 0.0. \nfrom Ming Xiaoling Mausoleum to Ming Xiaoling Mausoleum:  metro: empty.  taxi: empty.  walk: empty. \nfrom Ming Xiaoling Mausoleum to Sun Yat-sen Mausoleum Scenic Area: metro: duration 52, cost 8. taxi: duration 3, cost 11.89. walk: duration 24, cost 0.0. \nfrom Ming Xiaoling Mausoleum to Nanjing Presidential Palace: metro: duration 33, cost 8. taxi: duration 5, cost 17.08. walk: duration 42, cost 0.0. \nfrom Ming Xiaoling Mausoleum to Nanjing Zhongshan Hotel (Jiangsu Conference Center): metro: duration 28, cost 8. taxi: duration 4, cost 15.53. walk: duration 37, cost 0.0. \nfrom Ming Xiaoling Mausoleum to Taiping Heavenly Kingdom History Museum (Zhan Garden): metro: duration 30, cost 12. taxi: duration 8, cost 23.89. walk: duration 65, cost 0.0. \nfrom Ming Xiaoling Mausoleum to Qinhuai River Painted Boat: metro: duration 32, cost 12. taxi: duration 7, cost 22.72. walk: duration 61, cost 0.0. \nfrom Ming Xiaoling Mausoleum to Zhongshan Scenic Area: metro: duration 58, cost 12. taxi: duration 3, cost 13.53. walk: duration 30, cost 0.0. \nfrom Ming Xiaoling Mausoleum to Xuanwu Lake Scenic Area: metro: duration 34, cost 12. taxi: duration 6, cost 20.89. walk: duration 55, cost 0.0. \nfrom Sun Yat-sen Mausoleum Scenic Area to Qixia Mountain: metro: duration 113, cost 20. taxi: duration 23, cost 65.91. walk: duration 189, cost 0.0. \nfrom Sun Yat-sen Mausoleum Scenic Area to Nanjing City Wall: metro: duration 111, cost 24. taxi: duration 31, cost 89.29. walk: duration 252, cost 0.0. \nfrom Sun Yat-sen Mausoleum Scenic Area to Chengdu Baby Garden Restaurant & Lounge: metro: duration 51, cost 16. taxi: duration 12, cost 33.19. walk: duration 97, cost 0.0. \nfrom Sun Yat-sen Mausoleum Scenic Area to Confucius Temple: metro: duration 50, cost 12. taxi: duration 10, cost 30.0. walk: duration 86, cost 0.0. \nfrom Sun Yat-sen Mausoleum Scenic Area to Holiday Inn Express Nanjing Jiangbei Wonhall Mall, an IHG Hotel: metro: duration 70, cost 20. taxi: duration 28, cost 81.29. walk: duration 230, cost 0.0. \nfrom Sun Yat-sen Mausoleum Scenic Area to Six Dynasties Museum: metro: duration 51, cost 12. taxi: duration 8, cost 23.5. walk: duration 64, cost 0.0. \nfrom Sun Yat-sen Mausoleum Scenic Area to Uncle Liu's Fragrant Frog Restaurant: metro: duration 59, cost 16. taxi: duration 21, cost 60.51. walk: duration 175, cost 0.0. \nfrom Sun Yat-sen Mausoleum Scenic Area to Great Bao'en Temple Ruins Scenic Area: metro: duration 50, cost 12. taxi: duration 12, cost 34.05. walk: duration 100, cost 0.0. \nfrom Sun Yat-sen Mausoleum Scenic Area to Chongqing Frog Restaurant (Changjiang Garden Branch): metro: duration 51, cost 12. taxi: duration 10, cost 29.84. walk: duration 86, cost 0.0. \nfrom Sun Yat-sen Mausoleum Scenic Area to Confucius Temple and Qinhuai River Scenic Area: metro: duration 50, cost 12. taxi: duration 10, cost 29.95. walk: duration 86, cost 0.0. \nfrom Sun Yat-sen Mausoleum Scenic Area to Sichuan Restaurant (Taiping South Road Branch): metro: duration 47, cost 12. taxi: duration 10, cost 28.79. walk: duration 82, cost 0.0. \nfrom Sun Yat-sen Mausoleum Scenic Area to Nanjing Lukou International Airport: metro: duration 100, cost 28. taxi: duration 54, cost 158.82. walk: duration 437, cost 0.0. \nfrom Sun Yat-sen Mausoleum Scenic Area to Dingye New Century Hotel Nanjing: metro: duration 81, cost 24. taxi: duration 32, cost 92.44. walk: duration 260, cost 0.0. \nfrom Sun Yat-sen Mausoleum Scenic Area to Nanjing South Railway Station: metro: duration 52, cost 16. taxi: duration 17, cost 47.52. walk: duration 140, cost 0.0. \nfrom Sun Yat-sen Mausoleum Scenic Area to Nanjing Museum: metro: duration 44, cost 8. taxi: duration 4, cost 15.74. walk: duration 37, cost 0.0. \nfrom Sun Yat-sen Mausoleum Scenic Area to First Step Tavern (Shuiyoucheng Branch): metro: duration 49, cost 12. taxi: duration 12, cost 33.09. walk: duration 97, cost 0.0. \nfrom Sun Yat-sen Mausoleum Scenic Area to Hongshan Forest Zoo: metro: duration 53, cost 16. taxi: duration 9, cost 27.55. walk: duration 78, cost 0.0. \nfrom Sun Yat-sen Mausoleum Scenic Area to Ming Xiaoling Mausoleum: metro: duration 52, cost 8. taxi: duration 3, cost 11.89. walk: duration 24, cost 0.0. \nfrom Sun Yat-sen Mausoleum Scenic Area to Sun Yat-sen Mausoleum Scenic Area:  metro: empty.  taxi: empty.  walk: empty. \nfrom Sun Yat-sen Mausoleum Scenic Area to Nanjing Presidential Palace: metro: duration 52, cost 12. taxi: duration 8, cost 23.98. walk: duration 66, cost 0.0. \nfrom Sun Yat-sen Mausoleum Scenic Area to Nanjing Zhongshan Hotel (Jiangsu Conference Center): metro: duration 47, cost 12. taxi: duration 7, cost 22.72. walk: duration 61, cost 0.0. \nfrom Sun Yat-sen Mausoleum Scenic Area to Taiping Heavenly Kingdom History Museum (Zhan Garden): metro: duration 48, cost 12. taxi: duration 11, cost 31.05. walk: duration 90, cost 0.0. \nfrom Sun Yat-sen Mausoleum Scenic Area to Qinhuai River Painted Boat: metro: duration 50, cost 12. taxi: duration 10, cost 29.84. walk: duration 86, cost 0.0. \nfrom Sun Yat-sen Mausoleum Scenic Area to Zhongshan Scenic Area: metro: duration 72, cost 12. taxi: duration 1, cost 11.0. walk: duration 12, cost 0.0. \nfrom Sun Yat-sen Mausoleum Scenic Area to Xuanwu Lake Scenic Area: metro: duration 50, cost 12. taxi: duration 8, cost 25.03. walk: duration 69, cost 0.0. \nfrom Nanjing Presidential Palace to Qixia Mountain: metro: duration 103, cost 20. taxi: duration 30, cost 87.26. walk: duration 246, cost 0.0. \nfrom Nanjing Presidential Palace to Nanjing City Wall: metro: duration 79, cost 20. taxi: duration 25, cost 70.57. walk: duration 202, cost 0.0. \nfrom Nanjing Presidential Palace to Chengdu Baby Garden Restaurant & Lounge: metro: duration 17, cost 8. taxi: duration 4, cost 14.44. walk: duration 33, cost 0.0. \nfrom Nanjing Presidential Palace to Confucius Temple: metro: duration 20, cost 8. taxi: duration 4, cost 14.3. walk: duration 32, cost 0.0. \nfrom Nanjing Presidential Palace to Holiday Inn Express Nanjing Jiangbei Wonhall Mall, an IHG Hotel: metro: duration 36, cost 16. taxi: duration 20, cost 57.27. walk: duration 166, cost 0.0. \nfrom Nanjing Presidential Palace to Six Dynasties Museum: metro: duration 21, cost 8. taxi: duration 0, cost 11.0. walk: duration 2, cost 0.0. \nfrom Nanjing Presidential Palace to Uncle Liu's Fragrant Frog Restaurant: metro: duration 36, cost 16. taxi: duration 17, cost 48.37. walk: duration 143, cost 0.0. \nfrom Nanjing Presidential Palace to Great Bao'en Temple Ruins Scenic Area: metro: duration 22, cost 8. taxi: duration 6, cost 19.12. walk: duration 49, cost 0.0. \nfrom Nanjing Presidential Palace to Chongqing Frog Restaurant (Changjiang Garden Branch): metro: duration 17, cost 8. taxi: duration 2, cost 11.0. walk: duration 20, cost 0.0. \nfrom Nanjing Presidential Palace to Confucius Temple and Qinhuai River Scenic Area: metro: duration 20, cost 8. taxi: duration 4, cost 14.5. walk: duration 33, cost 0.0. \nfrom Nanjing Presidential Palace to Sichuan Restaurant (Taiping South Road Branch): metro: duration 16, cost 8. taxi: duration 2, cost 11.06. walk: duration 21, cost 0.0. \nfrom Nanjing Presidential Palace to Nanjing Lukou International Airport: metro: duration 84, cost 28. taxi: duration 53, cost 156.47. walk: duration 431, cost 0.0. \nfrom Nanjing Presidential Palace to Dingye New Century Hotel Nanjing: metro: duration 47, cost 20. taxi: duration 24, cost 68.31. walk: duration 196, cost 0.0. \nfrom Nanjing Presidential Palace to Nanjing South Railway Station: metro: duration 29, cost 12. taxi: duration 13, cost 36.49. walk: duration 108, cost 0.0. \nfrom Nanjing Presidential Palace to Nanjing Museum: metro: duration 25, cost 8. taxi: duration 3, cost 14.0. walk: duration 31, cost 0.0. \nfrom Nanjing Presidential Palace to First Step Tavern (Shuiyoucheng Branch): metro: duration 19, cost 8. taxi: duration 5, cost 16.49. walk: duration 40, cost 0.0. \nfrom Nanjing Presidential Palace to Hongshan Forest Zoo: metro: duration 27, cost 12. taxi: duration 7, cost 23.21. walk: duration 63, cost 0.0. \nfrom Nanjing Presidential Palace to Ming Xiaoling Mausoleum: metro: duration 33, cost 8. taxi: duration 5, cost 17.08. walk: duration 42, cost 0.0. \nfrom Nanjing Presidential Palace to Sun Yat-sen Mausoleum Scenic Area: metro: duration 52, cost 12. taxi: duration 8, cost 23.98. walk: duration 66, cost 0.0. \nfrom Nanjing Presidential Palace to Nanjing Presidential Palace:  metro: empty.  taxi: empty.  walk: empty. \nfrom Nanjing Presidential Palace to Nanjing Zhongshan Hotel (Jiangsu Conference Center): metro: duration 17, cost 8. taxi: duration 2, cost 11.0. walk: duration 16, cost 0.0. \nfrom Nanjing Presidential Palace to Taiping Heavenly Kingdom History Museum (Zhan Garden): metro: duration 18, cost 8. taxi: duration 4, cost 14.65. walk: duration 34, cost 0.0. \nfrom Nanjing Presidential Palace to Qinhuai River Painted Boat: metro: duration 20, cost 8. taxi: duration 4, cost 14.44. walk: duration 33, cost 0.0. \nfrom Nanjing Presidential Palace to Zhongshan Scenic Area: metro: duration 52, cost 12. taxi: duration 8, cost 24.45. walk: duration 67, cost 0.0. \nfrom Nanjing Presidential Palace to Xuanwu Lake Scenic Area: metro: duration 23, cost 8. taxi: duration 4, cost 15.98. walk: duration 38, cost 0.0. \nfrom Nanjing Zhongshan Hotel (Jiangsu Conference Center) to Qixia Mountain: metro: duration 99, cost 20. taxi: duration 31, cost 87.87. walk: duration 248, cost 0.0. \nfrom Nanjing Zhongshan Hotel (Jiangsu Conference Center) to Nanjing City Wall: metro: duration 79, cost 20. taxi: duration 27, cost 76.24. walk: duration 217, cost 0.0. \nfrom Nanjing Zhongshan Hotel (Jiangsu Conference Center) to Chengdu Baby Garden Restaurant & Lounge: metro: duration 17, cost 8. taxi: duration 5, cost 18.2. walk: duration 46, cost 0.0. \nfrom Nanjing Zhongshan Hotel (Jiangsu Conference Center) to Confucius Temple: metro: duration 16, cost 8. taxi: duration 3, cost 12.27. walk: duration 25, cost 0.0. \nfrom Nanjing Zhongshan Hotel (Jiangsu Conference Center) to Holiday Inn Express Nanjing Jiangbei Wonhall Mall, an IHG Hotel: metro: duration 35, cost 20. taxi: duration 22, cost 61.26. walk: duration 177, cost 0.0. \nfrom Nanjing Zhongshan Hotel (Jiangsu Conference Center) to Six Dynasties Museum: metro: duration 19, cost 8. taxi: duration 1, cost 11.0. walk: duration 13, cost 0.0. \nfrom Nanjing Zhongshan Hotel (Jiangsu Conference Center) to Uncle Liu's Fragrant Frog Restaurant: metro: duration 32, cost 16. taxi: duration 16, cost 43.95. walk: duration 131, cost 0.0. \nfrom Nanjing Zhongshan Hotel (Jiangsu Conference Center) to Great Bao'en Temple Ruins Scenic Area: metro: duration 18, cost 8. taxi: duration 5, cost 16.87. walk: duration 41, cost 0.0. \nfrom Nanjing Zhongshan Hotel (Jiangsu Conference Center) to Chongqing Frog Restaurant (Changjiang Garden Branch): metro: duration 16, cost 8. taxi: duration 3, cost 13.37. walk: duration 29, cost 0.0. \nfrom Nanjing Zhongshan Hotel (Jiangsu Conference Center) to Confucius Temple and Qinhuai River Scenic Area: metro: duration 16, cost 8. taxi: duration 3, cost 12.31. walk: duration 26, cost 0.0. \nfrom Nanjing Zhongshan Hotel (Jiangsu Conference Center) to Sichuan Restaurant (Taiping South Road Branch): metro: duration 12, cost 8. taxi: duration 2, cost 11.0. walk: duration 21, cost 0.0. \nfrom Nanjing Zhongshan Hotel (Jiangsu Conference Center) to Nanjing Lukou International Airport: metro: duration 78, cost 28. taxi: duration 52, cost 150.96. walk: duration 416, cost 0.0. \nfrom Nanjing Zhongshan Hotel (Jiangsu Conference Center) to Dingye New Century Hotel Nanjing: metro: duration 46, cost 20. taxi: duration 25, cost 72.15. walk: duration 206, cost 0.0. \nfrom Nanjing Zhongshan Hotel (Jiangsu Conference Center) to Nanjing South Railway Station: metro: duration 24, cost 12. taxi: duration 12, cost 32.87. walk: duration 96, cost 0.0. \nfrom Nanjing Zhongshan Hotel (Jiangsu Conference Center) to Nanjing Museum: metro: duration 20, cost 8. taxi: duration 3, cost 11.72. walk: duration 24, cost 0.0. \nfrom Nanjing Zhongshan Hotel (Jiangsu Conference Center) to First Step Tavern (Shuiyoucheng Branch): metro: duration 15, cost 8. taxi: duration 4, cost 15.21. walk: duration 36, cost 0.0. \nfrom Nanjing Zhongshan Hotel (Jiangsu Conference Center) to Hongshan Forest Zoo: metro: duration 25, cost 12. taxi: duration 9, cost 27.1. walk: duration 76, cost 0.0. \nfrom Nanjing Zhongshan Hotel (Jiangsu Conference Center) to Ming Xiaoling Mausoleum: metro: duration 28, cost 8. taxi: duration 4, cost 15.53. walk: duration 37, cost 0.0. \nfrom Nanjing Zhongshan Hotel (Jiangsu Conference Center) to Sun Yat-sen Mausoleum Scenic Area: metro: duration 47, cost 12. taxi: duration 7, cost 22.72. walk: duration 61, cost 0.0. \nfrom Nanjing Zhongshan Hotel (Jiangsu Conference Center) to Nanjing Presidential Palace: metro: duration 17, cost 8. taxi: duration 2, cost 11.0. walk: duration 16, cost 0.0. \nfrom Nanjing Zhongshan Hotel (Jiangsu Conference Center) to Nanjing Zhongshan Hotel (Jiangsu Conference Center):  metro: empty.  taxi: empty.  walk: empty. \nfrom Nanjing Zhongshan Hotel (Jiangsu Conference Center) to Taiping Heavenly Kingdom History Museum (Zhan Garden): metro: duration 14, cost 8. taxi: duration 3, cost 13.16. walk: duration 29, cost 0.0. \nfrom Nanjing Zhongshan Hotel (Jiangsu Conference Center) to Qinhuai River Painted Boat: metro: duration 16, cost 8. taxi: duration 3, cost 12.2. walk: duration 25, cost 0.0. \nfrom Nanjing Zhongshan Hotel (Jiangsu Conference Center) to Zhongshan Scenic Area: metro: duration 49, cost 12. taxi: duration 8, cost 24.02. walk: duration 66, cost 0.0. \nfrom Nanjing Zhongshan Hotel (Jiangsu Conference Center) to Xuanwu Lake Scenic Area: metro: duration 22, cost 12. taxi: duration 6, cost 20.1. walk: duration 52, cost 0.0. \nfrom Taiping Heavenly Kingdom History Museum (Zhan Garden) to Qixia Mountain: metro: duration 102, cost 24. taxi: duration 34, cost 98.73. walk: duration 277, cost 0.0. \nfrom Taiping Heavenly Kingdom History Museum (Zhan Garden) to Nanjing City Wall: metro: duration 78, cost 20. taxi: duration 26, cost 74.03. walk: duration 211, cost 0.0. \nfrom Taiping Heavenly Kingdom History Museum (Zhan Garden) to Chengdu Baby Garden Restaurant & Lounge: metro: duration 16, cost 12. taxi: duration 5, cost 17.03. walk: duration 42, cost 0.0. \nfrom Taiping Heavenly Kingdom History Museum (Zhan Garden) to Confucius Temple: taxi: duration 0, cost 11.0. walk: duration 4, cost 0.0. \nfrom Taiping Heavenly Kingdom History Museum (Zhan Garden) to Holiday Inn Express Nanjing Jiangbei Wonhall Mall, an IHG Hotel: metro: duration 31, cost 16. taxi: duration 19, cost 54.4. walk: duration 159, cost 0.0. \nfrom Taiping Heavenly Kingdom History Museum (Zhan Garden) to Six Dynasties Museum: metro: duration 21, cost 8. taxi: duration 4, cost 14.5. walk: duration 33, cost 0.0. \nfrom Taiping Heavenly Kingdom History Museum (Zhan Garden) to Uncle Liu's Fragrant Frog Restaurant: metro: duration 26, cost 16. taxi: duration 13, cost 37.08. walk: duration 111, cost 0.0. \nfrom Taiping Heavenly Kingdom History Museum (Zhan Garden) to Great Bao'en Temple Ruins Scenic Area: metro: duration 12, cost 8. taxi: duration 1, cost 11.0. walk: duration 15, cost 0.0. \nfrom Taiping Heavenly Kingdom History Museum (Zhan Garden) to Chongqing Frog Restaurant (Changjiang Garden Branch): metro: duration 16, cost 8. taxi: duration 3, cost 12.51. walk: duration 26, cost 0.0. \nfrom Taiping Heavenly Kingdom History Museum (Zhan Garden) to Confucius Temple and Qinhuai River Scenic Area: taxi: duration 0, cost 11.0. walk: duration 5, cost 0.0. \nfrom Taiping Heavenly Kingdom History Museum (Zhan Garden) to Sichuan Restaurant (Taiping South Road Branch): metro: duration 10, cost 8. taxi: duration 1, cost 11.0. walk: duration 12, cost 0.0. \nfrom Taiping Heavenly Kingdom History Museum (Zhan Garden) to Nanjing Lukou International Airport: metro: duration 74, cost 28. taxi: duration 50, cost 146.12. walk: duration 403, cost 0.0. \nfrom Taiping Heavenly Kingdom History Museum (Zhan Garden) to Dingye New Century Hotel Nanjing: metro: duration 41, cost 20. taxi: duration 23, cost 64.9. walk: duration 187, cost 0.0. \nfrom Taiping Heavenly Kingdom History Museum (Zhan Garden) to Nanjing South Railway Station: metro: duration 18, cost 12. taxi: duration 9, cost 27.5. walk: duration 78, cost 0.0. \nfrom Taiping Heavenly Kingdom History Museum (Zhan Garden) to Nanjing Museum: metro: duration 22, cost 12. taxi: duration 6, cost 20.01. walk: duration 52, cost 0.0. \nfrom Taiping Heavenly Kingdom History Museum (Zhan Garden) to First Step Tavern (Shuiyoucheng Branch): taxi: duration 0, cost 11.0. walk: duration 7, cost 0.0. \nfrom Taiping Heavenly Kingdom History Museum (Zhan Garden) to Hongshan Forest Zoo: metro: duration 27, cost 12. taxi: duration 12, cost 32.77. walk: duration 96, cost 0.0. \nfrom Taiping Heavenly Kingdom History Museum (Zhan Garden) to Ming Xiaoling Mausoleum: metro: duration 30, cost 12. taxi: duration 8, cost 23.89. walk: duration 65, cost 0.0. \nfrom Taiping Heavenly Kingdom History Museum (Zhan Garden) to Sun Yat-sen Mausoleum Scenic Area: metro: duration 48, cost 12. taxi: duration 11, cost 31.05. walk: duration 90, cost 0.0. \nfrom Taiping Heavenly Kingdom History Museum (Zhan Garden) to Nanjing Presidential Palace: metro: duration 18, cost 8. taxi: duration 4, cost 14.65. walk: duration 34, cost 0.0. \nfrom Taiping Heavenly Kingdom History Museum (Zhan Garden) to Nanjing Zhongshan Hotel (Jiangsu Conference Center): metro: duration 14, cost 8. taxi: duration 3, cost 13.16. walk: duration 29, cost 0.0. \nfrom Taiping Heavenly Kingdom History Museum (Zhan Garden) to Taiping Heavenly Kingdom History Museum (Zhan Garden):  metro: empty.  taxi: empty.  walk: empty. \nfrom Taiping Heavenly Kingdom History Museum (Zhan Garden) to Qinhuai River Painted Boat: taxi: duration 0, cost 11.0. walk: duration 5, cost 0.0. \nfrom Taiping Heavenly Kingdom History Museum (Zhan Garden) to Zhongshan Scenic Area: metro: duration 52, cost 12. taxi: duration 11, cost 32.48. walk: duration 95, cost 0.0. \nfrom Taiping Heavenly Kingdom History Museum (Zhan Garden) to Xuanwu Lake Scenic Area: metro: duration 24, cost 12. taxi: duration 8, cost 25.45. walk: duration 71, cost 0.0. \nfrom Qinhuai River Painted Boat to Qixia Mountain: metro: duration 104, cost 24. taxi: duration 34, cost 97.47. walk: duration 274, cost 0.0. \nfrom Qinhuai River Painted Boat to Nanjing City Wall: metro: duration 80, cost 20. taxi: duration 27, cost 75.84. walk: duration 216, cost 0.0. \nfrom Qinhuai River Painted Boat to Chengdu Baby Garden Restaurant & Lounge: metro: duration 18, cost 12. taxi: duration 5, cost 18.12. walk: duration 46, cost 0.0. \nfrom Qinhuai River Painted Boat to Confucius Temple: taxi: duration 0, cost 11.0. walk: duration 1, cost 0.0. \nfrom Qinhuai River Painted Boat to Holiday Inn Express Nanjing Jiangbei Wonhall Mall, an IHG Hotel: metro: duration 33, cost 16. taxi: duration 20, cost 56.52. walk: duration 164, cost 0.0. \nfrom Qinhuai River Painted Boat to Six Dynasties Museum: metro: duration 23, cost 8. taxi: duration 4, cost 14.17. walk: duration 32, cost 0.0. \nfrom Qinhuai River Painted Boat to Uncle Liu's Fragrant Frog Restaurant: metro: duration 28, cost 16. taxi: duration 13, cost 36.81. walk: duration 110, cost 0.0. \nfrom Qinhuai River Painted Boat to Great Bao'en Temple Ruins Scenic Area: metro: duration 14, cost 8. taxi: duration 2, cost 11.0. walk: duration 16, cost 0.0. \nfrom Qinhuai River Painted Boat to Chongqing Frog Restaurant (Changjiang Garden Branch): metro: duration 18, cost 8. taxi: duration 3, cost 13.32. walk: duration 29, cost 0.0. \nfrom Qinhuai River Painted Boat to Confucius Temple and Qinhuai River Scenic Area: taxi: duration 0, cost 11.0. walk: duration 0, cost 0.0. \nfrom Qinhuai River Painted Boat to Sichuan Restaurant (Taiping South Road Branch): metro: duration 12, cost 8. taxi: duration 1, cost 11.0. walk: duration 14, cost 0.0. \nfrom Qinhuai River Painted Boat to Nanjing Lukou International Airport: metro: duration 76, cost 28. taxi: duration 50, cost 145.22. walk: duration 401, cost 0.0. \nfrom Qinhuai River Painted Boat to Dingye New Century Hotel Nanjing: metro: duration 43, cost 20. taxi: duration 24, cost 67.03. walk: duration 192, cost 0.0. \nfrom Qinhuai River Painted Boat to Nanjing South Railway Station: metro: duration 20, cost 12. taxi: duration 9, cost 27.03. walk: duration 76, cost 0.0. \nfrom Qinhuai River Painted Boat to Nanjing Museum: metro: duration 24, cost 12. taxi: duration 6, cost 18.82. walk: duration 48, cost 0.0. \nfrom Qinhuai River Painted Boat to First Step Tavern (Shuiyoucheng Branch): taxi: duration 1, cost 11.0. walk: duration 11, cost 0.0. \nfrom Qinhuai River Painted Boat to Hongshan Forest Zoo: metro: duration 29, cost 12. taxi: duration 12, cost 32.85. walk: duration 96, cost 0.0. \nfrom Qinhuai River Painted Boat to Ming Xiaoling Mausoleum: metro: duration 32, cost 12. taxi: duration 7, cost 22.72. walk: duration 61, cost 0.0. \nfrom Qinhuai River Painted Boat to Sun Yat-sen Mausoleum Scenic Area: metro: duration 50, cost 12. taxi: duration 10, cost 29.84. walk: duration 86, cost 0.0. \nfrom Qinhuai River Painted Boat to Nanjing Presidential Palace: metro: duration 20, cost 8. taxi: duration 4, cost 14.44. walk: duration 33, cost 0.0. \nfrom Qinhuai River Painted Boat to Nanjing Zhongshan Hotel (Jiangsu Conference Center): metro: duration 16, cost 8. taxi: duration 3, cost 12.2. walk: duration 25, cost 0.0. \nfrom Qinhuai River Painted Boat to Taiping Heavenly Kingdom History Museum (Zhan Garden): taxi: duration 0, cost 11.0. walk: duration 5, cost 0.0. \nfrom Qinhuai River Painted Boat to Qinhuai River Painted Boat:  metro: empty.  taxi: empty.  walk: empty. \nfrom Qinhuai River Painted Boat to Zhongshan Scenic Area: metro: duration 54, cost 12. taxi: duration 11, cost 31.41. walk: duration 91, cost 0.0. \nfrom Qinhuai River Painted Boat to Xuanwu Lake Scenic Area: metro: duration 26, cost 12. taxi: duration 8, cost 25.55. walk: duration 71, cost 0.0. \nfrom Zhongshan Scenic Area to Qixia Mountain: metro: duration 116, cost 20. taxi: duration 22, cost 63.22. walk: duration 182, cost 0.0. \nfrom Zhongshan Scenic Area to Nanjing City Wall: metro: duration 103, cost 20. taxi: duration 30, cost 86.87. walk: duration 245, cost 0.0. \nfrom Zhongshan Scenic Area to Chengdu Baby Garden Restaurant & Lounge: metro: duration 49, cost 12. taxi: duration 12, cost 33.08. walk: duration 97, cost 0.0. \nfrom Zhongshan Scenic Area to Confucius Temple: metro: duration 54, cost 12. taxi: duration 11, cost 31.53. walk: duration 91, cost 0.0. \nfrom Zhongshan Scenic Area to Holiday Inn Express Nanjing Jiangbei Wonhall Mall, an IHG Hotel: metro: duration 67, cost 20. taxi: duration 28, cost 80.65. walk: duration 229, cost 0.0. \nfrom Zhongshan Scenic Area to Six Dynasties Museum: metro: duration 50, cost 12. taxi: duration 8, cost 24.08. walk: duration 66, cost 0.0. \nfrom Zhongshan Scenic Area to Uncle Liu's Fragrant Frog Restaurant: metro: duration 69, cost 20. taxi: duration 23, cost 64.21. walk: duration 185, cost 0.0. \nfrom Zhongshan Scenic Area to Great Bao'en Temple Ruins Scenic Area: metro: duration 55, cost 12. taxi: duration 13, cost 35.84. walk: duration 106, cost 0.0. \nfrom Zhongshan Scenic Area to Chongqing Frog Restaurant (Changjiang Garden Branch): metro: duration 50, cost 12. taxi: duration 10, cost 30.28. walk: duration 87, cost 0.0. \nfrom Zhongshan Scenic Area to Confucius Temple and Qinhuai River Scenic Area: metro: duration 54, cost 12. taxi: duration 11, cost 31.52. walk: duration 91, cost 0.0. \nfrom Zhongshan Scenic Area to Sichuan Restaurant (Taiping South Road Branch): metro: duration 50, cost 12. taxi: duration 10, cost 29.86. walk: duration 86, cost 0.0. \nfrom Zhongshan Scenic Area to Nanjing Lukou International Airport: metro: duration 114, cost 32. taxi: duration 56, cost 163.34. walk: duration 449, cost 0.0. \nfrom Zhongshan Scenic Area to Dingye New Century Hotel Nanjing: metro: duration 78, cost 20. taxi: duration 32, cost 91.83. walk: duration 259, cost 0.0. \nfrom Zhongshan Scenic Area to Nanjing South Railway Station: metro: duration 61, cost 16. taxi: duration 18, cost 51.13. walk: duration 150, cost 0.0. \nfrom Zhongshan Scenic Area to Nanjing Museum: metro: duration 50, cost 12. taxi: duration 5, cost 17.37. walk: duration 43, cost 0.0. \nfrom Zhongshan Scenic Area to First Step Tavern (Shuiyoucheng Branch): metro: duration 53, cost 12. taxi: duration 12, cost 34.53. walk: duration 102, cost 0.0. \nfrom Zhongshan Scenic Area to Hongshan Forest Zoo: metro: duration 44, cost 8. taxi: duration 8, cost 25.02. walk: duration 69, cost 0.0. \nfrom Zhongshan Scenic Area to Ming Xiaoling Mausoleum: metro: duration 58, cost 12. taxi: duration 3, cost 13.53. walk: duration 30, cost 0.0. \nfrom Zhongshan Scenic Area to Sun Yat-sen Mausoleum Scenic Area: metro: duration 72, cost 12. taxi: duration 1, cost 11.0. walk: duration 12, cost 0.0. \nfrom Zhongshan Scenic Area to Nanjing Presidential Palace: metro: duration 52, cost 12. taxi: duration 8, cost 24.45. walk: duration 67, cost 0.0. \nfrom Zhongshan Scenic Area to Nanjing Zhongshan Hotel (Jiangsu Conference Center): metro: duration 49, cost 12. taxi: duration 8, cost 24.02. walk: duration 66, cost 0.0. \nfrom Zhongshan Scenic Area to Taiping Heavenly Kingdom History Museum (Zhan Garden): metro: duration 52, cost 12. taxi: duration 11, cost 32.48. walk: duration 95, cost 0.0. \nfrom Zhongshan Scenic Area to Qinhuai River Painted Boat: metro: duration 54, cost 12. taxi: duration 11, cost 31.41. walk: duration 91, cost 0.0. \nfrom Zhongshan Scenic Area to Zhongshan Scenic Area:  metro: empty.  taxi: empty.  walk: empty. \nfrom Zhongshan Scenic Area to Xuanwu Lake Scenic Area: metro: duration 45, cost 8. taxi: duration 8, cost 23.48. walk: duration 64, cost 0.0. \nfrom Xuanwu Lake Scenic Area to Qixia Mountain: metro: duration 98, cost 20. taxi: duration 28, cost 79.16. walk: duration 225, cost 0.0. \nfrom Xuanwu Lake Scenic Area to Nanjing City Wall: metro: duration 76, cost 20. taxi: duration 22, cost 63.2. walk: duration 182, cost 0.0. \nfrom Xuanwu Lake Scenic Area to Chengdu Baby Garden Restaurant & Lounge: metro: duration 19, cost 8. taxi: duration 5, cost 18.0. walk: duration 45, cost 0.0. \nfrom Xuanwu Lake Scenic Area to Confucius Temple: metro: duration 26, cost 12. taxi: duration 8, cost 25.34. walk: duration 70, cost 0.0. \nfrom Xuanwu Lake Scenic Area to Holiday Inn Express Nanjing Jiangbei Wonhall Mall, an IHG Hotel: metro: duration 38, cost 20. taxi: duration 20, cost 57.55. walk: duration 167, cost 0.0. \nfrom Xuanwu Lake Scenic Area to Six Dynasties Museum: metro: duration 22, cost 8. taxi: duration 5, cost 16.45. walk: duration 40, cost 0.0. \nfrom Xuanwu Lake Scenic Area to Uncle Liu's Fragrant Frog Restaurant: metro: duration 42, cost 20. taxi: duration 22, cost 62.78. walk: duration 181, cost 0.0. \nfrom Xuanwu Lake Scenic Area to Great Bao'en Temple Ruins Scenic Area: metro: duration 28, cost 12. taxi: duration 10, cost 30.05. walk: duration 86, cost 0.0. \nfrom Xuanwu Lake Scenic Area to Chongqing Frog Restaurant (Changjiang Garden Branch): metro: duration 21, cost 8. taxi: duration 5, cost 18.61. walk: duration 47, cost 0.0. \nfrom Xuanwu Lake Scenic Area to Confucius Temple and Qinhuai River Scenic Area: metro: duration 26, cost 12. taxi: duration 8, cost 25.59. walk: duration 71, cost 0.0. \nfrom Xuanwu Lake Scenic Area to Sichuan Restaurant (Taiping South Road Branch): metro: duration 22, cost 12. taxi: duration 7, cost 21.71. walk: duration 58, cost 0.0. \nfrom Xuanwu Lake Scenic Area to Nanjing Lukou International Airport: metro: duration 88, cost 32. taxi: duration 58, cost 170.76. walk: duration 469, cost 0.0. \nfrom Xuanwu Lake Scenic Area to Dingye New Century Hotel Nanjing: metro: duration 48, cost 20. taxi: duration 24, cost 68.73. walk: duration 197, cost 0.0. \nfrom Xuanwu Lake Scenic Area to Nanjing South Railway Station: metro: duration 34, cost 16. taxi: duration 18, cost 50.05. walk: duration 147, cost 0.0. \nfrom Xuanwu Lake Scenic Area to Nanjing Museum: metro: duration 26, cost 12. taxi: duration 6, cost 20.4. walk: duration 53, cost 0.0. \nfrom Xuanwu Lake Scenic Area to First Step Tavern (Shuiyoucheng Branch): metro: duration 25, cost 12. taxi: duration 9, cost 27.02. walk: duration 76, cost 0.0. \nfrom Xuanwu Lake Scenic Area to Hongshan Forest Zoo: metro: duration 19, cost 8. taxi: duration 3, cost 12.02. walk: duration 25, cost 0.0. \nfrom Xuanwu Lake Scenic Area to Ming Xiaoling Mausoleum: metro: duration 34, cost 12. taxi: duration 6, cost 20.89. walk: duration 55, cost 0.0. \nfrom Xuanwu Lake Scenic Area to Sun Yat-sen Mausoleum Scenic Area: metro: duration 50, cost 12. taxi: duration 8, cost 25.03. walk: duration 69, cost 0.0. \nfrom Xuanwu Lake Scenic Area to Nanjing Presidential Palace: metro: duration 23, cost 8. taxi: duration 4, cost 15.98. walk: duration 38, cost 0.0. \nfrom Xuanwu Lake Scenic Area to Nanjing Zhongshan Hotel (Jiangsu Conference Center): metro: duration 22, cost 12. taxi: duration 6, cost 20.1. walk: duration 52, cost 0.0. \nfrom Xuanwu Lake Scenic Area to Taiping Heavenly Kingdom History Museum (Zhan Garden): metro: duration 24, cost 12. taxi: duration 8, cost 25.45. walk: duration 71, cost 0.0. \nfrom Xuanwu Lake Scenic Area to Qinhuai River Painted Boat: metro: duration 26, cost 12. taxi: duration 8, cost 25.55. walk: duration 71, cost 0.0. \nfrom Xuanwu Lake Scenic Area to Zhongshan Scenic Area: metro: duration 45, cost 8. taxi: duration 8, cost 23.48. walk: duration 64, cost 0.0. \nfrom Xuanwu Lake Scenic Area to Xuanwu Lake Scenic Area:  metro: empty.  taxi: empty.  walk: empty. \n"
+    },
+    "initial_verification": {
+      "commonsense_errors": [
+        "No information found given intercity transport ID from destination to origin.",
+        "The attraction, Nanjing Museum in day 2, is closed when you visiting. Its open time is [09:00 -- 17:00]",
+        "Incorrect cost infomation of innercity transport in day 1, from Nanjing South Railway Station to Nanjing Zhongshan Hotel (Jiangsu Conference Center), metro. [cost = price * people_number]",
+        "Incorrect cost infomation of innercity transport in day 1, from Nanjing Zhongshan Hotel (Jiangsu Conference Center) to Sichuan Restaurant (Taiping South Road Branch), metro. [cost = price * people_number]",
+        "Incorrect cost infomation of innercity transport in day 2, from Nanjing Zhongshan Hotel (Jiangsu Conference Center) to Nanjing Museum, metro. [cost = price * people_number]",
+        "Incorrect cost infomation of innercity transport in day 2, from Nanjing Museum to Chengdu Baby Garden Restaurant & Lounge, metro. [cost = price * people_number]",
+        "Incorrect cost infomation of innercity transport in day 2, from Chengdu Baby Garden Restaurant & Lounge to Confucius Temple, metro. [cost = price * people_number]",
+        "Incorrect cost infomation of innercity transport in day 2, from Qinhuai River Painted Boat to Chongqing Frog Restaurant (Changjiang Garden Branch), metro. [cost = price * people_number]",
+        "Incorrect cost infomation of innercity transport in day 2, from Chongqing Frog Restaurant (Changjiang Garden Branch) to Nanjing South Railway Station, metro. [cost = price * people_number]",
+        "The type of the last activity on day 1 should be accommodation. Except for the last day of the trip, the last activity at night on other days should be returning to the hotel in the plan. ",
+        "The origin of the innercity-transport to Nanjing Museum must be equal to the position of the previous activity Sichuan Restaurant (Taiping South Road Branch)"
+      ],
+      "personal_constraints": [
+        true,
+        true,
+        false,
+        true,
+        true,
+        true,
+        true,
+        true
+      ],
+      "category_normalization": [
+        {
+          "constraint_index": 4,
+          "category_domain": "activity",
+          "expression": "activity_type(activity)",
+          "raw_label": "train",
+          "normalized_label": "train"
+        },
+        {
+          "constraint_index": 4,
+          "category_domain": "activity",
+          "expression": "['breakfast', 'lunch', 'dinner']",
+          "raw_label": "breakfast",
+          "normalized_label": "breakfast"
+        },
+        {
+          "constraint_index": 4,
+          "category_domain": "activity",
+          "expression": "['breakfast', 'lunch', 'dinner']",
+          "raw_label": "lunch",
+          "normalized_label": "lunch"
+        },
+        {
+          "constraint_index": 4,
+          "category_domain": "activity",
+          "expression": "['breakfast', 'lunch', 'dinner']",
+          "raw_label": "dinner",
+          "normalized_label": "dinner"
+        },
+        {
+          "constraint_index": 4,
+          "category_domain": "activity",
+          "expression": "activity_type(activity)",
+          "raw_label": "accommodation",
+          "normalized_label": "accommodation"
+        },
+        {
+          "constraint_index": 4,
+          "category_domain": "activity",
+          "expression": "['breakfast', 'lunch', 'dinner']",
+          "raw_label": "breakfast",
+          "normalized_label": "breakfast"
+        },
+        {
+          "constraint_index": 4,
+          "category_domain": "activity",
+          "expression": "['breakfast', 'lunch', 'dinner']",
+          "raw_label": "lunch",
+          "normalized_label": "lunch"
+        },
+        {
+          "constraint_index": 4,
+          "category_domain": "activity",
+          "expression": "['breakfast', 'lunch', 'dinner']",
+          "raw_label": "dinner",
+          "normalized_label": "dinner"
+        },
+        {
+          "constraint_index": 4,
+          "category_domain": "activity",
+          "expression": "activity_type(activity)",
+          "raw_label": "dinner",
+          "normalized_label": "dinner"
+        },
+        {
+          "constraint_index": 4,
+          "category_domain": "activity",
+          "expression": "['breakfast', 'lunch', 'dinner']",
+          "raw_label": "breakfast",
+          "normalized_label": "breakfast"
+        },
+        {
+          "constraint_index": 4,
+          "category_domain": "activity",
+          "expression": "['breakfast', 'lunch', 'dinner']",
+          "raw_label": "lunch",
+          "normalized_label": "lunch"
+        },
+        {
+          "constraint_index": 4,
+          "category_domain": "activity",
+          "expression": "['breakfast', 'lunch', 'dinner']",
+          "raw_label": "dinner",
+          "normalized_label": "dinner"
+        },
+        {
+          "constraint_index": 4,
+          "category_domain": "activity",
+          "expression": "activity_type(activity)",
+          "raw_label": "attraction",
+          "normalized_label": "attraction"
+        },
+        {
+          "constraint_index": 4,
+          "category_domain": "activity",
+          "expression": "['breakfast', 'lunch', 'dinner']",
+          "raw_label": "breakfast",
+          "normalized_label": "breakfast"
+        },
+        {
+          "constraint_index": 4,
+          "category_domain": "activity",
+          "expression": "['breakfast', 'lunch', 'dinner']",
+          "raw_label": "lunch",
+          "normalized_label": "lunch"
+        },
+        {
+          "constraint_index": 4,
+          "category_domain": "activity",
+          "expression": "['breakfast', 'lunch', 'dinner']",
+          "raw_label": "dinner",
+          "normalized_label": "dinner"
+        },
+        {
+          "constraint_index": 4,
+          "category_domain": "activity",
+          "expression": "activity_type(activity)",
+          "raw_label": "lunch",
+          "normalized_label": "lunch"
+        },
+        {
+          "constraint_index": 4,
+          "category_domain": "activity",
+          "expression": "['breakfast', 'lunch', 'dinner']",
+          "raw_label": "breakfast",
+          "normalized_label": "breakfast"
+        },
+        {
+          "constraint_index": 4,
+          "category_domain": "activity",
+          "expression": "['breakfast', 'lunch', 'dinner']",
+          "raw_label": "lunch",
+          "normalized_label": "lunch"
+        },
+        {
+          "constraint_index": 4,
+          "category_domain": "activity",
+          "expression": "['breakfast', 'lunch', 'dinner']",
+          "raw_label": "dinner",
+          "normalized_label": "dinner"
+        },
+        {
+          "constraint_index": 4,
+          "category_domain": "activity",
+          "expression": "activity_type(activity)",
+          "raw_label": "attraction",
+          "normalized_label": "attraction"
+        },
+        {
+          "constraint_index": 4,
+          "category_domain": "activity",
+          "expression": "['breakfast', 'lunch', 'dinner']",
+          "raw_label": "breakfast",
+          "normalized_label": "breakfast"
+        },
+        {
+          "constraint_index": 4,
+          "category_domain": "activity",
+          "expression": "['breakfast', 'lunch', 'dinner']",
+          "raw_label": "lunch",
+          "normalized_label": "lunch"
+        },
+        {
+          "constraint_index": 4,
+          "category_domain": "activity",
+          "expression": "['breakfast', 'lunch', 'dinner']",
+          "raw_label": "dinner",
+          "normalized_label": "dinner"
+        },
+        {
+          "constraint_index": 4,
+          "category_domain": "activity",
+          "expression": "activity_type(activity)",
+          "raw_label": "attraction",
+          "normalized_label": "attraction"
+        },
+        {
+          "constraint_index": 4,
+          "category_domain": "activity",
+          "expression": "['breakfast', 'lunch', 'dinner']",
+          "raw_label": "breakfast",
+          "normalized_label": "breakfast"
+        },
+        {
+          "constraint_index": 4,
+          "category_domain": "activity",
+          "expression": "['breakfast', 'lunch', 'dinner']",
+          "raw_label": "lunch",
+          "normalized_label": "lunch"
+        },
+        {
+          "constraint_index": 4,
+          "category_domain": "activity",
+          "expression": "['breakfast', 'lunch', 'dinner']",
+          "raw_label": "dinner",
+          "normalized_label": "dinner"
+        },
+        {
+          "constraint_index": 4,
+          "category_domain": "activity",
+          "expression": "activity_type(activity)",
+          "raw_label": "dinner",
+          "normalized_label": "dinner"
+        },
+        {
+          "constraint_index": 4,
+          "category_domain": "activity",
+          "expression": "['breakfast', 'lunch', 'dinner']",
+          "raw_label": "breakfast",
+          "normalized_label": "breakfast"
+        },
+        {
+          "constraint_index": 4,
+          "category_domain": "activity",
+          "expression": "['breakfast', 'lunch', 'dinner']",
+          "raw_label": "lunch",
+          "normalized_label": "lunch"
+        },
+        {
+          "constraint_index": 4,
+          "category_domain": "activity",
+          "expression": "['breakfast', 'lunch', 'dinner']",
+          "raw_label": "dinner",
+          "normalized_label": "dinner"
+        },
+        {
+          "constraint_index": 4,
+          "category_domain": "activity",
+          "expression": "activity_type(activity)",
+          "raw_label": "train",
+          "normalized_label": "train"
+        },
+        {
+          "constraint_index": 4,
+          "category_domain": "activity",
+          "expression": "['breakfast', 'lunch', 'dinner']",
+          "raw_label": "breakfast",
+          "normalized_label": "breakfast"
+        },
+        {
+          "constraint_index": 4,
+          "category_domain": "activity",
+          "expression": "['breakfast', 'lunch', 'dinner']",
+          "raw_label": "lunch",
+          "normalized_label": "lunch"
+        },
+        {
+          "constraint_index": 4,
+          "category_domain": "activity",
+          "expression": "['breakfast', 'lunch', 'dinner']",
+          "raw_label": "dinner",
+          "normalized_label": "dinner"
+        },
+        {
+          "constraint_index": 4,
+          "category_domain": "restaurant",
+          "expression": "{'川菜'}",
+          "raw_label": "川菜",
+          "normalized_label": "Sichuan cuisine"
+        },
+        {
+          "constraint_index": 4,
+          "category_domain": "restaurant",
+          "expression": "restaurant_type_set",
+          "raw_label": "Sichuan cuisine",
+          "normalized_label": "Sichuan cuisine"
+        },
+        {
+          "constraint_index": 5,
+          "category_domain": "activity",
+          "expression": "activity_type(activity)",
+          "raw_label": "train",
+          "normalized_label": "train"
+        },
+        {
+          "constraint_index": 5,
+          "category_domain": "activity",
+          "expression": "['attraction', 'airplane', 'train']",
+          "raw_label": "attraction",
+          "normalized_label": "attraction"
+        },
+        {
+          "constraint_index": 5,
+          "category_domain": "activity",
+          "expression": "['attraction', 'airplane', 'train']",
+          "raw_label": "airplane",
+          "normalized_label": "airplane"
+        },
+        {
+          "constraint_index": 5,
+          "category_domain": "activity",
+          "expression": "['attraction', 'airplane', 'train']",
+          "raw_label": "train",
+          "normalized_label": "train"
+        },
+        {
+          "constraint_index": 5,
+          "category_domain": "transport",
+          "expression": "innercity_transport_type(activity_transports(activity))",
+          "raw_label": "empty",
+          "normalized_label": "empty"
+        },
+        {
+          "constraint_index": 5,
+          "category_domain": "transport",
+          "expression": "'metro'",
+          "raw_label": "metro",
+          "normalized_label": "metro"
+        },
+        {
+          "constraint_index": 5,
+          "category_domain": "activity",
+          "expression": "activity_type(activity)",
+          "raw_label": "accommodation",
+          "normalized_label": "accommodation"
+        },
+        {
+          "constraint_index": 5,
+          "category_domain": "activity",
+          "expression": "['attraction', 'airplane', 'train']",
+          "raw_label": "attraction",
+          "normalized_label": "attraction"
+        },
+        {
+          "constraint_index": 5,
+          "category_domain": "activity",
+          "expression": "['attraction', 'airplane', 'train']",
+          "raw_label": "airplane",
+          "normalized_label": "airplane"
+        },
+        {
+          "constraint_index": 5,
+          "category_domain": "activity",
+          "expression": "['attraction', 'airplane', 'train']",
+          "raw_label": "train",
+          "normalized_label": "train"
+        },
+        {
+          "constraint_index": 5,
+          "category_domain": "transport",
+          "expression": "innercity_transport_type(activity_transports(activity))",
+          "raw_label": "metro",
+          "normalized_label": "metro"
+        },
+        {
+          "constraint_index": 5,
+          "category_domain": "transport",
+          "expression": "'metro'",
+          "raw_label": "metro",
+          "normalized_label": "metro"
+        },
+        {
+          "constraint_index": 5,
+          "category_domain": "activity",
+          "expression": "activity_type(activity)",
+          "raw_label": "dinner",
+          "normalized_label": "dinner"
+        },
+        {
+          "constraint_index": 5,
+          "category_domain": "activity",
+          "expression": "['attraction', 'airplane', 'train']",
+          "raw_label": "attraction",
+          "normalized_label": "attraction"
+        },
+        {
+          "constraint_index": 5,
+          "category_domain": "activity",
+          "expression": "['attraction', 'airplane', 'train']",
+          "raw_label": "airplane",
+          "normalized_label": "airplane"
+        },
+        {
+          "constraint_index": 5,
+          "category_domain": "activity",
+          "expression": "['attraction', 'airplane', 'train']",
+          "raw_label": "train",
+          "normalized_label": "train"
+        },
+        {
+          "constraint_index": 5,
+          "category_domain": "transport",
+          "expression": "innercity_transport_type(activity_transports(activity))",
+          "raw_label": "metro",
+          "normalized_label": "metro"
+        },
+        {
+          "constraint_index": 5,
+          "category_domain": "transport",
+          "expression": "'metro'",
+          "raw_label": "metro",
+          "normalized_label": "metro"
+        },
+        {
+          "constraint_index": 5,
+          "category_domain": "activity",
+          "expression": "activity_type(activity)",
+          "raw_label": "attraction",
+          "normalized_label": "attraction"
+        },
+        {
+          "constraint_index": 5,
+          "category_domain": "activity",
+          "expression": "['attraction', 'airplane', 'train']",
+          "raw_label": "attraction",
+          "normalized_label": "attraction"
+        },
+        {
+          "constraint_index": 5,
+          "category_domain": "activity",
+          "expression": "['attraction', 'airplane', 'train']",
+          "raw_label": "airplane",
+          "normalized_label": "airplane"
+        },
+        {
+          "constraint_index": 5,
+          "category_domain": "activity",
+          "expression": "['attraction', 'airplane', 'train']",
+          "raw_label": "train",
+          "normalized_label": "train"
+        },
+        {
+          "constraint_index": 5,
+          "category_domain": "transport",
+          "expression": "innercity_transport_type(activity_transports(activity))",
+          "raw_label": "metro",
+          "normalized_label": "metro"
+        },
+        {
+          "constraint_index": 5,
+          "category_domain": "transport",
+          "expression": "'metro'",
+          "raw_label": "metro",
+          "normalized_label": "metro"
+        },
+        {
+          "constraint_index": 5,
+          "category_domain": "activity",
+          "expression": "activity_type(activity)",
+          "raw_label": "lunch",
+          "normalized_label": "lunch"
+        },
+        {
+          "constraint_index": 5,
+          "category_domain": "activity",
+          "expression": "['attraction', 'airplane', 'train']",
+          "raw_label": "attraction",
+          "normalized_label": "attraction"
+        },
+        {
+          "constraint_index": 5,
+          "category_domain": "activity",
+          "expression": "['attraction', 'airplane', 'train']",
+          "raw_label": "airplane",
+          "normalized_label": "airplane"
+        },
+        {
+          "constraint_index": 5,
+          "category_domain": "activity",
+          "expression": "['attraction', 'airplane', 'train']",
+          "raw_label": "train",
+          "normalized_label": "train"
+        },
+        {
+          "constraint_index": 5,
+          "category_domain": "transport",
+          "expression": "innercity_transport_type(activity_transports(activity))",
+          "raw_label": "metro",
+          "normalized_label": "metro"
+        },
+        {
+          "constraint_index": 5,
+          "category_domain": "transport",
+          "expression": "'metro'",
+          "raw_label": "metro",
+          "normalized_label": "metro"
+        },
+        {
+          "constraint_index": 5,
+          "category_domain": "activity",
+          "expression": "activity_type(activity)",
+          "raw_label": "attraction",
+          "normalized_label": "attraction"
+        },
+        {
+          "constraint_index": 5,
+          "category_domain": "activity",
+          "expression": "['attraction', 'airplane', 'train']",
+          "raw_label": "attraction",
+          "normalized_label": "attraction"
+        },
+        {
+          "constraint_index": 5,
+          "category_domain": "activity",
+          "expression": "['attraction', 'airplane', 'train']",
+          "raw_label": "airplane",
+          "normalized_label": "airplane"
+        },
+        {
+          "constraint_index": 5,
+          "category_domain": "activity",
+          "expression": "['attraction', 'airplane', 'train']",
+          "raw_label": "train",
+          "normalized_label": "train"
+        },
+        {
+          "constraint_index": 5,
+          "category_domain": "transport",
+          "expression": "innercity_transport_type(activity_transports(activity))",
+          "raw_label": "metro",
+          "normalized_label": "metro"
+        },
+        {
+          "constraint_index": 5,
+          "category_domain": "transport",
+          "expression": "'metro'",
+          "raw_label": "metro",
+          "normalized_label": "metro"
+        },
+        {
+          "constraint_index": 5,
+          "category_domain": "activity",
+          "expression": "activity_type(activity)",
+          "raw_label": "attraction",
+          "normalized_label": "attraction"
+        },
+        {
+          "constraint_index": 5,
+          "category_domain": "activity",
+          "expression": "['attraction', 'airplane', 'train']",
+          "raw_label": "attraction",
+          "normalized_label": "attraction"
+        },
+        {
+          "constraint_index": 5,
+          "category_domain": "activity",
+          "expression": "['attraction', 'airplane', 'train']",
+          "raw_label": "airplane",
+          "normalized_label": "airplane"
+        },
+        {
+          "constraint_index": 5,
+          "category_domain": "activity",
+          "expression": "['attraction', 'airplane', 'train']",
+          "raw_label": "train",
+          "normalized_label": "train"
+        },
+        {
+          "constraint_index": 5,
+          "category_domain": "transport",
+          "expression": "innercity_transport_type(activity_transports(activity))",
+          "raw_label": "walk",
+          "normalized_label": "walk"
+        },
+        {
+          "constraint_index": 5,
+          "category_domain": "transport",
+          "expression": "'metro'",
+          "raw_label": "metro",
+          "normalized_label": "metro"
+        },
+        {
+          "constraint_index": 5,
+          "category_domain": "activity",
+          "expression": "activity_type(activity)",
+          "raw_label": "dinner",
+          "normalized_label": "dinner"
+        },
+        {
+          "constraint_index": 5,
+          "category_domain": "activity",
+          "expression": "['attraction', 'airplane', 'train']",
+          "raw_label": "attraction",
+          "normalized_label": "attraction"
+        },
+        {
+          "constraint_index": 5,
+          "category_domain": "activity",
+          "expression": "['attraction', 'airplane', 'train']",
+          "raw_label": "airplane",
+          "normalized_label": "airplane"
+        },
+        {
+          "constraint_index": 5,
+          "category_domain": "activity",
+          "expression": "['attraction', 'airplane', 'train']",
+          "raw_label": "train",
+          "normalized_label": "train"
+        },
+        {
+          "constraint_index": 5,
+          "category_domain": "transport",
+          "expression": "innercity_transport_type(activity_transports(activity))",
+          "raw_label": "metro",
+          "normalized_label": "metro"
+        },
+        {
+          "constraint_index": 5,
+          "category_domain": "transport",
+          "expression": "'metro'",
+          "raw_label": "metro",
+          "normalized_label": "metro"
+        },
+        {
+          "constraint_index": 5,
+          "category_domain": "activity",
+          "expression": "activity_type(activity)",
+          "raw_label": "train",
+          "normalized_label": "train"
+        },
+        {
+          "constraint_index": 5,
+          "category_domain": "activity",
+          "expression": "['attraction', 'airplane', 'train']",
+          "raw_label": "attraction",
+          "normalized_label": "attraction"
+        },
+        {
+          "constraint_index": 5,
+          "category_domain": "activity",
+          "expression": "['attraction', 'airplane', 'train']",
+          "raw_label": "airplane",
+          "normalized_label": "airplane"
+        },
+        {
+          "constraint_index": 5,
+          "category_domain": "activity",
+          "expression": "['attraction', 'airplane', 'train']",
+          "raw_label": "train",
+          "normalized_label": "train"
+        },
+        {
+          "constraint_index": 5,
+          "category_domain": "transport",
+          "expression": "innercity_transport_type(activity_transports(activity))",
+          "raw_label": "metro",
+          "normalized_label": "metro"
+        },
+        {
+          "constraint_index": 5,
+          "category_domain": "transport",
+          "expression": "'metro'",
+          "raw_label": "metro",
+          "normalized_label": "metro"
+        },
+        {
+          "constraint_index": 6,
+          "category_domain": "activity",
+          "expression": "activity_type(activity)",
+          "raw_label": "train",
+          "normalized_label": "train"
+        },
+        {
+          "constraint_index": 6,
+          "category_domain": "activity",
+          "expression": "'accommodation'",
+          "raw_label": "accommodation",
+          "normalized_label": "accommodation"
+        },
+        {
+          "constraint_index": 6,
+          "category_domain": "activity",
+          "expression": "activity_type(activity)",
+          "raw_label": "accommodation",
+          "normalized_label": "accommodation"
+        },
+        {
+          "constraint_index": 6,
+          "category_domain": "activity",
+          "expression": "'accommodation'",
+          "raw_label": "accommodation",
+          "normalized_label": "accommodation"
+        },
+        {
+          "constraint_index": 6,
+          "category_domain": "activity",
+          "expression": "activity_type(activity)",
+          "raw_label": "dinner",
+          "normalized_label": "dinner"
+        },
+        {
+          "constraint_index": 6,
+          "category_domain": "activity",
+          "expression": "'accommodation'",
+          "raw_label": "accommodation",
+          "normalized_label": "accommodation"
+        },
+        {
+          "constraint_index": 6,
+          "category_domain": "activity",
+          "expression": "activity_type(activity)",
+          "raw_label": "attraction",
+          "normalized_label": "attraction"
+        },
+        {
+          "constraint_index": 6,
+          "category_domain": "activity",
+          "expression": "'accommodation'",
+          "raw_label": "accommodation",
+          "normalized_label": "accommodation"
+        },
+        {
+          "constraint_index": 6,
+          "category_domain": "activity",
+          "expression": "activity_type(activity)",
+          "raw_label": "lunch",
+          "normalized_label": "lunch"
+        },
+        {
+          "constraint_index": 6,
+          "category_domain": "activity",
+          "expression": "'accommodation'",
+          "raw_label": "accommodation",
+          "normalized_label": "accommodation"
+        },
+        {
+          "constraint_index": 6,
+          "category_domain": "activity",
+          "expression": "activity_type(activity)",
+          "raw_label": "attraction",
+          "normalized_label": "attraction"
+        },
+        {
+          "constraint_index": 6,
+          "category_domain": "activity",
+          "expression": "'accommodation'",
+          "raw_label": "accommodation",
+          "normalized_label": "accommodation"
+        },
+        {
+          "constraint_index": 6,
+          "category_domain": "activity",
+          "expression": "activity_type(activity)",
+          "raw_label": "attraction",
+          "normalized_label": "attraction"
+        },
+        {
+          "constraint_index": 6,
+          "category_domain": "activity",
+          "expression": "'accommodation'",
+          "raw_label": "accommodation",
+          "normalized_label": "accommodation"
+        },
+        {
+          "constraint_index": 6,
+          "category_domain": "activity",
+          "expression": "activity_type(activity)",
+          "raw_label": "dinner",
+          "normalized_label": "dinner"
+        },
+        {
+          "constraint_index": 6,
+          "category_domain": "activity",
+          "expression": "'accommodation'",
+          "raw_label": "accommodation",
+          "normalized_label": "accommodation"
+        },
+        {
+          "constraint_index": 6,
+          "category_domain": "activity",
+          "expression": "activity_type(activity)",
+          "raw_label": "train",
+          "normalized_label": "train"
+        },
+        {
+          "constraint_index": 6,
+          "category_domain": "activity",
+          "expression": "'accommodation'",
+          "raw_label": "accommodation",
+          "normalized_label": "accommodation"
+        },
+        {
+          "constraint_index": 7,
+          "category_domain": "activity",
+          "expression": "activity_type(activity)",
+          "raw_label": "train",
+          "normalized_label": "train"
+        },
+        {
+          "constraint_index": 7,
+          "category_domain": "activity",
+          "expression": "'accommodation'",
+          "raw_label": "accommodation",
+          "normalized_label": "accommodation"
+        },
+        {
+          "constraint_index": 7,
+          "category_domain": "activity",
+          "expression": "activity_type(activity)",
+          "raw_label": "accommodation",
+          "normalized_label": "accommodation"
+        },
+        {
+          "constraint_index": 7,
+          "category_domain": "activity",
+          "expression": "'accommodation'",
+          "raw_label": "accommodation",
+          "normalized_label": "accommodation"
+        },
+        {
+          "constraint_index": 7,
+          "category_domain": "activity",
+          "expression": "activity_type(activity)",
+          "raw_label": "dinner",
+          "normalized_label": "dinner"
+        },
+        {
+          "constraint_index": 7,
+          "category_domain": "activity",
+          "expression": "'accommodation'",
+          "raw_label": "accommodation",
+          "normalized_label": "accommodation"
+        },
+        {
+          "constraint_index": 7,
+          "category_domain": "activity",
+          "expression": "activity_type(activity)",
+          "raw_label": "attraction",
+          "normalized_label": "attraction"
+        },
+        {
+          "constraint_index": 7,
+          "category_domain": "activity",
+          "expression": "'accommodation'",
+          "raw_label": "accommodation",
+          "normalized_label": "accommodation"
+        },
+        {
+          "constraint_index": 7,
+          "category_domain": "activity",
+          "expression": "activity_type(activity)",
+          "raw_label": "lunch",
+          "normalized_label": "lunch"
+        },
+        {
+          "constraint_index": 7,
+          "category_domain": "activity",
+          "expression": "'accommodation'",
+          "raw_label": "accommodation",
+          "normalized_label": "accommodation"
+        },
+        {
+          "constraint_index": 7,
+          "category_domain": "activity",
+          "expression": "activity_type(activity)",
+          "raw_label": "attraction",
+          "normalized_label": "attraction"
+        },
+        {
+          "constraint_index": 7,
+          "category_domain": "activity",
+          "expression": "'accommodation'",
+          "raw_label": "accommodation",
+          "normalized_label": "accommodation"
+        },
+        {
+          "constraint_index": 7,
+          "category_domain": "activity",
+          "expression": "activity_type(activity)",
+          "raw_label": "attraction",
+          "normalized_label": "attraction"
+        },
+        {
+          "constraint_index": 7,
+          "category_domain": "activity",
+          "expression": "'accommodation'",
+          "raw_label": "accommodation",
+          "normalized_label": "accommodation"
+        },
+        {
+          "constraint_index": 7,
+          "category_domain": "activity",
+          "expression": "activity_type(activity)",
+          "raw_label": "dinner",
+          "normalized_label": "dinner"
+        },
+        {
+          "constraint_index": 7,
+          "category_domain": "activity",
+          "expression": "'accommodation'",
+          "raw_label": "accommodation",
+          "normalized_label": "accommodation"
+        },
+        {
+          "constraint_index": 7,
+          "category_domain": "activity",
+          "expression": "activity_type(activity)",
+          "raw_label": "train",
+          "normalized_label": "train"
+        },
+        {
+          "constraint_index": 7,
+          "category_domain": "activity",
+          "expression": "'accommodation'",
+          "raw_label": "accommodation",
+          "normalized_label": "accommodation"
+        },
+        {
+          "constraint_index": 8,
+          "category_domain": "transport",
+          "expression": "innercity_transport_type(activity_transports(activity))",
+          "raw_label": "empty",
+          "normalized_label": "empty"
+        },
+        {
+          "constraint_index": 8,
+          "category_domain": "transport",
+          "expression": "'taxi'",
+          "raw_label": "taxi",
+          "normalized_label": "taxi"
+        },
+        {
+          "constraint_index": 8,
+          "category_domain": "transport",
+          "expression": "innercity_transport_type(activity_transports(activity))",
+          "raw_label": "metro",
+          "normalized_label": "metro"
+        },
+        {
+          "constraint_index": 8,
+          "category_domain": "transport",
+          "expression": "'taxi'",
+          "raw_label": "taxi",
+          "normalized_label": "taxi"
+        },
+        {
+          "constraint_index": 8,
+          "category_domain": "transport",
+          "expression": "innercity_transport_type(activity_transports(activity))",
+          "raw_label": "metro",
+          "normalized_label": "metro"
+        },
+        {
+          "constraint_index": 8,
+          "category_domain": "transport",
+          "expression": "'taxi'",
+          "raw_label": "taxi",
+          "normalized_label": "taxi"
+        },
+        {
+          "constraint_index": 8,
+          "category_domain": "transport",
+          "expression": "innercity_transport_type(activity_transports(activity))",
+          "raw_label": "metro",
+          "normalized_label": "metro"
+        },
+        {
+          "constraint_index": 8,
+          "category_domain": "transport",
+          "expression": "'taxi'",
+          "raw_label": "taxi",
+          "normalized_label": "taxi"
+        },
+        {
+          "constraint_index": 8,
+          "category_domain": "transport",
+          "expression": "innercity_transport_type(activity_transports(activity))",
+          "raw_label": "metro",
+          "normalized_label": "metro"
+        },
+        {
+          "constraint_index": 8,
+          "category_domain": "transport",
+          "expression": "'taxi'",
+          "raw_label": "taxi",
+          "normalized_label": "taxi"
+        },
+        {
+          "constraint_index": 8,
+          "category_domain": "transport",
+          "expression": "innercity_transport_type(activity_transports(activity))",
+          "raw_label": "metro",
+          "normalized_label": "metro"
+        },
+        {
+          "constraint_index": 8,
+          "category_domain": "transport",
+          "expression": "'taxi'",
+          "raw_label": "taxi",
+          "normalized_label": "taxi"
+        },
+        {
+          "constraint_index": 8,
+          "category_domain": "transport",
+          "expression": "innercity_transport_type(activity_transports(activity))",
+          "raw_label": "walk",
+          "normalized_label": "walk"
+        },
+        {
+          "constraint_index": 8,
+          "category_domain": "transport",
+          "expression": "'taxi'",
+          "raw_label": "taxi",
+          "normalized_label": "taxi"
+        },
+        {
+          "constraint_index": 8,
+          "category_domain": "transport",
+          "expression": "innercity_transport_type(activity_transports(activity))",
+          "raw_label": "metro",
+          "normalized_label": "metro"
+        },
+        {
+          "constraint_index": 8,
+          "category_domain": "transport",
+          "expression": "'taxi'",
+          "raw_label": "taxi",
+          "normalized_label": "taxi"
+        },
+        {
+          "constraint_index": 8,
+          "category_domain": "transport",
+          "expression": "innercity_transport_type(activity_transports(activity))",
+          "raw_label": "metro",
+          "normalized_label": "metro"
+        },
+        {
+          "constraint_index": 8,
+          "category_domain": "transport",
+          "expression": "'taxi'",
+          "raw_label": "taxi",
+          "normalized_label": "taxi"
+        }
+      ],
+      "personal_errors": [
+        "Personal constraint 3 failed: total_cost=0 \nfor activity in allactivities(plan):\n    total_cost+=activity_cost(activity)\n    total_cost += innercity_transport_cost(activity_transports(activity))\nresult=(total_cost<=7400)"
+      ],
+      "evaluation_errors": [],
+      "translation_errors": [],
+      "error_info": [
+        "No information found given intercity transport ID from destination to origin.",
+        "The attraction, Nanjing Museum in day 2, is closed when you visiting. Its open time is [09:00 -- 17:00]",
+        "Incorrect cost infomation of innercity transport in day 1, from Nanjing South Railway Station to Nanjing Zhongshan Hotel (Jiangsu Conference Center), metro. [cost = price * people_number]",
+        "Incorrect cost infomation of innercity transport in day 1, from Nanjing Zhongshan Hotel (Jiangsu Conference Center) to Sichuan Restaurant (Taiping South Road Branch), metro. [cost = price * people_number]",
+        "Incorrect cost infomation of innercity transport in day 2, from Nanjing Zhongshan Hotel (Jiangsu Conference Center) to Nanjing Museum, metro. [cost = price * people_number]",
+        "Incorrect cost infomation of innercity transport in day 2, from Nanjing Museum to Chengdu Baby Garden Restaurant & Lounge, metro. [cost = price * people_number]",
+        "Incorrect cost infomation of innercity transport in day 2, from Chengdu Baby Garden Restaurant & Lounge to Confucius Temple, metro. [cost = price * people_number]",
+        "Incorrect cost infomation of innercity transport in day 2, from Qinhuai River Painted Boat to Chongqing Frog Restaurant (Changjiang Garden Branch), metro. [cost = price * people_number]",
+        "Incorrect cost infomation of innercity transport in day 2, from Chongqing Frog Restaurant (Changjiang Garden Branch) to Nanjing South Railway Station, metro. [cost = price * people_number]",
+        "The type of the last activity on day 1 should be accommodation. Except for the last day of the trip, the last activity at night on other days should be returning to the hotel in the plan. ",
+        "The origin of the innercity-transport to Nanjing Museum must be equal to the position of the previous activity Sichuan Restaurant (Taiping South Road Branch)",
+        "Personal constraint 3 failed: total_cost=0 \nfor activity in allactivities(plan):\n    total_cost+=activity_cost(activity)\n    total_cost += innercity_transport_cost(activity_transports(activity))\nresult=(total_cost<=7400)"
+      ],
+      "passed": false,
+      "translated_plan": {
+        "people_number": 4,
+        "start_city": "Chengdu",
+        "target_city": "Nanjing",
+        "itinerary": [
+          {
+            "day": 1,
+            "activities": [
+              {
+                "start_time": "07:13",
+                "end_time": "18:14",
+                "start": "Chengdu East Railway Station",
+                "end": "Nanjing South Railway Station",
+                "price": 915.14,
+                "cost": 3660.56,
+                "TrainID": "G1475",
+                "type": "train",
+                "tickets": 4,
+                "transports": []
+              },
+              {
+                "position": "Nanjing Zhongshan Hotel (Jiangsu Conference Center)",
+                "type": "accommodation",
+                "transports": [
+                  {
+                    "start": "Nanjing South Railway Station",
+                    "end": "Nanjing South Railway Station-Metro Station",
+                    "mode": "walk",
+                    "start_time": "18:14",
+                    "end_time": "18:17",
+                    "cost": 0,
+                    "distance": 0.29,
+                    "price": 0
+                  },
+                  {
+                    "start": "Nanjing South Railway Station-Metro Station",
+                    "end": "Xianmen-Metro Station",
+                    "mode": "metro",
+                    "start_time": "18:17",
+                    "end_time": "18:32",
+                    "cost": 2,
+                    "distance": 7.71,
+                    "price": 3,
+                    "tickets": 4
+                  },
+                  {
+                    "start": "Xianmen-Metro Station",
+                    "end": "Nanjing Zhongshan Hotel (Jiangsu Conference Center)",
+                    "mode": "walk",
+                    "start_time": "18:32",
+                    "end_time": "18:38",
+                    "cost": 0,
+                    "distance": 0.56,
+                    "price": 0
+                  }
+                ],
+                "room_type": 2,
+                "price": 369,
+                "cost": 738,
+                "start_time": "18:30",
+                "end_time": "24:00",
+                "rooms": 2
+              },
+              {
+                "position": "Sichuan Restaurant (Taiping South Road Branch)",
+                "type": "dinner",
+                "transports": [
+                  {
+                    "start": "Nanjing Zhongshan Hotel (Jiangsu Conference Center)",
+                    "end": "Xianmen-Metro Station",
+                    "mode": "walk",
+                    "start_time": "18:30",
+                    "end_time": "18:36",
+                    "cost": 0,
+                    "distance": 0.56,
+                    "price": 0
+                  },
+                  {
+                    "start": "Xianmen-Metro Station",
+                    "end": "Changfu Street-Metro Station",
+                    "mode": "metro",
+                    "start_time": "18:36",
+                    "end_time": "18:38",
+                    "cost": 2,
+                    "distance": 1.47,
+                    "price": 2,
+                    "tickets": 4
+                  },
+                  {
+                    "start": "Changfu Street-Metro Station",
+                    "end": "Sichuan Restaurant (Taiping South Road Branch)",
+                    "mode": "walk",
+                    "start_time": "18:38",
+                    "end_time": "18:42",
+                    "cost": 0,
+                    "distance": 0.38,
+                    "price": 0
+                  }
+                ],
+                "price": 55,
+                "cost": 220,
+                "start_time": "19:00",
+                "end_time": "20:00"
+              }
+            ]
+          },
+          {
+            "day": 2,
+            "activities": [
+              {
+                "position": "Nanjing Museum",
+                "type": "attraction",
+                "transports": [
+                  {
+                    "start": "Nanjing Zhongshan Hotel (Jiangsu Conference Center)",
+                    "end": "Xianmen-Metro Station",
+                    "mode": "walk",
+                    "start_time": "08:00",
+                    "end_time": "08:06",
+                    "cost": 0,
+                    "distance": 0.56,
+                    "price": 0
+                  },
+                  {
+                    "start": "Xianmen-Metro Station",
+                    "end": "Clover Garden-Metro Station",
+                    "mode": "metro",
+                    "start_time": "08:06",
+                    "end_time": "08:11",
+                    "cost": 2,
+                    "distance": 2.79,
+                    "price": 2,
+                    "tickets": 4
+                  },
+                  {
+                    "start": "Clover Garden-Metro Station",
+                    "end": "Nanjing Museum",
+                    "mode": "walk",
+                    "start_time": "08:11",
+                    "end_time": "08:20",
+                    "cost": 0,
+                    "distance": 0.81,
+                    "price": 0
+                  }
+                ],
+                "price": 0.0,
+                "cost": 0.0,
+                "tickets": 4,
+                "start_time": "08:30",
+                "end_time": "10:00"
+              },
+              {
+                "position": "Chengdu Baby Garden Restaurant & Lounge",
+                "type": "lunch",
+                "transports": [
+                  {
+                    "start": "Nanjing Museum",
+                    "end": "Clover Garden-Metro Station",
+                    "mode": "walk",
+                    "start_time": "10:00",
+                    "end_time": "10:09",
+                    "cost": 0,
+                    "distance": 0.81,
+                    "price": 0
+                  },
+                  {
+                    "start": "Clover Garden-Metro Station",
+                    "end": "Yunnan Road-Metro Station",
+                    "mode": "metro",
+                    "start_time": "10:09",
+                    "end_time": "10:21",
+                    "cost": 2,
+                    "distance": 6.1,
+                    "price": 3,
+                    "tickets": 4
+                  },
+                  {
+                    "start": "Yunnan Road-Metro Station",
+                    "end": "Chengdu Baby Garden Restaurant & Lounge",
+                    "mode": "walk",
+                    "start_time": "10:21",
+                    "end_time": "10:25",
+                    "cost": 0,
+                    "distance": 0.38,
+                    "price": 0
+                  }
+                ],
+                "price": 119,
+                "cost": 476,
+                "start_time": "12:00",
+                "end_time": "13:00"
+              },
+              {
+                "position": "Confucius Temple",
+                "type": "attraction",
+                "transports": [
+                  {
+                    "start": "Chengdu Baby Garden Restaurant & Lounge",
+                    "end": "Yunnan Road-Metro Station",
+                    "mode": "walk",
+                    "start_time": "13:00",
+                    "end_time": "13:04",
+                    "cost": 0,
+                    "distance": 0.38,
+                    "price": 0
+                  },
+                  {
+                    "start": "Yunnan Road-Metro Station",
+                    "end": "Confucius Temple-Metro Station",
+                    "mode": "metro",
+                    "start_time": "13:04",
+                    "end_time": "13:12",
+                    "cost": 2,
+                    "distance": 4.17,
+                    "price": 3,
+                    "tickets": 4
+                  },
+                  {
+                    "start": "Confucius Temple-Metro Station",
+                    "end": "Confucius Temple",
+                    "mode": "walk",
+                    "start_time": "13:12",
+                    "end_time": "13:18",
+                    "cost": 0,
+                    "distance": 0.52,
+                    "price": 0
+                  }
+                ],
+                "price": 0.0,
+                "cost": 0.0,
+                "tickets": 4,
+                "start_time": "13:30",
+                "end_time": "15:00"
+              },
+              {
+                "position": "Qinhuai River Painted Boat",
+                "type": "attraction",
+                "transports": [
+                  {
+                    "start": "Confucius Temple",
+                    "end": "Qinhuai River Painted Boat",
+                    "mode": "walk",
+                    "start_time": "15:00",
+                    "end_time": "15:01",
+                    "cost": 0,
+                    "distance": 0.1211728178996144
+                  }
+                ],
+                "price": 100.0,
+                "cost": 400.0,
+                "tickets": 4,
+                "start_time": "15:10",
+                "end_time": "16:10"
+              },
+              {
+                "position": "Chongqing Frog Restaurant (Changjiang Garden Branch)",
+                "type": "dinner",
+                "transports": [
+                  {
+                    "start": "Qinhuai River Painted Boat",
+                    "end": "Confucius Temple-Metro Station",
+                    "mode": "walk",
+                    "start_time": "16:10",
+                    "end_time": "16:16",
+                    "cost": 0,
+                    "distance": 0.56,
+                    "price": 0
+                  },
+                  {
+                    "start": "Confucius Temple-Metro Station",
+                    "end": "Zhujiang Road-Metro Station",
+                    "mode": "metro",
+                    "start_time": "16:16",
+                    "end_time": "16:22",
+                    "cost": 3,
+                    "distance": 3.04,
+                    "price": 2,
+                    "tickets": 4
+                  },
+                  {
+                    "start": "Zhujiang Road-Metro Station",
+                    "end": "Chongqing Frog Restaurant (Changjiang Garden Branch)",
+                    "mode": "walk",
+                    "start_time": "16:22",
+                    "end_time": "16:28",
+                    "cost": 0,
+                    "distance": 0.5,
+                    "price": 0
+                  }
+                ],
+                "price": 102,
+                "cost": 408,
+                "start_time": "17:00",
+                "end_time": "18:00"
+              },
+              {
+                "start": "Nanjing South Railway Station",
+                "end": "Chengdu East Railway Station",
+                "start_time": "20:02",
+                "end_time": "23:18",
+                "TrainID": "G28",
+                "type": "train",
+                "transports": [
+                  {
+                    "start": "Chongqing Frog Restaurant (Changjiang Garden Branch)",
+                    "end": "Zhujiang Road-Metro Station",
+                    "mode": "walk",
+                    "start_time": "18:00",
+                    "end_time": "18:06",
+                    "cost": 0,
+                    "distance": 0.5,
+                    "price": 0
+                  },
+                  {
+                    "start": "Zhujiang Road-Metro Station",
+                    "end": "Nanjing South Railway Station-Metro Station",
+                    "mode": "metro",
+                    "start_time": "18:06",
+                    "end_time": "18:23",
+                    "cost": 3,
+                    "distance": 8.95,
+                    "price": 3,
+                    "tickets": 4
+                  },
+                  {
+                    "start": "Nanjing South Railway Station-Metro Station",
+                    "end": "Nanjing South Railway Station",
+                    "mode": "walk",
+                    "start_time": "18:23",
+                    "end_time": "18:26",
+                    "cost": 0,
+                    "distance": 0.29,
+                    "price": 0
+                  }
+                ],
+                "price": 844.74,
+                "cost": 3378.96,
+                "tickets": 4
+              }
+            ]
+          }
+        ]
+      },
+      "verifier_errors": [],
+      "schema_errors": [],
+      "translation_failures": []
+    },
+    "environment_context": {
+      "lang": "en"
+    },
+    "generation_metadata": {
+      "raw_response": "[{\"day\": 1,```json\n{\n    \"day\": 1,\n    \"activities\": [\n        {\n            \"start_time\": \"07:13\",\n            \"end_time\": \"18:14\",\n            \"start\": \"Chengdu East Railway Station\",\n            \"end\": \"Nanjing South Railway Station\",\n            \"price\": 915.14,\n            \"cost\": 3660.56,\n            \"TrainID\": \"G1475\",\n            \"type\": \"train\",\n            \"tickets\": 4,\n            \"transports\": \"empty\"\n        },\n        {\n            \"position\": \"Nanjing Zhongshan Hotel (Jiangsu Conference Center)\",\n            \"type\": \"accommodation\",\n            \"transports\": {\"from\": \"Nanjing South Railway Station\", \"to\": \"Nanjing Zhongshan Hotel (Jiangsu Conference Center)\", \"mode\": \"metro\", \"start_time\": \"18:14\", \"end_time\": \"18:26\", \"cost\": 2},\n            \"room_type\": 2,\n            \"price\": 369,\n            \"cost\": 738,\n            \"start_time\": \"18:30\",\n            \"end_time\": \"24:00\",\n            \"rooms\": 2\n        },\n        {\n            \"position\": \"Sichuan Restaurant (Taiping South Road Branch)\",\n            \"type\": \"dinner\",\n            \"transports\": {\"from\": \"Nanjing Zhongshan Hotel (Jiangsu Conference Center)\", \"to\": \"Sichuan Restaurant (Taiping South Road Branch)\", \"mode\": \"metro\", \"start_time\": \"18:30\", \"end_time\": \"18:42\", \"cost\": 2},\n            \"price\": 55,\n            \"cost\": 220,\n            \"start_time\": \"19:00\",\n            \"end_time\": \"20:00\"\n        }\n    ]\n},\n{\n    \"day\": 2,\n    \"activities\": [\n        {\n            \"position\": \"Nanjing Museum\",\n            \"type\": \"attraction\",\n            \"transports\": {\"from\": \"Nanjing Zhongshan Hotel (Jiangsu Conference Center)\", \"to\": \"Nanjing Museum\", \"mode\": \"metro\", \"start_time\": \"08:00\", \"end_time\": \"08:20\", \"cost\": 2},\n            \"price\": 0.0,\n            \"cost\": 0.0,\n            \"tickets\": 4,\n            \"start_time\": \"08:30\",\n            \"end_time\": \"10:00\"\n        },\n        {\n            \"position\": \"Chengdu Baby Garden Restaurant & Lounge\",\n            \"type\": \"lunch\",\n            \"transports\": {\"from\": \"Nanjing Museum\", \"to\": \"Chengdu Baby Garden Restaurant & Lounge\", \"mode\": \"metro\", \"start_time\": \"10:00\", \"end_time\": \"10:25\", \"cost\": 2},\n            \"price\": 119,\n            \"cost\": 476,\n            \"start_time\": \"12:00\",\n            \"end_time\": \"13:00\"\n        },\n        {\n            \"position\": \"Confucius Temple\",\n            \"type\": \"attraction\",\n            \"transports\": {\"from\": \"Chengdu Baby Garden Restaurant & Lounge\", \"to\": \"Confucius Temple\", \"mode\": \"metro\", \"start_time\": \"13:00\", \"end_time\": \"13:18\", \"cost\": 2},\n            \"price\": 0.0,\n            \"cost\": 0.0,\n            \"tickets\": 4,\n            \"start_time\": \"13:30\",\n            \"end_time\": \"15:00\"\n        },\n        {\n            \"position\": \"Qinhuai River Painted Boat\",\n            \"type\": \"attraction\",\n            \"transports\": {\"from\": \"Confucius Temple\", \"to\": \"Qinhuai River Painted Boat\", \"mode\": \"walk\", \"start_time\": \"15:00\", \"end_time\": \"15:01\", \"cost\": 0},\n            \"price\": 100.0,\n            \"cost\": 400.0,\n            \"tickets\": 4,\n            \"start_time\": \"15:10\",\n            \"end_time\": \"16:10\"\n        },\n        {\n            \"position\": \"Chongqing Frog Restaurant (Changjiang Garden Branch)\",\n            \"type\": \"dinner\",\n            \"transports\": {\"from\": \"Qinhuai River Painted Boat\", \"to\": \"Chongqing Frog Restaurant (Changjiang Garden Branch)\", \"mode\": \"metro\", \"start_time\": \"16:10\", \"end_time\": \"16:33\", \"cost\": 3},\n            \"price\": 102,\n            \"cost\": 408,\n            \"start_time\": \"17:00\",\n            \"end_time\": \"18:00\"\n        },\n        {\n            \"start\": \"Nanjing South Railway Station\",\n            \"end\": \"Chengdu East Railway Station\",\n            \"start_time\": \"20:02\",\n            \"end_time\": \"23:18\",\n            \"TrainID\": \"G28\",\n            \"type\": \"train\",\n            \"transports\": {\"from\": \"Chongqing Frog Restaurant (Changjiang Garden Branch)\", \"to\": \"Nanjing South Railway Station\", \"mode\": \"metro\", \"start_time\": \"18:00\", \"end_time\": \"18:26\", \"cost\": 3},\n            \"price\": 844.74,\n            \"cost\": 3378.96,\n            \"tickets\": 4\n        }\n    ]\n}\n```",
+      "input_tokens": 95092,
+      "output_tokens": 1465,
+      "total_tokens": 96557,
+      "model_calls": 6,
+      "failed_model_calls": 0,
+      "elapsed_time_seconds": 42.059696197509766,
+      "llm_inference_time_seconds": 28.231104135513306,
+      "information_collection_time_seconds": 13.822865724563599,
+      "initial_generation_time_s": 42.04958099999931,
+      "initial_generation_tool_calls": 5532,
+      "initial_generation_tool_call_counts_by_type": {
+        "accommodations_select": 1,
+        "attractions_select": 1,
+        "goto": 1800,
+        "intercity_transport_select": 4,
+        "next_page": 125,
+        "poi_lat_lon_search": 3600,
+        "restaurants_select": 1
+      },
+      "shared_initialization_time_s": 42.50392210006248,
+      "shared_initialization_system_metrics": {
+        "tool_call_count": 5592,
+        "successful_tool_call_count": 5592,
+        "failed_tool_call_count": 0,
+        "verification_count": 1,
+        "tool_call_counts_by_type": {
+          "accommodations_select": 2,
+          "attractions_select": 4,
+          "goto": 1816,
+          "intercity_transport_select": 6,
+          "next_page": 125,
+          "poi_lat_lon_search": 3632,
+          "restaurants_select": 7
+        }
+      }
+    }
+  },
+  "initial_plan_hash": "73426f40aa2cb28161c3c06032a8e20c73fe8df194580e4bcf15659f06a52feb",
+  "initial_state_hash": "8891117e9ca4c66e7c4633d8d2089bf51111da73644087d5d27c7c46d854782b"
+}
