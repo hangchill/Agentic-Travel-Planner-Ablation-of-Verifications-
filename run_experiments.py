@@ -45,7 +45,28 @@ def main(argv=None):
     parser.add_argument("--oracle-translation", "--oracle_translation", action="store_true", default=True)
     parser.add_argument("--split-manifest", type=Path)
     parser.add_argument("--partition", choices=("train", "test"))
+    parser.add_argument("--prepared-r4-inputs", action="store_true", help=argparse.SUPPRESS)
+    parser.add_argument("--r4-matrix", type=Path, help="Pooled R4 guidance matrix")
+    parser.add_argument("--allow-synthetic-matrix", action="store_true")
+    parser.add_argument("--query-limit", type=int, default=5)
+    parser.add_argument("--dry-run", action="store_true")
     args = parser.parse_args(argv)
+    if args.r4_matrix:
+        if args.strategy != ["R4"] or args.resume or args.retry_failed or args.prepared_r4_inputs:
+            parser.error("--r4-matrix requires --strategy R4 and a fresh run")
+        if args.strategy_max_steps or args.split_manifest or args.temperature is not None or args.top_p is not None:
+            parser.error("Pooled R4 uses --max-steps and the standard split/model settings")
+        from r4.run_r4 import execute
+        args.mode, args.matrix, args.matrix_dir = "combined", args.r4_matrix, []
+        args.allow_missing_r1, args.perspective = False, "candidate"
+        args.llm = args.llm or "deepseek/deepseek-chat"
+        args.seed = args.seed if args.seed is not None else 4213
+        try:
+            return execute(args)
+        except ValueError as exc:
+            parser.error(str(exc))
+    if args.dry_run or args.allow_synthetic_matrix:
+        parser.error("--dry-run/--allow-synthetic-matrix require --r4-matrix")
     args.repair_strategies = args.strategy
     strategy_max_steps = {}
     for value in args.strategy_max_steps:
@@ -162,10 +183,13 @@ def main(argv=None):
         config["split_manifest_hash"] = stable_hash(load_manifest(args.split_manifest))
     if strategy_max_steps:
         config["strategy_max_steps"] = strategy_max_steps
+    if args.prepared_r4_inputs:
+        config["trial_subdirectory"] = "trials"
     directory = run_comparison(
         {uid: data[uid] for uid in selected}, run_id=run_id, output_root=args.output_dir,
         config=config, prepare_initial_state=prepare, runtime_factory=runtime,
         skip_unavailable=args.skip_unavailable, resume=args.resume, retry_failed=args.retry_failed, raw_only=True,
+        prepared_inputs=args.prepared_r4_inputs,
     )
     print(f"Comparison outputs: {directory}")
 
