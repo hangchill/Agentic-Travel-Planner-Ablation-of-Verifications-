@@ -287,6 +287,94 @@ class RegressionMatrixTests(unittest.TestCase):
         self.assertEqual(row["regression_count"], 1)
         self.assertEqual(result["coverage"]["unchanged_attempts"], 0)
 
+    def test_commonsense_repair_source_captures_regression(self):
+        # A changed commonsense zero-target attempt that regresses a passing
+        # personal destination (monetary_budget True -> False).
+        result = build_regression_matrix([record(
+            before=[False, True], after=[True, False], codes=[TRIP, BUDGET],
+            targets=[], repair_phase="commonsense", target_commonsense_errors=["x"],
+            changed_slot_count=1, total_comparable_slots=2, changed_slot_rate=0.5,
+        )])
+        row = cell(result, source="commonsense_repair", destination="monetary_budget")
+        self.assertEqual(row["regression_count"], 1)
+        self.assertEqual(row["support_count"], 1)
+        self.assertEqual(row["regression_rate"], 1.0)
+        accepted = cell(result, "accepted_trajectory",
+                        source="commonsense_repair", destination="monetary_budget")
+        self.assertEqual(accepted["regression_count"], 1)
+        self.assertEqual(accepted["support_count"], 1)
+        self.assertEqual(accepted["regression_rate"], 1.0)
+        contrib = next(row for row in result["contributions"]
+                       if row["source_family"] == "commonsense_repair"
+                       and row["destination_family"] == "monetary_budget"
+                       and row["perspective"] == "candidate")
+        self.assertIsNone(contrib["source_constraint_index"])
+        self.assertFalse(contrib["is_single_target"])
+        self.assertFalse(contrib["is_isolated_personal_target"])
+
+    def test_commonsense_unchanged_still_excluded(self):
+        result = build_regression_matrix([record(
+            before=[False, True], after=[False, True], codes=[TRIP, BUDGET],
+            targets=[], repair_phase="commonsense", target_commonsense_errors=["x"],
+            changed_slot_count=0, total_comparable_slots=2, changed_slot_rate=0.0,
+            decision_reason="no_progress_unchanged",
+        )])
+        row = cell(result, source="commonsense_repair", destination="monetary_budget")
+        self.assertEqual(row["support_count"], 0)
+        self.assertIsNone(row["regression_rate"])
+        self.assertEqual(result["coverage"]["unchanged_attempts"], 1)
+        # The unchanged exclusion runs first, so the attempt never becomes a
+        # commonsense source and contributes no eligible support anywhere.
+        self.assertFalse(any(row["source_family"] == "commonsense_repair"
+                             for row in result["contributions"]))
+        self.assertFalse(any(row["eligible"] for row in result["contributions"]))
+        excluded = next(row for row in result["contributions"]
+                        if row["destination_family"] == "monetary_budget"
+                        and row["perspective"] == "candidate")
+        self.assertFalse(excluded["eligible"])
+        self.assertEqual(excluded["exclusion_reason"], "unchanged_candidate")
+
+    def test_commonsense_source_unsupported_cells(self):
+        def commonsense(before, after, codes):
+            return record(before=before, after=after, codes=codes, targets=[],
+                          repair_phase="commonsense", target_commonsense_errors=["x"],
+                          changed_slot_count=1, total_comparable_slots=2, changed_slot_rate=0.5)
+        cases = (
+            # destination family absent from the descriptors
+            (commonsense([False, True], [True, False], [TRIP, TRIP]),
+             "dining", "destination_family_absent"),
+            # mapped destination was FAIL before repair
+            (commonsense([False, False], [True, False], [TRIP, BUDGET]),
+             "monetary_budget", "destination_not_all_pass_before"),
+            # mapped destination is UNKNOWN after repair
+            (commonsense([False, True], [True, None], [TRIP, BUDGET]),
+             "monetary_budget", "destination_unknown_after"),
+        )
+        for attempt, destination, reason in cases:
+            with self.subTest(reason=reason):
+                result = build_regression_matrix([attempt])
+                row = cell(result, source="commonsense_repair", destination=destination)
+                self.assertEqual(row["support_count"], 0)
+                self.assertIsNone(row["regression_rate"])
+                contrib = next(row for row in result["contributions"]
+                               if row["source_family"] == "commonsense_repair"
+                               and row["destination_family"] == destination
+                               and row["perspective"] == "candidate")
+                self.assertFalse(contrib["eligible"])
+                self.assertEqual(contrib["exclusion_reason"], reason)
+
+    def test_personal_zero_and_multi_target_unchanged(self):
+        # Non-commonsense zero-target still excluded as zero_targets.
+        zero = build_regression_matrix([record(targets=[], repair_phase=None)])
+        self.assertEqual(contribution(zero)["exclusion_reason"], "zero_targets")
+        self.assertFalse(any(row["source_family"] == "commonsense_repair"
+                             and row["eligible"] for row in zero["contributions"]))
+        # Multi-target still excluded as multiple_targets even in commonsense phase.
+        multi = build_regression_matrix([record(targets=[1, 2], repair_phase="commonsense",
+                                                 target_commonsense_errors=["x"])])
+        self.assertEqual(contribution(multi)["exclusion_reason"], "multiple_targets")
+
+
 class MatrixCliTests(unittest.TestCase):
     def run_cli(self, *args):
         return subprocess.run(
@@ -348,6 +436,40 @@ class MatrixCliTests(unittest.TestCase):
                 "trip_specification,0,0,2,", "trip_specification,0,0,6,"))
             with self.assertRaises(ValueError):
                 load_regression_matrix(output)
+
+    def test_commonsense_row_in_exports_and_loader(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            input_file, output = root / "records.jsonl", root / "out"
+            records = [
+                # single-target personal regression on monetary_budget
+                record(step=1, before=[False, True], after=[True, False],
+                       codes=[TRIP, BUDGET], editable_scope="plan"),
+                # commonsense zero-target regression on monetary_budget
+                record(step=2, before=[False, True], after=[True, False],
+                       codes=[TRIP, BUDGET], targets=[], repair_phase="commonsense",
+                       target_commonsense_errors=["x"], changed_slot_count=1,
+                       total_comparable_slots=2, changed_slot_rate=0.5,
+                       editable_scope="plan"),
+            ]
+            input_file.write_text("\n".join(json.dumps(r.to_dict()) for r in records), encoding="utf-8")
+            result = self.run_cli("--input", str(input_file), "--output-dir", str(output))
+            self.assertEqual(result.returncode, 0, result.stderr)
+            pivots = (
+                "candidate_regression_rate.csv", "candidate_regression_support.csv",
+                "candidate_regression_count.csv", "accepted_regression_rate.csv",
+                "accepted_regression_support.csv", "accepted_regression_count.csv",
+                "regression_matrix_candidate.csv", "regression_matrix_accepted.csv",
+            )
+            for filename in pivots:
+                with (output / filename).open(newline="") as stream:
+                    rows = list(csv.DictReader(stream))
+                self.assertEqual(len(rows), 10)
+                self.assertEqual(rows[-1]["source_family"], "commonsense_repair")
+            matrix = load_regression_matrix(output)
+            self.assertIn("commonsense_repair", matrix)
+            self.assertEqual(matrix["commonsense_repair"]["monetary_budget"],
+                             dict(rate=1.0, support_count=1, regression_count=1))
 
     def test_cli_strategy_filter_and_multiple_strategy_error(self):
         with tempfile.TemporaryDirectory() as directory:

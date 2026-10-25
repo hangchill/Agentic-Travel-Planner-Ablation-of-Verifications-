@@ -19,6 +19,19 @@ An attempt contributes only when:
 
 A regression occurs if **any** eligible destination instance is False afterward.
 Each attempt counts at most once per family pair, even if several instances fail.
+
+### Source families
+
+The source axis is the 9 personal `CONSTRAINT_FAMILIES` plus one extra
+`commonsense_repair` row (10 source rows in all; matrix definition version
+`2.1.0`). A `commonsense_repair` source is a changed (non-no-op) attempt with
+`repair_phase == "commonsense"` and no personal target; the unchanged-attempt
+exclusion still runs first, so commonsense no-ops are dropped. Destination
+columns remain the 9 personal families. `commonsense_repair` is never a
+destination column, so the diagonal exclusion never fires for it and all 9
+destinations are candidate columns. Rules 2, 3 and 7 (single mapped personal
+source, source False before, i != j) apply to the personal source rows only;
+rules 4-6 (destination mapped, True before, known after) apply to every source.
 Missing/unmapped/ambiguous/compound descriptors are not guessed. Eligibility
 covers mapped instances, not necessarily every real-world requirement. Unknown
 after states exclude the whole destination contribution, even if another member
@@ -133,6 +146,10 @@ matrix = load_regression_matrix(output_directory, perspective="candidate")
 cell = matrix["trip_specification"]["monetary_budget"]
 # {"rate": 0.4, "support_count": 5, "regression_count": 2}
 ```
+
+Pivots and `load_regression_matrix` return 10 source rows (the 9 personal
+families plus `commonsense_repair`) over 9 destination columns, e.g.
+`matrix["commonsense_repair"]["monetary_budget"]`.
 
 Pass a scope subdirectory to load scoped matrices, or `perspective="accepted"`
 (`"accepted_trajectory"` also works). The loader validates matching axes and

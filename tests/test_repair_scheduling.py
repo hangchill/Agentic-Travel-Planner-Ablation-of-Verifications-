@@ -103,14 +103,23 @@ class SchedulingTests(unittest.TestCase):
         self.assertEqual(len(result['history']) - 1, 6)
         self.assertEqual(self.phases, ['personal'] * 5 + ['commonsense'])
 
-    def test_commonsense_matrix_exclusion_and_historical_reading(self):
+    def test_commonsense_matrix_capture_and_historical_reading(self):
         result = self.run_loop([verification(False, False), verification(True, False)], initial=verification(True))
         payload = result['history'][1]['repair_attempt']
         self.assertEqual(payload['repair_phase'], 'commonsense')
         self.assertEqual(payload['target_constraint_indices'], [])
         self.assertEqual(payload['target_commonsense_errors'], ['transport failure'])
+        # The changed commonsense attempt regressed a previously-passing personal
+        # family and is now captured under the commonsense_repair source row.
         analysis = build_regression_matrix([payload])
-        self.assertTrue(all(row['eligible_count'] == 0 for row in analysis['aggregate']))
+        eligible = [row for row in analysis['aggregate'] if row['eligible_count']]
+        self.assertTrue(eligible)
+        self.assertTrue(all(row['source_family'] == 'commonsense_repair' for row in eligible))
+        regressed = next(row for row in eligible if row['perspective'] == 'candidate'
+                         and row['destination_family'] == 'trip_specification')
+        self.assertEqual(regressed['regression_count'], 1)
+        self.assertEqual(regressed['support_count'], 1)
+        self.assertEqual(regressed['regression_rate'], 1.0)
         payload.pop('repair_phase'); payload.pop('target_commonsense_errors')
         self.assertIsNone(RepairAttemptRecord.from_dict(payload).repair_phase)
 

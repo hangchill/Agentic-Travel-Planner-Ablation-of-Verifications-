@@ -12,7 +12,10 @@ from chinatravel.evaluation.constraint_families import (
 from chinatravel.evaluation.repair_attempt import coerce_repair_attempt
 
 TAXONOMY_VERSION = "1.0.0"
-MATRIX_DEFINITION_VERSION = "2.0.0"
+MATRIX_DEFINITION_VERSION = "2.1.0"
+COMMONSENSE_REPAIR_SOURCE = "commonsense_repair"
+# Source axis is the 9 personal destination families plus one commonsense row.
+SOURCE_FAMILIES = (*CONSTRAINT_FAMILIES, COMMONSENSE_REPAIR_SOURCE)
 PERSPECTIVES = ("candidate", "accepted_trajectory")
 CONTRIBUTION_COLUMNS = (
     "run_id", "query_uid", "step", "repair_strategy", "source_constraint_index",
@@ -89,6 +92,11 @@ def _is_unchanged_attempt(record):
 
 def _source(record, mapping):
     targets = record.target_constraint_indices
+    # Changed commonsense-phase attempts with no personal target form their own
+    # source row; the unchanged exclusion still runs first so no-ops are dropped.
+    if (not _is_unchanged_attempt(record) and record.repair_phase == "commonsense"
+            and not targets):
+        return None, COMMONSENSE_REPAIR_SOURCE, "commonsense", None
     if len(targets) != 1:
         return None, None, None, "zero_targets" if not targets else "multiple_targets"
     index = targets[0]
@@ -263,7 +271,7 @@ def aggregate_contributions(contributions, *, by_scope=False) -> list[dict]:
     result = []
     for strategy, scope in sorted(strategies, key=lambda pair: (pair[0], pair[1] or "")):
         for perspective in PERSPECTIVES:
-            for source in CONSTRAINT_FAMILIES:
+            for source in SOURCE_FAMILIES:
                 for destination in CONSTRAINT_FAMILIES:
                     if source == destination:
                         continue
@@ -306,11 +314,11 @@ def load_regression_matrix(directory, perspective="candidate") -> dict:
             if reader.fieldnames != ["source_family", *CONSTRAINT_FAMILIES]:
                 raise ValueError(f"Unexpected matrix columns: {path}")
             rows = list(reader)
-        if [row["source_family"] for row in rows] != list(CONSTRAINT_FAMILIES):
+        if [row["source_family"] for row in rows] != list(SOURCE_FAMILIES):
             raise ValueError(f"Unexpected matrix rows: {path}")
         matrices[metric] = rows
     result = {}
-    for index, source in enumerate(CONSTRAINT_FAMILIES):
+    for index, source in enumerate(SOURCE_FAMILIES):
         result[source] = {}
         for destination in CONSTRAINT_FAMILIES:
             raw_rate = matrices["rate"][index][destination]
