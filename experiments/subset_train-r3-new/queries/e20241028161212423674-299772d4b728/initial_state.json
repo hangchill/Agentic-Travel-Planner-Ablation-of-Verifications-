@@ -1,0 +1,1580 @@
+{
+  "run_id": "subset_train-r3-new",
+  "query_uid": "e20241028161212423674",
+  "state": {
+    "query_uid": "e20241028161212423674",
+    "problem": {
+      "uid": "e20241028161212423674",
+      "tag": "medium",
+      "start_city": "Beijing",
+      "target_city": "Chengdu",
+      "days": 2,
+      "people_number": 2,
+      "limit_rooms": true,
+      "limits_room_type": true,
+      "hard_logic_py": [
+        "result=(day_count(plan)==2)",
+        "result=(people_count(plan)==2)",
+        "total_cost=0 \nfor activity in allactivities(plan):\n    total_cost+=activity_cost(activity)\n    total_cost += innercity_transport_cost(activity_transports(activity))\nresult=(total_cost<=5000)",
+        "result=True\nfor activity in allactivities(plan):\n  if activity_type(activity) in ['attraction', 'airplane', 'train'] and activity_tickets(activity)!=2: result=False\n  if innercity_transport_type(activity_transports(activity))=='metro'and metro_tickets(activity_transports(activity))!=2: result=False",
+        "result=True\nfor activity in allactivities(plan):\n  if activity_type(activity)=='accommodation' and room_count(activity)!=1: result=False",
+        "result=True\nfor activity in allactivities(plan):\n  if activity_type(activity)=='accommodation' and room_type(activity)!=1: result=False",
+        "intercity_transport_set=set()\nfor activity in allactivities(plan):\n  if activity_type(activity) in ['train', 'airplane']: intercity_transport_set.add(intercity_transport_type(activity))\nresult=({'train'}==intercity_transport_set)",
+        "result=True\nfor activity in allactivities(plan):\n  if innercity_transport_type(activity_transports(activity))=='taxi'and taxi_cars(activity_transports(activity))!=1: result=False"
+      ],
+      "nature_language": "Current location: Beijing. Two of us want to visit Chengdu for 2 days with a budget of 5,000 RMB. We plan to travel round-trip by train and stay in a room with a large bed. Could you please provide a travel itinerary for us?",
+      "nature_language_en": "Current location: Beijing. Two of us want to visit Chengdu for 2 days with a budget of 5,000 RMB. We plan to travel round-trip by train and stay in a room with a large bed. Could you please provide a travel itinerary for us?"
+    },
+    "raw_initial_plan": [
+      {
+        "day": 1,
+        "activities": [
+          {
+            "start_time": "07:00",
+            "end_time": "14:33",
+            "start": "Beijing West Railway Station",
+            "end": "Chengdu East Railway Station",
+            "price": 990.94,
+            "cost": 1981.88,
+            "TrainID": "G87",
+            "type": "train",
+            "tickets": 2,
+            "transports": "empty"
+          },
+          {
+            "position": "Chengdu Research Base of Giant Panda Breeding",
+            "type": "attraction",
+            "transports": {
+              "from": "Chengdu East Railway Station",
+              "to": "Chengdu Research Base of Giant Panda Breeding",
+              "mode": "metro",
+              "start_time": "14:33",
+              "end_time": "15:35",
+              "cost": 10
+            },
+            "price": 55.0,
+            "cost": 110.0,
+            "tickets": 2,
+            "start_time": "15:45",
+            "end_time": "17:45"
+          },
+          {
+            "position": "Chen Mapo Tofu (Flagship Store)",
+            "type": "dinner",
+            "transports": {
+              "from": "Chengdu Research Base of Giant Panda Breeding",
+              "to": "Chen Mapo Tofu (Flagship Store)",
+              "mode": "metro",
+              "start_time": "17:45",
+              "end_time": "18:45",
+              "cost": 8
+            },
+            "price": 74,
+            "cost": 148,
+            "start_time": "19:00",
+            "end_time": "20:00"
+          },
+          {
+            "position": "Celebrity City Hotel",
+            "type": "accommodation",
+            "transports": {
+              "from": "Chen Mapo Tofu (Flagship Store)",
+              "to": "Celebrity City Hotel",
+              "mode": "metro",
+              "start_time": "20:00",
+              "end_time": "20:09",
+              "cost": 4
+            },
+            "room_type": 2,
+            "price": 353,
+            "cost": 353,
+            "start_time": "20:15",
+            "end_time": "24:00",
+            "rooms": 1
+          }
+        ]
+      },
+      {
+        "day": 2,
+        "activities": [
+          {
+            "position": "Wuhou Shrine",
+            "type": "attraction",
+            "transports": {
+              "from": "Celebrity City Hotel",
+              "to": "Wuhou Shrine",
+              "mode": "metro",
+              "start_time": "08:00",
+              "end_time": "08:13",
+              "cost": 4
+            },
+            "price": 50.0,
+            "cost": 100.0,
+            "tickets": 2,
+            "start_time": "08:20",
+            "end_time": "10:20"
+          },
+          {
+            "position": "Jinli Ancient Street",
+            "type": "attraction",
+            "transports": {
+              "from": "Wuhou Shrine",
+              "to": "Jinli Ancient Street",
+              "mode": "walk",
+              "start_time": "10:20",
+              "end_time": "10:22",
+              "cost": 0
+            },
+            "price": 0.0,
+            "cost": 0.0,
+            "tickets": 2,
+            "start_time": "10:30",
+            "end_time": "11:30"
+          },
+          {
+            "position": "Shu Daxia Hot Pot (Chunxi Branch)",
+            "type": "lunch",
+            "transports": {
+              "from": "Jinli Ancient Street",
+              "to": "Shu Daxia Hot Pot (Chunxi Branch)",
+              "mode": "metro",
+              "start_time": "11:30",
+              "end_time": "11:42",
+              "cost": 4
+            },
+            "price": 109,
+            "cost": 218,
+            "start_time": "12:00",
+            "end_time": "13:00"
+          },
+          {
+            "position": "Kuanzhai Alley",
+            "type": "attraction",
+            "transports": {
+              "from": "Shu Daxia Hot Pot (Chunxi Branch)",
+              "to": "Kuanzhai Alley",
+              "mode": "metro",
+              "start_time": "13:00",
+              "end_time": "13:13",
+              "cost": 4
+            },
+            "price": 0.0,
+            "cost": 0.0,
+            "tickets": 2,
+            "start_time": "13:20",
+            "end_time": "14:20"
+          },
+          {
+            "position": "Chengdu East Railway Station",
+            "type": "train",
+            "transports": {
+              "from": "Kuanzhai Alley",
+              "to": "Chengdu East Railway Station",
+              "mode": "metro",
+              "start_time": "14:20",
+              "end_time": "14:44",
+              "cost": 6
+            },
+            "start_time": "15:00",
+            "end_time": "22:32",
+            "start": "Chengdu East Railway Station",
+            "end": "Beijing West Railway Station",
+            "price": 990.94,
+            "cost": 1981.88,
+            "TrainID": "G90",
+            "tickets": 2
+          }
+        ]
+      }
+    ],
+    "repair_context": {
+      "go_train_info": "TrainID\tTrainType\tFrom\tTo\tBeginTime\tEndTime\tDuration\tprice\nG87\tHigh-speed rail\tBeijing West Railway Station\tChengdu East Railway Station\t07:00\t14:33\t7.55\t990.94\nG89\tHigh-speed rail\tBeijing West Railway Station\tChengdu East Railway Station\t15:00\t22:31\t7.52\t990.94\n",
+      "go_flight_info": "FlightID\tFrom\tTo\tBeginTime\tEndTime\tDuration\tprice\nFL123\tBeijing Daxing International Airport\tChengdu Shuangliu International Airport\t14:10\t16:04\t1.91\t750.67\nFL124\tBeijing Capital International Airport\tChengdu Shuangliu International Airport\t15:14\t17:08\t1.91\t722.94\nFL127\tBeijing Capital International Airport\tChengdu Shuangliu International Airport\t15:49\t17:43\t1.91\t715.52\n",
+      "back_train_info": "TrainID\tTrainType\tFrom\tTo\tBeginTime\tEndTime\tDuration\tprice\nG90\tHigh-speed rail\tChengdu East Railway Station\tBeijing West Railway Station\t15:00\t22:32\t7.53\t990.94\nG88\tHigh-speed rail\tChengdu East Railway Station\tBeijing West Railway Station\t06:55\t14:26\t7.52\t990.94\nG388\tHigh-speed rail\tChengdu East Railway Station\tBeijing Fengtai Station\t10:22\t20:00\t9.77\t990.94\nG308\tHigh-speed rail\tChengdu East Railway Station\tBeijing West Railway Station\t10:56\t20:20\t9.4\t990.94\n",
+      "back_flight_info": "FlightID\tFrom\tTo\tBeginTime\tEndTime\tDuration\tprice\nFL420\tChengdu Tianfu International Airport\tBeijing Capital International Airport\t21:12\t23:06\t1.91\t721.96\n",
+      "attraction_info": "name\ttype\tlat\tlon\topentime\tendtime\tprice\trecommendmintime\trecommendmaxtime\nChengdu Research Base of Giant Panda Breeding\tAmusement Park/Sports Entertainment\t30.747146\t104.145729\t07:30\t17:00\t55.0\t0.5\t2.0\nDujiangyan Irrigation System Scenic Area\tnatural scenery\t31.00793\t103.617627\t08:00\t18:00\t80.0\t0.0\t1.5\nWuhou Shrine\thistorical site\t30.652927\t104.054625\t08:30\t19:00\t50.0\t2.0\t3.5\nDu Fu Thatched Cottage\thistorical site\t30.666527\t104.034938\t08:30\t19:00\t50.0\t2.5\t4.0\nMount Qingcheng\tnatural scenery\t30.911742\t103.569195\t08:30\t17:30\t80.0\t0.5\t1.0\nJinsha Site Museum\tMuseum/Memorial Hall\t30.687728\t104.019188\t09:00\t18:00\t66.0\t2.5\t3.0\nChengdu Museum\tMuseum/Memorial Hall\t30.663457\t104.070226\t09:00\t17:00\t0.0\t1.0\t1.5\nShufeng Yayun Sichuan Opera Theater\tCultural Landscape\t30.666437\t104.052651\t09:00\t21:30\t120.0\t0.0\t1.0\nJinli Ancient Street\tcommercial district\t30.651906\t104.056257\t00:00\t24:00\t0.0\t1.0\t2.0\nKuanzhai Alley\tcommercial district\t30.669938\t104.059763\t00:00\t24:00\t0.0\t1.0\t2.0\nChunxi Road\tcommercial district\t30.662751\t104.084506\t00:00\t24:00\t0.0\t2.5\t4.0\nSichuan Museum\tMuseum/Memorial Hall\t30.666735\t104.040142\t09:00\t17:00\t0.0\t2.0\t3.0\nSichuan Museum\tMuseum/Memorial Hall\t30.666735\t104.040142\t09:00\t17:00\t0.0\t2.0\t3.0\nChengdu Happy Valley\tAmusement Park/Sports Entertainment\t30.728966\t104.040363\t10:00\t21:00\t150.0\t2.0\t3.0\nChengdu Polar Ocean Park\tAmusement Park/Sports Entertainment\t30.500235\t104.080551\t09:30\t17:30\t255.0\t2.5\t4.0\n",
+      "restaurant_info": "name\tlat\tlon\tprice\tcuisine\topentime\tendtime\trecommendedfood\nChen Mapo Tofu (Flagship Store)\t30.6627136\t104.0341746\t74.0\tSichuan cuisine\t11:00\t21:00\tChen Mapo Tofu, Chen Mapo Twice-Cooked Pork, Couple's Sliced Beef and Ox Tripe in Chili Sauce, Kung Pao Chicken, Yu-Shiang Shredded Pork, Dan Dan Noodles\nGrandma Ye's Bobo Chicken (Taikoo Li Branch)\t30.6510074\t104.0845205\t57.0\tSnacks\t10:30\t21:30\tSpecialty minced pork egg fried rice, signature chicken soup rice, secret recipe beef, fermented glutinous rice poached egg, handmade thin pancakes, old brown sugar cold cake\nZhong Dumplings (Main Store at People's Park)\t30.6567713\t104.0589733\t41.0\tSnacks\t08:30\t20:00\tZhong Dumplings, Dan Dan Noodles, Couple's Sliced Beef and Ox Tripe, Dragon Wontons, Special Three Cannons, Egg Pancakes\nShu Daxia Hot Pot (Chunxi Branch)\t30.6540734\t104.0760104\t109.0\tHot pot\t11:00\t01:00\tImperial Concubine Beef, Tai Chi Double Slippery, Flower Thousand Bones, Glacier Goose Intestine, Hero Water Buffalo Tripe, Brown Sugar Glutinous Rice Cake\nGrill Master Spicy Grilled Fish (IFS Branch)\t30.6544864\t104.0807262\t100.0\tSichuan cuisine\t11:00\t21:30\tClassic Spicy Grilled Fish, Black Pepper Pork Neck, Crispy Tofu Puffs, Handmade Black Bean Curd, Charcoal-Grilled Oysters, Crispy Fried Pork\n",
+      "accommodation_info": "name\tfeaturehoteltype\tlat\tlon\tprice\tnumbed\nCelebrity City Hotel\tSauna\t30.654071\t104.06535\t353\t2\nMeiholi Zhi Hotel (Huayang Branch, Tianfu New District)\tSauna\t30.520868\t104.05269\t349\t2\nOrange Fruit Hotel (Chengdu Kuanzhai Alley, Tonghuimen Metro Station)\tFree parking\t30.661073\t104.05048\t347\t1\n",
+      "innercity_transport_info": "from Shufeng Yayun Sichuan Opera Theater to Shufeng Yayun Sichuan Opera Theater:  metro: empty.  taxi: empty.  walk: empty. \nfrom Shufeng Yayun Sichuan Opera Theater to Chengdu Shuangliu International Airport: metro: duration 44, cost 8. taxi: duration 23, cost 63.76. walk: duration 184, cost 0.0. \nfrom Shufeng Yayun Sichuan Opera Theater to Jinli Ancient Street: metro: duration 12, cost 4. taxi: duration 2, cost 11.0. walk: duration 19, cost 0.0. \nfrom Shufeng Yayun Sichuan Opera Theater to Kuanzhai Alley: metro: duration 12, cost 4. taxi: duration 1, cost 11.0. walk: duration 9, cost 0.0. \nfrom Shufeng Yayun Sichuan Opera Theater to Chengdu Research Base of Giant Panda Breeding: metro: duration 62, cost 8. taxi: duration 18, cost 51.54. walk: duration 151, cost 0.0. \nfrom Shufeng Yayun Sichuan Opera Theater to Chengdu Museum: metro: duration 10, cost 4. taxi: duration 2, cost 11.0. walk: duration 20, cost 0.0. \nfrom Shufeng Yayun Sichuan Opera Theater to Mount Qingcheng: metro: duration 385, cost 12. taxi: duration 80, cost 236.23. walk: duration 644, cost 0.0. \nfrom Shufeng Yayun Sichuan Opera Theater to Dujiangyan Irrigation System Scenic Area: metro: duration 446, cost 12. taxi: duration 84, cost 247.88. walk: duration 675, cost 0.0. \nfrom Shufeng Yayun Sichuan Opera Theater to Meiholi Zhi Hotel (Huayang Branch, Tianfu New District): metro: duration 44, cost 10. taxi: duration 24, cost 67.32. walk: duration 193, cost 0.0. \nfrom Shufeng Yayun Sichuan Opera Theater to Chunxi Road: metro: duration 10, cost 4. taxi: duration 4, cost 15.48. walk: duration 36, cost 0.0. \nfrom Shufeng Yayun Sichuan Opera Theater to Chengdu East Railway Station: metro: duration 20, cost 8. taxi: duration 13, cost 37.34. walk: duration 111, cost 0.0. \nfrom Shufeng Yayun Sichuan Opera Theater to Celebrity City Hotel: metro: duration 9, cost 4. taxi: duration 2, cost 11.12. walk: duration 21, cost 0.0. \nfrom Shufeng Yayun Sichuan Opera Theater to Grandma Ye's Bobo Chicken (Taikoo Li Branch): metro: duration 13, cost 4. taxi: duration 5, cost 16.95. walk: duration 42, cost 0.0. \nfrom Shufeng Yayun Sichuan Opera Theater to Chengdu Tianfu International Airport: metro: duration 155, cost 18. taxi: duration 84, cost 248.32. walk: duration 676, cost 0.0. \nfrom Shufeng Yayun Sichuan Opera Theater to Du Fu Thatched Cottage: metro: duration 9, cost 4. taxi: duration 2, cost 11.0. walk: duration 20, cost 0.0. \nfrom Shufeng Yayun Sichuan Opera Theater to Shu Daxia Hot Pot (Chunxi Branch): metro: duration 12, cost 4. taxi: duration 3, cost 13.89. walk: duration 31, cost 0.0. \nfrom Shufeng Yayun Sichuan Opera Theater to Orange Fruit Hotel (Chengdu Kuanzhai Alley, Tonghuimen Metro Station): metro: duration 4, cost 4. taxi: duration 0, cost 11.0. walk: duration 7, cost 0.0. \nfrom Shufeng Yayun Sichuan Opera Theater to Wuhou Shrine: metro: duration 11, cost 4. taxi: duration 2, cost 11.0. walk: duration 18, cost 0.0. \nfrom Shufeng Yayun Sichuan Opera Theater to Chen Mapo Tofu (Flagship Store): metro: duration 12, cost 4. taxi: duration 2, cost 11.06. walk: duration 21, cost 0.0. \nfrom Shufeng Yayun Sichuan Opera Theater to Jinsha Site Museum: metro: duration 10, cost 4. taxi: duration 5, cost 18.64. walk: duration 47, cost 0.0. \nfrom Shufeng Yayun Sichuan Opera Theater to Sichuan Museum: metro: duration 3, cost 4. taxi: duration 1, cost 11.0. walk: duration 14, cost 0.0. \nfrom Shufeng Yayun Sichuan Opera Theater to Chengdu Happy Valley: metro: duration 33, cost 6. taxi: duration 10, cost 29.31. walk: duration 84, cost 0.0. \nfrom Shufeng Yayun Sichuan Opera Theater to Grill Master Spicy Grilled Fish (IFS Branch): metro: duration 9, cost 4. taxi: duration 4, cost 15.2. walk: duration 35, cost 0.0. \nfrom Shufeng Yayun Sichuan Opera Theater to Chengdu Polar Ocean Park: metro: duration 40, cost 10. taxi: duration 27, cost 78.48. walk: duration 223, cost 0.0. \nfrom Shufeng Yayun Sichuan Opera Theater to Zhong Dumplings (Main Store at People's Park): metro: duration 7, cost 4. taxi: duration 1, cost 11.0. walk: duration 14, cost 0.0. \nfrom Chengdu Shuangliu International Airport to Shufeng Yayun Sichuan Opera Theater: metro: duration 44, cost 8. taxi: duration 23, cost 63.76. walk: duration 184, cost 0.0. \nfrom Chengdu Shuangliu International Airport to Chengdu Shuangliu International Airport:  metro: empty.  taxi: empty.  walk: empty. \nfrom Chengdu Shuangliu International Airport to Jinli Ancient Street: metro: duration 51, cost 8. taxi: duration 21, cost 59.38. walk: duration 172, cost 0.0. \nfrom Chengdu Shuangliu International Airport to Kuanzhai Alley: metro: duration 52, cost 10. taxi: duration 24, cost 67.06. walk: duration 192, cost 0.0. \nfrom Chengdu Shuangliu International Airport to Chengdu Research Base of Giant Panda Breeding: metro: duration 103, cost 12. taxi: duration 41, cost 120.45. walk: duration 335, cost 0.0. \nfrom Chengdu Shuangliu International Airport to Chengdu Museum: metro: duration 50, cost 10. taxi: duration 24, cost 67.72. walk: duration 194, cost 0.0. \nfrom Chengdu Shuangliu International Airport to Mount Qingcheng: metro: duration 396, cost 12. taxi: duration 80, cost 235.75. walk: duration 642, cost 0.0. \nfrom Chengdu Shuangliu International Airport to Dujiangyan Irrigation System Scenic Area: metro: duration 457, cost 12. taxi: duration 88, cost 260.84. walk: duration 709, cost 0.0. \nfrom Chengdu Shuangliu International Airport to Meiholi Zhi Hotel (Huayang Branch, Tianfu New District): metro: duration 45, cost 8. taxi: duration 15, cost 42.35. walk: duration 127, cost 0.0. \nfrom Chengdu Shuangliu International Airport to Chunxi Road: metro: duration 48, cost 10. taxi: duration 25, cost 71.93. walk: duration 205, cost 0.0. \nfrom Chengdu Shuangliu International Airport to Chengdu East Railway Station: metro: duration 52, cost 10. taxi: duration 29, cost 83.23. walk: duration 236, cost 0.0. \nfrom Chengdu Shuangliu International Airport to Celebrity City Hotel: metro: duration 47, cost 10. taxi: duration 22, cost 62.93. walk: duration 181, cost 0.0. \nfrom Chengdu Shuangliu International Airport to Grandma Ye's Bobo Chicken (Taikoo Li Branch): metro: duration 49, cost 10. taxi: duration 24, cost 68.14. walk: duration 195, cost 0.0. \nfrom Chengdu Shuangliu International Airport to Chengdu Tianfu International Airport: metro: duration 168, cost 18. taxi: duration 83, cost 245.27. walk: duration 668, cost 0.0. \nfrom Chengdu Shuangliu International Airport to Du Fu Thatched Cottage: metro: duration 47, cost 8. taxi: duration 21, cost 59.24. walk: duration 172, cost 0.0. \nfrom Chengdu Shuangliu International Airport to Shu Daxia Hot Pot (Chunxi Branch): metro: duration 49, cost 10. taxi: duration 23, cost 66.31. walk: duration 190, cost 0.0. \nfrom Chengdu Shuangliu International Airport to Orange Fruit Hotel (Chengdu Kuanzhai Alley, Tonghuimen Metro Station): metro: duration 44, cost 8. taxi: duration 22, cost 61.1. walk: duration 177, cost 0.0. \nfrom Chengdu Shuangliu International Airport to Wuhou Shrine: metro: duration 50, cost 8. taxi: duration 21, cost 59.26. walk: duration 172, cost 0.0. \nfrom Chengdu Shuangliu International Airport to Chen Mapo Tofu (Flagship Store): metro: duration 48, cost 8. taxi: duration 20, cost 57.49. walk: duration 167, cost 0.0. \nfrom Chengdu Shuangliu International Airport to Jinsha Site Museum: metro: duration 45, cost 10. taxi: duration 23, cost 65.19. walk: duration 187, cost 0.0. \nfrom Chengdu Shuangliu International Airport to Sichuan Museum: metro: duration 41, cost 8. taxi: duration 21, cost 60.61. walk: duration 175, cost 0.0. \nfrom Chengdu Shuangliu International Airport to Chengdu Happy Valley: metro: duration 69, cost 10. taxi: duration 30, cost 87.69. walk: duration 247, cost 0.0. \nfrom Chengdu Shuangliu International Airport to Grill Master Spicy Grilled Fish (IFS Branch): metro: duration 46, cost 10. taxi: duration 24, cost 67.98. walk: duration 195, cost 0.0. \nfrom Chengdu Shuangliu International Airport to Chengdu Polar Ocean Park: metro: duration 45, cost 10. taxi: duration 20, cost 57.67. walk: duration 167, cost 0.0. \nfrom Chengdu Shuangliu International Airport to Zhong Dumplings (Main Store at People's Park): metro: duration 46, cost 8. taxi: duration 22, cost 61.95. walk: duration 179, cost 0.0. \nfrom Jinli Ancient Street to Shufeng Yayun Sichuan Opera Theater: metro: duration 12, cost 4. taxi: duration 2, cost 11.0. walk: duration 19, cost 0.0. \nfrom Jinli Ancient Street to Chengdu Shuangliu International Airport: metro: duration 51, cost 8. taxi: duration 21, cost 59.38. walk: duration 172, cost 0.0. \nfrom Jinli Ancient Street to Jinli Ancient Street:  metro: empty.  taxi: empty.  walk: empty. \nfrom Jinli Ancient Street to Kuanzhai Alley: metro: duration 19, cost 4. taxi: duration 3, cost 11.79. walk: duration 24, cost 0.0. \nfrom Jinli Ancient Street to Chengdu Research Base of Giant Panda Breeding: metro: duration 70, cost 8. taxi: duration 20, cost 55.9. walk: duration 163, cost 0.0. \nfrom Jinli Ancient Street to Chengdu Museum: metro: duration 17, cost 4. taxi: duration 2, cost 11.18. walk: duration 22, cost 0.0. \nfrom Jinli Ancient Street to Mount Qingcheng: metro: duration 393, cost 12. taxi: duration 82, cost 241.32. walk: duration 657, cost 0.0. \nfrom Jinli Ancient Street to Dujiangyan Irrigation System Scenic Area: metro: duration 454, cost 12. taxi: duration 86, cost 253.95. walk: duration 691, cost 0.0. \nfrom Jinli Ancient Street to Meiholi Zhi Hotel (Huayang Branch, Tianfu New District): metro: duration 49, cost 10. taxi: duration 21, cost 60.09. walk: duration 174, cost 0.0. \nfrom Jinli Ancient Street to Chunxi Road: metro: duration 16, cost 4. taxi: duration 4, cost 15.07. walk: duration 35, cost 0.0. \nfrom Jinli Ancient Street to Chengdu East Railway Station: metro: duration 26, cost 6. taxi: duration 12, cost 34.11. walk: duration 100, cost 0.0. \nfrom Jinli Ancient Street to Celebrity City Hotel: metro: duration 14, cost 4. taxi: duration 1, cost 11.0. walk: duration 10, cost 0.0. \nfrom Jinli Ancient Street to Grandma Ye's Bobo Chicken (Taikoo Li Branch): metro: duration 19, cost 4. taxi: duration 4, cost 14.19. walk: duration 32, cost 0.0. \nfrom Jinli Ancient Street to Chengdu Tianfu International Airport: metro: duration 160, cost 18. taxi: duration 82, cost 241.82. walk: duration 658, cost 0.0. \nfrom Jinli Ancient Street to Du Fu Thatched Cottage: metro: duration 18, cost 4. taxi: duration 3, cost 13.83. walk: duration 31, cost 0.0. \nfrom Jinli Ancient Street to Shu Daxia Hot Pot (Chunxi Branch): metro: duration 17, cost 4. taxi: duration 2, cost 11.38. walk: duration 22, cost 0.0. \nfrom Jinli Ancient Street to Orange Fruit Hotel (Chengdu Kuanzhai Alley, Tonghuimen Metro Station): metro: duration 12, cost 4. taxi: duration 1, cost 11.0. walk: duration 13, cost 0.0. \nfrom Jinli Ancient Street to Wuhou Shrine: taxi: duration 0, cost 11.0. walk: duration 2, cost 0.0. \nfrom Jinli Ancient Street to Chen Mapo Tofu (Flagship Store): metro: duration 20, cost 4. taxi: duration 3, cost 13.21. walk: duration 29, cost 0.0. \nfrom Jinli Ancient Street to Jinsha Site Museum: metro: duration 19, cost 6. taxi: duration 7, cost 23.35. walk: duration 63, cost 0.0. \nfrom Jinli Ancient Street to Sichuan Museum: metro: duration 12, cost 4. taxi: duration 3, cost 12.59. walk: duration 27, cost 0.0. \nfrom Jinli Ancient Street to Chengdu Happy Valley: metro: duration 41, cost 6. taxi: duration 13, cost 35.07. walk: duration 104, cost 0.0. \nfrom Jinli Ancient Street to Grill Master Spicy Grilled Fish (IFS Branch): metro: duration 14, cost 4. taxi: duration 3, cost 12.97. walk: duration 28, cost 0.0. \nfrom Jinli Ancient Street to Chengdu Polar Ocean Park: metro: duration 46, cost 10. taxi: duration 25, cost 71.09. walk: duration 203, cost 0.0. \nfrom Jinli Ancient Street to Zhong Dumplings (Main Store at People's Park): taxi: duration 0, cost 11.0. walk: duration 7, cost 0.0. \nfrom Kuanzhai Alley to Shufeng Yayun Sichuan Opera Theater: metro: duration 12, cost 4. taxi: duration 1, cost 11.0. walk: duration 9, cost 0.0. \nfrom Kuanzhai Alley to Chengdu Shuangliu International Airport: metro: duration 52, cost 10. taxi: duration 24, cost 67.06. walk: duration 192, cost 0.0. \nfrom Kuanzhai Alley to Jinli Ancient Street: metro: duration 19, cost 4. taxi: duration 3, cost 11.79. walk: duration 24, cost 0.0. \nfrom Kuanzhai Alley to Kuanzhai Alley:  metro: empty.  taxi: empty.  walk: empty. \nfrom Kuanzhai Alley to Chengdu Research Base of Giant Panda Breeding: metro: duration 66, cost 8. taxi: duration 17, cost 48.15. walk: duration 142, cost 0.0. \nfrom Kuanzhai Alley to Chengdu Museum: taxi: duration 1, cost 11.0. walk: duration 14, cost 0.0. \nfrom Kuanzhai Alley to Mount Qingcheng: metro: duration 393, cost 12. taxi: duration 81, cost 238.0. walk: duration 648, cost 0.0. \nfrom Kuanzhai Alley to Dujiangyan Irrigation System Scenic Area: metro: duration 454, cost 12. taxi: duration 84, cost 248.99. walk: duration 678, cost 0.0. \nfrom Kuanzhai Alley to Meiholi Zhi Hotel (Huayang Branch, Tianfu New District): metro: duration 50, cost 10. taxi: duration 24, cost 69.13. walk: duration 198, cost 0.0. \nfrom Kuanzhai Alley to Chunxi Road: metro: duration 13, cost 4. taxi: duration 3, cost 13.46. walk: duration 30, cost 0.0. \nfrom Kuanzhai Alley to Chengdu East Railway Station: metro: duration 24, cost 6. taxi: duration 13, cost 35.88. walk: duration 106, cost 0.0. \nfrom Kuanzhai Alley to Celebrity City Hotel: metro: duration 14, cost 4. taxi: duration 2, cost 11.14. walk: duration 22, cost 0.0. \nfrom Kuanzhai Alley to Grandma Ye's Bobo Chicken (Taikoo Li Branch): metro: duration 17, cost 4. taxi: duration 4, cost 15.79. walk: duration 38, cost 0.0. \nfrom Kuanzhai Alley to Chengdu Tianfu International Airport: metro: duration 159, cost 18. taxi: duration 84, cost 247.69. walk: duration 674, cost 0.0. \nfrom Kuanzhai Alley to Du Fu Thatched Cottage: metro: duration 18, cost 4. taxi: duration 3, cost 13.13. walk: duration 28, cost 0.0. \nfrom Kuanzhai Alley to Shu Daxia Hot Pot (Chunxi Branch): metro: duration 16, cost 4. taxi: duration 3, cost 12.92. walk: duration 28, cost 0.0. \nfrom Kuanzhai Alley to Orange Fruit Hotel (Chengdu Kuanzhai Alley, Tonghuimen Metro Station): metro: duration 13, cost 4. taxi: duration 1, cost 11.0. walk: duration 15, cost 0.0. \nfrom Kuanzhai Alley to Wuhou Shrine: metro: duration 18, cost 4. taxi: duration 2, cost 11.52. walk: duration 23, cost 0.0. \nfrom Kuanzhai Alley to Chen Mapo Tofu (Flagship Store): metro: duration 20, cost 4. taxi: duration 3, cost 13.73. walk: duration 30, cost 0.0. \nfrom Kuanzhai Alley to Jinsha Site Museum: metro: duration 19, cost 6. taxi: duration 6, cost 19.96. walk: duration 52, cost 0.0. \nfrom Kuanzhai Alley to Sichuan Museum: metro: duration 12, cost 4. taxi: duration 2, cost 11.4. walk: duration 22, cost 0.0. \nfrom Kuanzhai Alley to Chengdu Happy Valley: metro: duration 40, cost 6. taxi: duration 10, cost 28.51. walk: duration 81, cost 0.0. \nfrom Kuanzhai Alley to Grill Master Spicy Grilled Fish (IFS Branch): metro: duration 13, cost 4. taxi: duration 3, cost 13.94. walk: duration 31, cost 0.0. \nfrom Kuanzhai Alley to Chengdu Polar Ocean Park: metro: duration 46, cost 10. taxi: duration 28, cost 79.84. walk: duration 227, cost 0.0. \nfrom Kuanzhai Alley to Zhong Dumplings (Main Store at People's Park): metro: duration 14, cost 4. taxi: duration 2, cost 11.0. walk: duration 17, cost 0.0. \nfrom Chengdu Research Base of Giant Panda Breeding to Shufeng Yayun Sichuan Opera Theater: metro: duration 62, cost 8. taxi: duration 18, cost 51.54. walk: duration 151, cost 0.0. \nfrom Chengdu Research Base of Giant Panda Breeding to Chengdu Shuangliu International Airport: metro: duration 103, cost 12. taxi: duration 41, cost 120.45. walk: duration 335, cost 0.0. \nfrom Chengdu Research Base of Giant Panda Breeding to Jinli Ancient Street: metro: duration 70, cost 8. taxi: duration 20, cost 55.9. walk: duration 163, cost 0.0. \nfrom Chengdu Research Base of Giant Panda Breeding to Kuanzhai Alley: metro: duration 66, cost 8. taxi: duration 17, cost 48.15. walk: duration 142, cost 0.0. \nfrom Chengdu Research Base of Giant Panda Breeding to Chengdu Research Base of Giant Panda Breeding:  metro: empty.  taxi: empty.  walk: empty. \nfrom Chengdu Research Base of Giant Panda Breeding to Chengdu Museum: metro: duration 64, cost 8. taxi: duration 17, cost 47.64. walk: duration 141, cost 0.0. \nfrom Chengdu Research Base of Giant Panda Breeding to Mount Qingcheng: metro: duration 427, cost 14. taxi: duration 87, cost 256.15. walk: duration 697, cost 0.0. \nfrom Chengdu Research Base of Giant Panda Breeding to Dujiangyan Irrigation System Scenic Area: metro: duration 488, cost 14. taxi: duration 87, cost 256.56. walk: duration 698, cost 0.0. \nfrom Chengdu Research Base of Giant Panda Breeding to Meiholi Zhi Hotel (Huayang Branch, Tianfu New District): metro: duration 100, cost 12. taxi: duration 39, cost 114.51. walk: duration 319, cost 0.0. \nfrom Chengdu Research Base of Giant Panda Breeding to Chunxi Road: metro: duration 60, cost 8. taxi: duration 16, cost 44.39. walk: duration 132, cost 0.0. \nfrom Chengdu Research Base of Giant Panda Breeding to Chengdu East Railway Station: metro: duration 64, cost 10. taxi: duration 19, cost 53.53. walk: duration 156, cost 0.0. \nfrom Chengdu Research Base of Giant Panda Breeding to Celebrity City Hotel: metro: duration 64, cost 8. taxi: duration 19, cost 52.64. walk: duration 154, cost 0.0. \nfrom Chengdu Research Base of Giant Panda Breeding to Grandma Ye's Bobo Chicken (Taikoo Li Branch): metro: duration 65, cost 8. taxi: duration 18, cost 49.44. walk: duration 145, cost 0.0. \nfrom Chengdu Research Base of Giant Panda Breeding to Chengdu Tianfu International Airport: metro: duration 196, cost 18. taxi: duration 88, cost 259.11. walk: duration 705, cost 0.0. \nfrom Chengdu Research Base of Giant Panda Breeding to Du Fu Thatched Cottage: metro: duration 67, cost 8. taxi: duration 20, cost 57.14. walk: duration 166, cost 0.0. \nfrom Chengdu Research Base of Giant Panda Breeding to Shu Daxia Hot Pot (Chunxi Branch): metro: duration 64, cost 8. taxi: duration 18, cost 50.01. walk: duration 147, cost 0.0. \nfrom Chengdu Research Base of Giant Panda Breeding to Orange Fruit Hotel (Chengdu Kuanzhai Alley, Tonghuimen Metro Station): metro: duration 63, cost 8. taxi: duration 19, cost 54.11. walk: duration 158, cost 0.0. \nfrom Chengdu Research Base of Giant Panda Breeding to Wuhou Shrine: metro: duration 69, cost 8. taxi: duration 20, cost 55.95. walk: duration 163, cost 0.0. \nfrom Chengdu Research Base of Giant Panda Breeding to Chen Mapo Tofu (Flagship Store): metro: duration 70, cost 8. taxi: duration 21, cost 58.63. walk: duration 170, cost 0.0. \nfrom Chengdu Research Base of Giant Panda Breeding to Jinsha Site Museum: metro: duration 61, cost 8. taxi: duration 20, cost 56.78. walk: duration 165, cost 0.0. \nfrom Chengdu Research Base of Giant Panda Breeding to Sichuan Museum: metro: duration 61, cost 8. taxi: duration 20, cost 55.37. walk: duration 161, cost 0.0. \nfrom Chengdu Research Base of Giant Panda Breeding to Chengdu Happy Valley: metro: duration 72, cost 8. taxi: duration 15, cost 41.0. walk: duration 123, cost 0.0. \nfrom Chengdu Research Base of Giant Panda Breeding to Grill Master Spicy Grilled Fish (IFS Branch): metro: duration 61, cost 8. taxi: duration 18, cost 48.76. walk: duration 144, cost 0.0. \nfrom Chengdu Research Base of Giant Panda Breeding to Chengdu Polar Ocean Park: metro: duration 95, cost 14. taxi: duration 42, cost 121.05. walk: duration 336, cost 0.0. \nfrom Chengdu Research Base of Giant Panda Breeding to Zhong Dumplings (Main Store at People's Park): metro: duration 65, cost 8. taxi: duration 19, cost 53.28. walk: duration 156, cost 0.0. \nfrom Chengdu Museum to Shufeng Yayun Sichuan Opera Theater: metro: duration 10, cost 4. taxi: duration 2, cost 11.0. walk: duration 20, cost 0.0. \nfrom Chengdu Museum to Chengdu Shuangliu International Airport: metro: duration 50, cost 10. taxi: duration 24, cost 67.72. walk: duration 194, cost 0.0. \nfrom Chengdu Museum to Jinli Ancient Street: metro: duration 17, cost 4. taxi: duration 2, cost 11.18. walk: duration 22, cost 0.0. \nfrom Chengdu Museum to Kuanzhai Alley: taxi: duration 1, cost 11.0. walk: duration 14, cost 0.0. \nfrom Chengdu Museum to Chengdu Research Base of Giant Panda Breeding: metro: duration 64, cost 8. taxi: duration 17, cost 47.64. walk: duration 141, cost 0.0. \nfrom Chengdu Museum to Chengdu Museum:  metro: empty.  taxi: empty.  walk: empty. \nfrom Chengdu Museum to Mount Qingcheng: metro: duration 391, cost 12. taxi: duration 82, cost 243.53. walk: duration 663, cost 0.0. \nfrom Chengdu Museum to Dujiangyan Irrigation System Scenic Area: metro: duration 452, cost 12. taxi: duration 86, cost 254.51. walk: duration 692, cost 0.0. \nfrom Chengdu Museum to Meiholi Zhi Hotel (Huayang Branch, Tianfu New District): metro: duration 48, cost 10. taxi: duration 23, cost 66.24. walk: duration 190, cost 0.0. \nfrom Chengdu Museum to Chunxi Road: metro: duration 11, cost 4. taxi: duration 2, cost 11.0. walk: duration 16, cost 0.0. \nfrom Chengdu Museum to Chengdu East Railway Station: metro: duration 22, cost 6. taxi: duration 11, cost 31.58. walk: duration 92, cost 0.0. \nfrom Chengdu Museum to Celebrity City Hotel: metro: duration 12, cost 4. taxi: duration 1, cost 11.0. walk: duration 13, cost 0.0. \nfrom Chengdu Museum to Grandma Ye's Bobo Chicken (Taikoo Li Branch): metro: duration 15, cost 4. taxi: duration 2, cost 11.51. walk: duration 23, cost 0.0. \nfrom Chengdu Museum to Chengdu Tianfu International Airport: metro: duration 157, cost 18. taxi: duration 82, cost 242.32. walk: duration 660, cost 0.0. \nfrom Chengdu Museum to Du Fu Thatched Cottage: metro: duration 16, cost 4. taxi: duration 5, cost 16.6. walk: duration 40, cost 0.0. \nfrom Chengdu Museum to Shu Daxia Hot Pot (Chunxi Branch): metro: duration 14, cost 4. taxi: duration 1, cost 11.0. walk: duration 14, cost 0.0. \nfrom Chengdu Museum to Orange Fruit Hotel (Chengdu Kuanzhai Alley, Tonghuimen Metro Station): metro: duration 11, cost 4. taxi: duration 2, cost 11.39. walk: duration 22, cost 0.0. \nfrom Chengdu Museum to Wuhou Shrine: metro: duration 16, cost 4. taxi: duration 2, cost 11.34. walk: duration 22, cost 0.0. \nfrom Chengdu Museum to Chen Mapo Tofu (Flagship Store): metro: duration 18, cost 4. taxi: duration 5, cost 16.8. walk: duration 41, cost 0.0. \nfrom Chengdu Museum to Jinsha Site Museum: metro: duration 17, cost 6. taxi: duration 8, cost 24.24. walk: duration 66, cost 0.0. \nfrom Chengdu Museum to Sichuan Museum: metro: duration 10, cost 4. taxi: duration 4, cost 14.87. walk: duration 34, cost 0.0. \nfrom Chengdu Museum to Chengdu Happy Valley: metro: duration 38, cost 6. taxi: duration 11, cost 32.02. walk: duration 93, cost 0.0. \nfrom Chengdu Museum to Grill Master Spicy Grilled Fish (IFS Branch): metro: duration 11, cost 4. taxi: duration 2, cost 11.0. walk: duration 16, cost 0.0. \nfrom Chengdu Museum to Chengdu Polar Ocean Park: metro: duration 44, cost 10. taxi: duration 27, cost 76.25. walk: duration 217, cost 0.0. \nfrom Chengdu Museum to Zhong Dumplings (Main Store at People's Park): metro: duration 12, cost 4. taxi: duration 1, cost 11.0. walk: duration 15, cost 0.0. \nfrom Mount Qingcheng to Shufeng Yayun Sichuan Opera Theater: metro: duration 385, cost 12. taxi: duration 80, cost 236.23. walk: duration 644, cost 0.0. \nfrom Mount Qingcheng to Chengdu Shuangliu International Airport: metro: duration 396, cost 12. taxi: duration 80, cost 235.75. walk: duration 642, cost 0.0. \nfrom Mount Qingcheng to Jinli Ancient Street: metro: duration 393, cost 12. taxi: duration 82, cost 241.32. walk: duration 657, cost 0.0. \nfrom Mount Qingcheng to Kuanzhai Alley: metro: duration 393, cost 12. taxi: duration 81, cost 238.0. walk: duration 648, cost 0.0. \nfrom Mount Qingcheng to Chengdu Research Base of Giant Panda Breeding: metro: duration 427, cost 14. taxi: duration 87, cost 256.15. walk: duration 697, cost 0.0. \nfrom Mount Qingcheng to Chengdu Museum: metro: duration 391, cost 12. taxi: duration 82, cost 243.53. walk: duration 663, cost 0.0. \nfrom Mount Qingcheng to Mount Qingcheng:  metro: empty.  taxi: empty.  walk: empty. \nfrom Mount Qingcheng to Dujiangyan Irrigation System Scenic Area: taxi: duration 17, cost 47.01. walk: duration 139, cost 0.0. \nfrom Mount Qingcheng to Meiholi Zhi Hotel (Huayang Branch, Tianfu New District): metro: duration 411, cost 14. taxi: duration 95, cost 280.11. walk: duration 761, cost 0.0. \nfrom Mount Qingcheng to Chunxi Road: metro: duration 391, cost 14. taxi: duration 84, cost 249.05. walk: duration 678, cost 0.0. \nfrom Mount Qingcheng to Chengdu East Railway Station: metro: duration 401, cost 14. taxi: duration 94, cost 278.09. walk: duration 755, cost 0.0. \nfrom Mount Qingcheng to Celebrity City Hotel: metro: duration 390, cost 14. taxi: duration 83, cost 244.1. walk: duration 665, cost 0.0. \nfrom Mount Qingcheng to Grandma Ye's Bobo Chicken (Taikoo Li Branch): metro: duration 395, cost 14. taxi: duration 85, cost 251.98. walk: duration 686, cost 0.0. \nfrom Mount Qingcheng to Chengdu Tianfu International Airport: metro: duration 533, cost 22.0. taxi: duration 162, cost 483.07. walk: duration 1302, cost 0.0. \nfrom Mount Qingcheng to Du Fu Thatched Cottage: metro: duration 387, cost 12. taxi: duration 78, cost 229.66. walk: duration 626, cost 0.0. \nfrom Mount Qingcheng to Shu Daxia Hot Pot (Chunxi Branch): metro: duration 393, cost 14. taxi: duration 84, cost 248.04. walk: duration 675, cost 0.0. \nfrom Mount Qingcheng to Orange Fruit Hotel (Chengdu Kuanzhai Alley, Tonghuimen Metro Station): metro: duration 385, cost 12. taxi: duration 80, cost 236.8. walk: duration 645, cost 0.0. \nfrom Mount Qingcheng to Wuhou Shrine: metro: duration 392, cost 12. taxi: duration 81, cost 240.45. walk: duration 655, cost 0.0. \nfrom Mount Qingcheng to Chen Mapo Tofu (Flagship Store): metro: duration 389, cost 12. taxi: duration 78, cost 230.38. walk: duration 628, cost 0.0. \nfrom Mount Qingcheng to Jinsha Site Museum: metro: duration 376, cost 12. taxi: duration 74, cost 218.41. walk: duration 596, cost 0.0. \nfrom Mount Qingcheng to Sichuan Museum: metro: duration 381, cost 12. taxi: duration 78, cost 231.52. walk: duration 631, cost 0.0. \nfrom Mount Qingcheng to Chengdu Happy Valley: metro: duration 391, cost 12. taxi: duration 74, cost 217.12. walk: duration 593, cost 0.0. \nfrom Mount Qingcheng to Grill Master Spicy Grilled Fish (IFS Branch): metro: duration 390, cost 14. taxi: duration 84, cost 249.69. walk: duration 679, cost 0.0. \nfrom Mount Qingcheng to Chengdu Polar Ocean Park: metro: duration 410, cost 16. taxi: duration 100, cost 295.93. walk: duration 803, cost 0.0. \nfrom Mount Qingcheng to Zhong Dumplings (Main Store at People's Park): metro: duration 388, cost 12. taxi: duration 82, cost 241.05. walk: duration 656, cost 0.0. \nfrom Dujiangyan Irrigation System Scenic Area to Shufeng Yayun Sichuan Opera Theater: metro: duration 446, cost 12. taxi: duration 84, cost 247.88. walk: duration 675, cost 0.0. \nfrom Dujiangyan Irrigation System Scenic Area to Chengdu Shuangliu International Airport: metro: duration 457, cost 12. taxi: duration 88, cost 260.84. walk: duration 709, cost 0.0. \nfrom Dujiangyan Irrigation System Scenic Area to Jinli Ancient Street: metro: duration 454, cost 12. taxi: duration 86, cost 253.95. walk: duration 691, cost 0.0. \nfrom Dujiangyan Irrigation System Scenic Area to Kuanzhai Alley: metro: duration 454, cost 12. taxi: duration 84, cost 248.99. walk: duration 678, cost 0.0. \nfrom Dujiangyan Irrigation System Scenic Area to Chengdu Research Base of Giant Panda Breeding: metro: duration 488, cost 14. taxi: duration 87, cost 256.56. walk: duration 698, cost 0.0. \nfrom Dujiangyan Irrigation System Scenic Area to Chengdu Museum: metro: duration 452, cost 12. taxi: duration 86, cost 254.51. walk: duration 692, cost 0.0. \nfrom Dujiangyan Irrigation System Scenic Area to Mount Qingcheng: taxi: duration 17, cost 47.01. walk: duration 139, cost 0.0. \nfrom Dujiangyan Irrigation System Scenic Area to Dujiangyan Irrigation System Scenic Area:  metro: empty.  taxi: empty.  walk: empty. \nfrom Dujiangyan Irrigation System Scenic Area to Meiholi Zhi Hotel (Huayang Branch, Tianfu New District): metro: duration 472, cost 14. taxi: duration 102, cost 301.58. walk: duration 818, cost 0.0. \nfrom Dujiangyan Irrigation System Scenic Area to Chunxi Road: metro: duration 452, cost 14. taxi: duration 88, cost 259.38. walk: duration 705, cost 0.0. \nfrom Dujiangyan Irrigation System Scenic Area to Chengdu East Railway Station: metro: duration 462, cost 14. taxi: duration 97, cost 288.4. walk: duration 783, cost 0.0. \nfrom Dujiangyan Irrigation System Scenic Area to Celebrity City Hotel: metro: duration 451, cost 14. taxi: duration 87, cost 256.08. walk: duration 697, cost 0.0. \nfrom Dujiangyan Irrigation System Scenic Area to Grandma Ye's Bobo Chicken (Taikoo Li Branch): metro: duration 456, cost 14. taxi: duration 89, cost 263.24. walk: duration 716, cost 0.0. \nfrom Dujiangyan Irrigation System Scenic Area to Chengdu Tianfu International Airport: metro: duration 594, cost 22.0. taxi: duration 168, cost 500.51. walk: duration 1348, cost 0.0. \nfrom Dujiangyan Irrigation System Scenic Area to Du Fu Thatched Cottage: metro: duration 448, cost 12. taxi: duration 82, cost 242.26. walk: duration 660, cost 0.0. \nfrom Dujiangyan Irrigation System Scenic Area to Shu Daxia Hot Pot (Chunxi Branch): metro: duration 454, cost 14. taxi: duration 88, cost 259.48. walk: duration 706, cost 0.0. \nfrom Dujiangyan Irrigation System Scenic Area to Orange Fruit Hotel (Chengdu Kuanzhai Alley, Tonghuimen Metro Station): metro: duration 446, cost 12. taxi: duration 84, cost 249.0. walk: duration 678, cost 0.0. \nfrom Dujiangyan Irrigation System Scenic Area to Wuhou Shrine: metro: duration 453, cost 12. taxi: duration 86, cost 253.09. walk: duration 689, cost 0.0. \nfrom Dujiangyan Irrigation System Scenic Area to Chen Mapo Tofu (Flagship Store): metro: duration 450, cost 12. taxi: duration 82, cost 243.34. walk: duration 663, cost 0.0. \nfrom Dujiangyan Irrigation System Scenic Area to Jinsha Site Museum: metro: duration 437, cost 12. taxi: duration 78, cost 230.07. walk: duration 627, cost 0.0. \nfrom Dujiangyan Irrigation System Scenic Area to Sichuan Museum: metro: duration 442, cost 12. taxi: duration 83, cost 243.82. walk: duration 664, cost 0.0. \nfrom Dujiangyan Irrigation System Scenic Area to Chengdu Happy Valley: metro: duration 452, cost 12. taxi: duration 76, cost 223.76. walk: duration 610, cost 0.0. \nfrom Dujiangyan Irrigation System Scenic Area to Grill Master Spicy Grilled Fish (IFS Branch): metro: duration 451, cost 14. taxi: duration 88, cost 260.86. walk: duration 709, cost 0.0. \nfrom Dujiangyan Irrigation System Scenic Area to Chengdu Polar Ocean Park: metro: duration 471, cost 16. taxi: duration 107, cost 317.09. walk: duration 859, cost 0.0. \nfrom Dujiangyan Irrigation System Scenic Area to Zhong Dumplings (Main Store at People's Park): metro: duration 449, cost 12. taxi: duration 86, cost 253.15. walk: duration 689, cost 0.0. \nfrom Meiholi Zhi Hotel (Huayang Branch, Tianfu New District) to Shufeng Yayun Sichuan Opera Theater: metro: duration 44, cost 10. taxi: duration 24, cost 67.32. walk: duration 193, cost 0.0. \nfrom Meiholi Zhi Hotel (Huayang Branch, Tianfu New District) to Chengdu Shuangliu International Airport: metro: duration 45, cost 8. taxi: duration 15, cost 42.35. walk: duration 127, cost 0.0. \nfrom Meiholi Zhi Hotel (Huayang Branch, Tianfu New District) to Jinli Ancient Street: metro: duration 49, cost 10. taxi: duration 21, cost 60.09. walk: duration 174, cost 0.0. \nfrom Meiholi Zhi Hotel (Huayang Branch, Tianfu New District) to Kuanzhai Alley: metro: duration 50, cost 10. taxi: duration 24, cost 69.13. walk: duration 198, cost 0.0. \nfrom Meiholi Zhi Hotel (Huayang Branch, Tianfu New District) to Chengdu Research Base of Giant Panda Breeding: metro: duration 100, cost 12. taxi: duration 39, cost 114.51. walk: duration 319, cost 0.0. \nfrom Meiholi Zhi Hotel (Huayang Branch, Tianfu New District) to Chengdu Museum: metro: duration 48, cost 10. taxi: duration 23, cost 66.24. walk: duration 190, cost 0.0. \nfrom Meiholi Zhi Hotel (Huayang Branch, Tianfu New District) to Mount Qingcheng: metro: duration 411, cost 14. taxi: duration 95, cost 280.11. walk: duration 761, cost 0.0. \nfrom Meiholi Zhi Hotel (Huayang Branch, Tianfu New District) to Dujiangyan Irrigation System Scenic Area: metro: duration 472, cost 14. taxi: duration 102, cost 301.58. walk: duration 818, cost 0.0. \nfrom Meiholi Zhi Hotel (Huayang Branch, Tianfu New District) to Meiholi Zhi Hotel (Huayang Branch, Tianfu New District):  metro: empty.  taxi: empty.  walk: empty. \nfrom Meiholi Zhi Hotel (Huayang Branch, Tianfu New District) to Chunxi Road: metro: duration 43, cost 10. taxi: duration 24, cost 66.8. walk: duration 192, cost 0.0. \nfrom Meiholi Zhi Hotel (Huayang Branch, Tianfu New District) to Chengdu East Railway Station: metro: duration 40, cost 10. taxi: duration 21, cost 60.63. walk: duration 175, cost 0.0. \nfrom Meiholi Zhi Hotel (Huayang Branch, Tianfu New District) to Celebrity City Hotel: metro: duration 44, cost 10. taxi: duration 22, cost 61.38. walk: duration 177, cost 0.0. \nfrom Meiholi Zhi Hotel (Huayang Branch, Tianfu New District) to Grandma Ye's Bobo Chicken (Taikoo Li Branch): metro: duration 43, cost 10. taxi: duration 22, cost 61.06. walk: duration 176, cost 0.0. \nfrom Meiholi Zhi Hotel (Huayang Branch, Tianfu New District) to Chengdu Tianfu International Airport: metro: duration 145, cost 16. taxi: duration 67, cost 198.55. walk: duration 543, cost 0.0. \nfrom Meiholi Zhi Hotel (Huayang Branch, Tianfu New District) to Du Fu Thatched Cottage: metro: duration 48, cost 10. taxi: duration 24, cost 67.77. walk: duration 194, cost 0.0. \nfrom Meiholi Zhi Hotel (Huayang Branch, Tianfu New District) to Shu Daxia Hot Pot (Chunxi Branch): metro: duration 44, cost 10. taxi: duration 22, cost 61.91. walk: duration 179, cost 0.0. \nfrom Meiholi Zhi Hotel (Huayang Branch, Tianfu New District) to Orange Fruit Hotel (Chengdu Kuanzhai Alley, Tonghuimen Metro Station): metro: duration 43, cost 10. taxi: duration 23, cost 64.65. walk: duration 186, cost 0.0. \nfrom Meiholi Zhi Hotel (Huayang Branch, Tianfu New District) to Wuhou Shrine: metro: duration 48, cost 10. taxi: duration 21, cost 60.59. walk: duration 175, cost 0.0. \nfrom Meiholi Zhi Hotel (Huayang Branch, Tianfu New District) to Chen Mapo Tofu (Flagship Store): metro: duration 48, cost 10. taxi: duration 23, cost 65.91. walk: duration 189, cost 0.0. \nfrom Meiholi Zhi Hotel (Huayang Branch, Tianfu New District) to Jinsha Site Museum: metro: duration 48, cost 10. taxi: duration 28, cost 79.19. walk: duration 225, cost 0.0. \nfrom Meiholi Zhi Hotel (Huayang Branch, Tianfu New District) to Sichuan Museum: metro: duration 42, cost 10. taxi: duration 24, cost 67.67. walk: duration 194, cost 0.0. \nfrom Meiholi Zhi Hotel (Huayang Branch, Tianfu New District) to Chengdu Happy Valley: metro: duration 72, cost 12. taxi: duration 34, cost 98.65. walk: duration 277, cost 0.0. \nfrom Meiholi Zhi Hotel (Huayang Branch, Tianfu New District) to Grill Master Spicy Grilled Fish (IFS Branch): metro: duration 41, cost 10. taxi: duration 22, cost 62.45. walk: duration 180, cost 0.0. \nfrom Meiholi Zhi Hotel (Huayang Branch, Tianfu New District) to Chengdu Polar Ocean Park: metro: duration 21, cost 6. taxi: duration 5, cost 17.02. walk: duration 42, cost 0.0. \nfrom Meiholi Zhi Hotel (Huayang Branch, Tianfu New District) to Zhong Dumplings (Main Store at People's Park): metro: duration 44, cost 10. taxi: duration 22, cost 62.55. walk: duration 180, cost 0.0. \nfrom Chunxi Road to Shufeng Yayun Sichuan Opera Theater: metro: duration 10, cost 4. taxi: duration 4, cost 15.48. walk: duration 36, cost 0.0. \nfrom Chunxi Road to Chengdu Shuangliu International Airport: metro: duration 48, cost 10. taxi: duration 25, cost 71.93. walk: duration 205, cost 0.0. \nfrom Chunxi Road to Jinli Ancient Street: metro: duration 16, cost 4. taxi: duration 4, cost 15.07. walk: duration 35, cost 0.0. \nfrom Chunxi Road to Kuanzhai Alley: metro: duration 13, cost 4. taxi: duration 3, cost 13.46. walk: duration 30, cost 0.0. \nfrom Chunxi Road to Chengdu Research Base of Giant Panda Breeding: metro: duration 60, cost 8. taxi: duration 16, cost 44.39. walk: duration 132, cost 0.0. \nfrom Chunxi Road to Chengdu Museum: metro: duration 11, cost 4. taxi: duration 2, cost 11.0. walk: duration 16, cost 0.0. \nfrom Chunxi Road to Mount Qingcheng: metro: duration 391, cost 14. taxi: duration 84, cost 249.05. walk: duration 678, cost 0.0. \nfrom Chunxi Road to Dujiangyan Irrigation System Scenic Area: metro: duration 452, cost 14. taxi: duration 88, cost 259.38. walk: duration 705, cost 0.0. \nfrom Chunxi Road to Meiholi Zhi Hotel (Huayang Branch, Tianfu New District): metro: duration 43, cost 10. taxi: duration 24, cost 66.8. walk: duration 192, cost 0.0. \nfrom Chunxi Road to Chunxi Road:  metro: empty.  taxi: empty.  walk: empty. \nfrom Chunxi Road to Chengdu East Railway Station: metro: duration 14, cost 6. taxi: duration 9, cost 27.38. walk: duration 77, cost 0.0. \nfrom Chunxi Road to Celebrity City Hotel: metro: duration 9, cost 4. taxi: duration 3, cost 11.96. walk: duration 24, cost 0.0. \nfrom Chunxi Road to Grandma Ye's Bobo Chicken (Taikoo Li Branch): metro: duration 8, cost 4. taxi: duration 1, cost 11.0. walk: duration 15, cost 0.0. \nfrom Chunxi Road to Chengdu Tianfu International Airport: metro: duration 149, cost 18. taxi: duration 81, cost 238.19. walk: duration 649, cost 0.0. \nfrom Chunxi Road to Du Fu Thatched Cottage: metro: duration 16, cost 6. taxi: duration 7, cost 21.39. walk: duration 57, cost 0.0. \nfrom Chunxi Road to Shu Daxia Hot Pot (Chunxi Branch): metro: duration 7, cost 4. taxi: duration 1, cost 11.0. walk: duration 15, cost 0.0. \nfrom Chunxi Road to Orange Fruit Hotel (Chengdu Kuanzhai Alley, Tonghuimen Metro Station): metro: duration 10, cost 4. taxi: duration 4, cost 16.13. walk: duration 39, cost 0.0. \nfrom Chunxi Road to Wuhou Shrine: metro: duration 15, cost 4. taxi: duration 4, cost 15.42. walk: duration 36, cost 0.0. \nfrom Chunxi Road to Chen Mapo Tofu (Flagship Store): metro: duration 18, cost 6. taxi: duration 7, cost 21.58. walk: duration 57, cost 0.0. \nfrom Chunxi Road to Jinsha Site Museum: metro: duration 16, cost 6. taxi: duration 10, cost 28.66. walk: duration 82, cost 0.0. \nfrom Chunxi Road to Sichuan Museum: metro: duration 10, cost 6. taxi: duration 6, cost 19.66. walk: duration 51, cost 0.0. \nfrom Chunxi Road to Chengdu Happy Valley: metro: duration 37, cost 8. taxi: duration 12, cost 34.35. walk: duration 101, cost 0.0. \nfrom Chunxi Road to Grill Master Spicy Grilled Fish (IFS Branch): metro: duration 4, cost 4. taxi: duration 1, cost 11.0. walk: duration 11, cost 0.0. \nfrom Chunxi Road to Chengdu Polar Ocean Park: metro: duration 39, cost 10. taxi: duration 27, cost 75.79. walk: duration 216, cost 0.0. \nfrom Chunxi Road to Zhong Dumplings (Main Store at People's Park): metro: duration 11, cost 4. taxi: duration 3, cost 13.57. walk: duration 30, cost 0.0. \nfrom Chengdu East Railway Station to Shufeng Yayun Sichuan Opera Theater: metro: duration 20, cost 8. taxi: duration 13, cost 37.34. walk: duration 111, cost 0.0. \nfrom Chengdu East Railway Station to Chengdu Shuangliu International Airport: metro: duration 52, cost 10. taxi: duration 29, cost 83.23. walk: duration 236, cost 0.0. \nfrom Chengdu East Railway Station to Jinli Ancient Street: metro: duration 26, cost 6. taxi: duration 12, cost 34.11. walk: duration 100, cost 0.0. \nfrom Chengdu East Railway Station to Kuanzhai Alley: metro: duration 24, cost 6. taxi: duration 13, cost 35.88. walk: duration 106, cost 0.0. \nfrom Chengdu East Railway Station to Chengdu Research Base of Giant Panda Breeding: metro: duration 64, cost 10. taxi: duration 19, cost 53.53. walk: duration 156, cost 0.0. \nfrom Chengdu East Railway Station to Chengdu Museum: metro: duration 22, cost 6. taxi: duration 11, cost 31.58. walk: duration 92, cost 0.0. \nfrom Chengdu East Railway Station to Mount Qingcheng: metro: duration 401, cost 14. taxi: duration 94, cost 278.09. walk: duration 755, cost 0.0. \nfrom Chengdu East Railway Station to Dujiangyan Irrigation System Scenic Area: metro: duration 462, cost 14. taxi: duration 97, cost 288.4. walk: duration 783, cost 0.0. \nfrom Chengdu East Railway Station to Meiholi Zhi Hotel (Huayang Branch, Tianfu New District): metro: duration 40, cost 10. taxi: duration 21, cost 60.63. walk: duration 175, cost 0.0. \nfrom Chengdu East Railway Station to Chunxi Road: metro: duration 14, cost 6. taxi: duration 9, cost 27.38. walk: duration 77, cost 0.0. \nfrom Chengdu East Railway Station to Chengdu East Railway Station:  metro: empty.  taxi: empty.  walk: empty. \nfrom Chengdu East Railway Station to Celebrity City Hotel: metro: duration 19, cost 6. taxi: duration 11, cost 31.51. walk: duration 91, cost 0.0. \nfrom Chengdu East Railway Station to Grandma Ye's Bobo Chicken (Taikoo Li Branch): metro: duration 14, cost 6. taxi: duration 8, cost 25.11. walk: duration 69, cost 0.0. \nfrom Chengdu East Railway Station to Chengdu Tianfu International Airport: metro: duration 135, cost 16. taxi: duration 71, cost 210.46. walk: duration 575, cost 0.0. \nfrom Chengdu East Railway Station to Du Fu Thatched Cottage: metro: duration 26, cost 8. taxi: duration 16, cost 43.65. walk: duration 130, cost 0.0. \nfrom Chengdu East Railway Station to Shu Daxia Hot Pot (Chunxi Branch): metro: duration 16, cost 6. taxi: duration 10, cost 28.2. walk: duration 80, cost 0.0. \nfrom Chengdu East Railway Station to Orange Fruit Hotel (Chengdu Kuanzhai Alley, Tonghuimen Metro Station): metro: duration 20, cost 8. taxi: duration 13, cost 37.15. walk: duration 111, cost 0.0. \nfrom Chengdu East Railway Station to Wuhou Shrine: metro: duration 25, cost 6. taxi: duration 12, cost 34.76. walk: duration 103, cost 0.0. \nfrom Chengdu East Railway Station to Chen Mapo Tofu (Flagship Store): metro: duration 28, cost 8. taxi: duration 16, cost 43.27. walk: duration 129, cost 0.0. \nfrom Chengdu East Railway Station to Jinsha Site Museum: metro: duration 27, cost 8. taxi: duration 19, cost 54.38. walk: duration 159, cost 0.0. \nfrom Chengdu East Railway Station to Sichuan Museum: metro: duration 20, cost 8. taxi: duration 15, cost 41.62. walk: duration 125, cost 0.0. \nfrom Chengdu East Railway Station to Chengdu Happy Valley: metro: duration 47, cost 10. taxi: duration 21, cost 60.39. walk: duration 175, cost 0.0. \nfrom Chengdu East Railway Station to Grill Master Spicy Grilled Fish (IFS Branch): metro: duration 13, cost 6. taxi: duration 9, cost 26.84. walk: duration 75, cost 0.0. \nfrom Chengdu East Railway Station to Chengdu Polar Ocean Park: metro: duration 32, cost 10. taxi: duration 23, cost 64.02. walk: duration 184, cost 0.0. \nfrom Chengdu East Railway Station to Zhong Dumplings (Main Store at People's Park): metro: duration 21, cost 6. taxi: duration 12, cost 33.88. walk: duration 100, cost 0.0. \nfrom Celebrity City Hotel to Shufeng Yayun Sichuan Opera Theater: metro: duration 9, cost 4. taxi: duration 2, cost 11.12. walk: duration 21, cost 0.0. \nfrom Celebrity City Hotel to Chengdu Shuangliu International Airport: metro: duration 47, cost 10. taxi: duration 22, cost 62.93. walk: duration 181, cost 0.0. \nfrom Celebrity City Hotel to Jinli Ancient Street: metro: duration 14, cost 4. taxi: duration 1, cost 11.0. walk: duration 10, cost 0.0. \nfrom Celebrity City Hotel to Kuanzhai Alley: metro: duration 14, cost 4. taxi: duration 2, cost 11.14. walk: duration 22, cost 0.0. \nfrom Celebrity City Hotel to Chengdu Research Base of Giant Panda Breeding: metro: duration 64, cost 8. taxi: duration 19, cost 52.64. walk: duration 154, cost 0.0. \nfrom Celebrity City Hotel to Chengdu Museum: metro: duration 12, cost 4. taxi: duration 1, cost 11.0. walk: duration 13, cost 0.0. \nfrom Celebrity City Hotel to Mount Qingcheng: metro: duration 390, cost 14. taxi: duration 83, cost 244.1. walk: duration 665, cost 0.0. \nfrom Celebrity City Hotel to Dujiangyan Irrigation System Scenic Area: metro: duration 451, cost 14. taxi: duration 87, cost 256.08. walk: duration 697, cost 0.0. \nfrom Celebrity City Hotel to Meiholi Zhi Hotel (Huayang Branch, Tianfu New District): metro: duration 44, cost 10. taxi: duration 22, cost 61.38. walk: duration 177, cost 0.0. \nfrom Celebrity City Hotel to Chunxi Road: metro: duration 9, cost 4. taxi: duration 3, cost 11.96. walk: duration 24, cost 0.0. \nfrom Celebrity City Hotel to Chengdu East Railway Station: metro: duration 19, cost 6. taxi: duration 11, cost 31.51. walk: duration 91, cost 0.0. \nfrom Celebrity City Hotel to Celebrity City Hotel:  metro: empty.  taxi: empty.  walk: empty. \nfrom Celebrity City Hotel to Grandma Ye's Bobo Chicken (Taikoo Li Branch): metro: duration 12, cost 4. taxi: duration 2, cost 11.24. walk: duration 22, cost 0.0. \nfrom Celebrity City Hotel to Chengdu Tianfu International Airport: metro: duration 153, cost 18. taxi: duration 81, cost 240.07. walk: duration 654, cost 0.0. \nfrom Celebrity City Hotel to Du Fu Thatched Cottage: metro: duration 15, cost 4. taxi: duration 4, cost 15.99. walk: duration 38, cost 0.0. \nfrom Celebrity City Hotel to Shu Daxia Hot Pot (Chunxi Branch): metro: duration 10, cost 4. taxi: duration 1, cost 11.0. walk: duration 12, cost 0.0. \nfrom Celebrity City Hotel to Orange Fruit Hotel (Chengdu Kuanzhai Alley, Tonghuimen Metro Station): metro: duration 9, cost 4. taxi: duration 2, cost 11.0. walk: duration 19, cost 0.0. \nfrom Celebrity City Hotel to Wuhou Shrine: metro: duration 13, cost 4. taxi: duration 1, cost 11.0. walk: duration 12, cost 0.0. \nfrom Celebrity City Hotel to Chen Mapo Tofu (Flagship Store): metro: duration 16, cost 4. taxi: duration 4, cost 15.68. walk: duration 37, cost 0.0. \nfrom Celebrity City Hotel to Jinsha Site Museum: metro: duration 16, cost 6. taxi: duration 8, cost 24.96. walk: duration 69, cost 0.0. \nfrom Celebrity City Hotel to Sichuan Museum: metro: duration 9, cost 4. taxi: duration 4, cost 14.48. walk: duration 33, cost 0.0. \nfrom Celebrity City Hotel to Chengdu Happy Valley: metro: duration 37, cost 6. taxi: duration 12, cost 34.94. walk: duration 103, cost 0.0. \nfrom Celebrity City Hotel to Grill Master Spicy Grilled Fish (IFS Branch): metro: duration 7, cost 4. taxi: duration 2, cost 11.0. walk: duration 17, cost 0.0. \nfrom Celebrity City Hotel to Chengdu Polar Ocean Park: metro: duration 40, cost 10. taxi: duration 25, cost 71.73. walk: duration 205, cost 0.0. \nfrom Celebrity City Hotel to Zhong Dumplings (Main Store at People's Park): metro: duration 9, cost 4. taxi: duration 1, cost 11.0. walk: duration 8, cost 0.0. \nfrom Grandma Ye's Bobo Chicken (Taikoo Li Branch) to Shufeng Yayun Sichuan Opera Theater: metro: duration 13, cost 4. taxi: duration 5, cost 16.95. walk: duration 42, cost 0.0. \nfrom Grandma Ye's Bobo Chicken (Taikoo Li Branch) to Chengdu Shuangliu International Airport: metro: duration 49, cost 10. taxi: duration 24, cost 68.14. walk: duration 195, cost 0.0. \nfrom Grandma Ye's Bobo Chicken (Taikoo Li Branch) to Jinli Ancient Street: metro: duration 19, cost 4. taxi: duration 4, cost 14.19. walk: duration 32, cost 0.0. \nfrom Grandma Ye's Bobo Chicken (Taikoo Li Branch) to Kuanzhai Alley: metro: duration 17, cost 4. taxi: duration 4, cost 15.79. walk: duration 38, cost 0.0. \nfrom Grandma Ye's Bobo Chicken (Taikoo Li Branch) to Chengdu Research Base of Giant Panda Breeding: metro: duration 65, cost 8. taxi: duration 18, cost 49.44. walk: duration 145, cost 0.0. \nfrom Grandma Ye's Bobo Chicken (Taikoo Li Branch) to Chengdu Museum: metro: duration 15, cost 4. taxi: duration 2, cost 11.51. walk: duration 23, cost 0.0. \nfrom Grandma Ye's Bobo Chicken (Taikoo Li Branch) to Mount Qingcheng: metro: duration 395, cost 14. taxi: duration 85, cost 251.98. walk: duration 686, cost 0.0. \nfrom Grandma Ye's Bobo Chicken (Taikoo Li Branch) to Dujiangyan Irrigation System Scenic Area: metro: duration 456, cost 14. taxi: duration 89, cost 263.24. walk: duration 716, cost 0.0. \nfrom Grandma Ye's Bobo Chicken (Taikoo Li Branch) to Meiholi Zhi Hotel (Huayang Branch, Tianfu New District): metro: duration 43, cost 10. taxi: duration 22, cost 61.06. walk: duration 176, cost 0.0. \nfrom Grandma Ye's Bobo Chicken (Taikoo Li Branch) to Chunxi Road: metro: duration 8, cost 4. taxi: duration 1, cost 11.0. walk: duration 15, cost 0.0. \nfrom Grandma Ye's Bobo Chicken (Taikoo Li Branch) to Chengdu East Railway Station: metro: duration 14, cost 6. taxi: duration 8, cost 25.11. walk: duration 69, cost 0.0. \nfrom Grandma Ye's Bobo Chicken (Taikoo Li Branch) to Celebrity City Hotel: metro: duration 12, cost 4. taxi: duration 2, cost 11.24. walk: duration 22, cost 0.0. \nfrom Grandma Ye's Bobo Chicken (Taikoo Li Branch) to Grandma Ye's Bobo Chicken (Taikoo Li Branch):  metro: empty.  taxi: empty.  walk: empty. \nfrom Grandma Ye's Bobo Chicken (Taikoo Li Branch) to Chengdu Tianfu International Airport: metro: duration 149, cost 18. taxi: duration 79, cost 233.61. walk: duration 637, cost 0.0. \nfrom Grandma Ye's Bobo Chicken (Taikoo Li Branch) to Du Fu Thatched Cottage: metro: duration 19, cost 6. taxi: duration 7, cost 22.39. walk: duration 60, cost 0.0. \nfrom Grandma Ye's Bobo Chicken (Taikoo Li Branch) to Shu Daxia Hot Pot (Chunxi Branch): metro: duration 9, cost 4. taxi: duration 1, cost 11.0. walk: duration 10, cost 0.0. \nfrom Grandma Ye's Bobo Chicken (Taikoo Li Branch) to Orange Fruit Hotel (Chengdu Kuanzhai Alley, Tonghuimen Metro Station): metro: duration 14, cost 6. taxi: duration 5, cost 16.77. walk: duration 41, cost 0.0. \nfrom Grandma Ye's Bobo Chicken (Taikoo Li Branch) to Wuhou Shrine: metro: duration 18, cost 4. taxi: duration 4, cost 14.76. walk: duration 34, cost 0.0. \nfrom Grandma Ye's Bobo Chicken (Taikoo Li Branch) to Chen Mapo Tofu (Flagship Store): metro: duration 21, cost 6. taxi: duration 7, cost 22.19. walk: duration 59, cost 0.0. \nfrom Grandma Ye's Bobo Chicken (Taikoo Li Branch) to Jinsha Site Museum: metro: duration 20, cost 6. taxi: duration 11, cost 30.84. walk: duration 89, cost 0.0. \nfrom Grandma Ye's Bobo Chicken (Taikoo Li Branch) to Sichuan Museum: metro: duration 13, cost 6. taxi: duration 6, cost 20.79. walk: duration 55, cost 0.0. \nfrom Grandma Ye's Bobo Chicken (Taikoo Li Branch) to Chengdu Happy Valley: metro: duration 41, cost 8. taxi: duration 14, cost 38.38. walk: duration 115, cost 0.0. \nfrom Grandma Ye's Bobo Chicken (Taikoo Li Branch) to Grill Master Spicy Grilled Fish (IFS Branch): metro: duration 6, cost 4. taxi: duration 0, cost 11.0. walk: duration 6, cost 0.0. \nfrom Grandma Ye's Bobo Chicken (Taikoo Li Branch) to Chengdu Polar Ocean Park: metro: duration 38, cost 10. taxi: duration 25, cost 69.94. walk: duration 200, cost 0.0. \nfrom Grandma Ye's Bobo Chicken (Taikoo Li Branch) to Zhong Dumplings (Main Store at People's Park): metro: duration 14, cost 4. taxi: duration 3, cost 13.56. walk: duration 30, cost 0.0. \nfrom Chengdu Tianfu International Airport to Shufeng Yayun Sichuan Opera Theater: metro: duration 155, cost 18. taxi: duration 84, cost 248.32. walk: duration 676, cost 0.0. \nfrom Chengdu Tianfu International Airport to Chengdu Shuangliu International Airport: metro: duration 168, cost 18. taxi: duration 83, cost 245.27. walk: duration 668, cost 0.0. \nfrom Chengdu Tianfu International Airport to Jinli Ancient Street: metro: duration 160, cost 18. taxi: duration 82, cost 241.82. walk: duration 658, cost 0.0. \nfrom Chengdu Tianfu International Airport to Kuanzhai Alley: metro: duration 159, cost 18. taxi: duration 84, cost 247.69. walk: duration 674, cost 0.0. \nfrom Chengdu Tianfu International Airport to Chengdu Research Base of Giant Panda Breeding: metro: duration 196, cost 18. taxi: duration 88, cost 259.11. walk: duration 705, cost 0.0. \nfrom Chengdu Tianfu International Airport to Chengdu Museum: metro: duration 157, cost 18. taxi: duration 82, cost 242.32. walk: duration 660, cost 0.0. \nfrom Chengdu Tianfu International Airport to Mount Qingcheng: metro: duration 533, cost 22.0. taxi: duration 162, cost 483.07. walk: duration 1302, cost 0.0. \nfrom Chengdu Tianfu International Airport to Dujiangyan Irrigation System Scenic Area: metro: duration 594, cost 22.0. taxi: duration 168, cost 500.51. walk: duration 1348, cost 0.0. \nfrom Chengdu Tianfu International Airport to Meiholi Zhi Hotel (Huayang Branch, Tianfu New District): metro: duration 145, cost 16. taxi: duration 67, cost 198.55. walk: duration 543, cost 0.0. \nfrom Chengdu Tianfu International Airport to Chunxi Road: metro: duration 149, cost 18. taxi: duration 81, cost 238.19. walk: duration 649, cost 0.0. \nfrom Chengdu Tianfu International Airport to Chengdu East Railway Station: metro: duration 135, cost 16. taxi: duration 71, cost 210.46. walk: duration 575, cost 0.0. \nfrom Chengdu Tianfu International Airport to Celebrity City Hotel: metro: duration 153, cost 18. taxi: duration 81, cost 240.07. walk: duration 654, cost 0.0. \nfrom Chengdu Tianfu International Airport to Grandma Ye's Bobo Chicken (Taikoo Li Branch): metro: duration 149, cost 18. taxi: duration 79, cost 233.61. walk: duration 637, cost 0.0. \nfrom Chengdu Tianfu International Airport to Chengdu Tianfu International Airport:  metro: empty.  taxi: empty.  walk: empty. \nfrom Chengdu Tianfu International Airport to Du Fu Thatched Cottage: metro: duration 160, cost 18. taxi: duration 86, cost 253.38. walk: duration 689, cost 0.0. \nfrom Chengdu Tianfu International Airport to Shu Daxia Hot Pot (Chunxi Branch): metro: duration 151, cost 18. taxi: duration 80, cost 237.12. walk: duration 646, cost 0.0. \nfrom Chengdu Tianfu International Airport to Orange Fruit Hotel (Chengdu Kuanzhai Alley, Tonghuimen Metro Station): metro: duration 154, cost 18. taxi: duration 84, cost 246.9. walk: duration 672, cost 0.0. \nfrom Chengdu Tianfu International Airport to Wuhou Shrine: metro: duration 159, cost 18. taxi: duration 82, cost 242.67. walk: duration 661, cost 0.0. \nfrom Chengdu Tianfu International Airport to Chen Mapo Tofu (Flagship Store): metro: duration 161, cost 18. taxi: duration 85, cost 252.18. walk: duration 686, cost 0.0. \nfrom Chengdu Tianfu International Airport to Jinsha Site Museum: metro: duration 161, cost 18. taxi: duration 90, cost 265.8. walk: duration 722, cost 0.0. \nfrom Chengdu Tianfu International Airport to Sichuan Museum: metro: duration 154, cost 18. taxi: duration 85, cost 251.96. walk: duration 686, cost 0.0. \nfrom Chengdu Tianfu International Airport to Chengdu Happy Valley: metro: duration 183, cost 18.0. taxi: duration 93, cost 275.97. walk: duration 750, cost 0.0. \nfrom Chengdu Tianfu International Airport to Grill Master Spicy Grilled Fish (IFS Branch): metro: duration 148, cost 18. taxi: duration 80, cost 235.99. walk: duration 643, cost 0.0. \nfrom Chengdu Tianfu International Airport to Chengdu Polar Ocean Park: metro: duration 127, cost 16. taxi: duration 62, cost 182.76. walk: duration 501, cost 0.0. \nfrom Chengdu Tianfu International Airport to Zhong Dumplings (Main Store at People's Park): metro: duration 155, cost 18. taxi: duration 82, cost 242.88. walk: duration 661, cost 0.0. \nfrom Du Fu Thatched Cottage to Shufeng Yayun Sichuan Opera Theater: metro: duration 9, cost 4. taxi: duration 2, cost 11.0. walk: duration 20, cost 0.0. \nfrom Du Fu Thatched Cottage to Chengdu Shuangliu International Airport: metro: duration 47, cost 8. taxi: duration 21, cost 59.24. walk: duration 172, cost 0.0. \nfrom Du Fu Thatched Cottage to Jinli Ancient Street: metro: duration 18, cost 4. taxi: duration 3, cost 13.83. walk: duration 31, cost 0.0. \nfrom Du Fu Thatched Cottage to Kuanzhai Alley: metro: duration 18, cost 4. taxi: duration 3, cost 13.13. walk: duration 28, cost 0.0. \nfrom Du Fu Thatched Cottage to Chengdu Research Base of Giant Panda Breeding: metro: duration 67, cost 8. taxi: duration 20, cost 57.14. walk: duration 166, cost 0.0. \nfrom Du Fu Thatched Cottage to Chengdu Museum: metro: duration 16, cost 4. taxi: duration 5, cost 16.6. walk: duration 40, cost 0.0. \nfrom Du Fu Thatched Cottage to Mount Qingcheng: metro: duration 387, cost 12. taxi: duration 78, cost 229.66. walk: duration 626, cost 0.0. \nfrom Du Fu Thatched Cottage to Dujiangyan Irrigation System Scenic Area: metro: duration 448, cost 12. taxi: duration 82, cost 242.26. walk: duration 660, cost 0.0. \nfrom Du Fu Thatched Cottage to Meiholi Zhi Hotel (Huayang Branch, Tianfu New District): metro: duration 48, cost 10. taxi: duration 24, cost 67.77. walk: duration 194, cost 0.0. \nfrom Du Fu Thatched Cottage to Chunxi Road: metro: duration 16, cost 6. taxi: duration 7, cost 21.39. walk: duration 57, cost 0.0. \nfrom Du Fu Thatched Cottage to Chengdu East Railway Station: metro: duration 26, cost 8. taxi: duration 16, cost 43.65. walk: duration 130, cost 0.0. \nfrom Du Fu Thatched Cottage to Celebrity City Hotel: metro: duration 15, cost 4. taxi: duration 4, cost 15.99. walk: duration 38, cost 0.0. \nfrom Du Fu Thatched Cottage to Grandma Ye's Bobo Chicken (Taikoo Li Branch): metro: duration 19, cost 6. taxi: duration 7, cost 22.39. walk: duration 60, cost 0.0. \nfrom Du Fu Thatched Cottage to Chengdu Tianfu International Airport: metro: duration 160, cost 18. taxi: duration 86, cost 253.38. walk: duration 689, cost 0.0. \nfrom Du Fu Thatched Cottage to Du Fu Thatched Cottage:  metro: empty.  taxi: empty.  walk: empty. \nfrom Du Fu Thatched Cottage to Shu Daxia Hot Pot (Chunxi Branch): metro: duration 18, cost 6. taxi: duration 6, cost 19.3. walk: duration 50, cost 0.0. \nfrom Du Fu Thatched Cottage to Orange Fruit Hotel (Chengdu Kuanzhai Alley, Tonghuimen Metro Station): metro: duration 9, cost 4. taxi: duration 2, cost 11.0. walk: duration 19, cost 0.0. \nfrom Du Fu Thatched Cottage to Wuhou Shrine: metro: duration 17, cost 4. taxi: duration 3, cost 13.15. walk: duration 28, cost 0.0. \nfrom Du Fu Thatched Cottage to Chen Mapo Tofu (Flagship Store): metro: duration 15, cost 4. taxi: duration 0, cost 11.0. walk: duration 5, cost 0.0. \nfrom Du Fu Thatched Cottage to Jinsha Site Museum: metro: duration 13, cost 4. taxi: duration 4, cost 14.48. walk: duration 33, cost 0.0. \nfrom Du Fu Thatched Cottage to Sichuan Museum: taxi: duration 0, cost 11.0. walk: duration 5, cost 0.0. \nfrom Du Fu Thatched Cottage to Chengdu Happy Valley: metro: duration 36, cost 6. taxi: duration 10, cost 29.0. walk: duration 83, cost 0.0. \nfrom Du Fu Thatched Cottage to Grill Master Spicy Grilled Fish (IFS Branch): metro: duration 15, cost 6. taxi: duration 6, cost 20.75. walk: duration 55, cost 0.0. \nfrom Du Fu Thatched Cottage to Chengdu Polar Ocean Park: metro: duration 45, cost 10. taxi: duration 28, cost 79.96. walk: duration 227, cost 0.0. \nfrom Du Fu Thatched Cottage to Zhong Dumplings (Main Store at People's Park): metro: duration 13, cost 4. taxi: duration 3, cost 13.61. walk: duration 30, cost 0.0. \nfrom Shu Daxia Hot Pot (Chunxi Branch) to Shufeng Yayun Sichuan Opera Theater: metro: duration 12, cost 4. taxi: duration 3, cost 13.89. walk: duration 31, cost 0.0. \nfrom Shu Daxia Hot Pot (Chunxi Branch) to Chengdu Shuangliu International Airport: metro: duration 49, cost 10. taxi: duration 23, cost 66.31. walk: duration 190, cost 0.0. \nfrom Shu Daxia Hot Pot (Chunxi Branch) to Jinli Ancient Street: metro: duration 17, cost 4. taxi: duration 2, cost 11.38. walk: duration 22, cost 0.0. \nfrom Shu Daxia Hot Pot (Chunxi Branch) to Kuanzhai Alley: metro: duration 16, cost 4. taxi: duration 3, cost 12.92. walk: duration 28, cost 0.0. \nfrom Shu Daxia Hot Pot (Chunxi Branch) to Chengdu Research Base of Giant Panda Breeding: metro: duration 64, cost 8. taxi: duration 18, cost 50.01. walk: duration 147, cost 0.0. \nfrom Shu Daxia Hot Pot (Chunxi Branch) to Chengdu Museum: metro: duration 14, cost 4. taxi: duration 1, cost 11.0. walk: duration 14, cost 0.0. \nfrom Shu Daxia Hot Pot (Chunxi Branch) to Mount Qingcheng: metro: duration 393, cost 14. taxi: duration 84, cost 248.04. walk: duration 675, cost 0.0. \nfrom Shu Daxia Hot Pot (Chunxi Branch) to Dujiangyan Irrigation System Scenic Area: metro: duration 454, cost 14. taxi: duration 88, cost 259.48. walk: duration 706, cost 0.0. \nfrom Shu Daxia Hot Pot (Chunxi Branch) to Meiholi Zhi Hotel (Huayang Branch, Tianfu New District): metro: duration 44, cost 10. taxi: duration 22, cost 61.91. walk: duration 179, cost 0.0. \nfrom Shu Daxia Hot Pot (Chunxi Branch) to Chunxi Road: metro: duration 7, cost 4. taxi: duration 1, cost 11.0. walk: duration 15, cost 0.0. \nfrom Shu Daxia Hot Pot (Chunxi Branch) to Chengdu East Railway Station: metro: duration 16, cost 6. taxi: duration 10, cost 28.2. walk: duration 80, cost 0.0. \nfrom Shu Daxia Hot Pot (Chunxi Branch) to Celebrity City Hotel: metro: duration 10, cost 4. taxi: duration 1, cost 11.0. walk: duration 12, cost 0.0. \nfrom Shu Daxia Hot Pot (Chunxi Branch) to Grandma Ye's Bobo Chicken (Taikoo Li Branch): metro: duration 9, cost 4. taxi: duration 1, cost 11.0. walk: duration 10, cost 0.0. \nfrom Shu Daxia Hot Pot (Chunxi Branch) to Chengdu Tianfu International Airport: metro: duration 151, cost 18. taxi: duration 80, cost 237.12. walk: duration 646, cost 0.0. \nfrom Shu Daxia Hot Pot (Chunxi Branch) to Du Fu Thatched Cottage: metro: duration 18, cost 6. taxi: duration 6, cost 19.3. walk: duration 50, cost 0.0. \nfrom Shu Daxia Hot Pot (Chunxi Branch) to Shu Daxia Hot Pot (Chunxi Branch):  metro: empty.  taxi: empty.  walk: empty. \nfrom Shu Daxia Hot Pot (Chunxi Branch) to Orange Fruit Hotel (Chengdu Kuanzhai Alley, Tonghuimen Metro Station): metro: duration 12, cost 4. taxi: duration 3, cost 13.68. walk: duration 30, cost 0.0. \nfrom Shu Daxia Hot Pot (Chunxi Branch) to Wuhou Shrine: metro: duration 16, cost 4. taxi: duration 3, cost 11.89. walk: duration 24, cost 0.0. \nfrom Shu Daxia Hot Pot (Chunxi Branch) to Chen Mapo Tofu (Flagship Store): metro: duration 19, cost 4. taxi: duration 6, cost 19.13. walk: duration 49, cost 0.0. \nfrom Shu Daxia Hot Pot (Chunxi Branch) to Jinsha Site Museum: metro: duration 19, cost 6. taxi: duration 9, cost 27.8. walk: duration 79, cost 0.0. \nfrom Shu Daxia Hot Pot (Chunxi Branch) to Sichuan Museum: metro: duration 12, cost 6. taxi: duration 5, cost 17.7. walk: duration 44, cost 0.0. \nfrom Shu Daxia Hot Pot (Chunxi Branch) to Chengdu Happy Valley: metro: duration 40, cost 8. taxi: duration 13, cost 36.12. walk: duration 107, cost 0.0. \nfrom Shu Daxia Hot Pot (Chunxi Branch) to Grill Master Spicy Grilled Fish (IFS Branch): taxi: duration 0, cost 11.0. walk: duration 5, cost 0.0. \nfrom Shu Daxia Hot Pot (Chunxi Branch) to Chengdu Polar Ocean Park: metro: duration 39, cost 10. taxi: duration 25, cost 71.47. walk: duration 204, cost 0.0. \nfrom Shu Daxia Hot Pot (Chunxi Branch) to Zhong Dumplings (Main Store at People's Park): metro: duration 12, cost 4. taxi: duration 2, cost 11.0. walk: duration 19, cost 0.0. \nfrom Orange Fruit Hotel (Chengdu Kuanzhai Alley, Tonghuimen Metro Station) to Shufeng Yayun Sichuan Opera Theater: metro: duration 4, cost 4. taxi: duration 0, cost 11.0. walk: duration 7, cost 0.0. \nfrom Orange Fruit Hotel (Chengdu Kuanzhai Alley, Tonghuimen Metro Station) to Chengdu Shuangliu International Airport: metro: duration 44, cost 8. taxi: duration 22, cost 61.1. walk: duration 177, cost 0.0. \nfrom Orange Fruit Hotel (Chengdu Kuanzhai Alley, Tonghuimen Metro Station) to Jinli Ancient Street: metro: duration 12, cost 4. taxi: duration 1, cost 11.0. walk: duration 13, cost 0.0. \nfrom Orange Fruit Hotel (Chengdu Kuanzhai Alley, Tonghuimen Metro Station) to Kuanzhai Alley: metro: duration 13, cost 4. taxi: duration 1, cost 11.0. walk: duration 15, cost 0.0. \nfrom Orange Fruit Hotel (Chengdu Kuanzhai Alley, Tonghuimen Metro Station) to Chengdu Research Base of Giant Panda Breeding: metro: duration 63, cost 8. taxi: duration 19, cost 54.11. walk: duration 158, cost 0.0. \nfrom Orange Fruit Hotel (Chengdu Kuanzhai Alley, Tonghuimen Metro Station) to Chengdu Museum: metro: duration 11, cost 4. taxi: duration 2, cost 11.39. walk: duration 22, cost 0.0. \nfrom Orange Fruit Hotel (Chengdu Kuanzhai Alley, Tonghuimen Metro Station) to Mount Qingcheng: metro: duration 385, cost 12. taxi: duration 80, cost 236.8. walk: duration 645, cost 0.0. \nfrom Orange Fruit Hotel (Chengdu Kuanzhai Alley, Tonghuimen Metro Station) to Dujiangyan Irrigation System Scenic Area: metro: duration 446, cost 12. taxi: duration 84, cost 249.0. walk: duration 678, cost 0.0. \nfrom Orange Fruit Hotel (Chengdu Kuanzhai Alley, Tonghuimen Metro Station) to Meiholi Zhi Hotel (Huayang Branch, Tianfu New District): metro: duration 43, cost 10. taxi: duration 23, cost 64.65. walk: duration 186, cost 0.0. \nfrom Orange Fruit Hotel (Chengdu Kuanzhai Alley, Tonghuimen Metro Station) to Chunxi Road: metro: duration 10, cost 4. taxi: duration 4, cost 16.13. walk: duration 39, cost 0.0. \nfrom Orange Fruit Hotel (Chengdu Kuanzhai Alley, Tonghuimen Metro Station) to Chengdu East Railway Station: metro: duration 20, cost 8. taxi: duration 13, cost 37.15. walk: duration 111, cost 0.0. \nfrom Orange Fruit Hotel (Chengdu Kuanzhai Alley, Tonghuimen Metro Station) to Celebrity City Hotel: metro: duration 9, cost 4. taxi: duration 2, cost 11.0. walk: duration 19, cost 0.0. \nfrom Orange Fruit Hotel (Chengdu Kuanzhai Alley, Tonghuimen Metro Station) to Grandma Ye's Bobo Chicken (Taikoo Li Branch): metro: duration 14, cost 6. taxi: duration 5, cost 16.77. walk: duration 41, cost 0.0. \nfrom Orange Fruit Hotel (Chengdu Kuanzhai Alley, Tonghuimen Metro Station) to Chengdu Tianfu International Airport: metro: duration 154, cost 18. taxi: duration 84, cost 246.9. walk: duration 672, cost 0.0. \nfrom Orange Fruit Hotel (Chengdu Kuanzhai Alley, Tonghuimen Metro Station) to Du Fu Thatched Cottage: metro: duration 9, cost 4. taxi: duration 2, cost 11.0. walk: duration 19, cost 0.0. \nfrom Orange Fruit Hotel (Chengdu Kuanzhai Alley, Tonghuimen Metro Station) to Shu Daxia Hot Pot (Chunxi Branch): metro: duration 12, cost 4. taxi: duration 3, cost 13.68. walk: duration 30, cost 0.0. \nfrom Orange Fruit Hotel (Chengdu Kuanzhai Alley, Tonghuimen Metro Station) to Orange Fruit Hotel (Chengdu Kuanzhai Alley, Tonghuimen Metro Station):  metro: empty.  taxi: empty.  walk: empty. \nfrom Orange Fruit Hotel (Chengdu Kuanzhai Alley, Tonghuimen Metro Station) to Wuhou Shrine: metro: duration 11, cost 4. taxi: duration 1, cost 11.0. walk: duration 11, cost 0.0. \nfrom Orange Fruit Hotel (Chengdu Kuanzhai Alley, Tonghuimen Metro Station) to Chen Mapo Tofu (Flagship Store): metro: duration 11, cost 4. taxi: duration 2, cost 11.0. walk: duration 18, cost 0.0. \nfrom Orange Fruit Hotel (Chengdu Kuanzhai Alley, Tonghuimen Metro Station) to Jinsha Site Museum: metro: duration 11, cost 6. taxi: duration 6, cost 19.44. walk: duration 50, cost 0.0. \nfrom Orange Fruit Hotel (Chengdu Kuanzhai Alley, Tonghuimen Metro Station) to Sichuan Museum: metro: duration 3, cost 4. taxi: duration 1, cost 11.0. walk: duration 14, cost 0.0. \nfrom Orange Fruit Hotel (Chengdu Kuanzhai Alley, Tonghuimen Metro Station) to Chengdu Happy Valley: metro: duration 33, cost 6. taxi: duration 11, cost 31.26. walk: duration 91, cost 0.0. \nfrom Orange Fruit Hotel (Chengdu Kuanzhai Alley, Tonghuimen Metro Station) to Grill Master Spicy Grilled Fish (IFS Branch): metro: duration 9, cost 4. taxi: duration 4, cost 15.16. walk: duration 35, cost 0.0. \nfrom Orange Fruit Hotel (Chengdu Kuanzhai Alley, Tonghuimen Metro Station) to Chengdu Polar Ocean Park: metro: duration 40, cost 10. taxi: duration 27, cost 75.98. walk: duration 216, cost 0.0. \nfrom Orange Fruit Hotel (Chengdu Kuanzhai Alley, Tonghuimen Metro Station) to Zhong Dumplings (Main Store at People's Park): metro: duration 7, cost 4. taxi: duration 1, cost 11.0. walk: duration 11, cost 0.0. \nfrom Wuhou Shrine to Shufeng Yayun Sichuan Opera Theater: metro: duration 11, cost 4. taxi: duration 2, cost 11.0. walk: duration 18, cost 0.0. \nfrom Wuhou Shrine to Chengdu Shuangliu International Airport: metro: duration 50, cost 8. taxi: duration 21, cost 59.26. walk: duration 172, cost 0.0. \nfrom Wuhou Shrine to Jinli Ancient Street: taxi: duration 0, cost 11.0. walk: duration 2, cost 0.0. \nfrom Wuhou Shrine to Kuanzhai Alley: metro: duration 18, cost 4. taxi: duration 2, cost 11.52. walk: duration 23, cost 0.0. \nfrom Wuhou Shrine to Chengdu Research Base of Giant Panda Breeding: metro: duration 69, cost 8. taxi: duration 20, cost 55.95. walk: duration 163, cost 0.0. \nfrom Wuhou Shrine to Chengdu Museum: metro: duration 16, cost 4. taxi: duration 2, cost 11.34. walk: duration 22, cost 0.0. \nfrom Wuhou Shrine to Mount Qingcheng: metro: duration 392, cost 12. taxi: duration 81, cost 240.45. walk: duration 655, cost 0.0. \nfrom Wuhou Shrine to Dujiangyan Irrigation System Scenic Area: metro: duration 453, cost 12. taxi: duration 86, cost 253.09. walk: duration 689, cost 0.0. \nfrom Wuhou Shrine to Meiholi Zhi Hotel (Huayang Branch, Tianfu New District): metro: duration 48, cost 10. taxi: duration 21, cost 60.59. walk: duration 175, cost 0.0. \nfrom Wuhou Shrine to Chunxi Road: metro: duration 15, cost 4. taxi: duration 4, cost 15.42. walk: duration 36, cost 0.0. \nfrom Wuhou Shrine to Chengdu East Railway Station: metro: duration 25, cost 6. taxi: duration 12, cost 34.76. walk: duration 103, cost 0.0. \nfrom Wuhou Shrine to Celebrity City Hotel: metro: duration 13, cost 4. taxi: duration 1, cost 11.0. walk: duration 12, cost 0.0. \nfrom Wuhou Shrine to Grandma Ye's Bobo Chicken (Taikoo Li Branch): metro: duration 18, cost 4. taxi: duration 4, cost 14.76. walk: duration 34, cost 0.0. \nfrom Wuhou Shrine to Chengdu Tianfu International Airport: metro: duration 159, cost 18. taxi: duration 82, cost 242.67. walk: duration 661, cost 0.0. \nfrom Wuhou Shrine to Du Fu Thatched Cottage: metro: duration 17, cost 4. taxi: duration 3, cost 13.15. walk: duration 28, cost 0.0. \nfrom Wuhou Shrine to Shu Daxia Hot Pot (Chunxi Branch): metro: duration 16, cost 4. taxi: duration 3, cost 11.89. walk: duration 24, cost 0.0. \nfrom Wuhou Shrine to Orange Fruit Hotel (Chengdu Kuanzhai Alley, Tonghuimen Metro Station): metro: duration 11, cost 4. taxi: duration 1, cost 11.0. walk: duration 11, cost 0.0. \nfrom Wuhou Shrine to Wuhou Shrine:  metro: empty.  taxi: empty.  walk: empty. \nfrom Wuhou Shrine to Chen Mapo Tofu (Flagship Store): metro: duration 19, cost 4. taxi: duration 3, cost 12.54. walk: duration 26, cost 0.0. \nfrom Wuhou Shrine to Jinsha Site Museum: metro: duration 18, cost 6. taxi: duration 7, cost 22.69. walk: duration 61, cost 0.0. \nfrom Wuhou Shrine to Sichuan Museum: metro: duration 11, cost 4. taxi: duration 3, cost 11.93. walk: duration 24, cost 0.0. \nfrom Wuhou Shrine to Chengdu Happy Valley: metro: duration 40, cost 6. taxi: duration 12, cost 34.59. walk: duration 102, cost 0.0. \nfrom Wuhou Shrine to Grill Master Spicy Grilled Fish (IFS Branch): metro: duration 13, cost 4. taxi: duration 3, cost 13.48. walk: duration 30, cost 0.0. \nfrom Wuhou Shrine to Chengdu Polar Ocean Park: metro: duration 45, cost 10. taxi: duration 25, cost 71.69. walk: duration 205, cost 0.0. \nfrom Wuhou Shrine to Zhong Dumplings (Main Store at People's Park): taxi: duration 0, cost 11.0. walk: duration 7, cost 0.0. \nfrom Chen Mapo Tofu (Flagship Store) to Shufeng Yayun Sichuan Opera Theater: metro: duration 12, cost 4. taxi: duration 2, cost 11.06. walk: duration 21, cost 0.0. \nfrom Chen Mapo Tofu (Flagship Store) to Chengdu Shuangliu International Airport: metro: duration 48, cost 8. taxi: duration 20, cost 57.49. walk: duration 167, cost 0.0. \nfrom Chen Mapo Tofu (Flagship Store) to Jinli Ancient Street: metro: duration 20, cost 4. taxi: duration 3, cost 13.21. walk: duration 29, cost 0.0. \nfrom Chen Mapo Tofu (Flagship Store) to Kuanzhai Alley: metro: duration 20, cost 4. taxi: duration 3, cost 13.73. walk: duration 30, cost 0.0. \nfrom Chen Mapo Tofu (Flagship Store) to Chengdu Research Base of Giant Panda Breeding: metro: duration 70, cost 8. taxi: duration 21, cost 58.63. walk: duration 170, cost 0.0. \nfrom Chen Mapo Tofu (Flagship Store) to Chengdu Museum: metro: duration 18, cost 4. taxi: duration 5, cost 16.8. walk: duration 41, cost 0.0. \nfrom Chen Mapo Tofu (Flagship Store) to Mount Qingcheng: metro: duration 389, cost 12. taxi: duration 78, cost 230.38. walk: duration 628, cost 0.0. \nfrom Chen Mapo Tofu (Flagship Store) to Dujiangyan Irrigation System Scenic Area: metro: duration 450, cost 12. taxi: duration 82, cost 243.34. walk: duration 663, cost 0.0. \nfrom Chen Mapo Tofu (Flagship Store) to Meiholi Zhi Hotel (Huayang Branch, Tianfu New District): metro: duration 48, cost 10. taxi: duration 23, cost 65.91. walk: duration 189, cost 0.0. \nfrom Chen Mapo Tofu (Flagship Store) to Chunxi Road: metro: duration 18, cost 6. taxi: duration 7, cost 21.58. walk: duration 57, cost 0.0. \nfrom Chen Mapo Tofu (Flagship Store) to Chengdu East Railway Station: metro: duration 28, cost 8. taxi: duration 16, cost 43.27. walk: duration 129, cost 0.0. \nfrom Chen Mapo Tofu (Flagship Store) to Celebrity City Hotel: metro: duration 16, cost 4. taxi: duration 4, cost 15.68. walk: duration 37, cost 0.0. \nfrom Chen Mapo Tofu (Flagship Store) to Grandma Ye's Bobo Chicken (Taikoo Li Branch): metro: duration 21, cost 6. taxi: duration 7, cost 22.19. walk: duration 59, cost 0.0. \nfrom Chen Mapo Tofu (Flagship Store) to Chengdu Tianfu International Airport: metro: duration 161, cost 18. taxi: duration 85, cost 252.18. walk: duration 686, cost 0.0. \nfrom Chen Mapo Tofu (Flagship Store) to Du Fu Thatched Cottage: metro: duration 15, cost 4. taxi: duration 0, cost 11.0. walk: duration 5, cost 0.0. \nfrom Chen Mapo Tofu (Flagship Store) to Shu Daxia Hot Pot (Chunxi Branch): metro: duration 19, cost 4. taxi: duration 6, cost 19.13. walk: duration 49, cost 0.0. \nfrom Chen Mapo Tofu (Flagship Store) to Orange Fruit Hotel (Chengdu Kuanzhai Alley, Tonghuimen Metro Station): metro: duration 11, cost 4. taxi: duration 2, cost 11.0. walk: duration 18, cost 0.0. \nfrom Chen Mapo Tofu (Flagship Store) to Wuhou Shrine: metro: duration 19, cost 4. taxi: duration 3, cost 12.54. walk: duration 26, cost 0.0. \nfrom Chen Mapo Tofu (Flagship Store) to Chen Mapo Tofu (Flagship Store):  metro: empty.  taxi: empty.  walk: empty. \nfrom Chen Mapo Tofu (Flagship Store) to Jinsha Site Museum: metro: duration 16, cost 4. taxi: duration 4, cost 15.63. walk: duration 37, cost 0.0. \nfrom Chen Mapo Tofu (Flagship Store) to Sichuan Museum: metro: duration 9, cost 4. taxi: duration 1, cost 11.0. walk: duration 8, cost 0.0. \nfrom Chen Mapo Tofu (Flagship Store) to Chengdu Happy Valley: metro: duration 39, cost 6. taxi: duration 11, cost 30.49. walk: duration 88, cost 0.0. \nfrom Chen Mapo Tofu (Flagship Store) to Grill Master Spicy Grilled Fish (IFS Branch): metro: duration 16, cost 4. taxi: duration 6, cost 20.64. walk: duration 54, cost 0.0. \nfrom Chen Mapo Tofu (Flagship Store) to Chengdu Polar Ocean Park: metro: duration 45, cost 10. taxi: duration 27, cost 78.19. walk: duration 222, cost 0.0. \nfrom Chen Mapo Tofu (Flagship Store) to Zhong Dumplings (Main Store at People's Park): metro: duration 15, cost 4. taxi: duration 3, cost 13.33. walk: duration 29, cost 0.0. \nfrom Jinsha Site Museum to Shufeng Yayun Sichuan Opera Theater: metro: duration 10, cost 4. taxi: duration 5, cost 18.64. walk: duration 47, cost 0.0. \nfrom Jinsha Site Museum to Chengdu Shuangliu International Airport: metro: duration 45, cost 10. taxi: duration 23, cost 65.19. walk: duration 187, cost 0.0. \nfrom Jinsha Site Museum to Jinli Ancient Street: metro: duration 19, cost 6. taxi: duration 7, cost 23.35. walk: duration 63, cost 0.0. \nfrom Jinsha Site Museum to Kuanzhai Alley: metro: duration 19, cost 6. taxi: duration 6, cost 19.96. walk: duration 52, cost 0.0. \nfrom Jinsha Site Museum to Chengdu Research Base of Giant Panda Breeding: metro: duration 61, cost 8. taxi: duration 20, cost 56.78. walk: duration 165, cost 0.0. \nfrom Jinsha Site Museum to Chengdu Museum: metro: duration 17, cost 6. taxi: duration 8, cost 24.24. walk: duration 66, cost 0.0. \nfrom Jinsha Site Museum to Mount Qingcheng: metro: duration 376, cost 12. taxi: duration 74, cost 218.41. walk: duration 596, cost 0.0. \nfrom Jinsha Site Museum to Dujiangyan Irrigation System Scenic Area: metro: duration 437, cost 12. taxi: duration 78, cost 230.07. walk: duration 627, cost 0.0. \nfrom Jinsha Site Museum to Meiholi Zhi Hotel (Huayang Branch, Tianfu New District): metro: duration 48, cost 10. taxi: duration 28, cost 79.19. walk: duration 225, cost 0.0. \nfrom Jinsha Site Museum to Chunxi Road: metro: duration 16, cost 6. taxi: duration 10, cost 28.66. walk: duration 82, cost 0.0. \nfrom Jinsha Site Museum to Chengdu East Railway Station: metro: duration 27, cost 8. taxi: duration 19, cost 54.38. walk: duration 159, cost 0.0. \nfrom Jinsha Site Museum to Celebrity City Hotel: metro: duration 16, cost 6. taxi: duration 8, cost 24.96. walk: duration 69, cost 0.0. \nfrom Jinsha Site Museum to Grandma Ye's Bobo Chicken (Taikoo Li Branch): metro: duration 20, cost 6. taxi: duration 11, cost 30.84. walk: duration 89, cost 0.0. \nfrom Jinsha Site Museum to Chengdu Tianfu International Airport: metro: duration 161, cost 18. taxi: duration 90, cost 265.8. walk: duration 722, cost 0.0. \nfrom Jinsha Site Museum to Du Fu Thatched Cottage: metro: duration 13, cost 4. taxi: duration 4, cost 14.48. walk: duration 33, cost 0.0. \nfrom Jinsha Site Museum to Shu Daxia Hot Pot (Chunxi Branch): metro: duration 19, cost 6. taxi: duration 9, cost 27.8. walk: duration 79, cost 0.0. \nfrom Jinsha Site Museum to Orange Fruit Hotel (Chengdu Kuanzhai Alley, Tonghuimen Metro Station): metro: duration 11, cost 6. taxi: duration 6, cost 19.44. walk: duration 50, cost 0.0. \nfrom Jinsha Site Museum to Wuhou Shrine: metro: duration 18, cost 6. taxi: duration 7, cost 22.69. walk: duration 61, cost 0.0. \nfrom Jinsha Site Museum to Chen Mapo Tofu (Flagship Store): metro: duration 16, cost 4. taxi: duration 4, cost 15.63. walk: duration 37, cost 0.0. \nfrom Jinsha Site Museum to Jinsha Site Museum:  metro: empty.  taxi: empty.  walk: empty. \nfrom Jinsha Site Museum to Sichuan Museum: metro: duration 7, cost 4. taxi: duration 4, cost 15.46. walk: duration 36, cost 0.0. \nfrom Jinsha Site Museum to Chengdu Happy Valley: metro: duration 26, cost 6. taxi: duration 7, cost 22.21. walk: duration 60, cost 0.0. \nfrom Jinsha Site Museum to Grill Master Spicy Grilled Fish (IFS Branch): metro: duration 16, cost 6. taxi: duration 10, cost 29.04. walk: duration 83, cost 0.0. \nfrom Jinsha Site Museum to Chengdu Polar Ocean Park: metro: duration 46, cost 12. taxi: duration 32, cost 91.91. walk: duration 259, cost 0.0. \nfrom Jinsha Site Museum to Zhong Dumplings (Main Store at People's Park): metro: duration 14, cost 6. taxi: duration 7, cost 22.65. walk: duration 61, cost 0.0. \nfrom Sichuan Museum to Shufeng Yayun Sichuan Opera Theater: metro: duration 3, cost 4. taxi: duration 1, cost 11.0. walk: duration 14, cost 0.0. \nfrom Sichuan Museum to Chengdu Shuangliu International Airport: metro: duration 41, cost 8. taxi: duration 21, cost 60.61. walk: duration 175, cost 0.0. \nfrom Sichuan Museum to Jinli Ancient Street: metro: duration 12, cost 4. taxi: duration 3, cost 12.59. walk: duration 27, cost 0.0. \nfrom Sichuan Museum to Kuanzhai Alley: metro: duration 12, cost 4. taxi: duration 2, cost 11.4. walk: duration 22, cost 0.0. \nfrom Sichuan Museum to Chengdu Research Base of Giant Panda Breeding: metro: duration 61, cost 8. taxi: duration 20, cost 55.37. walk: duration 161, cost 0.0. \nfrom Sichuan Museum to Chengdu Museum: metro: duration 10, cost 4. taxi: duration 4, cost 14.87. walk: duration 34, cost 0.0. \nfrom Sichuan Museum to Mount Qingcheng: metro: duration 381, cost 12. taxi: duration 78, cost 231.52. walk: duration 631, cost 0.0. \nfrom Sichuan Museum to Dujiangyan Irrigation System Scenic Area: metro: duration 442, cost 12. taxi: duration 83, cost 243.82. walk: duration 664, cost 0.0. \nfrom Sichuan Museum to Meiholi Zhi Hotel (Huayang Branch, Tianfu New District): metro: duration 42, cost 10. taxi: duration 24, cost 67.67. walk: duration 194, cost 0.0. \nfrom Sichuan Museum to Chunxi Road: metro: duration 10, cost 6. taxi: duration 6, cost 19.66. walk: duration 51, cost 0.0. \nfrom Sichuan Museum to Chengdu East Railway Station: metro: duration 20, cost 8. taxi: duration 15, cost 41.62. walk: duration 125, cost 0.0. \nfrom Sichuan Museum to Celebrity City Hotel: metro: duration 9, cost 4. taxi: duration 4, cost 14.48. walk: duration 33, cost 0.0. \nfrom Sichuan Museum to Grandma Ye's Bobo Chicken (Taikoo Li Branch): metro: duration 13, cost 6. taxi: duration 6, cost 20.79. walk: duration 55, cost 0.0. \nfrom Sichuan Museum to Chengdu Tianfu International Airport: metro: duration 154, cost 18. taxi: duration 85, cost 251.96. walk: duration 686, cost 0.0. \nfrom Sichuan Museum to Du Fu Thatched Cottage: taxi: duration 0, cost 11.0. walk: duration 5, cost 0.0. \nfrom Sichuan Museum to Shu Daxia Hot Pot (Chunxi Branch): metro: duration 12, cost 6. taxi: duration 5, cost 17.7. walk: duration 44, cost 0.0. \nfrom Sichuan Museum to Orange Fruit Hotel (Chengdu Kuanzhai Alley, Tonghuimen Metro Station): metro: duration 3, cost 4. taxi: duration 1, cost 11.0. walk: duration 14, cost 0.0. \nfrom Sichuan Museum to Wuhou Shrine: metro: duration 11, cost 4. taxi: duration 3, cost 11.93. walk: duration 24, cost 0.0. \nfrom Sichuan Museum to Chen Mapo Tofu (Flagship Store): metro: duration 9, cost 4. taxi: duration 1, cost 11.0. walk: duration 8, cost 0.0. \nfrom Sichuan Museum to Jinsha Site Museum: metro: duration 7, cost 4. taxi: duration 4, cost 15.46. walk: duration 36, cost 0.0. \nfrom Sichuan Museum to Sichuan Museum:  metro: empty.  taxi: empty.  walk: empty. \nfrom Sichuan Museum to Chengdu Happy Valley: metro: duration 30, cost 6. taxi: duration 10, cost 28.85. walk: duration 82, cost 0.0. \nfrom Sichuan Museum to Grill Master Spicy Grilled Fish (IFS Branch): metro: duration 9, cost 6. taxi: duration 6, cost 19.12. walk: duration 49, cost 0.0. \nfrom Sichuan Museum to Chengdu Polar Ocean Park: metro: duration 39, cost 10. taxi: duration 28, cost 79.58. walk: duration 226, cost 0.0. \nfrom Sichuan Museum to Zhong Dumplings (Main Store at People's Park): metro: duration 7, cost 4. taxi: duration 3, cost 12.11. walk: duration 25, cost 0.0. \nfrom Chengdu Happy Valley to Shufeng Yayun Sichuan Opera Theater: metro: duration 33, cost 6. taxi: duration 10, cost 29.31. walk: duration 84, cost 0.0. \nfrom Chengdu Happy Valley to Chengdu Shuangliu International Airport: metro: duration 69, cost 10. taxi: duration 30, cost 87.69. walk: duration 247, cost 0.0. \nfrom Chengdu Happy Valley to Jinli Ancient Street: metro: duration 41, cost 6. taxi: duration 13, cost 35.07. walk: duration 104, cost 0.0. \nfrom Chengdu Happy Valley to Kuanzhai Alley: metro: duration 40, cost 6. taxi: duration 10, cost 28.51. walk: duration 81, cost 0.0. \nfrom Chengdu Happy Valley to Chengdu Research Base of Giant Panda Breeding: metro: duration 72, cost 8. taxi: duration 15, cost 41.0. walk: duration 123, cost 0.0. \nfrom Chengdu Happy Valley to Chengdu Museum: metro: duration 38, cost 6. taxi: duration 11, cost 32.02. walk: duration 93, cost 0.0. \nfrom Chengdu Happy Valley to Mount Qingcheng: metro: duration 391, cost 12. taxi: duration 74, cost 217.12. walk: duration 593, cost 0.0. \nfrom Chengdu Happy Valley to Dujiangyan Irrigation System Scenic Area: metro: duration 452, cost 12. taxi: duration 76, cost 223.76. walk: duration 610, cost 0.0. \nfrom Chengdu Happy Valley to Meiholi Zhi Hotel (Huayang Branch, Tianfu New District): metro: duration 72, cost 12. taxi: duration 34, cost 98.65. walk: duration 277, cost 0.0. \nfrom Chengdu Happy Valley to Chunxi Road: metro: duration 37, cost 8. taxi: duration 12, cost 34.35. walk: duration 101, cost 0.0. \nfrom Chengdu Happy Valley to Chengdu East Railway Station: metro: duration 47, cost 10. taxi: duration 21, cost 60.39. walk: duration 175, cost 0.0. \nfrom Chengdu Happy Valley to Celebrity City Hotel: metro: duration 37, cost 6. taxi: duration 12, cost 34.94. walk: duration 103, cost 0.0. \nfrom Chengdu Happy Valley to Grandma Ye's Bobo Chicken (Taikoo Li Branch): metro: duration 41, cost 8. taxi: duration 14, cost 38.38. walk: duration 115, cost 0.0. \nfrom Chengdu Happy Valley to Chengdu Tianfu International Airport: metro: duration 183, cost 18.0. taxi: duration 93, cost 275.97. walk: duration 750, cost 0.0. \nfrom Chengdu Happy Valley to Du Fu Thatched Cottage: metro: duration 36, cost 6. taxi: duration 10, cost 29.0. walk: duration 83, cost 0.0. \nfrom Chengdu Happy Valley to Shu Daxia Hot Pot (Chunxi Branch): metro: duration 40, cost 8. taxi: duration 13, cost 36.12. walk: duration 107, cost 0.0. \nfrom Chengdu Happy Valley to Orange Fruit Hotel (Chengdu Kuanzhai Alley, Tonghuimen Metro Station): metro: duration 33, cost 6. taxi: duration 11, cost 31.26. walk: duration 91, cost 0.0. \nfrom Chengdu Happy Valley to Wuhou Shrine: metro: duration 40, cost 6. taxi: duration 12, cost 34.59. walk: duration 102, cost 0.0. \nfrom Chengdu Happy Valley to Chen Mapo Tofu (Flagship Store): metro: duration 39, cost 6. taxi: duration 11, cost 30.49. walk: duration 88, cost 0.0. \nfrom Chengdu Happy Valley to Jinsha Site Museum: metro: duration 26, cost 6. taxi: duration 7, cost 22.21. walk: duration 60, cost 0.0. \nfrom Chengdu Happy Valley to Sichuan Museum: metro: duration 30, cost 6. taxi: duration 10, cost 28.85. walk: duration 82, cost 0.0. \nfrom Chengdu Happy Valley to Chengdu Happy Valley:  metro: empty.  taxi: empty.  walk: empty. \nfrom Chengdu Happy Valley to Grill Master Spicy Grilled Fish (IFS Branch): metro: duration 37, cost 8. taxi: duration 13, cost 36.61. walk: duration 109, cost 0.0. \nfrom Chengdu Happy Valley to Chengdu Polar Ocean Park: metro: duration 69, cost 12. taxi: duration 38, cost 110.12. walk: duration 307, cost 0.0. \nfrom Chengdu Happy Valley to Zhong Dumplings (Main Store at People's Park): metro: duration 36, cost 6. taxi: duration 12, cost 33.4. walk: duration 98, cost 0.0. \nfrom Grill Master Spicy Grilled Fish (IFS Branch) to Shufeng Yayun Sichuan Opera Theater: metro: duration 9, cost 4. taxi: duration 4, cost 15.2. walk: duration 35, cost 0.0. \nfrom Grill Master Spicy Grilled Fish (IFS Branch) to Chengdu Shuangliu International Airport: metro: duration 46, cost 10. taxi: duration 24, cost 67.98. walk: duration 195, cost 0.0. \nfrom Grill Master Spicy Grilled Fish (IFS Branch) to Jinli Ancient Street: metro: duration 14, cost 4. taxi: duration 3, cost 12.97. walk: duration 28, cost 0.0. \nfrom Grill Master Spicy Grilled Fish (IFS Branch) to Kuanzhai Alley: metro: duration 13, cost 4. taxi: duration 3, cost 13.94. walk: duration 31, cost 0.0. \nfrom Grill Master Spicy Grilled Fish (IFS Branch) to Chengdu Research Base of Giant Panda Breeding: metro: duration 61, cost 8. taxi: duration 18, cost 48.76. walk: duration 144, cost 0.0. \nfrom Grill Master Spicy Grilled Fish (IFS Branch) to Chengdu Museum: metro: duration 11, cost 4. taxi: duration 2, cost 11.0. walk: duration 16, cost 0.0. \nfrom Grill Master Spicy Grilled Fish (IFS Branch) to Mount Qingcheng: metro: duration 390, cost 14. taxi: duration 84, cost 249.69. walk: duration 679, cost 0.0. \nfrom Grill Master Spicy Grilled Fish (IFS Branch) to Dujiangyan Irrigation System Scenic Area: metro: duration 451, cost 14. taxi: duration 88, cost 260.86. walk: duration 709, cost 0.0. \nfrom Grill Master Spicy Grilled Fish (IFS Branch) to Meiholi Zhi Hotel (Huayang Branch, Tianfu New District): metro: duration 41, cost 10. taxi: duration 22, cost 62.45. walk: duration 180, cost 0.0. \nfrom Grill Master Spicy Grilled Fish (IFS Branch) to Chunxi Road: metro: duration 4, cost 4. taxi: duration 1, cost 11.0. walk: duration 11, cost 0.0. \nfrom Grill Master Spicy Grilled Fish (IFS Branch) to Chengdu East Railway Station: metro: duration 13, cost 6. taxi: duration 9, cost 26.84. walk: duration 75, cost 0.0. \nfrom Grill Master Spicy Grilled Fish (IFS Branch) to Celebrity City Hotel: metro: duration 7, cost 4. taxi: duration 2, cost 11.0. walk: duration 17, cost 0.0. \nfrom Grill Master Spicy Grilled Fish (IFS Branch) to Grandma Ye's Bobo Chicken (Taikoo Li Branch): metro: duration 6, cost 4. taxi: duration 0, cost 11.0. walk: duration 6, cost 0.0. \nfrom Grill Master Spicy Grilled Fish (IFS Branch) to Chengdu Tianfu International Airport: metro: duration 148, cost 18. taxi: duration 80, cost 235.99. walk: duration 643, cost 0.0. \nfrom Grill Master Spicy Grilled Fish (IFS Branch) to Du Fu Thatched Cottage: metro: duration 15, cost 6. taxi: duration 6, cost 20.75. walk: duration 55, cost 0.0. \nfrom Grill Master Spicy Grilled Fish (IFS Branch) to Shu Daxia Hot Pot (Chunxi Branch): taxi: duration 0, cost 11.0. walk: duration 5, cost 0.0. \nfrom Grill Master Spicy Grilled Fish (IFS Branch) to Orange Fruit Hotel (Chengdu Kuanzhai Alley, Tonghuimen Metro Station): metro: duration 9, cost 4. taxi: duration 4, cost 15.16. walk: duration 35, cost 0.0. \nfrom Grill Master Spicy Grilled Fish (IFS Branch) to Wuhou Shrine: metro: duration 13, cost 4. taxi: duration 3, cost 13.48. walk: duration 30, cost 0.0. \nfrom Grill Master Spicy Grilled Fish (IFS Branch) to Chen Mapo Tofu (Flagship Store): metro: duration 16, cost 4. taxi: duration 6, cost 20.64. walk: duration 54, cost 0.0. \nfrom Grill Master Spicy Grilled Fish (IFS Branch) to Jinsha Site Museum: metro: duration 16, cost 6. taxi: duration 10, cost 29.04. walk: duration 83, cost 0.0. \nfrom Grill Master Spicy Grilled Fish (IFS Branch) to Sichuan Museum: metro: duration 9, cost 6. taxi: duration 6, cost 19.12. walk: duration 49, cost 0.0. \nfrom Grill Master Spicy Grilled Fish (IFS Branch) to Chengdu Happy Valley: metro: duration 37, cost 8. taxi: duration 13, cost 36.61. walk: duration 109, cost 0.0. \nfrom Grill Master Spicy Grilled Fish (IFS Branch) to Grill Master Spicy Grilled Fish (IFS Branch):  metro: empty.  taxi: empty.  walk: empty. \nfrom Grill Master Spicy Grilled Fish (IFS Branch) to Chengdu Polar Ocean Park: metro: duration 36, cost 10. taxi: duration 25, cost 71.65. walk: duration 205, cost 0.0. \nfrom Grill Master Spicy Grilled Fish (IFS Branch) to Zhong Dumplings (Main Store at People's Park): metro: duration 9, cost 4. taxi: duration 3, cost 12.05. walk: duration 25, cost 0.0. \nfrom Chengdu Polar Ocean Park to Shufeng Yayun Sichuan Opera Theater: metro: duration 40, cost 10. taxi: duration 27, cost 78.48. walk: duration 223, cost 0.0. \nfrom Chengdu Polar Ocean Park to Chengdu Shuangliu International Airport: metro: duration 45, cost 10. taxi: duration 20, cost 57.67. walk: duration 167, cost 0.0. \nfrom Chengdu Polar Ocean Park to Jinli Ancient Street: metro: duration 46, cost 10. taxi: duration 25, cost 71.09. walk: duration 203, cost 0.0. \nfrom Chengdu Polar Ocean Park to Kuanzhai Alley: metro: duration 46, cost 10. taxi: duration 28, cost 79.84. walk: duration 227, cost 0.0. \nfrom Chengdu Polar Ocean Park to Chengdu Research Base of Giant Panda Breeding: metro: duration 95, cost 14. taxi: duration 42, cost 121.05. walk: duration 336, cost 0.0. \nfrom Chengdu Polar Ocean Park to Chengdu Museum: metro: duration 44, cost 10. taxi: duration 27, cost 76.25. walk: duration 217, cost 0.0. \nfrom Chengdu Polar Ocean Park to Mount Qingcheng: metro: duration 410, cost 16. taxi: duration 100, cost 295.93. walk: duration 803, cost 0.0. \nfrom Chengdu Polar Ocean Park to Dujiangyan Irrigation System Scenic Area: metro: duration 471, cost 16. taxi: duration 107, cost 317.09. walk: duration 859, cost 0.0. \nfrom Chengdu Polar Ocean Park to Meiholi Zhi Hotel (Huayang Branch, Tianfu New District): metro: duration 21, cost 6. taxi: duration 5, cost 17.02. walk: duration 42, cost 0.0. \nfrom Chengdu Polar Ocean Park to Chunxi Road: metro: duration 39, cost 10. taxi: duration 27, cost 75.79. walk: duration 216, cost 0.0. \nfrom Chengdu Polar Ocean Park to Chengdu East Railway Station: metro: duration 32, cost 10. taxi: duration 23, cost 64.02. walk: duration 184, cost 0.0. \nfrom Chengdu Polar Ocean Park to Celebrity City Hotel: metro: duration 40, cost 10. taxi: duration 25, cost 71.73. walk: duration 205, cost 0.0. \nfrom Chengdu Polar Ocean Park to Grandma Ye's Bobo Chicken (Taikoo Li Branch): metro: duration 38, cost 10. taxi: duration 25, cost 69.94. walk: duration 200, cost 0.0. \nfrom Chengdu Polar Ocean Park to Chengdu Tianfu International Airport: metro: duration 127, cost 16. taxi: duration 62, cost 182.76. walk: duration 501, cost 0.0. \nfrom Chengdu Polar Ocean Park to Du Fu Thatched Cottage: metro: duration 45, cost 10. taxi: duration 28, cost 79.96. walk: duration 227, cost 0.0. \nfrom Chengdu Polar Ocean Park to Shu Daxia Hot Pot (Chunxi Branch): metro: duration 39, cost 10. taxi: duration 25, cost 71.47. walk: duration 204, cost 0.0. \nfrom Chengdu Polar Ocean Park to Orange Fruit Hotel (Chengdu Kuanzhai Alley, Tonghuimen Metro Station): metro: duration 40, cost 10. taxi: duration 27, cost 75.98. walk: duration 216, cost 0.0. \nfrom Chengdu Polar Ocean Park to Wuhou Shrine: metro: duration 45, cost 10. taxi: duration 25, cost 71.69. walk: duration 205, cost 0.0. \nfrom Chengdu Polar Ocean Park to Chen Mapo Tofu (Flagship Store): metro: duration 45, cost 10. taxi: duration 27, cost 78.19. walk: duration 222, cost 0.0. \nfrom Chengdu Polar Ocean Park to Jinsha Site Museum: metro: duration 46, cost 12. taxi: duration 32, cost 91.91. walk: duration 259, cost 0.0. \nfrom Chengdu Polar Ocean Park to Sichuan Museum: metro: duration 39, cost 10. taxi: duration 28, cost 79.58. walk: duration 226, cost 0.0. \nfrom Chengdu Polar Ocean Park to Chengdu Happy Valley: metro: duration 69, cost 12. taxi: duration 38, cost 110.12. walk: duration 307, cost 0.0. \nfrom Chengdu Polar Ocean Park to Grill Master Spicy Grilled Fish (IFS Branch): metro: duration 36, cost 10. taxi: duration 25, cost 71.65. walk: duration 205, cost 0.0. \nfrom Chengdu Polar Ocean Park to Chengdu Polar Ocean Park:  metro: empty.  taxi: empty.  walk: empty. \nfrom Chengdu Polar Ocean Park to Zhong Dumplings (Main Store at People's Park): metro: duration 41, cost 10. taxi: duration 26, cost 73.35. walk: duration 209, cost 0.0. \nfrom Zhong Dumplings (Main Store at People's Park) to Shufeng Yayun Sichuan Opera Theater: metro: duration 7, cost 4. taxi: duration 1, cost 11.0. walk: duration 14, cost 0.0. \nfrom Zhong Dumplings (Main Store at People's Park) to Chengdu Shuangliu International Airport: metro: duration 46, cost 8. taxi: duration 22, cost 61.95. walk: duration 179, cost 0.0. \nfrom Zhong Dumplings (Main Store at People's Park) to Jinli Ancient Street: taxi: duration 0, cost 11.0. walk: duration 7, cost 0.0. \nfrom Zhong Dumplings (Main Store at People's Park) to Kuanzhai Alley: metro: duration 14, cost 4. taxi: duration 2, cost 11.0. walk: duration 17, cost 0.0. \nfrom Zhong Dumplings (Main Store at People's Park) to Chengdu Research Base of Giant Panda Breeding: metro: duration 65, cost 8. taxi: duration 19, cost 53.28. walk: duration 156, cost 0.0. \nfrom Zhong Dumplings (Main Store at People's Park) to Chengdu Museum: metro: duration 12, cost 4. taxi: duration 1, cost 11.0. walk: duration 15, cost 0.0. \nfrom Zhong Dumplings (Main Store at People's Park) to Mount Qingcheng: metro: duration 388, cost 12. taxi: duration 82, cost 241.05. walk: duration 656, cost 0.0. \nfrom Zhong Dumplings (Main Store at People's Park) to Dujiangyan Irrigation System Scenic Area: metro: duration 449, cost 12. taxi: duration 86, cost 253.15. walk: duration 689, cost 0.0. \nfrom Zhong Dumplings (Main Store at People's Park) to Meiholi Zhi Hotel (Huayang Branch, Tianfu New District): metro: duration 44, cost 10. taxi: duration 22, cost 62.55. walk: duration 180, cost 0.0. \nfrom Zhong Dumplings (Main Store at People's Park) to Chunxi Road: metro: duration 11, cost 4. taxi: duration 3, cost 13.57. walk: duration 30, cost 0.0. \nfrom Zhong Dumplings (Main Store at People's Park) to Chengdu East Railway Station: metro: duration 21, cost 6. taxi: duration 12, cost 33.88. walk: duration 100, cost 0.0. \nfrom Zhong Dumplings (Main Store at People's Park) to Celebrity City Hotel: metro: duration 9, cost 4. taxi: duration 1, cost 11.0. walk: duration 8, cost 0.0. \nfrom Zhong Dumplings (Main Store at People's Park) to Grandma Ye's Bobo Chicken (Taikoo Li Branch): metro: duration 14, cost 4. taxi: duration 3, cost 13.56. walk: duration 30, cost 0.0. \nfrom Zhong Dumplings (Main Store at People's Park) to Chengdu Tianfu International Airport: metro: duration 155, cost 18. taxi: duration 82, cost 242.88. walk: duration 661, cost 0.0. \nfrom Zhong Dumplings (Main Store at People's Park) to Du Fu Thatched Cottage: metro: duration 13, cost 4. taxi: duration 3, cost 13.61. walk: duration 30, cost 0.0. \nfrom Zhong Dumplings (Main Store at People's Park) to Shu Daxia Hot Pot (Chunxi Branch): metro: duration 12, cost 4. taxi: duration 2, cost 11.0. walk: duration 19, cost 0.0. \nfrom Zhong Dumplings (Main Store at People's Park) to Orange Fruit Hotel (Chengdu Kuanzhai Alley, Tonghuimen Metro Station): metro: duration 7, cost 4. taxi: duration 1, cost 11.0. walk: duration 11, cost 0.0. \nfrom Zhong Dumplings (Main Store at People's Park) to Wuhou Shrine: taxi: duration 0, cost 11.0. walk: duration 7, cost 0.0. \nfrom Zhong Dumplings (Main Store at People's Park) to Chen Mapo Tofu (Flagship Store): metro: duration 15, cost 4. taxi: duration 3, cost 13.33. walk: duration 29, cost 0.0. \nfrom Zhong Dumplings (Main Store at People's Park) to Jinsha Site Museum: metro: duration 14, cost 6. taxi: duration 7, cost 22.65. walk: duration 61, cost 0.0. \nfrom Zhong Dumplings (Main Store at People's Park) to Sichuan Museum: metro: duration 7, cost 4. taxi: duration 3, cost 12.11. walk: duration 25, cost 0.0. \nfrom Zhong Dumplings (Main Store at People's Park) to Chengdu Happy Valley: metro: duration 36, cost 6. taxi: duration 12, cost 33.4. walk: duration 98, cost 0.0. \nfrom Zhong Dumplings (Main Store at People's Park) to Grill Master Spicy Grilled Fish (IFS Branch): metro: duration 9, cost 4. taxi: duration 3, cost 12.05. walk: duration 25, cost 0.0. \nfrom Zhong Dumplings (Main Store at People's Park) to Chengdu Polar Ocean Park: metro: duration 41, cost 10. taxi: duration 26, cost 73.35. walk: duration 209, cost 0.0. \nfrom Zhong Dumplings (Main Store at People's Park) to Zhong Dumplings (Main Store at People's Park):  metro: empty.  taxi: empty.  walk: empty. \n"
+    },
+    "initial_verification": {
+      "commonsense_errors": [
+        "The attraction, Chengdu Research Base of Giant Panda Breeding in day 1, is closed when you visiting. Its open time is [07:30 -- 17:00]",
+        "The attraction, Wuhou Shrine in day 2, is closed when you visiting. Its open time is [08:30 -- 19:00]"
+      ],
+      "personal_constraints": [
+        true,
+        true,
+        true,
+        true,
+        true,
+        false,
+        true,
+        true
+      ],
+      "category_normalization": [
+        {
+          "constraint_index": 4,
+          "category_domain": "activity",
+          "expression": "activity_type(activity)",
+          "raw_label": "train",
+          "normalized_label": "train"
+        },
+        {
+          "constraint_index": 4,
+          "category_domain": "activity",
+          "expression": "['attraction', 'airplane', 'train']",
+          "raw_label": "attraction",
+          "normalized_label": "attraction"
+        },
+        {
+          "constraint_index": 4,
+          "category_domain": "activity",
+          "expression": "['attraction', 'airplane', 'train']",
+          "raw_label": "airplane",
+          "normalized_label": "airplane"
+        },
+        {
+          "constraint_index": 4,
+          "category_domain": "activity",
+          "expression": "['attraction', 'airplane', 'train']",
+          "raw_label": "train",
+          "normalized_label": "train"
+        },
+        {
+          "constraint_index": 4,
+          "category_domain": "transport",
+          "expression": "innercity_transport_type(activity_transports(activity))",
+          "raw_label": "empty",
+          "normalized_label": "empty"
+        },
+        {
+          "constraint_index": 4,
+          "category_domain": "transport",
+          "expression": "'metro'",
+          "raw_label": "metro",
+          "normalized_label": "metro"
+        },
+        {
+          "constraint_index": 4,
+          "category_domain": "activity",
+          "expression": "activity_type(activity)",
+          "raw_label": "attraction",
+          "normalized_label": "attraction"
+        },
+        {
+          "constraint_index": 4,
+          "category_domain": "activity",
+          "expression": "['attraction', 'airplane', 'train']",
+          "raw_label": "attraction",
+          "normalized_label": "attraction"
+        },
+        {
+          "constraint_index": 4,
+          "category_domain": "activity",
+          "expression": "['attraction', 'airplane', 'train']",
+          "raw_label": "airplane",
+          "normalized_label": "airplane"
+        },
+        {
+          "constraint_index": 4,
+          "category_domain": "activity",
+          "expression": "['attraction', 'airplane', 'train']",
+          "raw_label": "train",
+          "normalized_label": "train"
+        },
+        {
+          "constraint_index": 4,
+          "category_domain": "transport",
+          "expression": "innercity_transport_type(activity_transports(activity))",
+          "raw_label": "metro",
+          "normalized_label": "metro"
+        },
+        {
+          "constraint_index": 4,
+          "category_domain": "transport",
+          "expression": "'metro'",
+          "raw_label": "metro",
+          "normalized_label": "metro"
+        },
+        {
+          "constraint_index": 4,
+          "category_domain": "activity",
+          "expression": "activity_type(activity)",
+          "raw_label": "dinner",
+          "normalized_label": "dinner"
+        },
+        {
+          "constraint_index": 4,
+          "category_domain": "activity",
+          "expression": "['attraction', 'airplane', 'train']",
+          "raw_label": "attraction",
+          "normalized_label": "attraction"
+        },
+        {
+          "constraint_index": 4,
+          "category_domain": "activity",
+          "expression": "['attraction', 'airplane', 'train']",
+          "raw_label": "airplane",
+          "normalized_label": "airplane"
+        },
+        {
+          "constraint_index": 4,
+          "category_domain": "activity",
+          "expression": "['attraction', 'airplane', 'train']",
+          "raw_label": "train",
+          "normalized_label": "train"
+        },
+        {
+          "constraint_index": 4,
+          "category_domain": "transport",
+          "expression": "innercity_transport_type(activity_transports(activity))",
+          "raw_label": "metro",
+          "normalized_label": "metro"
+        },
+        {
+          "constraint_index": 4,
+          "category_domain": "transport",
+          "expression": "'metro'",
+          "raw_label": "metro",
+          "normalized_label": "metro"
+        },
+        {
+          "constraint_index": 4,
+          "category_domain": "activity",
+          "expression": "activity_type(activity)",
+          "raw_label": "accommodation",
+          "normalized_label": "accommodation"
+        },
+        {
+          "constraint_index": 4,
+          "category_domain": "activity",
+          "expression": "['attraction', 'airplane', 'train']",
+          "raw_label": "attraction",
+          "normalized_label": "attraction"
+        },
+        {
+          "constraint_index": 4,
+          "category_domain": "activity",
+          "expression": "['attraction', 'airplane', 'train']",
+          "raw_label": "airplane",
+          "normalized_label": "airplane"
+        },
+        {
+          "constraint_index": 4,
+          "category_domain": "activity",
+          "expression": "['attraction', 'airplane', 'train']",
+          "raw_label": "train",
+          "normalized_label": "train"
+        },
+        {
+          "constraint_index": 4,
+          "category_domain": "transport",
+          "expression": "innercity_transport_type(activity_transports(activity))",
+          "raw_label": "metro",
+          "normalized_label": "metro"
+        },
+        {
+          "constraint_index": 4,
+          "category_domain": "transport",
+          "expression": "'metro'",
+          "raw_label": "metro",
+          "normalized_label": "metro"
+        },
+        {
+          "constraint_index": 4,
+          "category_domain": "activity",
+          "expression": "activity_type(activity)",
+          "raw_label": "attraction",
+          "normalized_label": "attraction"
+        },
+        {
+          "constraint_index": 4,
+          "category_domain": "activity",
+          "expression": "['attraction', 'airplane', 'train']",
+          "raw_label": "attraction",
+          "normalized_label": "attraction"
+        },
+        {
+          "constraint_index": 4,
+          "category_domain": "activity",
+          "expression": "['attraction', 'airplane', 'train']",
+          "raw_label": "airplane",
+          "normalized_label": "airplane"
+        },
+        {
+          "constraint_index": 4,
+          "category_domain": "activity",
+          "expression": "['attraction', 'airplane', 'train']",
+          "raw_label": "train",
+          "normalized_label": "train"
+        },
+        {
+          "constraint_index": 4,
+          "category_domain": "transport",
+          "expression": "innercity_transport_type(activity_transports(activity))",
+          "raw_label": "metro",
+          "normalized_label": "metro"
+        },
+        {
+          "constraint_index": 4,
+          "category_domain": "transport",
+          "expression": "'metro'",
+          "raw_label": "metro",
+          "normalized_label": "metro"
+        },
+        {
+          "constraint_index": 4,
+          "category_domain": "activity",
+          "expression": "activity_type(activity)",
+          "raw_label": "attraction",
+          "normalized_label": "attraction"
+        },
+        {
+          "constraint_index": 4,
+          "category_domain": "activity",
+          "expression": "['attraction', 'airplane', 'train']",
+          "raw_label": "attraction",
+          "normalized_label": "attraction"
+        },
+        {
+          "constraint_index": 4,
+          "category_domain": "activity",
+          "expression": "['attraction', 'airplane', 'train']",
+          "raw_label": "airplane",
+          "normalized_label": "airplane"
+        },
+        {
+          "constraint_index": 4,
+          "category_domain": "activity",
+          "expression": "['attraction', 'airplane', 'train']",
+          "raw_label": "train",
+          "normalized_label": "train"
+        },
+        {
+          "constraint_index": 4,
+          "category_domain": "transport",
+          "expression": "innercity_transport_type(activity_transports(activity))",
+          "raw_label": "walk",
+          "normalized_label": "walk"
+        },
+        {
+          "constraint_index": 4,
+          "category_domain": "transport",
+          "expression": "'metro'",
+          "raw_label": "metro",
+          "normalized_label": "metro"
+        },
+        {
+          "constraint_index": 4,
+          "category_domain": "activity",
+          "expression": "activity_type(activity)",
+          "raw_label": "lunch",
+          "normalized_label": "lunch"
+        },
+        {
+          "constraint_index": 4,
+          "category_domain": "activity",
+          "expression": "['attraction', 'airplane', 'train']",
+          "raw_label": "attraction",
+          "normalized_label": "attraction"
+        },
+        {
+          "constraint_index": 4,
+          "category_domain": "activity",
+          "expression": "['attraction', 'airplane', 'train']",
+          "raw_label": "airplane",
+          "normalized_label": "airplane"
+        },
+        {
+          "constraint_index": 4,
+          "category_domain": "activity",
+          "expression": "['attraction', 'airplane', 'train']",
+          "raw_label": "train",
+          "normalized_label": "train"
+        },
+        {
+          "constraint_index": 4,
+          "category_domain": "transport",
+          "expression": "innercity_transport_type(activity_transports(activity))",
+          "raw_label": "metro",
+          "normalized_label": "metro"
+        },
+        {
+          "constraint_index": 4,
+          "category_domain": "transport",
+          "expression": "'metro'",
+          "raw_label": "metro",
+          "normalized_label": "metro"
+        },
+        {
+          "constraint_index": 4,
+          "category_domain": "activity",
+          "expression": "activity_type(activity)",
+          "raw_label": "attraction",
+          "normalized_label": "attraction"
+        },
+        {
+          "constraint_index": 4,
+          "category_domain": "activity",
+          "expression": "['attraction', 'airplane', 'train']",
+          "raw_label": "attraction",
+          "normalized_label": "attraction"
+        },
+        {
+          "constraint_index": 4,
+          "category_domain": "activity",
+          "expression": "['attraction', 'airplane', 'train']",
+          "raw_label": "airplane",
+          "normalized_label": "airplane"
+        },
+        {
+          "constraint_index": 4,
+          "category_domain": "activity",
+          "expression": "['attraction', 'airplane', 'train']",
+          "raw_label": "train",
+          "normalized_label": "train"
+        },
+        {
+          "constraint_index": 4,
+          "category_domain": "transport",
+          "expression": "innercity_transport_type(activity_transports(activity))",
+          "raw_label": "metro",
+          "normalized_label": "metro"
+        },
+        {
+          "constraint_index": 4,
+          "category_domain": "transport",
+          "expression": "'metro'",
+          "raw_label": "metro",
+          "normalized_label": "metro"
+        },
+        {
+          "constraint_index": 4,
+          "category_domain": "activity",
+          "expression": "activity_type(activity)",
+          "raw_label": "train",
+          "normalized_label": "train"
+        },
+        {
+          "constraint_index": 4,
+          "category_domain": "activity",
+          "expression": "['attraction', 'airplane', 'train']",
+          "raw_label": "attraction",
+          "normalized_label": "attraction"
+        },
+        {
+          "constraint_index": 4,
+          "category_domain": "activity",
+          "expression": "['attraction', 'airplane', 'train']",
+          "raw_label": "airplane",
+          "normalized_label": "airplane"
+        },
+        {
+          "constraint_index": 4,
+          "category_domain": "activity",
+          "expression": "['attraction', 'airplane', 'train']",
+          "raw_label": "train",
+          "normalized_label": "train"
+        },
+        {
+          "constraint_index": 4,
+          "category_domain": "transport",
+          "expression": "innercity_transport_type(activity_transports(activity))",
+          "raw_label": "metro",
+          "normalized_label": "metro"
+        },
+        {
+          "constraint_index": 4,
+          "category_domain": "transport",
+          "expression": "'metro'",
+          "raw_label": "metro",
+          "normalized_label": "metro"
+        },
+        {
+          "constraint_index": 5,
+          "category_domain": "activity",
+          "expression": "activity_type(activity)",
+          "raw_label": "train",
+          "normalized_label": "train"
+        },
+        {
+          "constraint_index": 5,
+          "category_domain": "activity",
+          "expression": "'accommodation'",
+          "raw_label": "accommodation",
+          "normalized_label": "accommodation"
+        },
+        {
+          "constraint_index": 5,
+          "category_domain": "activity",
+          "expression": "activity_type(activity)",
+          "raw_label": "attraction",
+          "normalized_label": "attraction"
+        },
+        {
+          "constraint_index": 5,
+          "category_domain": "activity",
+          "expression": "'accommodation'",
+          "raw_label": "accommodation",
+          "normalized_label": "accommodation"
+        },
+        {
+          "constraint_index": 5,
+          "category_domain": "activity",
+          "expression": "activity_type(activity)",
+          "raw_label": "dinner",
+          "normalized_label": "dinner"
+        },
+        {
+          "constraint_index": 5,
+          "category_domain": "activity",
+          "expression": "'accommodation'",
+          "raw_label": "accommodation",
+          "normalized_label": "accommodation"
+        },
+        {
+          "constraint_index": 5,
+          "category_domain": "activity",
+          "expression": "activity_type(activity)",
+          "raw_label": "accommodation",
+          "normalized_label": "accommodation"
+        },
+        {
+          "constraint_index": 5,
+          "category_domain": "activity",
+          "expression": "'accommodation'",
+          "raw_label": "accommodation",
+          "normalized_label": "accommodation"
+        },
+        {
+          "constraint_index": 5,
+          "category_domain": "activity",
+          "expression": "activity_type(activity)",
+          "raw_label": "attraction",
+          "normalized_label": "attraction"
+        },
+        {
+          "constraint_index": 5,
+          "category_domain": "activity",
+          "expression": "'accommodation'",
+          "raw_label": "accommodation",
+          "normalized_label": "accommodation"
+        },
+        {
+          "constraint_index": 5,
+          "category_domain": "activity",
+          "expression": "activity_type(activity)",
+          "raw_label": "attraction",
+          "normalized_label": "attraction"
+        },
+        {
+          "constraint_index": 5,
+          "category_domain": "activity",
+          "expression": "'accommodation'",
+          "raw_label": "accommodation",
+          "normalized_label": "accommodation"
+        },
+        {
+          "constraint_index": 5,
+          "category_domain": "activity",
+          "expression": "activity_type(activity)",
+          "raw_label": "lunch",
+          "normalized_label": "lunch"
+        },
+        {
+          "constraint_index": 5,
+          "category_domain": "activity",
+          "expression": "'accommodation'",
+          "raw_label": "accommodation",
+          "normalized_label": "accommodation"
+        },
+        {
+          "constraint_index": 5,
+          "category_domain": "activity",
+          "expression": "activity_type(activity)",
+          "raw_label": "attraction",
+          "normalized_label": "attraction"
+        },
+        {
+          "constraint_index": 5,
+          "category_domain": "activity",
+          "expression": "'accommodation'",
+          "raw_label": "accommodation",
+          "normalized_label": "accommodation"
+        },
+        {
+          "constraint_index": 5,
+          "category_domain": "activity",
+          "expression": "activity_type(activity)",
+          "raw_label": "train",
+          "normalized_label": "train"
+        },
+        {
+          "constraint_index": 5,
+          "category_domain": "activity",
+          "expression": "'accommodation'",
+          "raw_label": "accommodation",
+          "normalized_label": "accommodation"
+        },
+        {
+          "constraint_index": 6,
+          "category_domain": "activity",
+          "expression": "activity_type(activity)",
+          "raw_label": "train",
+          "normalized_label": "train"
+        },
+        {
+          "constraint_index": 6,
+          "category_domain": "activity",
+          "expression": "'accommodation'",
+          "raw_label": "accommodation",
+          "normalized_label": "accommodation"
+        },
+        {
+          "constraint_index": 6,
+          "category_domain": "activity",
+          "expression": "activity_type(activity)",
+          "raw_label": "attraction",
+          "normalized_label": "attraction"
+        },
+        {
+          "constraint_index": 6,
+          "category_domain": "activity",
+          "expression": "'accommodation'",
+          "raw_label": "accommodation",
+          "normalized_label": "accommodation"
+        },
+        {
+          "constraint_index": 6,
+          "category_domain": "activity",
+          "expression": "activity_type(activity)",
+          "raw_label": "dinner",
+          "normalized_label": "dinner"
+        },
+        {
+          "constraint_index": 6,
+          "category_domain": "activity",
+          "expression": "'accommodation'",
+          "raw_label": "accommodation",
+          "normalized_label": "accommodation"
+        },
+        {
+          "constraint_index": 6,
+          "category_domain": "activity",
+          "expression": "activity_type(activity)",
+          "raw_label": "accommodation",
+          "normalized_label": "accommodation"
+        },
+        {
+          "constraint_index": 6,
+          "category_domain": "activity",
+          "expression": "'accommodation'",
+          "raw_label": "accommodation",
+          "normalized_label": "accommodation"
+        },
+        {
+          "constraint_index": 6,
+          "category_domain": "activity",
+          "expression": "activity_type(activity)",
+          "raw_label": "attraction",
+          "normalized_label": "attraction"
+        },
+        {
+          "constraint_index": 6,
+          "category_domain": "activity",
+          "expression": "'accommodation'",
+          "raw_label": "accommodation",
+          "normalized_label": "accommodation"
+        },
+        {
+          "constraint_index": 6,
+          "category_domain": "activity",
+          "expression": "activity_type(activity)",
+          "raw_label": "attraction",
+          "normalized_label": "attraction"
+        },
+        {
+          "constraint_index": 6,
+          "category_domain": "activity",
+          "expression": "'accommodation'",
+          "raw_label": "accommodation",
+          "normalized_label": "accommodation"
+        },
+        {
+          "constraint_index": 6,
+          "category_domain": "activity",
+          "expression": "activity_type(activity)",
+          "raw_label": "lunch",
+          "normalized_label": "lunch"
+        },
+        {
+          "constraint_index": 6,
+          "category_domain": "activity",
+          "expression": "'accommodation'",
+          "raw_label": "accommodation",
+          "normalized_label": "accommodation"
+        },
+        {
+          "constraint_index": 6,
+          "category_domain": "activity",
+          "expression": "activity_type(activity)",
+          "raw_label": "attraction",
+          "normalized_label": "attraction"
+        },
+        {
+          "constraint_index": 6,
+          "category_domain": "activity",
+          "expression": "'accommodation'",
+          "raw_label": "accommodation",
+          "normalized_label": "accommodation"
+        },
+        {
+          "constraint_index": 6,
+          "category_domain": "activity",
+          "expression": "activity_type(activity)",
+          "raw_label": "train",
+          "normalized_label": "train"
+        },
+        {
+          "constraint_index": 6,
+          "category_domain": "activity",
+          "expression": "'accommodation'",
+          "raw_label": "accommodation",
+          "normalized_label": "accommodation"
+        },
+        {
+          "constraint_index": 7,
+          "category_domain": "activity",
+          "expression": "activity_type(activity)",
+          "raw_label": "train",
+          "normalized_label": "train"
+        },
+        {
+          "constraint_index": 7,
+          "category_domain": "activity",
+          "expression": "['train', 'airplane']",
+          "raw_label": "train",
+          "normalized_label": "train"
+        },
+        {
+          "constraint_index": 7,
+          "category_domain": "activity",
+          "expression": "['train', 'airplane']",
+          "raw_label": "airplane",
+          "normalized_label": "airplane"
+        },
+        {
+          "constraint_index": 7,
+          "category_domain": "activity",
+          "expression": "activity_type(activity)",
+          "raw_label": "attraction",
+          "normalized_label": "attraction"
+        },
+        {
+          "constraint_index": 7,
+          "category_domain": "activity",
+          "expression": "['train', 'airplane']",
+          "raw_label": "train",
+          "normalized_label": "train"
+        },
+        {
+          "constraint_index": 7,
+          "category_domain": "activity",
+          "expression": "['train', 'airplane']",
+          "raw_label": "airplane",
+          "normalized_label": "airplane"
+        },
+        {
+          "constraint_index": 7,
+          "category_domain": "activity",
+          "expression": "activity_type(activity)",
+          "raw_label": "dinner",
+          "normalized_label": "dinner"
+        },
+        {
+          "constraint_index": 7,
+          "category_domain": "activity",
+          "expression": "['train', 'airplane']",
+          "raw_label": "train",
+          "normalized_label": "train"
+        },
+        {
+          "constraint_index": 7,
+          "category_domain": "activity",
+          "expression": "['train', 'airplane']",
+          "raw_label": "airplane",
+          "normalized_label": "airplane"
+        },
+        {
+          "constraint_index": 7,
+          "category_domain": "activity",
+          "expression": "activity_type(activity)",
+          "raw_label": "accommodation",
+          "normalized_label": "accommodation"
+        },
+        {
+          "constraint_index": 7,
+          "category_domain": "activity",
+          "expression": "['train', 'airplane']",
+          "raw_label": "train",
+          "normalized_label": "train"
+        },
+        {
+          "constraint_index": 7,
+          "category_domain": "activity",
+          "expression": "['train', 'airplane']",
+          "raw_label": "airplane",
+          "normalized_label": "airplane"
+        },
+        {
+          "constraint_index": 7,
+          "category_domain": "activity",
+          "expression": "activity_type(activity)",
+          "raw_label": "attraction",
+          "normalized_label": "attraction"
+        },
+        {
+          "constraint_index": 7,
+          "category_domain": "activity",
+          "expression": "['train', 'airplane']",
+          "raw_label": "train",
+          "normalized_label": "train"
+        },
+        {
+          "constraint_index": 7,
+          "category_domain": "activity",
+          "expression": "['train', 'airplane']",
+          "raw_label": "airplane",
+          "normalized_label": "airplane"
+        },
+        {
+          "constraint_index": 7,
+          "category_domain": "activity",
+          "expression": "activity_type(activity)",
+          "raw_label": "attraction",
+          "normalized_label": "attraction"
+        },
+        {
+          "constraint_index": 7,
+          "category_domain": "activity",
+          "expression": "['train', 'airplane']",
+          "raw_label": "train",
+          "normalized_label": "train"
+        },
+        {
+          "constraint_index": 7,
+          "category_domain": "activity",
+          "expression": "['train', 'airplane']",
+          "raw_label": "airplane",
+          "normalized_label": "airplane"
+        },
+        {
+          "constraint_index": 7,
+          "category_domain": "activity",
+          "expression": "activity_type(activity)",
+          "raw_label": "lunch",
+          "normalized_label": "lunch"
+        },
+        {
+          "constraint_index": 7,
+          "category_domain": "activity",
+          "expression": "['train', 'airplane']",
+          "raw_label": "train",
+          "normalized_label": "train"
+        },
+        {
+          "constraint_index": 7,
+          "category_domain": "activity",
+          "expression": "['train', 'airplane']",
+          "raw_label": "airplane",
+          "normalized_label": "airplane"
+        },
+        {
+          "constraint_index": 7,
+          "category_domain": "activity",
+          "expression": "activity_type(activity)",
+          "raw_label": "attraction",
+          "normalized_label": "attraction"
+        },
+        {
+          "constraint_index": 7,
+          "category_domain": "activity",
+          "expression": "['train', 'airplane']",
+          "raw_label": "train",
+          "normalized_label": "train"
+        },
+        {
+          "constraint_index": 7,
+          "category_domain": "activity",
+          "expression": "['train', 'airplane']",
+          "raw_label": "airplane",
+          "normalized_label": "airplane"
+        },
+        {
+          "constraint_index": 7,
+          "category_domain": "activity",
+          "expression": "activity_type(activity)",
+          "raw_label": "train",
+          "normalized_label": "train"
+        },
+        {
+          "constraint_index": 7,
+          "category_domain": "activity",
+          "expression": "['train', 'airplane']",
+          "raw_label": "train",
+          "normalized_label": "train"
+        },
+        {
+          "constraint_index": 7,
+          "category_domain": "activity",
+          "expression": "['train', 'airplane']",
+          "raw_label": "airplane",
+          "normalized_label": "airplane"
+        },
+        {
+          "constraint_index": 7,
+          "category_domain": "transport",
+          "expression": "{'train'}",
+          "raw_label": "train",
+          "normalized_label": "train"
+        },
+        {
+          "constraint_index": 7,
+          "category_domain": "transport",
+          "expression": "intercity_transport_set",
+          "raw_label": "train",
+          "normalized_label": "train"
+        },
+        {
+          "constraint_index": 8,
+          "category_domain": "transport",
+          "expression": "innercity_transport_type(activity_transports(activity))",
+          "raw_label": "empty",
+          "normalized_label": "empty"
+        },
+        {
+          "constraint_index": 8,
+          "category_domain": "transport",
+          "expression": "'taxi'",
+          "raw_label": "taxi",
+          "normalized_label": "taxi"
+        },
+        {
+          "constraint_index": 8,
+          "category_domain": "transport",
+          "expression": "innercity_transport_type(activity_transports(activity))",
+          "raw_label": "metro",
+          "normalized_label": "metro"
+        },
+        {
+          "constraint_index": 8,
+          "category_domain": "transport",
+          "expression": "'taxi'",
+          "raw_label": "taxi",
+          "normalized_label": "taxi"
+        },
+        {
+          "constraint_index": 8,
+          "category_domain": "transport",
+          "expression": "innercity_transport_type(activity_transports(activity))",
+          "raw_label": "metro",
+          "normalized_label": "metro"
+        },
+        {
+          "constraint_index": 8,
+          "category_domain": "transport",
+          "expression": "'taxi'",
+          "raw_label": "taxi",
+          "normalized_label": "taxi"
+        },
+        {
+          "constraint_index": 8,
+          "category_domain": "transport",
+          "expression": "innercity_transport_type(activity_transports(activity))",
+          "raw_label": "metro",
+          "normalized_label": "metro"
+        },
+        {
+          "constraint_index": 8,
+          "category_domain": "transport",
+          "expression": "'taxi'",
+          "raw_label": "taxi",
+          "normalized_label": "taxi"
+        },
+        {
+          "constraint_index": 8,
+          "category_domain": "transport",
+          "expression": "innercity_transport_type(activity_transports(activity))",
+          "raw_label": "metro",
+          "normalized_label": "metro"
+        },
+        {
+          "constraint_index": 8,
+          "category_domain": "transport",
+          "expression": "'taxi'",
+          "raw_label": "taxi",
+          "normalized_label": "taxi"
+        },
+        {
+          "constraint_index": 8,
+          "category_domain": "transport",
+          "expression": "innercity_transport_type(activity_transports(activity))",
+          "raw_label": "walk",
+          "normalized_label": "walk"
+        },
+        {
+          "constraint_index": 8,
+          "category_domain": "transport",
+          "expression": "'taxi'",
+          "raw_label": "taxi",
+          "normalized_label": "taxi"
+        },
+        {
+          "constraint_index": 8,
+          "category_domain": "transport",
+          "expression": "innercity_transport_type(activity_transports(activity))",
+          "raw_label": "metro",
+          "normalized_label": "metro"
+        },
+        {
+          "constraint_index": 8,
+          "category_domain": "transport",
+          "expression": "'taxi'",
+          "raw_label": "taxi",
+          "normalized_label": "taxi"
+        },
+        {
+          "constraint_index": 8,
+          "category_domain": "transport",
+          "expression": "innercity_transport_type(activity_transports(activity))",
+          "raw_label": "metro",
+          "normalized_label": "metro"
+        },
+        {
+          "constraint_index": 8,
+          "category_domain": "transport",
+          "expression": "'taxi'",
+          "raw_label": "taxi",
+          "normalized_label": "taxi"
+        },
+        {
+          "constraint_index": 8,
+          "category_domain": "transport",
+          "expression": "innercity_transport_type(activity_transports(activity))",
+          "raw_label": "metro",
+          "normalized_label": "metro"
+        },
+        {
+          "constraint_index": 8,
+          "category_domain": "transport",
+          "expression": "'taxi'",
+          "raw_label": "taxi",
+          "normalized_label": "taxi"
+        }
+      ],
+      "personal_errors": [
+        "Personal constraint 6 failed: result=True\nfor activity in allactivities(plan):\n  if activity_type(activity)=='accommodation' and room_type(activity)!=1: result=False"
+      ],
+      "evaluation_errors": [],
+      "translation_errors": [],
+      "error_info": [
+        "The attraction, Chengdu Research Base of Giant Panda Breeding in day 1, is closed when you visiting. Its open time is [07:30 -- 17:00]",
+        "The attraction, Wuhou Shrine in day 2, is closed when you visiting. Its open time is [08:30 -- 19:00]",
+        "Personal constraint 6 failed: result=True\nfor activity in allactivities(plan):\n  if activity_type(activity)=='accommodation' and room_type(activity)!=1: result=False"
+      ],
+      "passed": false,
+      "translated_plan": {
+        "people_number": 2,
+        "start_city": "Beijing",
+        "target_city": "Chengdu",
+        "itinerary": [
+          {
+            "day": 1,
+            "activities": [
+              {
+                "start_time": "07:00",
+                "end_time": "14:33",
+                "start": "Beijing West Railway Station",
+                "end": "Chengdu East Railway Station",
+                "price": 990.94,
+                "cost": 1981.88,
+                "TrainID": "G87",
+                "type": "train",
+                "tickets": 2,
+                "transports": []
+              },
+              {
+                "position": "Chengdu Research Base of Giant Panda Breeding",
+                "type": "attraction",
+                "transports": [
+                  {
+                    "start": "Chengdu East Railway Station",
+                    "end": "Chengdu East Railway Station-Metro Station",
+                    "mode": "walk",
+                    "start_time": "14:33",
+                    "end_time": "14:33",
+                    "cost": 0,
+                    "distance": 0.0,
+                    "price": 0
+                  },
+                  {
+                    "start": "Chengdu East Railway Station-Metro Station",
+                    "end": "Botanical Garden-Metro Station",
+                    "mode": "metro",
+                    "start_time": "14:33",
+                    "end_time": "15:02",
+                    "cost": 10,
+                    "distance": 14.97,
+                    "price": 5,
+                    "tickets": 2
+                  },
+                  {
+                    "start": "Botanical Garden-Metro Station",
+                    "end": "Chengdu Research Base of Giant Panda Breeding",
+                    "mode": "walk",
+                    "start_time": "15:02",
+                    "end_time": "15:37",
+                    "cost": 0,
+                    "distance": 2.95,
+                    "price": 0
+                  }
+                ],
+                "price": 55.0,
+                "cost": 110.0,
+                "tickets": 2,
+                "start_time": "15:45",
+                "end_time": "17:45"
+              },
+              {
+                "position": "Chen Mapo Tofu (Flagship Store)",
+                "type": "dinner",
+                "transports": [
+                  {
+                    "start": "Chengdu Research Base of Giant Panda Breeding",
+                    "end": "Botanical Garden-Metro Station",
+                    "mode": "walk",
+                    "start_time": "17:45",
+                    "end_time": "18:20",
+                    "cost": 0,
+                    "distance": 2.95,
+                    "price": 0
+                  },
+                  {
+                    "start": "Botanical Garden-Metro Station",
+                    "end": "Green Goat Palace-Metro Station",
+                    "mode": "metro",
+                    "start_time": "18:20",
+                    "end_time": "18:47",
+                    "cost": 8,
+                    "distance": 13.81,
+                    "price": 4,
+                    "tickets": 2
+                  },
+                  {
+                    "start": "Green Goat Palace-Metro Station",
+                    "end": "Chen Mapo Tofu (Flagship Store)",
+                    "mode": "walk",
+                    "start_time": "18:47",
+                    "end_time": "18:55",
+                    "cost": 0,
+                    "distance": 0.7,
+                    "price": 0
+                  }
+                ],
+                "price": 74,
+                "cost": 148,
+                "start_time": "19:00",
+                "end_time": "20:00"
+              },
+              {
+                "position": "Celebrity City Hotel",
+                "type": "accommodation",
+                "transports": [
+                  {
+                    "start": "Chen Mapo Tofu (Flagship Store)",
+                    "end": "Green Goat Palace-Metro Station",
+                    "mode": "walk",
+                    "start_time": "20:00",
+                    "end_time": "20:08",
+                    "cost": 0,
+                    "distance": 0.7,
+                    "price": 0
+                  },
+                  {
+                    "start": "Green Goat Palace-Metro Station",
+                    "end": "Tianfu Square-Metro Station",
+                    "mode": "metro",
+                    "start_time": "20:08",
+                    "end_time": "20:12",
+                    "cost": 4,
+                    "distance": 2.41,
+                    "price": 2,
+                    "tickets": 2
+                  },
+                  {
+                    "start": "Tianfu Square-Metro Station",
+                    "end": "Celebrity City Hotel",
+                    "mode": "walk",
+                    "start_time": "20:12",
+                    "end_time": "20:16",
+                    "cost": 0,
+                    "distance": 0.38,
+                    "price": 0
+                  }
+                ],
+                "room_type": 2,
+                "price": 353,
+                "cost": 353,
+                "start_time": "20:15",
+                "end_time": "24:00",
+                "rooms": 1
+              }
+            ]
+          },
+          {
+            "day": 2,
+            "activities": [
+              {
+                "position": "Wuhou Shrine",
+                "type": "attraction",
+                "transports": [
+                  {
+                    "start": "Celebrity City Hotel",
+                    "end": "Tianfu Square-Metro Station",
+                    "mode": "walk",
+                    "start_time": "08:00",
+                    "end_time": "08:04",
+                    "cost": 0,
+                    "distance": 0.38,
+                    "price": 0
+                  },
+                  {
+                    "start": "Tianfu Square-Metro Station",
+                    "end": "People's Park-Metro Station",
+                    "mode": "metro",
+                    "start_time": "08:04",
+                    "end_time": "08:05",
+                    "cost": 4,
+                    "distance": 0.88,
+                    "price": 2,
+                    "tickets": 2
+                  },
+                  {
+                    "start": "People's Park-Metro Station",
+                    "end": "Wuhou Shrine",
+                    "mode": "walk",
+                    "start_time": "08:05",
+                    "end_time": "08:13",
+                    "cost": 0,
+                    "distance": 0.74,
+                    "price": 0
+                  }
+                ],
+                "price": 50.0,
+                "cost": 100.0,
+                "tickets": 2,
+                "start_time": "08:20",
+                "end_time": "10:20"
+              },
+              {
+                "position": "Jinli Ancient Street",
+                "type": "attraction",
+                "transports": [
+                  {
+                    "start": "Wuhou Shrine",
+                    "end": "Jinli Ancient Street",
+                    "mode": "walk",
+                    "start_time": "10:20",
+                    "end_time": "10:22",
+                    "cost": 0,
+                    "distance": 0.19308355882416436
+                  }
+                ],
+                "price": 0.0,
+                "cost": 0.0,
+                "tickets": 2,
+                "start_time": "10:30",
+                "end_time": "11:30"
+              },
+              {
+                "position": "Shu Daxia Hot Pot (Chunxi Branch)",
+                "type": "lunch",
+                "transports": [
+                  {
+                    "start": "Jinli Ancient Street",
+                    "end": "People's Park-Metro Station",
+                    "mode": "walk",
+                    "start_time": "11:30",
+                    "end_time": "11:39",
+                    "cost": 0,
+                    "distance": 0.82,
+                    "price": 0
+                  },
+                  {
+                    "start": "People's Park-Metro Station",
+                    "end": "Chunxi Road-Metro Station",
+                    "mode": "metro",
+                    "start_time": "11:39",
+                    "end_time": "11:43",
+                    "cost": 4,
+                    "distance": 2.32,
+                    "price": 2,
+                    "tickets": 2
+                  },
+                  {
+                    "start": "Chunxi Road-Metro Station",
+                    "end": "Shu Daxia Hot Pot (Chunxi Branch)",
+                    "mode": "walk",
+                    "start_time": "11:43",
+                    "end_time": "11:47",
+                    "cost": 0,
+                    "distance": 0.39,
+                    "price": 0
+                  }
+                ],
+                "price": 109,
+                "cost": 218,
+                "start_time": "12:00",
+                "end_time": "13:00"
+              },
+              {
+                "position": "Kuanzhai Alley",
+                "type": "attraction",
+                "transports": [
+                  {
+                    "start": "Shu Daxia Hot Pot (Chunxi Branch)",
+                    "end": "Chunxi Road-Metro Station",
+                    "mode": "walk",
+                    "start_time": "13:00",
+                    "end_time": "13:04",
+                    "cost": 0,
+                    "distance": 0.39,
+                    "price": 0
+                  },
+                  {
+                    "start": "Chunxi Road-Metro Station",
+                    "end": "Luomashi-Metro Station",
+                    "mode": "metro",
+                    "start_time": "13:04",
+                    "end_time": "13:08",
+                    "cost": 4,
+                    "distance": 2.01,
+                    "price": 2,
+                    "tickets": 2
+                  },
+                  {
+                    "start": "Luomashi-Metro Station",
+                    "end": "Kuanzhai Alley",
+                    "mode": "walk",
+                    "start_time": "13:08",
+                    "end_time": "13:16",
+                    "cost": 0,
+                    "distance": 0.68,
+                    "price": 0
+                  }
+                ],
+                "price": 0.0,
+                "cost": 0.0,
+                "tickets": 2,
+                "start_time": "13:20",
+                "end_time": "14:20"
+              },
+              {
+                "position": "Chengdu East Railway Station",
+                "type": "train",
+                "transports": [
+                  {
+                    "start": "Kuanzhai Alley",
+                    "end": "Luomashi-Metro Station",
+                    "mode": "walk",
+                    "start_time": "14:20",
+                    "end_time": "14:28",
+                    "cost": 0,
+                    "distance": 0.68,
+                    "price": 0
+                  },
+                  {
+                    "start": "Luomashi-Metro Station",
+                    "end": "Chengdu East Railway Station-Metro Station",
+                    "mode": "metro",
+                    "start_time": "14:28",
+                    "end_time": "14:44",
+                    "cost": 6,
+                    "distance": 8.23,
+                    "price": 3,
+                    "tickets": 2
+                  },
+                  {
+                    "start": "Chengdu East Railway Station-Metro Station",
+                    "end": "Chengdu East Railway Station",
+                    "mode": "walk",
+                    "start_time": "14:44",
+                    "end_time": "14:44",
+                    "cost": 0,
+                    "distance": 0.0,
+                    "price": 0
+                  }
+                ],
+                "start_time": "15:00",
+                "end_time": "22:32",
+                "start": "Chengdu East Railway Station",
+                "end": "Beijing West Railway Station",
+                "price": 990.94,
+                "cost": 1981.88,
+                "TrainID": "G90",
+                "tickets": 2
+              }
+            ]
+          }
+        ]
+      },
+      "verifier_errors": [],
+      "schema_errors": [],
+      "translation_failures": []
+    },
+    "environment_context": {
+      "lang": "en"
+    },
+    "generation_metadata": {
+      "raw_response": "[{\"day\": 1,```json\n{\n    \"day\": 1,\n    \"activities\": [\n        {\n            \"start_time\": \"07:00\",\n            \"end_time\": \"14:33\",\n            \"start\": \"Beijing West Railway Station\",\n            \"end\": \"Chengdu East Railway Station\",\n            \"price\": 990.94,\n            \"cost\": 1981.88,\n            \"TrainID\": \"G87\",\n            \"type\": \"train\",\n            \"tickets\": 2,\n            \"transports\": \"empty\"\n        },\n        {\n            \"position\": \"Chengdu Research Base of Giant Panda Breeding\",\n            \"type\": \"attraction\",\n            \"transports\": {\"from\": \"Chengdu East Railway Station\", \"to\": \"Chengdu Research Base of Giant Panda Breeding\", \"mode\": \"metro\", \"start_time\": \"14:33\", \"end_time\": \"15:35\", \"cost\": 10},\n            \"price\": 55.0,\n            \"cost\": 110.0,\n            \"tickets\": 2,\n            \"start_time\": \"15:45\",\n            \"end_time\": \"17:45\"\n        },\n        {\n            \"position\": \"Chen Mapo Tofu (Flagship Store)\",\n            \"type\": \"dinner\",\n            \"transports\": {\"from\": \"Chengdu Research Base of Giant Panda Breeding\", \"to\": \"Chen Mapo Tofu (Flagship Store)\", \"mode\": \"metro\", \"start_time\": \"17:45\", \"end_time\": \"18:45\", \"cost\": 8},\n            \"price\": 74,\n            \"cost\": 148,\n            \"start_time\": \"19:00\",\n            \"end_time\": \"20:00\"\n        },\n        {\n            \"position\": \"Celebrity City Hotel\",\n            \"type\": \"accommodation\",\n            \"transports\": {\"from\": \"Chen Mapo Tofu (Flagship Store)\", \"to\": \"Celebrity City Hotel\", \"mode\": \"metro\", \"start_time\": \"20:00\", \"end_time\": \"20:09\", \"cost\": 4},\n            \"room_type\": 2,\n            \"price\": 353,\n            \"cost\": 353,\n            \"start_time\": \"20:15\",\n            \"end_time\": \"24:00\",\n            \"rooms\": 1\n        }\n    ]\n},\n{\n    \"day\": 2,\n    \"activities\": [\n        {\n            \"position\": \"Wuhou Shrine\",\n            \"type\": \"attraction\",\n            \"transports\": {\"from\": \"Celebrity City Hotel\", \"to\": \"Wuhou Shrine\", \"mode\": \"metro\", \"start_time\": \"08:00\", \"end_time\": \"08:13\", \"cost\": 4},\n            \"price\": 50.0,\n            \"cost\": 100.0,\n            \"tickets\": 2,\n            \"start_time\": \"08:20\",\n            \"end_time\": \"10:20\"\n        },\n        {\n            \"position\": \"Jinli Ancient Street\",\n            \"type\": \"attraction\",\n            \"transports\": {\"from\": \"Wuhou Shrine\", \"to\": \"Jinli Ancient Street\", \"mode\": \"walk\", \"start_time\": \"10:20\", \"end_time\": \"10:22\", \"cost\": 0},\n            \"price\": 0.0,\n            \"cost\": 0.0,\n            \"tickets\": 2,\n            \"start_time\": \"10:30\",\n            \"end_time\": \"11:30\"\n        },\n        {\n            \"position\": \"Shu Daxia Hot Pot (Chunxi Branch)\",\n            \"type\": \"lunch\",\n            \"transports\": {\"from\": \"Jinli Ancient Street\", \"to\": \"Shu Daxia Hot Pot (Chunxi Branch)\", \"mode\": \"metro\", \"start_time\": \"11:30\", \"end_time\": \"11:42\", \"cost\": 4},\n            \"price\": 109,\n            \"cost\": 218,\n            \"start_time\": \"12:00\",\n            \"end_time\": \"13:00\"\n        },\n        {\n            \"position\": \"Kuanzhai Alley\",\n            \"type\": \"attraction\",\n            \"transports\": {\"from\": \"Shu Daxia Hot Pot (Chunxi Branch)\", \"to\": \"Kuanzhai Alley\", \"mode\": \"metro\", \"start_time\": \"13:00\", \"end_time\": \"13:13\", \"cost\": 4},\n            \"price\": 0.0,\n            \"cost\": 0.0,\n            \"tickets\": 2,\n            \"start_time\": \"13:20\",\n            \"end_time\": \"14:20\"\n        },\n        {\n            \"position\": \"Chengdu East Railway Station\",\n            \"type\": \"train\",\n            \"transports\": {\"from\": \"Kuanzhai Alley\", \"to\": \"Chengdu East Railway Station\", \"mode\": \"metro\", \"start_time\": \"14:20\", \"end_time\": \"14:44\", \"cost\": 6},\n            \"start_time\": \"15:00\",\n            \"end_time\": \"22:32\",\n            \"start\": \"Chengdu East Railway Station\",\n            \"end\": \"Beijing West Railway Station\",\n            \"price\": 990.94,\n            \"cost\": 1981.88,\n            \"TrainID\": \"G90\",\n            \"tickets\": 2\n        }\n    ]\n}\n```",
+      "input_tokens": 100071,
+      "output_tokens": 1458,
+      "total_tokens": 101529,
+      "model_calls": 6,
+      "failed_model_calls": 0,
+      "elapsed_time_seconds": 46.43757915496826,
+      "llm_inference_time_seconds": 29.056405067443848,
+      "information_collection_time_seconds": 17.378682851791382,
+      "initial_generation_time_s": 46.43203566595912,
+      "initial_generation_tool_calls": 5532,
+      "initial_generation_tool_call_counts_by_type": {
+        "accommodations_select": 1,
+        "attractions_select": 1,
+        "goto": 1800,
+        "intercity_transport_select": 4,
+        "next_page": 125,
+        "poi_lat_lon_search": 3600,
+        "restaurants_select": 1
+      },
+      "shared_initialization_time_s": 46.64862354192883,
+      "shared_initialization_system_metrics": {
+        "tool_call_count": 5589,
+        "successful_tool_call_count": 5589,
+        "failed_tool_call_count": 0,
+        "verification_count": 1,
+        "tool_call_counts_by_type": {
+          "accommodations_select": 2,
+          "attractions_select": 5,
+          "goto": 1816,
+          "intercity_transport_select": 6,
+          "next_page": 125,
+          "poi_lat_lon_search": 3632,
+          "restaurants_select": 3
+        }
+      }
+    }
+  },
+  "initial_plan_hash": "fc907d596e001185aadf92af0d31384f9946f9f681547227c4437de9218a7021",
+  "initial_state_hash": "d91e0100490b98f1b5b8eb566d964bc716f3eb18e4ecd1c6f8947ed6e7d75c1f"
+}

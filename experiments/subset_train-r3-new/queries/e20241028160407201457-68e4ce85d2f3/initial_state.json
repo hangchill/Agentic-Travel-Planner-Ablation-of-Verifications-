@@ -1,0 +1,664 @@
+{
+  "run_id": "subset_train-r3-new",
+  "query_uid": "e20241028160407201457",
+  "state": {
+    "query_uid": "e20241028160407201457",
+    "problem": {
+      "uid": "e20241028160407201457",
+      "tag": "easy",
+      "start_city": "Chongqing",
+      "target_city": "Hangzhou",
+      "days": 1,
+      "people_number": 1,
+      "limit_rooms": false,
+      "limits_room_type": false,
+      "hard_logic_py": [
+        "result=(day_count(plan)==1)",
+        "result=(people_count(plan)==1)",
+        "total_cost=0 \nfor activity in allactivities(plan):\n    total_cost+=activity_cost(activity)\n    total_cost += innercity_transport_cost(activity_transports(activity))\nresult=(total_cost<=1400)",
+        "result=True\nfor activity in allactivities(plan):\n  if activity_type(activity) in ['attraction', 'airplane', 'train'] and activity_tickets(activity)!=1: result=False\n  if innercity_transport_type(activity_transports(activity))=='metro'and metro_tickets(activity_transports(activity))!=1: result=False",
+        "result=True\nfor activity in allactivities(plan):\n  if innercity_transport_type(activity_transports(activity))=='taxi'and taxi_cars(activity_transports(activity))!=1: result=False"
+      ],
+      "nature_language": "Current location: Chongqing. I want to travel alone to Hangzhou for a day with a budget of 1400 RMB. Please provide me with a travel plan.",
+      "nature_language_en": "Current location: Chongqing. I want to travel alone to Hangzhou for a day with a budget of 1400 RMB. Please provide me with a travel plan."
+    },
+    "raw_initial_plan": [
+      {
+        "day": 1,
+        "activities": [
+          {
+            "start_time": "05:16",
+            "end_time": "06:54",
+            "start": "Chongqing Jiangbei International Airport",
+            "end": "Hangzhou Xiaoshan International Airport",
+            "price": 612.57,
+            "cost": 612.57,
+            "FlightID": "FL372",
+            "type": "airplane",
+            "tickets": 1,
+            "transports": "empty"
+          },
+          {
+            "position": "West Lake Scenic Area",
+            "type": "attraction",
+            "transports": {
+              "from": "Hangzhou Xiaoshan International Airport",
+              "to": "West Lake Scenic Area",
+              "mode": "metro",
+              "start_time": "06:54",
+              "end_time": "08:08",
+              "cost": 5
+            },
+            "price": 0.0,
+            "cost": 0.0,
+            "tickets": 1,
+            "start_time": "08:15",
+            "end_time": "10:15"
+          },
+          {
+            "position": "Lou Wai Lou (Gushan Road Store, West Lake Scenic Area)",
+            "type": "lunch",
+            "transports": {
+              "from": "West Lake Scenic Area",
+              "to": "Lou Wai Lou (Gushan Road Store, West Lake Scenic Area)",
+              "mode": "metro",
+              "start_time": "10:15",
+              "end_time": "10:48",
+              "cost": 3
+            },
+            "price": 177.0,
+            "cost": 177.0,
+            "start_time": "11:00",
+            "end_time": "12:00"
+          },
+          {
+            "position": "Leifeng Pagoda",
+            "type": "attraction",
+            "transports": {
+              "from": "Lou Wai Lou (Gushan Road Store, West Lake Scenic Area)",
+              "to": "Leifeng Pagoda",
+              "mode": "metro",
+              "start_time": "12:00",
+              "end_time": "12:24",
+              "cost": 2
+            },
+            "price": 0.0,
+            "cost": 0.0,
+            "tickets": 1,
+            "start_time": "12:30",
+            "end_time": "13:30"
+          },
+          {
+            "position": "Hangzhou West Lake Zhongwei Xiangyi Hotel",
+            "type": "accommodation",
+            "transports": {
+              "from": "Leifeng Pagoda",
+              "to": "Hangzhou West Lake Zhongwei Xiangyi Hotel",
+              "mode": "metro",
+              "start_time": "13:30",
+              "end_time": "13:50",
+              "cost": 2
+            },
+            "room_type": 2,
+            "price": 409,
+            "cost": 409,
+            "start_time": "14:00",
+            "end_time": "24:00",
+            "rooms": 1
+          }
+        ]
+      }
+    ],
+    "repair_context": {
+      "go_train_info": "None",
+      "go_flight_info": "FlightID\tFrom\tTo\tBeginTime\tEndTime\tDuration\tprice\nFL372\tChongqing Jiangbei International Airport\tHangzhou Xiaoshan International Airport\t05:16\t06:54\t1.6400000000000001\t612.57\nFL371\tChongqing Jiangbei International Airport\tHangzhou Xiaoshan International Airport\t01:20\t02:58\t1.6400000000000001\t628.78\nFL374\tChongqing Jiangbei International Airport\tHangzhou Xiaoshan International Airport\t07:56\t09:34\t1.6400000000000001\t628.14\nFL375\tChongqing Jiangbei International Airport\tHangzhou Xiaoshan International Airport\t02:56\t04:34\t1.6400000000000001\t650.94\nFL380\tChongqing Jiangbei International Airport\tHangzhou Xiaoshan International Airport\t23:45\t01:23\t1.6400000000000001\t641.26\n",
+      "back_train_info": "TrainID\tTrainType\tFrom\tTo\tBeginTime\tEndTime\tDuration\tprice\nZ256\tDirect Express\tHangzhou South Railway Station\tChongqing North Railway Station\t21:37\t12:46\t15.25\t656.33\nZ257\tDirect Express\tHangzhou South Railway Station\tChongqing North Railway Station\t21:37\t12:46\t15.25\t656.33\n",
+      "back_flight_info": "FlightID\tFrom\tTo\tBeginTime\tEndTime\tDuration\tprice\nFL529\tHangzhou Xiaoshan International Airport\tChongqing Jiangbei International Airport\t22:17\t23:55\t1.6400000000000001\t613.67\nFL526\tHangzhou Xiaoshan International Airport\tChongqing Jiangbei International Airport\t21:41\t23:19\t1.6400000000000001\t639.67\nFL521\tHangzhou Xiaoshan International Airport\tChongqing Jiangbei International Airport\t22:10\t23:48\t1.6400000000000001\t644.86\n",
+      "attraction_info": "name\ttype\tlat\tlon\topentime\tendtime\tprice\trecommendmintime\trecommendmaxtime\nWest Lake Scenic Area\tnatural scenery\t30.228932\t120.12792\t00:00\t24:00\t0.0\t1.0\t2.0\nLingyin Temple\thistorical site\t30.246914\t120.107833\t06:30\t17:45\t0.0\t0.5\t1.5\nLeifeng Pagoda\thistorical site\t30.236901\t120.155363\t08:00\t20:00\t0.0\t0.5\t2.0\nQinghefang Street\tcommercial district\t30.245629\t120.175778\t00:00\t24:00\t0.0\t1.0\t2.5\nThree Ponds Mirroring the Moon\tpark\t30.244073\t120.150685\t08:00\t17:00\t55.0\t1.0\t2.5\nXixi National Wetland Park\tpark\t30.27289\t120.071528\t07:30\t18:30\t70.0\t0.5\t1.0\nHangzhou Museum\tMuseum/Memorial Hall\t30.244425\t120.173089\t09:00\t16:30\t0.0\t0.5\t1.0\nChina National Silk Museum\tMuseum/Memorial Hall\t30.22889\t120.158034\t09:00\t17:00\t0.0\t1.5\t2.0\nHangzhou Botanical Garden\tpark\t30.256881\t120.122838\t07:00\t17:30\t10.0\t3.0\t4.0\nSu Causeway\tpark\t30.238234\t120.149074\t00:00\t24:00\t0.0\t1.0\t2.0\nBai Causeway\tpark\t30.261371\t120.155406\t00:00\t24:00\t0.0\t1.0\t2.0\nHangzhou Confucius Temple\thistorical site\t30.247581\t120.168458\t09:00\t16:30\t0.0\t2.0\t3.0\nZhejiang Provincial Museum (Zhijiang Branch)\tMuseum/Memorial Hall\t30.167064\t120.108693\t09:00\t17:00\t0.0\t2.5\t4.0\nHu Xueyan's Former Residence\thistorical site\t30.243087\t120.179167\t08:00\t17:00\t20.0\t1.5\t3.0\nHangzhou Grand Theatre\tCultural Landscape\t30.250582\t120.221926\t09:00\t17:00\t0.0\t2.0\t3.0\n",
+      "restaurant_info": "name\tlat\tlon\tprice\tcuisine\topentime\tendtime\trecommendedfood\nLou Wai Lou (Gushan Road Store, West Lake Scenic Area)\t30.2502465\t120.1407155\t177.0\tJiangsu-Zhejiang cuisine\t10:30\t20:30\tWest Lake Vinegar Fish, Dongpo Braised Pork, Sister Song's Fish Soup, West Lake Sweet Lotus Root, Premium Shrimp with Longjing Tea, West Lake Water Shield Soup\nJiangzhe Hui (West Lake Lakeside in77 Zone B Store)\t30.2548566\t120.1637714\t139.0\tJiangsu-Zhejiang cuisine\t10:00\t22:00\tLongjing Shrimp, Braised Pork Belly with Abalone, Abalone Sauce Fried Rice, Fish with Pickled Cabbage in Creamy Broth, Curry Seasonal Vegetables, Family Feast\nZhiweiguan Weizhuang (Yang Gongdi Branch)\t30.2305558\t120.1372912\t161.0\tJiangsu-Zhejiang cuisine\t10:30\t20:00\tDongpo Pork, West Lake Vinegar Fish, Longjing Tea Pastry, West Lake Snow Beauty, Three Delicacies Cat's Ear Noodles, Shrimp Xiaolongbao, Honey Glazed Lotus Root, Qianlong Fish Head, Braised Pork Belly, Hand-Peeled Longjing Shrimp\nNew Zhou Ji (Gulou Branch)\t30.2376745\t120.1709907\t98.0\tJiangsu-Zhejiang cuisine\t10:30\t02:00\tSignature Fish Head, Signature Braised Chicken Feet, Signature Soy Sauce Prawns, Sizzling Platter Sea Bass, Brown Sugar Glutinous Rice Balls, Dry-Fried Hand-Torn Cabbage, Cheese Baked Pumpkin\nSizhao'er · Hangzhou Local Cuisine (Gulou Branch 1)\t30.2373675\t120.1701958\t90.0\tJiangsu-Zhejiang cuisine\t10:00\t21:00\tEgg Yolk Pumpkin, Crispy Pork Intestine, Stone Pot Shrimp Tofu, Fermented Rice Bun with Braised Pork Belly, Signature Deep-Fried Stinky Tofu, Four Stoves Special Stir-Fry\n",
+      "accommodation_info": "name\tfeaturehoteltype\tlat\tlon\tprice\tnumbed\nHangzhou West Lake Zhongwei Xiangyi Hotel\tRobot Service\t30.251167\t120.174776\t409\t2\nHangzhou Zhelv Kaiyuan Mingting Hotel\tFree parking\t30.286356\t120.218951\t400\t1\nHangzhou West Lake Xinqiao Hotel\tFree parking\t30.250737\t120.165582\t381\t1\n",
+      "innercity_transport_info": "from Hangzhou South Railway Station to Hangzhou South Railway Station:  metro: empty.  taxi: empty.  walk: empty. \nfrom Hangzhou South Railway Station to Hangzhou Zhelv Kaiyuan Mingting Hotel: metro: duration 34, cost 5. taxi: duration 21, cost 60.05. walk: duration 174, cost 0.0. \nfrom Hangzhou South Railway Station to Zhejiang Provincial Museum (Zhijiang Branch): metro: duration 51, cost 5. taxi: duration 26, cost 75.17. walk: duration 214, cost 0.0. \nfrom Hangzhou South Railway Station to Hangzhou Botanical Garden: metro: duration 58, cost 5. taxi: duration 28, cost 79.97. walk: duration 227, cost 0.0. \nfrom Hangzhou South Railway Station to Hu Xueyan's Former Residence: metro: duration 32, cost 4. taxi: duration 20, cost 55.64. walk: duration 162, cost 0.0. \nfrom Hangzhou South Railway Station to West Lake Scenic Area: metro: duration 74, cost 5. taxi: duration 25, cost 72.0. walk: duration 206, cost 0.0. \nfrom Hangzhou South Railway Station to Lingyin Temple: metro: duration 70, cost 6. taxi: duration 29, cost 83.51. walk: duration 236, cost 0.0. \nfrom Hangzhou South Railway Station to Su Causeway: metro: duration 48, cost 5. taxi: duration 23, cost 65.55. walk: duration 188, cost 0.0. \nfrom Hangzhou South Railway Station to Lou Wai Lou (Gushan Road Store, West Lake Scenic Area): metro: duration 59, cost 5. taxi: duration 25, cost 71.61. walk: duration 205, cost 0.0. \nfrom Hangzhou South Railway Station to Hangzhou West Lake Xinqiao Hotel: metro: duration 39, cost 5. taxi: duration 22, cost 62.65. walk: duration 181, cost 0.0. \nfrom Hangzhou South Railway Station to Hangzhou Confucius Temple: metro: duration 34, cost 5. taxi: duration 22, cost 60.73. walk: duration 176, cost 0.0. \nfrom Hangzhou South Railway Station to Qinghefang Street: metro: duration 35, cost 4. taxi: duration 20, cost 57.57. walk: duration 167, cost 0.0. \nfrom Hangzhou South Railway Station to Hangzhou Xiaoshan International Airport: metro: duration 33, cost 5. taxi: duration 22, cost 62.07. walk: duration 179, cost 0.0. \nfrom Hangzhou South Railway Station to Hangzhou West Lake Zhongwei Xiangyi Hotel: metro: duration 38, cost 5. taxi: duration 21, cost 59.55. walk: duration 172, cost 0.0. \nfrom Hangzhou South Railway Station to Hangzhou Grand Theatre: metro: duration 33, cost 4. taxi: duration 16, cost 44.56. walk: duration 132, cost 0.0. \nfrom Hangzhou South Railway Station to Hangzhou Museum: metro: duration 38, cost 5. taxi: duration 21, cost 58.18. walk: duration 169, cost 0.0. \nfrom Hangzhou South Railway Station to Sizhao'er · Hangzhou Local Cuisine (Gulou Branch 1): metro: duration 40, cost 5. taxi: duration 20, cost 57.35. walk: duration 167, cost 0.0. \nfrom Hangzhou South Railway Station to New Zhou Ji (Gulou Branch): metro: duration 38, cost 4. taxi: duration 20, cost 57.13. walk: duration 166, cost 0.0. \nfrom Hangzhou South Railway Station to Zhiweiguan Weizhuang (Yang Gongdi Branch): metro: duration 64, cost 5. taxi: duration 24, cost 68.55. walk: duration 196, cost 0.0. \nfrom Hangzhou South Railway Station to Xixi National Wetland Park: metro: duration 65, cost 6. taxi: duration 36, cost 103.32. walk: duration 289, cost 0.0. \nfrom Hangzhou South Railway Station to Jiangzhe Hui (West Lake Lakeside in77 Zone B Store): metro: duration 34, cost 5. taxi: duration 23, cost 64.48. walk: duration 186, cost 0.0. \nfrom Hangzhou South Railway Station to Leifeng Pagoda: metro: duration 41, cost 5. taxi: duration 22, cost 62.83. walk: duration 181, cost 0.0. \nfrom Hangzhou South Railway Station to China National Silk Museum: metro: duration 47, cost 5. taxi: duration 21, cost 60.0. walk: duration 174, cost 0.0. \nfrom Hangzhou South Railway Station to Bai Causeway: metro: duration 44, cost 5. taxi: duration 24, cost 69.32. walk: duration 198, cost 0.0. \nfrom Hangzhou South Railway Station to Three Ponds Mirroring the Moon: metro: duration 47, cost 5. taxi: duration 23, cost 66.33. walk: duration 191, cost 0.0. \nfrom Hangzhou Zhelv Kaiyuan Mingting Hotel to Hangzhou South Railway Station: metro: duration 34, cost 5. taxi: duration 21, cost 60.05. walk: duration 174, cost 0.0. \nfrom Hangzhou Zhelv Kaiyuan Mingting Hotel to Hangzhou Zhelv Kaiyuan Mingting Hotel:  metro: empty.  taxi: empty.  walk: empty. \nfrom Hangzhou Zhelv Kaiyuan Mingting Hotel to Zhejiang Provincial Museum (Zhijiang Branch): metro: duration 50, cost 5. taxi: duration 25, cost 71.01. walk: duration 203, cost 0.0. \nfrom Hangzhou Zhelv Kaiyuan Mingting Hotel to Hangzhou Botanical Garden: metro: duration 37, cost 3. taxi: duration 14, cost 39.03. walk: duration 117, cost 0.0. \nfrom Hangzhou Zhelv Kaiyuan Mingting Hotel to Hu Xueyan's Former Residence: metro: duration 16, cost 3. taxi: duration 9, cost 26.18. walk: duration 73, cost 0.0. \nfrom Hangzhou Zhelv Kaiyuan Mingting Hotel to West Lake Scenic Area: metro: duration 68, cost 4. taxi: duration 16, cost 43.43. walk: duration 129, cost 0.0. \nfrom Hangzhou Zhelv Kaiyuan Mingting Hotel to Lingyin Temple: metro: duration 51, cost 4. taxi: duration 17, cost 46.68. walk: duration 138, cost 0.0. \nfrom Hangzhou Zhelv Kaiyuan Mingting Hotel to Su Causeway: metro: duration 33, cost 3. taxi: duration 12, cost 34.74. walk: duration 103, cost 0.0. \nfrom Hangzhou Zhelv Kaiyuan Mingting Hotel to Lou Wai Lou (Gushan Road Store, West Lake Scenic Area): metro: duration 38, cost 3. taxi: duration 12, cost 34.54. walk: duration 102, cost 0.0. \nfrom Hangzhou Zhelv Kaiyuan Mingting Hotel to Hangzhou West Lake Xinqiao Hotel: metro: duration 20, cost 3. taxi: duration 9, cost 27.37. walk: duration 77, cost 0.0. \nfrom Hangzhou Zhelv Kaiyuan Mingting Hotel to Hangzhou Confucius Temple: metro: duration 18, cost 3. taxi: duration 9, cost 27.41. walk: duration 77, cost 0.0. \nfrom Hangzhou Zhelv Kaiyuan Mingting Hotel to Qinghefang Street: metro: duration 19, cost 3. taxi: duration 9, cost 26.17. walk: duration 73, cost 0.0. \nfrom Hangzhou Zhelv Kaiyuan Mingting Hotel to Hangzhou Xiaoshan International Airport: metro: duration 46, cost 6. taxi: duration 31, cost 90.67. walk: duration 255, cost 0.0. \nfrom Hangzhou Zhelv Kaiyuan Mingting Hotel to Hangzhou West Lake Zhongwei Xiangyi Hotel: metro: duration 20, cost 3. taxi: duration 8, cost 24.89. walk: duration 69, cost 0.0. \nfrom Hangzhou Zhelv Kaiyuan Mingting Hotel to Hangzhou Grand Theatre: metro: duration 17, cost 2. taxi: duration 5, cost 18.62. walk: duration 47, cost 0.0. \nfrom Hangzhou Zhelv Kaiyuan Mingting Hotel to Hangzhou Museum: metro: duration 22, cost 3. taxi: duration 9, cost 27.13. walk: duration 76, cost 0.0. \nfrom Hangzhou Zhelv Kaiyuan Mingting Hotel to Sizhao'er · Hangzhou Local Cuisine (Gulou Branch 1): metro: duration 25, cost 3. taxi: duration 10, cost 29.82. walk: duration 86, cost 0.0. \nfrom Hangzhou Zhelv Kaiyuan Mingting Hotel to New Zhou Ji (Gulou Branch): metro: duration 23, cost 3. taxi: duration 10, cost 29.55. walk: duration 85, cost 0.0. \nfrom Hangzhou Zhelv Kaiyuan Mingting Hotel to Zhiweiguan Weizhuang (Yang Gongdi Branch): metro: duration 49, cost 3. taxi: duration 15, cost 39.7. walk: duration 120, cost 0.0. \nfrom Hangzhou Zhelv Kaiyuan Mingting Hotel to Xixi National Wetland Park: metro: duration 43, cost 5. taxi: duration 21, cost 58.88. walk: duration 171, cost 0.0. \nfrom Hangzhou Zhelv Kaiyuan Mingting Hotel to Jiangzhe Hui (West Lake Lakeside in77 Zone B Store): metro: duration 15, cost 3. taxi: duration 9, cost 26.94. walk: duration 76, cost 0.0. \nfrom Hangzhou Zhelv Kaiyuan Mingting Hotel to Leifeng Pagoda: metro: duration 26, cost 3. taxi: duration 12, cost 33.46. walk: duration 98, cost 0.0. \nfrom Hangzhou Zhelv Kaiyuan Mingting Hotel to China National Silk Museum: metro: duration 32, cost 3. taxi: duration 12, cost 35.0. walk: duration 103, cost 0.0. \nfrom Hangzhou Zhelv Kaiyuan Mingting Hotel to Bai Causeway: metro: duration 23, cost 3. taxi: duration 10, cost 28.19. walk: duration 80, cost 0.0. \nfrom Hangzhou Zhelv Kaiyuan Mingting Hotel to Three Ponds Mirroring the Moon: metro: duration 32, cost 3. taxi: duration 12, cost 32.95. walk: duration 96, cost 0.0. \nfrom Zhejiang Provincial Museum (Zhijiang Branch) to Hangzhou South Railway Station: metro: duration 51, cost 5. taxi: duration 26, cost 75.17. walk: duration 214, cost 0.0. \nfrom Zhejiang Provincial Museum (Zhijiang Branch) to Hangzhou Zhelv Kaiyuan Mingting Hotel: metro: duration 50, cost 5. taxi: duration 25, cost 71.01. walk: duration 203, cost 0.0. \nfrom Zhejiang Provincial Museum (Zhijiang Branch) to Zhejiang Provincial Museum (Zhijiang Branch):  metro: empty.  taxi: empty.  walk: empty. \nfrom Zhejiang Provincial Museum (Zhijiang Branch) to Hangzhou Botanical Garden: metro: duration 53, cost 4. taxi: duration 15, cost 39.92. walk: duration 120, cost 0.0. \nfrom Zhejiang Provincial Museum (Zhijiang Branch) to Hu Xueyan's Former Residence: metro: duration 37, cost 4. taxi: duration 16, cost 43.39. walk: duration 129, cost 0.0. \nfrom Zhejiang Provincial Museum (Zhijiang Branch) to West Lake Scenic Area: metro: duration 68, cost 3. taxi: duration 10, cost 29.56. walk: duration 85, cost 0.0. \nfrom Zhejiang Provincial Museum (Zhijiang Branch) to Lingyin Temple: metro: duration 60, cost 4. taxi: duration 13, cost 35.68. walk: duration 106, cost 0.0. \nfrom Zhejiang Provincial Museum (Zhijiang Branch) to Su Causeway: metro: duration 49, cost 4. taxi: duration 13, cost 35.49. walk: duration 105, cost 0.0. \nfrom Zhejiang Provincial Museum (Zhijiang Branch) to Lou Wai Lou (Gushan Road Store, West Lake Scenic Area): metro: duration 56, cost 4. taxi: duration 14, cost 38.73. walk: duration 116, cost 0.0. \nfrom Zhejiang Provincial Museum (Zhijiang Branch) to Hangzhou West Lake Xinqiao Hotel: metro: duration 41, cost 4. taxi: duration 16, cost 43.17. walk: duration 129, cost 0.0. \nfrom Zhejiang Provincial Museum (Zhijiang Branch) to Hangzhou Confucius Temple: metro: duration 36, cost 4. taxi: duration 15, cost 42.49. walk: duration 127, cost 0.0. \nfrom Zhejiang Provincial Museum (Zhijiang Branch) to Qinghefang Street: metro: duration 40, cost 4. taxi: duration 16, cost 43.49. walk: duration 130, cost 0.0. \nfrom Zhejiang Provincial Museum (Zhijiang Branch) to Hangzhou Xiaoshan International Airport: metro: duration 77, cost 7. taxi: duration 48, cost 138.97. walk: duration 384, cost 0.0. \nfrom Zhejiang Provincial Museum (Zhijiang Branch) to Hangzhou West Lake Zhongwei Xiangyi Hotel: metro: duration 44, cost 4. taxi: duration 16, cost 45.49. walk: duration 135, cost 0.0. \nfrom Zhejiang Provincial Museum (Zhijiang Branch) to Hangzhou Grand Theatre: metro: duration 48, cost 5. taxi: duration 21, cost 59.06. walk: duration 171, cost 0.0. \nfrom Zhejiang Provincial Museum (Zhijiang Branch) to Hangzhou Museum: metro: duration 40, cost 4. taxi: duration 15, cost 42.32. walk: duration 126, cost 0.0. \nfrom Zhejiang Provincial Museum (Zhijiang Branch) to Sizhao'er · Hangzhou Local Cuisine (Gulou Branch 1): metro: duration 41, cost 4. taxi: duration 14, cost 38.96. walk: duration 117, cost 0.0. \nfrom Zhejiang Provincial Museum (Zhijiang Branch) to New Zhou Ji (Gulou Branch): metro: duration 42, cost 4. taxi: duration 14, cost 39.22. walk: duration 118, cost 0.0. \nfrom Zhejiang Provincial Museum (Zhijiang Branch) to Zhiweiguan Weizhuang (Yang Gongdi Branch): metro: duration 65, cost 4. taxi: duration 11, cost 31.15. walk: duration 90, cost 0.0. \nfrom Zhejiang Provincial Museum (Zhijiang Branch) to Xixi National Wetland Park: metro: duration 52, cost 5. taxi: duration 18, cost 49.89. walk: duration 147, cost 0.0. \nfrom Zhejiang Provincial Museum (Zhijiang Branch) to Jiangzhe Hui (West Lake Lakeside in77 Zone B Store): metro: duration 36, cost 4. taxi: duration 16, cost 44.58. walk: duration 133, cost 0.0. \nfrom Zhejiang Provincial Museum (Zhijiang Branch) to Leifeng Pagoda: metro: duration 42, cost 4. taxi: duration 13, cost 36.03. walk: duration 107, cost 0.0. \nfrom Zhejiang Provincial Museum (Zhijiang Branch) to China National Silk Museum: metro: duration 48, cost 4. taxi: duration 12, cost 33.89. walk: duration 100, cost 0.0. \nfrom Zhejiang Provincial Museum (Zhijiang Branch) to Bai Causeway: metro: duration 46, cost 4. taxi: duration 17, cost 45.91. walk: duration 136, cost 0.0. \nfrom Zhejiang Provincial Museum (Zhijiang Branch) to Three Ponds Mirroring the Moon: metro: duration 48, cost 4. taxi: duration 14, cost 37.76. walk: duration 113, cost 0.0. \nfrom Hangzhou Botanical Garden to Hangzhou South Railway Station: metro: duration 58, cost 5. taxi: duration 28, cost 79.97. walk: duration 227, cost 0.0. \nfrom Hangzhou Botanical Garden to Hangzhou Zhelv Kaiyuan Mingting Hotel: metro: duration 37, cost 3. taxi: duration 14, cost 39.03. walk: duration 117, cost 0.0. \nfrom Hangzhou Botanical Garden to Zhejiang Provincial Museum (Zhijiang Branch): metro: duration 53, cost 4. taxi: duration 15, cost 39.92. walk: duration 120, cost 0.0. \nfrom Hangzhou Botanical Garden to Hangzhou Botanical Garden:  metro: empty.  taxi: empty.  walk: empty. \nfrom Hangzhou Botanical Garden to Hu Xueyan's Former Residence: metro: duration 30, cost 3. taxi: duration 8, cost 24.41. walk: duration 67, cost 0.0. \nfrom Hangzhou Botanical Garden to West Lake Scenic Area: metro: duration 74, cost 3. taxi: duration 4, cost 15.68. walk: duration 37, cost 0.0. \nfrom Hangzhou Botanical Garden to Lingyin Temple: metro: duration 47, cost 2. taxi: duration 2, cost 11.06. walk: duration 21, cost 0.0. \nfrom Hangzhou Botanical Garden to Su Causeway: metro: duration 41, cost 3. taxi: duration 4, cost 16.12. walk: duration 39, cost 0.0. \nfrom Hangzhou Botanical Garden to Lou Wai Lou (Gushan Road Store, West Lake Scenic Area): metro: duration 39, cost 2. taxi: duration 2, cost 11.25. walk: duration 22, cost 0.0. \nfrom Hangzhou Botanical Garden to Hangzhou West Lake Xinqiao Hotel: metro: duration 29, cost 2. taxi: duration 6, cost 19.29. walk: duration 50, cost 0.0. \nfrom Hangzhou Botanical Garden to Hangzhou Confucius Temple: metro: duration 27, cost 3. taxi: duration 6, cost 20.48. walk: duration 54, cost 0.0. \nfrom Hangzhou Botanical Garden to Qinghefang Street: metro: duration 33, cost 3. taxi: duration 7, cost 23.06. walk: duration 62, cost 0.0. \nfrom Hangzhou Botanical Garden to Hangzhou Xiaoshan International Airport: metro: duration 76, cost 7. taxi: duration 44, cost 129.24. walk: duration 358, cost 0.0. \nfrom Hangzhou Botanical Garden to Hangzhou West Lake Zhongwei Xiangyi Hotel: metro: duration 34, cost 3. taxi: duration 7, cost 22.33. walk: duration 60, cost 0.0. \nfrom Hangzhou Botanical Garden to Hangzhou Grand Theatre: metro: duration 40, cost 3. taxi: duration 14, cost 38.17. walk: duration 114, cost 0.0. \nfrom Hangzhou Botanical Garden to Hangzhou Museum: metro: duration 31, cost 3. taxi: duration 7, cost 22.3. walk: duration 60, cost 0.0. \nfrom Hangzhou Botanical Garden to Sizhao'er · Hangzhou Local Cuisine (Gulou Branch 1): metro: duration 33, cost 3. taxi: duration 7, cost 22.36. walk: duration 60, cost 0.0. \nfrom Hangzhou Botanical Garden to New Zhou Ji (Gulou Branch): metro: duration 36, cost 3. taxi: duration 7, cost 22.55. walk: duration 61, cost 0.0. \nfrom Hangzhou Botanical Garden to Zhiweiguan Weizhuang (Yang Gongdi Branch): metro: duration 57, cost 3. taxi: duration 4, cost 16.02. walk: duration 38, cost 0.0. \nfrom Hangzhou Botanical Garden to Xixi National Wetland Park: metro: duration 40, cost 3. taxi: duration 7, cost 23.06. walk: duration 62, cost 0.0. \nfrom Hangzhou Botanical Garden to Jiangzhe Hui (West Lake Lakeside in77 Zone B Store): metro: duration 24, cost 2. taxi: duration 5, cost 18.51. walk: duration 47, cost 0.0. \nfrom Hangzhou Botanical Garden to Leifeng Pagoda: metro: duration 34, cost 3. taxi: duration 5, cost 18.12. walk: duration 46, cost 0.0. \nfrom Hangzhou Botanical Garden to China National Silk Museum: metro: duration 40, cost 3. taxi: duration 6, cost 20.78. walk: duration 55, cost 0.0. \nfrom Hangzhou Botanical Garden to Bai Causeway: metro: duration 32, cost 2. taxi: duration 4, cost 15.81. walk: duration 38, cost 0.0. \nfrom Hangzhou Botanical Garden to Three Ponds Mirroring the Moon: metro: duration 40, cost 3. taxi: duration 4, cost 15.32. walk: duration 36, cost 0.0. \nfrom Hu Xueyan's Former Residence to Hangzhou South Railway Station: metro: duration 32, cost 4. taxi: duration 20, cost 55.64. walk: duration 162, cost 0.0. \nfrom Hu Xueyan's Former Residence to Hangzhou Zhelv Kaiyuan Mingting Hotel: metro: duration 16, cost 3. taxi: duration 9, cost 26.18. walk: duration 73, cost 0.0. \nfrom Hu Xueyan's Former Residence to Zhejiang Provincial Museum (Zhijiang Branch): metro: duration 37, cost 4. taxi: duration 16, cost 43.39. walk: duration 129, cost 0.0. \nfrom Hu Xueyan's Former Residence to Hangzhou Botanical Garden: metro: duration 30, cost 3. taxi: duration 8, cost 24.41. walk: duration 67, cost 0.0. \nfrom Hu Xueyan's Former Residence to Hu Xueyan's Former Residence:  metro: empty.  taxi: empty.  walk: empty. \nfrom Hu Xueyan's Former Residence to West Lake Scenic Area: metro: duration 55, cost 3. taxi: duration 7, cost 22.82. walk: duration 62, cost 0.0. \nfrom Hu Xueyan's Former Residence to Lingyin Temple: metro: duration 42, cost 3. taxi: duration 10, cost 28.78. walk: duration 82, cost 0.0. \nfrom Hu Xueyan's Former Residence to Su Causeway: metro: duration 21, cost 2. taxi: duration 4, cost 15.01. walk: duration 35, cost 0.0. \nfrom Hu Xueyan's Former Residence to Lou Wai Lou (Gushan Road Store, West Lake Scenic Area): metro: duration 31, cost 3. taxi: duration 5, cost 17.95. walk: duration 45, cost 0.0. \nfrom Hu Xueyan's Former Residence to Hangzhou West Lake Xinqiao Hotel: metro: duration 10, cost 2. taxi: duration 2, cost 11.0. walk: duration 18, cost 0.0. \nfrom Hu Xueyan's Former Residence to Hangzhou Confucius Temple: metro: duration 6, cost 2. taxi: duration 1, cost 11.0. walk: duration 13, cost 0.0. \nfrom Hu Xueyan's Former Residence to Qinghefang Street: taxi: duration 0, cost 11.0. walk: duration 5, cost 0.0. \nfrom Hu Xueyan's Former Residence to Hangzhou Xiaoshan International Airport: metro: duration 51, cost 6. taxi: duration 36, cost 104.47. walk: duration 292, cost 0.0. \nfrom Hu Xueyan's Former Residence to Hangzhou West Lake Zhongwei Xiangyi Hotel: metro: duration 11, cost 2. taxi: duration 1, cost 11.0. walk: duration 11, cost 0.0. \nfrom Hu Xueyan's Former Residence to Hangzhou Grand Theatre: metro: duration 15, cost 2. taxi: duration 6, cost 19.39. walk: duration 50, cost 0.0. \nfrom Hu Xueyan's Former Residence to Hangzhou Museum: metro: duration 10, cost 2. taxi: duration 0, cost 11.0. walk: duration 7, cost 0.0. \nfrom Hu Xueyan's Former Residence to Sizhao'er · Hangzhou Local Cuisine (Gulou Branch 1): metro: duration 13, cost 2. taxi: duration 1, cost 11.0. walk: duration 12, cost 0.0. \nfrom Hu Xueyan's Former Residence to New Zhou Ji (Gulou Branch): metro: duration 11, cost 2. taxi: duration 1, cost 11.0. walk: duration 11, cost 0.0. \nfrom Hu Xueyan's Former Residence to Zhiweiguan Weizhuang (Yang Gongdi Branch): metro: duration 37, cost 2. taxi: duration 6, cost 19.62. walk: duration 51, cost 0.0. \nfrom Hu Xueyan's Former Residence to Xixi National Wetland Park: metro: duration 36, cost 4. taxi: duration 16, cost 43.63. walk: duration 130, cost 0.0. \nfrom Hu Xueyan's Former Residence to Jiangzhe Hui (West Lake Lakeside in77 Zone B Store): metro: duration 5, cost 2. taxi: duration 2, cost 11.61. walk: duration 23, cost 0.0. \nfrom Hu Xueyan's Former Residence to Leifeng Pagoda: metro: duration 14, cost 2. taxi: duration 3, cost 13.07. walk: duration 28, cost 0.0. \nfrom Hu Xueyan's Former Residence to China National Silk Museum: metro: duration 20, cost 2. taxi: duration 3, cost 13.7. walk: duration 30, cost 0.0. \nfrom Hu Xueyan's Former Residence to Bai Causeway: metro: duration 16, cost 2. taxi: duration 4, cost 15.4. walk: duration 36, cost 0.0. \nfrom Hu Xueyan's Former Residence to Three Ponds Mirroring the Moon: metro: duration 20, cost 2. taxi: duration 4, cost 14.3. walk: duration 32, cost 0.0. \nfrom West Lake Scenic Area to Hangzhou South Railway Station: metro: duration 74, cost 5. taxi: duration 25, cost 72.0. walk: duration 206, cost 0.0. \nfrom West Lake Scenic Area to Hangzhou Zhelv Kaiyuan Mingting Hotel: metro: duration 68, cost 4. taxi: duration 16, cost 43.43. walk: duration 129, cost 0.0. \nfrom West Lake Scenic Area to Zhejiang Provincial Museum (Zhijiang Branch): metro: duration 68, cost 3. taxi: duration 10, cost 29.56. walk: duration 85, cost 0.0. \nfrom West Lake Scenic Area to Hangzhou Botanical Garden: metro: duration 74, cost 3. taxi: duration 4, cost 15.68. walk: duration 37, cost 0.0. \nfrom West Lake Scenic Area to Hu Xueyan's Former Residence: metro: duration 55, cost 3. taxi: duration 7, cost 22.82. walk: duration 62, cost 0.0. \nfrom West Lake Scenic Area to West Lake Scenic Area:  metro: empty.  taxi: empty.  walk: empty. \nfrom West Lake Scenic Area to Lingyin Temple: metro: duration 84, cost 3. taxi: duration 4, cost 14.42. walk: duration 33, cost 0.0. \nfrom West Lake Scenic Area to Su Causeway: metro: duration 67, cost 3. taxi: duration 3, cost 12.69. walk: duration 27, cost 0.0. \nfrom West Lake Scenic Area to Lou Wai Lou (Gushan Road Store, West Lake Scenic Area): metro: duration 76, cost 3. taxi: duration 3, cost 14.03. walk: duration 31, cost 0.0. \nfrom West Lake Scenic Area to Hangzhou West Lake Xinqiao Hotel: metro: duration 59, cost 3. taxi: duration 6, cost 19.95. walk: duration 52, cost 0.0. \nfrom West Lake Scenic Area to Hangzhou Confucius Temple: metro: duration 54, cost 3. taxi: duration 6, cost 20.16. walk: duration 52, cost 0.0. \nfrom West Lake Scenic Area to Qinghefang Street: metro: duration 58, cost 3. taxi: duration 7, cost 22.08. walk: duration 59, cost 0.0. \nfrom West Lake Scenic Area to Hangzhou Xiaoshan International Airport: metro: duration 98, cost 6. taxi: duration 43, cost 126.63. walk: duration 351, cost 0.0. \nfrom West Lake Scenic Area to Hangzhou West Lake Zhongwei Xiangyi Hotel: metro: duration 62, cost 3. taxi: duration 7, cost 22.69. walk: duration 61, cost 0.0. \nfrom West Lake Scenic Area to Hangzhou Grand Theatre: metro: duration 65, cost 3. taxi: duration 14, cost 37.46. walk: duration 112, cost 0.0. \nfrom West Lake Scenic Area to Hangzhou Museum: metro: duration 58, cost 3. taxi: duration 7, cost 21.06. walk: duration 56, cost 0.0. \nfrom West Lake Scenic Area to Sizhao'er · Hangzhou Local Cuisine (Gulou Branch 1): metro: duration 59, cost 3. taxi: duration 6, cost 19.31. walk: duration 50, cost 0.0. \nfrom West Lake Scenic Area to New Zhou Ji (Gulou Branch): metro: duration 60, cost 3. taxi: duration 6, cost 19.6. walk: duration 51, cost 0.0. \nfrom West Lake Scenic Area to Zhiweiguan Weizhuang (Yang Gongdi Branch): metro: duration 83, cost 3. taxi: duration 1, cost 11.0. walk: duration 11, cost 0.0. \nfrom West Lake Scenic Area to Xixi National Wetland Park: metro: duration 78, cost 4. taxi: duration 10, cost 30.23. walk: duration 87, cost 0.0. \nfrom West Lake Scenic Area to Jiangzhe Hui (West Lake Lakeside in77 Zone B Store): metro: duration 54, cost 3. taxi: duration 6, cost 20.42. walk: duration 53, cost 0.0. \nfrom West Lake Scenic Area to Leifeng Pagoda: metro: duration 60, cost 3. taxi: duration 4, cost 14.45. walk: duration 33, cost 0.0. \nfrom West Lake Scenic Area to China National Silk Museum: metro: duration 66, cost 3. taxi: duration 4, cost 14.85. walk: duration 34, cost 0.0. \nfrom West Lake Scenic Area to Bai Causeway: metro: duration 65, cost 3. taxi: duration 6, cost 20.33. walk: duration 53, cost 0.0. \nfrom West Lake Scenic Area to Three Ponds Mirroring the Moon: metro: duration 66, cost 3. taxi: duration 4, cost 14.36. walk: duration 33, cost 0.0. \nfrom Lingyin Temple to Hangzhou South Railway Station: metro: duration 70, cost 6. taxi: duration 29, cost 83.51. walk: duration 236, cost 0.0. \nfrom Lingyin Temple to Hangzhou Zhelv Kaiyuan Mingting Hotel: metro: duration 51, cost 4. taxi: duration 17, cost 46.68. walk: duration 138, cost 0.0. \nfrom Lingyin Temple to Zhejiang Provincial Museum (Zhijiang Branch): metro: duration 60, cost 4. taxi: duration 13, cost 35.68. walk: duration 106, cost 0.0. \nfrom Lingyin Temple to Hangzhou Botanical Garden: metro: duration 47, cost 2. taxi: duration 2, cost 11.06. walk: duration 21, cost 0.0. \nfrom Lingyin Temple to Hu Xueyan's Former Residence: metro: duration 42, cost 3. taxi: duration 10, cost 28.78. walk: duration 82, cost 0.0. \nfrom Lingyin Temple to West Lake Scenic Area: metro: duration 84, cost 3. taxi: duration 4, cost 14.42. walk: duration 33, cost 0.0. \nfrom Lingyin Temple to Lingyin Temple:  metro: empty.  taxi: empty.  walk: empty. \nfrom Lingyin Temple to Su Causeway: metro: duration 54, cost 3. taxi: duration 6, cost 19.0. walk: duration 49, cost 0.0. \nfrom Lingyin Temple to Lou Wai Lou (Gushan Road Store, West Lake Scenic Area): metro: duration 52, cost 2. taxi: duration 4, cost 15.85. walk: duration 38, cost 0.0. \nfrom Lingyin Temple to Hangzhou West Lake Xinqiao Hotel: metro: duration 42, cost 3. taxi: duration 8, cost 24.21. walk: duration 66, cost 0.0. \nfrom Lingyin Temple to Hangzhou Confucius Temple: metro: duration 40, cost 3. taxi: duration 8, cost 25.12. walk: duration 70, cost 0.0. \nfrom Lingyin Temple to Qinghefang Street: metro: duration 45, cost 3. taxi: duration 9, cost 27.59. walk: duration 78, cost 0.0. \nfrom Lingyin Temple to Hangzhou Xiaoshan International Airport: metro: duration 90, cost 7. taxi: duration 46, cost 135.42. walk: duration 375, cost 0.0. \nfrom Lingyin Temple to Hangzhou West Lake Zhongwei Xiangyi Hotel: metro: duration 47, cost 3. taxi: duration 9, cost 27.31. walk: duration 77, cost 0.0. \nfrom Lingyin Temple to Hangzhou Grand Theatre: metro: duration 54, cost 4. taxi: duration 16, cost 44.15. walk: duration 131, cost 0.0. \nfrom Lingyin Temple to Hangzhou Museum: metro: duration 44, cost 3. taxi: duration 9, cost 26.7. walk: duration 75, cost 0.0. \nfrom Lingyin Temple to Sizhao'er · Hangzhou Local Cuisine (Gulou Branch 1): metro: duration 46, cost 3. taxi: duration 9, cost 26.03. walk: duration 73, cost 0.0. \nfrom Lingyin Temple to New Zhou Ji (Gulou Branch): metro: duration 48, cost 3. taxi: duration 9, cost 26.28. walk: duration 73, cost 0.0. \nfrom Lingyin Temple to Zhiweiguan Weizhuang (Yang Gongdi Branch): metro: duration 70, cost 3. taxi: duration 5, cost 16.48. walk: duration 40, cost 0.0. \nfrom Lingyin Temple to Xixi National Wetland Park: metro: duration 44, cost 2. taxi: duration 6, cost 20.55. walk: duration 54, cost 0.0. \nfrom Lingyin Temple to Jiangzhe Hui (West Lake Lakeside in77 Zone B Store): metro: duration 37, cost 3. taxi: duration 8, cost 23.79. walk: duration 65, cost 0.0. \nfrom Lingyin Temple to Leifeng Pagoda: metro: duration 47, cost 3. taxi: duration 7, cost 21.18. walk: duration 56, cost 0.0. \nfrom Lingyin Temple to China National Silk Museum: metro: duration 53, cost 3. taxi: duration 7, cost 23.0. walk: duration 62, cost 0.0. \nfrom Lingyin Temple to Bai Causeway: metro: duration 45, cost 3. taxi: duration 7, cost 21.68. walk: duration 58, cost 0.0. \nfrom Lingyin Temple to Three Ponds Mirroring the Moon: metro: duration 53, cost 3. taxi: duration 6, cost 19.18. walk: duration 49, cost 0.0. \nfrom Su Causeway to Hangzhou South Railway Station: metro: duration 48, cost 5. taxi: duration 23, cost 65.55. walk: duration 188, cost 0.0. \nfrom Su Causeway to Hangzhou Zhelv Kaiyuan Mingting Hotel: metro: duration 33, cost 3. taxi: duration 12, cost 34.74. walk: duration 103, cost 0.0. \nfrom Su Causeway to Zhejiang Provincial Museum (Zhijiang Branch): metro: duration 49, cost 4. taxi: duration 13, cost 35.49. walk: duration 105, cost 0.0. \nfrom Su Causeway to Hangzhou Botanical Garden: metro: duration 41, cost 3. taxi: duration 4, cost 16.12. walk: duration 39, cost 0.0. \nfrom Su Causeway to Hu Xueyan's Former Residence: metro: duration 21, cost 2. taxi: duration 4, cost 15.01. walk: duration 35, cost 0.0. \nfrom Su Causeway to West Lake Scenic Area: metro: duration 67, cost 3. taxi: duration 3, cost 12.69. walk: duration 27, cost 0.0. \nfrom Su Causeway to Lingyin Temple: metro: duration 54, cost 3. taxi: duration 6, cost 19.0. walk: duration 49, cost 0.0. \nfrom Su Causeway to Su Causeway:  metro: empty.  taxi: empty.  walk: empty. \nfrom Su Causeway to Lou Wai Lou (Gushan Road Store, West Lake Scenic Area): metro: duration 43, cost 2. taxi: duration 2, cost 11.0. walk: duration 18, cost 0.0. \nfrom Su Causeway to Hangzhou West Lake Xinqiao Hotel: metro: duration 24, cost 2. taxi: duration 3, cost 12.08. walk: duration 25, cost 0.0. \nfrom Su Causeway to Hangzhou Confucius Temple: metro: duration 19, cost 2. taxi: duration 3, cost 12.17. walk: duration 25, cost 0.0. \nfrom Su Causeway to Qinghefang Street: metro: duration 24, cost 2. taxi: duration 4, cost 14.14. walk: duration 32, cost 0.0. \nfrom Su Causeway to Hangzhou Xiaoshan International Airport: metro: duration 68, cost 6. taxi: duration 40, cost 117.45. walk: duration 327, cost 0.0. \nfrom Su Causeway to Hangzhou West Lake Zhongwei Xiangyi Hotel: metro: duration 27, cost 2. taxi: duration 4, cost 14.71. walk: duration 34, cost 0.0. \nfrom Su Causeway to Hangzhou Grand Theatre: metro: duration 33, cost 3. taxi: duration 10, cost 29.71. walk: duration 85, cost 0.0. \nfrom Su Causeway to Hangzhou Museum: metro: duration 23, cost 2. taxi: duration 3, cost 13.14. walk: duration 28, cost 0.0. \nfrom Su Causeway to Sizhao'er · Hangzhou Local Cuisine (Gulou Branch 1): taxi: duration 3, cost 11.82. walk: duration 24, cost 0.0. \nfrom Su Causeway to New Zhou Ji (Gulou Branch): metro: duration 26, cost 2. taxi: duration 3, cost 12.09. walk: duration 25, cost 0.0. \nfrom Su Causeway to Zhiweiguan Weizhuang (Yang Gongdi Branch): taxi: duration 2, cost 11.0. walk: duration 17, cost 0.0. \nfrom Su Causeway to Xixi National Wetland Park: metro: duration 48, cost 4. taxi: duration 12, cost 34.08. walk: duration 100, cost 0.0. \nfrom Su Causeway to Jiangzhe Hui (West Lake Lakeside in77 Zone B Store): metro: duration 19, cost 2. taxi: duration 3, cost 12.83. walk: duration 27, cost 0.0. \nfrom Su Causeway to Leifeng Pagoda: taxi: duration 0, cost 11.0. walk: duration 7, cost 0.0. \nfrom Su Causeway to China National Silk Museum: taxi: duration 2, cost 11.0. walk: duration 16, cost 0.0. \nfrom Su Causeway to Bai Causeway: metro: duration 30, cost 2. taxi: duration 3, cost 13.93. walk: duration 31, cost 0.0. \nfrom Su Causeway to Three Ponds Mirroring the Moon: taxi: duration 0, cost 11.0. walk: duration 7, cost 0.0. \nfrom Lou Wai Lou (Gushan Road Store, West Lake Scenic Area) to Hangzhou South Railway Station: metro: duration 59, cost 5. taxi: duration 25, cost 71.61. walk: duration 205, cost 0.0. \nfrom Lou Wai Lou (Gushan Road Store, West Lake Scenic Area) to Hangzhou Zhelv Kaiyuan Mingting Hotel: metro: duration 38, cost 3. taxi: duration 12, cost 34.54. walk: duration 102, cost 0.0. \nfrom Lou Wai Lou (Gushan Road Store, West Lake Scenic Area) to Zhejiang Provincial Museum (Zhijiang Branch): metro: duration 56, cost 4. taxi: duration 14, cost 38.73. walk: duration 116, cost 0.0. \nfrom Lou Wai Lou (Gushan Road Store, West Lake Scenic Area) to Hangzhou Botanical Garden: metro: duration 39, cost 2. taxi: duration 2, cost 11.25. walk: duration 22, cost 0.0. \nfrom Lou Wai Lou (Gushan Road Store, West Lake Scenic Area) to Hu Xueyan's Former Residence: metro: duration 31, cost 3. taxi: duration 5, cost 17.95. walk: duration 45, cost 0.0. \nfrom Lou Wai Lou (Gushan Road Store, West Lake Scenic Area) to West Lake Scenic Area: metro: duration 76, cost 3. taxi: duration 3, cost 14.03. walk: duration 31, cost 0.0. \nfrom Lou Wai Lou (Gushan Road Store, West Lake Scenic Area) to Lingyin Temple: metro: duration 52, cost 2. taxi: duration 4, cost 15.85. walk: duration 38, cost 0.0. \nfrom Lou Wai Lou (Gushan Road Store, West Lake Scenic Area) to Su Causeway: metro: duration 43, cost 2. taxi: duration 2, cost 11.0. walk: duration 18, cost 0.0. \nfrom Lou Wai Lou (Gushan Road Store, West Lake Scenic Area) to Lou Wai Lou (Gushan Road Store, West Lake Scenic Area):  metro: empty.  taxi: empty.  walk: empty. \nfrom Lou Wai Lou (Gushan Road Store, West Lake Scenic Area) to Hangzhou West Lake Xinqiao Hotel: metro: duration 30, cost 2. taxi: duration 3, cost 13.08. walk: duration 28, cost 0.0. \nfrom Lou Wai Lou (Gushan Road Store, West Lake Scenic Area) to Hangzhou Confucius Temple: metro: duration 28, cost 2. taxi: duration 4, cost 14.1. walk: duration 32, cost 0.0. \nfrom Lou Wai Lou (Gushan Road Store, West Lake Scenic Area) to Qinghefang Street: metro: duration 34, cost 3. taxi: duration 5, cost 16.65. walk: duration 40, cost 0.0. \nfrom Lou Wai Lou (Gushan Road Store, West Lake Scenic Area) to Hangzhou Xiaoshan International Airport: metro: duration 77, cost 7. taxi: duration 42, cost 121.28. walk: duration 337, cost 0.0. \nfrom Lou Wai Lou (Gushan Road Store, West Lake Scenic Area) to Hangzhou West Lake Zhongwei Xiangyi Hotel: metro: duration 35, cost 3. taxi: duration 4, cost 16.18. walk: duration 39, cost 0.0. \nfrom Lou Wai Lou (Gushan Road Store, West Lake Scenic Area) to Hangzhou Grand Theatre: metro: duration 41, cost 3. taxi: duration 11, cost 32.06. walk: duration 93, cost 0.0. \nfrom Lou Wai Lou (Gushan Road Store, West Lake Scenic Area) to Hangzhou Museum: metro: duration 32, cost 2. taxi: duration 4, cost 15.84. walk: duration 38, cost 0.0. \nfrom Lou Wai Lou (Gushan Road Store, West Lake Scenic Area) to Sizhao'er · Hangzhou Local Cuisine (Gulou Branch 1): metro: duration 35, cost 2. taxi: duration 4, cost 15.82. walk: duration 38, cost 0.0. \nfrom Lou Wai Lou (Gushan Road Store, West Lake Scenic Area) to New Zhou Ji (Gulou Branch): metro: duration 37, cost 3. taxi: duration 4, cost 16.01. walk: duration 38, cost 0.0. \nfrom Lou Wai Lou (Gushan Road Store, West Lake Scenic Area) to Zhiweiguan Weizhuang (Yang Gongdi Branch): metro: duration 59, cost 2. taxi: duration 3, cost 12.43. walk: duration 26, cost 0.0. \nfrom Lou Wai Lou (Gushan Road Store, West Lake Scenic Area) to Xixi National Wetland Park: metro: duration 46, cost 3. taxi: duration 10, cost 29.6. walk: duration 85, cost 0.0. \nfrom Lou Wai Lou (Gushan Road Store, West Lake Scenic Area) to Jiangzhe Hui (West Lake Lakeside in77 Zone B Store): metro: duration 25, cost 2. taxi: duration 3, cost 12.67. walk: duration 27, cost 0.0. \nfrom Lou Wai Lou (Gushan Road Store, West Lake Scenic Area) to Leifeng Pagoda: metro: duration 36, cost 2. taxi: duration 3, cost 11.85. walk: duration 24, cost 0.0. \nfrom Lou Wai Lou (Gushan Road Store, West Lake Scenic Area) to China National Silk Museum: metro: duration 42, cost 2. taxi: duration 4, cost 14.83. walk: duration 34, cost 0.0. \nfrom Lou Wai Lou (Gushan Road Store, West Lake Scenic Area) to Bai Causeway: metro: duration 33, cost 2. taxi: duration 2, cost 11.27. walk: duration 22, cost 0.0. \nfrom Lou Wai Lou (Gushan Road Store, West Lake Scenic Area) to Three Ponds Mirroring the Moon: metro: duration 42, cost 2. taxi: duration 1, cost 11.0. walk: duration 14, cost 0.0. \nfrom Hangzhou West Lake Xinqiao Hotel to Hangzhou South Railway Station: metro: duration 39, cost 5. taxi: duration 22, cost 62.65. walk: duration 181, cost 0.0. \nfrom Hangzhou West Lake Xinqiao Hotel to Hangzhou Zhelv Kaiyuan Mingting Hotel: metro: duration 20, cost 3. taxi: duration 9, cost 27.37. walk: duration 77, cost 0.0. \nfrom Hangzhou West Lake Xinqiao Hotel to Zhejiang Provincial Museum (Zhijiang Branch): metro: duration 41, cost 4. taxi: duration 16, cost 43.17. walk: duration 129, cost 0.0. \nfrom Hangzhou West Lake Xinqiao Hotel to Hangzhou Botanical Garden: metro: duration 29, cost 2. taxi: duration 6, cost 19.29. walk: duration 50, cost 0.0. \nfrom Hangzhou West Lake Xinqiao Hotel to Hu Xueyan's Former Residence: metro: duration 10, cost 2. taxi: duration 2, cost 11.0. walk: duration 18, cost 0.0. \nfrom Hangzhou West Lake Xinqiao Hotel to West Lake Scenic Area: metro: duration 59, cost 3. taxi: duration 6, cost 19.95. walk: duration 52, cost 0.0. \nfrom Hangzhou West Lake Xinqiao Hotel to Lingyin Temple: metro: duration 42, cost 3. taxi: duration 8, cost 24.21. walk: duration 66, cost 0.0. \nfrom Hangzhou West Lake Xinqiao Hotel to Su Causeway: metro: duration 24, cost 2. taxi: duration 3, cost 12.08. walk: duration 25, cost 0.0. \nfrom Hangzhou West Lake Xinqiao Hotel to Lou Wai Lou (Gushan Road Store, West Lake Scenic Area): metro: duration 30, cost 2. taxi: duration 3, cost 13.08. walk: duration 28, cost 0.0. \nfrom Hangzhou West Lake Xinqiao Hotel to Hangzhou West Lake Xinqiao Hotel:  metro: empty.  taxi: empty.  walk: empty. \nfrom Hangzhou West Lake Xinqiao Hotel to Hangzhou Confucius Temple: metro: duration 9, cost 2. taxi: duration 0, cost 11.0. walk: duration 5, cost 0.0. \nfrom Hangzhou West Lake Xinqiao Hotel to Qinghefang Street: metro: duration 13, cost 2. taxi: duration 1, cost 11.0. walk: duration 13, cost 0.0. \nfrom Hangzhou West Lake Xinqiao Hotel to Hangzhou Xiaoshan International Airport: metro: duration 57, cost 6. taxi: duration 38, cost 110.55. walk: duration 308, cost 0.0. \nfrom Hangzhou West Lake Xinqiao Hotel to Hangzhou West Lake Zhongwei Xiangyi Hotel: metro: duration 15, cost 2. taxi: duration 1, cost 11.0. walk: duration 10, cost 0.0. \nfrom Hangzhou West Lake Xinqiao Hotel to Hangzhou Grand Theatre: metro: duration 21, cost 3. taxi: duration 8, cost 23.68. walk: duration 65, cost 0.0. \nfrom Hangzhou West Lake Xinqiao Hotel to Hangzhou Museum: metro: duration 13, cost 2. taxi: duration 1, cost 11.0. walk: duration 12, cost 0.0. \nfrom Hangzhou West Lake Xinqiao Hotel to Sizhao'er · Hangzhou Local Cuisine (Gulou Branch 1): metro: duration 16, cost 2. taxi: duration 2, cost 11.0. walk: duration 18, cost 0.0. \nfrom Hangzhou West Lake Xinqiao Hotel to New Zhou Ji (Gulou Branch): metro: duration 17, cost 2. taxi: duration 2, cost 11.0. walk: duration 18, cost 0.0. \nfrom Hangzhou West Lake Xinqiao Hotel to Zhiweiguan Weizhuang (Yang Gongdi Branch): metro: duration 40, cost 2. taxi: duration 5, cost 17.03. walk: duration 42, cost 0.0. \nfrom Hangzhou West Lake Xinqiao Hotel to Xixi National Wetland Park: metro: duration 36, cost 4. taxi: duration 14, cost 37.52. walk: duration 112, cost 0.0. \nfrom Hangzhou West Lake Xinqiao Hotel to Jiangzhe Hui (West Lake Lakeside in77 Zone B Store): taxi: duration 0, cost 11.0. walk: duration 5, cost 0.0. \nfrom Hangzhou West Lake Xinqiao Hotel to Leifeng Pagoda: metro: duration 17, cost 2. taxi: duration 2, cost 11.08. walk: duration 21, cost 0.0. \nfrom Hangzhou West Lake Xinqiao Hotel to China National Silk Museum: metro: duration 23, cost 2. taxi: duration 3, cost 13.55. walk: duration 30, cost 0.0. \nfrom Hangzhou West Lake Xinqiao Hotel to Bai Causeway: metro: duration 16, cost 2. taxi: duration 2, cost 11.0. walk: duration 18, cost 0.0. \nfrom Hangzhou West Lake Xinqiao Hotel to Three Ponds Mirroring the Moon: metro: duration 23, cost 2. taxi: duration 2, cost 11.0. walk: duration 19, cost 0.0. \nfrom Hangzhou Confucius Temple to Hangzhou South Railway Station: metro: duration 34, cost 5. taxi: duration 22, cost 60.73. walk: duration 176, cost 0.0. \nfrom Hangzhou Confucius Temple to Hangzhou Zhelv Kaiyuan Mingting Hotel: metro: duration 18, cost 3. taxi: duration 9, cost 27.41. walk: duration 77, cost 0.0. \nfrom Hangzhou Confucius Temple to Zhejiang Provincial Museum (Zhijiang Branch): metro: duration 36, cost 4. taxi: duration 15, cost 42.49. walk: duration 127, cost 0.0. \nfrom Hangzhou Confucius Temple to Hangzhou Botanical Garden: metro: duration 27, cost 3. taxi: duration 6, cost 20.48. walk: duration 54, cost 0.0. \nfrom Hangzhou Confucius Temple to Hu Xueyan's Former Residence: metro: duration 6, cost 2. taxi: duration 1, cost 11.0. walk: duration 13, cost 0.0. \nfrom Hangzhou Confucius Temple to West Lake Scenic Area: metro: duration 54, cost 3. taxi: duration 6, cost 20.16. walk: duration 52, cost 0.0. \nfrom Hangzhou Confucius Temple to Lingyin Temple: metro: duration 40, cost 3. taxi: duration 8, cost 25.12. walk: duration 70, cost 0.0. \nfrom Hangzhou Confucius Temple to Su Causeway: metro: duration 19, cost 2. taxi: duration 3, cost 12.17. walk: duration 25, cost 0.0. \nfrom Hangzhou Confucius Temple to Lou Wai Lou (Gushan Road Store, West Lake Scenic Area): metro: duration 28, cost 2. taxi: duration 4, cost 14.1. walk: duration 32, cost 0.0. \nfrom Hangzhou Confucius Temple to Hangzhou West Lake Xinqiao Hotel: metro: duration 9, cost 2. taxi: duration 0, cost 11.0. walk: duration 5, cost 0.0. \nfrom Hangzhou Confucius Temple to Hangzhou Confucius Temple:  metro: empty.  taxi: empty.  walk: empty. \nfrom Hangzhou Confucius Temple to Qinghefang Street: metro: duration 9, cost 2. taxi: duration 1, cost 11.0. walk: duration 8, cost 0.0. \nfrom Hangzhou Confucius Temple to Hangzhou Xiaoshan International Airport: metro: duration 54, cost 6. taxi: duration 38, cost 109.21. walk: duration 305, cost 0.0. \nfrom Hangzhou Confucius Temple to Hangzhou West Lake Zhongwei Xiangyi Hotel: metro: duration 12, cost 2. taxi: duration 1, cost 11.0. walk: duration 8, cost 0.0. \nfrom Hangzhou Confucius Temple to Hangzhou Grand Theatre: metro: duration 18, cost 3. taxi: duration 7, cost 22.75. walk: duration 61, cost 0.0. \nfrom Hangzhou Confucius Temple to Hangzhou Museum: taxi: duration 0, cost 11.0. walk: duration 6, cost 0.0. \nfrom Hangzhou Confucius Temple to Sizhao'er · Hangzhou Local Cuisine (Gulou Branch 1): metro: duration 11, cost 2. taxi: duration 1, cost 11.0. walk: duration 13, cost 0.0. \nfrom Hangzhou Confucius Temple to New Zhou Ji (Gulou Branch): metro: duration 12, cost 2. taxi: duration 1, cost 11.0. walk: duration 13, cost 0.0. \nfrom Hangzhou Confucius Temple to Zhiweiguan Weizhuang (Yang Gongdi Branch): metro: duration 35, cost 2. taxi: duration 5, cost 17.1. walk: duration 42, cost 0.0. \nfrom Hangzhou Confucius Temple to Xixi National Wetland Park: metro: duration 34, cost 4. taxi: duration 14, cost 38.79. walk: duration 116, cost 0.0. \nfrom Hangzhou Confucius Temple to Jiangzhe Hui (West Lake Lakeside in77 Zone B Store): metro: duration 4, cost 2. taxi: duration 1, cost 11.0. walk: duration 11, cost 0.0. \nfrom Hangzhou Confucius Temple to Leifeng Pagoda: metro: duration 12, cost 2. taxi: duration 2, cost 11.0. walk: duration 20, cost 0.0. \nfrom Hangzhou Confucius Temple to China National Silk Museum: metro: duration 18, cost 2. taxi: duration 3, cost 12.76. walk: duration 27, cost 0.0. \nfrom Hangzhou Confucius Temple to Bai Causeway: metro: duration 15, cost 2. taxi: duration 2, cost 11.63. walk: duration 23, cost 0.0. \nfrom Hangzhou Confucius Temple to Three Ponds Mirroring the Moon: metro: duration 18, cost 2. taxi: duration 2, cost 11.0. walk: duration 21, cost 0.0. \nfrom Qinghefang Street to Hangzhou South Railway Station: metro: duration 35, cost 4. taxi: duration 20, cost 57.57. walk: duration 167, cost 0.0. \nfrom Qinghefang Street to Hangzhou Zhelv Kaiyuan Mingting Hotel: metro: duration 19, cost 3. taxi: duration 9, cost 26.17. walk: duration 73, cost 0.0. \nfrom Qinghefang Street to Zhejiang Provincial Museum (Zhijiang Branch): metro: duration 40, cost 4. taxi: duration 16, cost 43.49. walk: duration 130, cost 0.0. \nfrom Qinghefang Street to Hangzhou Botanical Garden: metro: duration 33, cost 3. taxi: duration 7, cost 23.06. walk: duration 62, cost 0.0. \nfrom Qinghefang Street to Hu Xueyan's Former Residence: taxi: duration 0, cost 11.0. walk: duration 5, cost 0.0. \nfrom Qinghefang Street to West Lake Scenic Area: metro: duration 58, cost 3. taxi: duration 7, cost 22.08. walk: duration 59, cost 0.0. \nfrom Qinghefang Street to Lingyin Temple: metro: duration 45, cost 3. taxi: duration 9, cost 27.59. walk: duration 78, cost 0.0. \nfrom Qinghefang Street to Su Causeway: metro: duration 24, cost 2. taxi: duration 4, cost 14.14. walk: duration 32, cost 0.0. \nfrom Qinghefang Street to Lou Wai Lou (Gushan Road Store, West Lake Scenic Area): metro: duration 34, cost 3. taxi: duration 5, cost 16.65. walk: duration 40, cost 0.0. \nfrom Qinghefang Street to Hangzhou West Lake Xinqiao Hotel: metro: duration 13, cost 2. taxi: duration 1, cost 11.0. walk: duration 13, cost 0.0. \nfrom Qinghefang Street to Hangzhou Confucius Temple: metro: duration 9, cost 2. taxi: duration 1, cost 11.0. walk: duration 8, cost 0.0. \nfrom Qinghefang Street to Qinghefang Street:  metro: empty.  taxi: empty.  walk: empty. \nfrom Qinghefang Street to Hangzhou Xiaoshan International Airport: metro: duration 54, cost 6. taxi: duration 37, cost 106.0. walk: duration 296, cost 0.0. \nfrom Qinghefang Street to Hangzhou West Lake Zhongwei Xiangyi Hotel: metro: duration 14, cost 2. taxi: duration 0, cost 11.0. walk: duration 7, cost 0.0. \nfrom Qinghefang Street to Hangzhou Grand Theatre: metro: duration 18, cost 2. taxi: duration 6, cost 20.36. walk: duration 53, cost 0.0. \nfrom Qinghefang Street to Hangzhou Museum: metro: duration 13, cost 2. taxi: duration 0, cost 11.0. walk: duration 3, cost 0.0. \nfrom Qinghefang Street to Sizhao'er · Hangzhou Local Cuisine (Gulou Branch 1): metro: duration 16, cost 2. taxi: duration 1, cost 11.0. walk: duration 12, cost 0.0. \nfrom Qinghefang Street to New Zhou Ji (Gulou Branch): metro: duration 14, cost 2. taxi: duration 1, cost 11.0. walk: duration 11, cost 0.0. \nfrom Qinghefang Street to Zhiweiguan Weizhuang (Yang Gongdi Branch): metro: duration 40, cost 2. taxi: duration 6, cost 18.92. walk: duration 48, cost 0.0. \nfrom Qinghefang Street to Xixi National Wetland Park: metro: duration 39, cost 4. taxi: duration 15, cost 41.85. walk: duration 125, cost 0.0. \nfrom Qinghefang Street to Jiangzhe Hui (West Lake Lakeside in77 Zone B Store): metro: duration 8, cost 2. taxi: duration 2, cost 11.0. walk: duration 18, cost 0.0. \nfrom Qinghefang Street to Leifeng Pagoda: metro: duration 17, cost 2. taxi: duration 3, cost 12.37. walk: duration 26, cost 0.0. \nfrom Qinghefang Street to China National Silk Museum: metro: duration 23, cost 2. taxi: duration 3, cost 13.53. walk: duration 30, cost 0.0. \nfrom Qinghefang Street to Bai Causeway: metro: duration 19, cost 2. taxi: duration 3, cost 13.89. walk: duration 31, cost 0.0. \nfrom Qinghefang Street to Three Ponds Mirroring the Moon: metro: duration 23, cost 2. taxi: duration 3, cost 13.17. walk: duration 29, cost 0.0. \nfrom Hangzhou Xiaoshan International Airport to Hangzhou South Railway Station: metro: duration 33, cost 5. taxi: duration 22, cost 62.07. walk: duration 179, cost 0.0. \nfrom Hangzhou Xiaoshan International Airport to Hangzhou Zhelv Kaiyuan Mingting Hotel: metro: duration 46, cost 6. taxi: duration 31, cost 90.67. walk: duration 255, cost 0.0. \nfrom Hangzhou Xiaoshan International Airport to Zhejiang Provincial Museum (Zhijiang Branch): metro: duration 77, cost 7. taxi: duration 48, cost 138.97. walk: duration 384, cost 0.0. \nfrom Hangzhou Xiaoshan International Airport to Hangzhou Botanical Garden: metro: duration 76, cost 7. taxi: duration 44, cost 129.24. walk: duration 358, cost 0.0. \nfrom Hangzhou Xiaoshan International Airport to Hu Xueyan's Former Residence: metro: duration 51, cost 6. taxi: duration 36, cost 104.47. walk: duration 292, cost 0.0. \nfrom Hangzhou Xiaoshan International Airport to West Lake Scenic Area: metro: duration 98, cost 6. taxi: duration 43, cost 126.63. walk: duration 351, cost 0.0. \nfrom Hangzhou Xiaoshan International Airport to Lingyin Temple: metro: duration 90, cost 7. taxi: duration 46, cost 135.42. walk: duration 375, cost 0.0. \nfrom Hangzhou Xiaoshan International Airport to Su Causeway: metro: duration 68, cost 6. taxi: duration 40, cost 117.45. walk: duration 327, cost 0.0. \nfrom Hangzhou Xiaoshan International Airport to Lou Wai Lou (Gushan Road Store, West Lake Scenic Area): metro: duration 77, cost 7. taxi: duration 42, cost 121.28. walk: duration 337, cost 0.0. \nfrom Hangzhou Xiaoshan International Airport to Hangzhou West Lake Xinqiao Hotel: metro: duration 57, cost 6. taxi: duration 38, cost 110.55. walk: duration 308, cost 0.0. \nfrom Hangzhou Xiaoshan International Airport to Hangzhou Confucius Temple: metro: duration 54, cost 6. taxi: duration 38, cost 109.21. walk: duration 305, cost 0.0. \nfrom Hangzhou Xiaoshan International Airport to Qinghefang Street: metro: duration 54, cost 6. taxi: duration 37, cost 106.0. walk: duration 296, cost 0.0. \nfrom Hangzhou Xiaoshan International Airport to Hangzhou Xiaoshan International Airport:  metro: empty.  taxi: empty.  walk: empty. \nfrom Hangzhou Xiaoshan International Airport to Hangzhou West Lake Zhongwei Xiangyi Hotel: metro: duration 56, cost 6. taxi: duration 37, cost 106.59. walk: duration 298, cost 0.0. \nfrom Hangzhou Xiaoshan International Airport to Hangzhou Grand Theatre: metro: duration 49, cost 5. taxi: duration 30, cost 86.21. walk: duration 244, cost 0.0. \nfrom Hangzhou Xiaoshan International Airport to Hangzhou Museum: metro: duration 58, cost 6. taxi: duration 37, cost 107.13. walk: duration 299, cost 0.0. \nfrom Hangzhou Xiaoshan International Airport to Sizhao'er · Hangzhou Local Cuisine (Gulou Branch 1): metro: duration 60, cost 6. taxi: duration 37, cost 108.29. walk: duration 302, cost 0.0. \nfrom Hangzhou Xiaoshan International Airport to New Zhou Ji (Gulou Branch): metro: duration 58, cost 6. taxi: duration 37, cost 107.95. walk: duration 301, cost 0.0. \nfrom Hangzhou Xiaoshan International Airport to Zhiweiguan Weizhuang (Yang Gongdi Branch): metro: duration 84, cost 6. taxi: duration 42, cost 122.56. walk: duration 340, cost 0.0. \nfrom Hangzhou Xiaoshan International Airport to Xixi National Wetland Park: metro: duration 83, cost 7. taxi: duration 52, cost 152.15. walk: duration 419, cost 0.0. \nfrom Hangzhou Xiaoshan International Airport to Jiangzhe Hui (West Lake Lakeside in77 Zone B Store): metro: duration 52, cost 6. taxi: duration 38, cost 111.49. walk: duration 311, cost 0.0. \nfrom Hangzhou Xiaoshan International Airport to Leifeng Pagoda: metro: duration 61, cost 6. taxi: duration 40, cost 114.71. walk: duration 320, cost 0.0. \nfrom Hangzhou Xiaoshan International Airport to China National Silk Museum: metro: duration 67, cost 6. taxi: duration 39, cost 113.59. walk: duration 317, cost 0.0. \nfrom Hangzhou Xiaoshan International Airport to Bai Causeway: metro: duration 62, cost 6. taxi: duration 40, cost 115.41. walk: duration 321, cost 0.0. \nfrom Hangzhou Xiaoshan International Airport to Three Ponds Mirroring the Moon: metro: duration 67, cost 6. taxi: duration 40, cost 116.82. walk: duration 325, cost 0.0. \nfrom Hangzhou West Lake Zhongwei Xiangyi Hotel to Hangzhou South Railway Station: metro: duration 38, cost 5. taxi: duration 21, cost 59.55. walk: duration 172, cost 0.0. \nfrom Hangzhou West Lake Zhongwei Xiangyi Hotel to Hangzhou Zhelv Kaiyuan Mingting Hotel: metro: duration 20, cost 3. taxi: duration 8, cost 24.89. walk: duration 69, cost 0.0. \nfrom Hangzhou West Lake Zhongwei Xiangyi Hotel to Zhejiang Provincial Museum (Zhijiang Branch): metro: duration 44, cost 4. taxi: duration 16, cost 45.49. walk: duration 135, cost 0.0. \nfrom Hangzhou West Lake Zhongwei Xiangyi Hotel to Hangzhou Botanical Garden: metro: duration 34, cost 3. taxi: duration 7, cost 22.33. walk: duration 60, cost 0.0. \nfrom Hangzhou West Lake Zhongwei Xiangyi Hotel to Hu Xueyan's Former Residence: metro: duration 11, cost 2. taxi: duration 1, cost 11.0. walk: duration 11, cost 0.0. \nfrom Hangzhou West Lake Zhongwei Xiangyi Hotel to West Lake Scenic Area: metro: duration 62, cost 3. taxi: duration 7, cost 22.69. walk: duration 61, cost 0.0. \nfrom Hangzhou West Lake Zhongwei Xiangyi Hotel to Lingyin Temple: metro: duration 47, cost 3. taxi: duration 9, cost 27.31. walk: duration 77, cost 0.0. \nfrom Hangzhou West Lake Zhongwei Xiangyi Hotel to Su Causeway: metro: duration 27, cost 2. taxi: duration 4, cost 14.71. walk: duration 34, cost 0.0. \nfrom Hangzhou West Lake Zhongwei Xiangyi Hotel to Lou Wai Lou (Gushan Road Store, West Lake Scenic Area): metro: duration 35, cost 3. taxi: duration 4, cost 16.18. walk: duration 39, cost 0.0. \nfrom Hangzhou West Lake Zhongwei Xiangyi Hotel to Hangzhou West Lake Xinqiao Hotel: metro: duration 15, cost 2. taxi: duration 1, cost 11.0. walk: duration 10, cost 0.0. \nfrom Hangzhou West Lake Zhongwei Xiangyi Hotel to Hangzhou Confucius Temple: metro: duration 12, cost 2. taxi: duration 1, cost 11.0. walk: duration 8, cost 0.0. \nfrom Hangzhou West Lake Zhongwei Xiangyi Hotel to Qinghefang Street: metro: duration 14, cost 2. taxi: duration 0, cost 11.0. walk: duration 7, cost 0.0. \nfrom Hangzhou West Lake Zhongwei Xiangyi Hotel to Hangzhou Xiaoshan International Airport: metro: duration 56, cost 6. taxi: duration 37, cost 106.59. walk: duration 298, cost 0.0. \nfrom Hangzhou West Lake Zhongwei Xiangyi Hotel to Hangzhou West Lake Zhongwei Xiangyi Hotel:  metro: empty.  taxi: empty.  walk: empty. \nfrom Hangzhou West Lake Zhongwei Xiangyi Hotel to Hangzhou Grand Theatre: metro: duration 20, cost 2. taxi: duration 6, cost 20.58. walk: duration 54, cost 0.0. \nfrom Hangzhou West Lake Zhongwei Xiangyi Hotel to Hangzhou Museum: metro: duration 16, cost 2. taxi: duration 1, cost 11.0. walk: duration 9, cost 0.0. \nfrom Hangzhou West Lake Zhongwei Xiangyi Hotel to Sizhao'er · Hangzhou Local Cuisine (Gulou Branch 1): metro: duration 19, cost 2. taxi: duration 2, cost 11.0. walk: duration 19, cost 0.0. \nfrom Hangzhou West Lake Zhongwei Xiangyi Hotel to New Zhou Ji (Gulou Branch): metro: duration 18, cost 2. taxi: duration 2, cost 11.0. walk: duration 18, cost 0.0. \nfrom Hangzhou West Lake Zhongwei Xiangyi Hotel to Zhiweiguan Weizhuang (Yang Gongdi Branch): metro: duration 43, cost 2. taxi: duration 6, cost 19.65. walk: duration 51, cost 0.0. \nfrom Hangzhou West Lake Zhongwei Xiangyi Hotel to Xixi National Wetland Park: metro: duration 41, cost 4. taxi: duration 15, cost 40.71. walk: duration 122, cost 0.0. \nfrom Hangzhou West Lake Zhongwei Xiangyi Hotel to Jiangzhe Hui (West Lake Lakeside in77 Zone B Store): metro: duration 10, cost 2. taxi: duration 1, cost 11.0. walk: duration 13, cost 0.0. \nfrom Hangzhou West Lake Zhongwei Xiangyi Hotel to Leifeng Pagoda: metro: duration 20, cost 2. taxi: duration 3, cost 13.27. walk: duration 29, cost 0.0. \nfrom Hangzhou West Lake Zhongwei Xiangyi Hotel to China National Silk Museum: metro: duration 26, cost 2. taxi: duration 4, cost 15.02. walk: duration 35, cost 0.0. \nfrom Hangzhou West Lake Zhongwei Xiangyi Hotel to Bai Causeway: metro: duration 20, cost 2. taxi: duration 3, cost 12.33. walk: duration 26, cost 0.0. \nfrom Hangzhou West Lake Zhongwei Xiangyi Hotel to Three Ponds Mirroring the Moon: metro: duration 26, cost 2. taxi: duration 3, cost 13.27. walk: duration 29, cost 0.0. \nfrom Hangzhou Grand Theatre to Hangzhou South Railway Station: metro: duration 33, cost 4. taxi: duration 16, cost 44.56. walk: duration 132, cost 0.0. \nfrom Hangzhou Grand Theatre to Hangzhou Zhelv Kaiyuan Mingting Hotel: metro: duration 17, cost 2. taxi: duration 5, cost 18.62. walk: duration 47, cost 0.0. \nfrom Hangzhou Grand Theatre to Zhejiang Provincial Museum (Zhijiang Branch): metro: duration 48, cost 5. taxi: duration 21, cost 59.06. walk: duration 171, cost 0.0. \nfrom Hangzhou Grand Theatre to Hangzhou Botanical Garden: metro: duration 40, cost 3. taxi: duration 14, cost 38.17. walk: duration 114, cost 0.0. \nfrom Hangzhou Grand Theatre to Hu Xueyan's Former Residence: metro: duration 15, cost 2. taxi: duration 6, cost 19.39. walk: duration 50, cost 0.0. \nfrom Hangzhou Grand Theatre to West Lake Scenic Area: metro: duration 65, cost 3. taxi: duration 14, cost 37.46. walk: duration 112, cost 0.0. \nfrom Hangzhou Grand Theatre to Lingyin Temple: metro: duration 54, cost 4. taxi: duration 16, cost 44.15. walk: duration 131, cost 0.0. \nfrom Hangzhou Grand Theatre to Su Causeway: metro: duration 33, cost 3. taxi: duration 10, cost 29.71. walk: duration 85, cost 0.0. \nfrom Hangzhou Grand Theatre to Lou Wai Lou (Gushan Road Store, West Lake Scenic Area): metro: duration 41, cost 3. taxi: duration 11, cost 32.06. walk: duration 93, cost 0.0. \nfrom Hangzhou Grand Theatre to Hangzhou West Lake Xinqiao Hotel: metro: duration 21, cost 3. taxi: duration 8, cost 23.68. walk: duration 65, cost 0.0. \nfrom Hangzhou Grand Theatre to Hangzhou Confucius Temple: metro: duration 18, cost 3. taxi: duration 7, cost 22.75. walk: duration 61, cost 0.0. \nfrom Hangzhou Grand Theatre to Qinghefang Street: metro: duration 18, cost 2. taxi: duration 6, cost 20.36. walk: duration 53, cost 0.0. \nfrom Hangzhou Grand Theatre to Hangzhou Xiaoshan International Airport: metro: duration 49, cost 5. taxi: duration 30, cost 86.21. walk: duration 244, cost 0.0. \nfrom Hangzhou Grand Theatre to Hangzhou West Lake Zhongwei Xiangyi Hotel: metro: duration 20, cost 2. taxi: duration 6, cost 20.58. walk: duration 54, cost 0.0. \nfrom Hangzhou Grand Theatre to Hangzhou Grand Theatre:  metro: empty.  taxi: empty.  walk: empty. \nfrom Hangzhou Grand Theatre to Hangzhou Museum: metro: duration 22, cost 3. taxi: duration 7, cost 21.32. walk: duration 56, cost 0.0. \nfrom Hangzhou Grand Theatre to Sizhao'er · Hangzhou Local Cuisine (Gulou Branch 1): metro: duration 25, cost 3. taxi: duration 7, cost 22.87. walk: duration 62, cost 0.0. \nfrom Hangzhou Grand Theatre to New Zhou Ji (Gulou Branch): metro: duration 22, cost 2. taxi: duration 7, cost 22.57. walk: duration 61, cost 0.0. \nfrom Hangzhou Grand Theatre to Zhiweiguan Weizhuang (Yang Gongdi Branch): metro: duration 49, cost 3. taxi: duration 12, cost 34.25. walk: duration 101, cost 0.0. \nfrom Hangzhou Grand Theatre to Xixi National Wetland Park: metro: duration 47, cost 5. taxi: duration 22, cost 60.77. walk: duration 176, cost 0.0. \nfrom Hangzhou Grand Theatre to Jiangzhe Hui (West Lake Lakeside in77 Zone B Store): metro: duration 16, cost 3. taxi: duration 8, cost 24.36. walk: duration 67, cost 0.0. \nfrom Hangzhou Grand Theatre to Leifeng Pagoda: metro: duration 26, cost 3. taxi: duration 9, cost 27.74. walk: duration 79, cost 0.0. \nfrom Hangzhou Grand Theatre to China National Silk Museum: metro: duration 32, cost 3. taxi: duration 9, cost 27.81. walk: duration 79, cost 0.0. \nfrom Hangzhou Grand Theatre to Bai Causeway: metro: duration 26, cost 3. taxi: duration 9, cost 27.49. walk: duration 78, cost 0.0. \nfrom Hangzhou Grand Theatre to Three Ponds Mirroring the Moon: metro: duration 32, cost 3. taxi: duration 10, cost 28.83. walk: duration 82, cost 0.0. \nfrom Hangzhou Museum to Hangzhou South Railway Station: metro: duration 38, cost 5. taxi: duration 21, cost 58.18. walk: duration 169, cost 0.0. \nfrom Hangzhou Museum to Hangzhou Zhelv Kaiyuan Mingting Hotel: metro: duration 22, cost 3. taxi: duration 9, cost 27.13. walk: duration 76, cost 0.0. \nfrom Hangzhou Museum to Zhejiang Provincial Museum (Zhijiang Branch): metro: duration 40, cost 4. taxi: duration 15, cost 42.32. walk: duration 126, cost 0.0. \nfrom Hangzhou Museum to Hangzhou Botanical Garden: metro: duration 31, cost 3. taxi: duration 7, cost 22.3. walk: duration 60, cost 0.0. \nfrom Hangzhou Museum to Hu Xueyan's Former Residence: metro: duration 10, cost 2. taxi: duration 0, cost 11.0. walk: duration 7, cost 0.0. \nfrom Hangzhou Museum to West Lake Scenic Area: metro: duration 58, cost 3. taxi: duration 7, cost 21.06. walk: duration 56, cost 0.0. \nfrom Hangzhou Museum to Lingyin Temple: metro: duration 44, cost 3. taxi: duration 9, cost 26.7. walk: duration 75, cost 0.0. \nfrom Hangzhou Museum to Su Causeway: metro: duration 23, cost 2. taxi: duration 3, cost 13.14. walk: duration 28, cost 0.0. \nfrom Hangzhou Museum to Lou Wai Lou (Gushan Road Store, West Lake Scenic Area): metro: duration 32, cost 2. taxi: duration 4, cost 15.84. walk: duration 38, cost 0.0. \nfrom Hangzhou Museum to Hangzhou West Lake Xinqiao Hotel: metro: duration 13, cost 2. taxi: duration 1, cost 11.0. walk: duration 12, cost 0.0. \nfrom Hangzhou Museum to Hangzhou Confucius Temple: taxi: duration 0, cost 11.0. walk: duration 6, cost 0.0. \nfrom Hangzhou Museum to Qinghefang Street: metro: duration 13, cost 2. taxi: duration 0, cost 11.0. walk: duration 3, cost 0.0. \nfrom Hangzhou Museum to Hangzhou Xiaoshan International Airport: metro: duration 58, cost 6. taxi: duration 37, cost 107.13. walk: duration 299, cost 0.0. \nfrom Hangzhou Museum to Hangzhou West Lake Zhongwei Xiangyi Hotel: metro: duration 16, cost 2. taxi: duration 1, cost 11.0. walk: duration 9, cost 0.0. \nfrom Hangzhou Museum to Hangzhou Grand Theatre: metro: duration 22, cost 3. taxi: duration 7, cost 21.32. walk: duration 56, cost 0.0. \nfrom Hangzhou Museum to Hangzhou Museum:  metro: empty.  taxi: empty.  walk: empty. \nfrom Hangzhou Museum to Sizhao'er · Hangzhou Local Cuisine (Gulou Branch 1): metro: duration 15, cost 2. taxi: duration 1, cost 11.0. walk: duration 9, cost 0.0. \nfrom Hangzhou Museum to New Zhou Ji (Gulou Branch): metro: duration 16, cost 2. taxi: duration 1, cost 11.0. walk: duration 9, cost 0.0. \nfrom Hangzhou Museum to Zhiweiguan Weizhuang (Yang Gongdi Branch): metro: duration 39, cost 2. taxi: duration 5, cost 17.91. walk: duration 45, cost 0.0. \nfrom Hangzhou Museum to Xixi National Wetland Park: metro: duration 38, cost 4. taxi: duration 15, cost 40.92. walk: duration 123, cost 0.0. \nfrom Hangzhou Museum to Jiangzhe Hui (West Lake Lakeside in77 Zone B Store): metro: duration 8, cost 2. taxi: duration 2, cost 11.0. walk: duration 17, cost 0.0. \nfrom Hangzhou Museum to Leifeng Pagoda: metro: duration 16, cost 2. taxi: duration 2, cost 11.35. walk: duration 22, cost 0.0. \nfrom Hangzhou Museum to China National Silk Museum: metro: duration 22, cost 2. taxi: duration 3, cost 12.58. walk: duration 27, cost 0.0. \nfrom Hangzhou Museum to Bai Causeway: metro: duration 19, cost 2. taxi: duration 3, cost 13.57. walk: duration 30, cost 0.0. \nfrom Hangzhou Museum to Three Ponds Mirroring the Moon: metro: duration 22, cost 2. taxi: duration 3, cost 12.25. walk: duration 25, cost 0.0. \nfrom Sizhao'er · Hangzhou Local Cuisine (Gulou Branch 1) to Hangzhou South Railway Station: metro: duration 40, cost 5. taxi: duration 20, cost 57.35. walk: duration 167, cost 0.0. \nfrom Sizhao'er · Hangzhou Local Cuisine (Gulou Branch 1) to Hangzhou Zhelv Kaiyuan Mingting Hotel: metro: duration 25, cost 3. taxi: duration 10, cost 29.82. walk: duration 86, cost 0.0. \nfrom Sizhao'er · Hangzhou Local Cuisine (Gulou Branch 1) to Zhejiang Provincial Museum (Zhijiang Branch): metro: duration 41, cost 4. taxi: duration 14, cost 38.96. walk: duration 117, cost 0.0. \nfrom Sizhao'er · Hangzhou Local Cuisine (Gulou Branch 1) to Hangzhou Botanical Garden: metro: duration 33, cost 3. taxi: duration 7, cost 22.36. walk: duration 60, cost 0.0. \nfrom Sizhao'er · Hangzhou Local Cuisine (Gulou Branch 1) to Hu Xueyan's Former Residence: metro: duration 13, cost 2. taxi: duration 1, cost 11.0. walk: duration 12, cost 0.0. \nfrom Sizhao'er · Hangzhou Local Cuisine (Gulou Branch 1) to West Lake Scenic Area: metro: duration 59, cost 3. taxi: duration 6, cost 19.31. walk: duration 50, cost 0.0. \nfrom Sizhao'er · Hangzhou Local Cuisine (Gulou Branch 1) to Lingyin Temple: metro: duration 46, cost 3. taxi: duration 9, cost 26.03. walk: duration 73, cost 0.0. \nfrom Sizhao'er · Hangzhou Local Cuisine (Gulou Branch 1) to Su Causeway: taxi: duration 3, cost 11.82. walk: duration 24, cost 0.0. \nfrom Sizhao'er · Hangzhou Local Cuisine (Gulou Branch 1) to Lou Wai Lou (Gushan Road Store, West Lake Scenic Area): metro: duration 35, cost 2. taxi: duration 4, cost 15.82. walk: duration 38, cost 0.0. \nfrom Sizhao'er · Hangzhou Local Cuisine (Gulou Branch 1) to Hangzhou West Lake Xinqiao Hotel: metro: duration 16, cost 2. taxi: duration 2, cost 11.0. walk: duration 18, cost 0.0. \nfrom Sizhao'er · Hangzhou Local Cuisine (Gulou Branch 1) to Hangzhou Confucius Temple: metro: duration 11, cost 2. taxi: duration 1, cost 11.0. walk: duration 13, cost 0.0. \nfrom Sizhao'er · Hangzhou Local Cuisine (Gulou Branch 1) to Qinghefang Street: metro: duration 16, cost 2. taxi: duration 1, cost 11.0. walk: duration 12, cost 0.0. \nfrom Sizhao'er · Hangzhou Local Cuisine (Gulou Branch 1) to Hangzhou Xiaoshan International Airport: metro: duration 60, cost 6. taxi: duration 37, cost 108.29. walk: duration 302, cost 0.0. \nfrom Sizhao'er · Hangzhou Local Cuisine (Gulou Branch 1) to Hangzhou West Lake Zhongwei Xiangyi Hotel: metro: duration 19, cost 2. taxi: duration 2, cost 11.0. walk: duration 19, cost 0.0. \nfrom Sizhao'er · Hangzhou Local Cuisine (Gulou Branch 1) to Hangzhou Grand Theatre: metro: duration 25, cost 3. taxi: duration 7, cost 22.87. walk: duration 62, cost 0.0. \nfrom Sizhao'er · Hangzhou Local Cuisine (Gulou Branch 1) to Hangzhou Museum: metro: duration 15, cost 2. taxi: duration 1, cost 11.0. walk: duration 9, cost 0.0. \nfrom Sizhao'er · Hangzhou Local Cuisine (Gulou Branch 1) to Sizhao'er · Hangzhou Local Cuisine (Gulou Branch 1):  metro: empty.  taxi: empty.  walk: empty. \nfrom Sizhao'er · Hangzhou Local Cuisine (Gulou Branch 1) to New Zhou Ji (Gulou Branch): metro: duration 18, cost 2. taxi: duration 0, cost 11.0. walk: duration 1, cost 0.0. \nfrom Sizhao'er · Hangzhou Local Cuisine (Gulou Branch 1) to Zhiweiguan Weizhuang (Yang Gongdi Branch): taxi: duration 4, cost 16.1. walk: duration 39, cost 0.0. \nfrom Sizhao'er · Hangzhou Local Cuisine (Gulou Branch 1) to Xixi National Wetland Park: metro: duration 40, cost 4. taxi: duration 15, cost 40.96. walk: duration 123, cost 0.0. \nfrom Sizhao'er · Hangzhou Local Cuisine (Gulou Branch 1) to Jiangzhe Hui (West Lake Lakeside in77 Zone B Store): metro: duration 11, cost 2. taxi: duration 3, cost 11.82. walk: duration 24, cost 0.0. \nfrom Sizhao'er · Hangzhou Local Cuisine (Gulou Branch 1) to Leifeng Pagoda: taxi: duration 2, cost 11.0. walk: duration 17, cost 0.0. \nfrom Sizhao'er · Hangzhou Local Cuisine (Gulou Branch 1) to China National Silk Museum: taxi: duration 2, cost 11.0. walk: duration 18, cost 0.0. \nfrom Sizhao'er · Hangzhou Local Cuisine (Gulou Branch 1) to Bai Causeway: metro: duration 22, cost 2. taxi: duration 4, cost 15.26. walk: duration 36, cost 0.0. \nfrom Sizhao'er · Hangzhou Local Cuisine (Gulou Branch 1) to Three Ponds Mirroring the Moon: taxi: duration 3, cost 11.77. walk: duration 24, cost 0.0. \nfrom New Zhou Ji (Gulou Branch) to Hangzhou South Railway Station: metro: duration 38, cost 4. taxi: duration 20, cost 57.13. walk: duration 166, cost 0.0. \nfrom New Zhou Ji (Gulou Branch) to Hangzhou Zhelv Kaiyuan Mingting Hotel: metro: duration 23, cost 3. taxi: duration 10, cost 29.55. walk: duration 85, cost 0.0. \nfrom New Zhou Ji (Gulou Branch) to Zhejiang Provincial Museum (Zhijiang Branch): metro: duration 42, cost 4. taxi: duration 14, cost 39.22. walk: duration 118, cost 0.0. \nfrom New Zhou Ji (Gulou Branch) to Hangzhou Botanical Garden: metro: duration 36, cost 3. taxi: duration 7, cost 22.55. walk: duration 61, cost 0.0. \nfrom New Zhou Ji (Gulou Branch) to Hu Xueyan's Former Residence: metro: duration 11, cost 2. taxi: duration 1, cost 11.0. walk: duration 11, cost 0.0. \nfrom New Zhou Ji (Gulou Branch) to West Lake Scenic Area: metro: duration 60, cost 3. taxi: duration 6, cost 19.6. walk: duration 51, cost 0.0. \nfrom New Zhou Ji (Gulou Branch) to Lingyin Temple: metro: duration 48, cost 3. taxi: duration 9, cost 26.28. walk: duration 73, cost 0.0. \nfrom New Zhou Ji (Gulou Branch) to Su Causeway: metro: duration 26, cost 2. taxi: duration 3, cost 12.09. walk: duration 25, cost 0.0. \nfrom New Zhou Ji (Gulou Branch) to Lou Wai Lou (Gushan Road Store, West Lake Scenic Area): metro: duration 37, cost 3. taxi: duration 4, cost 16.01. walk: duration 38, cost 0.0. \nfrom New Zhou Ji (Gulou Branch) to Hangzhou West Lake Xinqiao Hotel: metro: duration 17, cost 2. taxi: duration 2, cost 11.0. walk: duration 18, cost 0.0. \nfrom New Zhou Ji (Gulou Branch) to Hangzhou Confucius Temple: metro: duration 12, cost 2. taxi: duration 1, cost 11.0. walk: duration 13, cost 0.0. \nfrom New Zhou Ji (Gulou Branch) to Qinghefang Street: metro: duration 14, cost 2. taxi: duration 1, cost 11.0. walk: duration 11, cost 0.0. \nfrom New Zhou Ji (Gulou Branch) to Hangzhou Xiaoshan International Airport: metro: duration 58, cost 6. taxi: duration 37, cost 107.95. walk: duration 301, cost 0.0. \nfrom New Zhou Ji (Gulou Branch) to Hangzhou West Lake Zhongwei Xiangyi Hotel: metro: duration 18, cost 2. taxi: duration 2, cost 11.0. walk: duration 18, cost 0.0. \nfrom New Zhou Ji (Gulou Branch) to Hangzhou Grand Theatre: metro: duration 22, cost 2. taxi: duration 7, cost 22.57. walk: duration 61, cost 0.0. \nfrom New Zhou Ji (Gulou Branch) to Hangzhou Museum: metro: duration 16, cost 2. taxi: duration 1, cost 11.0. walk: duration 9, cost 0.0. \nfrom New Zhou Ji (Gulou Branch) to Sizhao'er · Hangzhou Local Cuisine (Gulou Branch 1): metro: duration 18, cost 2. taxi: duration 0, cost 11.0. walk: duration 1, cost 0.0. \nfrom New Zhou Ji (Gulou Branch) to New Zhou Ji (Gulou Branch):  metro: empty.  taxi: empty.  walk: empty. \nfrom New Zhou Ji (Gulou Branch) to Zhiweiguan Weizhuang (Yang Gongdi Branch): metro: duration 42, cost 2. taxi: duration 5, cost 16.38. walk: duration 40, cost 0.0. \nfrom New Zhou Ji (Gulou Branch) to Xixi National Wetland Park: metro: duration 42, cost 4. taxi: duration 15, cost 41.22. walk: duration 124, cost 0.0. \nfrom New Zhou Ji (Gulou Branch) to Jiangzhe Hui (West Lake Lakeside in77 Zone B Store): metro: duration 12, cost 2. taxi: duration 3, cost 11.8. walk: duration 24, cost 0.0. \nfrom New Zhou Ji (Gulou Branch) to Leifeng Pagoda: metro: duration 19, cost 2. taxi: duration 2, cost 11.0. walk: duration 18, cost 0.0. \nfrom New Zhou Ji (Gulou Branch) to China National Silk Museum: metro: duration 25, cost 2. taxi: duration 2, cost 11.0. walk: duration 18, cost 0.0. \nfrom New Zhou Ji (Gulou Branch) to Bai Causeway: metro: duration 23, cost 2. taxi: duration 4, cost 15.29. walk: duration 36, cost 0.0. \nfrom New Zhou Ji (Gulou Branch) to Three Ponds Mirroring the Moon: metro: duration 25, cost 2. taxi: duration 3, cost 11.98. walk: duration 24, cost 0.0. \nfrom Zhiweiguan Weizhuang (Yang Gongdi Branch) to Hangzhou South Railway Station: metro: duration 64, cost 5. taxi: duration 24, cost 68.55. walk: duration 196, cost 0.0. \nfrom Zhiweiguan Weizhuang (Yang Gongdi Branch) to Hangzhou Zhelv Kaiyuan Mingting Hotel: metro: duration 49, cost 3. taxi: duration 15, cost 39.7. walk: duration 120, cost 0.0. \nfrom Zhiweiguan Weizhuang (Yang Gongdi Branch) to Zhejiang Provincial Museum (Zhijiang Branch): metro: duration 65, cost 4. taxi: duration 11, cost 31.15. walk: duration 90, cost 0.0. \nfrom Zhiweiguan Weizhuang (Yang Gongdi Branch) to Hangzhou Botanical Garden: metro: duration 57, cost 3. taxi: duration 4, cost 16.02. walk: duration 38, cost 0.0. \nfrom Zhiweiguan Weizhuang (Yang Gongdi Branch) to Hu Xueyan's Former Residence: metro: duration 37, cost 2. taxi: duration 6, cost 19.62. walk: duration 51, cost 0.0. \nfrom Zhiweiguan Weizhuang (Yang Gongdi Branch) to West Lake Scenic Area: metro: duration 83, cost 3. taxi: duration 1, cost 11.0. walk: duration 11, cost 0.0. \nfrom Zhiweiguan Weizhuang (Yang Gongdi Branch) to Lingyin Temple: metro: duration 70, cost 3. taxi: duration 5, cost 16.48. walk: duration 40, cost 0.0. \nfrom Zhiweiguan Weizhuang (Yang Gongdi Branch) to Su Causeway: taxi: duration 2, cost 11.0. walk: duration 17, cost 0.0. \nfrom Zhiweiguan Weizhuang (Yang Gongdi Branch) to Lou Wai Lou (Gushan Road Store, West Lake Scenic Area): metro: duration 59, cost 2. taxi: duration 3, cost 12.43. walk: duration 26, cost 0.0. \nfrom Zhiweiguan Weizhuang (Yang Gongdi Branch) to Hangzhou West Lake Xinqiao Hotel: metro: duration 40, cost 2. taxi: duration 5, cost 17.03. walk: duration 42, cost 0.0. \nfrom Zhiweiguan Weizhuang (Yang Gongdi Branch) to Hangzhou Confucius Temple: metro: duration 35, cost 2. taxi: duration 5, cost 17.1. walk: duration 42, cost 0.0. \nfrom Zhiweiguan Weizhuang (Yang Gongdi Branch) to Qinghefang Street: metro: duration 40, cost 2. taxi: duration 6, cost 18.92. walk: duration 48, cost 0.0. \nfrom Zhiweiguan Weizhuang (Yang Gongdi Branch) to Hangzhou Xiaoshan International Airport: metro: duration 84, cost 6. taxi: duration 42, cost 122.56. walk: duration 340, cost 0.0. \nfrom Zhiweiguan Weizhuang (Yang Gongdi Branch) to Hangzhou West Lake Zhongwei Xiangyi Hotel: metro: duration 43, cost 2. taxi: duration 6, cost 19.65. walk: duration 51, cost 0.0. \nfrom Zhiweiguan Weizhuang (Yang Gongdi Branch) to Hangzhou Grand Theatre: metro: duration 49, cost 3. taxi: duration 12, cost 34.25. walk: duration 101, cost 0.0. \nfrom Zhiweiguan Weizhuang (Yang Gongdi Branch) to Hangzhou Museum: metro: duration 39, cost 2. taxi: duration 5, cost 17.91. walk: duration 45, cost 0.0. \nfrom Zhiweiguan Weizhuang (Yang Gongdi Branch) to Sizhao'er · Hangzhou Local Cuisine (Gulou Branch 1): taxi: duration 4, cost 16.1. walk: duration 39, cost 0.0. \nfrom Zhiweiguan Weizhuang (Yang Gongdi Branch) to New Zhou Ji (Gulou Branch): metro: duration 42, cost 2. taxi: duration 5, cost 16.38. walk: duration 40, cost 0.0. \nfrom Zhiweiguan Weizhuang (Yang Gongdi Branch) to Zhiweiguan Weizhuang (Yang Gongdi Branch):  metro: empty.  taxi: empty.  walk: empty. \nfrom Zhiweiguan Weizhuang (Yang Gongdi Branch) to Xixi National Wetland Park: metro: duration 64, cost 4. taxi: duration 11, cost 32.28. walk: duration 94, cost 0.0. \nfrom Zhiweiguan Weizhuang (Yang Gongdi Branch) to Jiangzhe Hui (West Lake Lakeside in77 Zone B Store): metro: duration 35, cost 2. taxi: duration 5, cost 17.68. walk: duration 44, cost 0.0. \nfrom Zhiweiguan Weizhuang (Yang Gongdi Branch) to Leifeng Pagoda: taxi: duration 2, cost 11.27. walk: duration 22, cost 0.0. \nfrom Zhiweiguan Weizhuang (Yang Gongdi Branch) to China National Silk Museum: taxi: duration 3, cost 11.72. walk: duration 24, cost 0.0. \nfrom Zhiweiguan Weizhuang (Yang Gongdi Branch) to Bai Causeway: metro: duration 46, cost 2. taxi: duration 5, cost 18.12. walk: duration 46, cost 0.0. \nfrom Zhiweiguan Weizhuang (Yang Gongdi Branch) to Three Ponds Mirroring the Moon: taxi: duration 2, cost 11.62. walk: duration 23, cost 0.0. \nfrom Xixi National Wetland Park to Hangzhou South Railway Station: metro: duration 65, cost 6. taxi: duration 36, cost 103.32. walk: duration 289, cost 0.0. \nfrom Xixi National Wetland Park to Hangzhou Zhelv Kaiyuan Mingting Hotel: metro: duration 43, cost 5. taxi: duration 21, cost 58.88. walk: duration 171, cost 0.0. \nfrom Xixi National Wetland Park to Zhejiang Provincial Museum (Zhijiang Branch): metro: duration 52, cost 5. taxi: duration 18, cost 49.89. walk: duration 147, cost 0.0. \nfrom Xixi National Wetland Park to Hangzhou Botanical Garden: metro: duration 40, cost 3. taxi: duration 7, cost 23.06. walk: duration 62, cost 0.0. \nfrom Xixi National Wetland Park to Hu Xueyan's Former Residence: metro: duration 36, cost 4. taxi: duration 16, cost 43.63. walk: duration 130, cost 0.0. \nfrom Xixi National Wetland Park to West Lake Scenic Area: metro: duration 78, cost 4. taxi: duration 10, cost 30.23. walk: duration 87, cost 0.0. \nfrom Xixi National Wetland Park to Lingyin Temple: metro: duration 44, cost 2. taxi: duration 6, cost 20.55. walk: duration 54, cost 0.0. \nfrom Xixi National Wetland Park to Su Causeway: metro: duration 48, cost 4. taxi: duration 12, cost 34.08. walk: duration 100, cost 0.0. \nfrom Xixi National Wetland Park to Lou Wai Lou (Gushan Road Store, West Lake Scenic Area): metro: duration 46, cost 3. taxi: duration 10, cost 29.6. walk: duration 85, cost 0.0. \nfrom Xixi National Wetland Park to Hangzhou West Lake Xinqiao Hotel: metro: duration 36, cost 4. taxi: duration 14, cost 37.52. walk: duration 112, cost 0.0. \nfrom Xixi National Wetland Park to Hangzhou Confucius Temple: metro: duration 34, cost 4. taxi: duration 14, cost 38.79. walk: duration 116, cost 0.0. \nfrom Xixi National Wetland Park to Qinghefang Street: metro: duration 39, cost 4. taxi: duration 15, cost 41.85. walk: duration 125, cost 0.0. \nfrom Xixi National Wetland Park to Hangzhou Xiaoshan International Airport: metro: duration 83, cost 7. taxi: duration 52, cost 152.15. walk: duration 419, cost 0.0. \nfrom Xixi National Wetland Park to Hangzhou West Lake Zhongwei Xiangyi Hotel: metro: duration 41, cost 4. taxi: duration 15, cost 40.71. walk: duration 122, cost 0.0. \nfrom Xixi National Wetland Park to Hangzhou Grand Theatre: metro: duration 47, cost 5. taxi: duration 22, cost 60.77. walk: duration 176, cost 0.0. \nfrom Xixi National Wetland Park to Hangzhou Museum: metro: duration 38, cost 4. taxi: duration 15, cost 40.92. walk: duration 123, cost 0.0. \nfrom Xixi National Wetland Park to Sizhao'er · Hangzhou Local Cuisine (Gulou Branch 1): metro: duration 40, cost 4. taxi: duration 15, cost 40.96. walk: duration 123, cost 0.0. \nfrom Xixi National Wetland Park to New Zhou Ji (Gulou Branch): metro: duration 42, cost 4. taxi: duration 15, cost 41.22. walk: duration 124, cost 0.0. \nfrom Xixi National Wetland Park to Zhiweiguan Weizhuang (Yang Gongdi Branch): metro: duration 64, cost 4. taxi: duration 11, cost 32.28. walk: duration 94, cost 0.0. \nfrom Xixi National Wetland Park to Xixi National Wetland Park:  metro: empty.  taxi: empty.  walk: empty. \nfrom Xixi National Wetland Park to Jiangzhe Hui (West Lake Lakeside in77 Zone B Store): metro: duration 31, cost 4. taxi: duration 13, cost 36.55. walk: duration 109, cost 0.0. \nfrom Xixi National Wetland Park to Leifeng Pagoda: metro: duration 41, cost 4. taxi: duration 13, cost 36.2. walk: duration 108, cost 0.0. \nfrom Xixi National Wetland Park to China National Silk Museum: metro: duration 47, cost 4. taxi: duration 14, cost 38.47. walk: duration 115, cost 0.0. \nfrom Xixi National Wetland Park to Bai Causeway: metro: duration 39, cost 4. taxi: duration 12, cost 33.3. walk: duration 98, cost 0.0. \nfrom Xixi National Wetland Park to Three Ponds Mirroring the Moon: metro: duration 47, cost 4. taxi: duration 12, cost 33.61. walk: duration 99, cost 0.0. \nfrom Jiangzhe Hui (West Lake Lakeside in77 Zone B Store) to Hangzhou South Railway Station: metro: duration 34, cost 5. taxi: duration 23, cost 64.48. walk: duration 186, cost 0.0. \nfrom Jiangzhe Hui (West Lake Lakeside in77 Zone B Store) to Hangzhou Zhelv Kaiyuan Mingting Hotel: metro: duration 15, cost 3. taxi: duration 9, cost 26.94. walk: duration 76, cost 0.0. \nfrom Jiangzhe Hui (West Lake Lakeside in77 Zone B Store) to Zhejiang Provincial Museum (Zhijiang Branch): metro: duration 36, cost 4. taxi: duration 16, cost 44.58. walk: duration 133, cost 0.0. \nfrom Jiangzhe Hui (West Lake Lakeside in77 Zone B Store) to Hangzhou Botanical Garden: metro: duration 24, cost 2. taxi: duration 5, cost 18.51. walk: duration 47, cost 0.0. \nfrom Jiangzhe Hui (West Lake Lakeside in77 Zone B Store) to Hu Xueyan's Former Residence: metro: duration 5, cost 2. taxi: duration 2, cost 11.61. walk: duration 23, cost 0.0. \nfrom Jiangzhe Hui (West Lake Lakeside in77 Zone B Store) to West Lake Scenic Area: metro: duration 54, cost 3. taxi: duration 6, cost 20.42. walk: duration 53, cost 0.0. \nfrom Jiangzhe Hui (West Lake Lakeside in77 Zone B Store) to Lingyin Temple: metro: duration 37, cost 3. taxi: duration 8, cost 23.79. walk: duration 65, cost 0.0. \nfrom Jiangzhe Hui (West Lake Lakeside in77 Zone B Store) to Su Causeway: metro: duration 19, cost 2. taxi: duration 3, cost 12.83. walk: duration 27, cost 0.0. \nfrom Jiangzhe Hui (West Lake Lakeside in77 Zone B Store) to Lou Wai Lou (Gushan Road Store, West Lake Scenic Area): metro: duration 25, cost 2. taxi: duration 3, cost 12.67. walk: duration 27, cost 0.0. \nfrom Jiangzhe Hui (West Lake Lakeside in77 Zone B Store) to Hangzhou West Lake Xinqiao Hotel: taxi: duration 0, cost 11.0. walk: duration 5, cost 0.0. \nfrom Jiangzhe Hui (West Lake Lakeside in77 Zone B Store) to Hangzhou Confucius Temple: metro: duration 4, cost 2. taxi: duration 1, cost 11.0. walk: duration 11, cost 0.0. \nfrom Jiangzhe Hui (West Lake Lakeside in77 Zone B Store) to Qinghefang Street: metro: duration 8, cost 2. taxi: duration 2, cost 11.0. walk: duration 18, cost 0.0. \nfrom Jiangzhe Hui (West Lake Lakeside in77 Zone B Store) to Hangzhou Xiaoshan International Airport: metro: duration 52, cost 6. taxi: duration 38, cost 111.49. walk: duration 311, cost 0.0. \nfrom Jiangzhe Hui (West Lake Lakeside in77 Zone B Store) to Hangzhou West Lake Zhongwei Xiangyi Hotel: metro: duration 10, cost 2. taxi: duration 1, cost 11.0. walk: duration 13, cost 0.0. \nfrom Jiangzhe Hui (West Lake Lakeside in77 Zone B Store) to Hangzhou Grand Theatre: metro: duration 16, cost 3. taxi: duration 8, cost 24.36. walk: duration 67, cost 0.0. \nfrom Jiangzhe Hui (West Lake Lakeside in77 Zone B Store) to Hangzhou Museum: metro: duration 8, cost 2. taxi: duration 2, cost 11.0. walk: duration 17, cost 0.0. \nfrom Jiangzhe Hui (West Lake Lakeside in77 Zone B Store) to Sizhao'er · Hangzhou Local Cuisine (Gulou Branch 1): metro: duration 11, cost 2. taxi: duration 3, cost 11.82. walk: duration 24, cost 0.0. \nfrom Jiangzhe Hui (West Lake Lakeside in77 Zone B Store) to New Zhou Ji (Gulou Branch): metro: duration 12, cost 2. taxi: duration 3, cost 11.8. walk: duration 24, cost 0.0. \nfrom Jiangzhe Hui (West Lake Lakeside in77 Zone B Store) to Zhiweiguan Weizhuang (Yang Gongdi Branch): metro: duration 35, cost 2. taxi: duration 5, cost 17.68. walk: duration 44, cost 0.0. \nfrom Jiangzhe Hui (West Lake Lakeside in77 Zone B Store) to Xixi National Wetland Park: metro: duration 31, cost 4. taxi: duration 13, cost 36.55. walk: duration 109, cost 0.0. \nfrom Jiangzhe Hui (West Lake Lakeside in77 Zone B Store) to Jiangzhe Hui (West Lake Lakeside in77 Zone B Store):  metro: empty.  taxi: empty.  walk: empty. \nfrom Jiangzhe Hui (West Lake Lakeside in77 Zone B Store) to Leifeng Pagoda: metro: duration 12, cost 2. taxi: duration 3, cost 12.22. walk: duration 25, cost 0.0. \nfrom Jiangzhe Hui (West Lake Lakeside in77 Zone B Store) to China National Silk Museum: metro: duration 18, cost 2. taxi: duration 4, cost 14.96. walk: duration 35, cost 0.0. \nfrom Jiangzhe Hui (West Lake Lakeside in77 Zone B Store) to Bai Causeway: metro: duration 11, cost 2. taxi: duration 1, cost 11.0. walk: duration 12, cost 0.0. \nfrom Jiangzhe Hui (West Lake Lakeside in77 Zone B Store) to Three Ponds Mirroring the Moon: metro: duration 18, cost 2. taxi: duration 2, cost 11.0. walk: duration 20, cost 0.0. \nfrom Leifeng Pagoda to Hangzhou South Railway Station: metro: duration 41, cost 5. taxi: duration 22, cost 62.83. walk: duration 181, cost 0.0. \nfrom Leifeng Pagoda to Hangzhou Zhelv Kaiyuan Mingting Hotel: metro: duration 26, cost 3. taxi: duration 12, cost 33.46. walk: duration 98, cost 0.0. \nfrom Leifeng Pagoda to Zhejiang Provincial Museum (Zhijiang Branch): metro: duration 42, cost 4. taxi: duration 13, cost 36.03. walk: duration 107, cost 0.0. \nfrom Leifeng Pagoda to Hangzhou Botanical Garden: metro: duration 34, cost 3. taxi: duration 5, cost 18.12. walk: duration 46, cost 0.0. \nfrom Leifeng Pagoda to Hu Xueyan's Former Residence: metro: duration 14, cost 2. taxi: duration 3, cost 13.07. walk: duration 28, cost 0.0. \nfrom Leifeng Pagoda to West Lake Scenic Area: metro: duration 60, cost 3. taxi: duration 4, cost 14.45. walk: duration 33, cost 0.0. \nfrom Leifeng Pagoda to Lingyin Temple: metro: duration 47, cost 3. taxi: duration 7, cost 21.18. walk: duration 56, cost 0.0. \nfrom Leifeng Pagoda to Su Causeway: taxi: duration 0, cost 11.0. walk: duration 7, cost 0.0. \nfrom Leifeng Pagoda to Lou Wai Lou (Gushan Road Store, West Lake Scenic Area): metro: duration 36, cost 2. taxi: duration 3, cost 11.85. walk: duration 24, cost 0.0. \nfrom Leifeng Pagoda to Hangzhou West Lake Xinqiao Hotel: metro: duration 17, cost 2. taxi: duration 2, cost 11.08. walk: duration 21, cost 0.0. \nfrom Leifeng Pagoda to Hangzhou Confucius Temple: metro: duration 12, cost 2. taxi: duration 2, cost 11.0. walk: duration 20, cost 0.0. \nfrom Leifeng Pagoda to Qinghefang Street: metro: duration 17, cost 2. taxi: duration 3, cost 12.37. walk: duration 26, cost 0.0. \nfrom Leifeng Pagoda to Hangzhou Xiaoshan International Airport: metro: duration 61, cost 6. taxi: duration 40, cost 114.71. walk: duration 320, cost 0.0. \nfrom Leifeng Pagoda to Hangzhou West Lake Zhongwei Xiangyi Hotel: metro: duration 20, cost 2. taxi: duration 3, cost 13.27. walk: duration 29, cost 0.0. \nfrom Leifeng Pagoda to Hangzhou Grand Theatre: metro: duration 26, cost 3. taxi: duration 9, cost 27.74. walk: duration 79, cost 0.0. \nfrom Leifeng Pagoda to Hangzhou Museum: metro: duration 16, cost 2. taxi: duration 2, cost 11.35. walk: duration 22, cost 0.0. \nfrom Leifeng Pagoda to Sizhao'er · Hangzhou Local Cuisine (Gulou Branch 1): taxi: duration 2, cost 11.0. walk: duration 17, cost 0.0. \nfrom Leifeng Pagoda to New Zhou Ji (Gulou Branch): metro: duration 19, cost 2. taxi: duration 2, cost 11.0. walk: duration 18, cost 0.0. \nfrom Leifeng Pagoda to Zhiweiguan Weizhuang (Yang Gongdi Branch): taxi: duration 2, cost 11.27. walk: duration 22, cost 0.0. \nfrom Leifeng Pagoda to Xixi National Wetland Park: metro: duration 41, cost 4. taxi: duration 13, cost 36.2. walk: duration 108, cost 0.0. \nfrom Leifeng Pagoda to Jiangzhe Hui (West Lake Lakeside in77 Zone B Store): metro: duration 12, cost 2. taxi: duration 3, cost 12.22. walk: duration 25, cost 0.0. \nfrom Leifeng Pagoda to Leifeng Pagoda:  metro: empty.  taxi: empty.  walk: empty. \nfrom Leifeng Pagoda to China National Silk Museum: taxi: duration 1, cost 11.0. walk: duration 11, cost 0.0. \nfrom Leifeng Pagoda to Bai Causeway: metro: duration 23, cost 2. taxi: duration 4, cost 14.19. walk: duration 32, cost 0.0. \nfrom Leifeng Pagoda to Three Ponds Mirroring the Moon: taxi: duration 1, cost 11.0. walk: duration 10, cost 0.0. \nfrom China National Silk Museum to Hangzhou South Railway Station: metro: duration 47, cost 5. taxi: duration 21, cost 60.0. walk: duration 174, cost 0.0. \nfrom China National Silk Museum to Hangzhou Zhelv Kaiyuan Mingting Hotel: metro: duration 32, cost 3. taxi: duration 12, cost 35.0. walk: duration 103, cost 0.0. \nfrom China National Silk Museum to Zhejiang Provincial Museum (Zhijiang Branch): metro: duration 48, cost 4. taxi: duration 12, cost 33.89. walk: duration 100, cost 0.0. \nfrom China National Silk Museum to Hangzhou Botanical Garden: metro: duration 40, cost 3. taxi: duration 6, cost 20.78. walk: duration 55, cost 0.0. \nfrom China National Silk Museum to Hu Xueyan's Former Residence: metro: duration 20, cost 2. taxi: duration 3, cost 13.7. walk: duration 30, cost 0.0. \nfrom China National Silk Museum to West Lake Scenic Area: metro: duration 66, cost 3. taxi: duration 4, cost 14.85. walk: duration 34, cost 0.0. \nfrom China National Silk Museum to Lingyin Temple: metro: duration 53, cost 3. taxi: duration 7, cost 23.0. walk: duration 62, cost 0.0. \nfrom China National Silk Museum to Su Causeway: taxi: duration 2, cost 11.0. walk: duration 16, cost 0.0. \nfrom China National Silk Museum to Lou Wai Lou (Gushan Road Store, West Lake Scenic Area): metro: duration 42, cost 2. taxi: duration 4, cost 14.83. walk: duration 34, cost 0.0. \nfrom China National Silk Museum to Hangzhou West Lake Xinqiao Hotel: metro: duration 23, cost 2. taxi: duration 3, cost 13.55. walk: duration 30, cost 0.0. \nfrom China National Silk Museum to Hangzhou Confucius Temple: metro: duration 18, cost 2. taxi: duration 3, cost 12.76. walk: duration 27, cost 0.0. \nfrom China National Silk Museum to Qinghefang Street: metro: duration 23, cost 2. taxi: duration 3, cost 13.53. walk: duration 30, cost 0.0. \nfrom China National Silk Museum to Hangzhou Xiaoshan International Airport: metro: duration 67, cost 6. taxi: duration 39, cost 113.59. walk: duration 317, cost 0.0. \nfrom China National Silk Museum to Hangzhou West Lake Zhongwei Xiangyi Hotel: metro: duration 26, cost 2. taxi: duration 4, cost 15.02. walk: duration 35, cost 0.0. \nfrom China National Silk Museum to Hangzhou Grand Theatre: metro: duration 32, cost 3. taxi: duration 9, cost 27.81. walk: duration 79, cost 0.0. \nfrom China National Silk Museum to Hangzhou Museum: metro: duration 22, cost 2. taxi: duration 3, cost 12.58. walk: duration 27, cost 0.0. \nfrom China National Silk Museum to Sizhao'er · Hangzhou Local Cuisine (Gulou Branch 1): taxi: duration 2, cost 11.0. walk: duration 18, cost 0.0. \nfrom China National Silk Museum to New Zhou Ji (Gulou Branch): metro: duration 25, cost 2. taxi: duration 2, cost 11.0. walk: duration 18, cost 0.0. \nfrom China National Silk Museum to Zhiweiguan Weizhuang (Yang Gongdi Branch): taxi: duration 3, cost 11.72. walk: duration 24, cost 0.0. \nfrom China National Silk Museum to Xixi National Wetland Park: metro: duration 47, cost 4. taxi: duration 14, cost 38.47. walk: duration 115, cost 0.0. \nfrom China National Silk Museum to Jiangzhe Hui (West Lake Lakeside in77 Zone B Store): metro: duration 18, cost 2. taxi: duration 4, cost 14.96. walk: duration 35, cost 0.0. \nfrom China National Silk Museum to Leifeng Pagoda: taxi: duration 1, cost 11.0. walk: duration 11, cost 0.0. \nfrom China National Silk Museum to China National Silk Museum:  metro: empty.  taxi: empty.  walk: empty. \nfrom China National Silk Museum to Bai Causeway: metro: duration 29, cost 2. taxi: duration 5, cost 17.33. walk: duration 43, cost 0.0. \nfrom China National Silk Museum to Three Ponds Mirroring the Moon: taxi: duration 2, cost 11.09. walk: duration 21, cost 0.0. \nfrom Bai Causeway to Hangzhou South Railway Station: metro: duration 44, cost 5. taxi: duration 24, cost 69.32. walk: duration 198, cost 0.0. \nfrom Bai Causeway to Hangzhou Zhelv Kaiyuan Mingting Hotel: metro: duration 23, cost 3. taxi: duration 10, cost 28.19. walk: duration 80, cost 0.0. \nfrom Bai Causeway to Zhejiang Provincial Museum (Zhijiang Branch): metro: duration 46, cost 4. taxi: duration 17, cost 45.91. walk: duration 136, cost 0.0. \nfrom Bai Causeway to Hangzhou Botanical Garden: metro: duration 32, cost 2. taxi: duration 4, cost 15.81. walk: duration 38, cost 0.0. \nfrom Bai Causeway to Hu Xueyan's Former Residence: metro: duration 16, cost 2. taxi: duration 4, cost 15.4. walk: duration 36, cost 0.0. \nfrom Bai Causeway to West Lake Scenic Area: metro: duration 65, cost 3. taxi: duration 6, cost 20.33. walk: duration 53, cost 0.0. \nfrom Bai Causeway to Lingyin Temple: metro: duration 45, cost 3. taxi: duration 7, cost 21.68. walk: duration 58, cost 0.0. \nfrom Bai Causeway to Su Causeway: metro: duration 30, cost 2. taxi: duration 3, cost 13.93. walk: duration 31, cost 0.0. \nfrom Bai Causeway to Lou Wai Lou (Gushan Road Store, West Lake Scenic Area): metro: duration 33, cost 2. taxi: duration 2, cost 11.27. walk: duration 22, cost 0.0. \nfrom Bai Causeway to Hangzhou West Lake Xinqiao Hotel: metro: duration 16, cost 2. taxi: duration 2, cost 11.0. walk: duration 18, cost 0.0. \nfrom Bai Causeway to Hangzhou Confucius Temple: metro: duration 15, cost 2. taxi: duration 2, cost 11.63. walk: duration 23, cost 0.0. \nfrom Bai Causeway to Qinghefang Street: metro: duration 19, cost 2. taxi: duration 3, cost 13.89. walk: duration 31, cost 0.0. \nfrom Bai Causeway to Hangzhou Xiaoshan International Airport: metro: duration 62, cost 6. taxi: duration 40, cost 115.41. walk: duration 321, cost 0.0. \nfrom Bai Causeway to Hangzhou West Lake Zhongwei Xiangyi Hotel: metro: duration 20, cost 2. taxi: duration 3, cost 12.33. walk: duration 26, cost 0.0. \nfrom Bai Causeway to Hangzhou Grand Theatre: metro: duration 26, cost 3. taxi: duration 9, cost 27.49. walk: duration 78, cost 0.0. \nfrom Bai Causeway to Hangzhou Museum: metro: duration 19, cost 2. taxi: duration 3, cost 13.57. walk: duration 30, cost 0.0. \nfrom Bai Causeway to Sizhao'er · Hangzhou Local Cuisine (Gulou Branch 1): metro: duration 22, cost 2. taxi: duration 4, cost 15.26. walk: duration 36, cost 0.0. \nfrom Bai Causeway to New Zhou Ji (Gulou Branch): metro: duration 23, cost 2. taxi: duration 4, cost 15.29. walk: duration 36, cost 0.0. \nfrom Bai Causeway to Zhiweiguan Weizhuang (Yang Gongdi Branch): metro: duration 46, cost 2. taxi: duration 5, cost 18.12. walk: duration 46, cost 0.0. \nfrom Bai Causeway to Xixi National Wetland Park: metro: duration 39, cost 4. taxi: duration 12, cost 33.3. walk: duration 98, cost 0.0. \nfrom Bai Causeway to Jiangzhe Hui (West Lake Lakeside in77 Zone B Store): metro: duration 11, cost 2. taxi: duration 1, cost 11.0. walk: duration 12, cost 0.0. \nfrom Bai Causeway to Leifeng Pagoda: metro: duration 23, cost 2. taxi: duration 4, cost 14.19. walk: duration 32, cost 0.0. \nfrom Bai Causeway to China National Silk Museum: metro: duration 29, cost 2. taxi: duration 5, cost 17.33. walk: duration 43, cost 0.0. \nfrom Bai Causeway to Bai Causeway:  metro: empty.  taxi: empty.  walk: empty. \nfrom Bai Causeway to Three Ponds Mirroring the Moon: metro: duration 29, cost 2. taxi: duration 2, cost 11.6. walk: duration 23, cost 0.0. \nfrom Three Ponds Mirroring the Moon to Hangzhou South Railway Station: metro: duration 47, cost 5. taxi: duration 23, cost 66.33. walk: duration 191, cost 0.0. \nfrom Three Ponds Mirroring the Moon to Hangzhou Zhelv Kaiyuan Mingting Hotel: metro: duration 32, cost 3. taxi: duration 12, cost 32.95. walk: duration 96, cost 0.0. \nfrom Three Ponds Mirroring the Moon to Zhejiang Provincial Museum (Zhijiang Branch): metro: duration 48, cost 4. taxi: duration 14, cost 37.76. walk: duration 113, cost 0.0. \nfrom Three Ponds Mirroring the Moon to Hangzhou Botanical Garden: metro: duration 40, cost 3. taxi: duration 4, cost 15.32. walk: duration 36, cost 0.0. \nfrom Three Ponds Mirroring the Moon to Hu Xueyan's Former Residence: metro: duration 20, cost 2. taxi: duration 4, cost 14.3. walk: duration 32, cost 0.0. \nfrom Three Ponds Mirroring the Moon to West Lake Scenic Area: metro: duration 66, cost 3. taxi: duration 4, cost 14.36. walk: duration 33, cost 0.0. \nfrom Three Ponds Mirroring the Moon to Lingyin Temple: metro: duration 53, cost 3. taxi: duration 6, cost 19.18. walk: duration 49, cost 0.0. \nfrom Three Ponds Mirroring the Moon to Su Causeway: taxi: duration 0, cost 11.0. walk: duration 7, cost 0.0. \nfrom Three Ponds Mirroring the Moon to Lou Wai Lou (Gushan Road Store, West Lake Scenic Area): metro: duration 42, cost 2. taxi: duration 1, cost 11.0. walk: duration 14, cost 0.0. \nfrom Three Ponds Mirroring the Moon to Hangzhou West Lake Xinqiao Hotel: metro: duration 23, cost 2. taxi: duration 2, cost 11.0. walk: duration 19, cost 0.0. \nfrom Three Ponds Mirroring the Moon to Hangzhou Confucius Temple: metro: duration 18, cost 2. taxi: duration 2, cost 11.0. walk: duration 21, cost 0.0. \nfrom Three Ponds Mirroring the Moon to Qinghefang Street: metro: duration 23, cost 2. taxi: duration 3, cost 13.17. walk: duration 29, cost 0.0. \nfrom Three Ponds Mirroring the Moon to Hangzhou Xiaoshan International Airport: metro: duration 67, cost 6. taxi: duration 40, cost 116.82. walk: duration 325, cost 0.0. \nfrom Three Ponds Mirroring the Moon to Hangzhou West Lake Zhongwei Xiangyi Hotel: metro: duration 26, cost 2. taxi: duration 3, cost 13.27. walk: duration 29, cost 0.0. \nfrom Three Ponds Mirroring the Moon to Hangzhou Grand Theatre: metro: duration 32, cost 3. taxi: duration 10, cost 28.83. walk: duration 82, cost 0.0. \nfrom Three Ponds Mirroring the Moon to Hangzhou Museum: metro: duration 22, cost 2. taxi: duration 3, cost 12.25. walk: duration 25, cost 0.0. \nfrom Three Ponds Mirroring the Moon to Sizhao'er · Hangzhou Local Cuisine (Gulou Branch 1): taxi: duration 3, cost 11.77. walk: duration 24, cost 0.0. \nfrom Three Ponds Mirroring the Moon to New Zhou Ji (Gulou Branch): metro: duration 25, cost 2. taxi: duration 3, cost 11.98. walk: duration 24, cost 0.0. \nfrom Three Ponds Mirroring the Moon to Zhiweiguan Weizhuang (Yang Gongdi Branch): taxi: duration 2, cost 11.62. walk: duration 23, cost 0.0. \nfrom Three Ponds Mirroring the Moon to Xixi National Wetland Park: metro: duration 47, cost 4. taxi: duration 12, cost 33.61. walk: duration 99, cost 0.0. \nfrom Three Ponds Mirroring the Moon to Jiangzhe Hui (West Lake Lakeside in77 Zone B Store): metro: duration 18, cost 2. taxi: duration 2, cost 11.0. walk: duration 20, cost 0.0. \nfrom Three Ponds Mirroring the Moon to Leifeng Pagoda: taxi: duration 1, cost 11.0. walk: duration 10, cost 0.0. \nfrom Three Ponds Mirroring the Moon to China National Silk Museum: taxi: duration 2, cost 11.09. walk: duration 21, cost 0.0. \nfrom Three Ponds Mirroring the Moon to Bai Causeway: metro: duration 29, cost 2. taxi: duration 2, cost 11.6. walk: duration 23, cost 0.0. \nfrom Three Ponds Mirroring the Moon to Three Ponds Mirroring the Moon:  metro: empty.  taxi: empty.  walk: empty. \n"
+    },
+    "initial_verification": {
+      "commonsense_errors": [
+        "The last activity should be an intercity transport.",
+        "Incorrect cost infomation of innercity transport in day 1, from Hangzhou Xiaoshan International Airport to West Lake Scenic Area, metro. [cost = price * people_number]"
+      ],
+      "personal_constraints": [
+        true,
+        true,
+        true,
+        true,
+        true
+      ],
+      "category_normalization": [
+        {
+          "constraint_index": 4,
+          "category_domain": "activity",
+          "expression": "activity_type(activity)",
+          "raw_label": "airplane",
+          "normalized_label": "airplane"
+        },
+        {
+          "constraint_index": 4,
+          "category_domain": "activity",
+          "expression": "['attraction', 'airplane', 'train']",
+          "raw_label": "attraction",
+          "normalized_label": "attraction"
+        },
+        {
+          "constraint_index": 4,
+          "category_domain": "activity",
+          "expression": "['attraction', 'airplane', 'train']",
+          "raw_label": "airplane",
+          "normalized_label": "airplane"
+        },
+        {
+          "constraint_index": 4,
+          "category_domain": "activity",
+          "expression": "['attraction', 'airplane', 'train']",
+          "raw_label": "train",
+          "normalized_label": "train"
+        },
+        {
+          "constraint_index": 4,
+          "category_domain": "transport",
+          "expression": "innercity_transport_type(activity_transports(activity))",
+          "raw_label": "empty",
+          "normalized_label": "empty"
+        },
+        {
+          "constraint_index": 4,
+          "category_domain": "transport",
+          "expression": "'metro'",
+          "raw_label": "metro",
+          "normalized_label": "metro"
+        },
+        {
+          "constraint_index": 4,
+          "category_domain": "activity",
+          "expression": "activity_type(activity)",
+          "raw_label": "attraction",
+          "normalized_label": "attraction"
+        },
+        {
+          "constraint_index": 4,
+          "category_domain": "activity",
+          "expression": "['attraction', 'airplane', 'train']",
+          "raw_label": "attraction",
+          "normalized_label": "attraction"
+        },
+        {
+          "constraint_index": 4,
+          "category_domain": "activity",
+          "expression": "['attraction', 'airplane', 'train']",
+          "raw_label": "airplane",
+          "normalized_label": "airplane"
+        },
+        {
+          "constraint_index": 4,
+          "category_domain": "activity",
+          "expression": "['attraction', 'airplane', 'train']",
+          "raw_label": "train",
+          "normalized_label": "train"
+        },
+        {
+          "constraint_index": 4,
+          "category_domain": "transport",
+          "expression": "innercity_transport_type(activity_transports(activity))",
+          "raw_label": "metro",
+          "normalized_label": "metro"
+        },
+        {
+          "constraint_index": 4,
+          "category_domain": "transport",
+          "expression": "'metro'",
+          "raw_label": "metro",
+          "normalized_label": "metro"
+        },
+        {
+          "constraint_index": 4,
+          "category_domain": "activity",
+          "expression": "activity_type(activity)",
+          "raw_label": "lunch",
+          "normalized_label": "lunch"
+        },
+        {
+          "constraint_index": 4,
+          "category_domain": "activity",
+          "expression": "['attraction', 'airplane', 'train']",
+          "raw_label": "attraction",
+          "normalized_label": "attraction"
+        },
+        {
+          "constraint_index": 4,
+          "category_domain": "activity",
+          "expression": "['attraction', 'airplane', 'train']",
+          "raw_label": "airplane",
+          "normalized_label": "airplane"
+        },
+        {
+          "constraint_index": 4,
+          "category_domain": "activity",
+          "expression": "['attraction', 'airplane', 'train']",
+          "raw_label": "train",
+          "normalized_label": "train"
+        },
+        {
+          "constraint_index": 4,
+          "category_domain": "transport",
+          "expression": "innercity_transport_type(activity_transports(activity))",
+          "raw_label": "metro",
+          "normalized_label": "metro"
+        },
+        {
+          "constraint_index": 4,
+          "category_domain": "transport",
+          "expression": "'metro'",
+          "raw_label": "metro",
+          "normalized_label": "metro"
+        },
+        {
+          "constraint_index": 4,
+          "category_domain": "activity",
+          "expression": "activity_type(activity)",
+          "raw_label": "attraction",
+          "normalized_label": "attraction"
+        },
+        {
+          "constraint_index": 4,
+          "category_domain": "activity",
+          "expression": "['attraction', 'airplane', 'train']",
+          "raw_label": "attraction",
+          "normalized_label": "attraction"
+        },
+        {
+          "constraint_index": 4,
+          "category_domain": "activity",
+          "expression": "['attraction', 'airplane', 'train']",
+          "raw_label": "airplane",
+          "normalized_label": "airplane"
+        },
+        {
+          "constraint_index": 4,
+          "category_domain": "activity",
+          "expression": "['attraction', 'airplane', 'train']",
+          "raw_label": "train",
+          "normalized_label": "train"
+        },
+        {
+          "constraint_index": 4,
+          "category_domain": "transport",
+          "expression": "innercity_transport_type(activity_transports(activity))",
+          "raw_label": "metro",
+          "normalized_label": "metro"
+        },
+        {
+          "constraint_index": 4,
+          "category_domain": "transport",
+          "expression": "'metro'",
+          "raw_label": "metro",
+          "normalized_label": "metro"
+        },
+        {
+          "constraint_index": 4,
+          "category_domain": "activity",
+          "expression": "activity_type(activity)",
+          "raw_label": "accommodation",
+          "normalized_label": "accommodation"
+        },
+        {
+          "constraint_index": 4,
+          "category_domain": "activity",
+          "expression": "['attraction', 'airplane', 'train']",
+          "raw_label": "attraction",
+          "normalized_label": "attraction"
+        },
+        {
+          "constraint_index": 4,
+          "category_domain": "activity",
+          "expression": "['attraction', 'airplane', 'train']",
+          "raw_label": "airplane",
+          "normalized_label": "airplane"
+        },
+        {
+          "constraint_index": 4,
+          "category_domain": "activity",
+          "expression": "['attraction', 'airplane', 'train']",
+          "raw_label": "train",
+          "normalized_label": "train"
+        },
+        {
+          "constraint_index": 4,
+          "category_domain": "transport",
+          "expression": "innercity_transport_type(activity_transports(activity))",
+          "raw_label": "metro",
+          "normalized_label": "metro"
+        },
+        {
+          "constraint_index": 4,
+          "category_domain": "transport",
+          "expression": "'metro'",
+          "raw_label": "metro",
+          "normalized_label": "metro"
+        },
+        {
+          "constraint_index": 5,
+          "category_domain": "transport",
+          "expression": "innercity_transport_type(activity_transports(activity))",
+          "raw_label": "empty",
+          "normalized_label": "empty"
+        },
+        {
+          "constraint_index": 5,
+          "category_domain": "transport",
+          "expression": "'taxi'",
+          "raw_label": "taxi",
+          "normalized_label": "taxi"
+        },
+        {
+          "constraint_index": 5,
+          "category_domain": "transport",
+          "expression": "innercity_transport_type(activity_transports(activity))",
+          "raw_label": "metro",
+          "normalized_label": "metro"
+        },
+        {
+          "constraint_index": 5,
+          "category_domain": "transport",
+          "expression": "'taxi'",
+          "raw_label": "taxi",
+          "normalized_label": "taxi"
+        },
+        {
+          "constraint_index": 5,
+          "category_domain": "transport",
+          "expression": "innercity_transport_type(activity_transports(activity))",
+          "raw_label": "metro",
+          "normalized_label": "metro"
+        },
+        {
+          "constraint_index": 5,
+          "category_domain": "transport",
+          "expression": "'taxi'",
+          "raw_label": "taxi",
+          "normalized_label": "taxi"
+        },
+        {
+          "constraint_index": 5,
+          "category_domain": "transport",
+          "expression": "innercity_transport_type(activity_transports(activity))",
+          "raw_label": "metro",
+          "normalized_label": "metro"
+        },
+        {
+          "constraint_index": 5,
+          "category_domain": "transport",
+          "expression": "'taxi'",
+          "raw_label": "taxi",
+          "normalized_label": "taxi"
+        },
+        {
+          "constraint_index": 5,
+          "category_domain": "transport",
+          "expression": "innercity_transport_type(activity_transports(activity))",
+          "raw_label": "metro",
+          "normalized_label": "metro"
+        },
+        {
+          "constraint_index": 5,
+          "category_domain": "transport",
+          "expression": "'taxi'",
+          "raw_label": "taxi",
+          "normalized_label": "taxi"
+        }
+      ],
+      "personal_errors": [],
+      "evaluation_errors": [],
+      "translation_errors": [],
+      "error_info": [
+        "The last activity should be an intercity transport.",
+        "Incorrect cost infomation of innercity transport in day 1, from Hangzhou Xiaoshan International Airport to West Lake Scenic Area, metro. [cost = price * people_number]"
+      ],
+      "passed": false,
+      "translated_plan": {
+        "people_number": 1,
+        "start_city": "Chongqing",
+        "target_city": "Hangzhou",
+        "itinerary": [
+          {
+            "day": 1,
+            "activities": [
+              {
+                "start_time": "05:16",
+                "end_time": "06:54",
+                "start": "Chongqing Jiangbei International Airport",
+                "end": "Hangzhou Xiaoshan International Airport",
+                "price": 612.57,
+                "cost": 612.57,
+                "FlightID": "FL372",
+                "type": "airplane",
+                "tickets": 1,
+                "transports": []
+              },
+              {
+                "position": "West Lake Scenic Area",
+                "type": "attraction",
+                "transports": [
+                  {
+                    "start": "Hangzhou Xiaoshan International Airport",
+                    "end": "Xiaoshan International Airport-Metro Station",
+                    "mode": "walk",
+                    "start_time": "06:54",
+                    "end_time": "06:55",
+                    "cost": 0,
+                    "distance": 0.12,
+                    "price": 0
+                  },
+                  {
+                    "start": "Xiaoshan International Airport-Metro Station",
+                    "end": "Shuicheng Bridge-Metro Station",
+                    "mode": "metro",
+                    "start_time": "06:55",
+                    "end_time": "07:49",
+                    "cost": 5,
+                    "distance": 27.29,
+                    "price": 6,
+                    "tickets": 1
+                  },
+                  {
+                    "start": "Shuicheng Bridge-Metro Station",
+                    "end": "West Lake Scenic Area",
+                    "mode": "walk",
+                    "start_time": "07:49",
+                    "end_time": "08:32",
+                    "cost": 0,
+                    "distance": 3.6,
+                    "price": 0
+                  }
+                ],
+                "price": 0.0,
+                "cost": 0.0,
+                "tickets": 1,
+                "start_time": "08:15",
+                "end_time": "10:15"
+              },
+              {
+                "position": "Lou Wai Lou (Gushan Road Store, West Lake Scenic Area)",
+                "type": "lunch",
+                "transports": [
+                  {
+                    "start": "West Lake Scenic Area",
+                    "end": "Shuicheng Bridge-Metro Station",
+                    "mode": "walk",
+                    "start_time": "10:15",
+                    "end_time": "10:58",
+                    "cost": 0,
+                    "distance": 3.6,
+                    "price": 0
+                  },
+                  {
+                    "start": "Shuicheng Bridge-Metro Station",
+                    "end": "Yellow Dragon Cave-Metro Station",
+                    "mode": "metro",
+                    "start_time": "10:58",
+                    "end_time": "11:11",
+                    "cost": 3,
+                    "distance": 6.89,
+                    "price": 3,
+                    "tickets": 1
+                  },
+                  {
+                    "start": "Yellow Dragon Cave-Metro Station",
+                    "end": "Lou Wai Lou (Gushan Road Store, West Lake Scenic Area)",
+                    "mode": "walk",
+                    "start_time": "11:11",
+                    "end_time": "11:31",
+                    "cost": 0,
+                    "distance": 1.68,
+                    "price": 0
+                  }
+                ],
+                "price": 177.0,
+                "cost": 177.0,
+                "start_time": "11:00",
+                "end_time": "12:00"
+              },
+              {
+                "position": "Leifeng Pagoda",
+                "type": "attraction",
+                "transports": [
+                  {
+                    "start": "Lou Wai Lou (Gushan Road Store, West Lake Scenic Area)",
+                    "end": "Yellow Dragon Cave-Metro Station",
+                    "mode": "walk",
+                    "start_time": "12:00",
+                    "end_time": "12:20",
+                    "cost": 0,
+                    "distance": 1.68,
+                    "price": 0
+                  },
+                  {
+                    "start": "Yellow Dragon Cave-Metro Station",
+                    "end": "Wushan Square-Metro Station",
+                    "mode": "metro",
+                    "start_time": "12:20",
+                    "end_time": "12:27",
+                    "cost": 2,
+                    "distance": 3.58,
+                    "price": 2,
+                    "tickets": 1
+                  },
+                  {
+                    "start": "Wushan Square-Metro Station",
+                    "end": "Leifeng Pagoda",
+                    "mode": "walk",
+                    "start_time": "12:27",
+                    "end_time": "12:36",
+                    "cost": 0,
+                    "distance": 0.82,
+                    "price": 0
+                  }
+                ],
+                "price": 0.0,
+                "cost": 0.0,
+                "tickets": 1,
+                "start_time": "12:30",
+                "end_time": "13:30"
+              },
+              {
+                "position": "Hangzhou West Lake Zhongwei Xiangyi Hotel",
+                "type": "accommodation",
+                "transports": [
+                  {
+                    "start": "Leifeng Pagoda",
+                    "end": "Wushan Square-Metro Station",
+                    "mode": "walk",
+                    "start_time": "13:30",
+                    "end_time": "13:39",
+                    "cost": 0,
+                    "distance": 0.82,
+                    "price": 0
+                  },
+                  {
+                    "start": "Wushan Square-Metro Station",
+                    "end": "Wan'an Bridge-Metro Station",
+                    "mode": "metro",
+                    "start_time": "13:39",
+                    "end_time": "13:43",
+                    "cost": 2,
+                    "distance": 2.3,
+                    "price": 2,
+                    "tickets": 1
+                  },
+                  {
+                    "start": "Wan'an Bridge-Metro Station",
+                    "end": "Hangzhou West Lake Zhongwei Xiangyi Hotel",
+                    "mode": "walk",
+                    "start_time": "13:43",
+                    "end_time": "13:50",
+                    "cost": 0,
+                    "distance": 0.64,
+                    "price": 0
+                  }
+                ],
+                "room_type": 2,
+                "price": 409,
+                "cost": 409,
+                "start_time": "14:00",
+                "end_time": "24:00",
+                "rooms": 1
+              }
+            ]
+          }
+        ]
+      },
+      "verifier_errors": [],
+      "schema_errors": [],
+      "translation_failures": []
+    },
+    "environment_context": {
+      "lang": "en"
+    },
+    "generation_metadata": {
+      "raw_response": "[{\"day\": 1,```json\n[\n    {\n        \"day\": 1,\n        \"activities\": [\n            {\n                \"start_time\": \"05:16\",\n                \"end_time\": \"06:54\",\n                \"start\": \"Chongqing Jiangbei International Airport\",\n                \"end\": \"Hangzhou Xiaoshan International Airport\",\n                \"price\": 612.57,\n                \"cost\": 612.57,\n                \"FlightID\": \"FL372\",\n                \"type\": \"airplane\",\n                \"tickets\": 1,\n                \"transports\": \"empty\"\n            },\n            {\n                \"position\": \"West Lake Scenic Area\",\n                \"type\": \"attraction\",\n                \"transports\": {\n                    \"from\": \"Hangzhou Xiaoshan International Airport\",\n                    \"to\": \"West Lake Scenic Area\",\n                    \"mode\": \"metro\",\n                    \"start_time\": \"06:54\",\n                    \"end_time\": \"08:08\",\n                    \"cost\": 5\n                },\n                \"price\": 0.0,\n                \"cost\": 0.0,\n                \"tickets\": 1,\n                \"start_time\": \"08:15\",\n                \"end_time\": \"10:15\"\n            },\n            {\n                \"position\": \"Lou Wai Lou (Gushan Road Store, West Lake Scenic Area)\",\n                \"type\": \"lunch\",\n                \"transports\": {\n                    \"from\": \"West Lake Scenic Area\",\n                    \"to\": \"Lou Wai Lou (Gushan Road Store, West Lake Scenic Area)\",\n                    \"mode\": \"metro\",\n                    \"start_time\": \"10:15\",\n                    \"end_time\": \"10:48\",\n                    \"cost\": 3\n                },\n                \"price\": 177.0,\n                \"cost\": 177.0,\n                \"start_time\": \"11:00\",\n                \"end_time\": \"12:00\"\n            },\n            {\n                \"position\": \"Leifeng Pagoda\",\n                \"type\": \"attraction\",\n                \"transports\": {\n                    \"from\": \"Lou Wai Lou (Gushan Road Store, West Lake Scenic Area)\",\n                    \"to\": \"Leifeng Pagoda\",\n                    \"mode\": \"metro\",\n                    \"start_time\": \"12:00\",\n                    \"end_time\": \"12:24\",\n                    \"cost\": 2\n                },\n                \"price\": 0.0,\n                \"cost\": 0.0,\n                \"tickets\": 1,\n                \"start_time\": \"12:30\",\n                \"end_time\": \"13:30\"\n            },\n            {\n                \"position\": \"Hangzhou West Lake Zhongwei Xiangyi Hotel\",\n                \"type\": \"accommodation\",\n                \"transports\": {\n                    \"from\": \"Leifeng Pagoda\",\n                    \"to\": \"Hangzhou West Lake Zhongwei Xiangyi Hotel\",\n                    \"mode\": \"metro\",\n                    \"start_time\": \"13:30\",\n                    \"end_time\": \"13:50\",\n                    \"cost\": 2\n                },\n                \"room_type\": 2,\n                \"price\": 409,\n                \"cost\": 409,\n                \"start_time\": \"14:00\",\n                \"end_time\": \"24:00\",\n                \"rooms\": 1\n            }\n        ]\n    }\n]\n```",
+      "input_tokens": 99281,
+      "output_tokens": 973,
+      "total_tokens": 100254,
+      "model_calls": 6,
+      "failed_model_calls": 0,
+      "elapsed_time_seconds": 36.89610695838928,
+      "llm_inference_time_seconds": 19.38692617416382,
+      "information_collection_time_seconds": 17.507534742355347,
+      "initial_generation_time_s": 36.896099915960804,
+      "initial_generation_tool_calls": 5535,
+      "initial_generation_tool_call_counts_by_type": {
+        "accommodations_select": 1,
+        "attractions_select": 1,
+        "goto": 1800,
+        "intercity_transport_select": 4,
+        "next_page": 128,
+        "poi_lat_lon_search": 3600,
+        "restaurants_select": 1
+      },
+      "shared_initialization_time_s": 37.3513044170104,
+      "shared_initialization_system_metrics": {
+        "tool_call_count": 5563,
+        "successful_tool_call_count": 5563,
+        "failed_tool_call_count": 0,
+        "verification_count": 1,
+        "tool_call_counts_by_type": {
+          "accommodations_select": 2,
+          "attractions_select": 3,
+          "goto": 1808,
+          "intercity_transport_select": 4,
+          "next_page": 128,
+          "poi_lat_lon_search": 3616,
+          "restaurants_select": 2
+        }
+      }
+    }
+  },
+  "initial_plan_hash": "fc076f6e82d0bb1eacec89d9c80c77928d610d68e786c436292b17d9e3e81a6f",
+  "initial_state_hash": "16a232048fb24aad165f5b161a85cd384486b32a951c4ab367171aac85a96ddc"
+}

@@ -1,0 +1,965 @@
+{
+  "run_id": "subset_train-r3-new",
+  "query_uid": "e20241028160410629558",
+  "state": {
+    "query_uid": "e20241028160410629558",
+    "problem": {
+      "uid": "e20241028160410629558",
+      "tag": "easy",
+      "start_city": "Nanjing",
+      "target_city": "Suzhou",
+      "days": 1,
+      "people_number": 1,
+      "limit_rooms": false,
+      "limits_room_type": false,
+      "hard_logic_py": [
+        "result=(day_count(plan)==1)",
+        "result=(people_count(plan)==1)",
+        "total_cost=0 \nfor activity in allactivities(plan):\n    total_cost+=activity_cost(activity)\n    total_cost += innercity_transport_cost(activity_transports(activity))\nresult=(total_cost<=1100)",
+        "result=True\nfor activity in allactivities(plan):\n  if activity_type(activity) in ['attraction', 'airplane', 'train'] and activity_tickets(activity)!=1: result=False\n  if innercity_transport_type(activity_transports(activity))=='metro'and metro_tickets(activity_transports(activity))!=1: result=False",
+        "result=True\nfor activity in allactivities(plan):\n  if innercity_transport_type(activity_transports(activity))=='taxi'and taxi_cars(activity_transports(activity))!=1: result=False"
+      ],
+      "nature_language": "Current location: Nanjing. I want to visit Suzhou alone for a day with a budget of 1100 RMB. Please provide me with a travel plan.",
+      "nature_language_en": "Current location: Nanjing. I want to visit Suzhou alone for a day with a budget of 1100 RMB. Please provide me with a travel plan."
+    },
+    "raw_initial_plan": [
+      {
+        "day": 1,
+        "activities": [
+          {
+            "start_time": "07:00",
+            "end_time": "08:12",
+            "start": "Nanjing Station",
+            "end": "Suzhou Station",
+            "price": 122.9,
+            "cost": 122.9,
+            "TrainID": "G7001",
+            "type": "train",
+            "tickets": 1,
+            "transports": "empty"
+          },
+          {
+            "position": "Humble Administrator's Garden",
+            "type": "attraction",
+            "transports": {
+              "from": "Suzhou Station",
+              "to": "Humble Administrator's Garden",
+              "mode": "metro",
+              "start_time": "08:12",
+              "end_time": "08:24",
+              "cost": 2
+            },
+            "price": 80.0,
+            "cost": 80.0,
+            "tickets": 1,
+            "start_time": "08:30",
+            "end_time": "10:30"
+          },
+          {
+            "position": "Wu's Garden Pavilion (Northwest Street Branch)",
+            "type": "lunch",
+            "transports": {
+              "from": "Humble Administrator's Garden",
+              "to": "Wu's Garden Pavilion (Northwest Street Branch)",
+              "mode": "metro",
+              "start_time": "10:30",
+              "end_time": "10:44",
+              "cost": 2
+            },
+            "price": 89,
+            "cost": 89,
+            "start_time": "11:00",
+            "end_time": "12:00"
+          },
+          {
+            "position": "Lingering Garden",
+            "type": "attraction",
+            "transports": {
+              "from": "Wu's Garden Pavilion (Northwest Street Branch)",
+              "to": "Lingering Garden",
+              "mode": "metro",
+              "start_time": "12:00",
+              "end_time": "12:12",
+              "cost": 2
+            },
+            "price": 55.0,
+            "cost": 55.0,
+            "tickets": 1,
+            "start_time": "12:20",
+            "end_time": "14:20"
+          },
+          {
+            "position": "Shantang Street",
+            "type": "attraction",
+            "transports": {
+              "from": "Lingering Garden",
+              "to": "Shantang Street",
+              "mode": "taxi",
+              "start_time": "14:20",
+              "end_time": "14:21",
+              "cost": 11
+            },
+            "price": 0.0,
+            "cost": 0.0,
+            "tickets": 1,
+            "start_time": "14:30",
+            "end_time": "15:30"
+          },
+          {
+            "position": "Suzhou Ancient Canal Cruise (Bai Juyi Pier at Shantang Street)",
+            "type": "attraction",
+            "transports": {
+              "from": "Shantang Street",
+              "to": "Suzhou Ancient Canal Cruise (Bai Juyi Pier at Shantang Street)",
+              "mode": "walk",
+              "start_time": "15:30",
+              "end_time": "15:32",
+              "cost": 0
+            },
+            "price": 95.0,
+            "cost": 95.0,
+            "tickets": 1,
+            "start_time": "15:40",
+            "end_time": "17:40"
+          },
+          {
+            "position": "Pine and Crane Tower (Guanqian Street Branch)",
+            "type": "dinner",
+            "transports": {
+              "from": "Suzhou Ancient Canal Cruise (Bai Juyi Pier at Shantang Street)",
+              "to": "Pine and Crane Tower (Guanqian Street Branch)",
+              "mode": "metro",
+              "start_time": "17:40",
+              "end_time": "17:57",
+              "cost": 2
+            },
+            "price": 172,
+            "cost": 172,
+            "start_time": "18:00",
+            "end_time": "19:00"
+          },
+          {
+            "start": "Suzhou North Station",
+            "end": "Nanjing South Railway Station",
+            "start_time": "20:02",
+            "end_time": "20:48",
+            "TrainID": "G16",
+            "type": "train",
+            "transports": {
+              "from": "Pine and Crane Tower (Guanqian Street Branch)",
+              "to": "Suzhou North Station",
+              "mode": "metro",
+              "start_time": "19:00",
+              "end_time": "19:30",
+              "cost": 4
+            },
+            "price": 122.9,
+            "cost": 122.9,
+            "tickets": 1
+          }
+        ]
+      }
+    ],
+    "repair_context": {
+      "go_train_info": "TrainID\tTrainType\tFrom\tTo\tBeginTime\tEndTime\tDuration\tprice\nG7029\tHigh-speed rail\tNanjing Station\tSuzhou Station\t05:36\t07:01\t1.42\t122.9\nG7179\tHigh-speed rail\tNanjing South Railway Station\tSuzhou North Station\t06:20\t07:24\t1.07\t122.9\nG7001\tHigh-speed rail\tNanjing Station\tSuzhou Station\t07:00\t08:12\t1.2\t122.9\nG7035\tHigh-speed rail\tNanjing Station\tSuzhou Station\t06:31\t07:55\t1.4\t122.9\nD2281\tEMU (Electric Multiple Unit)\tNanjing South Railway Station\tSuzhou Station\t06:32\t08:00\t1.47\t113.45\n",
+      "go_flight_info": "None",
+      "back_train_info": "TrainID\tTrainType\tFrom\tTo\tBeginTime\tEndTime\tDuration\tprice\nG16\tHigh-speed rail\tSuzhou North Station\tNanjing South Railway Station\t13:22\t14:06\t0.77\t122.9\nG4\tHigh-speed rail\tSuzhou North Station\tNanjing South Railway Station\t07:24\t08:15\t0.85\t122.9\nG222\tHigh-speed rail\tSuzhou North Station\tNanjing South Railway Station\t07:35\t08:26\t0.88\t122.9\nG1228\tHigh-speed rail\tSuzhou North Station\tNanjing South Railway Station\t12:00\t12:48\t0.8300000000000001\t122.9\nG1725\tHigh-speed rail\tSuzhou North Station\tNanjing South Railway Station\t12:05\t12:56\t0.88\t122.9\n",
+      "back_flight_info": "None",
+      "attraction_info": "name\ttype\tlat\tlon\topentime\tendtime\tprice\trecommendmintime\trecommendmaxtime\nHumble Administrator's Garden\tGarden\t31.330247\t120.63571\t07:30\t17:30\t80.0\t1.5\t3.0\nHanshan Temple\thistorical site\t31.316432\t120.574955\t07:30\t17:30\t18.0\t1.0\t2.0\nTiger Hill Scenic Area\tnatural scenery\t31.341612\t120.587391\t07:30\t18:00\t70.0\t2.0\t3.0\nLingering Garden\tGarden\t31.321729\t120.598973\t07:30\t17:30\t55.0\t3.0\t4.0\nSuzhou Museum\tMuseum/Memorial Hall\t31.329059\t120.634317\t09:00\t17:00\t0.0\t1.5\t3.0\nShantang Street\tcommercial district\t31.32316\t120.609569\t00:00\t24:00\t0.0\t0.5\t1.0\nPingjiang Road Historic District\thistorical site\t31.319908\t120.641291\t00:00\t24:00\t0.0\t1.5\t3.0\nMaster of the Nets Garden\tGarden\t31.304178\t120.640219\t07:30\t17:30\t40.0\t1.0\t1.5\nSuzhou Ancient Canal Cruise (Bai Juyi Pier at Shantang Street)\tCultural Landscape\t31.321365\t120.610935\t09:00\t21:00\t95.0\t2.0\t3.0\nThe Couple's Garden Retreat\tGarden\t31.32204\t120.644781\t07:30\t17:30\t25.0\t0.5\t2.0\nCanglang Pavilion\thistorical site\t31.300614\t120.632073\t07:30\t17:30\t20.0\t2.0\t3.0\nPanmen\thistorical site\t31.294881\t120.623312\t08:30\t21:00\t34.9\t3.0\t3.5\nSuzhou Museum West Branch\tMuseum/Memorial Hall\t31.295519\t120.555576\t09:00\t17:00\t0.0\t2.0\t3.0\nGolden Rooster Lake\tpark\t31.317298\t120.70789\t00:00\t24:00\t0.0\t1.0\t2.0\nSuzhou Water Tour\tCultural Tourism Area\t31.29735\t120.618024\t09:00\t20:30\t0.0\t2.0\t2.5\n",
+      "restaurant_info": "name\tlat\tlon\tprice\tcuisine\topentime\tendtime\trecommendedfood\nSun Shengxing Aozao Noodle House (Shantang Street Branch)\t31.3150572\t120.6038128\t57.0\tSnacks\t08:00\t22:00\tTraditional Aozhao Noodles, Signature Aozhao Duck, Crispy Fish Noodles, Stir-fried Eel, Crab Roe Noodles, Smoked Fish\nWu's Garden Pavilion (Northwest Street Branch)\t31.3216184\t120.6235644\t89.0\tJiangsu-Zhejiang cuisine\t10:00\t21:00\tSquirrel-shaped Mandarin Fish, Sizzling Rice Eel Paste, Egg Yolk Crispy Rice, Stir-fried Shrimp, Osmanthus Sweet Lotus Root, Hairy Crab with Rice Cakes, Tofu Skin Casserole\nMute's Pan-Fried Buns (Lindun Road Branch)\t31.3150866\t120.6284369\t22.0\tSnacks\t07:00\t19:00\tVegetarian Pan-Fried Buns, Tofu Pudding, Meat-Stuffed Zongzi, Bubble Wontons, Jasmine Head Soup, Beef Vermicelli Soup\nPine and Crane Tower (Guanqian Street Branch)\t31.3107042\t120.6257101\t172.0\tJiangsu-Zhejiang cuisine\t11:00\t20:30\tSquirrel-shaped Mandarin Fish, Stir-fried River Shrimp, Huaiyang-style Lion's Head Meatballs, Suzhou-style Braised Duck, Sizzling Rice Eel Paste, Crab Roe Tofu, Suzhou-style Date Paste Cake, Lion's Head Meatballs, Silver Fish and Water Shield Soup, Oil-exploded Shrimp\nXin Ju Feng Restaurant (Taijian Lane Branch)\t31.3104895\t120.6261014\t192.0\tJiangsu-Zhejiang cuisine\t11:00\t20:30\tStir-fried Shrimp, Sizzling Eel Strips, Squirrel-shaped Mandarin Fish, Cherry Juice Pork, Crab Roe Tofu, Jujube Paste Cake\n",
+      "accommodation_info": "name\tfeaturehoteltype\tlat\tlon\tprice\tnumbed\nGarbo Hotel (Suzhou Guanqian Street Shiquan Street Branch)\tFree parking\t31.292336\t120.635666\t277\t1\nDays Hotel Suzhou\tFree parking\t31.358922\t120.607198\t325\t1\nVienna International Hotel (Suzhou Railway Station North Square)\tFree parking\t31.333565\t120.610404\t325\t1\n",
+      "innercity_transport_info": "from Humble Administrator's Garden to Humble Administrator's Garden:  metro: empty.  taxi: empty.  walk: empty. \nfrom Humble Administrator's Garden to Suzhou Museum West Branch: metro: duration 29, cost 3. taxi: duration 12, cost 34.61. walk: duration 102, cost 0.0. \nfrom Humble Administrator's Garden to Suzhou Museum: taxi: duration 0, cost 11.0. walk: duration 2, cost 0.0. \nfrom Humble Administrator's Garden to Wu's Garden Pavilion (Northwest Street Branch): metro: duration 14, cost 2. taxi: duration 2, cost 11.0. walk: duration 18, cost 0.0. \nfrom Humble Administrator's Garden to Vienna International Hotel (Suzhou Railway Station North Square): metro: duration 14, cost 2. taxi: duration 3, cost 13.23. walk: duration 29, cost 0.0. \nfrom Humble Administrator's Garden to Suzhou Station: metro: duration 12, cost 2. taxi: duration 3, cost 12.99. walk: duration 28, cost 0.0. \nfrom Humble Administrator's Garden to Pingjiang Road Historic District: metro: duration 26, cost 2. taxi: duration 1, cost 11.0. walk: duration 15, cost 0.0. \nfrom Humble Administrator's Garden to Days Hotel Suzhou: metro: duration 21, cost 2. taxi: duration 6, cost 19.33. walk: duration 50, cost 0.0. \nfrom Humble Administrator's Garden to Canglang Pavilion: metro: duration 19, cost 2. taxi: duration 4, cost 16.26. walk: duration 39, cost 0.0. \nfrom Humble Administrator's Garden to The Couple's Garden Retreat: metro: duration 28, cost 2. taxi: duration 1, cost 11.0. walk: duration 15, cost 0.0. \nfrom Humble Administrator's Garden to Sun Shengxing Aozao Noodle House (Shantang Street Branch): metro: duration 20, cost 2. taxi: duration 5, cost 16.85. walk: duration 41, cost 0.0. \nfrom Humble Administrator's Garden to Suzhou Water Tour: metro: duration 22, cost 3. taxi: duration 6, cost 18.76. walk: duration 48, cost 0.0. \nfrom Humble Administrator's Garden to Pine and Crane Tower (Guanqian Street Branch): metro: duration 18, cost 2. taxi: duration 3, cost 12.98. walk: duration 28, cost 0.0. \nfrom Humble Administrator's Garden to Golden Rooster Lake: metro: duration 30, cost 3. taxi: duration 10, cost 29.26. walk: duration 84, cost 0.0. \nfrom Humble Administrator's Garden to Shantang Street: metro: duration 23, cost 2. taxi: duration 3, cost 13.83. walk: duration 31, cost 0.0. \nfrom Humble Administrator's Garden to Xin Ju Feng Restaurant (Taijian Lane Branch): metro: duration 17, cost 2. taxi: duration 3, cost 13.01. walk: duration 28, cost 0.0. \nfrom Humble Administrator's Garden to Master of the Nets Garden: metro: duration 20, cost 2. taxi: duration 4, cost 14.93. walk: duration 35, cost 0.0. \nfrom Humble Administrator's Garden to Panmen: metro: duration 20, cost 3. taxi: duration 6, cost 19.03. walk: duration 49, cost 0.0. \nfrom Humble Administrator's Garden to Mute's Pan-Fried Buns (Lindun Road Branch): metro: duration 13, cost 2. taxi: duration 2, cost 11.06. walk: duration 21, cost 0.0. \nfrom Humble Administrator's Garden to Garbo Hotel (Suzhou Guanqian Street Shiquan Street Branch): metro: duration 18, cost 3. taxi: duration 6, cost 19.41. walk: duration 50, cost 0.0. \nfrom Humble Administrator's Garden to Tiger Hill Scenic Area: metro: duration 28, cost 3. taxi: duration 7, cost 21.39. walk: duration 57, cost 0.0. \nfrom Humble Administrator's Garden to Hanshan Temple: metro: duration 35, cost 3. taxi: duration 8, cost 25.64. walk: duration 71, cost 0.0. \nfrom Humble Administrator's Garden to Suzhou North Station: metro: duration 28, cost 4. taxi: duration 15, cost 40.54. walk: duration 122, cost 0.0. \nfrom Humble Administrator's Garden to Suzhou Ancient Canal Cruise (Bai Juyi Pier at Shantang Street): metro: duration 21, cost 2. taxi: duration 3, cost 13.64. walk: duration 30, cost 0.0. \nfrom Humble Administrator's Garden to Lingering Garden: metro: duration 18, cost 2. taxi: duration 5, cost 17.38. walk: duration 43, cost 0.0. \nfrom Suzhou Museum West Branch to Humble Administrator's Garden: metro: duration 29, cost 3. taxi: duration 12, cost 34.61. walk: duration 102, cost 0.0. \nfrom Suzhou Museum West Branch to Suzhou Museum West Branch:  metro: empty.  taxi: empty.  walk: empty. \nfrom Suzhou Museum West Branch to Suzhou Museum: metro: duration 30, cost 3. taxi: duration 12, cost 33.99. walk: duration 100, cost 0.0. \nfrom Suzhou Museum West Branch to Wu's Garden Pavilion (Northwest Street Branch): metro: duration 23, cost 3. taxi: duration 10, cost 29.51. walk: duration 85, cost 0.0. \nfrom Suzhou Museum West Branch to Vienna International Hotel (Suzhou Railway Station North Square): metro: duration 20, cost 3. taxi: duration 10, cost 28.19. walk: duration 80, cost 0.0. \nfrom Suzhou Museum West Branch to Suzhou Station: metro: duration 18, cost 3. taxi: duration 9, cost 27.4. walk: duration 77, cost 0.0. \nfrom Suzhou Museum West Branch to Pingjiang Road Historic District: metro: duration 33, cost 3. taxi: duration 12, cost 34.79. walk: duration 103, cost 0.0. \nfrom Suzhou Museum West Branch to Days Hotel Suzhou: metro: duration 28, cost 3. taxi: duration 12, cost 34.72. walk: duration 102, cost 0.0. \nfrom Suzhou Museum West Branch to Canglang Pavilion: metro: duration 23, cost 3. taxi: duration 10, cost 30.27. walk: duration 87, cost 0.0. \nfrom Suzhou Museum West Branch to The Couple's Garden Retreat: metro: duration 36, cost 3. taxi: duration 13, cost 36.15. walk: duration 107, cost 0.0. \nfrom Suzhou Museum West Branch to Sun Shengxing Aozao Noodle House (Shantang Street Branch): metro: duration 21, cost 3. taxi: duration 7, cost 22.47. walk: duration 60, cost 0.0. \nfrom Suzhou Museum West Branch to Suzhou Water Tour: metro: duration 23, cost 3. taxi: duration 8, cost 25.52. walk: duration 71, cost 0.0. \nfrom Suzhou Museum West Branch to Pine and Crane Tower (Guanqian Street Branch): metro: duration 22, cost 3. taxi: duration 10, cost 28.8. walk: duration 82, cost 0.0. \nfrom Suzhou Museum West Branch to Golden Rooster Lake: metro: duration 41, cost 5. taxi: duration 22, cost 60.85. walk: duration 176, cost 0.0. \nfrom Suzhou Museum West Branch to Shantang Street: metro: duration 24, cost 3. taxi: duration 8, cost 25.64. walk: duration 71, cost 0.0. \nfrom Suzhou Museum West Branch to Xin Ju Feng Restaurant (Taijian Lane Branch): metro: duration 22, cost 3. taxi: duration 10, cost 28.91. walk: duration 82, cost 0.0. \nfrom Suzhou Museum West Branch to Master of the Nets Garden: metro: duration 24, cost 3. taxi: duration 12, cost 33.1. walk: duration 97, cost 0.0. \nfrom Suzhou Museum West Branch to Panmen: metro: duration 20, cost 3. taxi: duration 9, cost 27.27. walk: duration 77, cost 0.0. \nfrom Suzhou Museum West Branch to Mute's Pan-Fried Buns (Lindun Road Branch): metro: duration 20, cost 3. taxi: duration 10, cost 30.14. walk: duration 87, cost 0.0. \nfrom Suzhou Museum West Branch to Garbo Hotel (Suzhou Guanqian Street Shiquan Street Branch): metro: duration 20, cost 3. taxi: duration 11, cost 31.42. walk: duration 91, cost 0.0. \nfrom Suzhou Museum West Branch to Tiger Hill Scenic Area: metro: duration 27, cost 3. taxi: duration 8, cost 25.49. walk: duration 71, cost 0.0. \nfrom Suzhou Museum West Branch to Hanshan Temple: metro: duration 31, cost 3. taxi: duration 4, cost 15.07. walk: duration 35, cost 0.0. \nfrom Suzhou Museum West Branch to Suzhou North Station: metro: duration 38, cost 5. taxi: duration 24, cost 68.15. walk: duration 195, cost 0.0. \nfrom Suzhou Museum West Branch to Suzhou Ancient Canal Cruise (Bai Juyi Pier at Shantang Street): metro: duration 27, cost 3. taxi: duration 8, cost 25.7. walk: duration 71, cost 0.0. \nfrom Suzhou Museum West Branch to Lingering Garden: metro: duration 19, cost 3. taxi: duration 7, cost 22.38. walk: duration 60, cost 0.0. \nfrom Suzhou Museum to Humble Administrator's Garden: taxi: duration 0, cost 11.0. walk: duration 2, cost 0.0. \nfrom Suzhou Museum to Suzhou Museum West Branch: metro: duration 30, cost 3. taxi: duration 12, cost 33.99. walk: duration 100, cost 0.0. \nfrom Suzhou Museum to Suzhou Museum:  metro: empty.  taxi: empty.  walk: empty. \nfrom Suzhou Museum to Wu's Garden Pavilion (Northwest Street Branch): metro: duration 15, cost 2. taxi: duration 1, cost 11.0. walk: duration 15, cost 0.0. \nfrom Suzhou Museum to Vienna International Hotel (Suzhou Railway Station North Square): metro: duration 15, cost 2. taxi: duration 3, cost 12.86. walk: duration 27, cost 0.0. \nfrom Suzhou Museum to Suzhou Station: metro: duration 13, cost 2. taxi: duration 3, cost 12.52. walk: duration 26, cost 0.0. \nfrom Suzhou Museum to Pingjiang Road Historic District: metro: duration 27, cost 2. taxi: duration 1, cost 11.0. walk: duration 14, cost 0.0. \nfrom Suzhou Museum to Days Hotel Suzhou: metro: duration 22, cost 2. taxi: duration 6, cost 19.39. walk: duration 50, cost 0.0. \nfrom Suzhou Museum to Canglang Pavilion: metro: duration 20, cost 2. taxi: duration 4, cost 15.76. walk: duration 37, cost 0.0. \nfrom Suzhou Museum to The Couple's Garden Retreat: metro: duration 29, cost 2. taxi: duration 1, cost 11.0. walk: duration 15, cost 0.0. \nfrom Suzhou Museum to Sun Shengxing Aozao Noodle House (Shantang Street Branch): metro: duration 21, cost 2. taxi: duration 4, cost 16.22. walk: duration 39, cost 0.0. \nfrom Suzhou Museum to Suzhou Water Tour: metro: duration 23, cost 3. taxi: duration 5, cost 18.15. walk: duration 46, cost 0.0. \nfrom Suzhou Museum to Pine and Crane Tower (Guanqian Street Branch): metro: duration 19, cost 2. taxi: duration 3, cost 12.38. walk: duration 26, cost 0.0. \nfrom Suzhou Museum to Golden Rooster Lake: metro: duration 31, cost 3. taxi: duration 10, cost 29.63. walk: duration 85, cost 0.0. \nfrom Suzhou Museum to Shantang Street: metro: duration 24, cost 2. taxi: duration 3, cost 13.26. walk: duration 29, cost 0.0. \nfrom Suzhou Museum to Xin Ju Feng Restaurant (Taijian Lane Branch): metro: duration 18, cost 2. taxi: duration 3, cost 12.41. walk: duration 26, cost 0.0. \nfrom Suzhou Museum to Master of the Nets Garden: metro: duration 21, cost 2. taxi: duration 4, cost 14.55. walk: duration 33, cost 0.0. \nfrom Suzhou Museum to Panmen: metro: duration 21, cost 3. taxi: duration 5, cost 18.46. walk: duration 47, cost 0.0. \nfrom Suzhou Museum to Mute's Pan-Fried Buns (Lindun Road Branch): metro: duration 14, cost 2. taxi: duration 2, cost 11.0. walk: duration 19, cost 0.0. \nfrom Suzhou Museum to Garbo Hotel (Suzhou Guanqian Street Shiquan Street Branch): metro: duration 19, cost 3. taxi: duration 6, cost 18.96. walk: duration 48, cost 0.0. \nfrom Suzhou Museum to Tiger Hill Scenic Area: metro: duration 29, cost 3. taxi: duration 7, cost 21.07. walk: duration 56, cost 0.0. \nfrom Suzhou Museum to Hanshan Temple: metro: duration 36, cost 3. taxi: duration 8, cost 25.07. walk: duration 69, cost 0.0. \nfrom Suzhou Museum to Suzhou North Station: metro: duration 29, cost 4. taxi: duration 15, cost 41.18. walk: duration 123, cost 0.0. \nfrom Suzhou Museum to Suzhou Ancient Canal Cruise (Bai Juyi Pier at Shantang Street): metro: duration 22, cost 2. taxi: duration 3, cost 13.04. walk: duration 28, cost 0.0. \nfrom Suzhou Museum to Lingering Garden: metro: duration 19, cost 2. taxi: duration 5, cost 16.81. walk: duration 41, cost 0.0. \nfrom Wu's Garden Pavilion (Northwest Street Branch) to Humble Administrator's Garden: metro: duration 14, cost 2. taxi: duration 2, cost 11.0. walk: duration 18, cost 0.0. \nfrom Wu's Garden Pavilion (Northwest Street Branch) to Suzhou Museum West Branch: metro: duration 23, cost 3. taxi: duration 10, cost 29.51. walk: duration 85, cost 0.0. \nfrom Wu's Garden Pavilion (Northwest Street Branch) to Suzhou Museum: metro: duration 15, cost 2. taxi: duration 1, cost 11.0. walk: duration 15, cost 0.0. \nfrom Wu's Garden Pavilion (Northwest Street Branch) to Wu's Garden Pavilion (Northwest Street Branch):  metro: empty.  taxi: empty.  walk: empty. \nfrom Wu's Garden Pavilion (Northwest Street Branch) to Vienna International Hotel (Suzhou Railway Station North Square): metro: duration 10, cost 2. taxi: duration 2, cost 11.08. walk: duration 21, cost 0.0. \nfrom Wu's Garden Pavilion (Northwest Street Branch) to Suzhou Station: metro: duration 8, cost 2. taxi: duration 2, cost 11.0. walk: duration 18, cost 0.0. \nfrom Wu's Garden Pavilion (Northwest Street Branch) to Pingjiang Road Historic District: metro: duration 20, cost 2. taxi: duration 2, cost 11.0. walk: duration 20, cost 0.0. \nfrom Wu's Garden Pavilion (Northwest Street Branch) to Days Hotel Suzhou: metro: duration 19, cost 3. taxi: duration 6, cost 20.17. walk: duration 53, cost 0.0. \nfrom Wu's Garden Pavilion (Northwest Street Branch) to Canglang Pavilion: metro: duration 12, cost 2. taxi: duration 3, cost 13.33. walk: duration 29, cost 0.0. \nfrom Wu's Garden Pavilion (Northwest Street Branch) to The Couple's Garden Retreat: metro: duration 23, cost 2. taxi: duration 3, cost 11.77. walk: duration 24, cost 0.0. \nfrom Wu's Garden Pavilion (Northwest Street Branch) to Sun Shengxing Aozao Noodle House (Shantang Street Branch): metro: duration 14, cost 2. taxi: duration 3, cost 11.76. walk: duration 24, cost 0.0. \nfrom Wu's Garden Pavilion (Northwest Street Branch) to Suzhou Water Tour: metro: duration 15, cost 2. taxi: duration 4, cost 14.3. walk: duration 32, cost 0.0. \nfrom Wu's Garden Pavilion (Northwest Street Branch) to Pine and Crane Tower (Guanqian Street Branch): metro: duration 11, cost 2. taxi: duration 1, cost 11.0. walk: duration 14, cost 0.0. \nfrom Wu's Garden Pavilion (Northwest Street Branch) to Golden Rooster Lake: metro: duration 26, cost 3. taxi: duration 12, cost 32.84. walk: duration 96, cost 0.0. \nfrom Wu's Garden Pavilion (Northwest Street Branch) to Shantang Street: metro: duration 17, cost 2. taxi: duration 2, cost 11.0. walk: duration 16, cost 0.0. \nfrom Wu's Garden Pavilion (Northwest Street Branch) to Xin Ju Feng Restaurant (Taijian Lane Branch): metro: duration 11, cost 2. taxi: duration 1, cost 11.0. walk: duration 15, cost 0.0. \nfrom Wu's Garden Pavilion (Northwest Street Branch) to Master of the Nets Garden: metro: duration 13, cost 2. taxi: duration 3, cost 13.45. walk: duration 30, cost 0.0. \nfrom Wu's Garden Pavilion (Northwest Street Branch) to Panmen: metro: duration 13, cost 2. taxi: duration 4, cost 15.08. walk: duration 35, cost 0.0. \nfrom Wu's Garden Pavilion (Northwest Street Branch) to Mute's Pan-Fried Buns (Lindun Road Branch): metro: duration 7, cost 2. taxi: duration 1, cost 11.0. walk: duration 10, cost 0.0. \nfrom Wu's Garden Pavilion (Northwest Street Branch) to Garbo Hotel (Suzhou Guanqian Street Shiquan Street Branch): metro: duration 11, cost 2. taxi: duration 5, cost 16.76. walk: duration 41, cost 0.0. \nfrom Wu's Garden Pavilion (Northwest Street Branch) to Tiger Hill Scenic Area: metro: duration 23, cost 2. taxi: duration 6, cost 19.03. walk: duration 49, cost 0.0. \nfrom Wu's Garden Pavilion (Northwest Street Branch) to Hanshan Temple: metro: duration 31, cost 3. taxi: duration 6, cost 21.02. walk: duration 55, cost 0.0. \nfrom Wu's Garden Pavilion (Northwest Street Branch) to Suzhou North Station: metro: duration 27, cost 4. taxi: duration 16, cost 45.45. walk: duration 135, cost 0.0. \nfrom Wu's Garden Pavilion (Northwest Street Branch) to Suzhou Ancient Canal Cruise (Bai Juyi Pier at Shantang Street): metro: duration 15, cost 2. taxi: duration 1, cost 11.0. walk: duration 14, cost 0.0. \nfrom Wu's Garden Pavilion (Northwest Street Branch) to Lingering Garden: metro: duration 12, cost 2. taxi: duration 3, cost 12.89. walk: duration 28, cost 0.0. \nfrom Vienna International Hotel (Suzhou Railway Station North Square) to Humble Administrator's Garden: metro: duration 14, cost 2. taxi: duration 3, cost 13.23. walk: duration 29, cost 0.0. \nfrom Vienna International Hotel (Suzhou Railway Station North Square) to Suzhou Museum West Branch: metro: duration 20, cost 3. taxi: duration 10, cost 28.19. walk: duration 80, cost 0.0. \nfrom Vienna International Hotel (Suzhou Railway Station North Square) to Suzhou Museum: metro: duration 15, cost 2. taxi: duration 3, cost 12.86. walk: duration 27, cost 0.0. \nfrom Vienna International Hotel (Suzhou Railway Station North Square) to Wu's Garden Pavilion (Northwest Street Branch): metro: duration 10, cost 2. taxi: duration 2, cost 11.08. walk: duration 21, cost 0.0. \nfrom Vienna International Hotel (Suzhou Railway Station North Square) to Vienna International Hotel (Suzhou Railway Station North Square):  metro: empty.  taxi: empty.  walk: empty. \nfrom Vienna International Hotel (Suzhou Railway Station North Square) to Suzhou Station: taxi: duration 0, cost 11.0. walk: duration 5, cost 0.0. \nfrom Vienna International Hotel (Suzhou Railway Station North Square) to Pingjiang Road Historic District: metro: duration 23, cost 2. taxi: duration 4, cost 16.27. walk: duration 39, cost 0.0. \nfrom Vienna International Hotel (Suzhou Railway Station North Square) to Days Hotel Suzhou: metro: duration 16, cost 2. taxi: duration 4, cost 14.6. walk: duration 33, cost 0.0. \nfrom Vienna International Hotel (Suzhou Railway Station North Square) to Canglang Pavilion: metro: duration 14, cost 2. taxi: duration 6, cost 19.38. walk: duration 50, cost 0.0. \nfrom Vienna International Hotel (Suzhou Railway Station North Square) to The Couple's Garden Retreat: metro: duration 25, cost 3. taxi: duration 5, cost 16.99. walk: duration 42, cost 0.0. \nfrom Vienna International Hotel (Suzhou Railway Station North Square) to Sun Shengxing Aozao Noodle House (Shantang Street Branch): metro: duration 11, cost 2. taxi: duration 3, cost 12.21. walk: duration 25, cost 0.0. \nfrom Vienna International Hotel (Suzhou Railway Station North Square) to Suzhou Water Tour: metro: duration 16, cost 2. taxi: duration 6, cost 18.98. walk: duration 48, cost 0.0. \nfrom Vienna International Hotel (Suzhou Railway Station North Square) to Pine and Crane Tower (Guanqian Street Branch): metro: duration 12, cost 2. taxi: duration 4, cost 14.93. walk: duration 35, cost 0.0. \nfrom Vienna International Hotel (Suzhou Railway Station North Square) to Golden Rooster Lake: metro: duration 28, cost 3. taxi: duration 14, cost 37.78. walk: duration 113, cost 0.0. \nfrom Vienna International Hotel (Suzhou Railway Station North Square) to Shantang Street: metro: duration 14, cost 2. taxi: duration 1, cost 11.0. walk: duration 13, cost 0.0. \nfrom Vienna International Hotel (Suzhou Railway Station North Square) to Xin Ju Feng Restaurant (Taijian Lane Branch): metro: duration 13, cost 2. taxi: duration 4, cost 15.07. walk: duration 35, cost 0.0. \nfrom Vienna International Hotel (Suzhou Railway Station North Square) to Master of the Nets Garden: metro: duration 15, cost 2. taxi: duration 6, cost 19.82. walk: duration 51, cost 0.0. \nfrom Vienna International Hotel (Suzhou Railway Station North Square) to Panmen: metro: duration 15, cost 3. taxi: duration 6, cost 20.32. walk: duration 53, cost 0.0. \nfrom Vienna International Hotel (Suzhou Railway Station North Square) to Mute's Pan-Fried Buns (Lindun Road Branch): metro: duration 9, cost 2. taxi: duration 4, cost 14.05. walk: duration 32, cost 0.0. \nfrom Vienna International Hotel (Suzhou Railway Station North Square) to Garbo Hotel (Suzhou Guanqian Street Shiquan Street Branch): metro: duration 13, cost 3. taxi: duration 7, cost 22.78. walk: duration 61, cost 0.0. \nfrom Vienna International Hotel (Suzhou Railway Station North Square) to Tiger Hill Scenic Area: metro: duration 19, cost 2. taxi: duration 3, cost 12.98. walk: duration 28, cost 0.0. \nfrom Vienna International Hotel (Suzhou Railway Station North Square) to Hanshan Temple: metro: duration 26, cost 2. taxi: duration 5, cost 18.25. walk: duration 46, cost 0.0. \nfrom Vienna International Hotel (Suzhou Railway Station North Square) to Suzhou North Station: metro: duration 25, cost 4. taxi: duration 15, cost 41.0. walk: duration 123, cost 0.0. \nfrom Vienna International Hotel (Suzhou Railway Station North Square) to Suzhou Ancient Canal Cruise (Bai Juyi Pier at Shantang Street): metro: duration 15, cost 2. taxi: duration 2, cost 11.0. walk: duration 16, cost 0.0. \nfrom Vienna International Hotel (Suzhou Railway Station North Square) to Lingering Garden: metro: duration 9, cost 2. taxi: duration 2, cost 11.0. walk: duration 20, cost 0.0. \nfrom Suzhou Station to Humble Administrator's Garden: metro: duration 12, cost 2. taxi: duration 3, cost 12.99. walk: duration 28, cost 0.0. \nfrom Suzhou Station to Suzhou Museum West Branch: metro: duration 18, cost 3. taxi: duration 9, cost 27.4. walk: duration 77, cost 0.0. \nfrom Suzhou Station to Suzhou Museum: metro: duration 13, cost 2. taxi: duration 3, cost 12.52. walk: duration 26, cost 0.0. \nfrom Suzhou Station to Wu's Garden Pavilion (Northwest Street Branch): metro: duration 8, cost 2. taxi: duration 2, cost 11.0. walk: duration 18, cost 0.0. \nfrom Suzhou Station to Vienna International Hotel (Suzhou Railway Station North Square): taxi: duration 0, cost 11.0. walk: duration 5, cost 0.0. \nfrom Suzhou Station to Suzhou Station:  metro: empty.  taxi: empty.  walk: empty. \nfrom Suzhou Station to Pingjiang Road Historic District: metro: duration 21, cost 2. taxi: duration 4, cost 15.54. walk: duration 37, cost 0.0. \nfrom Suzhou Station to Days Hotel Suzhou: metro: duration 14, cost 2. taxi: duration 4, cost 16.1. walk: duration 39, cost 0.0. \nfrom Suzhou Station to Canglang Pavilion: metro: duration 12, cost 2. taxi: duration 5, cost 18.03. walk: duration 45, cost 0.0. \nfrom Suzhou Station to The Couple's Garden Retreat: metro: duration 23, cost 3. taxi: duration 5, cost 16.39. walk: duration 40, cost 0.0. \nfrom Suzhou Station to Sun Shengxing Aozao Noodle House (Shantang Street Branch): metro: duration 9, cost 2. taxi: duration 2, cost 11.0. walk: duration 21, cost 0.0. \nfrom Suzhou Station to Suzhou Water Tour: metro: duration 14, cost 2. taxi: duration 5, cost 17.49. walk: duration 43, cost 0.0. \nfrom Suzhou Station to Pine and Crane Tower (Guanqian Street Branch): metro: duration 10, cost 2. taxi: duration 3, cost 13.59. walk: duration 30, cost 0.0. \nfrom Suzhou Station to Golden Rooster Lake: metro: duration 26, cost 3. taxi: duration 14, cost 37.39. walk: duration 112, cost 0.0. \nfrom Suzhou Station to Shantang Street: metro: duration 12, cost 2. taxi: duration 1, cost 11.0. walk: duration 8, cost 0.0. \nfrom Suzhou Station to Xin Ju Feng Restaurant (Taijian Lane Branch): metro: duration 11, cost 2. taxi: duration 3, cost 13.73. walk: duration 30, cost 0.0. \nfrom Suzhou Station to Master of the Nets Garden: metro: duration 13, cost 2. taxi: duration 5, cost 18.63. walk: duration 47, cost 0.0. \nfrom Suzhou Station to Panmen: metro: duration 13, cost 3. taxi: duration 6, cost 18.85. walk: duration 48, cost 0.0. \nfrom Suzhou Station to Mute's Pan-Fried Buns (Lindun Road Branch): metro: duration 7, cost 2. taxi: duration 3, cost 12.86. walk: duration 27, cost 0.0. \nfrom Suzhou Station to Garbo Hotel (Suzhou Guanqian Street Shiquan Street Branch): metro: duration 11, cost 3. taxi: duration 7, cost 21.4. walk: duration 57, cost 0.0. \nfrom Suzhou Station to Tiger Hill Scenic Area: metro: duration 17, cost 2. taxi: duration 3, cost 13.77. walk: duration 31, cost 0.0. \nfrom Suzhou Station to Hanshan Temple: metro: duration 24, cost 2. taxi: duration 5, cost 17.72. walk: duration 44, cost 0.0. \nfrom Suzhou Station to Suzhou North Station: metro: duration 23, cost 4. taxi: duration 16, cost 42.77. walk: duration 128, cost 0.0. \nfrom Suzhou Station to Suzhou Ancient Canal Cruise (Bai Juyi Pier at Shantang Street): metro: duration 13, cost 2. taxi: duration 1, cost 11.0. walk: duration 11, cost 0.0. \nfrom Suzhou Station to Lingering Garden: metro: duration 7, cost 2. taxi: duration 2, cost 11.0. walk: duration 17, cost 0.0. \nfrom Pingjiang Road Historic District to Humble Administrator's Garden: metro: duration 26, cost 2. taxi: duration 1, cost 11.0. walk: duration 15, cost 0.0. \nfrom Pingjiang Road Historic District to Suzhou Museum West Branch: metro: duration 33, cost 3. taxi: duration 12, cost 34.79. walk: duration 103, cost 0.0. \nfrom Pingjiang Road Historic District to Suzhou Museum: metro: duration 27, cost 2. taxi: duration 1, cost 11.0. walk: duration 14, cost 0.0. \nfrom Pingjiang Road Historic District to Wu's Garden Pavilion (Northwest Street Branch): metro: duration 20, cost 2. taxi: duration 2, cost 11.0. walk: duration 20, cost 0.0. \nfrom Pingjiang Road Historic District to Vienna International Hotel (Suzhou Railway Station North Square): metro: duration 23, cost 2. taxi: duration 4, cost 16.27. walk: duration 39, cost 0.0. \nfrom Pingjiang Road Historic District to Suzhou Station: metro: duration 21, cost 2. taxi: duration 4, cost 15.54. walk: duration 37, cost 0.0. \nfrom Pingjiang Road Historic District to Pingjiang Road Historic District:  metro: empty.  taxi: empty.  walk: empty. \nfrom Pingjiang Road Historic District to Days Hotel Suzhou: metro: duration 32, cost 3. taxi: duration 8, cost 23.63. walk: duration 64, cost 0.0. \nfrom Pingjiang Road Historic District to Canglang Pavilion: metro: duration 18, cost 2. taxi: duration 3, cost 12.79. walk: duration 27, cost 0.0. \nfrom Pingjiang Road Historic District to The Couple's Garden Retreat: metro: duration 29, cost 2. taxi: duration 0, cost 11.0. walk: duration 4, cost 0.0. \nfrom Pingjiang Road Historic District to Sun Shengxing Aozao Noodle House (Shantang Street Branch): metro: duration 26, cost 2. taxi: duration 5, cost 17.33. walk: duration 43, cost 0.0. \nfrom Pingjiang Road Historic District to Suzhou Water Tour: metro: duration 22, cost 2. taxi: duration 5, cost 16.39. walk: duration 40, cost 0.0. \nfrom Pingjiang Road Historic District to Pine and Crane Tower (Guanqian Street Branch): metro: duration 21, cost 2. taxi: duration 2, cost 11.0. walk: duration 21, cost 0.0. \nfrom Pingjiang Road Historic District to Golden Rooster Lake: metro: duration 33, cost 3. taxi: duration 9, cost 26.91. walk: duration 76, cost 0.0. \nfrom Pingjiang Road Historic District to Shantang Street: metro: duration 29, cost 2. taxi: duration 4, cost 15.34. walk: duration 36, cost 0.0. \nfrom Pingjiang Road Historic District to Xin Ju Feng Restaurant (Taijian Lane Branch): metro: duration 18, cost 2. taxi: duration 2, cost 11.0. walk: duration 21, cost 0.0. \nfrom Pingjiang Road Historic District to Master of the Nets Garden: metro: duration 19, cost 2. taxi: duration 2, cost 11.0. walk: duration 20, cost 0.0. \nfrom Pingjiang Road Historic District to Panmen: metro: duration 20, cost 2. taxi: duration 4, cost 16.11. walk: duration 39, cost 0.0. \nfrom Pingjiang Road Historic District to Mute's Pan-Fried Buns (Lindun Road Branch): metro: duration 16, cost 2. taxi: duration 2, cost 11.0. walk: duration 16, cost 0.0. \nfrom Pingjiang Road Historic District to Garbo Hotel (Suzhou Guanqian Street Shiquan Street Branch): metro: duration 17, cost 2. taxi: duration 4, cost 15.56. walk: duration 37, cost 0.0. \nfrom Pingjiang Road Historic District to Tiger Hill Scenic Area: metro: duration 35, cost 3. taxi: duration 8, cost 24.53. walk: duration 67, cost 0.0. \nfrom Pingjiang Road Historic District to Hanshan Temple: metro: duration 43, cost 3. taxi: duration 9, cost 26.84. walk: duration 75, cost 0.0. \nfrom Pingjiang Road Historic District to Suzhou North Station: metro: duration 38, cost 4. taxi: duration 16, cost 45.59. walk: duration 135, cost 0.0. \nfrom Pingjiang Road Historic District to Suzhou Ancient Canal Cruise (Bai Juyi Pier at Shantang Street): metro: duration 27, cost 2. taxi: duration 4, cost 14.83. walk: duration 34, cost 0.0. \nfrom Pingjiang Road Historic District to Lingering Garden: metro: duration 24, cost 2. taxi: duration 6, cost 18.82. walk: duration 48, cost 0.0. \nfrom Days Hotel Suzhou to Humble Administrator's Garden: metro: duration 21, cost 2. taxi: duration 6, cost 19.33. walk: duration 50, cost 0.0. \nfrom Days Hotel Suzhou to Suzhou Museum West Branch: metro: duration 28, cost 3. taxi: duration 12, cost 34.72. walk: duration 102, cost 0.0. \nfrom Days Hotel Suzhou to Suzhou Museum: metro: duration 22, cost 2. taxi: duration 6, cost 19.39. walk: duration 50, cost 0.0. \nfrom Days Hotel Suzhou to Wu's Garden Pavilion (Northwest Street Branch): metro: duration 19, cost 3. taxi: duration 6, cost 20.17. walk: duration 53, cost 0.0. \nfrom Days Hotel Suzhou to Vienna International Hotel (Suzhou Railway Station North Square): metro: duration 16, cost 2. taxi: duration 4, cost 14.6. walk: duration 33, cost 0.0. \nfrom Days Hotel Suzhou to Suzhou Station: metro: duration 14, cost 2. taxi: duration 4, cost 16.1. walk: duration 39, cost 0.0. \nfrom Days Hotel Suzhou to Pingjiang Road Historic District: metro: duration 32, cost 3. taxi: duration 8, cost 23.63. walk: duration 64, cost 0.0. \nfrom Days Hotel Suzhou to Days Hotel Suzhou:  metro: empty.  taxi: empty.  walk: empty. \nfrom Days Hotel Suzhou to Canglang Pavilion: metro: duration 24, cost 3. taxi: duration 10, cost 28.8. walk: duration 82, cost 0.0. \nfrom Days Hotel Suzhou to The Couple's Garden Retreat: metro: duration 34, cost 3. taxi: duration 8, cost 23.71. walk: duration 65, cost 0.0. \nfrom Days Hotel Suzhou to Sun Shengxing Aozao Noodle House (Shantang Street Branch): metro: duration 21, cost 3. taxi: duration 7, cost 21.76. walk: duration 58, cost 0.0. \nfrom Days Hotel Suzhou to Suzhou Water Tour: metro: duration 26, cost 3. taxi: duration 10, cost 28.86. walk: duration 82, cost 0.0. \nfrom Days Hotel Suzhou to Pine and Crane Tower (Guanqian Street Branch): metro: duration 22, cost 3. taxi: duration 8, cost 24.4. walk: duration 67, cost 0.0. \nfrom Days Hotel Suzhou to Golden Rooster Lake: metro: duration 35, cost 4. taxi: duration 15, cost 42.56. walk: duration 127, cost 0.0. \nfrom Days Hotel Suzhou to Shantang Street: metro: duration 24, cost 3. taxi: duration 5, cost 18.6. walk: duration 47, cost 0.0. \nfrom Days Hotel Suzhou to Xin Ju Feng Restaurant (Taijian Lane Branch): metro: duration 22, cost 3. taxi: duration 8, cost 24.52. walk: duration 67, cost 0.0. \nfrom Days Hotel Suzhou to Master of the Nets Garden: metro: duration 25, cost 3. taxi: duration 10, cost 28.62. walk: duration 82, cost 0.0. \nfrom Days Hotel Suzhou to Panmen: metro: duration 25, cost 3. taxi: duration 10, cost 30.13. walk: duration 87, cost 0.0. \nfrom Days Hotel Suzhou to Mute's Pan-Fried Buns (Lindun Road Branch): metro: duration 18, cost 3. taxi: duration 7, cost 23.12. walk: duration 63, cost 0.0. \nfrom Days Hotel Suzhou to Garbo Hotel (Suzhou Guanqian Street Shiquan Street Branch): metro: duration 23, cost 3. taxi: duration 11, cost 32.22. walk: duration 94, cost 0.0. \nfrom Days Hotel Suzhou to Tiger Hill Scenic Area: metro: duration 25, cost 2. taxi: duration 4, cost 14.11. walk: duration 32, cost 0.0. \nfrom Days Hotel Suzhou to Hanshan Temple: metro: duration 32, cost 3. taxi: duration 8, cost 24.38. walk: duration 67, cost 0.0. \nfrom Days Hotel Suzhou to Suzhou North Station: metro: duration 22, cost 3. taxi: duration 11, cost 31.97. walk: duration 93, cost 0.0. \nfrom Days Hotel Suzhou to Suzhou Ancient Canal Cruise (Bai Juyi Pier at Shantang Street): metro: duration 25, cost 3. taxi: duration 6, cost 19.33. walk: duration 50, cost 0.0. \nfrom Days Hotel Suzhou to Lingering Garden: metro: duration 19, cost 3. taxi: duration 6, cost 19.39. walk: duration 50, cost 0.0. \nfrom Canglang Pavilion to Humble Administrator's Garden: metro: duration 19, cost 2. taxi: duration 4, cost 16.26. walk: duration 39, cost 0.0. \nfrom Canglang Pavilion to Suzhou Museum West Branch: metro: duration 23, cost 3. taxi: duration 10, cost 30.27. walk: duration 87, cost 0.0. \nfrom Canglang Pavilion to Suzhou Museum: metro: duration 20, cost 2. taxi: duration 4, cost 15.76. walk: duration 37, cost 0.0. \nfrom Canglang Pavilion to Wu's Garden Pavilion (Northwest Street Branch): metro: duration 12, cost 2. taxi: duration 3, cost 13.33. walk: duration 29, cost 0.0. \nfrom Canglang Pavilion to Vienna International Hotel (Suzhou Railway Station North Square): metro: duration 14, cost 2. taxi: duration 6, cost 19.38. walk: duration 50, cost 0.0. \nfrom Canglang Pavilion to Suzhou Station: metro: duration 12, cost 2. taxi: duration 5, cost 18.03. walk: duration 45, cost 0.0. \nfrom Canglang Pavilion to Pingjiang Road Historic District: metro: duration 18, cost 2. taxi: duration 3, cost 12.79. walk: duration 27, cost 0.0. \nfrom Canglang Pavilion to Days Hotel Suzhou: metro: duration 24, cost 3. taxi: duration 10, cost 28.8. walk: duration 82, cost 0.0. \nfrom Canglang Pavilion to Canglang Pavilion:  metro: empty.  taxi: empty.  walk: empty. \nfrom Canglang Pavilion to The Couple's Garden Retreat: metro: duration 21, cost 2. taxi: duration 3, cost 14.03. walk: duration 31, cost 0.0. \nfrom Canglang Pavilion to Sun Shengxing Aozao Noodle House (Shantang Street Branch): metro: duration 17, cost 2. taxi: duration 4, cost 15.66. walk: duration 37, cost 0.0. \nfrom Canglang Pavilion to Suzhou Water Tour: metro: duration 12, cost 2. taxi: duration 2, cost 11.0. walk: duration 16, cost 0.0. \nfrom Canglang Pavilion to Pine and Crane Tower (Guanqian Street Branch): metro: duration 12, cost 2. taxi: duration 1, cost 11.0. walk: duration 15, cost 0.0. \nfrom Canglang Pavilion to Golden Rooster Lake: metro: duration 25, cost 3. taxi: duration 11, cost 30.78. walk: duration 89, cost 0.0. \nfrom Canglang Pavilion to Shantang Street: metro: duration 20, cost 2. taxi: duration 4, cost 16.22. walk: duration 39, cost 0.0. \nfrom Canglang Pavilion to Xin Ju Feng Restaurant (Taijian Lane Branch): metro: duration 9, cost 2. taxi: duration 1, cost 11.0. walk: duration 14, cost 0.0. \nfrom Canglang Pavilion to Master of the Nets Garden: taxi: duration 1, cost 11.0. walk: duration 10, cost 0.0. \nfrom Canglang Pavilion to Panmen: metro: duration 10, cost 2. taxi: duration 1, cost 11.0. walk: duration 12, cost 0.0. \nfrom Canglang Pavilion to Mute's Pan-Fried Buns (Lindun Road Branch): metro: duration 7, cost 2. taxi: duration 2, cost 11.0. walk: duration 19, cost 0.0. \nfrom Canglang Pavilion to Garbo Hotel (Suzhou Guanqian Street Shiquan Street Branch): metro: duration 7, cost 2. taxi: duration 1, cost 11.0. walk: duration 11, cost 0.0. \nfrom Canglang Pavilion to Tiger Hill Scenic Area: metro: duration 27, cost 3. taxi: duration 9, cost 26.49. walk: duration 74, cost 0.0. \nfrom Canglang Pavilion to Hanshan Temple: metro: duration 34, cost 3. taxi: duration 8, cost 24.7. walk: duration 68, cost 0.0. \nfrom Canglang Pavilion to Suzhou North Station: metro: duration 31, cost 4. taxi: duration 20, cost 55.4. walk: duration 161, cost 0.0. \nfrom Canglang Pavilion to Suzhou Ancient Canal Cruise (Bai Juyi Pier at Shantang Street): metro: duration 18, cost 2. taxi: duration 4, cost 15.4. walk: duration 36, cost 0.0. \nfrom Canglang Pavilion to Lingering Garden: metro: duration 15, cost 2. taxi: duration 5, cost 18.44. walk: duration 47, cost 0.0. \nfrom The Couple's Garden Retreat to Humble Administrator's Garden: metro: duration 28, cost 2. taxi: duration 1, cost 11.0. walk: duration 15, cost 0.0. \nfrom The Couple's Garden Retreat to Suzhou Museum West Branch: metro: duration 36, cost 3. taxi: duration 13, cost 36.15. walk: duration 107, cost 0.0. \nfrom The Couple's Garden Retreat to Suzhou Museum: metro: duration 29, cost 2. taxi: duration 1, cost 11.0. walk: duration 15, cost 0.0. \nfrom The Couple's Garden Retreat to Wu's Garden Pavilion (Northwest Street Branch): metro: duration 23, cost 2. taxi: duration 3, cost 11.77. walk: duration 24, cost 0.0. \nfrom The Couple's Garden Retreat to Vienna International Hotel (Suzhou Railway Station North Square): metro: duration 25, cost 3. taxi: duration 5, cost 16.99. walk: duration 42, cost 0.0. \nfrom The Couple's Garden Retreat to Suzhou Station: metro: duration 23, cost 3. taxi: duration 5, cost 16.39. walk: duration 40, cost 0.0. \nfrom The Couple's Garden Retreat to Pingjiang Road Historic District: metro: duration 29, cost 2. taxi: duration 0, cost 11.0. walk: duration 4, cost 0.0. \nfrom The Couple's Garden Retreat to Days Hotel Suzhou: metro: duration 34, cost 3. taxi: duration 8, cost 23.71. walk: duration 65, cost 0.0. \nfrom The Couple's Garden Retreat to Canglang Pavilion: metro: duration 21, cost 2. taxi: duration 3, cost 14.03. walk: duration 31, cost 0.0. \nfrom The Couple's Garden Retreat to The Couple's Garden Retreat:  metro: empty.  taxi: empty.  walk: empty. \nfrom The Couple's Garden Retreat to Sun Shengxing Aozao Noodle House (Shantang Street Branch): metro: duration 29, cost 3. taxi: duration 5, cost 18.61. walk: duration 47, cost 0.0. \nfrom The Couple's Garden Retreat to Suzhou Water Tour: metro: duration 25, cost 2. taxi: duration 5, cost 17.79. walk: duration 44, cost 0.0. \nfrom The Couple's Garden Retreat to Pine and Crane Tower (Guanqian Street Branch): metro: duration 24, cost 2. taxi: duration 3, cost 12.43. walk: duration 26, cost 0.0. \nfrom The Couple's Garden Retreat to Golden Rooster Lake: metro: duration 32, cost 3. taxi: duration 9, cost 25.8. walk: duration 72, cost 0.0. \nfrom The Couple's Garden Retreat to Shantang Street: metro: duration 32, cost 3. taxi: duration 5, cost 16.44. walk: duration 40, cost 0.0. \nfrom The Couple's Garden Retreat to Xin Ju Feng Restaurant (Taijian Lane Branch): metro: duration 21, cost 2. taxi: duration 3, cost 12.37. walk: duration 26, cost 0.0. \nfrom The Couple's Garden Retreat to Master of the Nets Garden: metro: duration 22, cost 2. taxi: duration 3, cost 11.8. walk: duration 24, cost 0.0. \nfrom The Couple's Garden Retreat to Panmen: metro: duration 23, cost 2. taxi: duration 5, cost 17.44. walk: duration 43, cost 0.0. \nfrom The Couple's Garden Retreat to Mute's Pan-Fried Buns (Lindun Road Branch): metro: duration 18, cost 2. taxi: duration 2, cost 11.0. walk: duration 20, cost 0.0. \nfrom The Couple's Garden Retreat to Garbo Hotel (Suzhou Guanqian Street Shiquan Street Branch): metro: duration 20, cost 2. taxi: duration 5, cost 16.62. walk: duration 40, cost 0.0. \nfrom The Couple's Garden Retreat to Tiger Hill Scenic Area: metro: duration 38, cost 3. taxi: duration 8, cost 25.27. walk: duration 70, cost 0.0. \nfrom The Couple's Garden Retreat to Hanshan Temple: metro: duration 46, cost 3. taxi: duration 10, cost 28.06. walk: duration 80, cost 0.0. \nfrom The Couple's Garden Retreat to Suzhou North Station: metro: duration 39, cost 4. taxi: duration 16, cost 44.52. walk: duration 132, cost 0.0. \nfrom The Couple's Garden Retreat to Suzhou Ancient Canal Cruise (Bai Juyi Pier at Shantang Street): metro: duration 30, cost 2. taxi: duration 4, cost 15.98. walk: duration 38, cost 0.0. \nfrom The Couple's Garden Retreat to Lingering Garden: metro: duration 27, cost 3. taxi: duration 6, cost 19.96. walk: duration 52, cost 0.0. \nfrom Sun Shengxing Aozao Noodle House (Shantang Street Branch) to Humble Administrator's Garden: metro: duration 20, cost 2. taxi: duration 5, cost 16.85. walk: duration 41, cost 0.0. \nfrom Sun Shengxing Aozao Noodle House (Shantang Street Branch) to Suzhou Museum West Branch: metro: duration 21, cost 3. taxi: duration 7, cost 22.47. walk: duration 60, cost 0.0. \nfrom Sun Shengxing Aozao Noodle House (Shantang Street Branch) to Suzhou Museum: metro: duration 21, cost 2. taxi: duration 4, cost 16.22. walk: duration 39, cost 0.0. \nfrom Sun Shengxing Aozao Noodle House (Shantang Street Branch) to Wu's Garden Pavilion (Northwest Street Branch): metro: duration 14, cost 2. taxi: duration 3, cost 11.76. walk: duration 24, cost 0.0. \nfrom Sun Shengxing Aozao Noodle House (Shantang Street Branch) to Vienna International Hotel (Suzhou Railway Station North Square): metro: duration 11, cost 2. taxi: duration 3, cost 12.21. walk: duration 25, cost 0.0. \nfrom Sun Shengxing Aozao Noodle House (Shantang Street Branch) to Suzhou Station: metro: duration 9, cost 2. taxi: duration 2, cost 11.0. walk: duration 21, cost 0.0. \nfrom Sun Shengxing Aozao Noodle House (Shantang Street Branch) to Pingjiang Road Historic District: metro: duration 26, cost 2. taxi: duration 5, cost 17.33. walk: duration 43, cost 0.0. \nfrom Sun Shengxing Aozao Noodle House (Shantang Street Branch) to Days Hotel Suzhou: metro: duration 21, cost 3. taxi: duration 7, cost 21.76. walk: duration 58, cost 0.0. \nfrom Sun Shengxing Aozao Noodle House (Shantang Street Branch) to Canglang Pavilion: metro: duration 17, cost 2. taxi: duration 4, cost 15.66. walk: duration 37, cost 0.0. \nfrom Sun Shengxing Aozao Noodle House (Shantang Street Branch) to The Couple's Garden Retreat: metro: duration 29, cost 3. taxi: duration 5, cost 18.61. walk: duration 47, cost 0.0. \nfrom Sun Shengxing Aozao Noodle House (Shantang Street Branch) to Sun Shengxing Aozao Noodle House (Shantang Street Branch):  metro: empty.  taxi: empty.  walk: empty. \nfrom Sun Shengxing Aozao Noodle House (Shantang Street Branch) to Suzhou Water Tour: metro: duration 18, cost 2. taxi: duration 3, cost 13.04. walk: duration 28, cost 0.0. \nfrom Sun Shengxing Aozao Noodle House (Shantang Street Branch) to Pine and Crane Tower (Guanqian Street Branch): metro: duration 15, cost 2. taxi: duration 3, cost 12.19. walk: duration 25, cost 0.0. \nfrom Sun Shengxing Aozao Noodle House (Shantang Street Branch) to Golden Rooster Lake: metro: duration 33, cost 4. taxi: duration 14, cost 39.38. walk: duration 118, cost 0.0. \nfrom Sun Shengxing Aozao Noodle House (Shantang Street Branch) to Shantang Street: taxi: duration 1, cost 11.0. walk: duration 12, cost 0.0. \nfrom Sun Shengxing Aozao Noodle House (Shantang Street Branch) to Xin Ju Feng Restaurant (Taijian Lane Branch): metro: duration 15, cost 2. taxi: duration 3, cost 12.33. walk: duration 26, cost 0.0. \nfrom Sun Shengxing Aozao Noodle House (Shantang Street Branch) to Master of the Nets Garden: metro: duration 18, cost 2. taxi: duration 5, cost 17.54. walk: duration 44, cost 0.0. \nfrom Sun Shengxing Aozao Noodle House (Shantang Street Branch) to Panmen: metro: duration 16, cost 2. taxi: duration 4, cost 14.87. walk: duration 34, cost 0.0. \nfrom Sun Shengxing Aozao Noodle House (Shantang Street Branch) to Mute's Pan-Fried Buns (Lindun Road Branch): metro: duration 12, cost 2. taxi: duration 3, cost 12.9. walk: duration 28, cost 0.0. \nfrom Sun Shengxing Aozao Noodle House (Shantang Street Branch) to Garbo Hotel (Suzhou Guanqian Street Shiquan Street Branch): metro: duration 15, cost 3. taxi: duration 5, cost 18.5. walk: duration 47, cost 0.0. \nfrom Sun Shengxing Aozao Noodle House (Shantang Street Branch) to Tiger Hill Scenic Area: metro: duration 21, cost 2. taxi: duration 5, cost 16.37. walk: duration 40, cost 0.0. \nfrom Sun Shengxing Aozao Noodle House (Shantang Street Branch) to Hanshan Temple: metro: duration 28, cost 2. taxi: duration 4, cost 14.33. walk: duration 33, cost 0.0. \nfrom Sun Shengxing Aozao Noodle House (Shantang Street Branch) to Suzhou North Station: metro: duration 31, cost 4. taxi: duration 18, cost 50.65. walk: duration 149, cost 0.0. \nfrom Sun Shengxing Aozao Noodle House (Shantang Street Branch) to Suzhou Ancient Canal Cruise (Bai Juyi Pier at Shantang Street): metro: duration 19, cost 2. taxi: duration 1, cost 11.0. walk: duration 11, cost 0.0. \nfrom Sun Shengxing Aozao Noodle House (Shantang Street Branch) to Lingering Garden: taxi: duration 1, cost 11.0. walk: duration 10, cost 0.0. \nfrom Suzhou Water Tour to Humble Administrator's Garden: metro: duration 22, cost 3. taxi: duration 6, cost 18.76. walk: duration 48, cost 0.0. \nfrom Suzhou Water Tour to Suzhou Museum West Branch: metro: duration 23, cost 3. taxi: duration 8, cost 25.52. walk: duration 71, cost 0.0. \nfrom Suzhou Water Tour to Suzhou Museum: metro: duration 23, cost 3. taxi: duration 5, cost 18.15. walk: duration 46, cost 0.0. \nfrom Suzhou Water Tour to Wu's Garden Pavilion (Northwest Street Branch): metro: duration 15, cost 2. taxi: duration 4, cost 14.3. walk: duration 32, cost 0.0. \nfrom Suzhou Water Tour to Vienna International Hotel (Suzhou Railway Station North Square): metro: duration 16, cost 2. taxi: duration 6, cost 18.98. walk: duration 48, cost 0.0. \nfrom Suzhou Water Tour to Suzhou Station: metro: duration 14, cost 2. taxi: duration 5, cost 17.49. walk: duration 43, cost 0.0. \nfrom Suzhou Water Tour to Pingjiang Road Historic District: metro: duration 22, cost 2. taxi: duration 5, cost 16.39. walk: duration 40, cost 0.0. \nfrom Suzhou Water Tour to Days Hotel Suzhou: metro: duration 26, cost 3. taxi: duration 10, cost 28.86. walk: duration 82, cost 0.0. \nfrom Suzhou Water Tour to Canglang Pavilion: metro: duration 12, cost 2. taxi: duration 2, cost 11.0. walk: duration 16, cost 0.0. \nfrom Suzhou Water Tour to The Couple's Garden Retreat: metro: duration 25, cost 2. taxi: duration 5, cost 17.79. walk: duration 44, cost 0.0. \nfrom Suzhou Water Tour to Sun Shengxing Aozao Noodle House (Shantang Street Branch): metro: duration 18, cost 2. taxi: duration 3, cost 13.04. walk: duration 28, cost 0.0. \nfrom Suzhou Water Tour to Suzhou Water Tour:  metro: empty.  taxi: empty.  walk: empty. \nfrom Suzhou Water Tour to Pine and Crane Tower (Guanqian Street Branch): metro: duration 13, cost 2. taxi: duration 2, cost 11.0. walk: duration 19, cost 0.0. \nfrom Suzhou Water Tour to Golden Rooster Lake: metro: duration 30, cost 3. taxi: duration 13, cost 35.63. walk: duration 106, cost 0.0. \nfrom Suzhou Water Tour to Shantang Street: metro: duration 21, cost 2. taxi: duration 4, cost 15.1. walk: duration 35, cost 0.0. \nfrom Suzhou Water Tour to Xin Ju Feng Restaurant (Taijian Lane Branch): metro: duration 12, cost 2. taxi: duration 2, cost 11.0. walk: duration 19, cost 0.0. \nfrom Suzhou Water Tour to Master of the Nets Garden: metro: duration 13, cost 2. taxi: duration 3, cost 12.56. walk: duration 26, cost 0.0. \nfrom Suzhou Water Tour to Panmen: metro: duration 10, cost 2. taxi: duration 0, cost 11.0. walk: duration 6, cost 0.0. \nfrom Suzhou Water Tour to Mute's Pan-Fried Buns (Lindun Road Branch): metro: duration 10, cost 2. taxi: duration 3, cost 12.41. walk: duration 26, cost 0.0. \nfrom Suzhou Water Tour to Garbo Hotel (Suzhou Guanqian Street Shiquan Street Branch): metro: duration 9, cost 2. taxi: duration 2, cost 11.0. walk: duration 21, cost 0.0. \nfrom Suzhou Water Tour to Tiger Hill Scenic Area: metro: duration 28, cost 3. taxi: duration 8, cost 24.68. walk: duration 68, cost 0.0. \nfrom Suzhou Water Tour to Hanshan Temple: metro: duration 35, cost 3. taxi: duration 6, cost 20.85. walk: duration 55, cost 0.0. \nfrom Suzhou Water Tour to Suzhou North Station: metro: duration 34, cost 4. taxi: duration 21, cost 57.79. walk: duration 168, cost 0.0. \nfrom Suzhou Water Tour to Suzhou Ancient Canal Cruise (Bai Juyi Pier at Shantang Street): metro: duration 21, cost 2. taxi: duration 4, cost 14.31. walk: duration 32, cost 0.0. \nfrom Suzhou Water Tour to Lingering Garden: metro: duration 16, cost 2. taxi: duration 4, cost 16.09. walk: duration 39, cost 0.0. \nfrom Pine and Crane Tower (Guanqian Street Branch) to Humble Administrator's Garden: metro: duration 18, cost 2. taxi: duration 3, cost 12.98. walk: duration 28, cost 0.0. \nfrom Pine and Crane Tower (Guanqian Street Branch) to Suzhou Museum West Branch: metro: duration 22, cost 3. taxi: duration 10, cost 28.8. walk: duration 82, cost 0.0. \nfrom Pine and Crane Tower (Guanqian Street Branch) to Suzhou Museum: metro: duration 19, cost 2. taxi: duration 3, cost 12.38. walk: duration 26, cost 0.0. \nfrom Pine and Crane Tower (Guanqian Street Branch) to Wu's Garden Pavilion (Northwest Street Branch): metro: duration 11, cost 2. taxi: duration 1, cost 11.0. walk: duration 14, cost 0.0. \nfrom Pine and Crane Tower (Guanqian Street Branch) to Vienna International Hotel (Suzhou Railway Station North Square): metro: duration 12, cost 2. taxi: duration 4, cost 14.93. walk: duration 35, cost 0.0. \nfrom Pine and Crane Tower (Guanqian Street Branch) to Suzhou Station: metro: duration 10, cost 2. taxi: duration 3, cost 13.59. walk: duration 30, cost 0.0. \nfrom Pine and Crane Tower (Guanqian Street Branch) to Pingjiang Road Historic District: metro: duration 21, cost 2. taxi: duration 2, cost 11.0. walk: duration 21, cost 0.0. \nfrom Pine and Crane Tower (Guanqian Street Branch) to Days Hotel Suzhou: metro: duration 22, cost 3. taxi: duration 8, cost 24.4. walk: duration 67, cost 0.0. \nfrom Pine and Crane Tower (Guanqian Street Branch) to Canglang Pavilion: metro: duration 12, cost 2. taxi: duration 1, cost 11.0. walk: duration 15, cost 0.0. \nfrom Pine and Crane Tower (Guanqian Street Branch) to The Couple's Garden Retreat: metro: duration 24, cost 2. taxi: duration 3, cost 12.43. walk: duration 26, cost 0.0. \nfrom Pine and Crane Tower (Guanqian Street Branch) to Sun Shengxing Aozao Noodle House (Shantang Street Branch): metro: duration 15, cost 2. taxi: duration 3, cost 12.19. walk: duration 25, cost 0.0. \nfrom Pine and Crane Tower (Guanqian Street Branch) to Suzhou Water Tour: metro: duration 13, cost 2. taxi: duration 2, cost 11.0. walk: duration 19, cost 0.0. \nfrom Pine and Crane Tower (Guanqian Street Branch) to Pine and Crane Tower (Guanqian Street Branch):  metro: empty.  taxi: empty.  walk: empty. \nfrom Pine and Crane Tower (Guanqian Street Branch) to Golden Rooster Lake: metro: duration 29, cost 3. taxi: duration 11, cost 32.2. walk: duration 94, cost 0.0. \nfrom Pine and Crane Tower (Guanqian Street Branch) to Shantang Street: metro: duration 18, cost 2. taxi: duration 3, cost 11.93. walk: duration 24, cost 0.0. \nfrom Pine and Crane Tower (Guanqian Street Branch) to Xin Ju Feng Restaurant (Taijian Lane Branch): metro: duration 10, cost 2. taxi: duration 0, cost 11.0. walk: duration 0, cost 0.0. \nfrom Pine and Crane Tower (Guanqian Street Branch) to Master of the Nets Garden: metro: duration 13, cost 2. taxi: duration 2, cost 11.0. walk: duration 18, cost 0.0. \nfrom Pine and Crane Tower (Guanqian Street Branch) to Panmen: metro: duration 12, cost 2. taxi: duration 2, cost 11.0. walk: duration 21, cost 0.0. \nfrom Pine and Crane Tower (Guanqian Street Branch) to Mute's Pan-Fried Buns (Lindun Road Branch): metro: duration 7, cost 2. taxi: duration 0, cost 11.0. walk: duration 6, cost 0.0. \nfrom Pine and Crane Tower (Guanqian Street Branch) to Garbo Hotel (Suzhou Guanqian Street Shiquan Street Branch): metro: duration 10, cost 2. taxi: duration 3, cost 12.56. walk: duration 26, cost 0.0. \nfrom Pine and Crane Tower (Guanqian Street Branch) to Tiger Hill Scenic Area: metro: duration 24, cost 2. taxi: duration 7, cost 22.22. walk: duration 60, cost 0.0. \nfrom Pine and Crane Tower (Guanqian Street Branch) to Hanshan Temple: metro: duration 32, cost 3. taxi: duration 7, cost 21.76. walk: duration 58, cost 0.0. \nfrom Pine and Crane Tower (Guanqian Street Branch) to Suzhou North Station: metro: duration 30, cost 4. taxi: duration 18, cost 50.7. walk: duration 149, cost 0.0. \nfrom Pine and Crane Tower (Guanqian Street Branch) to Suzhou Ancient Canal Cruise (Bai Juyi Pier at Shantang Street): metro: duration 17, cost 2. taxi: duration 2, cost 11.13. walk: duration 22, cost 0.0. \nfrom Pine and Crane Tower (Guanqian Street Branch) to Lingering Garden: metro: duration 13, cost 2. taxi: duration 4, cost 14.58. walk: duration 33, cost 0.0. \nfrom Golden Rooster Lake to Humble Administrator's Garden: metro: duration 30, cost 3. taxi: duration 10, cost 29.26. walk: duration 84, cost 0.0. \nfrom Golden Rooster Lake to Suzhou Museum West Branch: metro: duration 41, cost 5. taxi: duration 22, cost 60.85. walk: duration 176, cost 0.0. \nfrom Golden Rooster Lake to Suzhou Museum: metro: duration 31, cost 3. taxi: duration 10, cost 29.63. walk: duration 85, cost 0.0. \nfrom Golden Rooster Lake to Wu's Garden Pavilion (Northwest Street Branch): metro: duration 26, cost 3. taxi: duration 12, cost 32.84. walk: duration 96, cost 0.0. \nfrom Golden Rooster Lake to Vienna International Hotel (Suzhou Railway Station North Square): metro: duration 28, cost 3. taxi: duration 14, cost 37.78. walk: duration 113, cost 0.0. \nfrom Golden Rooster Lake to Suzhou Station: metro: duration 26, cost 3. taxi: duration 14, cost 37.39. walk: duration 112, cost 0.0. \nfrom Golden Rooster Lake to Pingjiang Road Historic District: metro: duration 33, cost 3. taxi: duration 9, cost 26.91. walk: duration 76, cost 0.0. \nfrom Golden Rooster Lake to Days Hotel Suzhou: metro: duration 35, cost 4. taxi: duration 15, cost 42.56. walk: duration 127, cost 0.0. \nfrom Golden Rooster Lake to Canglang Pavilion: metro: duration 25, cost 3. taxi: duration 11, cost 30.78. walk: duration 89, cost 0.0. \nfrom Golden Rooster Lake to The Couple's Garden Retreat: metro: duration 32, cost 3. taxi: duration 9, cost 25.8. walk: duration 72, cost 0.0. \nfrom Golden Rooster Lake to Sun Shengxing Aozao Noodle House (Shantang Street Branch): metro: duration 33, cost 4. taxi: duration 14, cost 39.38. walk: duration 118, cost 0.0. \nfrom Golden Rooster Lake to Suzhou Water Tour: metro: duration 30, cost 3. taxi: duration 13, cost 35.63. walk: duration 106, cost 0.0. \nfrom Golden Rooster Lake to Pine and Crane Tower (Guanqian Street Branch): metro: duration 29, cost 3. taxi: duration 11, cost 32.2. walk: duration 94, cost 0.0. \nfrom Golden Rooster Lake to Golden Rooster Lake:  metro: empty.  taxi: empty.  walk: empty. \nfrom Golden Rooster Lake to Shantang Street: metro: duration 36, cost 4. taxi: duration 14, cost 37.53. walk: duration 112, cost 0.0. \nfrom Golden Rooster Lake to Xin Ju Feng Restaurant (Taijian Lane Branch): metro: duration 26, cost 3. taxi: duration 11, cost 32.08. walk: duration 93, cost 0.0. \nfrom Golden Rooster Lake to Master of the Nets Garden: metro: duration 26, cost 3. taxi: duration 9, cost 27.81. walk: duration 79, cost 0.0. \nfrom Golden Rooster Lake to Panmen: metro: duration 27, cost 3. taxi: duration 12, cost 34.19. walk: duration 101, cost 0.0. \nfrom Golden Rooster Lake to Mute's Pan-Fried Buns (Lindun Road Branch): metro: duration 23, cost 3. taxi: duration 11, cost 31.18. walk: duration 90, cost 0.0. \nfrom Golden Rooster Lake to Garbo Hotel (Suzhou Guanqian Street Shiquan Street Branch): metro: duration 23, cost 3. taxi: duration 11, cost 30.64. walk: duration 88, cost 0.0. \nfrom Golden Rooster Lake to Tiger Hill Scenic Area: metro: duration 42, cost 4. taxi: duration 17, cost 47.71. walk: duration 141, cost 0.0. \nfrom Golden Rooster Lake to Hanshan Temple: metro: duration 49, cost 4. taxi: duration 18, cost 51.64. walk: duration 151, cost 0.0. \nfrom Golden Rooster Lake to Suzhou North Station: metro: duration 33, cost 4. taxi: duration 19, cost 53.7. walk: duration 157, cost 0.0. \nfrom Golden Rooster Lake to Suzhou Ancient Canal Cruise (Bai Juyi Pier at Shantang Street): metro: duration 34, cost 3. taxi: duration 13, cost 37.04. walk: duration 110, cost 0.0. \nfrom Golden Rooster Lake to Lingering Garden: metro: duration 31, cost 4. taxi: duration 15, cost 41.4. walk: duration 124, cost 0.0. \nfrom Shantang Street to Humble Administrator's Garden: metro: duration 23, cost 2. taxi: duration 3, cost 13.83. walk: duration 31, cost 0.0. \nfrom Shantang Street to Suzhou Museum West Branch: metro: duration 24, cost 3. taxi: duration 8, cost 25.64. walk: duration 71, cost 0.0. \nfrom Shantang Street to Suzhou Museum: metro: duration 24, cost 2. taxi: duration 3, cost 13.26. walk: duration 29, cost 0.0. \nfrom Shantang Street to Wu's Garden Pavilion (Northwest Street Branch): metro: duration 17, cost 2. taxi: duration 2, cost 11.0. walk: duration 16, cost 0.0. \nfrom Shantang Street to Vienna International Hotel (Suzhou Railway Station North Square): metro: duration 14, cost 2. taxi: duration 1, cost 11.0. walk: duration 13, cost 0.0. \nfrom Shantang Street to Suzhou Station: metro: duration 12, cost 2. taxi: duration 1, cost 11.0. walk: duration 8, cost 0.0. \nfrom Shantang Street to Pingjiang Road Historic District: metro: duration 29, cost 2. taxi: duration 4, cost 15.34. walk: duration 36, cost 0.0. \nfrom Shantang Street to Days Hotel Suzhou: metro: duration 24, cost 3. taxi: duration 5, cost 18.6. walk: duration 47, cost 0.0. \nfrom Shantang Street to Canglang Pavilion: metro: duration 20, cost 2. taxi: duration 4, cost 16.22. walk: duration 39, cost 0.0. \nfrom Shantang Street to The Couple's Garden Retreat: metro: duration 32, cost 3. taxi: duration 5, cost 16.44. walk: duration 40, cost 0.0. \nfrom Shantang Street to Sun Shengxing Aozao Noodle House (Shantang Street Branch): taxi: duration 1, cost 11.0. walk: duration 12, cost 0.0. \nfrom Shantang Street to Suzhou Water Tour: metro: duration 21, cost 2. taxi: duration 4, cost 15.1. walk: duration 35, cost 0.0. \nfrom Shantang Street to Pine and Crane Tower (Guanqian Street Branch): metro: duration 18, cost 2. taxi: duration 3, cost 11.93. walk: duration 24, cost 0.0. \nfrom Shantang Street to Golden Rooster Lake: metro: duration 36, cost 4. taxi: duration 14, cost 37.53. walk: duration 112, cost 0.0. \nfrom Shantang Street to Shantang Street:  metro: empty.  taxi: empty.  walk: empty. \nfrom Shantang Street to Xin Ju Feng Restaurant (Taijian Lane Branch): metro: duration 18, cost 2. taxi: duration 3, cost 12.08. walk: duration 25, cost 0.0. \nfrom Shantang Street to Master of the Nets Garden: metro: duration 21, cost 2. taxi: duration 5, cost 17.29. walk: duration 43, cost 0.0. \nfrom Shantang Street to Panmen: metro: duration 19, cost 2. taxi: duration 5, cost 16.59. walk: duration 40, cost 0.0. \nfrom Shantang Street to Mute's Pan-Fried Buns (Lindun Road Branch): metro: duration 15, cost 2. taxi: duration 3, cost 11.72. walk: duration 24, cost 0.0. \nfrom Shantang Street to Garbo Hotel (Suzhou Guanqian Street Shiquan Street Branch): metro: duration 18, cost 3. taxi: duration 6, cost 19.49. walk: duration 50, cost 0.0. \nfrom Shantang Street to Tiger Hill Scenic Area: metro: duration 24, cost 2. taxi: duration 4, cost 14.99. walk: duration 35, cost 0.0. \nfrom Shantang Street to Hanshan Temple: metro: duration 31, cost 2. taxi: duration 5, cost 16.52. walk: duration 40, cost 0.0. \nfrom Shantang Street to Suzhou North Station: metro: duration 34, cost 4. taxi: duration 17, cost 46.06. walk: duration 136, cost 0.0. \nfrom Shantang Street to Suzhou Ancient Canal Cruise (Bai Juyi Pier at Shantang Street): metro: duration 22, cost 2. taxi: duration 0, cost 11.0. walk: duration 2, cost 0.0. \nfrom Shantang Street to Lingering Garden: taxi: duration 1, cost 11.0. walk: duration 12, cost 0.0. \nfrom Xin Ju Feng Restaurant (Taijian Lane Branch) to Humble Administrator's Garden: metro: duration 17, cost 2. taxi: duration 3, cost 13.01. walk: duration 28, cost 0.0. \nfrom Xin Ju Feng Restaurant (Taijian Lane Branch) to Suzhou Museum West Branch: metro: duration 22, cost 3. taxi: duration 10, cost 28.91. walk: duration 82, cost 0.0. \nfrom Xin Ju Feng Restaurant (Taijian Lane Branch) to Suzhou Museum: metro: duration 18, cost 2. taxi: duration 3, cost 12.41. walk: duration 26, cost 0.0. \nfrom Xin Ju Feng Restaurant (Taijian Lane Branch) to Wu's Garden Pavilion (Northwest Street Branch): metro: duration 11, cost 2. taxi: duration 1, cost 11.0. walk: duration 15, cost 0.0. \nfrom Xin Ju Feng Restaurant (Taijian Lane Branch) to Vienna International Hotel (Suzhou Railway Station North Square): metro: duration 13, cost 2. taxi: duration 4, cost 15.07. walk: duration 35, cost 0.0. \nfrom Xin Ju Feng Restaurant (Taijian Lane Branch) to Suzhou Station: metro: duration 11, cost 2. taxi: duration 3, cost 13.73. walk: duration 30, cost 0.0. \nfrom Xin Ju Feng Restaurant (Taijian Lane Branch) to Pingjiang Road Historic District: metro: duration 18, cost 2. taxi: duration 2, cost 11.0. walk: duration 21, cost 0.0. \nfrom Xin Ju Feng Restaurant (Taijian Lane Branch) to Days Hotel Suzhou: metro: duration 22, cost 3. taxi: duration 8, cost 24.52. walk: duration 67, cost 0.0. \nfrom Xin Ju Feng Restaurant (Taijian Lane Branch) to Canglang Pavilion: metro: duration 9, cost 2. taxi: duration 1, cost 11.0. walk: duration 14, cost 0.0. \nfrom Xin Ju Feng Restaurant (Taijian Lane Branch) to The Couple's Garden Retreat: metro: duration 21, cost 2. taxi: duration 3, cost 12.37. walk: duration 26, cost 0.0. \nfrom Xin Ju Feng Restaurant (Taijian Lane Branch) to Sun Shengxing Aozao Noodle House (Shantang Street Branch): metro: duration 15, cost 2. taxi: duration 3, cost 12.33. walk: duration 26, cost 0.0. \nfrom Xin Ju Feng Restaurant (Taijian Lane Branch) to Suzhou Water Tour: metro: duration 12, cost 2. taxi: duration 2, cost 11.0. walk: duration 19, cost 0.0. \nfrom Xin Ju Feng Restaurant (Taijian Lane Branch) to Pine and Crane Tower (Guanqian Street Branch): metro: duration 10, cost 2. taxi: duration 0, cost 11.0. walk: duration 0, cost 0.0. \nfrom Xin Ju Feng Restaurant (Taijian Lane Branch) to Golden Rooster Lake: metro: duration 26, cost 3. taxi: duration 11, cost 32.08. walk: duration 93, cost 0.0. \nfrom Xin Ju Feng Restaurant (Taijian Lane Branch) to Shantang Street: metro: duration 18, cost 2. taxi: duration 3, cost 12.08. walk: duration 25, cost 0.0. \nfrom Xin Ju Feng Restaurant (Taijian Lane Branch) to Xin Ju Feng Restaurant (Taijian Lane Branch):  metro: empty.  taxi: empty.  walk: empty. \nfrom Xin Ju Feng Restaurant (Taijian Lane Branch) to Master of the Nets Garden: metro: duration 10, cost 2. taxi: duration 2, cost 11.0. walk: duration 18, cost 0.0. \nfrom Xin Ju Feng Restaurant (Taijian Lane Branch) to Panmen: metro: duration 11, cost 2. taxi: duration 2, cost 11.0. walk: duration 21, cost 0.0. \nfrom Xin Ju Feng Restaurant (Taijian Lane Branch) to Mute's Pan-Fried Buns (Lindun Road Branch): metro: duration 6, cost 2. taxi: duration 0, cost 11.0. walk: duration 6, cost 0.0. \nfrom Xin Ju Feng Restaurant (Taijian Lane Branch) to Garbo Hotel (Suzhou Guanqian Street Shiquan Street Branch): metro: duration 8, cost 2. taxi: duration 3, cost 12.43. walk: duration 26, cost 0.0. \nfrom Xin Ju Feng Restaurant (Taijian Lane Branch) to Tiger Hill Scenic Area: metro: duration 25, cost 3. taxi: duration 7, cost 22.37. walk: duration 60, cost 0.0. \nfrom Xin Ju Feng Restaurant (Taijian Lane Branch) to Hanshan Temple: metro: duration 32, cost 3. taxi: duration 7, cost 21.9. walk: duration 58, cost 0.0. \nfrom Xin Ju Feng Restaurant (Taijian Lane Branch) to Suzhou North Station: metro: duration 30, cost 4. taxi: duration 18, cost 50.78. walk: duration 149, cost 0.0. \nfrom Xin Ju Feng Restaurant (Taijian Lane Branch) to Suzhou Ancient Canal Cruise (Bai Juyi Pier at Shantang Street): metro: duration 17, cost 2. taxi: duration 2, cost 11.28. walk: duration 22, cost 0.0. \nfrom Xin Ju Feng Restaurant (Taijian Lane Branch) to Lingering Garden: metro: duration 13, cost 2. taxi: duration 4, cost 14.74. walk: duration 34, cost 0.0. \nfrom Master of the Nets Garden to Humble Administrator's Garden: metro: duration 20, cost 2. taxi: duration 4, cost 14.93. walk: duration 35, cost 0.0. \nfrom Master of the Nets Garden to Suzhou Museum West Branch: metro: duration 24, cost 3. taxi: duration 12, cost 33.1. walk: duration 97, cost 0.0. \nfrom Master of the Nets Garden to Suzhou Museum: metro: duration 21, cost 2. taxi: duration 4, cost 14.55. walk: duration 33, cost 0.0. \nfrom Master of the Nets Garden to Wu's Garden Pavilion (Northwest Street Branch): metro: duration 13, cost 2. taxi: duration 3, cost 13.45. walk: duration 30, cost 0.0. \nfrom Master of the Nets Garden to Vienna International Hotel (Suzhou Railway Station North Square): metro: duration 15, cost 2. taxi: duration 6, cost 19.82. walk: duration 51, cost 0.0. \nfrom Master of the Nets Garden to Suzhou Station: metro: duration 13, cost 2. taxi: duration 5, cost 18.63. walk: duration 47, cost 0.0. \nfrom Master of the Nets Garden to Pingjiang Road Historic District: metro: duration 19, cost 2. taxi: duration 2, cost 11.0. walk: duration 20, cost 0.0. \nfrom Master of the Nets Garden to Days Hotel Suzhou: metro: duration 25, cost 3. taxi: duration 10, cost 28.62. walk: duration 82, cost 0.0. \nfrom Master of the Nets Garden to Canglang Pavilion: taxi: duration 1, cost 11.0. walk: duration 10, cost 0.0. \nfrom Master of the Nets Garden to The Couple's Garden Retreat: metro: duration 22, cost 2. taxi: duration 3, cost 11.8. walk: duration 24, cost 0.0. \nfrom Master of the Nets Garden to Sun Shengxing Aozao Noodle House (Shantang Street Branch): metro: duration 18, cost 2. taxi: duration 5, cost 17.54. walk: duration 44, cost 0.0. \nfrom Master of the Nets Garden to Suzhou Water Tour: metro: duration 13, cost 2. taxi: duration 3, cost 12.56. walk: duration 26, cost 0.0. \nfrom Master of the Nets Garden to Pine and Crane Tower (Guanqian Street Branch): metro: duration 13, cost 2. taxi: duration 2, cost 11.0. walk: duration 18, cost 0.0. \nfrom Master of the Nets Garden to Golden Rooster Lake: metro: duration 26, cost 3. taxi: duration 9, cost 27.81. walk: duration 79, cost 0.0. \nfrom Master of the Nets Garden to Shantang Street: metro: duration 21, cost 2. taxi: duration 5, cost 17.29. walk: duration 43, cost 0.0. \nfrom Master of the Nets Garden to Xin Ju Feng Restaurant (Taijian Lane Branch): metro: duration 10, cost 2. taxi: duration 2, cost 11.0. walk: duration 18, cost 0.0. \nfrom Master of the Nets Garden to Master of the Nets Garden:  metro: empty.  taxi: empty.  walk: empty. \nfrom Master of the Nets Garden to Panmen: metro: duration 11, cost 2. taxi: duration 2, cost 11.39. walk: duration 22, cost 0.0. \nfrom Master of the Nets Garden to Mute's Pan-Fried Buns (Lindun Road Branch): metro: duration 8, cost 2. taxi: duration 2, cost 11.0. walk: duration 19, cost 0.0. \nfrom Master of the Nets Garden to Garbo Hotel (Suzhou Guanqian Street Shiquan Street Branch): metro: duration 8, cost 2. taxi: duration 2, cost 11.0. walk: duration 16, cost 0.0. \nfrom Master of the Nets Garden to Tiger Hill Scenic Area: metro: duration 28, cost 3. taxi: duration 9, cost 27.52. walk: duration 78, cost 0.0. \nfrom Master of the Nets Garden to Hanshan Temple: metro: duration 35, cost 3. taxi: duration 9, cost 26.96. walk: duration 76, cost 0.0. \nfrom Master of the Nets Garden to Suzhou North Station: metro: duration 32, cost 4. taxi: duration 19, cost 53.44. walk: duration 156, cost 0.0. \nfrom Master of the Nets Garden to Suzhou Ancient Canal Cruise (Bai Juyi Pier at Shantang Street): metro: duration 19, cost 2. taxi: duration 5, cost 16.52. walk: duration 40, cost 0.0. \nfrom Master of the Nets Garden to Lingering Garden: metro: duration 16, cost 2. taxi: duration 6, cost 20.04. walk: duration 52, cost 0.0. \nfrom Panmen to Humble Administrator's Garden: metro: duration 20, cost 3. taxi: duration 6, cost 19.03. walk: duration 49, cost 0.0. \nfrom Panmen to Suzhou Museum West Branch: metro: duration 20, cost 3. taxi: duration 9, cost 27.27. walk: duration 77, cost 0.0. \nfrom Panmen to Suzhou Museum: metro: duration 21, cost 3. taxi: duration 5, cost 18.46. walk: duration 47, cost 0.0. \nfrom Panmen to Wu's Garden Pavilion (Northwest Street Branch): metro: duration 13, cost 2. taxi: duration 4, cost 15.08. walk: duration 35, cost 0.0. \nfrom Panmen to Vienna International Hotel (Suzhou Railway Station North Square): metro: duration 15, cost 3. taxi: duration 6, cost 20.32. walk: duration 53, cost 0.0. \nfrom Panmen to Suzhou Station: metro: duration 13, cost 3. taxi: duration 6, cost 18.85. walk: duration 48, cost 0.0. \nfrom Panmen to Pingjiang Road Historic District: metro: duration 20, cost 2. taxi: duration 4, cost 16.11. walk: duration 39, cost 0.0. \nfrom Panmen to Days Hotel Suzhou: metro: duration 25, cost 3. taxi: duration 10, cost 30.13. walk: duration 87, cost 0.0. \nfrom Panmen to Canglang Pavilion: metro: duration 10, cost 2. taxi: duration 1, cost 11.0. walk: duration 12, cost 0.0. \nfrom Panmen to The Couple's Garden Retreat: metro: duration 23, cost 2. taxi: duration 5, cost 17.44. walk: duration 43, cost 0.0. \nfrom Panmen to Sun Shengxing Aozao Noodle House (Shantang Street Branch): metro: duration 16, cost 2. taxi: duration 4, cost 14.87. walk: duration 34, cost 0.0. \nfrom Panmen to Suzhou Water Tour: metro: duration 10, cost 2. taxi: duration 0, cost 11.0. walk: duration 6, cost 0.0. \nfrom Panmen to Pine and Crane Tower (Guanqian Street Branch): metro: duration 12, cost 2. taxi: duration 2, cost 11.0. walk: duration 21, cost 0.0. \nfrom Panmen to Golden Rooster Lake: metro: duration 27, cost 3. taxi: duration 12, cost 34.19. walk: duration 101, cost 0.0. \nfrom Panmen to Shantang Street: metro: duration 19, cost 2. taxi: duration 5, cost 16.59. walk: duration 40, cost 0.0. \nfrom Panmen to Xin Ju Feng Restaurant (Taijian Lane Branch): metro: duration 11, cost 2. taxi: duration 2, cost 11.0. walk: duration 21, cost 0.0. \nfrom Panmen to Master of the Nets Garden: metro: duration 11, cost 2. taxi: duration 2, cost 11.39. walk: duration 22, cost 0.0. \nfrom Panmen to Panmen:  metro: empty.  taxi: empty.  walk: empty. \nfrom Panmen to Mute's Pan-Fried Buns (Lindun Road Branch): metro: duration 8, cost 2. taxi: duration 3, cost 12.72. walk: duration 27, cost 0.0. \nfrom Panmen to Garbo Hotel (Suzhou Guanqian Street Shiquan Street Branch): metro: duration 5, cost 2. taxi: duration 1, cost 11.0. walk: duration 14, cost 0.0. \nfrom Panmen to Tiger Hill Scenic Area: metro: duration 26, cost 3. taxi: duration 9, cost 26.43. walk: duration 74, cost 0.0. \nfrom Panmen to Hanshan Temple: metro: duration 33, cost 3. taxi: duration 7, cost 22.85. walk: duration 62, cost 0.0. \nfrom Panmen to Suzhou North Station: metro: duration 33, cost 5. taxi: duration 21, cost 58.66. walk: duration 170, cost 0.0. \nfrom Panmen to Suzhou Ancient Canal Cruise (Bai Juyi Pier at Shantang Street): metro: duration 19, cost 2. taxi: duration 4, cost 15.77. walk: duration 37, cost 0.0. \nfrom Panmen to Lingering Garden: metro: duration 14, cost 2. taxi: duration 5, cost 17.9. walk: duration 45, cost 0.0. \nfrom Mute's Pan-Fried Buns (Lindun Road Branch) to Humble Administrator's Garden: metro: duration 13, cost 2. taxi: duration 2, cost 11.06. walk: duration 21, cost 0.0. \nfrom Mute's Pan-Fried Buns (Lindun Road Branch) to Suzhou Museum West Branch: metro: duration 20, cost 3. taxi: duration 10, cost 30.14. walk: duration 87, cost 0.0. \nfrom Mute's Pan-Fried Buns (Lindun Road Branch) to Suzhou Museum: metro: duration 14, cost 2. taxi: duration 2, cost 11.0. walk: duration 19, cost 0.0. \nfrom Mute's Pan-Fried Buns (Lindun Road Branch) to Wu's Garden Pavilion (Northwest Street Branch): metro: duration 7, cost 2. taxi: duration 1, cost 11.0. walk: duration 10, cost 0.0. \nfrom Mute's Pan-Fried Buns (Lindun Road Branch) to Vienna International Hotel (Suzhou Railway Station North Square): metro: duration 9, cost 2. taxi: duration 4, cost 14.05. walk: duration 32, cost 0.0. \nfrom Mute's Pan-Fried Buns (Lindun Road Branch) to Suzhou Station: metro: duration 7, cost 2. taxi: duration 3, cost 12.86. walk: duration 27, cost 0.0. \nfrom Mute's Pan-Fried Buns (Lindun Road Branch) to Pingjiang Road Historic District: metro: duration 16, cost 2. taxi: duration 2, cost 11.0. walk: duration 16, cost 0.0. \nfrom Mute's Pan-Fried Buns (Lindun Road Branch) to Days Hotel Suzhou: metro: duration 18, cost 3. taxi: duration 7, cost 23.12. walk: duration 63, cost 0.0. \nfrom Mute's Pan-Fried Buns (Lindun Road Branch) to Canglang Pavilion: metro: duration 7, cost 2. taxi: duration 2, cost 11.0. walk: duration 19, cost 0.0. \nfrom Mute's Pan-Fried Buns (Lindun Road Branch) to The Couple's Garden Retreat: metro: duration 18, cost 2. taxi: duration 2, cost 11.0. walk: duration 20, cost 0.0. \nfrom Mute's Pan-Fried Buns (Lindun Road Branch) to Sun Shengxing Aozao Noodle House (Shantang Street Branch): metro: duration 12, cost 2. taxi: duration 3, cost 12.9. walk: duration 28, cost 0.0. \nfrom Mute's Pan-Fried Buns (Lindun Road Branch) to Suzhou Water Tour: metro: duration 10, cost 2. taxi: duration 3, cost 12.41. walk: duration 26, cost 0.0. \nfrom Mute's Pan-Fried Buns (Lindun Road Branch) to Pine and Crane Tower (Guanqian Street Branch): metro: duration 7, cost 2. taxi: duration 0, cost 11.0. walk: duration 6, cost 0.0. \nfrom Mute's Pan-Fried Buns (Lindun Road Branch) to Golden Rooster Lake: metro: duration 23, cost 3. taxi: duration 11, cost 31.18. walk: duration 90, cost 0.0. \nfrom Mute's Pan-Fried Buns (Lindun Road Branch) to Shantang Street: metro: duration 15, cost 2. taxi: duration 3, cost 11.72. walk: duration 24, cost 0.0. \nfrom Mute's Pan-Fried Buns (Lindun Road Branch) to Xin Ju Feng Restaurant (Taijian Lane Branch): metro: duration 6, cost 2. taxi: duration 0, cost 11.0. walk: duration 6, cost 0.0. \nfrom Mute's Pan-Fried Buns (Lindun Road Branch) to Master of the Nets Garden: metro: duration 8, cost 2. taxi: duration 2, cost 11.0. walk: duration 19, cost 0.0. \nfrom Mute's Pan-Fried Buns (Lindun Road Branch) to Panmen: metro: duration 8, cost 2. taxi: duration 3, cost 12.72. walk: duration 27, cost 0.0. \nfrom Mute's Pan-Fried Buns (Lindun Road Branch) to Mute's Pan-Fried Buns (Lindun Road Branch):  metro: empty.  taxi: empty.  walk: empty. \nfrom Mute's Pan-Fried Buns (Lindun Road Branch) to Garbo Hotel (Suzhou Guanqian Street Shiquan Street Branch): metro: duration 6, cost 2. taxi: duration 3, cost 13.85. walk: duration 31, cost 0.0. \nfrom Mute's Pan-Fried Buns (Lindun Road Branch) to Tiger Hill Scenic Area: metro: duration 21, cost 3. taxi: duration 7, cost 21.81. walk: duration 58, cost 0.0. \nfrom Mute's Pan-Fried Buns (Lindun Road Branch) to Hanshan Temple: metro: duration 29, cost 3. taxi: duration 7, cost 22.53. walk: duration 61, cost 0.0. \nfrom Mute's Pan-Fried Buns (Lindun Road Branch) to Suzhou North Station: metro: duration 26, cost 4. taxi: duration 17, cost 48.38. walk: duration 143, cost 0.0. \nfrom Mute's Pan-Fried Buns (Lindun Road Branch) to Suzhou Ancient Canal Cruise (Bai Juyi Pier at Shantang Street): metro: duration 13, cost 2. taxi: duration 2, cost 11.02. walk: duration 21, cost 0.0. \nfrom Mute's Pan-Fried Buns (Lindun Road Branch) to Lingering Garden: metro: duration 10, cost 2. taxi: duration 4, cost 14.85. walk: duration 34, cost 0.0. \nfrom Garbo Hotel (Suzhou Guanqian Street Shiquan Street Branch) to Humble Administrator's Garden: metro: duration 18, cost 3. taxi: duration 6, cost 19.41. walk: duration 50, cost 0.0. \nfrom Garbo Hotel (Suzhou Guanqian Street Shiquan Street Branch) to Suzhou Museum West Branch: metro: duration 20, cost 3. taxi: duration 11, cost 31.42. walk: duration 91, cost 0.0. \nfrom Garbo Hotel (Suzhou Guanqian Street Shiquan Street Branch) to Suzhou Museum: metro: duration 19, cost 3. taxi: duration 6, cost 18.96. walk: duration 48, cost 0.0. \nfrom Garbo Hotel (Suzhou Guanqian Street Shiquan Street Branch) to Wu's Garden Pavilion (Northwest Street Branch): metro: duration 11, cost 2. taxi: duration 5, cost 16.76. walk: duration 41, cost 0.0. \nfrom Garbo Hotel (Suzhou Guanqian Street Shiquan Street Branch) to Vienna International Hotel (Suzhou Railway Station North Square): metro: duration 13, cost 3. taxi: duration 7, cost 22.78. walk: duration 61, cost 0.0. \nfrom Garbo Hotel (Suzhou Guanqian Street Shiquan Street Branch) to Suzhou Station: metro: duration 11, cost 3. taxi: duration 7, cost 21.4. walk: duration 57, cost 0.0. \nfrom Garbo Hotel (Suzhou Guanqian Street Shiquan Street Branch) to Pingjiang Road Historic District: metro: duration 17, cost 2. taxi: duration 4, cost 15.56. walk: duration 37, cost 0.0. \nfrom Garbo Hotel (Suzhou Guanqian Street Shiquan Street Branch) to Days Hotel Suzhou: metro: duration 23, cost 3. taxi: duration 11, cost 32.22. walk: duration 94, cost 0.0. \nfrom Garbo Hotel (Suzhou Guanqian Street Shiquan Street Branch) to Canglang Pavilion: metro: duration 7, cost 2. taxi: duration 1, cost 11.0. walk: duration 11, cost 0.0. \nfrom Garbo Hotel (Suzhou Guanqian Street Shiquan Street Branch) to The Couple's Garden Retreat: metro: duration 20, cost 2. taxi: duration 5, cost 16.62. walk: duration 40, cost 0.0. \nfrom Garbo Hotel (Suzhou Guanqian Street Shiquan Street Branch) to Sun Shengxing Aozao Noodle House (Shantang Street Branch): metro: duration 15, cost 3. taxi: duration 5, cost 18.5. walk: duration 47, cost 0.0. \nfrom Garbo Hotel (Suzhou Guanqian Street Shiquan Street Branch) to Suzhou Water Tour: metro: duration 9, cost 2. taxi: duration 2, cost 11.0. walk: duration 21, cost 0.0. \nfrom Garbo Hotel (Suzhou Guanqian Street Shiquan Street Branch) to Pine and Crane Tower (Guanqian Street Branch): metro: duration 10, cost 2. taxi: duration 3, cost 12.56. walk: duration 26, cost 0.0. \nfrom Garbo Hotel (Suzhou Guanqian Street Shiquan Street Branch) to Golden Rooster Lake: metro: duration 23, cost 3. taxi: duration 11, cost 30.64. walk: duration 88, cost 0.0. \nfrom Garbo Hotel (Suzhou Guanqian Street Shiquan Street Branch) to Shantang Street: metro: duration 18, cost 3. taxi: duration 6, cost 19.49. walk: duration 50, cost 0.0. \nfrom Garbo Hotel (Suzhou Guanqian Street Shiquan Street Branch) to Xin Ju Feng Restaurant (Taijian Lane Branch): metro: duration 8, cost 2. taxi: duration 3, cost 12.43. walk: duration 26, cost 0.0. \nfrom Garbo Hotel (Suzhou Guanqian Street Shiquan Street Branch) to Master of the Nets Garden: metro: duration 8, cost 2. taxi: duration 2, cost 11.0. walk: duration 16, cost 0.0. \nfrom Garbo Hotel (Suzhou Guanqian Street Shiquan Street Branch) to Panmen: metro: duration 5, cost 2. taxi: duration 1, cost 11.0. walk: duration 14, cost 0.0. \nfrom Garbo Hotel (Suzhou Guanqian Street Shiquan Street Branch) to Mute's Pan-Fried Buns (Lindun Road Branch): metro: duration 6, cost 2. taxi: duration 3, cost 13.85. walk: duration 31, cost 0.0. \nfrom Garbo Hotel (Suzhou Guanqian Street Shiquan Street Branch) to Garbo Hotel (Suzhou Guanqian Street Shiquan Street Branch):  metro: empty.  taxi: empty.  walk: empty. \nfrom Garbo Hotel (Suzhou Guanqian Street Shiquan Street Branch) to Tiger Hill Scenic Area: metro: duration 25, cost 3. taxi: duration 10, cost 29.69. walk: duration 85, cost 0.0. \nfrom Garbo Hotel (Suzhou Guanqian Street Shiquan Street Branch) to Hanshan Temple: metro: duration 32, cost 3. taxi: duration 9, cost 26.99. walk: duration 76, cost 0.0. \nfrom Garbo Hotel (Suzhou Guanqian Street Shiquan Street Branch) to Suzhou North Station: metro: duration 30, cost 5. taxi: duration 21, cost 59.42. walk: duration 172, cost 0.0. \nfrom Garbo Hotel (Suzhou Guanqian Street Shiquan Street Branch) to Suzhou Ancient Canal Cruise (Bai Juyi Pier at Shantang Street): metro: duration 17, cost 2. taxi: duration 5, cost 18.66. walk: duration 47, cost 0.0. \nfrom Garbo Hotel (Suzhou Guanqian Street Shiquan Street Branch) to Lingering Garden: metro: duration 13, cost 3. taxi: duration 7, cost 21.42. walk: duration 57, cost 0.0. \nfrom Tiger Hill Scenic Area to Humble Administrator's Garden: metro: duration 28, cost 3. taxi: duration 7, cost 21.39. walk: duration 57, cost 0.0. \nfrom Tiger Hill Scenic Area to Suzhou Museum West Branch: metro: duration 27, cost 3. taxi: duration 8, cost 25.49. walk: duration 71, cost 0.0. \nfrom Tiger Hill Scenic Area to Suzhou Museum: metro: duration 29, cost 3. taxi: duration 7, cost 21.07. walk: duration 56, cost 0.0. \nfrom Tiger Hill Scenic Area to Wu's Garden Pavilion (Northwest Street Branch): metro: duration 23, cost 2. taxi: duration 6, cost 19.03. walk: duration 49, cost 0.0. \nfrom Tiger Hill Scenic Area to Vienna International Hotel (Suzhou Railway Station North Square): metro: duration 19, cost 2. taxi: duration 3, cost 12.98. walk: duration 28, cost 0.0. \nfrom Tiger Hill Scenic Area to Suzhou Station: metro: duration 17, cost 2. taxi: duration 3, cost 13.77. walk: duration 31, cost 0.0. \nfrom Tiger Hill Scenic Area to Pingjiang Road Historic District: metro: duration 35, cost 3. taxi: duration 8, cost 24.53. walk: duration 67, cost 0.0. \nfrom Tiger Hill Scenic Area to Days Hotel Suzhou: metro: duration 25, cost 2. taxi: duration 4, cost 14.11. walk: duration 32, cost 0.0. \nfrom Tiger Hill Scenic Area to Canglang Pavilion: metro: duration 27, cost 3. taxi: duration 9, cost 26.49. walk: duration 74, cost 0.0. \nfrom Tiger Hill Scenic Area to The Couple's Garden Retreat: metro: duration 38, cost 3. taxi: duration 8, cost 25.27. walk: duration 70, cost 0.0. \nfrom Tiger Hill Scenic Area to Sun Shengxing Aozao Noodle House (Shantang Street Branch): metro: duration 21, cost 2. taxi: duration 5, cost 16.37. walk: duration 40, cost 0.0. \nfrom Tiger Hill Scenic Area to Suzhou Water Tour: metro: duration 28, cost 3. taxi: duration 8, cost 24.68. walk: duration 68, cost 0.0. \nfrom Tiger Hill Scenic Area to Pine and Crane Tower (Guanqian Street Branch): metro: duration 24, cost 2. taxi: duration 7, cost 22.22. walk: duration 60, cost 0.0. \nfrom Tiger Hill Scenic Area to Golden Rooster Lake: metro: duration 42, cost 4. taxi: duration 17, cost 47.71. walk: duration 141, cost 0.0. \nfrom Tiger Hill Scenic Area to Shantang Street: metro: duration 24, cost 2. taxi: duration 4, cost 14.99. walk: duration 35, cost 0.0. \nfrom Tiger Hill Scenic Area to Xin Ju Feng Restaurant (Taijian Lane Branch): metro: duration 25, cost 3. taxi: duration 7, cost 22.37. walk: duration 60, cost 0.0. \nfrom Tiger Hill Scenic Area to Master of the Nets Garden: metro: duration 28, cost 3. taxi: duration 9, cost 27.52. walk: duration 78, cost 0.0. \nfrom Tiger Hill Scenic Area to Panmen: metro: duration 26, cost 3. taxi: duration 9, cost 26.43. walk: duration 74, cost 0.0. \nfrom Tiger Hill Scenic Area to Mute's Pan-Fried Buns (Lindun Road Branch): metro: duration 21, cost 3. taxi: duration 7, cost 21.81. walk: duration 58, cost 0.0. \nfrom Tiger Hill Scenic Area to Garbo Hotel (Suzhou Guanqian Street Shiquan Street Branch): metro: duration 25, cost 3. taxi: duration 10, cost 29.69. walk: duration 85, cost 0.0. \nfrom Tiger Hill Scenic Area to Tiger Hill Scenic Area:  metro: empty.  taxi: empty.  walk: empty. \nfrom Tiger Hill Scenic Area to Hanshan Temple: metro: duration 31, cost 2. taxi: duration 4, cost 15.31. walk: duration 36, cost 0.0. \nfrom Tiger Hill Scenic Area to Suzhou North Station: metro: duration 35, cost 4. taxi: duration 15, cost 41.42. walk: duration 124, cost 0.0. \nfrom Tiger Hill Scenic Area to Suzhou Ancient Canal Cruise (Bai Juyi Pier at Shantang Street): metro: duration 28, cost 2. taxi: duration 4, cost 15.8. walk: duration 38, cost 0.0. \nfrom Tiger Hill Scenic Area to Lingering Garden: metro: duration 19, cost 2. taxi: duration 3, cost 13.33. walk: duration 29, cost 0.0. \nfrom Hanshan Temple to Humble Administrator's Garden: metro: duration 35, cost 3. taxi: duration 8, cost 25.64. walk: duration 71, cost 0.0. \nfrom Hanshan Temple to Suzhou Museum West Branch: metro: duration 31, cost 3. taxi: duration 4, cost 15.07. walk: duration 35, cost 0.0. \nfrom Hanshan Temple to Suzhou Museum: metro: duration 36, cost 3. taxi: duration 8, cost 25.07. walk: duration 69, cost 0.0. \nfrom Hanshan Temple to Wu's Garden Pavilion (Northwest Street Branch): metro: duration 31, cost 3. taxi: duration 6, cost 21.02. walk: duration 55, cost 0.0. \nfrom Hanshan Temple to Vienna International Hotel (Suzhou Railway Station North Square): metro: duration 26, cost 2. taxi: duration 5, cost 18.25. walk: duration 46, cost 0.0. \nfrom Hanshan Temple to Suzhou Station: metro: duration 24, cost 2. taxi: duration 5, cost 17.72. walk: duration 44, cost 0.0. \nfrom Hanshan Temple to Pingjiang Road Historic District: metro: duration 43, cost 3. taxi: duration 9, cost 26.84. walk: duration 75, cost 0.0. \nfrom Hanshan Temple to Days Hotel Suzhou: metro: duration 32, cost 3. taxi: duration 8, cost 24.38. walk: duration 67, cost 0.0. \nfrom Hanshan Temple to Canglang Pavilion: metro: duration 34, cost 3. taxi: duration 8, cost 24.7. walk: duration 68, cost 0.0. \nfrom Hanshan Temple to The Couple's Garden Retreat: metro: duration 46, cost 3. taxi: duration 10, cost 28.06. walk: duration 80, cost 0.0. \nfrom Hanshan Temple to Sun Shengxing Aozao Noodle House (Shantang Street Branch): metro: duration 28, cost 2. taxi: duration 4, cost 14.33. walk: duration 33, cost 0.0. \nfrom Hanshan Temple to Suzhou Water Tour: metro: duration 35, cost 3. taxi: duration 6, cost 20.85. walk: duration 55, cost 0.0. \nfrom Hanshan Temple to Pine and Crane Tower (Guanqian Street Branch): metro: duration 32, cost 3. taxi: duration 7, cost 21.76. walk: duration 58, cost 0.0. \nfrom Hanshan Temple to Golden Rooster Lake: metro: duration 49, cost 4. taxi: duration 18, cost 51.64. walk: duration 151, cost 0.0. \nfrom Hanshan Temple to Shantang Street: metro: duration 31, cost 2. taxi: duration 5, cost 16.52. walk: duration 40, cost 0.0. \nfrom Hanshan Temple to Xin Ju Feng Restaurant (Taijian Lane Branch): metro: duration 32, cost 3. taxi: duration 7, cost 21.9. walk: duration 58, cost 0.0. \nfrom Hanshan Temple to Master of the Nets Garden: metro: duration 35, cost 3. taxi: duration 9, cost 26.96. walk: duration 76, cost 0.0. \nfrom Hanshan Temple to Panmen: metro: duration 33, cost 3. taxi: duration 7, cost 22.85. walk: duration 62, cost 0.0. \nfrom Hanshan Temple to Mute's Pan-Fried Buns (Lindun Road Branch): metro: duration 29, cost 3. taxi: duration 7, cost 22.53. walk: duration 61, cost 0.0. \nfrom Hanshan Temple to Garbo Hotel (Suzhou Guanqian Street Shiquan Street Branch): metro: duration 32, cost 3. taxi: duration 9, cost 26.99. walk: duration 76, cost 0.0. \nfrom Hanshan Temple to Tiger Hill Scenic Area: metro: duration 31, cost 2. taxi: duration 4, cost 15.31. walk: duration 36, cost 0.0. \nfrom Hanshan Temple to Hanshan Temple:  metro: empty.  taxi: empty.  walk: empty. \nfrom Hanshan Temple to Suzhou North Station: metro: duration 42, cost 4. taxi: duration 20, cost 54.96. walk: duration 160, cost 0.0. \nfrom Hanshan Temple to Suzhou Ancient Canal Cruise (Bai Juyi Pier at Shantang Street): metro: duration 36, cost 3. taxi: duration 5, cost 16.84. walk: duration 41, cost 0.0. \nfrom Hanshan Temple to Lingering Garden: metro: duration 26, cost 2. taxi: duration 3, cost 12.96. walk: duration 28, cost 0.0. \nfrom Suzhou North Station to Humble Administrator's Garden: metro: duration 28, cost 4. taxi: duration 15, cost 40.54. walk: duration 122, cost 0.0. \nfrom Suzhou North Station to Suzhou Museum West Branch: metro: duration 38, cost 5. taxi: duration 24, cost 68.15. walk: duration 195, cost 0.0. \nfrom Suzhou North Station to Suzhou Museum: metro: duration 29, cost 4. taxi: duration 15, cost 41.18. walk: duration 123, cost 0.0. \nfrom Suzhou North Station to Wu's Garden Pavilion (Northwest Street Branch): metro: duration 27, cost 4. taxi: duration 16, cost 45.45. walk: duration 135, cost 0.0. \nfrom Suzhou North Station to Vienna International Hotel (Suzhou Railway Station North Square): metro: duration 25, cost 4. taxi: duration 15, cost 41.0. walk: duration 123, cost 0.0. \nfrom Suzhou North Station to Suzhou Station: metro: duration 23, cost 4. taxi: duration 16, cost 42.77. walk: duration 128, cost 0.0. \nfrom Suzhou North Station to Pingjiang Road Historic District: metro: duration 38, cost 4. taxi: duration 16, cost 45.59. walk: duration 135, cost 0.0. \nfrom Suzhou North Station to Days Hotel Suzhou: metro: duration 22, cost 3. taxi: duration 11, cost 31.97. walk: duration 93, cost 0.0. \nfrom Suzhou North Station to Canglang Pavilion: metro: duration 31, cost 4. taxi: duration 20, cost 55.4. walk: duration 161, cost 0.0. \nfrom Suzhou North Station to The Couple's Garden Retreat: metro: duration 39, cost 4. taxi: duration 16, cost 44.52. walk: duration 132, cost 0.0. \nfrom Suzhou North Station to Sun Shengxing Aozao Noodle House (Shantang Street Branch): metro: duration 31, cost 4. taxi: duration 18, cost 50.65. walk: duration 149, cost 0.0. \nfrom Suzhou North Station to Suzhou Water Tour: metro: duration 34, cost 4. taxi: duration 21, cost 57.79. walk: duration 168, cost 0.0. \nfrom Suzhou North Station to Pine and Crane Tower (Guanqian Street Branch): metro: duration 30, cost 4. taxi: duration 18, cost 50.7. walk: duration 149, cost 0.0. \nfrom Suzhou North Station to Golden Rooster Lake: metro: duration 33, cost 4. taxi: duration 19, cost 53.7. walk: duration 157, cost 0.0. \nfrom Suzhou North Station to Shantang Street: metro: duration 34, cost 4. taxi: duration 17, cost 46.06. walk: duration 136, cost 0.0. \nfrom Suzhou North Station to Xin Ju Feng Restaurant (Taijian Lane Branch): metro: duration 30, cost 4. taxi: duration 18, cost 50.78. walk: duration 149, cost 0.0. \nfrom Suzhou North Station to Master of the Nets Garden: metro: duration 32, cost 4. taxi: duration 19, cost 53.44. walk: duration 156, cost 0.0. \nfrom Suzhou North Station to Panmen: metro: duration 33, cost 5. taxi: duration 21, cost 58.66. walk: duration 170, cost 0.0. \nfrom Suzhou North Station to Mute's Pan-Fried Buns (Lindun Road Branch): metro: duration 26, cost 4. taxi: duration 17, cost 48.38. walk: duration 143, cost 0.0. \nfrom Suzhou North Station to Garbo Hotel (Suzhou Guanqian Street Shiquan Street Branch): metro: duration 30, cost 5. taxi: duration 21, cost 59.42. walk: duration 172, cost 0.0. \nfrom Suzhou North Station to Tiger Hill Scenic Area: metro: duration 35, cost 4. taxi: duration 15, cost 41.42. walk: duration 124, cost 0.0. \nfrom Suzhou North Station to Hanshan Temple: metro: duration 42, cost 4. taxi: duration 20, cost 54.96. walk: duration 160, cost 0.0. \nfrom Suzhou North Station to Suzhou North Station:  metro: empty.  taxi: empty.  walk: empty. \nfrom Suzhou North Station to Suzhou Ancient Canal Cruise (Bai Juyi Pier at Shantang Street): metro: duration 33, cost 4. taxi: duration 17, cost 46.76. walk: duration 138, cost 0.0. \nfrom Suzhou North Station to Lingering Garden: metro: duration 29, cost 4. taxi: duration 17, cost 48.19. walk: duration 142, cost 0.0. \nfrom Suzhou Ancient Canal Cruise (Bai Juyi Pier at Shantang Street) to Humble Administrator's Garden: metro: duration 21, cost 2. taxi: duration 3, cost 13.64. walk: duration 30, cost 0.0. \nfrom Suzhou Ancient Canal Cruise (Bai Juyi Pier at Shantang Street) to Suzhou Museum West Branch: metro: duration 27, cost 3. taxi: duration 8, cost 25.7. walk: duration 71, cost 0.0. \nfrom Suzhou Ancient Canal Cruise (Bai Juyi Pier at Shantang Street) to Suzhou Museum: metro: duration 22, cost 2. taxi: duration 3, cost 13.04. walk: duration 28, cost 0.0. \nfrom Suzhou Ancient Canal Cruise (Bai Juyi Pier at Shantang Street) to Wu's Garden Pavilion (Northwest Street Branch): metro: duration 15, cost 2. taxi: duration 1, cost 11.0. walk: duration 14, cost 0.0. \nfrom Suzhou Ancient Canal Cruise (Bai Juyi Pier at Shantang Street) to Vienna International Hotel (Suzhou Railway Station North Square): metro: duration 15, cost 2. taxi: duration 2, cost 11.0. walk: duration 16, cost 0.0. \nfrom Suzhou Ancient Canal Cruise (Bai Juyi Pier at Shantang Street) to Suzhou Station: metro: duration 13, cost 2. taxi: duration 1, cost 11.0. walk: duration 11, cost 0.0. \nfrom Suzhou Ancient Canal Cruise (Bai Juyi Pier at Shantang Street) to Pingjiang Road Historic District: metro: duration 27, cost 2. taxi: duration 4, cost 14.83. walk: duration 34, cost 0.0. \nfrom Suzhou Ancient Canal Cruise (Bai Juyi Pier at Shantang Street) to Days Hotel Suzhou: metro: duration 25, cost 3. taxi: duration 6, cost 19.33. walk: duration 50, cost 0.0. \nfrom Suzhou Ancient Canal Cruise (Bai Juyi Pier at Shantang Street) to Canglang Pavilion: metro: duration 18, cost 2. taxi: duration 4, cost 15.4. walk: duration 36, cost 0.0. \nfrom Suzhou Ancient Canal Cruise (Bai Juyi Pier at Shantang Street) to The Couple's Garden Retreat: metro: duration 30, cost 2. taxi: duration 4, cost 15.98. walk: duration 38, cost 0.0. \nfrom Suzhou Ancient Canal Cruise (Bai Juyi Pier at Shantang Street) to Sun Shengxing Aozao Noodle House (Shantang Street Branch): metro: duration 19, cost 2. taxi: duration 1, cost 11.0. walk: duration 11, cost 0.0. \nfrom Suzhou Ancient Canal Cruise (Bai Juyi Pier at Shantang Street) to Suzhou Water Tour: metro: duration 21, cost 2. taxi: duration 4, cost 14.31. walk: duration 32, cost 0.0. \nfrom Suzhou Ancient Canal Cruise (Bai Juyi Pier at Shantang Street) to Pine and Crane Tower (Guanqian Street Branch): metro: duration 17, cost 2. taxi: duration 2, cost 11.13. walk: duration 22, cost 0.0. \nfrom Suzhou Ancient Canal Cruise (Bai Juyi Pier at Shantang Street) to Golden Rooster Lake: metro: duration 34, cost 3. taxi: duration 13, cost 37.04. walk: duration 110, cost 0.0. \nfrom Suzhou Ancient Canal Cruise (Bai Juyi Pier at Shantang Street) to Shantang Street: metro: duration 22, cost 2. taxi: duration 0, cost 11.0. walk: duration 2, cost 0.0. \nfrom Suzhou Ancient Canal Cruise (Bai Juyi Pier at Shantang Street) to Xin Ju Feng Restaurant (Taijian Lane Branch): metro: duration 17, cost 2. taxi: duration 2, cost 11.28. walk: duration 22, cost 0.0. \nfrom Suzhou Ancient Canal Cruise (Bai Juyi Pier at Shantang Street) to Master of the Nets Garden: metro: duration 19, cost 2. taxi: duration 5, cost 16.52. walk: duration 40, cost 0.0. \nfrom Suzhou Ancient Canal Cruise (Bai Juyi Pier at Shantang Street) to Panmen: metro: duration 19, cost 2. taxi: duration 4, cost 15.77. walk: duration 37, cost 0.0. \nfrom Suzhou Ancient Canal Cruise (Bai Juyi Pier at Shantang Street) to Mute's Pan-Fried Buns (Lindun Road Branch): metro: duration 13, cost 2. taxi: duration 2, cost 11.02. walk: duration 21, cost 0.0. \nfrom Suzhou Ancient Canal Cruise (Bai Juyi Pier at Shantang Street) to Garbo Hotel (Suzhou Guanqian Street Shiquan Street Branch): metro: duration 17, cost 2. taxi: duration 5, cost 18.66. walk: duration 47, cost 0.0. \nfrom Suzhou Ancient Canal Cruise (Bai Juyi Pier at Shantang Street) to Tiger Hill Scenic Area: metro: duration 28, cost 2. taxi: duration 4, cost 15.8. walk: duration 38, cost 0.0. \nfrom Suzhou Ancient Canal Cruise (Bai Juyi Pier at Shantang Street) to Hanshan Temple: metro: duration 36, cost 3. taxi: duration 5, cost 16.84. walk: duration 41, cost 0.0. \nfrom Suzhou Ancient Canal Cruise (Bai Juyi Pier at Shantang Street) to Suzhou North Station: metro: duration 33, cost 4. taxi: duration 17, cost 46.76. walk: duration 138, cost 0.0. \nfrom Suzhou Ancient Canal Cruise (Bai Juyi Pier at Shantang Street) to Suzhou Ancient Canal Cruise (Bai Juyi Pier at Shantang Street):  metro: empty.  taxi: empty.  walk: empty. \nfrom Suzhou Ancient Canal Cruise (Bai Juyi Pier at Shantang Street) to Lingering Garden: metro: duration 17, cost 2. taxi: duration 1, cost 11.0. walk: duration 13, cost 0.0. \nfrom Lingering Garden to Humble Administrator's Garden: metro: duration 18, cost 2. taxi: duration 5, cost 17.38. walk: duration 43, cost 0.0. \nfrom Lingering Garden to Suzhou Museum West Branch: metro: duration 19, cost 3. taxi: duration 7, cost 22.38. walk: duration 60, cost 0.0. \nfrom Lingering Garden to Suzhou Museum: metro: duration 19, cost 2. taxi: duration 5, cost 16.81. walk: duration 41, cost 0.0. \nfrom Lingering Garden to Wu's Garden Pavilion (Northwest Street Branch): metro: duration 12, cost 2. taxi: duration 3, cost 12.89. walk: duration 28, cost 0.0. \nfrom Lingering Garden to Vienna International Hotel (Suzhou Railway Station North Square): metro: duration 9, cost 2. taxi: duration 2, cost 11.0. walk: duration 20, cost 0.0. \nfrom Lingering Garden to Suzhou Station: metro: duration 7, cost 2. taxi: duration 2, cost 11.0. walk: duration 17, cost 0.0. \nfrom Lingering Garden to Pingjiang Road Historic District: metro: duration 24, cost 2. taxi: duration 6, cost 18.82. walk: duration 48, cost 0.0. \nfrom Lingering Garden to Days Hotel Suzhou: metro: duration 19, cost 3. taxi: duration 6, cost 19.39. walk: duration 50, cost 0.0. \nfrom Lingering Garden to Canglang Pavilion: metro: duration 15, cost 2. taxi: duration 5, cost 18.44. walk: duration 47, cost 0.0. \nfrom Lingering Garden to The Couple's Garden Retreat: metro: duration 27, cost 3. taxi: duration 6, cost 19.96. walk: duration 52, cost 0.0. \nfrom Lingering Garden to Sun Shengxing Aozao Noodle House (Shantang Street Branch): taxi: duration 1, cost 11.0. walk: duration 10, cost 0.0. \nfrom Lingering Garden to Suzhou Water Tour: metro: duration 16, cost 2. taxi: duration 4, cost 16.09. walk: duration 39, cost 0.0. \nfrom Lingering Garden to Pine and Crane Tower (Guanqian Street Branch): metro: duration 13, cost 2. taxi: duration 4, cost 14.58. walk: duration 33, cost 0.0. \nfrom Lingering Garden to Golden Rooster Lake: metro: duration 31, cost 4. taxi: duration 15, cost 41.4. walk: duration 124, cost 0.0. \nfrom Lingering Garden to Shantang Street: taxi: duration 1, cost 11.0. walk: duration 12, cost 0.0. \nfrom Lingering Garden to Xin Ju Feng Restaurant (Taijian Lane Branch): metro: duration 13, cost 2. taxi: duration 4, cost 14.74. walk: duration 34, cost 0.0. \nfrom Lingering Garden to Master of the Nets Garden: metro: duration 16, cost 2. taxi: duration 6, cost 20.04. walk: duration 52, cost 0.0. \nfrom Lingering Garden to Panmen: metro: duration 14, cost 2. taxi: duration 5, cost 17.9. walk: duration 45, cost 0.0. \nfrom Lingering Garden to Mute's Pan-Fried Buns (Lindun Road Branch): metro: duration 10, cost 2. taxi: duration 4, cost 14.85. walk: duration 34, cost 0.0. \nfrom Lingering Garden to Garbo Hotel (Suzhou Guanqian Street Shiquan Street Branch): metro: duration 13, cost 3. taxi: duration 7, cost 21.42. walk: duration 57, cost 0.0. \nfrom Lingering Garden to Tiger Hill Scenic Area: metro: duration 19, cost 2. taxi: duration 3, cost 13.33. walk: duration 29, cost 0.0. \nfrom Lingering Garden to Hanshan Temple: metro: duration 26, cost 2. taxi: duration 3, cost 12.96. walk: duration 28, cost 0.0. \nfrom Lingering Garden to Suzhou North Station: metro: duration 29, cost 4. taxi: duration 17, cost 48.19. walk: duration 142, cost 0.0. \nfrom Lingering Garden to Suzhou Ancient Canal Cruise (Bai Juyi Pier at Shantang Street): metro: duration 17, cost 2. taxi: duration 1, cost 11.0. walk: duration 13, cost 0.0. \nfrom Lingering Garden to Lingering Garden:  metro: empty.  taxi: empty.  walk: empty. \n"
+    },
+    "initial_verification": {
+      "commonsense_errors": [
+        "Incorrect duration information of given intercity transport from destination to origin G16 [start_time -> end_time]."
+      ],
+      "personal_constraints": [
+        true,
+        true,
+        true,
+        true,
+        true
+      ],
+      "category_normalization": [
+        {
+          "constraint_index": 4,
+          "category_domain": "activity",
+          "expression": "activity_type(activity)",
+          "raw_label": "train",
+          "normalized_label": "train"
+        },
+        {
+          "constraint_index": 4,
+          "category_domain": "activity",
+          "expression": "['attraction', 'airplane', 'train']",
+          "raw_label": "attraction",
+          "normalized_label": "attraction"
+        },
+        {
+          "constraint_index": 4,
+          "category_domain": "activity",
+          "expression": "['attraction', 'airplane', 'train']",
+          "raw_label": "airplane",
+          "normalized_label": "airplane"
+        },
+        {
+          "constraint_index": 4,
+          "category_domain": "activity",
+          "expression": "['attraction', 'airplane', 'train']",
+          "raw_label": "train",
+          "normalized_label": "train"
+        },
+        {
+          "constraint_index": 4,
+          "category_domain": "transport",
+          "expression": "innercity_transport_type(activity_transports(activity))",
+          "raw_label": "empty",
+          "normalized_label": "empty"
+        },
+        {
+          "constraint_index": 4,
+          "category_domain": "transport",
+          "expression": "'metro'",
+          "raw_label": "metro",
+          "normalized_label": "metro"
+        },
+        {
+          "constraint_index": 4,
+          "category_domain": "activity",
+          "expression": "activity_type(activity)",
+          "raw_label": "attraction",
+          "normalized_label": "attraction"
+        },
+        {
+          "constraint_index": 4,
+          "category_domain": "activity",
+          "expression": "['attraction', 'airplane', 'train']",
+          "raw_label": "attraction",
+          "normalized_label": "attraction"
+        },
+        {
+          "constraint_index": 4,
+          "category_domain": "activity",
+          "expression": "['attraction', 'airplane', 'train']",
+          "raw_label": "airplane",
+          "normalized_label": "airplane"
+        },
+        {
+          "constraint_index": 4,
+          "category_domain": "activity",
+          "expression": "['attraction', 'airplane', 'train']",
+          "raw_label": "train",
+          "normalized_label": "train"
+        },
+        {
+          "constraint_index": 4,
+          "category_domain": "transport",
+          "expression": "innercity_transport_type(activity_transports(activity))",
+          "raw_label": "metro",
+          "normalized_label": "metro"
+        },
+        {
+          "constraint_index": 4,
+          "category_domain": "transport",
+          "expression": "'metro'",
+          "raw_label": "metro",
+          "normalized_label": "metro"
+        },
+        {
+          "constraint_index": 4,
+          "category_domain": "activity",
+          "expression": "activity_type(activity)",
+          "raw_label": "lunch",
+          "normalized_label": "lunch"
+        },
+        {
+          "constraint_index": 4,
+          "category_domain": "activity",
+          "expression": "['attraction', 'airplane', 'train']",
+          "raw_label": "attraction",
+          "normalized_label": "attraction"
+        },
+        {
+          "constraint_index": 4,
+          "category_domain": "activity",
+          "expression": "['attraction', 'airplane', 'train']",
+          "raw_label": "airplane",
+          "normalized_label": "airplane"
+        },
+        {
+          "constraint_index": 4,
+          "category_domain": "activity",
+          "expression": "['attraction', 'airplane', 'train']",
+          "raw_label": "train",
+          "normalized_label": "train"
+        },
+        {
+          "constraint_index": 4,
+          "category_domain": "transport",
+          "expression": "innercity_transport_type(activity_transports(activity))",
+          "raw_label": "metro",
+          "normalized_label": "metro"
+        },
+        {
+          "constraint_index": 4,
+          "category_domain": "transport",
+          "expression": "'metro'",
+          "raw_label": "metro",
+          "normalized_label": "metro"
+        },
+        {
+          "constraint_index": 4,
+          "category_domain": "activity",
+          "expression": "activity_type(activity)",
+          "raw_label": "attraction",
+          "normalized_label": "attraction"
+        },
+        {
+          "constraint_index": 4,
+          "category_domain": "activity",
+          "expression": "['attraction', 'airplane', 'train']",
+          "raw_label": "attraction",
+          "normalized_label": "attraction"
+        },
+        {
+          "constraint_index": 4,
+          "category_domain": "activity",
+          "expression": "['attraction', 'airplane', 'train']",
+          "raw_label": "airplane",
+          "normalized_label": "airplane"
+        },
+        {
+          "constraint_index": 4,
+          "category_domain": "activity",
+          "expression": "['attraction', 'airplane', 'train']",
+          "raw_label": "train",
+          "normalized_label": "train"
+        },
+        {
+          "constraint_index": 4,
+          "category_domain": "transport",
+          "expression": "innercity_transport_type(activity_transports(activity))",
+          "raw_label": "metro",
+          "normalized_label": "metro"
+        },
+        {
+          "constraint_index": 4,
+          "category_domain": "transport",
+          "expression": "'metro'",
+          "raw_label": "metro",
+          "normalized_label": "metro"
+        },
+        {
+          "constraint_index": 4,
+          "category_domain": "activity",
+          "expression": "activity_type(activity)",
+          "raw_label": "attraction",
+          "normalized_label": "attraction"
+        },
+        {
+          "constraint_index": 4,
+          "category_domain": "activity",
+          "expression": "['attraction', 'airplane', 'train']",
+          "raw_label": "attraction",
+          "normalized_label": "attraction"
+        },
+        {
+          "constraint_index": 4,
+          "category_domain": "activity",
+          "expression": "['attraction', 'airplane', 'train']",
+          "raw_label": "airplane",
+          "normalized_label": "airplane"
+        },
+        {
+          "constraint_index": 4,
+          "category_domain": "activity",
+          "expression": "['attraction', 'airplane', 'train']",
+          "raw_label": "train",
+          "normalized_label": "train"
+        },
+        {
+          "constraint_index": 4,
+          "category_domain": "transport",
+          "expression": "innercity_transport_type(activity_transports(activity))",
+          "raw_label": "taxi",
+          "normalized_label": "taxi"
+        },
+        {
+          "constraint_index": 4,
+          "category_domain": "transport",
+          "expression": "'metro'",
+          "raw_label": "metro",
+          "normalized_label": "metro"
+        },
+        {
+          "constraint_index": 4,
+          "category_domain": "activity",
+          "expression": "activity_type(activity)",
+          "raw_label": "attraction",
+          "normalized_label": "attraction"
+        },
+        {
+          "constraint_index": 4,
+          "category_domain": "activity",
+          "expression": "['attraction', 'airplane', 'train']",
+          "raw_label": "attraction",
+          "normalized_label": "attraction"
+        },
+        {
+          "constraint_index": 4,
+          "category_domain": "activity",
+          "expression": "['attraction', 'airplane', 'train']",
+          "raw_label": "airplane",
+          "normalized_label": "airplane"
+        },
+        {
+          "constraint_index": 4,
+          "category_domain": "activity",
+          "expression": "['attraction', 'airplane', 'train']",
+          "raw_label": "train",
+          "normalized_label": "train"
+        },
+        {
+          "constraint_index": 4,
+          "category_domain": "transport",
+          "expression": "innercity_transport_type(activity_transports(activity))",
+          "raw_label": "walk",
+          "normalized_label": "walk"
+        },
+        {
+          "constraint_index": 4,
+          "category_domain": "transport",
+          "expression": "'metro'",
+          "raw_label": "metro",
+          "normalized_label": "metro"
+        },
+        {
+          "constraint_index": 4,
+          "category_domain": "activity",
+          "expression": "activity_type(activity)",
+          "raw_label": "dinner",
+          "normalized_label": "dinner"
+        },
+        {
+          "constraint_index": 4,
+          "category_domain": "activity",
+          "expression": "['attraction', 'airplane', 'train']",
+          "raw_label": "attraction",
+          "normalized_label": "attraction"
+        },
+        {
+          "constraint_index": 4,
+          "category_domain": "activity",
+          "expression": "['attraction', 'airplane', 'train']",
+          "raw_label": "airplane",
+          "normalized_label": "airplane"
+        },
+        {
+          "constraint_index": 4,
+          "category_domain": "activity",
+          "expression": "['attraction', 'airplane', 'train']",
+          "raw_label": "train",
+          "normalized_label": "train"
+        },
+        {
+          "constraint_index": 4,
+          "category_domain": "transport",
+          "expression": "innercity_transport_type(activity_transports(activity))",
+          "raw_label": "metro",
+          "normalized_label": "metro"
+        },
+        {
+          "constraint_index": 4,
+          "category_domain": "transport",
+          "expression": "'metro'",
+          "raw_label": "metro",
+          "normalized_label": "metro"
+        },
+        {
+          "constraint_index": 4,
+          "category_domain": "activity",
+          "expression": "activity_type(activity)",
+          "raw_label": "train",
+          "normalized_label": "train"
+        },
+        {
+          "constraint_index": 4,
+          "category_domain": "activity",
+          "expression": "['attraction', 'airplane', 'train']",
+          "raw_label": "attraction",
+          "normalized_label": "attraction"
+        },
+        {
+          "constraint_index": 4,
+          "category_domain": "activity",
+          "expression": "['attraction', 'airplane', 'train']",
+          "raw_label": "airplane",
+          "normalized_label": "airplane"
+        },
+        {
+          "constraint_index": 4,
+          "category_domain": "activity",
+          "expression": "['attraction', 'airplane', 'train']",
+          "raw_label": "train",
+          "normalized_label": "train"
+        },
+        {
+          "constraint_index": 4,
+          "category_domain": "transport",
+          "expression": "innercity_transport_type(activity_transports(activity))",
+          "raw_label": "metro",
+          "normalized_label": "metro"
+        },
+        {
+          "constraint_index": 4,
+          "category_domain": "transport",
+          "expression": "'metro'",
+          "raw_label": "metro",
+          "normalized_label": "metro"
+        },
+        {
+          "constraint_index": 5,
+          "category_domain": "transport",
+          "expression": "innercity_transport_type(activity_transports(activity))",
+          "raw_label": "empty",
+          "normalized_label": "empty"
+        },
+        {
+          "constraint_index": 5,
+          "category_domain": "transport",
+          "expression": "'taxi'",
+          "raw_label": "taxi",
+          "normalized_label": "taxi"
+        },
+        {
+          "constraint_index": 5,
+          "category_domain": "transport",
+          "expression": "innercity_transport_type(activity_transports(activity))",
+          "raw_label": "metro",
+          "normalized_label": "metro"
+        },
+        {
+          "constraint_index": 5,
+          "category_domain": "transport",
+          "expression": "'taxi'",
+          "raw_label": "taxi",
+          "normalized_label": "taxi"
+        },
+        {
+          "constraint_index": 5,
+          "category_domain": "transport",
+          "expression": "innercity_transport_type(activity_transports(activity))",
+          "raw_label": "metro",
+          "normalized_label": "metro"
+        },
+        {
+          "constraint_index": 5,
+          "category_domain": "transport",
+          "expression": "'taxi'",
+          "raw_label": "taxi",
+          "normalized_label": "taxi"
+        },
+        {
+          "constraint_index": 5,
+          "category_domain": "transport",
+          "expression": "innercity_transport_type(activity_transports(activity))",
+          "raw_label": "metro",
+          "normalized_label": "metro"
+        },
+        {
+          "constraint_index": 5,
+          "category_domain": "transport",
+          "expression": "'taxi'",
+          "raw_label": "taxi",
+          "normalized_label": "taxi"
+        },
+        {
+          "constraint_index": 5,
+          "category_domain": "transport",
+          "expression": "innercity_transport_type(activity_transports(activity))",
+          "raw_label": "taxi",
+          "normalized_label": "taxi"
+        },
+        {
+          "constraint_index": 5,
+          "category_domain": "transport",
+          "expression": "'taxi'",
+          "raw_label": "taxi",
+          "normalized_label": "taxi"
+        },
+        {
+          "constraint_index": 5,
+          "category_domain": "transport",
+          "expression": "innercity_transport_type(activity_transports(activity))",
+          "raw_label": "walk",
+          "normalized_label": "walk"
+        },
+        {
+          "constraint_index": 5,
+          "category_domain": "transport",
+          "expression": "'taxi'",
+          "raw_label": "taxi",
+          "normalized_label": "taxi"
+        },
+        {
+          "constraint_index": 5,
+          "category_domain": "transport",
+          "expression": "innercity_transport_type(activity_transports(activity))",
+          "raw_label": "metro",
+          "normalized_label": "metro"
+        },
+        {
+          "constraint_index": 5,
+          "category_domain": "transport",
+          "expression": "'taxi'",
+          "raw_label": "taxi",
+          "normalized_label": "taxi"
+        },
+        {
+          "constraint_index": 5,
+          "category_domain": "transport",
+          "expression": "innercity_transport_type(activity_transports(activity))",
+          "raw_label": "metro",
+          "normalized_label": "metro"
+        },
+        {
+          "constraint_index": 5,
+          "category_domain": "transport",
+          "expression": "'taxi'",
+          "raw_label": "taxi",
+          "normalized_label": "taxi"
+        }
+      ],
+      "personal_errors": [],
+      "evaluation_errors": [],
+      "translation_errors": [],
+      "error_info": [
+        "Incorrect duration information of given intercity transport from destination to origin G16 [start_time -> end_time]."
+      ],
+      "passed": false,
+      "translated_plan": {
+        "people_number": 1,
+        "start_city": "Nanjing",
+        "target_city": "Suzhou",
+        "itinerary": [
+          {
+            "day": 1,
+            "activities": [
+              {
+                "start_time": "07:00",
+                "end_time": "08:12",
+                "start": "Nanjing Station",
+                "end": "Suzhou Station",
+                "price": 122.9,
+                "cost": 122.9,
+                "TrainID": "G7001",
+                "type": "train",
+                "tickets": 1,
+                "transports": []
+              },
+              {
+                "position": "Humble Administrator's Garden",
+                "type": "attraction",
+                "transports": [
+                  {
+                    "start": "Suzhou Station",
+                    "end": "Suzhou Railway Station-Metro Station",
+                    "mode": "walk",
+                    "start_time": "08:12",
+                    "end_time": "08:13",
+                    "cost": 0,
+                    "distance": 0.13,
+                    "price": 0
+                  },
+                  {
+                    "start": "Suzhou Railway Station-Metro Station",
+                    "end": "Meixiang-Metro Station",
+                    "mode": "metro",
+                    "start_time": "08:13",
+                    "end_time": "08:16",
+                    "cost": 2,
+                    "distance": 1.99,
+                    "price": 2,
+                    "tickets": 1
+                  },
+                  {
+                    "start": "Meixiang-Metro Station",
+                    "end": "Humble Administrator's Garden",
+                    "mode": "walk",
+                    "start_time": "08:16",
+                    "end_time": "08:24",
+                    "cost": 0,
+                    "distance": 0.75,
+                    "price": 0
+                  }
+                ],
+                "price": 80.0,
+                "cost": 80.0,
+                "tickets": 1,
+                "start_time": "08:30",
+                "end_time": "10:30"
+              },
+              {
+                "position": "Wu's Garden Pavilion (Northwest Street Branch)",
+                "type": "lunch",
+                "transports": [
+                  {
+                    "start": "Humble Administrator's Garden",
+                    "end": "Meixiang-Metro Station",
+                    "mode": "walk",
+                    "start_time": "10:30",
+                    "end_time": "10:38",
+                    "cost": 0,
+                    "distance": 0.75,
+                    "price": 0
+                  },
+                  {
+                    "start": "Meixiang-Metro Station",
+                    "end": "Humble Administrator's Garden Suzhou Museum-Metro Station",
+                    "mode": "metro",
+                    "start_time": "10:38",
+                    "end_time": "10:40",
+                    "cost": 2,
+                    "distance": 1.4,
+                    "price": 2,
+                    "tickets": 1
+                  },
+                  {
+                    "start": "Humble Administrator's Garden Suzhou Museum-Metro Station",
+                    "end": "Wu's Garden Pavilion (Northwest Street Branch)",
+                    "mode": "walk",
+                    "start_time": "10:40",
+                    "end_time": "10:44",
+                    "cost": 0,
+                    "distance": 0.35,
+                    "price": 0
+                  }
+                ],
+                "price": 89,
+                "cost": 89,
+                "start_time": "11:00",
+                "end_time": "12:00"
+              },
+              {
+                "position": "Lingering Garden",
+                "type": "attraction",
+                "transports": [
+                  {
+                    "start": "Wu's Garden Pavilion (Northwest Street Branch)",
+                    "end": "Humble Administrator's Garden Suzhou Museum-Metro Station",
+                    "mode": "walk",
+                    "start_time": "12:00",
+                    "end_time": "12:04",
+                    "cost": 0,
+                    "distance": 0.35,
+                    "price": 0
+                  },
+                  {
+                    "start": "Humble Administrator's Garden Suzhou Museum-Metro Station",
+                    "end": "Shantang Street-Metro Station",
+                    "mode": "metro",
+                    "start_time": "12:04",
+                    "end_time": "12:08",
+                    "cost": 2,
+                    "distance": 2.39,
+                    "price": 2,
+                    "tickets": 1
+                  },
+                  {
+                    "start": "Shantang Street-Metro Station",
+                    "end": "Lingering Garden",
+                    "mode": "walk",
+                    "start_time": "12:08",
+                    "end_time": "12:12",
+                    "cost": 0,
+                    "distance": 0.36,
+                    "price": 0
+                  }
+                ],
+                "price": 55.0,
+                "cost": 55.0,
+                "tickets": 1,
+                "start_time": "12:20",
+                "end_time": "14:20"
+              },
+              {
+                "position": "Shantang Street",
+                "type": "attraction",
+                "transports": [
+                  {
+                    "start": "Lingering Garden",
+                    "end": "Shantang Street",
+                    "mode": "taxi",
+                    "start_time": "14:20",
+                    "end_time": "14:21",
+                    "cost": 11,
+                    "distance": 1.02,
+                    "price": 11.0,
+                    "cars": 1
+                  }
+                ],
+                "price": 0.0,
+                "cost": 0.0,
+                "tickets": 1,
+                "start_time": "14:30",
+                "end_time": "15:30"
+              },
+              {
+                "position": "Suzhou Ancient Canal Cruise (Bai Juyi Pier at Shantang Street)",
+                "type": "attraction",
+                "transports": [
+                  {
+                    "start": "Shantang Street",
+                    "end": "Suzhou Ancient Canal Cruise (Bai Juyi Pier at Shantang Street)",
+                    "mode": "walk",
+                    "start_time": "15:30",
+                    "end_time": "15:32",
+                    "cost": 0,
+                    "distance": 0.23772655205356652
+                  }
+                ],
+                "price": 95.0,
+                "cost": 95.0,
+                "tickets": 1,
+                "start_time": "15:40",
+                "end_time": "17:40"
+              },
+              {
+                "position": "Pine and Crane Tower (Guanqian Street Branch)",
+                "type": "dinner",
+                "transports": [
+                  {
+                    "start": "Suzhou Ancient Canal Cruise (Bai Juyi Pier at Shantang Street)",
+                    "end": "North Temple Pagoda-Metro Station",
+                    "mode": "walk",
+                    "start_time": "17:40",
+                    "end_time": "17:50",
+                    "cost": 0,
+                    "distance": 0.84,
+                    "price": 0
+                  },
+                  {
+                    "start": "North Temple Pagoda-Metro Station",
+                    "end": "Chayuanchang-Metro Station",
+                    "mode": "metro",
+                    "start_time": "17:50",
+                    "end_time": "17:52",
+                    "cost": 2,
+                    "distance": 1.01,
+                    "price": 2,
+                    "tickets": 1
+                  },
+                  {
+                    "start": "Chayuanchang-Metro Station",
+                    "end": "Pine and Crane Tower (Guanqian Street Branch)",
+                    "mode": "walk",
+                    "start_time": "17:52",
+                    "end_time": "17:57",
+                    "cost": 0,
+                    "distance": 0.42,
+                    "price": 0
+                  }
+                ],
+                "price": 172,
+                "cost": 172,
+                "start_time": "18:00",
+                "end_time": "19:00"
+              },
+              {
+                "start": "Suzhou North Station",
+                "end": "Nanjing South Railway Station",
+                "start_time": "20:02",
+                "end_time": "20:48",
+                "TrainID": "G16",
+                "type": "train",
+                "transports": [
+                  {
+                    "start": "Pine and Crane Tower (Guanqian Street Branch)",
+                    "end": "Chayuanchang-Metro Station",
+                    "mode": "walk",
+                    "start_time": "19:00",
+                    "end_time": "19:05",
+                    "cost": 0,
+                    "distance": 0.42,
+                    "price": 0
+                  },
+                  {
+                    "start": "Chayuanchang-Metro Station",
+                    "end": "Suzhou North Railway Station-Metro Station",
+                    "mode": "metro",
+                    "start_time": "19:05",
+                    "end_time": "19:29",
+                    "cost": 4,
+                    "distance": 12.45,
+                    "price": 4,
+                    "tickets": 1
+                  },
+                  {
+                    "start": "Suzhou North Railway Station-Metro Station",
+                    "end": "Suzhou North Station",
+                    "mode": "walk",
+                    "start_time": "19:29",
+                    "end_time": "19:30",
+                    "cost": 0,
+                    "distance": 0.14,
+                    "price": 0
+                  }
+                ],
+                "price": 122.9,
+                "cost": 122.9,
+                "tickets": 1
+              }
+            ]
+          }
+        ]
+      },
+      "verifier_errors": [],
+      "schema_errors": [],
+      "translation_failures": []
+    },
+    "environment_context": {
+      "lang": "en"
+    },
+    "generation_metadata": {
+      "raw_response": "[{\"day\": 1,```json\n{\n    \"day\": 1,\n    \"activities\": [\n        {\n            \"start_time\": \"07:00\",\n            \"end_time\": \"08:12\",\n            \"start\": \"Nanjing Station\",\n            \"end\": \"Suzhou Station\",\n            \"price\": 122.9,\n            \"cost\": 122.9,\n            \"TrainID\": \"G7001\",\n            \"type\": \"train\",\n            \"tickets\": 1,\n            \"transports\": \"empty\"\n        },\n        {\n            \"position\": \"Humble Administrator's Garden\",\n            \"type\": \"attraction\",\n            \"transports\": {\"from\": \"Suzhou Station\", \"to\": \"Humble Administrator's Garden\", \"mode\": \"metro\", \"start_time\": \"08:12\", \"end_time\": \"08:24\", \"cost\": 2},\n            \"price\": 80.0,\n            \"cost\": 80.0,\n            \"tickets\": 1,\n            \"start_time\": \"08:30\",\n            \"end_time\": \"10:30\"\n        },\n        {\n            \"position\": \"Wu's Garden Pavilion (Northwest Street Branch)\",\n            \"type\": \"lunch\",\n            \"transports\": {\"from\": \"Humble Administrator's Garden\", \"to\": \"Wu's Garden Pavilion (Northwest Street Branch)\", \"mode\": \"metro\", \"start_time\": \"10:30\", \"end_time\": \"10:44\", \"cost\": 2},\n            \"price\": 89,\n            \"cost\": 89,\n            \"start_time\": \"11:00\",\n            \"end_time\": \"12:00\"\n        },\n        {\n            \"position\": \"Lingering Garden\",\n            \"type\": \"attraction\",\n            \"transports\": {\"from\": \"Wu's Garden Pavilion (Northwest Street Branch)\", \"to\": \"Lingering Garden\", \"mode\": \"metro\", \"start_time\": \"12:00\", \"end_time\": \"12:12\", \"cost\": 2},\n            \"price\": 55.0,\n            \"cost\": 55.0,\n            \"tickets\": 1,\n            \"start_time\": \"12:20\",\n            \"end_time\": \"14:20\"\n        },\n        {\n            \"position\": \"Shantang Street\",\n            \"type\": \"attraction\",\n            \"transports\": {\"from\": \"Lingering Garden\", \"to\": \"Shantang Street\", \"mode\": \"taxi\", \"start_time\": \"14:20\", \"end_time\": \"14:21\", \"cost\": 11},\n            \"price\": 0.0,\n            \"cost\": 0.0,\n            \"tickets\": 1,\n            \"start_time\": \"14:30\",\n            \"end_time\": \"15:30\"\n        },\n        {\n            \"position\": \"Suzhou Ancient Canal Cruise (Bai Juyi Pier at Shantang Street)\",\n            \"type\": \"attraction\",\n            \"transports\": {\"from\": \"Shantang Street\", \"to\": \"Suzhou Ancient Canal Cruise (Bai Juyi Pier at Shantang Street)\", \"mode\": \"walk\", \"start_time\": \"15:30\", \"end_time\": \"15:32\", \"cost\": 0},\n            \"price\": 95.0,\n            \"cost\": 95.0,\n            \"tickets\": 1,\n            \"start_time\": \"15:40\",\n            \"end_time\": \"17:40\"\n        },\n        {\n            \"position\": \"Pine and Crane Tower (Guanqian Street Branch)\",\n            \"type\": \"dinner\",\n            \"transports\": {\"from\": \"Suzhou Ancient Canal Cruise (Bai Juyi Pier at Shantang Street)\", \"to\": \"Pine and Crane Tower (Guanqian Street Branch)\", \"mode\": \"metro\", \"start_time\": \"17:40\", \"end_time\": \"17:57\", \"cost\": 2},\n            \"price\": 172,\n            \"cost\": 172,\n            \"start_time\": \"18:00\",\n            \"end_time\": \"19:00\"\n        },\n        {\n            \"start\": \"Suzhou North Station\",\n            \"end\": \"Nanjing South Railway Station\",\n            \"start_time\": \"20:02\",\n            \"end_time\": \"20:48\",\n            \"TrainID\": \"G16\",\n            \"type\": \"train\",\n            \"transports\": {\"from\": \"Pine and Crane Tower (Guanqian Street Branch)\", \"to\": \"Suzhou North Station\", \"mode\": \"metro\", \"start_time\": \"19:00\", \"end_time\": \"19:30\", \"cost\": 4},\n            \"price\": 122.9,\n            \"cost\": 122.9,\n            \"tickets\": 1\n        }\n    ]\n}\n```",
+      "input_tokens": 110700,
+      "output_tokens": 1321,
+      "total_tokens": 112021,
+      "model_calls": 6,
+      "failed_model_calls": 0,
+      "elapsed_time_seconds": 39.54969000816345,
+      "llm_inference_time_seconds": 25.11603093147278,
+      "information_collection_time_seconds": 14.428935050964355,
+      "initial_generation_time_s": 39.63032116717659,
+      "initial_generation_tool_calls": 5584,
+      "initial_generation_tool_call_counts_by_type": {
+        "accommodations_select": 1,
+        "attractions_select": 1,
+        "goto": 1800,
+        "intercity_transport_select": 4,
+        "next_page": 177,
+        "poi_lat_lon_search": 3600,
+        "restaurants_select": 1
+      },
+      "shared_initialization_time_s": 40.096427749842405,
+      "shared_initialization_system_metrics": {
+        "tool_call_count": 5634,
+        "successful_tool_call_count": 5634,
+        "failed_tool_call_count": 0,
+        "verification_count": 1,
+        "tool_call_counts_by_type": {
+          "accommodations_select": 1,
+          "attractions_select": 5,
+          "goto": 1814,
+          "intercity_transport_select": 6,
+          "next_page": 177,
+          "poi_lat_lon_search": 3628,
+          "restaurants_select": 3
+        }
+      }
+    }
+  },
+  "initial_plan_hash": "f25fb2ead99f5df9858a94016b6d29ace6eabbfa9cc6238218b9dae1236c154d",
+  "initial_state_hash": "0ff1bfd4f618d9913793ffcbf17585a2336303cc423253632d659211ab36a81c"
+}
