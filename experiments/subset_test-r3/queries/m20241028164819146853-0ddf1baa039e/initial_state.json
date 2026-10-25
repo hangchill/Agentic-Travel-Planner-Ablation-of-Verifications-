@@ -1,0 +1,1612 @@
+{
+  "run_id": "subset_test-r3",
+  "query_uid": "m20241028164819146853",
+  "state": {
+    "query_uid": "m20241028164819146853",
+    "problem": {
+      "uid": "m20241028164819146853",
+      "tag": "easy",
+      "start_city": "Chongqing",
+      "target_city": "Hangzhou",
+      "days": 2,
+      "people_number": 4,
+      "limit_rooms": true,
+      "limits_room_type": true,
+      "hard_logic_py": [
+        "result=(day_count(plan)==2)",
+        "result=(people_count(plan)==4)",
+        "result=True\nfor activity in allactivities(plan):\n  if activity_type(activity) in ['attraction', 'airplane', 'train'] and activity_tickets(activity)!=4: result=False\n  if innercity_transport_type(activity_transports(activity))=='metro'and metro_tickets(activity_transports(activity))!=4: result=False",
+        "result=True\nfor activity in allactivities(plan):\n  if activity_type(activity)=='accommodation' and room_count(activity)!=2: result=False",
+        "result=True\nfor activity in allactivities(plan):\n  if activity_type(activity)=='accommodation' and room_type(activity)!=1: result=False",
+        "accommodation_type_set=set()\nfor activity in allactivities(plan):\n  if activity_type(activity) == 'accommodation': accommodation_type_set.add(accommodation_type(activity, target_city(plan)))\nresult=({'智能马桶'}<=accommodation_type_set)",
+        "result=True\nfor activity in allactivities(plan):\n  if innercity_transport_type(activity_transports(activity))=='taxi'and taxi_cars(activity_transports(activity))!=1: result=False"
+      ],
+      "nature_language": "Current location: Chongqing. Four of us want to visit Hangzhou for 2 days and stay in two double rooms. The hotel should have smart toilets. Please provide me with a travel plan.",
+      "nature_language_en": "Current location: Chongqing. Four of us want to visit Hangzhou for 2 days and stay in two double rooms. The hotel should have smart toilets. Please provide me with a travel plan."
+    },
+    "raw_initial_plan": [
+      {
+        "day": 1,
+        "activities": [
+          {
+            "start_time": "05:16",
+            "end_time": "06:54",
+            "start": "Chongqing Jiangbei International Airport",
+            "end": "Hangzhou Xiaoshan International Airport",
+            "price": 612.57,
+            "cost": 2450.28,
+            "FlightID": "FL372",
+            "type": "airplane",
+            "tickets": 4,
+            "transports": "empty"
+          },
+          {
+            "position": "West Lake Scenic Area",
+            "type": "attraction",
+            "transports": {
+              "from": "Hangzhou Xiaoshan International Airport",
+              "to": "West Lake Scenic Area",
+              "mode": "metro",
+              "start_time": "06:54",
+              "end_time": "08:32",
+              "cost": 24
+            },
+            "price": 0.0,
+            "cost": 0.0,
+            "tickets": 4,
+            "start_time": "08:40",
+            "end_time": "10:40"
+          },
+          {
+            "position": "Lou Wai Lou (Gushan Road Store, West Lake Scenic Area)",
+            "type": "lunch",
+            "transports": {
+              "from": "West Lake Scenic Area",
+              "to": "Lou Wai Lou (Gushan Road Store, West Lake Scenic Area)",
+              "mode": "metro",
+              "start_time": "10:40",
+              "end_time": "11:56",
+              "cost": 12
+            },
+            "price": 177.0,
+            "cost": 708.0,
+            "start_time": "12:00",
+            "end_time": "13:00"
+          },
+          {
+            "position": "Leifeng Pagoda",
+            "type": "attraction",
+            "transports": {
+              "from": "Lou Wai Lou (Gushan Road Store, West Lake Scenic Area)",
+              "to": "Leifeng Pagoda",
+              "mode": "metro",
+              "start_time": "13:00",
+              "end_time": "13:36",
+              "cost": 8
+            },
+            "price": 0.0,
+            "cost": 0.0,
+            "tickets": 4,
+            "start_time": "13:40",
+            "end_time": "15:10"
+          },
+          {
+            "position": "Qinghefang Street",
+            "type": "attraction",
+            "transports": {
+              "from": "Leifeng Pagoda",
+              "to": "Qinghefang Street",
+              "mode": "metro",
+              "start_time": "15:10",
+              "end_time": "15:26",
+              "cost": 8
+            },
+            "price": 0.0,
+            "cost": 0.0,
+            "tickets": 4,
+            "start_time": "15:30",
+            "end_time": "17:00"
+          },
+          {
+            "position": "Floral Hotel·Hangzhou Zhuyin Garden Homestay",
+            "type": "accommodation",
+            "transports": {
+              "from": "Qinghefang Street",
+              "to": "Floral Hotel·Hangzhou Zhuyin Garden Homestay",
+              "mode": "metro",
+              "start_time": "17:00",
+              "end_time": "17:57",
+              "cost": 12
+            },
+            "room_type": 2,
+            "price": 527,
+            "cost": 1054,
+            "start_time": "18:00",
+            "end_time": "24:00",
+            "rooms": 2
+          }
+        ]
+      },
+      {
+        "day": 2,
+        "activities": [
+          {
+            "position": "Lingyin Temple",
+            "type": "attraction",
+            "transports": {
+              "from": "Floral Hotel·Hangzhou Zhuyin Garden Homestay",
+              "to": "Lingyin Temple",
+              "mode": "taxi",
+              "start_time": "08:00",
+              "end_time": "08:11",
+              "cost": 11
+            },
+            "price": 0.0,
+            "cost": 0.0,
+            "tickets": 4,
+            "start_time": "08:20",
+            "end_time": "09:50"
+          },
+          {
+            "position": "China National Tea Museum",
+            "type": "attraction",
+            "transports": {
+              "from": "Lingyin Temple",
+              "to": "China National Tea Museum",
+              "mode": "taxi",
+              "start_time": "09:50",
+              "end_time": "09:53",
+              "cost": 12.02
+            },
+            "price": 0.0,
+            "cost": 0.0,
+            "tickets": 4,
+            "start_time": "10:00",
+            "end_time": "12:00"
+          },
+          {
+            "position": "Tea Village: The Essence of Jiangnan",
+            "type": "lunch",
+            "transports": {
+              "from": "China National Tea Museum",
+              "to": "Tea Village: The Essence of Jiangnan",
+              "mode": "taxi",
+              "start_time": "12:00",
+              "end_time": "12:02",
+              "cost": 11
+            },
+            "price": 138.0,
+            "cost": 552.0,
+            "start_time": "12:10",
+            "end_time": "13:10"
+          },
+          {
+            "position": "Hangzhou Xiaoshan International Airport",
+            "type": "airplane",
+            "transports": {
+              "from": "Tea Village: The Essence of Jiangnan",
+              "to": "Hangzhou Xiaoshan International Airport",
+              "mode": "taxi",
+              "start_time": "13:10",
+              "end_time": "13:55",
+              "cost": 130.06
+            },
+            "start_time": "22:10",
+            "end_time": "23:48",
+            "start": "Hangzhou Xiaoshan International Airport",
+            "end": "Chongqing Jiangbei International Airport",
+            "price": 644.86,
+            "cost": 2579.44,
+            "FlightID": "FL521",
+            "tickets": 4
+          }
+        ]
+      }
+    ],
+    "repair_context": {
+      "go_train_info": "TrainID\tTrainType\tFrom\tTo\tBeginTime\tEndTime\tDuration\tprice\r\nG1339\tHigh-speed rail\tChongqing West Railway Station\tHangzhou East Railway Station\t11:36\t22:11\t10.58\t853.23\r\n",
+      "go_flight_info": "FlightID\tFrom\tTo\tBeginTime\tEndTime\tDuration\tprice\r\nFL372\tChongqing Jiangbei International Airport\tHangzhou Xiaoshan International Airport\t05:16\t06:54\t1.6400000000000001\t612.57\r\nFL374\tChongqing Jiangbei International Airport\tHangzhou Xiaoshan International Airport\t07:56\t09:34\t1.6400000000000001\t628.14\r\nFL373\tChongqing Jiangbei International Airport\tHangzhou Xiaoshan International Airport\t16:24\t18:02\t1.6400000000000001\t646.94\r\nFL376\tChongqing Jiangbei International Airport\tHangzhou Xiaoshan International Airport\t13:24\t15:02\t1.6400000000000001\t665.97\r\n",
+      "back_train_info": "TrainID\tTrainType\tFrom\tTo\tBeginTime\tEndTime\tDuration\tprice\r\nZ257\tDirect Express\tHangzhou South Railway Station\tChongqing North Railway Station\t21:37\t12:46\t15.25\t656.33\r\nZ256\tDirect Express\tHangzhou South Railway Station\tChongqing North Railway Station\t21:37\t12:46\t15.25\t656.33\r\n",
+      "back_flight_info": "FlightID\tFrom\tTo\tBeginTime\tEndTime\tDuration\tprice\r\nFL529\tHangzhou Xiaoshan International Airport\tChongqing Jiangbei International Airport\t22:17\t23:55\t1.6400000000000001\t613.67\r\nFL521\tHangzhou Xiaoshan International Airport\tChongqing Jiangbei International Airport\t22:10\t23:48\t1.6400000000000001\t644.86\r\nFL526\tHangzhou Xiaoshan International Airport\tChongqing Jiangbei International Airport\t21:41\t23:19\t1.6400000000000001\t639.67\r\n",
+      "attraction_info": "name\ttype\tlat\tlon\topentime\tendtime\tprice\trecommendmintime\trecommendmaxtime\r\nWest Lake Scenic Area\tnatural scenery\t30.228932\t120.12792\t00:00\t24:00\t0.0\t1.0\t2.0\r\nLingyin Temple\thistorical site\t30.246914\t120.107833\t06:30\t17:45\t0.0\t0.5\t1.5\r\nLeifeng Pagoda\thistorical site\t30.236901\t120.155363\t08:00\t20:00\t0.0\t0.5\t2.0\r\nQinghefang Street\tcommercial district\t30.245629\t120.175778\t00:00\t24:00\t0.0\t1.0\t2.5\r\nXixi National Wetland Park\tpark\t30.27289\t120.071528\t07:30\t18:30\t70.0\t0.5\t1.0\r\nHangzhou Songcheng\tAmusement Park/Sports Entertainment\t30.175794\t120.105381\t09:30\t21:00\t300.0\t1.5\t2.0\r\nWest Lake Boat Tour\tnatural scenery\t30.253883\t120.155772\t08:00\t17:00\t55.0\t2.0\t3.0\r\nChina National Tea Museum\tMuseum/Memorial Hall\t30.238721\t120.127393\t09:00\t16:30\t0.0\t2.0\t3.5\r\nHangzhou Museum\tMuseum/Memorial Hall\t30.244425\t120.173089\t09:00\t16:30\t0.0\t0.5\t1.0\r\nLiangzhu Ancient City Ruins Park\thistorical site\t30.386514\t119.993671\t09:00\t17:00\t55.0\t1.5\t2.0\r\nHangzhou Zoo\tAmusement Park/Sports Entertainment\t30.218839\t120.139703\t07:00\t17:30\t20.0\t2.5\t4.0\r\nThree Ponds Mirroring the Moon\tpark\t30.244073\t120.150685\t08:00\t17:00\t55.0\t1.0\t2.5\r\nHangzhou Botanical Garden\tpark\t30.256881\t120.122838\t07:00\t17:30\t10.0\t3.0\t4.0\r\nHangzhou Confucius Temple\thistorical site\t30.247581\t120.168458\t09:00\t16:30\t0.0\t2.0\t3.0\r\nHangzhou Confucius Temple\thistorical site\t30.247581\t120.168458\t09:00\t16:30\t0.0\t2.0\t3.0\r\n",
+      "restaurant_info": "name\tlat\tlon\tprice\tcuisine\topentime\tendtime\trecommendedfood\r\nTea Village: The Essence of Jiangnan\t30.2281884\t120.1200366\t138.0\tJiangsu-Zhejiang cuisine\t11:00\t20:30\tTea Master Taro Casserole, Chicken Broth Crown Daisy, Private Kitchen Mandarin Fish, Tea Master Farmhouse Millet Cake, Upgraded Dongpo Pork, Tea-Scented Chicken\r\nJiangzhe Hui (West Lake Lakeside in77 Zone B Store)\t30.2548566\t120.1637714\t139.0\tJiangsu-Zhejiang cuisine\t10:00\t22:00\tLongjing Shrimp, Braised Pork Belly with Abalone, Abalone Sauce Fried Rice, Fish with Pickled Cabbage in Creamy Broth, Curry Seasonal Vegetables, Family Feast\r\nLou Wai Lou (Gushan Road Store, West Lake Scenic Area)\t30.2502465\t120.1407155\t177.0\tJiangsu-Zhejiang cuisine\t10:30\t20:30\tWest Lake Vinegar Fish, Dongpo Braised Pork, Sister Song's Fish Soup, West Lake Sweet Lotus Root, Premium Shrimp with Longjing Tea, West Lake Water Shield Soup\r\nZhiweiguan Weizhuang (Yang Gongdi Branch)\t30.2305558\t120.1372912\t161.0\tJiangsu-Zhejiang cuisine\t10:30\t20:00\tDongpo Pork, West Lake Vinegar Fish, Longjing Tea Pastry, West Lake Snow Beauty, Three Delicacies Cat's Ear Noodles, Shrimp Xiaolongbao, Honey Glazed Lotus Root, Qianlong Fish Head, Braised Pork Belly, Hand-Peeled Longjing Shrimp\r\nNew Zhou Ji (Gulou Branch)\t30.2376745\t120.1709907\t98.0\tJiangsu-Zhejiang cuisine\t10:30\t02:00\tSignature Fish Head, Signature Braised Chicken Feet, Signature Soy Sauce Prawns, Sizzling Platter Sea Bass, Brown Sugar Glutinous Rice Balls, Dry-Fried Hand-Torn Cabbage, Cheese Baked Pumpkin\r\n",
+      "accommodation_info": "name\tfeaturehoteltype\tlat\tlon\tprice\tnumbed\r\nFloral Hotel·Hangzhou Zhuyin Garden Homestay\tSmart toilet\t30.237747\t120.10698\t527\t1\r\nHangzhou Xiaoshan Meiliyun Bed&Breakfast\tFree parking\t29.992049\t120.221601\t403\t1\r\nHangzhou Lin'an Xia'er · Parent Child Vacation and River Tracing Homestay\tFree parking\t30.373748\t119.56274\t499\t1\r\n",
+      "innercity_transport_info": "from West Lake Scenic Area to West Lake Scenic Area:  metro: empty.  taxi: empty.  walk: empty. \nfrom West Lake Scenic Area to Hangzhou Zoo: taxi: duration 2, cost 11.0. walk: duration 19, cost 0.0. \nfrom West Lake Scenic Area to Lingyin Temple: metro: duration 84, cost 12. taxi: duration 4, cost 14.42. walk: duration 33, cost 0.0. \nfrom West Lake Scenic Area to Jiangzhe Hui (West Lake Lakeside in77 Zone B Store): metro: duration 54, cost 12. taxi: duration 6, cost 20.42. walk: duration 53, cost 0.0. \nfrom West Lake Scenic Area to Hangzhou Lin'an Xia'er · Parent Child Vacation and River Tracing Homestay: metro: duration 383, cost 32. taxi: duration 85, cost 249.79. walk: duration 680, cost 0.0. \nfrom West Lake Scenic Area to Hangzhou Songcheng: metro: duration 79, cost 12. taxi: duration 9, cost 26.67. walk: duration 75, cost 0.0. \nfrom West Lake Scenic Area to Three Ponds Mirroring the Moon: metro: duration 66, cost 12. taxi: duration 4, cost 14.36. walk: duration 33, cost 0.0. \nfrom West Lake Scenic Area to West Lake Boat Tour: metro: duration 63, cost 12. taxi: duration 5, cost 18.18. walk: duration 46, cost 0.0. \nfrom West Lake Scenic Area to Leifeng Pagoda: metro: duration 60, cost 12. taxi: duration 4, cost 14.45. walk: duration 33, cost 0.0. \nfrom West Lake Scenic Area to Liangzhu Ancient City Ruins Park: metro: duration 149, cost 20. taxi: duration 32, cost 92.46. walk: duration 260, cost 0.0. \nfrom West Lake Scenic Area to Tea Village: The Essence of Jiangnan: taxi: duration 1, cost 11.0. walk: duration 9, cost 0.0. \nfrom West Lake Scenic Area to Qinghefang Street: metro: duration 58, cost 12. taxi: duration 7, cost 22.08. walk: duration 59, cost 0.0. \nfrom West Lake Scenic Area to Hangzhou Xiaoshan International Airport: metro: duration 98, cost 24. taxi: duration 43, cost 126.63. walk: duration 351, cost 0.0. \nfrom West Lake Scenic Area to Hangzhou Botanical Garden: metro: duration 74, cost 12. taxi: duration 4, cost 15.68. walk: duration 37, cost 0.0. \nfrom West Lake Scenic Area to China National Tea Museum: metro: duration 94, cost 12. taxi: duration 1, cost 11.0. walk: duration 13, cost 0.0. \nfrom West Lake Scenic Area to Zhiweiguan Weizhuang (Yang Gongdi Branch): metro: duration 83, cost 12. taxi: duration 1, cost 11.0. walk: duration 11, cost 0.0. \nfrom West Lake Scenic Area to Lou Wai Lou (Gushan Road Store, West Lake Scenic Area): metro: duration 76, cost 12. taxi: duration 3, cost 14.03. walk: duration 31, cost 0.0. \nfrom West Lake Scenic Area to Hangzhou East Railway Station: metro: duration 71, cost 16. taxi: duration 17, cost 46.92. walk: duration 139, cost 0.0. \nfrom West Lake Scenic Area to Hangzhou South Railway Station: metro: duration 74, cost 20. taxi: duration 25, cost 72.0. walk: duration 206, cost 0.0. \nfrom West Lake Scenic Area to Xixi National Wetland Park: metro: duration 78, cost 16. taxi: duration 10, cost 30.23. walk: duration 87, cost 0.0. \nfrom West Lake Scenic Area to Floral Hotel·Hangzhou Zhuyin Garden Homestay: metro: duration 96, cost 12. taxi: duration 3, cost 12.54. walk: duration 26, cost 0.0. \nfrom West Lake Scenic Area to Hangzhou Confucius Temple: metro: duration 54, cost 12. taxi: duration 6, cost 20.16. walk: duration 52, cost 0.0. \nfrom West Lake Scenic Area to Hangzhou Xiaoshan Meiliyun Bed&Breakfast: metro: duration 252, cost 20. taxi: duration 41, cost 119.66. walk: duration 333, cost 0.0. \nfrom West Lake Scenic Area to Hangzhou Museum: metro: duration 58, cost 12. taxi: duration 7, cost 21.06. walk: duration 56, cost 0.0. \nfrom West Lake Scenic Area to New Zhou Ji (Gulou Branch): metro: duration 60, cost 12. taxi: duration 6, cost 19.6. walk: duration 51, cost 0.0. \nfrom Hangzhou Zoo to West Lake Scenic Area: taxi: duration 2, cost 11.0. walk: duration 19, cost 0.0. \nfrom Hangzhou Zoo to Hangzhou Zoo:  metro: empty.  taxi: empty.  walk: empty. \nfrom Hangzhou Zoo to Lingyin Temple: metro: duration 65, cost 12. taxi: duration 6, cost 20.0. walk: duration 52, cost 0.0. \nfrom Hangzhou Zoo to Jiangzhe Hui (West Lake Lakeside in77 Zone B Store): metro: duration 35, cost 12. taxi: duration 6, cost 20.86. walk: duration 55, cost 0.0. \nfrom Hangzhou Zoo to Hangzhou Lin'an Xia'er · Parent Child Vacation and River Tracing Homestay: metro: duration 364, cost 32. taxi: duration 87, cost 256.14. walk: duration 697, cost 0.0. \nfrom Hangzhou Zoo to Hangzhou Songcheng: metro: duration 60, cost 12. taxi: duration 8, cost 25.02. walk: duration 69, cost 0.0. \nfrom Hangzhou Zoo to Three Ponds Mirroring the Moon: metro: duration 47, cost 12. taxi: duration 4, cost 15.17. walk: duration 35, cost 0.0. \nfrom Hangzhou Zoo to West Lake Boat Tour: metro: duration 44, cost 12. taxi: duration 6, cost 19.34. walk: duration 50, cost 0.0. \nfrom Hangzhou Zoo to Leifeng Pagoda: metro: duration 41, cost 12. taxi: duration 3, cost 13.47. walk: duration 30, cost 0.0. \nfrom Hangzhou Zoo to Liangzhu Ancient City Ruins Park: metro: duration 130, cost 20. taxi: duration 34, cost 99.54. walk: duration 279, cost 0.0. \nfrom Hangzhou Zoo to Tea Village: The Essence of Jiangnan: taxi: duration 3, cost 12.25. walk: duration 25, cost 0.0. \nfrom Hangzhou Zoo to Qinghefang Street: metro: duration 39, cost 12. taxi: duration 6, cost 20.69. walk: duration 54, cost 0.0. \nfrom Hangzhou Zoo to Hangzhou Xiaoshan International Airport: metro: duration 79, cost 24. taxi: duration 42, cost 121.75. walk: duration 338, cost 0.0. \nfrom Hangzhou Zoo to Hangzhou Botanical Garden: metro: duration 55, cost 12. taxi: duration 6, cost 20.52. walk: duration 54, cost 0.0. \nfrom Hangzhou Zoo to China National Tea Museum: metro: duration 75, cost 12. taxi: duration 3, cost 13.46. walk: duration 30, cost 0.0. \nfrom Hangzhou Zoo to Zhiweiguan Weizhuang (Yang Gongdi Branch): metro: duration 64, cost 12. taxi: duration 1, cost 11.0. walk: duration 15, cost 0.0. \nfrom Hangzhou Zoo to Lou Wai Lou (Gushan Road Store, West Lake Scenic Area): metro: duration 57, cost 12. taxi: duration 5, cost 16.89. walk: duration 41, cost 0.0. \nfrom Hangzhou Zoo to Hangzhou East Railway Station: metro: duration 52, cost 16. taxi: duration 17, cost 46.83. walk: duration 139, cost 0.0. \nfrom Hangzhou Zoo to Hangzhou South Railway Station: metro: duration 55, cost 20. taxi: duration 23, cost 65.48. walk: duration 188, cost 0.0. \nfrom Hangzhou Zoo to Xixi National Wetland Park: metro: duration 59, cost 16. taxi: duration 13, cost 35.8. walk: duration 106, cost 0.0. \nfrom Hangzhou Zoo to Floral Hotel·Hangzhou Zhuyin Garden Homestay: metro: duration 77, cost 12. taxi: duration 5, cost 17.94. walk: duration 45, cost 0.0. \nfrom Hangzhou Zoo to Hangzhou Confucius Temple: metro: duration 35, cost 12. taxi: duration 6, cost 19.47. walk: duration 50, cost 0.0. \nfrom Hangzhou Zoo to Hangzhou Xiaoshan Meiliyun Bed&Breakfast: metro: duration 233, cost 20. taxi: duration 39, cost 113.28. walk: duration 316, cost 0.0. \nfrom Hangzhou Zoo to Hangzhou Museum: metro: duration 39, cost 12. taxi: duration 6, cost 19.7. walk: duration 51, cost 0.0. \nfrom Hangzhou Zoo to New Zhou Ji (Gulou Branch): metro: duration 41, cost 12. taxi: duration 5, cost 17.53. walk: duration 43, cost 0.0. \nfrom Lingyin Temple to West Lake Scenic Area: metro: duration 84, cost 12. taxi: duration 4, cost 14.42. walk: duration 33, cost 0.0. \nfrom Lingyin Temple to Hangzhou Zoo: metro: duration 65, cost 12. taxi: duration 6, cost 20.0. walk: duration 52, cost 0.0. \nfrom Lingyin Temple to Lingyin Temple:  metro: empty.  taxi: empty.  walk: empty. \nfrom Lingyin Temple to Jiangzhe Hui (West Lake Lakeside in77 Zone B Store): metro: duration 37, cost 12. taxi: duration 8, cost 23.79. walk: duration 65, cost 0.0. \nfrom Lingyin Temple to Hangzhou Lin'an Xia'er · Parent Child Vacation and River Tracing Homestay: metro: duration 356, cost 32. taxi: duration 81, cost 238.97. walk: duration 651, cost 0.0. \nfrom Lingyin Temple to Hangzhou Songcheng: metro: duration 71, cost 16. taxi: duration 11, cost 32.31. walk: duration 94, cost 0.0. \nfrom Lingyin Temple to Three Ponds Mirroring the Moon: metro: duration 53, cost 12. taxi: duration 6, cost 19.18. walk: duration 49, cost 0.0. \nfrom Lingyin Temple to West Lake Boat Tour: metro: duration 46, cost 12. taxi: duration 7, cost 21.07. walk: duration 56, cost 0.0. \nfrom Lingyin Temple to Leifeng Pagoda: metro: duration 47, cost 12. taxi: duration 7, cost 21.18. walk: duration 56, cost 0.0. \nfrom Lingyin Temple to Liangzhu Ancient City Ruins Park: metro: duration 114, cost 16. taxi: duration 28, cost 80.09. walk: duration 227, cost 0.0. \nfrom Lingyin Temple to Tea Village: The Essence of Jiangnan: metro: duration 89, cost 12. taxi: duration 3, cost 13.05. walk: duration 28, cost 0.0. \nfrom Lingyin Temple to Qinghefang Street: metro: duration 45, cost 12. taxi: duration 9, cost 27.59. walk: duration 78, cost 0.0. \nfrom Lingyin Temple to Hangzhou Xiaoshan International Airport: metro: duration 90, cost 28. taxi: duration 46, cost 135.42. walk: duration 375, cost 0.0. \nfrom Lingyin Temple to Hangzhou Botanical Garden: metro: duration 47, cost 8. taxi: duration 2, cost 11.06. walk: duration 21, cost 0.0. \nfrom Lingyin Temple to China National Tea Museum: metro: duration 70, cost 8. taxi: duration 3, cost 12.02. walk: duration 25, cost 0.0. \nfrom Lingyin Temple to Zhiweiguan Weizhuang (Yang Gongdi Branch): metro: duration 70, cost 12. taxi: duration 5, cost 16.48. walk: duration 40, cost 0.0. \nfrom Lingyin Temple to Lou Wai Lou (Gushan Road Store, West Lake Scenic Area): metro: duration 52, cost 8. taxi: duration 4, cost 15.85. walk: duration 38, cost 0.0. \nfrom Lingyin Temple to Hangzhou East Railway Station: metro: duration 52, cost 16. taxi: duration 18, cost 49.12. walk: duration 145, cost 0.0. \nfrom Lingyin Temple to Hangzhou South Railway Station: metro: duration 70, cost 24. taxi: duration 29, cost 83.51. walk: duration 236, cost 0.0. \nfrom Lingyin Temple to Xixi National Wetland Park: metro: duration 44, cost 8. taxi: duration 6, cost 20.55. walk: duration 54, cost 0.0. \nfrom Lingyin Temple to Floral Hotel·Hangzhou Zhuyin Garden Homestay: taxi: duration 1, cost 11.0. walk: duration 12, cost 0.0. \nfrom Lingyin Temple to Hangzhou Confucius Temple: metro: duration 40, cost 12. taxi: duration 8, cost 25.12. walk: duration 70, cost 0.0. \nfrom Lingyin Temple to Hangzhou Xiaoshan Meiliyun Bed&Breakfast: metro: duration 251, cost 24. taxi: duration 45, cost 131.08. walk: duration 363, cost 0.0. \nfrom Lingyin Temple to Hangzhou Museum: metro: duration 44, cost 12. taxi: duration 9, cost 26.7. walk: duration 75, cost 0.0. \nfrom Lingyin Temple to New Zhou Ji (Gulou Branch): metro: duration 48, cost 12. taxi: duration 9, cost 26.28. walk: duration 73, cost 0.0. \nfrom Jiangzhe Hui (West Lake Lakeside in77 Zone B Store) to West Lake Scenic Area: metro: duration 54, cost 12. taxi: duration 6, cost 20.42. walk: duration 53, cost 0.0. \nfrom Jiangzhe Hui (West Lake Lakeside in77 Zone B Store) to Hangzhou Zoo: metro: duration 35, cost 12. taxi: duration 6, cost 20.86. walk: duration 55, cost 0.0. \nfrom Jiangzhe Hui (West Lake Lakeside in77 Zone B Store) to Lingyin Temple: metro: duration 37, cost 12. taxi: duration 8, cost 23.79. walk: duration 65, cost 0.0. \nfrom Jiangzhe Hui (West Lake Lakeside in77 Zone B Store) to Jiangzhe Hui (West Lake Lakeside in77 Zone B Store):  metro: empty.  taxi: empty.  walk: empty. \nfrom Jiangzhe Hui (West Lake Lakeside in77 Zone B Store) to Hangzhou Lin'an Xia'er · Parent Child Vacation and River Tracing Homestay: metro: duration 343, cost 32. taxi: duration 88, cost 261.51. walk: duration 711, cost 0.0. \nfrom Jiangzhe Hui (West Lake Lakeside in77 Zone B Store) to Hangzhou Songcheng: metro: duration 47, cost 16. taxi: duration 15, cost 41.56. walk: duration 124, cost 0.0. \nfrom Jiangzhe Hui (West Lake Lakeside in77 Zone B Store) to Three Ponds Mirroring the Moon: metro: duration 18, cost 8. taxi: duration 2, cost 11.0. walk: duration 20, cost 0.0. \nfrom Jiangzhe Hui (West Lake Lakeside in77 Zone B Store) to West Lake Boat Tour: taxi: duration 1, cost 11.0. walk: duration 9, cost 0.0. \nfrom Jiangzhe Hui (West Lake Lakeside in77 Zone B Store) to Leifeng Pagoda: metro: duration 12, cost 8. taxi: duration 3, cost 12.22. walk: duration 25, cost 0.0. \nfrom Jiangzhe Hui (West Lake Lakeside in77 Zone B Store) to Liangzhu Ancient City Ruins Park: metro: duration 99, cost 20. taxi: duration 32, cost 93.36. walk: duration 263, cost 0.0. \nfrom Jiangzhe Hui (West Lake Lakeside in77 Zone B Store) to Tea Village: The Essence of Jiangnan: metro: duration 59, cost 12. taxi: duration 7, cost 22.7. walk: duration 61, cost 0.0. \nfrom Jiangzhe Hui (West Lake Lakeside in77 Zone B Store) to Qinghefang Street: metro: duration 8, cost 8. taxi: duration 2, cost 11.0. walk: duration 18, cost 0.0. \nfrom Jiangzhe Hui (West Lake Lakeside in77 Zone B Store) to Hangzhou Xiaoshan International Airport: metro: duration 52, cost 24. taxi: duration 38, cost 111.49. walk: duration 311, cost 0.0. \nfrom Jiangzhe Hui (West Lake Lakeside in77 Zone B Store) to Hangzhou Botanical Garden: metro: duration 24, cost 8. taxi: duration 5, cost 18.51. walk: duration 47, cost 0.0. \nfrom Jiangzhe Hui (West Lake Lakeside in77 Zone B Store) to China National Tea Museum: metro: duration 43, cost 8. taxi: duration 5, cost 18.46. walk: duration 47, cost 0.0. \nfrom Jiangzhe Hui (West Lake Lakeside in77 Zone B Store) to Zhiweiguan Weizhuang (Yang Gongdi Branch): metro: duration 35, cost 8. taxi: duration 5, cost 17.68. walk: duration 44, cost 0.0. \nfrom Jiangzhe Hui (West Lake Lakeside in77 Zone B Store) to Lou Wai Lou (Gushan Road Store, West Lake Scenic Area): metro: duration 25, cost 8. taxi: duration 3, cost 12.67. walk: duration 27, cost 0.0. \nfrom Jiangzhe Hui (West Lake Lakeside in77 Zone B Store) to Hangzhou East Railway Station: metro: duration 18, cost 12. taxi: duration 10, cost 29.6. walk: duration 85, cost 0.0. \nfrom Jiangzhe Hui (West Lake Lakeside in77 Zone B Store) to Hangzhou South Railway Station: metro: duration 34, cost 20. taxi: duration 23, cost 64.48. walk: duration 186, cost 0.0. \nfrom Jiangzhe Hui (West Lake Lakeside in77 Zone B Store) to Xixi National Wetland Park: metro: duration 31, cost 16. taxi: duration 13, cost 36.55. walk: duration 109, cost 0.0. \nfrom Jiangzhe Hui (West Lake Lakeside in77 Zone B Store) to Floral Hotel·Hangzhou Zhuyin Garden Homestay: metro: duration 49, cost 12. taxi: duration 8, cost 24.95. walk: duration 69, cost 0.0. \nfrom Jiangzhe Hui (West Lake Lakeside in77 Zone B Store) to Hangzhou Confucius Temple: metro: duration 4, cost 8. taxi: duration 1, cost 11.0. walk: duration 11, cost 0.0. \nfrom Jiangzhe Hui (West Lake Lakeside in77 Zone B Store) to Hangzhou Xiaoshan Meiliyun Bed&Breakfast: metro: duration 216, cost 20. taxi: duration 44, cost 128.18. walk: duration 355, cost 0.0. \nfrom Jiangzhe Hui (West Lake Lakeside in77 Zone B Store) to Hangzhou Museum: metro: duration 8, cost 8. taxi: duration 2, cost 11.0. walk: duration 17, cost 0.0. \nfrom Jiangzhe Hui (West Lake Lakeside in77 Zone B Store) to New Zhou Ji (Gulou Branch): metro: duration 12, cost 8. taxi: duration 3, cost 11.8. walk: duration 24, cost 0.0. \nfrom Hangzhou Lin'an Xia'er · Parent Child Vacation and River Tracing Homestay to West Lake Scenic Area: metro: duration 383, cost 32. taxi: duration 85, cost 249.79. walk: duration 680, cost 0.0. \nfrom Hangzhou Lin'an Xia'er · Parent Child Vacation and River Tracing Homestay to Hangzhou Zoo: metro: duration 364, cost 32. taxi: duration 87, cost 256.14. walk: duration 697, cost 0.0. \nfrom Hangzhou Lin'an Xia'er · Parent Child Vacation and River Tracing Homestay to Lingyin Temple: metro: duration 356, cost 32. taxi: duration 81, cost 238.97. walk: duration 651, cost 0.0. \nfrom Hangzhou Lin'an Xia'er · Parent Child Vacation and River Tracing Homestay to Jiangzhe Hui (West Lake Lakeside in77 Zone B Store): metro: duration 343, cost 32. taxi: duration 88, cost 261.51. walk: duration 711, cost 0.0. \nfrom Hangzhou Lin'an Xia'er · Parent Child Vacation and River Tracing Homestay to Hangzhou Lin'an Xia'er · Parent Child Vacation and River Tracing Homestay:  metro: empty.  taxi: empty.  walk: empty. \nfrom Hangzhou Lin'an Xia'er · Parent Child Vacation and River Tracing Homestay to Hangzhou Songcheng: metro: duration 356, cost 32. taxi: duration 84, cost 249.56. walk: duration 679, cost 0.0. \nfrom Hangzhou Lin'an Xia'er · Parent Child Vacation and River Tracing Homestay to Three Ponds Mirroring the Moon: metro: duration 357, cost 32. taxi: duration 87, cost 257.28. walk: duration 700, cost 0.0. \nfrom Hangzhou Lin'an Xia'er · Parent Child Vacation and River Tracing Homestay to West Lake Boat Tour: metro: duration 352, cost 32. taxi: duration 87, cost 258.25. walk: duration 702, cost 0.0. \nfrom Hangzhou Lin'an Xia'er · Parent Child Vacation and River Tracing Homestay to Leifeng Pagoda: metro: duration 351, cost 32. taxi: duration 88, cost 260.15. walk: duration 707, cost 0.0. \nfrom Hangzhou Lin'an Xia'er · Parent Child Vacation and River Tracing Homestay to Liangzhu Ancient City Ruins Park: metro: duration 391, cost 28. taxi: duration 62, cost 181.2. walk: duration 497, cost 0.0. \nfrom Hangzhou Lin'an Xia'er · Parent Child Vacation and River Tracing Homestay to Tea Village: The Essence of Jiangnan: metro: duration 388, cost 32. taxi: duration 83, cost 246.63. walk: duration 671, cost 0.0. \nfrom Hangzhou Lin'an Xia'er · Parent Child Vacation and River Tracing Homestay to Qinghefang Street: metro: duration 351, cost 32. taxi: duration 90, cost 267.63. walk: duration 727, cost 0.0. \nfrom Hangzhou Lin'an Xia'er · Parent Child Vacation and River Tracing Homestay to Hangzhou Xiaoshan International Airport: metro: duration 395, cost 40.0. taxi: duration 127, cost 377.48. walk: duration 1020, cost 0.0. \nfrom Hangzhou Lin'an Xia'er · Parent Child Vacation and River Tracing Homestay to Hangzhou Botanical Garden: metro: duration 354, cost 32. taxi: duration 83, cost 244.03. walk: duration 664, cost 0.0. \nfrom Hangzhou Lin'an Xia'er · Parent Child Vacation and River Tracing Homestay to China National Tea Museum: metro: duration 376, cost 32. taxi: duration 84, cost 248.22. walk: duration 676, cost 0.0. \nfrom Hangzhou Lin'an Xia'er · Parent Child Vacation and River Tracing Homestay to Zhiweiguan Weizhuang (Yang Gongdi Branch): metro: duration 374, cost 32. taxi: duration 86, cost 253.46. walk: duration 690, cost 0.0. \nfrom Hangzhou Lin'an Xia'er · Parent Child Vacation and River Tracing Homestay to Lou Wai Lou (Gushan Road Store, West Lake Scenic Area): metro: duration 358, cost 32. taxi: duration 85, cost 252.34. walk: duration 687, cost 0.0. \nfrom Hangzhou Lin'an Xia'er · Parent Child Vacation and River Tracing Homestay to Hangzhou East Railway Station: metro: duration 359, cost 36. taxi: duration 95, cost 281.41. walk: duration 764, cost 0.0. \nfrom Hangzhou Lin'an Xia'er · Parent Child Vacation and River Tracing Homestay to Hangzhou South Railway Station: metro: duration 372, cost 36. taxi: duration 110, cost 326.91. walk: duration 885, cost 0.0. \nfrom Hangzhou Lin'an Xia'er · Parent Child Vacation and River Tracing Homestay to Xixi National Wetland Park: metro: duration 337, cost 28. taxi: duration 75, cost 220.57. walk: duration 602, cost 0.0. \nfrom Hangzhou Lin'an Xia'er · Parent Child Vacation and River Tracing Homestay to Floral Hotel·Hangzhou Zhuyin Garden Homestay: metro: duration 368, cost 32. taxi: duration 81, cost 239.85. walk: duration 653, cost 0.0. \nfrom Hangzhou Lin'an Xia'er · Parent Child Vacation and River Tracing Homestay to Hangzhou Confucius Temple: metro: duration 345, cost 32. taxi: duration 89, cost 264.32. walk: duration 718, cost 0.0. \nfrom Hangzhou Lin'an Xia'er · Parent Child Vacation and River Tracing Homestay to Hangzhou Xiaoshan Meiliyun Bed&Breakfast: metro: duration 546, cost 36. taxi: duration 114, cost 337.91. walk: duration 915, cost 0.0. \nfrom Hangzhou Lin'an Xia'er · Parent Child Vacation and River Tracing Homestay to Hangzhou Museum: metro: duration 349, cost 32. taxi: duration 90, cost 266.64. walk: duration 725, cost 0.0. \nfrom Hangzhou Lin'an Xia'er · Parent Child Vacation and River Tracing Homestay to New Zhou Ji (Gulou Branch): metro: duration 353, cost 32. taxi: duration 90, cost 266.59. walk: duration 725, cost 0.0. \nfrom Hangzhou Songcheng to West Lake Scenic Area: metro: duration 79, cost 12. taxi: duration 9, cost 26.67. walk: duration 75, cost 0.0. \nfrom Hangzhou Songcheng to Hangzhou Zoo: metro: duration 60, cost 12. taxi: duration 8, cost 25.02. walk: duration 69, cost 0.0. \nfrom Hangzhou Songcheng to Lingyin Temple: metro: duration 71, cost 16. taxi: duration 11, cost 32.31. walk: duration 94, cost 0.0. \nfrom Hangzhou Songcheng to Jiangzhe Hui (West Lake Lakeside in77 Zone B Store): metro: duration 47, cost 16. taxi: duration 15, cost 41.56. walk: duration 124, cost 0.0. \nfrom Hangzhou Songcheng to Hangzhou Lin'an Xia'er · Parent Child Vacation and River Tracing Homestay: metro: duration 356, cost 32. taxi: duration 84, cost 249.56. walk: duration 679, cost 0.0. \nfrom Hangzhou Songcheng to Hangzhou Songcheng:  metro: empty.  taxi: empty.  walk: empty. \nfrom Hangzhou Songcheng to Three Ponds Mirroring the Moon: metro: duration 59, cost 16. taxi: duration 13, cost 35.28. walk: duration 104, cost 0.0. \nfrom Hangzhou Songcheng to West Lake Boat Tour: metro: duration 56, cost 16. taxi: duration 14, cost 39.43. walk: duration 119, cost 0.0. \nfrom Hangzhou Songcheng to Leifeng Pagoda: metro: duration 53, cost 16. taxi: duration 12, cost 33.78. walk: duration 99, cost 0.0. \nfrom Hangzhou Songcheng to Liangzhu Ancient City Ruins Park: metro: duration 135, cost 24. taxi: duration 38, cost 110.41. walk: duration 308, cost 0.0. \nfrom Hangzhou Songcheng to Tea Village: The Essence of Jiangnan: metro: duration 84, cost 12. taxi: duration 8, cost 25.62. walk: duration 71, cost 0.0. \nfrom Hangzhou Songcheng to Qinghefang Street: metro: duration 51, cost 16. taxi: duration 15, cost 41.0. walk: duration 123, cost 0.0. \nfrom Hangzhou Songcheng to Hangzhou Xiaoshan International Airport: metro: duration 88, cost 28. taxi: duration 48, cost 139.42. walk: duration 385, cost 0.0. \nfrom Hangzhou Songcheng to Hangzhou Botanical Garden: metro: duration 64, cost 16. taxi: duration 13, cost 36.71. walk: duration 109, cost 0.0. \nfrom Hangzhou Songcheng to China National Tea Museum: metro: duration 85, cost 16. taxi: duration 10, cost 30.22. walk: duration 87, cost 0.0. \nfrom Hangzhou Songcheng to Zhiweiguan Weizhuang (Yang Gongdi Branch): metro: duration 76, cost 16. taxi: duration 10, cost 28.51. walk: duration 81, cost 0.0. \nfrom Hangzhou Songcheng to Lou Wai Lou (Gushan Road Store, West Lake Scenic Area): metro: duration 67, cost 16. taxi: duration 13, cost 35.95. walk: duration 107, cost 0.0. \nfrom Hangzhou Songcheng to Hangzhou East Railway Station: metro: duration 64, cost 20. taxi: duration 26, cost 72.83. walk: duration 208, cost 0.0. \nfrom Hangzhou Songcheng to Hangzhou South Railway Station: metro: duration 62, cost 20. taxi: duration 27, cost 76.56. walk: duration 218, cost 0.0. \nfrom Hangzhou Songcheng to Xixi National Wetland Park: metro: duration 63, cost 20. taxi: duration 16, cost 45.31. walk: duration 134, cost 0.0. \nfrom Hangzhou Songcheng to Floral Hotel·Hangzhou Zhuyin Garden Homestay: metro: duration 83, cost 16. taxi: duration 10, cost 28.74. walk: duration 82, cost 0.0. \nfrom Hangzhou Songcheng to Hangzhou Confucius Temple: metro: duration 47, cost 16. taxi: duration 15, cost 39.75. walk: duration 120, cost 0.0. \nfrom Hangzhou Songcheng to Hangzhou Xiaoshan Meiliyun Bed&Breakfast: metro: duration 235, cost 20. taxi: duration 34, cost 99.31. walk: duration 278, cost 0.0. \nfrom Hangzhou Songcheng to Hangzhou Museum: metro: duration 51, cost 16. taxi: duration 15, cost 39.79. walk: duration 120, cost 0.0. \nfrom Hangzhou Songcheng to New Zhou Ji (Gulou Branch): metro: duration 53, cost 16. taxi: duration 13, cost 37.34. walk: duration 111, cost 0.0. \nfrom Three Ponds Mirroring the Moon to West Lake Scenic Area: metro: duration 66, cost 12. taxi: duration 4, cost 14.36. walk: duration 33, cost 0.0. \nfrom Three Ponds Mirroring the Moon to Hangzhou Zoo: metro: duration 47, cost 12. taxi: duration 4, cost 15.17. walk: duration 35, cost 0.0. \nfrom Three Ponds Mirroring the Moon to Lingyin Temple: metro: duration 53, cost 12. taxi: duration 6, cost 19.18. walk: duration 49, cost 0.0. \nfrom Three Ponds Mirroring the Moon to Jiangzhe Hui (West Lake Lakeside in77 Zone B Store): metro: duration 18, cost 8. taxi: duration 2, cost 11.0. walk: duration 20, cost 0.0. \nfrom Three Ponds Mirroring the Moon to Hangzhou Lin'an Xia'er · Parent Child Vacation and River Tracing Homestay: metro: duration 357, cost 32. taxi: duration 87, cost 257.28. walk: duration 700, cost 0.0. \nfrom Three Ponds Mirroring the Moon to Hangzhou Songcheng: metro: duration 59, cost 16. taxi: duration 13, cost 35.28. walk: duration 104, cost 0.0. \nfrom Three Ponds Mirroring the Moon to Three Ponds Mirroring the Moon:  metro: empty.  taxi: empty.  walk: empty. \nfrom Three Ponds Mirroring the Moon to West Lake Boat Tour: metro: duration 27, cost 8. taxi: duration 1, cost 11.0. walk: duration 14, cost 0.0. \nfrom Three Ponds Mirroring the Moon to Leifeng Pagoda: taxi: duration 1, cost 11.0. walk: duration 10, cost 0.0. \nfrom Three Ponds Mirroring the Moon to Liangzhu Ancient City Ruins Park: metro: duration 116, cost 20. taxi: duration 32, cost 93.02. walk: duration 262, cost 0.0. \nfrom Three Ponds Mirroring the Moon to Tea Village: The Essence of Jiangnan: metro: duration 71, cost 12. taxi: duration 5, cost 16.72. walk: duration 41, cost 0.0. \nfrom Three Ponds Mirroring the Moon to Qinghefang Street: metro: duration 23, cost 8. taxi: duration 3, cost 13.17. walk: duration 29, cost 0.0. \nfrom Three Ponds Mirroring the Moon to Hangzhou Xiaoshan International Airport: metro: duration 67, cost 24. taxi: duration 40, cost 116.82. walk: duration 325, cost 0.0. \nfrom Three Ponds Mirroring the Moon to Hangzhou Botanical Garden: metro: duration 40, cost 12. taxi: duration 4, cost 15.32. walk: duration 36, cost 0.0. \nfrom Three Ponds Mirroring the Moon to China National Tea Museum: metro: duration 60, cost 8. taxi: duration 3, cost 12.82. walk: duration 27, cost 0.0. \nfrom Three Ponds Mirroring the Moon to Zhiweiguan Weizhuang (Yang Gongdi Branch): taxi: duration 2, cost 11.62. walk: duration 23, cost 0.0. \nfrom Three Ponds Mirroring the Moon to Lou Wai Lou (Gushan Road Store, West Lake Scenic Area): metro: duration 42, cost 8. taxi: duration 1, cost 11.0. walk: duration 14, cost 0.0. \nfrom Three Ponds Mirroring the Moon to Hangzhou East Railway Station: metro: duration 35, cost 12. taxi: duration 13, cost 35.68. walk: duration 106, cost 0.0. \nfrom Three Ponds Mirroring the Moon to Hangzhou South Railway Station: metro: duration 47, cost 20. taxi: duration 23, cost 66.33. walk: duration 191, cost 0.0. \nfrom Three Ponds Mirroring the Moon to Xixi National Wetland Park: metro: duration 47, cost 16. taxi: duration 12, cost 33.61. walk: duration 99, cost 0.0. \nfrom Three Ponds Mirroring the Moon to Floral Hotel·Hangzhou Zhuyin Garden Homestay: metro: duration 65, cost 12. taxi: duration 6, cost 19.63. walk: duration 51, cost 0.0. \nfrom Three Ponds Mirroring the Moon to Hangzhou Confucius Temple: metro: duration 18, cost 8. taxi: duration 2, cost 11.0. walk: duration 21, cost 0.0. \nfrom Three Ponds Mirroring the Moon to Hangzhou Xiaoshan Meiliyun Bed&Breakfast: metro: duration 228, cost 20. taxi: duration 43, cost 124.13. walk: duration 345, cost 0.0. \nfrom Three Ponds Mirroring the Moon to Hangzhou Museum: metro: duration 22, cost 8. taxi: duration 3, cost 12.25. walk: duration 25, cost 0.0. \nfrom Three Ponds Mirroring the Moon to New Zhou Ji (Gulou Branch): metro: duration 25, cost 8. taxi: duration 3, cost 11.98. walk: duration 24, cost 0.0. \nfrom West Lake Boat Tour to West Lake Scenic Area: metro: duration 63, cost 12. taxi: duration 5, cost 18.18. walk: duration 46, cost 0.0. \nfrom West Lake Boat Tour to Hangzhou Zoo: metro: duration 44, cost 12. taxi: duration 6, cost 19.34. walk: duration 50, cost 0.0. \nfrom West Lake Boat Tour to Lingyin Temple: metro: duration 46, cost 12. taxi: duration 7, cost 21.07. walk: duration 56, cost 0.0. \nfrom West Lake Boat Tour to Jiangzhe Hui (West Lake Lakeside in77 Zone B Store): taxi: duration 1, cost 11.0. walk: duration 9, cost 0.0. \nfrom West Lake Boat Tour to Hangzhou Lin'an Xia'er · Parent Child Vacation and River Tracing Homestay: metro: duration 352, cost 32. taxi: duration 87, cost 258.25. walk: duration 702, cost 0.0. \nfrom West Lake Boat Tour to Hangzhou Songcheng: metro: duration 56, cost 16. taxi: duration 14, cost 39.43. walk: duration 119, cost 0.0. \nfrom West Lake Boat Tour to Three Ponds Mirroring the Moon: metro: duration 27, cost 8. taxi: duration 1, cost 11.0. walk: duration 14, cost 0.0. \nfrom West Lake Boat Tour to West Lake Boat Tour:  metro: empty.  taxi: empty.  walk: empty. \nfrom West Lake Boat Tour to Leifeng Pagoda: metro: duration 21, cost 8. taxi: duration 2, cost 11.29. walk: duration 22, cost 0.0. \nfrom West Lake Boat Tour to Liangzhu Ancient City Ruins Park: metro: duration 108, cost 20. taxi: duration 32, cost 91.13. walk: duration 257, cost 0.0. \nfrom West Lake Boat Tour to Tea Village: The Essence of Jiangnan: metro: duration 68, cost 12. taxi: duration 6, cost 20.33. walk: duration 53, cost 0.0. \nfrom West Lake Boat Tour to Qinghefang Street: metro: duration 17, cost 8. taxi: duration 3, cost 12.16. walk: duration 25, cost 0.0. \nfrom West Lake Boat Tour to Hangzhou Xiaoshan International Airport: metro: duration 61, cost 24. taxi: duration 40, cost 114.9. walk: duration 320, cost 0.0. \nfrom West Lake Boat Tour to Hangzhou Botanical Garden: metro: duration 33, cost 8. taxi: duration 4, cost 15.85. walk: duration 38, cost 0.0. \nfrom West Lake Boat Tour to China National Tea Museum: metro: duration 52, cost 8. taxi: duration 4, cost 15.92. walk: duration 38, cost 0.0. \nfrom West Lake Boat Tour to Zhiweiguan Weizhuang (Yang Gongdi Branch): metro: duration 44, cost 8. taxi: duration 4, cost 15.69. walk: duration 37, cost 0.0. \nfrom West Lake Boat Tour to Lou Wai Lou (Gushan Road Store, West Lake Scenic Area): metro: duration 34, cost 8. taxi: duration 2, cost 11.0. walk: duration 18, cost 0.0. \nfrom West Lake Boat Tour to Hangzhou East Railway Station: metro: duration 27, cost 12. taxi: duration 11, cost 31.92. walk: duration 93, cost 0.0. \nfrom West Lake Boat Tour to Hangzhou South Railway Station: metro: duration 43, cost 20. taxi: duration 24, cost 67.04. walk: duration 192, cost 0.0. \nfrom West Lake Boat Tour to Xixi National Wetland Park: metro: duration 40, cost 16. taxi: duration 12, cost 34.02. walk: duration 100, cost 0.0. \nfrom West Lake Boat Tour to Floral Hotel·Hangzhou Zhuyin Garden Homestay: metro: duration 58, cost 12. taxi: duration 7, cost 22.29. walk: duration 60, cost 0.0. \nfrom West Lake Boat Tour to Hangzhou Confucius Temple: metro: duration 13, cost 8. taxi: duration 2, cost 11.0. walk: duration 16, cost 0.0. \nfrom West Lake Boat Tour to Hangzhou Xiaoshan Meiliyun Bed&Breakfast: metro: duration 225, cost 20. taxi: duration 44, cost 128.4. walk: duration 356, cost 0.0. \nfrom West Lake Boat Tour to Hangzhou Museum: metro: duration 17, cost 8. taxi: duration 2, cost 11.59. walk: duration 23, cost 0.0. \nfrom West Lake Boat Tour to New Zhou Ji (Gulou Branch): metro: duration 21, cost 8. taxi: duration 3, cost 12.81. walk: duration 27, cost 0.0. \nfrom Leifeng Pagoda to West Lake Scenic Area: metro: duration 60, cost 12. taxi: duration 4, cost 14.45. walk: duration 33, cost 0.0. \nfrom Leifeng Pagoda to Hangzhou Zoo: metro: duration 41, cost 12. taxi: duration 3, cost 13.47. walk: duration 30, cost 0.0. \nfrom Leifeng Pagoda to Lingyin Temple: metro: duration 47, cost 12. taxi: duration 7, cost 21.18. walk: duration 56, cost 0.0. \nfrom Leifeng Pagoda to Jiangzhe Hui (West Lake Lakeside in77 Zone B Store): metro: duration 12, cost 8. taxi: duration 3, cost 12.22. walk: duration 25, cost 0.0. \nfrom Leifeng Pagoda to Hangzhou Lin'an Xia'er · Parent Child Vacation and River Tracing Homestay: metro: duration 351, cost 32. taxi: duration 88, cost 260.15. walk: duration 707, cost 0.0. \nfrom Leifeng Pagoda to Hangzhou Songcheng: metro: duration 53, cost 16. taxi: duration 12, cost 33.78. walk: duration 99, cost 0.0. \nfrom Leifeng Pagoda to Three Ponds Mirroring the Moon: taxi: duration 1, cost 11.0. walk: duration 10, cost 0.0. \nfrom Leifeng Pagoda to West Lake Boat Tour: metro: duration 21, cost 8. taxi: duration 2, cost 11.29. walk: duration 22, cost 0.0. \nfrom Leifeng Pagoda to Leifeng Pagoda:  metro: empty.  taxi: empty.  walk: empty. \nfrom Leifeng Pagoda to Liangzhu Ancient City Ruins Park: metro: duration 110, cost 20. taxi: duration 34, cost 97.01. walk: duration 272, cost 0.0. \nfrom Leifeng Pagoda to Tea Village: The Essence of Jiangnan: metro: duration 65, cost 12. taxi: duration 5, cost 17.07. walk: duration 42, cost 0.0. \nfrom Leifeng Pagoda to Qinghefang Street: metro: duration 17, cost 8. taxi: duration 3, cost 12.37. walk: duration 26, cost 0.0. \nfrom Leifeng Pagoda to Hangzhou Xiaoshan International Airport: metro: duration 61, cost 24. taxi: duration 40, cost 114.71. walk: duration 320, cost 0.0. \nfrom Leifeng Pagoda to Hangzhou Botanical Garden: metro: duration 34, cost 12. taxi: duration 5, cost 18.12. walk: duration 46, cost 0.0. \nfrom Leifeng Pagoda to China National Tea Museum: metro: duration 54, cost 8. taxi: duration 4, cost 14.15. walk: duration 32, cost 0.0. \nfrom Leifeng Pagoda to Zhiweiguan Weizhuang (Yang Gongdi Branch): taxi: duration 2, cost 11.27. walk: duration 22, cost 0.0. \nfrom Leifeng Pagoda to Lou Wai Lou (Gushan Road Store, West Lake Scenic Area): metro: duration 36, cost 8. taxi: duration 3, cost 11.85. walk: duration 24, cost 0.0. \nfrom Leifeng Pagoda to Hangzhou East Railway Station: metro: duration 29, cost 12. taxi: duration 13, cost 36.51. walk: duration 109, cost 0.0. \nfrom Leifeng Pagoda to Hangzhou South Railway Station: metro: duration 41, cost 20. taxi: duration 22, cost 62.83. walk: duration 181, cost 0.0. \nfrom Leifeng Pagoda to Xixi National Wetland Park: metro: duration 41, cost 16. taxi: duration 13, cost 36.2. walk: duration 108, cost 0.0. \nfrom Leifeng Pagoda to Floral Hotel·Hangzhou Zhuyin Garden Homestay: metro: duration 59, cost 12. taxi: duration 6, cost 21.0. walk: duration 55, cost 0.0. \nfrom Leifeng Pagoda to Hangzhou Confucius Temple: metro: duration 12, cost 8. taxi: duration 2, cost 11.0. walk: duration 20, cost 0.0. \nfrom Leifeng Pagoda to Hangzhou Xiaoshan Meiliyun Bed&Breakfast: metro: duration 222, cost 20. taxi: duration 41, cost 120.18. walk: duration 334, cost 0.0. \nfrom Leifeng Pagoda to Hangzhou Museum: metro: duration 16, cost 8. taxi: duration 2, cost 11.35. walk: duration 22, cost 0.0. \nfrom Leifeng Pagoda to New Zhou Ji (Gulou Branch): metro: duration 19, cost 8. taxi: duration 2, cost 11.0. walk: duration 18, cost 0.0. \nfrom Liangzhu Ancient City Ruins Park to West Lake Scenic Area: metro: duration 149, cost 20. taxi: duration 32, cost 92.46. walk: duration 260, cost 0.0. \nfrom Liangzhu Ancient City Ruins Park to Hangzhou Zoo: metro: duration 130, cost 20. taxi: duration 34, cost 99.54. walk: duration 279, cost 0.0. \nfrom Liangzhu Ancient City Ruins Park to Lingyin Temple: metro: duration 114, cost 16. taxi: duration 28, cost 80.09. walk: duration 227, cost 0.0. \nfrom Liangzhu Ancient City Ruins Park to Jiangzhe Hui (West Lake Lakeside in77 Zone B Store): metro: duration 99, cost 20. taxi: duration 32, cost 93.36. walk: duration 263, cost 0.0. \nfrom Liangzhu Ancient City Ruins Park to Hangzhou Lin'an Xia'er · Parent Child Vacation and River Tracing Homestay: metro: duration 391, cost 28. taxi: duration 62, cost 181.2. walk: duration 497, cost 0.0. \nfrom Liangzhu Ancient City Ruins Park to Hangzhou Songcheng: metro: duration 135, cost 24. taxi: duration 38, cost 110.41. walk: duration 308, cost 0.0. \nfrom Liangzhu Ancient City Ruins Park to Three Ponds Mirroring the Moon: metro: duration 116, cost 20. taxi: duration 32, cost 93.02. walk: duration 262, cost 0.0. \nfrom Liangzhu Ancient City Ruins Park to West Lake Boat Tour: metro: duration 108, cost 20. taxi: duration 32, cost 91.13. walk: duration 257, cost 0.0. \nfrom Liangzhu Ancient City Ruins Park to Leifeng Pagoda: metro: duration 110, cost 20. taxi: duration 34, cost 97.01. walk: duration 272, cost 0.0. \nfrom Liangzhu Ancient City Ruins Park to Liangzhu Ancient City Ruins Park:  metro: empty.  taxi: empty.  walk: empty. \nfrom Liangzhu Ancient City Ruins Park to Tea Village: The Essence of Jiangnan: metro: duration 154, cost 20. taxi: duration 32, cost 90.77. walk: duration 256, cost 0.0. \nfrom Liangzhu Ancient City Ruins Park to Qinghefang Street: metro: duration 107, cost 20. taxi: duration 35, cost 100.3. walk: duration 281, cost 0.0. \nfrom Liangzhu Ancient City Ruins Park to Hangzhou Xiaoshan International Airport: metro: duration 147, cost 32. taxi: duration 68, cost 199.15. walk: duration 545, cost 0.0. \nfrom Liangzhu Ancient City Ruins Park to Hangzhou Botanical Garden: metro: duration 109, cost 16. taxi: duration 28, cost 80.18. walk: duration 227, cost 0.0. \nfrom Liangzhu Ancient City Ruins Park to China National Tea Museum: metro: duration 132, cost 20. taxi: duration 31, cost 88.43. walk: duration 249, cost 0.0. \nfrom Liangzhu Ancient City Ruins Park to Zhiweiguan Weizhuang (Yang Gongdi Branch): metro: duration 133, cost 20. taxi: duration 33, cost 94.29. walk: duration 265, cost 0.0. \nfrom Liangzhu Ancient City Ruins Park to Lou Wai Lou (Gushan Road Store, West Lake Scenic Area): metro: duration 114, cost 20. taxi: duration 31, cost 87.82. walk: duration 248, cost 0.0. \nfrom Liangzhu Ancient City Ruins Park to Hangzhou East Railway Station: metro: duration 107, cost 20. taxi: duration 35, cost 102.06. walk: duration 286, cost 0.0. \nfrom Liangzhu Ancient City Ruins Park to Hangzhou South Railway Station: metro: duration 133, cost 28. taxi: duration 56, cost 162.92. walk: duration 448, cost 0.0. \nfrom Liangzhu Ancient City Ruins Park to Xixi National Wetland Park: metro: duration 95, cost 12. taxi: duration 21, cost 60.64. walk: duration 175, cost 0.0. \nfrom Liangzhu Ancient City Ruins Park to Floral Hotel·Hangzhou Zhuyin Garden Homestay: metro: duration 126, cost 16. taxi: duration 29, cost 83.65. walk: duration 237, cost 0.0. \nfrom Liangzhu Ancient City Ruins Park to Hangzhou Confucius Temple: metro: duration 102, cost 20. taxi: duration 34, cost 97.3. walk: duration 273, cost 0.0. \nfrom Liangzhu Ancient City Ruins Park to Hangzhou Xiaoshan Meiliyun Bed&Breakfast: metro: duration 315, cost 28. taxi: duration 73, cost 214.88. walk: duration 587, cost 0.0. \nfrom Liangzhu Ancient City Ruins Park to Hangzhou Museum: metro: duration 106, cost 20. taxi: duration 35, cost 99.84. walk: duration 280, cost 0.0. \nfrom Liangzhu Ancient City Ruins Park to New Zhou Ji (Gulou Branch): metro: duration 111, cost 20. taxi: duration 35, cost 101.49. walk: duration 284, cost 0.0. \nfrom Tea Village: The Essence of Jiangnan to West Lake Scenic Area: taxi: duration 1, cost 11.0. walk: duration 9, cost 0.0. \nfrom Tea Village: The Essence of Jiangnan to Hangzhou Zoo: taxi: duration 3, cost 12.25. walk: duration 25, cost 0.0. \nfrom Tea Village: The Essence of Jiangnan to Lingyin Temple: metro: duration 89, cost 12. taxi: duration 3, cost 13.05. walk: duration 28, cost 0.0. \nfrom Tea Village: The Essence of Jiangnan to Jiangzhe Hui (West Lake Lakeside in77 Zone B Store): metro: duration 59, cost 12. taxi: duration 7, cost 22.7. walk: duration 61, cost 0.0. \nfrom Tea Village: The Essence of Jiangnan to Hangzhou Lin'an Xia'er · Parent Child Vacation and River Tracing Homestay: metro: duration 388, cost 32. taxi: duration 83, cost 246.63. walk: duration 671, cost 0.0. \nfrom Tea Village: The Essence of Jiangnan to Hangzhou Songcheng: metro: duration 84, cost 12. taxi: duration 8, cost 25.62. walk: duration 71, cost 0.0. \nfrom Tea Village: The Essence of Jiangnan to Three Ponds Mirroring the Moon: metro: duration 71, cost 12. taxi: duration 5, cost 16.72. walk: duration 41, cost 0.0. \nfrom Tea Village: The Essence of Jiangnan to West Lake Boat Tour: metro: duration 68, cost 12. taxi: duration 6, cost 20.33. walk: duration 53, cost 0.0. \nfrom Tea Village: The Essence of Jiangnan to Leifeng Pagoda: metro: duration 65, cost 12. taxi: duration 5, cost 17.07. walk: duration 42, cost 0.0. \nfrom Tea Village: The Essence of Jiangnan to Liangzhu Ancient City Ruins Park: metro: duration 154, cost 20. taxi: duration 32, cost 90.77. walk: duration 256, cost 0.0. \nfrom Tea Village: The Essence of Jiangnan to Tea Village: The Essence of Jiangnan:  metro: empty.  taxi: empty.  walk: empty. \nfrom Tea Village: The Essence of Jiangnan to Qinghefang Street: metro: duration 63, cost 12. taxi: duration 8, cost 24.66. walk: duration 68, cost 0.0. \nfrom Tea Village: The Essence of Jiangnan to Hangzhou Xiaoshan International Airport: metro: duration 103, cost 24. taxi: duration 45, cost 130.06. walk: duration 360, cost 0.0. \nfrom Tea Village: The Essence of Jiangnan to Hangzhou Botanical Garden: metro: duration 79, cost 12. taxi: duration 4, cost 15.87. walk: duration 38, cost 0.0. \nfrom Tea Village: The Essence of Jiangnan to China National Tea Museum: metro: duration 99, cost 12. taxi: duration 2, cost 11.0. walk: duration 16, cost 0.0. \nfrom Tea Village: The Essence of Jiangnan to Zhiweiguan Weizhuang (Yang Gongdi Branch): metro: duration 88, cost 12. taxi: duration 2, cost 11.0. walk: duration 20, cost 0.0. \nfrom Tea Village: The Essence of Jiangnan to Lou Wai Lou (Gushan Road Store, West Lake Scenic Area): metro: duration 81, cost 12. taxi: duration 4, cost 15.74. walk: duration 37, cost 0.0. \nfrom Tea Village: The Essence of Jiangnan to Hangzhou East Railway Station: metro: duration 76, cost 16. taxi: duration 18, cost 49.79. walk: duration 146, cost 0.0. \nfrom Tea Village: The Essence of Jiangnan to Hangzhou South Railway Station: metro: duration 79, cost 20. taxi: duration 26, cost 75.07. walk: duration 214, cost 0.0. \nfrom Tea Village: The Essence of Jiangnan to Xixi National Wetland Park: metro: duration 83, cost 16. taxi: duration 10, cost 28.53. walk: duration 81, cost 0.0. \nfrom Tea Village: The Essence of Jiangnan to Floral Hotel·Hangzhou Zhuyin Garden Homestay: metro: duration 101, cost 12. taxi: duration 2, cost 11.0. walk: duration 19, cost 0.0. \nfrom Tea Village: The Essence of Jiangnan to Hangzhou Confucius Temple: metro: duration 59, cost 12. taxi: duration 7, cost 22.66. walk: duration 61, cost 0.0. \nfrom Tea Village: The Essence of Jiangnan to Hangzhou Xiaoshan Meiliyun Bed&Breakfast: metro: duration 257, cost 20. taxi: duration 41, cost 120.46. walk: duration 335, cost 0.0. \nfrom Tea Village: The Essence of Jiangnan to Hangzhou Museum: metro: duration 63, cost 12. taxi: duration 8, cost 23.65. walk: duration 64, cost 0.0. \nfrom Tea Village: The Essence of Jiangnan to New Zhou Ji (Gulou Branch): metro: duration 65, cost 12. taxi: duration 7, cost 22.26. walk: duration 60, cost 0.0. \nfrom Qinghefang Street to West Lake Scenic Area: metro: duration 58, cost 12. taxi: duration 7, cost 22.08. walk: duration 59, cost 0.0. \nfrom Qinghefang Street to Hangzhou Zoo: metro: duration 39, cost 12. taxi: duration 6, cost 20.69. walk: duration 54, cost 0.0. \nfrom Qinghefang Street to Lingyin Temple: metro: duration 45, cost 12. taxi: duration 9, cost 27.59. walk: duration 78, cost 0.0. \nfrom Qinghefang Street to Jiangzhe Hui (West Lake Lakeside in77 Zone B Store): metro: duration 8, cost 8. taxi: duration 2, cost 11.0. walk: duration 18, cost 0.0. \nfrom Qinghefang Street to Hangzhou Lin'an Xia'er · Parent Child Vacation and River Tracing Homestay: metro: duration 351, cost 32. taxi: duration 90, cost 267.63. walk: duration 727, cost 0.0. \nfrom Qinghefang Street to Hangzhou Songcheng: metro: duration 51, cost 16. taxi: duration 15, cost 41.0. walk: duration 123, cost 0.0. \nfrom Qinghefang Street to Three Ponds Mirroring the Moon: metro: duration 23, cost 8. taxi: duration 3, cost 13.17. walk: duration 29, cost 0.0. \nfrom Qinghefang Street to West Lake Boat Tour: metro: duration 17, cost 8. taxi: duration 3, cost 12.16. walk: duration 25, cost 0.0. \nfrom Qinghefang Street to Leifeng Pagoda: metro: duration 17, cost 8. taxi: duration 3, cost 12.37. walk: duration 26, cost 0.0. \nfrom Qinghefang Street to Liangzhu Ancient City Ruins Park: metro: duration 107, cost 20. taxi: duration 35, cost 100.3. walk: duration 281, cost 0.0. \nfrom Qinghefang Street to Tea Village: The Essence of Jiangnan: metro: duration 63, cost 12. taxi: duration 8, cost 24.66. walk: duration 68, cost 0.0. \nfrom Qinghefang Street to Qinghefang Street:  metro: empty.  taxi: empty.  walk: empty. \nfrom Qinghefang Street to Hangzhou Xiaoshan International Airport: metro: duration 54, cost 24. taxi: duration 37, cost 106.0. walk: duration 296, cost 0.0. \nfrom Qinghefang Street to Hangzhou Botanical Garden: metro: duration 33, cost 12. taxi: duration 7, cost 23.06. walk: duration 62, cost 0.0. \nfrom Qinghefang Street to China National Tea Museum: metro: duration 52, cost 12. taxi: duration 7, cost 21.22. walk: duration 56, cost 0.0. \nfrom Qinghefang Street to Zhiweiguan Weizhuang (Yang Gongdi Branch): metro: duration 40, cost 8. taxi: duration 6, cost 18.92. walk: duration 48, cost 0.0. \nfrom Qinghefang Street to Lou Wai Lou (Gushan Road Store, West Lake Scenic Area): metro: duration 34, cost 12. taxi: duration 5, cost 16.65. walk: duration 40, cost 0.0. \nfrom Qinghefang Street to Hangzhou East Railway Station: metro: duration 22, cost 12. taxi: duration 10, cost 29.51. walk: duration 85, cost 0.0. \nfrom Qinghefang Street to Hangzhou South Railway Station: metro: duration 35, cost 16. taxi: duration 20, cost 57.57. walk: duration 167, cost 0.0. \nfrom Qinghefang Street to Xixi National Wetland Park: metro: duration 39, cost 16. taxi: duration 15, cost 41.85. walk: duration 125, cost 0.0. \nfrom Qinghefang Street to Floral Hotel·Hangzhou Zhuyin Garden Homestay: metro: duration 57, cost 12. taxi: duration 10, cost 28.08. walk: duration 80, cost 0.0. \nfrom Qinghefang Street to Hangzhou Confucius Temple: metro: duration 9, cost 8. taxi: duration 1, cost 11.0. walk: duration 8, cost 0.0. \nfrom Qinghefang Street to Hangzhou Xiaoshan Meiliyun Bed&Breakfast: metro: duration 217, cost 20. taxi: duration 42, cost 122.75. walk: duration 341, cost 0.0. \nfrom Qinghefang Street to Hangzhou Museum: metro: duration 13, cost 8. taxi: duration 0, cost 11.0. walk: duration 3, cost 0.0. \nfrom Qinghefang Street to New Zhou Ji (Gulou Branch): metro: duration 14, cost 8. taxi: duration 1, cost 11.0. walk: duration 11, cost 0.0. \nfrom Hangzhou Xiaoshan International Airport to West Lake Scenic Area: metro: duration 98, cost 24. taxi: duration 43, cost 126.63. walk: duration 351, cost 0.0. \nfrom Hangzhou Xiaoshan International Airport to Hangzhou Zoo: metro: duration 79, cost 24. taxi: duration 42, cost 121.75. walk: duration 338, cost 0.0. \nfrom Hangzhou Xiaoshan International Airport to Lingyin Temple: metro: duration 90, cost 28. taxi: duration 46, cost 135.42. walk: duration 375, cost 0.0. \nfrom Hangzhou Xiaoshan International Airport to Jiangzhe Hui (West Lake Lakeside in77 Zone B Store): metro: duration 52, cost 24. taxi: duration 38, cost 111.49. walk: duration 311, cost 0.0. \nfrom Hangzhou Xiaoshan International Airport to Hangzhou Lin'an Xia'er · Parent Child Vacation and River Tracing Homestay: metro: duration 395, cost 40.0. taxi: duration 127, cost 377.48. walk: duration 1020, cost 0.0. \nfrom Hangzhou Xiaoshan International Airport to Hangzhou Songcheng: metro: duration 88, cost 28. taxi: duration 48, cost 139.42. walk: duration 385, cost 0.0. \nfrom Hangzhou Xiaoshan International Airport to Three Ponds Mirroring the Moon: metro: duration 67, cost 24. taxi: duration 40, cost 116.82. walk: duration 325, cost 0.0. \nfrom Hangzhou Xiaoshan International Airport to West Lake Boat Tour: metro: duration 61, cost 24. taxi: duration 40, cost 114.9. walk: duration 320, cost 0.0. \nfrom Hangzhou Xiaoshan International Airport to Leifeng Pagoda: metro: duration 61, cost 24. taxi: duration 40, cost 114.71. walk: duration 320, cost 0.0. \nfrom Hangzhou Xiaoshan International Airport to Liangzhu Ancient City Ruins Park: metro: duration 147, cost 32. taxi: duration 68, cost 199.15. walk: duration 545, cost 0.0. \nfrom Hangzhou Xiaoshan International Airport to Tea Village: The Essence of Jiangnan: metro: duration 103, cost 24. taxi: duration 45, cost 130.06. walk: duration 360, cost 0.0. \nfrom Hangzhou Xiaoshan International Airport to Qinghefang Street: metro: duration 54, cost 24. taxi: duration 37, cost 106.0. walk: duration 296, cost 0.0. \nfrom Hangzhou Xiaoshan International Airport to Hangzhou Xiaoshan International Airport:  metro: empty.  taxi: empty.  walk: empty. \nfrom Hangzhou Xiaoshan International Airport to Hangzhou Botanical Garden: metro: duration 76, cost 28. taxi: duration 44, cost 129.24. walk: duration 358, cost 0.0. \nfrom Hangzhou Xiaoshan International Airport to China National Tea Museum: metro: duration 95, cost 28. taxi: duration 44, cost 126.84. walk: duration 352, cost 0.0. \nfrom Hangzhou Xiaoshan International Airport to Zhiweiguan Weizhuang (Yang Gongdi Branch): metro: duration 84, cost 24. taxi: duration 42, cost 122.56. walk: duration 340, cost 0.0. \nfrom Hangzhou Xiaoshan International Airport to Lou Wai Lou (Gushan Road Store, West Lake Scenic Area): metro: duration 77, cost 28. taxi: duration 42, cost 121.28. walk: duration 337, cost 0.0. \nfrom Hangzhou Xiaoshan International Airport to Hangzhou East Railway Station: metro: duration 49, cost 24. taxi: duration 32, cost 92.06. walk: duration 259, cost 0.0. \nfrom Hangzhou Xiaoshan International Airport to Hangzhou South Railway Station: metro: duration 33, cost 20. taxi: duration 22, cost 62.07. walk: duration 179, cost 0.0. \nfrom Hangzhou Xiaoshan International Airport to Xixi National Wetland Park: metro: duration 83, cost 28. taxi: duration 52, cost 152.15. walk: duration 419, cost 0.0. \nfrom Hangzhou Xiaoshan International Airport to Floral Hotel·Hangzhou Zhuyin Garden Homestay: metro: duration 102, cost 28. taxi: duration 46, cost 135.67. walk: duration 375, cost 0.0. \nfrom Hangzhou Xiaoshan International Airport to Hangzhou Confucius Temple: metro: duration 54, cost 24. taxi: duration 38, cost 109.21. walk: duration 305, cost 0.0. \nfrom Hangzhou Xiaoshan International Airport to Hangzhou Xiaoshan Meiliyun Bed&Breakfast: metro: duration 222, cost 20. taxi: duration 50, cost 146.39. walk: duration 404, cost 0.0. \nfrom Hangzhou Xiaoshan International Airport to Hangzhou Museum: metro: duration 58, cost 24. taxi: duration 37, cost 107.13. walk: duration 299, cost 0.0. \nfrom Hangzhou Xiaoshan International Airport to New Zhou Ji (Gulou Branch): metro: duration 58, cost 24. taxi: duration 37, cost 107.95. walk: duration 301, cost 0.0. \nfrom Hangzhou Botanical Garden to West Lake Scenic Area: metro: duration 74, cost 12. taxi: duration 4, cost 15.68. walk: duration 37, cost 0.0. \nfrom Hangzhou Botanical Garden to Hangzhou Zoo: metro: duration 55, cost 12. taxi: duration 6, cost 20.52. walk: duration 54, cost 0.0. \nfrom Hangzhou Botanical Garden to Lingyin Temple: metro: duration 47, cost 8. taxi: duration 2, cost 11.06. walk: duration 21, cost 0.0. \nfrom Hangzhou Botanical Garden to Jiangzhe Hui (West Lake Lakeside in77 Zone B Store): metro: duration 24, cost 8. taxi: duration 5, cost 18.51. walk: duration 47, cost 0.0. \nfrom Hangzhou Botanical Garden to Hangzhou Lin'an Xia'er · Parent Child Vacation and River Tracing Homestay: metro: duration 354, cost 32. taxi: duration 83, cost 244.03. walk: duration 664, cost 0.0. \nfrom Hangzhou Botanical Garden to Hangzhou Songcheng: metro: duration 64, cost 16. taxi: duration 13, cost 36.71. walk: duration 109, cost 0.0. \nfrom Hangzhou Botanical Garden to Three Ponds Mirroring the Moon: metro: duration 40, cost 12. taxi: duration 4, cost 15.32. walk: duration 36, cost 0.0. \nfrom Hangzhou Botanical Garden to West Lake Boat Tour: metro: duration 33, cost 8. taxi: duration 4, cost 15.85. walk: duration 38, cost 0.0. \nfrom Hangzhou Botanical Garden to Leifeng Pagoda: metro: duration 34, cost 12. taxi: duration 5, cost 18.12. walk: duration 46, cost 0.0. \nfrom Hangzhou Botanical Garden to Liangzhu Ancient City Ruins Park: metro: duration 109, cost 16. taxi: duration 28, cost 80.18. walk: duration 227, cost 0.0. \nfrom Hangzhou Botanical Garden to Tea Village: The Essence of Jiangnan: metro: duration 79, cost 12. taxi: duration 4, cost 15.87. walk: duration 38, cost 0.0. \nfrom Hangzhou Botanical Garden to Qinghefang Street: metro: duration 33, cost 12. taxi: duration 7, cost 23.06. walk: duration 62, cost 0.0. \nfrom Hangzhou Botanical Garden to Hangzhou Xiaoshan International Airport: metro: duration 76, cost 28. taxi: duration 44, cost 129.24. walk: duration 358, cost 0.0. \nfrom Hangzhou Botanical Garden to Hangzhou Botanical Garden:  metro: empty.  taxi: empty.  walk: empty. \nfrom Hangzhou Botanical Garden to China National Tea Museum: metro: duration 57, cost 8. taxi: duration 3, cost 11.91. walk: duration 24, cost 0.0. \nfrom Hangzhou Botanical Garden to Zhiweiguan Weizhuang (Yang Gongdi Branch): metro: duration 57, cost 12. taxi: duration 4, cost 16.02. walk: duration 38, cost 0.0. \nfrom Hangzhou Botanical Garden to Lou Wai Lou (Gushan Road Store, West Lake Scenic Area): metro: duration 39, cost 8. taxi: duration 2, cost 11.25. walk: duration 22, cost 0.0. \nfrom Hangzhou Botanical Garden to Hangzhou East Railway Station: metro: duration 39, cost 12. taxi: duration 15, cost 41.08. walk: duration 123, cost 0.0. \nfrom Hangzhou Botanical Garden to Hangzhou South Railway Station: metro: duration 58, cost 20. taxi: duration 28, cost 79.97. walk: duration 227, cost 0.0. \nfrom Hangzhou Botanical Garden to Xixi National Wetland Park: metro: duration 40, cost 12. taxi: duration 7, cost 23.06. walk: duration 62, cost 0.0. \nfrom Hangzhou Botanical Garden to Floral Hotel·Hangzhou Zhuyin Garden Homestay: metro: duration 59, cost 8. taxi: duration 3, cost 13.85. walk: duration 31, cost 0.0. \nfrom Hangzhou Botanical Garden to Hangzhou Confucius Temple: metro: duration 27, cost 12. taxi: duration 6, cost 20.48. walk: duration 54, cost 0.0. \nfrom Hangzhou Botanical Garden to Hangzhou Xiaoshan Meiliyun Bed&Breakfast: metro: duration 239, cost 20. taxi: duration 46, cost 133.58. walk: duration 370, cost 0.0. \nfrom Hangzhou Botanical Garden to Hangzhou Museum: metro: duration 31, cost 12. taxi: duration 7, cost 22.3. walk: duration 60, cost 0.0. \nfrom Hangzhou Botanical Garden to New Zhou Ji (Gulou Branch): metro: duration 36, cost 12. taxi: duration 7, cost 22.55. walk: duration 61, cost 0.0. \nfrom China National Tea Museum to West Lake Scenic Area: metro: duration 94, cost 12. taxi: duration 1, cost 11.0. walk: duration 13, cost 0.0. \nfrom China National Tea Museum to Hangzhou Zoo: metro: duration 75, cost 12. taxi: duration 3, cost 13.46. walk: duration 30, cost 0.0. \nfrom China National Tea Museum to Lingyin Temple: metro: duration 70, cost 8. taxi: duration 3, cost 12.02. walk: duration 25, cost 0.0. \nfrom China National Tea Museum to Jiangzhe Hui (West Lake Lakeside in77 Zone B Store): metro: duration 43, cost 8. taxi: duration 5, cost 18.46. walk: duration 47, cost 0.0. \nfrom China National Tea Museum to Hangzhou Lin'an Xia'er · Parent Child Vacation and River Tracing Homestay: metro: duration 376, cost 32. taxi: duration 84, cost 248.22. walk: duration 676, cost 0.0. \nfrom China National Tea Museum to Hangzhou Songcheng: metro: duration 85, cost 16. taxi: duration 10, cost 30.22. walk: duration 87, cost 0.0. \nfrom China National Tea Museum to Three Ponds Mirroring the Moon: metro: duration 60, cost 8. taxi: duration 3, cost 12.82. walk: duration 27, cost 0.0. \nfrom China National Tea Museum to West Lake Boat Tour: metro: duration 52, cost 8. taxi: duration 4, cost 15.92. walk: duration 38, cost 0.0. \nfrom China National Tea Museum to Leifeng Pagoda: metro: duration 54, cost 8. taxi: duration 4, cost 14.15. walk: duration 32, cost 0.0. \nfrom China National Tea Museum to Liangzhu Ancient City Ruins Park: metro: duration 132, cost 20. taxi: duration 31, cost 88.43. walk: duration 249, cost 0.0. \nfrom China National Tea Museum to Tea Village: The Essence of Jiangnan: metro: duration 99, cost 12. taxi: duration 2, cost 11.0. walk: duration 16, cost 0.0. \nfrom China National Tea Museum to Qinghefang Street: metro: duration 52, cost 12. taxi: duration 7, cost 21.22. walk: duration 56, cost 0.0. \nfrom China National Tea Museum to Hangzhou Xiaoshan International Airport: metro: duration 95, cost 28. taxi: duration 44, cost 126.84. walk: duration 352, cost 0.0. \nfrom China National Tea Museum to Hangzhou Botanical Garden: metro: duration 57, cost 8. taxi: duration 3, cost 11.91. walk: duration 24, cost 0.0. \nfrom China National Tea Museum to China National Tea Museum:  metro: empty.  taxi: empty.  walk: empty. \nfrom China National Tea Museum to Zhiweiguan Weizhuang (Yang Gongdi Branch): metro: duration 77, cost 8. taxi: duration 1, cost 11.0. walk: duration 15, cost 0.0. \nfrom China National Tea Museum to Lou Wai Lou (Gushan Road Store, West Lake Scenic Area): taxi: duration 2, cost 11.04. walk: duration 21, cost 0.0. \nfrom China National Tea Museum to Hangzhou East Railway Station: metro: duration 58, cost 12. taxi: duration 16, cost 44.06. walk: duration 131, cost 0.0. \nfrom China National Tea Museum to Hangzhou South Railway Station: metro: duration 77, cost 20. taxi: duration 26, cost 74.11. walk: duration 211, cost 0.0. \nfrom China National Tea Museum to Xixi National Wetland Park: metro: duration 64, cost 12. taxi: duration 9, cost 27.72. walk: duration 78, cost 0.0. \nfrom China National Tea Museum to Floral Hotel·Hangzhou Zhuyin Garden Homestay: metro: duration 82, cost 8. taxi: duration 2, cost 11.59. walk: duration 23, cost 0.0. \nfrom China National Tea Museum to Hangzhou Confucius Temple: metro: duration 46, cost 8. taxi: duration 6, cost 18.95. walk: duration 48, cost 0.0. \nfrom China National Tea Museum to Hangzhou Xiaoshan Meiliyun Bed&Breakfast: metro: duration 259, cost 20. taxi: duration 43, cost 124.36. walk: duration 345, cost 0.0. \nfrom China National Tea Museum to Hangzhou Museum: metro: duration 50, cost 8. taxi: duration 6, cost 20.25. walk: duration 53, cost 0.0. \nfrom China National Tea Museum to New Zhou Ji (Gulou Branch): metro: duration 55, cost 12. taxi: duration 6, cost 19.39. walk: duration 50, cost 0.0. \nfrom Zhiweiguan Weizhuang (Yang Gongdi Branch) to West Lake Scenic Area: metro: duration 83, cost 12. taxi: duration 1, cost 11.0. walk: duration 11, cost 0.0. \nfrom Zhiweiguan Weizhuang (Yang Gongdi Branch) to Hangzhou Zoo: metro: duration 64, cost 12. taxi: duration 1, cost 11.0. walk: duration 15, cost 0.0. \nfrom Zhiweiguan Weizhuang (Yang Gongdi Branch) to Lingyin Temple: metro: duration 70, cost 12. taxi: duration 5, cost 16.48. walk: duration 40, cost 0.0. \nfrom Zhiweiguan Weizhuang (Yang Gongdi Branch) to Jiangzhe Hui (West Lake Lakeside in77 Zone B Store): metro: duration 35, cost 8. taxi: duration 5, cost 17.68. walk: duration 44, cost 0.0. \nfrom Zhiweiguan Weizhuang (Yang Gongdi Branch) to Hangzhou Lin'an Xia'er · Parent Child Vacation and River Tracing Homestay: metro: duration 374, cost 32. taxi: duration 86, cost 253.46. walk: duration 690, cost 0.0. \nfrom Zhiweiguan Weizhuang (Yang Gongdi Branch) to Hangzhou Songcheng: metro: duration 76, cost 16. taxi: duration 10, cost 28.51. walk: duration 81, cost 0.0. \nfrom Zhiweiguan Weizhuang (Yang Gongdi Branch) to Three Ponds Mirroring the Moon: taxi: duration 2, cost 11.62. walk: duration 23, cost 0.0. \nfrom Zhiweiguan Weizhuang (Yang Gongdi Branch) to West Lake Boat Tour: metro: duration 44, cost 8. taxi: duration 4, cost 15.69. walk: duration 37, cost 0.0. \nfrom Zhiweiguan Weizhuang (Yang Gongdi Branch) to Leifeng Pagoda: taxi: duration 2, cost 11.27. walk: duration 22, cost 0.0. \nfrom Zhiweiguan Weizhuang (Yang Gongdi Branch) to Liangzhu Ancient City Ruins Park: metro: duration 133, cost 20. taxi: duration 33, cost 94.29. walk: duration 265, cost 0.0. \nfrom Zhiweiguan Weizhuang (Yang Gongdi Branch) to Tea Village: The Essence of Jiangnan: metro: duration 88, cost 12. taxi: duration 2, cost 11.0. walk: duration 20, cost 0.0. \nfrom Zhiweiguan Weizhuang (Yang Gongdi Branch) to Qinghefang Street: metro: duration 40, cost 8. taxi: duration 6, cost 18.92. walk: duration 48, cost 0.0. \nfrom Zhiweiguan Weizhuang (Yang Gongdi Branch) to Hangzhou Xiaoshan International Airport: metro: duration 84, cost 24. taxi: duration 42, cost 122.56. walk: duration 340, cost 0.0. \nfrom Zhiweiguan Weizhuang (Yang Gongdi Branch) to Hangzhou Botanical Garden: metro: duration 57, cost 12. taxi: duration 4, cost 16.02. walk: duration 38, cost 0.0. \nfrom Zhiweiguan Weizhuang (Yang Gongdi Branch) to China National Tea Museum: metro: duration 77, cost 8. taxi: duration 1, cost 11.0. walk: duration 15, cost 0.0. \nfrom Zhiweiguan Weizhuang (Yang Gongdi Branch) to Zhiweiguan Weizhuang (Yang Gongdi Branch):  metro: empty.  taxi: empty.  walk: empty. \nfrom Zhiweiguan Weizhuang (Yang Gongdi Branch) to Lou Wai Lou (Gushan Road Store, West Lake Scenic Area): metro: duration 59, cost 8. taxi: duration 3, cost 12.43. walk: duration 26, cost 0.0. \nfrom Zhiweiguan Weizhuang (Yang Gongdi Branch) to Hangzhou East Railway Station: metro: duration 52, cost 12. taxi: duration 16, cost 43.36. walk: duration 129, cost 0.0. \nfrom Zhiweiguan Weizhuang (Yang Gongdi Branch) to Hangzhou South Railway Station: metro: duration 64, cost 20. taxi: duration 24, cost 68.55. walk: duration 196, cost 0.0. \nfrom Zhiweiguan Weizhuang (Yang Gongdi Branch) to Xixi National Wetland Park: metro: duration 64, cost 16. taxi: duration 11, cost 32.28. walk: duration 94, cost 0.0. \nfrom Zhiweiguan Weizhuang (Yang Gongdi Branch) to Floral Hotel·Hangzhou Zhuyin Garden Homestay: metro: duration 82, cost 12. taxi: duration 4, cost 15.29. walk: duration 36, cost 0.0. \nfrom Zhiweiguan Weizhuang (Yang Gongdi Branch) to Hangzhou Confucius Temple: metro: duration 35, cost 8. taxi: duration 5, cost 17.1. walk: duration 42, cost 0.0. \nfrom Zhiweiguan Weizhuang (Yang Gongdi Branch) to Hangzhou Xiaoshan Meiliyun Bed&Breakfast: metro: duration 245, cost 20. taxi: duration 41, cost 119.17. walk: duration 331, cost 0.0. \nfrom Zhiweiguan Weizhuang (Yang Gongdi Branch) to Hangzhou Museum: metro: duration 39, cost 8. taxi: duration 5, cost 17.91. walk: duration 45, cost 0.0. \nfrom Zhiweiguan Weizhuang (Yang Gongdi Branch) to New Zhou Ji (Gulou Branch): metro: duration 42, cost 8. taxi: duration 5, cost 16.38. walk: duration 40, cost 0.0. \nfrom Lou Wai Lou (Gushan Road Store, West Lake Scenic Area) to West Lake Scenic Area: metro: duration 76, cost 12. taxi: duration 3, cost 14.03. walk: duration 31, cost 0.0. \nfrom Lou Wai Lou (Gushan Road Store, West Lake Scenic Area) to Hangzhou Zoo: metro: duration 57, cost 12. taxi: duration 5, cost 16.89. walk: duration 41, cost 0.0. \nfrom Lou Wai Lou (Gushan Road Store, West Lake Scenic Area) to Lingyin Temple: metro: duration 52, cost 8. taxi: duration 4, cost 15.85. walk: duration 38, cost 0.0. \nfrom Lou Wai Lou (Gushan Road Store, West Lake Scenic Area) to Jiangzhe Hui (West Lake Lakeside in77 Zone B Store): metro: duration 25, cost 8. taxi: duration 3, cost 12.67. walk: duration 27, cost 0.0. \nfrom Lou Wai Lou (Gushan Road Store, West Lake Scenic Area) to Hangzhou Lin'an Xia'er · Parent Child Vacation and River Tracing Homestay: metro: duration 358, cost 32. taxi: duration 85, cost 252.34. walk: duration 687, cost 0.0. \nfrom Lou Wai Lou (Gushan Road Store, West Lake Scenic Area) to Hangzhou Songcheng: metro: duration 67, cost 16. taxi: duration 13, cost 35.95. walk: duration 107, cost 0.0. \nfrom Lou Wai Lou (Gushan Road Store, West Lake Scenic Area) to Three Ponds Mirroring the Moon: metro: duration 42, cost 8. taxi: duration 1, cost 11.0. walk: duration 14, cost 0.0. \nfrom Lou Wai Lou (Gushan Road Store, West Lake Scenic Area) to West Lake Boat Tour: metro: duration 34, cost 8. taxi: duration 2, cost 11.0. walk: duration 18, cost 0.0. \nfrom Lou Wai Lou (Gushan Road Store, West Lake Scenic Area) to Leifeng Pagoda: metro: duration 36, cost 8. taxi: duration 3, cost 11.85. walk: duration 24, cost 0.0. \nfrom Lou Wai Lou (Gushan Road Store, West Lake Scenic Area) to Liangzhu Ancient City Ruins Park: metro: duration 114, cost 20. taxi: duration 31, cost 87.82. walk: duration 248, cost 0.0. \nfrom Lou Wai Lou (Gushan Road Store, West Lake Scenic Area) to Tea Village: The Essence of Jiangnan: metro: duration 81, cost 12. taxi: duration 4, cost 15.74. walk: duration 37, cost 0.0. \nfrom Lou Wai Lou (Gushan Road Store, West Lake Scenic Area) to Qinghefang Street: metro: duration 34, cost 12. taxi: duration 5, cost 16.65. walk: duration 40, cost 0.0. \nfrom Lou Wai Lou (Gushan Road Store, West Lake Scenic Area) to Hangzhou Xiaoshan International Airport: metro: duration 77, cost 28. taxi: duration 42, cost 121.28. walk: duration 337, cost 0.0. \nfrom Lou Wai Lou (Gushan Road Store, West Lake Scenic Area) to Hangzhou Botanical Garden: metro: duration 39, cost 8. taxi: duration 2, cost 11.25. walk: duration 22, cost 0.0. \nfrom Lou Wai Lou (Gushan Road Store, West Lake Scenic Area) to China National Tea Museum: taxi: duration 2, cost 11.04. walk: duration 21, cost 0.0. \nfrom Lou Wai Lou (Gushan Road Store, West Lake Scenic Area) to Zhiweiguan Weizhuang (Yang Gongdi Branch): metro: duration 59, cost 8. taxi: duration 3, cost 12.43. walk: duration 26, cost 0.0. \nfrom Lou Wai Lou (Gushan Road Store, West Lake Scenic Area) to Lou Wai Lou (Gushan Road Store, West Lake Scenic Area):  metro: empty.  taxi: empty.  walk: empty. \nfrom Lou Wai Lou (Gushan Road Store, West Lake Scenic Area) to Hangzhou East Railway Station: metro: duration 40, cost 12. taxi: duration 13, cost 36.85. walk: duration 110, cost 0.0. \nfrom Lou Wai Lou (Gushan Road Store, West Lake Scenic Area) to Hangzhou South Railway Station: metro: duration 59, cost 20. taxi: duration 25, cost 71.61. walk: duration 205, cost 0.0. \nfrom Lou Wai Lou (Gushan Road Store, West Lake Scenic Area) to Xixi National Wetland Park: metro: duration 46, cost 12. taxi: duration 10, cost 29.6. walk: duration 85, cost 0.0. \nfrom Lou Wai Lou (Gushan Road Store, West Lake Scenic Area) to Floral Hotel·Hangzhou Zhuyin Garden Homestay: metro: duration 64, cost 8. taxi: duration 5, cost 17.06. walk: duration 42, cost 0.0. \nfrom Lou Wai Lou (Gushan Road Store, West Lake Scenic Area) to Hangzhou Confucius Temple: metro: duration 28, cost 8. taxi: duration 4, cost 14.1. walk: duration 32, cost 0.0. \nfrom Lou Wai Lou (Gushan Road Store, West Lake Scenic Area) to Hangzhou Xiaoshan Meiliyun Bed&Breakfast: metro: duration 241, cost 20. taxi: duration 44, cost 128.19. walk: duration 355, cost 0.0. \nfrom Lou Wai Lou (Gushan Road Store, West Lake Scenic Area) to Hangzhou Museum: metro: duration 32, cost 8. taxi: duration 4, cost 15.84. walk: duration 38, cost 0.0. \nfrom Lou Wai Lou (Gushan Road Store, West Lake Scenic Area) to New Zhou Ji (Gulou Branch): metro: duration 37, cost 12. taxi: duration 4, cost 16.01. walk: duration 38, cost 0.0. \nfrom Hangzhou East Railway Station to West Lake Scenic Area: metro: duration 71, cost 16. taxi: duration 17, cost 46.92. walk: duration 139, cost 0.0. \nfrom Hangzhou East Railway Station to Hangzhou Zoo: metro: duration 52, cost 16. taxi: duration 17, cost 46.83. walk: duration 139, cost 0.0. \nfrom Hangzhou East Railway Station to Lingyin Temple: metro: duration 52, cost 16. taxi: duration 18, cost 49.12. walk: duration 145, cost 0.0. \nfrom Hangzhou East Railway Station to Jiangzhe Hui (West Lake Lakeside in77 Zone B Store): metro: duration 18, cost 12. taxi: duration 10, cost 29.6. walk: duration 85, cost 0.0. \nfrom Hangzhou East Railway Station to Hangzhou Lin'an Xia'er · Parent Child Vacation and River Tracing Homestay: metro: duration 359, cost 36. taxi: duration 95, cost 281.41. walk: duration 764, cost 0.0. \nfrom Hangzhou East Railway Station to Hangzhou Songcheng: metro: duration 64, cost 20. taxi: duration 26, cost 72.83. walk: duration 208, cost 0.0. \nfrom Hangzhou East Railway Station to Three Ponds Mirroring the Moon: metro: duration 35, cost 12. taxi: duration 13, cost 35.68. walk: duration 106, cost 0.0. \nfrom Hangzhou East Railway Station to West Lake Boat Tour: metro: duration 27, cost 12. taxi: duration 11, cost 31.92. walk: duration 93, cost 0.0. \nfrom Hangzhou East Railway Station to Leifeng Pagoda: metro: duration 29, cost 12. taxi: duration 13, cost 36.51. walk: duration 109, cost 0.0. \nfrom Hangzhou East Railway Station to Liangzhu Ancient City Ruins Park: metro: duration 107, cost 20. taxi: duration 35, cost 102.06. walk: duration 286, cost 0.0. \nfrom Hangzhou East Railway Station to Tea Village: The Essence of Jiangnan: metro: duration 76, cost 16. taxi: duration 18, cost 49.79. walk: duration 146, cost 0.0. \nfrom Hangzhou East Railway Station to Qinghefang Street: metro: duration 22, cost 12. taxi: duration 10, cost 29.51. walk: duration 85, cost 0.0. \nfrom Hangzhou East Railway Station to Hangzhou Xiaoshan International Airport: metro: duration 49, cost 24. taxi: duration 32, cost 92.06. walk: duration 259, cost 0.0. \nfrom Hangzhou East Railway Station to Hangzhou Botanical Garden: metro: duration 39, cost 12. taxi: duration 15, cost 41.08. walk: duration 123, cost 0.0. \nfrom Hangzhou East Railway Station to China National Tea Museum: metro: duration 58, cost 12. taxi: duration 16, cost 44.06. walk: duration 131, cost 0.0. \nfrom Hangzhou East Railway Station to Zhiweiguan Weizhuang (Yang Gongdi Branch): metro: duration 52, cost 12. taxi: duration 16, cost 43.36. walk: duration 129, cost 0.0. \nfrom Hangzhou East Railway Station to Lou Wai Lou (Gushan Road Store, West Lake Scenic Area): metro: duration 40, cost 12. taxi: duration 13, cost 36.85. walk: duration 110, cost 0.0. \nfrom Hangzhou East Railway Station to Hangzhou East Railway Station:  metro: empty.  taxi: empty.  walk: empty. \nfrom Hangzhou East Railway Station to Hangzhou South Railway Station: metro: duration 39, cost 20. taxi: duration 23, cost 64.68. walk: duration 186, cost 0.0. \nfrom Hangzhou East Railway Station to Xixi National Wetland Park: metro: duration 45, cost 20. taxi: duration 21, cost 59.85. walk: duration 173, cost 0.0. \nfrom Hangzhou East Railway Station to Floral Hotel·Hangzhou Zhuyin Garden Homestay: metro: duration 64, cost 16. taxi: duration 18, cost 51.69. walk: duration 151, cost 0.0. \nfrom Hangzhou East Railway Station to Hangzhou Confucius Temple: metro: duration 21, cost 12. taxi: duration 11, cost 30.47. walk: duration 88, cost 0.0. \nfrom Hangzhou East Railway Station to Hangzhou Xiaoshan Meiliyun Bed&Breakfast: metro: duration 225, cost 20. taxi: duration 50, cost 146.9. walk: duration 405, cost 0.0. \nfrom Hangzhou East Railway Station to Hangzhou Museum: metro: duration 25, cost 12. taxi: duration 11, cost 30.42. walk: duration 88, cost 0.0. \nfrom Hangzhou East Railway Station to New Zhou Ji (Gulou Branch): metro: duration 27, cost 12. taxi: duration 12, cost 32.95. walk: duration 96, cost 0.0. \nfrom Hangzhou South Railway Station to West Lake Scenic Area: metro: duration 74, cost 20. taxi: duration 25, cost 72.0. walk: duration 206, cost 0.0. \nfrom Hangzhou South Railway Station to Hangzhou Zoo: metro: duration 55, cost 20. taxi: duration 23, cost 65.48. walk: duration 188, cost 0.0. \nfrom Hangzhou South Railway Station to Lingyin Temple: metro: duration 70, cost 24. taxi: duration 29, cost 83.51. walk: duration 236, cost 0.0. \nfrom Hangzhou South Railway Station to Jiangzhe Hui (West Lake Lakeside in77 Zone B Store): metro: duration 34, cost 20. taxi: duration 23, cost 64.48. walk: duration 186, cost 0.0. \nfrom Hangzhou South Railway Station to Hangzhou Lin'an Xia'er · Parent Child Vacation and River Tracing Homestay: metro: duration 372, cost 36. taxi: duration 110, cost 326.91. walk: duration 885, cost 0.0. \nfrom Hangzhou South Railway Station to Hangzhou Songcheng: metro: duration 62, cost 20. taxi: duration 27, cost 76.56. walk: duration 218, cost 0.0. \nfrom Hangzhou South Railway Station to Three Ponds Mirroring the Moon: metro: duration 47, cost 20. taxi: duration 23, cost 66.33. walk: duration 191, cost 0.0. \nfrom Hangzhou South Railway Station to West Lake Boat Tour: metro: duration 43, cost 20. taxi: duration 24, cost 67.04. walk: duration 192, cost 0.0. \nfrom Hangzhou South Railway Station to Leifeng Pagoda: metro: duration 41, cost 20. taxi: duration 22, cost 62.83. walk: duration 181, cost 0.0. \nfrom Hangzhou South Railway Station to Liangzhu Ancient City Ruins Park: metro: duration 133, cost 28. taxi: duration 56, cost 162.92. walk: duration 448, cost 0.0. \nfrom Hangzhou South Railway Station to Tea Village: The Essence of Jiangnan: metro: duration 79, cost 20. taxi: duration 26, cost 75.07. walk: duration 214, cost 0.0. \nfrom Hangzhou South Railway Station to Qinghefang Street: metro: duration 35, cost 16. taxi: duration 20, cost 57.57. walk: duration 167, cost 0.0. \nfrom Hangzhou South Railway Station to Hangzhou Xiaoshan International Airport: metro: duration 33, cost 20. taxi: duration 22, cost 62.07. walk: duration 179, cost 0.0. \nfrom Hangzhou South Railway Station to Hangzhou Botanical Garden: metro: duration 58, cost 20. taxi: duration 28, cost 79.97. walk: duration 227, cost 0.0. \nfrom Hangzhou South Railway Station to China National Tea Museum: metro: duration 77, cost 20. taxi: duration 26, cost 74.11. walk: duration 211, cost 0.0. \nfrom Hangzhou South Railway Station to Zhiweiguan Weizhuang (Yang Gongdi Branch): metro: duration 64, cost 20. taxi: duration 24, cost 68.55. walk: duration 196, cost 0.0. \nfrom Hangzhou South Railway Station to Lou Wai Lou (Gushan Road Store, West Lake Scenic Area): metro: duration 59, cost 20. taxi: duration 25, cost 71.61. walk: duration 205, cost 0.0. \nfrom Hangzhou South Railway Station to Hangzhou East Railway Station: metro: duration 39, cost 20. taxi: duration 23, cost 64.68. walk: duration 186, cost 0.0. \nfrom Hangzhou South Railway Station to Hangzhou South Railway Station:  metro: empty.  taxi: empty.  walk: empty. \nfrom Hangzhou South Railway Station to Xixi National Wetland Park: metro: duration 65, cost 24. taxi: duration 36, cost 103.32. walk: duration 289, cost 0.0. \nfrom Hangzhou South Railway Station to Floral Hotel·Hangzhou Zhuyin Garden Homestay: metro: duration 82, cost 24. taxi: duration 29, cost 82.06. walk: duration 232, cost 0.0. \nfrom Hangzhou South Railway Station to Hangzhou Confucius Temple: metro: duration 34, cost 20. taxi: duration 22, cost 60.73. walk: duration 176, cost 0.0. \nfrom Hangzhou South Railway Station to Hangzhou Xiaoshan Meiliyun Bed&Breakfast: metro: duration 196, cost 12. taxi: duration 31, cost 90.22. walk: duration 254, cost 0.0. \nfrom Hangzhou South Railway Station to Hangzhou Museum: metro: duration 38, cost 20. taxi: duration 21, cost 58.18. walk: duration 169, cost 0.0. \nfrom Hangzhou South Railway Station to New Zhou Ji (Gulou Branch): metro: duration 38, cost 16. taxi: duration 20, cost 57.13. walk: duration 166, cost 0.0. \nfrom Xixi National Wetland Park to West Lake Scenic Area: metro: duration 78, cost 16. taxi: duration 10, cost 30.23. walk: duration 87, cost 0.0. \nfrom Xixi National Wetland Park to Hangzhou Zoo: metro: duration 59, cost 16. taxi: duration 13, cost 35.8. walk: duration 106, cost 0.0. \nfrom Xixi National Wetland Park to Lingyin Temple: metro: duration 44, cost 8. taxi: duration 6, cost 20.55. walk: duration 54, cost 0.0. \nfrom Xixi National Wetland Park to Jiangzhe Hui (West Lake Lakeside in77 Zone B Store): metro: duration 31, cost 16. taxi: duration 13, cost 36.55. walk: duration 109, cost 0.0. \nfrom Xixi National Wetland Park to Hangzhou Lin'an Xia'er · Parent Child Vacation and River Tracing Homestay: metro: duration 337, cost 28. taxi: duration 75, cost 220.57. walk: duration 602, cost 0.0. \nfrom Xixi National Wetland Park to Hangzhou Songcheng: metro: duration 63, cost 20. taxi: duration 16, cost 45.31. walk: duration 134, cost 0.0. \nfrom Xixi National Wetland Park to Three Ponds Mirroring the Moon: metro: duration 47, cost 16. taxi: duration 12, cost 33.61. walk: duration 99, cost 0.0. \nfrom Xixi National Wetland Park to West Lake Boat Tour: metro: duration 40, cost 16. taxi: duration 12, cost 34.02. walk: duration 100, cost 0.0. \nfrom Xixi National Wetland Park to Leifeng Pagoda: metro: duration 41, cost 16. taxi: duration 13, cost 36.2. walk: duration 108, cost 0.0. \nfrom Xixi National Wetland Park to Liangzhu Ancient City Ruins Park: metro: duration 95, cost 12. taxi: duration 21, cost 60.64. walk: duration 175, cost 0.0. \nfrom Xixi National Wetland Park to Tea Village: The Essence of Jiangnan: metro: duration 83, cost 16. taxi: duration 10, cost 28.53. walk: duration 81, cost 0.0. \nfrom Xixi National Wetland Park to Qinghefang Street: metro: duration 39, cost 16. taxi: duration 15, cost 41.85. walk: duration 125, cost 0.0. \nfrom Xixi National Wetland Park to Hangzhou Xiaoshan International Airport: metro: duration 83, cost 28. taxi: duration 52, cost 152.15. walk: duration 419, cost 0.0. \nfrom Xixi National Wetland Park to Hangzhou Botanical Garden: metro: duration 40, cost 12. taxi: duration 7, cost 23.06. walk: duration 62, cost 0.0. \nfrom Xixi National Wetland Park to China National Tea Museum: metro: duration 64, cost 12. taxi: duration 9, cost 27.72. walk: duration 78, cost 0.0. \nfrom Xixi National Wetland Park to Zhiweiguan Weizhuang (Yang Gongdi Branch): metro: duration 64, cost 16. taxi: duration 11, cost 32.28. walk: duration 94, cost 0.0. \nfrom Xixi National Wetland Park to Lou Wai Lou (Gushan Road Store, West Lake Scenic Area): metro: duration 46, cost 12. taxi: duration 10, cost 29.6. walk: duration 85, cost 0.0. \nfrom Xixi National Wetland Park to Hangzhou East Railway Station: metro: duration 45, cost 20. taxi: duration 21, cost 59.85. walk: duration 173, cost 0.0. \nfrom Xixi National Wetland Park to Hangzhou South Railway Station: metro: duration 65, cost 24. taxi: duration 36, cost 103.32. walk: duration 289, cost 0.0. \nfrom Xixi National Wetland Park to Xixi National Wetland Park:  metro: empty.  taxi: empty.  walk: empty. \nfrom Xixi National Wetland Park to Floral Hotel·Hangzhou Zhuyin Garden Homestay: metro: duration 56, cost 8. taxi: duration 7, cost 22.83. walk: duration 62, cost 0.0. \nfrom Xixi National Wetland Park to Hangzhou Confucius Temple: metro: duration 34, cost 16. taxi: duration 14, cost 38.79. walk: duration 116, cost 0.0. \nfrom Xixi National Wetland Park to Hangzhou Xiaoshan Meiliyun Bed&Breakfast: metro: duration 245, cost 24. taxi: duration 51, cost 149.17. walk: duration 411, cost 0.0. \nfrom Xixi National Wetland Park to Hangzhou Museum: metro: duration 38, cost 16. taxi: duration 15, cost 40.92. walk: duration 123, cost 0.0. \nfrom Xixi National Wetland Park to New Zhou Ji (Gulou Branch): metro: duration 42, cost 16. taxi: duration 15, cost 41.22. walk: duration 124, cost 0.0. \nfrom Floral Hotel·Hangzhou Zhuyin Garden Homestay to West Lake Scenic Area: metro: duration 96, cost 12. taxi: duration 3, cost 12.54. walk: duration 26, cost 0.0. \nfrom Floral Hotel·Hangzhou Zhuyin Garden Homestay to Hangzhou Zoo: metro: duration 77, cost 12. taxi: duration 5, cost 17.94. walk: duration 45, cost 0.0. \nfrom Floral Hotel·Hangzhou Zhuyin Garden Homestay to Lingyin Temple: taxi: duration 1, cost 11.0. walk: duration 12, cost 0.0. \nfrom Floral Hotel·Hangzhou Zhuyin Garden Homestay to Jiangzhe Hui (West Lake Lakeside in77 Zone B Store): metro: duration 49, cost 12. taxi: duration 8, cost 24.95. walk: duration 69, cost 0.0. \nfrom Floral Hotel·Hangzhou Zhuyin Garden Homestay to Hangzhou Lin'an Xia'er · Parent Child Vacation and River Tracing Homestay: metro: duration 368, cost 32. taxi: duration 81, cost 239.85. walk: duration 653, cost 0.0. \nfrom Floral Hotel·Hangzhou Zhuyin Garden Homestay to Hangzhou Songcheng: metro: duration 83, cost 16. taxi: duration 10, cost 28.74. walk: duration 82, cost 0.0. \nfrom Floral Hotel·Hangzhou Zhuyin Garden Homestay to Three Ponds Mirroring the Moon: metro: duration 65, cost 12. taxi: duration 6, cost 19.63. walk: duration 51, cost 0.0. \nfrom Floral Hotel·Hangzhou Zhuyin Garden Homestay to West Lake Boat Tour: metro: duration 58, cost 12. taxi: duration 7, cost 22.29. walk: duration 60, cost 0.0. \nfrom Floral Hotel·Hangzhou Zhuyin Garden Homestay to Leifeng Pagoda: metro: duration 59, cost 12. taxi: duration 6, cost 21.0. walk: duration 55, cost 0.0. \nfrom Floral Hotel·Hangzhou Zhuyin Garden Homestay to Liangzhu Ancient City Ruins Park: metro: duration 126, cost 16. taxi: duration 29, cost 83.65. walk: duration 237, cost 0.0. \nfrom Floral Hotel·Hangzhou Zhuyin Garden Homestay to Tea Village: The Essence of Jiangnan: metro: duration 101, cost 12. taxi: duration 2, cost 11.0. walk: duration 19, cost 0.0. \nfrom Floral Hotel·Hangzhou Zhuyin Garden Homestay to Qinghefang Street: metro: duration 57, cost 12. taxi: duration 10, cost 28.08. walk: duration 80, cost 0.0. \nfrom Floral Hotel·Hangzhou Zhuyin Garden Homestay to Hangzhou Xiaoshan International Airport: metro: duration 102, cost 28. taxi: duration 46, cost 135.67. walk: duration 375, cost 0.0. \nfrom Floral Hotel·Hangzhou Zhuyin Garden Homestay to Hangzhou Botanical Garden: metro: duration 59, cost 8. taxi: duration 3, cost 13.85. walk: duration 31, cost 0.0. \nfrom Floral Hotel·Hangzhou Zhuyin Garden Homestay to China National Tea Museum: metro: duration 82, cost 8. taxi: duration 2, cost 11.59. walk: duration 23, cost 0.0. \nfrom Floral Hotel·Hangzhou Zhuyin Garden Homestay to Zhiweiguan Weizhuang (Yang Gongdi Branch): metro: duration 82, cost 12. taxi: duration 4, cost 15.29. walk: duration 36, cost 0.0. \nfrom Floral Hotel·Hangzhou Zhuyin Garden Homestay to Lou Wai Lou (Gushan Road Store, West Lake Scenic Area): metro: duration 64, cost 8. taxi: duration 5, cost 17.06. walk: duration 42, cost 0.0. \nfrom Floral Hotel·Hangzhou Zhuyin Garden Homestay to Hangzhou East Railway Station: metro: duration 64, cost 16. taxi: duration 18, cost 51.69. walk: duration 151, cost 0.0. \nfrom Floral Hotel·Hangzhou Zhuyin Garden Homestay to Hangzhou South Railway Station: metro: duration 82, cost 24. taxi: duration 29, cost 82.06. walk: duration 232, cost 0.0. \nfrom Floral Hotel·Hangzhou Zhuyin Garden Homestay to Xixi National Wetland Park: metro: duration 56, cost 8. taxi: duration 7, cost 22.83. walk: duration 62, cost 0.0. \nfrom Floral Hotel·Hangzhou Zhuyin Garden Homestay to Floral Hotel·Hangzhou Zhuyin Garden Homestay:  metro: empty.  taxi: empty.  walk: empty. \nfrom Floral Hotel·Hangzhou Zhuyin Garden Homestay to Hangzhou Confucius Temple: metro: duration 52, cost 12. taxi: duration 9, cost 25.76. walk: duration 72, cost 0.0. \nfrom Floral Hotel·Hangzhou Zhuyin Garden Homestay to Hangzhou Xiaoshan Meiliyun Bed&Breakfast: metro: duration 263, cost 24. taxi: duration 44, cost 126.96. walk: duration 352, cost 0.0. \nfrom Floral Hotel·Hangzhou Zhuyin Garden Homestay to Hangzhou Museum: metro: duration 56, cost 12. taxi: duration 9, cost 27.12. walk: duration 76, cost 0.0. \nfrom Floral Hotel·Hangzhou Zhuyin Garden Homestay to New Zhou Ji (Gulou Branch): metro: duration 60, cost 12. taxi: duration 9, cost 26.26. walk: duration 73, cost 0.0. \nfrom Hangzhou Confucius Temple to West Lake Scenic Area: metro: duration 54, cost 12. taxi: duration 6, cost 20.16. walk: duration 52, cost 0.0. \nfrom Hangzhou Confucius Temple to Hangzhou Zoo: metro: duration 35, cost 12. taxi: duration 6, cost 19.47. walk: duration 50, cost 0.0. \nfrom Hangzhou Confucius Temple to Lingyin Temple: metro: duration 40, cost 12. taxi: duration 8, cost 25.12. walk: duration 70, cost 0.0. \nfrom Hangzhou Confucius Temple to Jiangzhe Hui (West Lake Lakeside in77 Zone B Store): metro: duration 4, cost 8. taxi: duration 1, cost 11.0. walk: duration 11, cost 0.0. \nfrom Hangzhou Confucius Temple to Hangzhou Lin'an Xia'er · Parent Child Vacation and River Tracing Homestay: metro: duration 345, cost 32. taxi: duration 89, cost 264.32. walk: duration 718, cost 0.0. \nfrom Hangzhou Confucius Temple to Hangzhou Songcheng: metro: duration 47, cost 16. taxi: duration 15, cost 39.75. walk: duration 120, cost 0.0. \nfrom Hangzhou Confucius Temple to Three Ponds Mirroring the Moon: metro: duration 18, cost 8. taxi: duration 2, cost 11.0. walk: duration 21, cost 0.0. \nfrom Hangzhou Confucius Temple to West Lake Boat Tour: metro: duration 13, cost 8. taxi: duration 2, cost 11.0. walk: duration 16, cost 0.0. \nfrom Hangzhou Confucius Temple to Leifeng Pagoda: metro: duration 12, cost 8. taxi: duration 2, cost 11.0. walk: duration 20, cost 0.0. \nfrom Hangzhou Confucius Temple to Liangzhu Ancient City Ruins Park: metro: duration 102, cost 20. taxi: duration 34, cost 97.3. walk: duration 273, cost 0.0. \nfrom Hangzhou Confucius Temple to Tea Village: The Essence of Jiangnan: metro: duration 59, cost 12. taxi: duration 7, cost 22.66. walk: duration 61, cost 0.0. \nfrom Hangzhou Confucius Temple to Qinghefang Street: metro: duration 9, cost 8. taxi: duration 1, cost 11.0. walk: duration 8, cost 0.0. \nfrom Hangzhou Confucius Temple to Hangzhou Xiaoshan International Airport: metro: duration 54, cost 24. taxi: duration 38, cost 109.21. walk: duration 305, cost 0.0. \nfrom Hangzhou Confucius Temple to Hangzhou Botanical Garden: metro: duration 27, cost 12. taxi: duration 6, cost 20.48. walk: duration 54, cost 0.0. \nfrom Hangzhou Confucius Temple to China National Tea Museum: metro: duration 46, cost 8. taxi: duration 6, cost 18.95. walk: duration 48, cost 0.0. \nfrom Hangzhou Confucius Temple to Zhiweiguan Weizhuang (Yang Gongdi Branch): metro: duration 35, cost 8. taxi: duration 5, cost 17.1. walk: duration 42, cost 0.0. \nfrom Hangzhou Confucius Temple to Lou Wai Lou (Gushan Road Store, West Lake Scenic Area): metro: duration 28, cost 8. taxi: duration 4, cost 14.1. walk: duration 32, cost 0.0. \nfrom Hangzhou Confucius Temple to Hangzhou East Railway Station: metro: duration 21, cost 12. taxi: duration 11, cost 30.47. walk: duration 88, cost 0.0. \nfrom Hangzhou Confucius Temple to Hangzhou South Railway Station: metro: duration 34, cost 20. taxi: duration 22, cost 60.73. walk: duration 176, cost 0.0. \nfrom Hangzhou Confucius Temple to Xixi National Wetland Park: metro: duration 34, cost 16. taxi: duration 14, cost 38.79. walk: duration 116, cost 0.0. \nfrom Hangzhou Confucius Temple to Floral Hotel·Hangzhou Zhuyin Garden Homestay: metro: duration 52, cost 12. taxi: duration 9, cost 25.76. walk: duration 72, cost 0.0. \nfrom Hangzhou Confucius Temple to Hangzhou Confucius Temple:  metro: empty.  taxi: empty.  walk: empty. \nfrom Hangzhou Confucius Temple to Hangzhou Xiaoshan Meiliyun Bed&Breakfast: metro: duration 216, cost 20. taxi: duration 43, cost 124.24. walk: duration 345, cost 0.0. \nfrom Hangzhou Confucius Temple to Hangzhou Museum: taxi: duration 0, cost 11.0. walk: duration 6, cost 0.0. \nfrom Hangzhou Confucius Temple to New Zhou Ji (Gulou Branch): metro: duration 12, cost 8. taxi: duration 1, cost 11.0. walk: duration 13, cost 0.0. \nfrom Hangzhou Xiaoshan Meiliyun Bed&Breakfast to West Lake Scenic Area: metro: duration 252, cost 20. taxi: duration 41, cost 119.66. walk: duration 333, cost 0.0. \nfrom Hangzhou Xiaoshan Meiliyun Bed&Breakfast to Hangzhou Zoo: metro: duration 233, cost 20. taxi: duration 39, cost 113.28. walk: duration 316, cost 0.0. \nfrom Hangzhou Xiaoshan Meiliyun Bed&Breakfast to Lingyin Temple: metro: duration 251, cost 24. taxi: duration 45, cost 131.08. walk: duration 363, cost 0.0. \nfrom Hangzhou Xiaoshan Meiliyun Bed&Breakfast to Jiangzhe Hui (West Lake Lakeside in77 Zone B Store): metro: duration 216, cost 20. taxi: duration 44, cost 128.18. walk: duration 355, cost 0.0. \nfrom Hangzhou Xiaoshan Meiliyun Bed&Breakfast to Hangzhou Lin'an Xia'er · Parent Child Vacation and River Tracing Homestay: metro: duration 546, cost 36. taxi: duration 114, cost 337.91. walk: duration 915, cost 0.0. \nfrom Hangzhou Xiaoshan Meiliyun Bed&Breakfast to Hangzhou Songcheng: metro: duration 235, cost 20. taxi: duration 34, cost 99.31. walk: duration 278, cost 0.0. \nfrom Hangzhou Xiaoshan Meiliyun Bed&Breakfast to Three Ponds Mirroring the Moon: metro: duration 228, cost 20. taxi: duration 43, cost 124.13. walk: duration 345, cost 0.0. \nfrom Hangzhou Xiaoshan Meiliyun Bed&Breakfast to West Lake Boat Tour: metro: duration 225, cost 20. taxi: duration 44, cost 128.4. walk: duration 356, cost 0.0. \nfrom Hangzhou Xiaoshan Meiliyun Bed&Breakfast to Leifeng Pagoda: metro: duration 222, cost 20. taxi: duration 41, cost 120.18. walk: duration 334, cost 0.0. \nfrom Hangzhou Xiaoshan Meiliyun Bed&Breakfast to Liangzhu Ancient City Ruins Park: metro: duration 315, cost 28. taxi: duration 73, cost 214.88. walk: duration 587, cost 0.0. \nfrom Hangzhou Xiaoshan Meiliyun Bed&Breakfast to Tea Village: The Essence of Jiangnan: metro: duration 257, cost 20. taxi: duration 41, cost 120.46. walk: duration 335, cost 0.0. \nfrom Hangzhou Xiaoshan Meiliyun Bed&Breakfast to Qinghefang Street: metro: duration 217, cost 20. taxi: duration 42, cost 122.75. walk: duration 341, cost 0.0. \nfrom Hangzhou Xiaoshan Meiliyun Bed&Breakfast to Hangzhou Xiaoshan International Airport: metro: duration 222, cost 20. taxi: duration 50, cost 146.39. walk: duration 404, cost 0.0. \nfrom Hangzhou Xiaoshan Meiliyun Bed&Breakfast to Hangzhou Botanical Garden: metro: duration 239, cost 20. taxi: duration 46, cost 133.58. walk: duration 370, cost 0.0. \nfrom Hangzhou Xiaoshan Meiliyun Bed&Breakfast to China National Tea Museum: metro: duration 259, cost 20. taxi: duration 43, cost 124.36. walk: duration 345, cost 0.0. \nfrom Hangzhou Xiaoshan Meiliyun Bed&Breakfast to Zhiweiguan Weizhuang (Yang Gongdi Branch): metro: duration 245, cost 20. taxi: duration 41, cost 119.17. walk: duration 331, cost 0.0. \nfrom Hangzhou Xiaoshan Meiliyun Bed&Breakfast to Lou Wai Lou (Gushan Road Store, West Lake Scenic Area): metro: duration 241, cost 20. taxi: duration 44, cost 128.19. walk: duration 355, cost 0.0. \nfrom Hangzhou Xiaoshan Meiliyun Bed&Breakfast to Hangzhou East Railway Station: metro: duration 225, cost 20. taxi: duration 50, cost 146.9. walk: duration 405, cost 0.0. \nfrom Hangzhou Xiaoshan Meiliyun Bed&Breakfast to Hangzhou South Railway Station: metro: duration 196, cost 12. taxi: duration 31, cost 90.22. walk: duration 254, cost 0.0. \nfrom Hangzhou Xiaoshan Meiliyun Bed&Breakfast to Xixi National Wetland Park: metro: duration 245, cost 24. taxi: duration 51, cost 149.17. walk: duration 411, cost 0.0. \nfrom Hangzhou Xiaoshan Meiliyun Bed&Breakfast to Floral Hotel·Hangzhou Zhuyin Garden Homestay: metro: duration 263, cost 24. taxi: duration 44, cost 126.96. walk: duration 352, cost 0.0. \nfrom Hangzhou Xiaoshan Meiliyun Bed&Breakfast to Hangzhou Confucius Temple: metro: duration 216, cost 20. taxi: duration 43, cost 124.24. walk: duration 345, cost 0.0. \nfrom Hangzhou Xiaoshan Meiliyun Bed&Breakfast to Hangzhou Xiaoshan Meiliyun Bed&Breakfast:  metro: empty.  taxi: empty.  walk: empty. \nfrom Hangzhou Xiaoshan Meiliyun Bed&Breakfast to Hangzhou Museum: metro: duration 220, cost 20. taxi: duration 42, cost 122.34. walk: duration 340, cost 0.0. \nfrom Hangzhou Xiaoshan Meiliyun Bed&Breakfast to New Zhou Ji (Gulou Branch): metro: duration 220, cost 20. taxi: duration 41, cost 119.18. walk: duration 331, cost 0.0. \nfrom Hangzhou Museum to West Lake Scenic Area: metro: duration 58, cost 12. taxi: duration 7, cost 21.06. walk: duration 56, cost 0.0. \nfrom Hangzhou Museum to Hangzhou Zoo: metro: duration 39, cost 12. taxi: duration 6, cost 19.7. walk: duration 51, cost 0.0. \nfrom Hangzhou Museum to Lingyin Temple: metro: duration 44, cost 12. taxi: duration 9, cost 26.7. walk: duration 75, cost 0.0. \nfrom Hangzhou Museum to Jiangzhe Hui (West Lake Lakeside in77 Zone B Store): metro: duration 8, cost 8. taxi: duration 2, cost 11.0. walk: duration 17, cost 0.0. \nfrom Hangzhou Museum to Hangzhou Lin'an Xia'er · Parent Child Vacation and River Tracing Homestay: metro: duration 349, cost 32. taxi: duration 90, cost 266.64. walk: duration 725, cost 0.0. \nfrom Hangzhou Museum to Hangzhou Songcheng: metro: duration 51, cost 16. taxi: duration 15, cost 39.79. walk: duration 120, cost 0.0. \nfrom Hangzhou Museum to Three Ponds Mirroring the Moon: metro: duration 22, cost 8. taxi: duration 3, cost 12.25. walk: duration 25, cost 0.0. \nfrom Hangzhou Museum to West Lake Boat Tour: metro: duration 17, cost 8. taxi: duration 2, cost 11.59. walk: duration 23, cost 0.0. \nfrom Hangzhou Museum to Leifeng Pagoda: metro: duration 16, cost 8. taxi: duration 2, cost 11.35. walk: duration 22, cost 0.0. \nfrom Hangzhou Museum to Liangzhu Ancient City Ruins Park: metro: duration 106, cost 20. taxi: duration 35, cost 99.84. walk: duration 280, cost 0.0. \nfrom Hangzhou Museum to Tea Village: The Essence of Jiangnan: metro: duration 63, cost 12. taxi: duration 8, cost 23.65. walk: duration 64, cost 0.0. \nfrom Hangzhou Museum to Qinghefang Street: metro: duration 13, cost 8. taxi: duration 0, cost 11.0. walk: duration 3, cost 0.0. \nfrom Hangzhou Museum to Hangzhou Xiaoshan International Airport: metro: duration 58, cost 24. taxi: duration 37, cost 107.13. walk: duration 299, cost 0.0. \nfrom Hangzhou Museum to Hangzhou Botanical Garden: metro: duration 31, cost 12. taxi: duration 7, cost 22.3. walk: duration 60, cost 0.0. \nfrom Hangzhou Museum to China National Tea Museum: metro: duration 50, cost 8. taxi: duration 6, cost 20.25. walk: duration 53, cost 0.0. \nfrom Hangzhou Museum to Zhiweiguan Weizhuang (Yang Gongdi Branch): metro: duration 39, cost 8. taxi: duration 5, cost 17.91. walk: duration 45, cost 0.0. \nfrom Hangzhou Museum to Lou Wai Lou (Gushan Road Store, West Lake Scenic Area): metro: duration 32, cost 8. taxi: duration 4, cost 15.84. walk: duration 38, cost 0.0. \nfrom Hangzhou Museum to Hangzhou East Railway Station: metro: duration 25, cost 12. taxi: duration 11, cost 30.42. walk: duration 88, cost 0.0. \nfrom Hangzhou Museum to Hangzhou South Railway Station: metro: duration 38, cost 20. taxi: duration 21, cost 58.18. walk: duration 169, cost 0.0. \nfrom Hangzhou Museum to Xixi National Wetland Park: metro: duration 38, cost 16. taxi: duration 15, cost 40.92. walk: duration 123, cost 0.0. \nfrom Hangzhou Museum to Floral Hotel·Hangzhou Zhuyin Garden Homestay: metro: duration 56, cost 12. taxi: duration 9, cost 27.12. walk: duration 76, cost 0.0. \nfrom Hangzhou Museum to Hangzhou Confucius Temple: taxi: duration 0, cost 11.0. walk: duration 6, cost 0.0. \nfrom Hangzhou Museum to Hangzhou Xiaoshan Meiliyun Bed&Breakfast: metro: duration 220, cost 20. taxi: duration 42, cost 122.34. walk: duration 340, cost 0.0. \nfrom Hangzhou Museum to Hangzhou Museum:  metro: empty.  taxi: empty.  walk: empty. \nfrom Hangzhou Museum to New Zhou Ji (Gulou Branch): metro: duration 16, cost 8. taxi: duration 1, cost 11.0. walk: duration 9, cost 0.0. \nfrom New Zhou Ji (Gulou Branch) to West Lake Scenic Area: metro: duration 60, cost 12. taxi: duration 6, cost 19.6. walk: duration 51, cost 0.0. \nfrom New Zhou Ji (Gulou Branch) to Hangzhou Zoo: metro: duration 41, cost 12. taxi: duration 5, cost 17.53. walk: duration 43, cost 0.0. \nfrom New Zhou Ji (Gulou Branch) to Lingyin Temple: metro: duration 48, cost 12. taxi: duration 9, cost 26.28. walk: duration 73, cost 0.0. \nfrom New Zhou Ji (Gulou Branch) to Jiangzhe Hui (West Lake Lakeside in77 Zone B Store): metro: duration 12, cost 8. taxi: duration 3, cost 11.8. walk: duration 24, cost 0.0. \nfrom New Zhou Ji (Gulou Branch) to Hangzhou Lin'an Xia'er · Parent Child Vacation and River Tracing Homestay: metro: duration 353, cost 32. taxi: duration 90, cost 266.59. walk: duration 725, cost 0.0. \nfrom New Zhou Ji (Gulou Branch) to Hangzhou Songcheng: metro: duration 53, cost 16. taxi: duration 13, cost 37.34. walk: duration 111, cost 0.0. \nfrom New Zhou Ji (Gulou Branch) to Three Ponds Mirroring the Moon: metro: duration 25, cost 8. taxi: duration 3, cost 11.98. walk: duration 24, cost 0.0. \nfrom New Zhou Ji (Gulou Branch) to West Lake Boat Tour: metro: duration 21, cost 8. taxi: duration 3, cost 12.81. walk: duration 27, cost 0.0. \nfrom New Zhou Ji (Gulou Branch) to Leifeng Pagoda: metro: duration 19, cost 8. taxi: duration 2, cost 11.0. walk: duration 18, cost 0.0. \nfrom New Zhou Ji (Gulou Branch) to Liangzhu Ancient City Ruins Park: metro: duration 111, cost 20. taxi: duration 35, cost 101.49. walk: duration 284, cost 0.0. \nfrom New Zhou Ji (Gulou Branch) to Tea Village: The Essence of Jiangnan: metro: duration 65, cost 12. taxi: duration 7, cost 22.26. walk: duration 60, cost 0.0. \nfrom New Zhou Ji (Gulou Branch) to Qinghefang Street: metro: duration 14, cost 8. taxi: duration 1, cost 11.0. walk: duration 11, cost 0.0. \nfrom New Zhou Ji (Gulou Branch) to Hangzhou Xiaoshan International Airport: metro: duration 58, cost 24. taxi: duration 37, cost 107.95. walk: duration 301, cost 0.0. \nfrom New Zhou Ji (Gulou Branch) to Hangzhou Botanical Garden: metro: duration 36, cost 12. taxi: duration 7, cost 22.55. walk: duration 61, cost 0.0. \nfrom New Zhou Ji (Gulou Branch) to China National Tea Museum: metro: duration 55, cost 12. taxi: duration 6, cost 19.39. walk: duration 50, cost 0.0. \nfrom New Zhou Ji (Gulou Branch) to Zhiweiguan Weizhuang (Yang Gongdi Branch): metro: duration 42, cost 8. taxi: duration 5, cost 16.38. walk: duration 40, cost 0.0. \nfrom New Zhou Ji (Gulou Branch) to Lou Wai Lou (Gushan Road Store, West Lake Scenic Area): metro: duration 37, cost 12. taxi: duration 4, cost 16.01. walk: duration 38, cost 0.0. \nfrom New Zhou Ji (Gulou Branch) to Hangzhou East Railway Station: metro: duration 27, cost 12. taxi: duration 12, cost 32.95. walk: duration 96, cost 0.0. \nfrom New Zhou Ji (Gulou Branch) to Hangzhou South Railway Station: metro: duration 38, cost 16. taxi: duration 20, cost 57.13. walk: duration 166, cost 0.0. \nfrom New Zhou Ji (Gulou Branch) to Xixi National Wetland Park: metro: duration 42, cost 16. taxi: duration 15, cost 41.22. walk: duration 124, cost 0.0. \nfrom New Zhou Ji (Gulou Branch) to Floral Hotel·Hangzhou Zhuyin Garden Homestay: metro: duration 60, cost 12. taxi: duration 9, cost 26.26. walk: duration 73, cost 0.0. \nfrom New Zhou Ji (Gulou Branch) to Hangzhou Confucius Temple: metro: duration 12, cost 8. taxi: duration 1, cost 11.0. walk: duration 13, cost 0.0. \nfrom New Zhou Ji (Gulou Branch) to Hangzhou Xiaoshan Meiliyun Bed&Breakfast: metro: duration 220, cost 20. taxi: duration 41, cost 119.18. walk: duration 331, cost 0.0. \nfrom New Zhou Ji (Gulou Branch) to Hangzhou Museum: metro: duration 16, cost 8. taxi: duration 1, cost 11.0. walk: duration 9, cost 0.0. \nfrom New Zhou Ji (Gulou Branch) to New Zhou Ji (Gulou Branch):  metro: empty.  taxi: empty.  walk: empty. \n"
+    },
+    "initial_verification": {
+      "commonsense_errors": [
+        "Incorrect room_type infomation of accommodation activity, Floral Hotel·Hangzhou Zhuyin Garden Homestay in day 1. The room type should be an integer, equaling to the num_bed information of the selected accommodation."
+      ],
+      "personal_constraints": [
+        true,
+        true,
+        true,
+        true,
+        false,
+        true,
+        true
+      ],
+      "category_normalization": [
+        {
+          "constraint_index": 3,
+          "category_domain": "activity",
+          "expression": "activity_type(activity)",
+          "raw_label": "airplane",
+          "normalized_label": "airplane"
+        },
+        {
+          "constraint_index": 3,
+          "category_domain": "activity",
+          "expression": "['attraction', 'airplane', 'train']",
+          "raw_label": "attraction",
+          "normalized_label": "attraction"
+        },
+        {
+          "constraint_index": 3,
+          "category_domain": "activity",
+          "expression": "['attraction', 'airplane', 'train']",
+          "raw_label": "airplane",
+          "normalized_label": "airplane"
+        },
+        {
+          "constraint_index": 3,
+          "category_domain": "activity",
+          "expression": "['attraction', 'airplane', 'train']",
+          "raw_label": "train",
+          "normalized_label": "train"
+        },
+        {
+          "constraint_index": 3,
+          "category_domain": "transport",
+          "expression": "innercity_transport_type(activity_transports(activity))",
+          "raw_label": "empty",
+          "normalized_label": "empty"
+        },
+        {
+          "constraint_index": 3,
+          "category_domain": "transport",
+          "expression": "'metro'",
+          "raw_label": "metro",
+          "normalized_label": "metro"
+        },
+        {
+          "constraint_index": 3,
+          "category_domain": "activity",
+          "expression": "activity_type(activity)",
+          "raw_label": "attraction",
+          "normalized_label": "attraction"
+        },
+        {
+          "constraint_index": 3,
+          "category_domain": "activity",
+          "expression": "['attraction', 'airplane', 'train']",
+          "raw_label": "attraction",
+          "normalized_label": "attraction"
+        },
+        {
+          "constraint_index": 3,
+          "category_domain": "activity",
+          "expression": "['attraction', 'airplane', 'train']",
+          "raw_label": "airplane",
+          "normalized_label": "airplane"
+        },
+        {
+          "constraint_index": 3,
+          "category_domain": "activity",
+          "expression": "['attraction', 'airplane', 'train']",
+          "raw_label": "train",
+          "normalized_label": "train"
+        },
+        {
+          "constraint_index": 3,
+          "category_domain": "transport",
+          "expression": "innercity_transport_type(activity_transports(activity))",
+          "raw_label": "metro",
+          "normalized_label": "metro"
+        },
+        {
+          "constraint_index": 3,
+          "category_domain": "transport",
+          "expression": "'metro'",
+          "raw_label": "metro",
+          "normalized_label": "metro"
+        },
+        {
+          "constraint_index": 3,
+          "category_domain": "activity",
+          "expression": "activity_type(activity)",
+          "raw_label": "lunch",
+          "normalized_label": "lunch"
+        },
+        {
+          "constraint_index": 3,
+          "category_domain": "activity",
+          "expression": "['attraction', 'airplane', 'train']",
+          "raw_label": "attraction",
+          "normalized_label": "attraction"
+        },
+        {
+          "constraint_index": 3,
+          "category_domain": "activity",
+          "expression": "['attraction', 'airplane', 'train']",
+          "raw_label": "airplane",
+          "normalized_label": "airplane"
+        },
+        {
+          "constraint_index": 3,
+          "category_domain": "activity",
+          "expression": "['attraction', 'airplane', 'train']",
+          "raw_label": "train",
+          "normalized_label": "train"
+        },
+        {
+          "constraint_index": 3,
+          "category_domain": "transport",
+          "expression": "innercity_transport_type(activity_transports(activity))",
+          "raw_label": "metro",
+          "normalized_label": "metro"
+        },
+        {
+          "constraint_index": 3,
+          "category_domain": "transport",
+          "expression": "'metro'",
+          "raw_label": "metro",
+          "normalized_label": "metro"
+        },
+        {
+          "constraint_index": 3,
+          "category_domain": "activity",
+          "expression": "activity_type(activity)",
+          "raw_label": "attraction",
+          "normalized_label": "attraction"
+        },
+        {
+          "constraint_index": 3,
+          "category_domain": "activity",
+          "expression": "['attraction', 'airplane', 'train']",
+          "raw_label": "attraction",
+          "normalized_label": "attraction"
+        },
+        {
+          "constraint_index": 3,
+          "category_domain": "activity",
+          "expression": "['attraction', 'airplane', 'train']",
+          "raw_label": "airplane",
+          "normalized_label": "airplane"
+        },
+        {
+          "constraint_index": 3,
+          "category_domain": "activity",
+          "expression": "['attraction', 'airplane', 'train']",
+          "raw_label": "train",
+          "normalized_label": "train"
+        },
+        {
+          "constraint_index": 3,
+          "category_domain": "transport",
+          "expression": "innercity_transport_type(activity_transports(activity))",
+          "raw_label": "metro",
+          "normalized_label": "metro"
+        },
+        {
+          "constraint_index": 3,
+          "category_domain": "transport",
+          "expression": "'metro'",
+          "raw_label": "metro",
+          "normalized_label": "metro"
+        },
+        {
+          "constraint_index": 3,
+          "category_domain": "activity",
+          "expression": "activity_type(activity)",
+          "raw_label": "attraction",
+          "normalized_label": "attraction"
+        },
+        {
+          "constraint_index": 3,
+          "category_domain": "activity",
+          "expression": "['attraction', 'airplane', 'train']",
+          "raw_label": "attraction",
+          "normalized_label": "attraction"
+        },
+        {
+          "constraint_index": 3,
+          "category_domain": "activity",
+          "expression": "['attraction', 'airplane', 'train']",
+          "raw_label": "airplane",
+          "normalized_label": "airplane"
+        },
+        {
+          "constraint_index": 3,
+          "category_domain": "activity",
+          "expression": "['attraction', 'airplane', 'train']",
+          "raw_label": "train",
+          "normalized_label": "train"
+        },
+        {
+          "constraint_index": 3,
+          "category_domain": "transport",
+          "expression": "innercity_transport_type(activity_transports(activity))",
+          "raw_label": "metro",
+          "normalized_label": "metro"
+        },
+        {
+          "constraint_index": 3,
+          "category_domain": "transport",
+          "expression": "'metro'",
+          "raw_label": "metro",
+          "normalized_label": "metro"
+        },
+        {
+          "constraint_index": 3,
+          "category_domain": "activity",
+          "expression": "activity_type(activity)",
+          "raw_label": "accommodation",
+          "normalized_label": "accommodation"
+        },
+        {
+          "constraint_index": 3,
+          "category_domain": "activity",
+          "expression": "['attraction', 'airplane', 'train']",
+          "raw_label": "attraction",
+          "normalized_label": "attraction"
+        },
+        {
+          "constraint_index": 3,
+          "category_domain": "activity",
+          "expression": "['attraction', 'airplane', 'train']",
+          "raw_label": "airplane",
+          "normalized_label": "airplane"
+        },
+        {
+          "constraint_index": 3,
+          "category_domain": "activity",
+          "expression": "['attraction', 'airplane', 'train']",
+          "raw_label": "train",
+          "normalized_label": "train"
+        },
+        {
+          "constraint_index": 3,
+          "category_domain": "transport",
+          "expression": "innercity_transport_type(activity_transports(activity))",
+          "raw_label": "metro",
+          "normalized_label": "metro"
+        },
+        {
+          "constraint_index": 3,
+          "category_domain": "transport",
+          "expression": "'metro'",
+          "raw_label": "metro",
+          "normalized_label": "metro"
+        },
+        {
+          "constraint_index": 3,
+          "category_domain": "activity",
+          "expression": "activity_type(activity)",
+          "raw_label": "attraction",
+          "normalized_label": "attraction"
+        },
+        {
+          "constraint_index": 3,
+          "category_domain": "activity",
+          "expression": "['attraction', 'airplane', 'train']",
+          "raw_label": "attraction",
+          "normalized_label": "attraction"
+        },
+        {
+          "constraint_index": 3,
+          "category_domain": "activity",
+          "expression": "['attraction', 'airplane', 'train']",
+          "raw_label": "airplane",
+          "normalized_label": "airplane"
+        },
+        {
+          "constraint_index": 3,
+          "category_domain": "activity",
+          "expression": "['attraction', 'airplane', 'train']",
+          "raw_label": "train",
+          "normalized_label": "train"
+        },
+        {
+          "constraint_index": 3,
+          "category_domain": "transport",
+          "expression": "innercity_transport_type(activity_transports(activity))",
+          "raw_label": "taxi",
+          "normalized_label": "taxi"
+        },
+        {
+          "constraint_index": 3,
+          "category_domain": "transport",
+          "expression": "'metro'",
+          "raw_label": "metro",
+          "normalized_label": "metro"
+        },
+        {
+          "constraint_index": 3,
+          "category_domain": "activity",
+          "expression": "activity_type(activity)",
+          "raw_label": "attraction",
+          "normalized_label": "attraction"
+        },
+        {
+          "constraint_index": 3,
+          "category_domain": "activity",
+          "expression": "['attraction', 'airplane', 'train']",
+          "raw_label": "attraction",
+          "normalized_label": "attraction"
+        },
+        {
+          "constraint_index": 3,
+          "category_domain": "activity",
+          "expression": "['attraction', 'airplane', 'train']",
+          "raw_label": "airplane",
+          "normalized_label": "airplane"
+        },
+        {
+          "constraint_index": 3,
+          "category_domain": "activity",
+          "expression": "['attraction', 'airplane', 'train']",
+          "raw_label": "train",
+          "normalized_label": "train"
+        },
+        {
+          "constraint_index": 3,
+          "category_domain": "transport",
+          "expression": "innercity_transport_type(activity_transports(activity))",
+          "raw_label": "taxi",
+          "normalized_label": "taxi"
+        },
+        {
+          "constraint_index": 3,
+          "category_domain": "transport",
+          "expression": "'metro'",
+          "raw_label": "metro",
+          "normalized_label": "metro"
+        },
+        {
+          "constraint_index": 3,
+          "category_domain": "activity",
+          "expression": "activity_type(activity)",
+          "raw_label": "lunch",
+          "normalized_label": "lunch"
+        },
+        {
+          "constraint_index": 3,
+          "category_domain": "activity",
+          "expression": "['attraction', 'airplane', 'train']",
+          "raw_label": "attraction",
+          "normalized_label": "attraction"
+        },
+        {
+          "constraint_index": 3,
+          "category_domain": "activity",
+          "expression": "['attraction', 'airplane', 'train']",
+          "raw_label": "airplane",
+          "normalized_label": "airplane"
+        },
+        {
+          "constraint_index": 3,
+          "category_domain": "activity",
+          "expression": "['attraction', 'airplane', 'train']",
+          "raw_label": "train",
+          "normalized_label": "train"
+        },
+        {
+          "constraint_index": 3,
+          "category_domain": "transport",
+          "expression": "innercity_transport_type(activity_transports(activity))",
+          "raw_label": "taxi",
+          "normalized_label": "taxi"
+        },
+        {
+          "constraint_index": 3,
+          "category_domain": "transport",
+          "expression": "'metro'",
+          "raw_label": "metro",
+          "normalized_label": "metro"
+        },
+        {
+          "constraint_index": 3,
+          "category_domain": "activity",
+          "expression": "activity_type(activity)",
+          "raw_label": "airplane",
+          "normalized_label": "airplane"
+        },
+        {
+          "constraint_index": 3,
+          "category_domain": "activity",
+          "expression": "['attraction', 'airplane', 'train']",
+          "raw_label": "attraction",
+          "normalized_label": "attraction"
+        },
+        {
+          "constraint_index": 3,
+          "category_domain": "activity",
+          "expression": "['attraction', 'airplane', 'train']",
+          "raw_label": "airplane",
+          "normalized_label": "airplane"
+        },
+        {
+          "constraint_index": 3,
+          "category_domain": "activity",
+          "expression": "['attraction', 'airplane', 'train']",
+          "raw_label": "train",
+          "normalized_label": "train"
+        },
+        {
+          "constraint_index": 3,
+          "category_domain": "transport",
+          "expression": "innercity_transport_type(activity_transports(activity))",
+          "raw_label": "taxi",
+          "normalized_label": "taxi"
+        },
+        {
+          "constraint_index": 3,
+          "category_domain": "transport",
+          "expression": "'metro'",
+          "raw_label": "metro",
+          "normalized_label": "metro"
+        },
+        {
+          "constraint_index": 4,
+          "category_domain": "activity",
+          "expression": "activity_type(activity)",
+          "raw_label": "airplane",
+          "normalized_label": "airplane"
+        },
+        {
+          "constraint_index": 4,
+          "category_domain": "activity",
+          "expression": "'accommodation'",
+          "raw_label": "accommodation",
+          "normalized_label": "accommodation"
+        },
+        {
+          "constraint_index": 4,
+          "category_domain": "activity",
+          "expression": "activity_type(activity)",
+          "raw_label": "attraction",
+          "normalized_label": "attraction"
+        },
+        {
+          "constraint_index": 4,
+          "category_domain": "activity",
+          "expression": "'accommodation'",
+          "raw_label": "accommodation",
+          "normalized_label": "accommodation"
+        },
+        {
+          "constraint_index": 4,
+          "category_domain": "activity",
+          "expression": "activity_type(activity)",
+          "raw_label": "lunch",
+          "normalized_label": "lunch"
+        },
+        {
+          "constraint_index": 4,
+          "category_domain": "activity",
+          "expression": "'accommodation'",
+          "raw_label": "accommodation",
+          "normalized_label": "accommodation"
+        },
+        {
+          "constraint_index": 4,
+          "category_domain": "activity",
+          "expression": "activity_type(activity)",
+          "raw_label": "attraction",
+          "normalized_label": "attraction"
+        },
+        {
+          "constraint_index": 4,
+          "category_domain": "activity",
+          "expression": "'accommodation'",
+          "raw_label": "accommodation",
+          "normalized_label": "accommodation"
+        },
+        {
+          "constraint_index": 4,
+          "category_domain": "activity",
+          "expression": "activity_type(activity)",
+          "raw_label": "attraction",
+          "normalized_label": "attraction"
+        },
+        {
+          "constraint_index": 4,
+          "category_domain": "activity",
+          "expression": "'accommodation'",
+          "raw_label": "accommodation",
+          "normalized_label": "accommodation"
+        },
+        {
+          "constraint_index": 4,
+          "category_domain": "activity",
+          "expression": "activity_type(activity)",
+          "raw_label": "accommodation",
+          "normalized_label": "accommodation"
+        },
+        {
+          "constraint_index": 4,
+          "category_domain": "activity",
+          "expression": "'accommodation'",
+          "raw_label": "accommodation",
+          "normalized_label": "accommodation"
+        },
+        {
+          "constraint_index": 4,
+          "category_domain": "activity",
+          "expression": "activity_type(activity)",
+          "raw_label": "attraction",
+          "normalized_label": "attraction"
+        },
+        {
+          "constraint_index": 4,
+          "category_domain": "activity",
+          "expression": "'accommodation'",
+          "raw_label": "accommodation",
+          "normalized_label": "accommodation"
+        },
+        {
+          "constraint_index": 4,
+          "category_domain": "activity",
+          "expression": "activity_type(activity)",
+          "raw_label": "attraction",
+          "normalized_label": "attraction"
+        },
+        {
+          "constraint_index": 4,
+          "category_domain": "activity",
+          "expression": "'accommodation'",
+          "raw_label": "accommodation",
+          "normalized_label": "accommodation"
+        },
+        {
+          "constraint_index": 4,
+          "category_domain": "activity",
+          "expression": "activity_type(activity)",
+          "raw_label": "lunch",
+          "normalized_label": "lunch"
+        },
+        {
+          "constraint_index": 4,
+          "category_domain": "activity",
+          "expression": "'accommodation'",
+          "raw_label": "accommodation",
+          "normalized_label": "accommodation"
+        },
+        {
+          "constraint_index": 4,
+          "category_domain": "activity",
+          "expression": "activity_type(activity)",
+          "raw_label": "airplane",
+          "normalized_label": "airplane"
+        },
+        {
+          "constraint_index": 4,
+          "category_domain": "activity",
+          "expression": "'accommodation'",
+          "raw_label": "accommodation",
+          "normalized_label": "accommodation"
+        },
+        {
+          "constraint_index": 5,
+          "category_domain": "activity",
+          "expression": "activity_type(activity)",
+          "raw_label": "airplane",
+          "normalized_label": "airplane"
+        },
+        {
+          "constraint_index": 5,
+          "category_domain": "activity",
+          "expression": "'accommodation'",
+          "raw_label": "accommodation",
+          "normalized_label": "accommodation"
+        },
+        {
+          "constraint_index": 5,
+          "category_domain": "activity",
+          "expression": "activity_type(activity)",
+          "raw_label": "attraction",
+          "normalized_label": "attraction"
+        },
+        {
+          "constraint_index": 5,
+          "category_domain": "activity",
+          "expression": "'accommodation'",
+          "raw_label": "accommodation",
+          "normalized_label": "accommodation"
+        },
+        {
+          "constraint_index": 5,
+          "category_domain": "activity",
+          "expression": "activity_type(activity)",
+          "raw_label": "lunch",
+          "normalized_label": "lunch"
+        },
+        {
+          "constraint_index": 5,
+          "category_domain": "activity",
+          "expression": "'accommodation'",
+          "raw_label": "accommodation",
+          "normalized_label": "accommodation"
+        },
+        {
+          "constraint_index": 5,
+          "category_domain": "activity",
+          "expression": "activity_type(activity)",
+          "raw_label": "attraction",
+          "normalized_label": "attraction"
+        },
+        {
+          "constraint_index": 5,
+          "category_domain": "activity",
+          "expression": "'accommodation'",
+          "raw_label": "accommodation",
+          "normalized_label": "accommodation"
+        },
+        {
+          "constraint_index": 5,
+          "category_domain": "activity",
+          "expression": "activity_type(activity)",
+          "raw_label": "attraction",
+          "normalized_label": "attraction"
+        },
+        {
+          "constraint_index": 5,
+          "category_domain": "activity",
+          "expression": "'accommodation'",
+          "raw_label": "accommodation",
+          "normalized_label": "accommodation"
+        },
+        {
+          "constraint_index": 5,
+          "category_domain": "activity",
+          "expression": "activity_type(activity)",
+          "raw_label": "accommodation",
+          "normalized_label": "accommodation"
+        },
+        {
+          "constraint_index": 5,
+          "category_domain": "activity",
+          "expression": "'accommodation'",
+          "raw_label": "accommodation",
+          "normalized_label": "accommodation"
+        },
+        {
+          "constraint_index": 5,
+          "category_domain": "activity",
+          "expression": "activity_type(activity)",
+          "raw_label": "attraction",
+          "normalized_label": "attraction"
+        },
+        {
+          "constraint_index": 5,
+          "category_domain": "activity",
+          "expression": "'accommodation'",
+          "raw_label": "accommodation",
+          "normalized_label": "accommodation"
+        },
+        {
+          "constraint_index": 5,
+          "category_domain": "activity",
+          "expression": "activity_type(activity)",
+          "raw_label": "attraction",
+          "normalized_label": "attraction"
+        },
+        {
+          "constraint_index": 5,
+          "category_domain": "activity",
+          "expression": "'accommodation'",
+          "raw_label": "accommodation",
+          "normalized_label": "accommodation"
+        },
+        {
+          "constraint_index": 5,
+          "category_domain": "activity",
+          "expression": "activity_type(activity)",
+          "raw_label": "lunch",
+          "normalized_label": "lunch"
+        },
+        {
+          "constraint_index": 5,
+          "category_domain": "activity",
+          "expression": "'accommodation'",
+          "raw_label": "accommodation",
+          "normalized_label": "accommodation"
+        },
+        {
+          "constraint_index": 5,
+          "category_domain": "activity",
+          "expression": "activity_type(activity)",
+          "raw_label": "airplane",
+          "normalized_label": "airplane"
+        },
+        {
+          "constraint_index": 5,
+          "category_domain": "activity",
+          "expression": "'accommodation'",
+          "raw_label": "accommodation",
+          "normalized_label": "accommodation"
+        },
+        {
+          "constraint_index": 6,
+          "category_domain": "activity",
+          "expression": "activity_type(activity)",
+          "raw_label": "airplane",
+          "normalized_label": "airplane"
+        },
+        {
+          "constraint_index": 6,
+          "category_domain": "activity",
+          "expression": "'accommodation'",
+          "raw_label": "accommodation",
+          "normalized_label": "accommodation"
+        },
+        {
+          "constraint_index": 6,
+          "category_domain": "activity",
+          "expression": "activity_type(activity)",
+          "raw_label": "attraction",
+          "normalized_label": "attraction"
+        },
+        {
+          "constraint_index": 6,
+          "category_domain": "activity",
+          "expression": "'accommodation'",
+          "raw_label": "accommodation",
+          "normalized_label": "accommodation"
+        },
+        {
+          "constraint_index": 6,
+          "category_domain": "activity",
+          "expression": "activity_type(activity)",
+          "raw_label": "lunch",
+          "normalized_label": "lunch"
+        },
+        {
+          "constraint_index": 6,
+          "category_domain": "activity",
+          "expression": "'accommodation'",
+          "raw_label": "accommodation",
+          "normalized_label": "accommodation"
+        },
+        {
+          "constraint_index": 6,
+          "category_domain": "activity",
+          "expression": "activity_type(activity)",
+          "raw_label": "attraction",
+          "normalized_label": "attraction"
+        },
+        {
+          "constraint_index": 6,
+          "category_domain": "activity",
+          "expression": "'accommodation'",
+          "raw_label": "accommodation",
+          "normalized_label": "accommodation"
+        },
+        {
+          "constraint_index": 6,
+          "category_domain": "activity",
+          "expression": "activity_type(activity)",
+          "raw_label": "attraction",
+          "normalized_label": "attraction"
+        },
+        {
+          "constraint_index": 6,
+          "category_domain": "activity",
+          "expression": "'accommodation'",
+          "raw_label": "accommodation",
+          "normalized_label": "accommodation"
+        },
+        {
+          "constraint_index": 6,
+          "category_domain": "activity",
+          "expression": "activity_type(activity)",
+          "raw_label": "accommodation",
+          "normalized_label": "accommodation"
+        },
+        {
+          "constraint_index": 6,
+          "category_domain": "activity",
+          "expression": "'accommodation'",
+          "raw_label": "accommodation",
+          "normalized_label": "accommodation"
+        },
+        {
+          "constraint_index": 6,
+          "category_domain": "activity",
+          "expression": "activity_type(activity)",
+          "raw_label": "attraction",
+          "normalized_label": "attraction"
+        },
+        {
+          "constraint_index": 6,
+          "category_domain": "activity",
+          "expression": "'accommodation'",
+          "raw_label": "accommodation",
+          "normalized_label": "accommodation"
+        },
+        {
+          "constraint_index": 6,
+          "category_domain": "activity",
+          "expression": "activity_type(activity)",
+          "raw_label": "attraction",
+          "normalized_label": "attraction"
+        },
+        {
+          "constraint_index": 6,
+          "category_domain": "activity",
+          "expression": "'accommodation'",
+          "raw_label": "accommodation",
+          "normalized_label": "accommodation"
+        },
+        {
+          "constraint_index": 6,
+          "category_domain": "activity",
+          "expression": "activity_type(activity)",
+          "raw_label": "lunch",
+          "normalized_label": "lunch"
+        },
+        {
+          "constraint_index": 6,
+          "category_domain": "activity",
+          "expression": "'accommodation'",
+          "raw_label": "accommodation",
+          "normalized_label": "accommodation"
+        },
+        {
+          "constraint_index": 6,
+          "category_domain": "activity",
+          "expression": "activity_type(activity)",
+          "raw_label": "airplane",
+          "normalized_label": "airplane"
+        },
+        {
+          "constraint_index": 6,
+          "category_domain": "activity",
+          "expression": "'accommodation'",
+          "raw_label": "accommodation",
+          "normalized_label": "accommodation"
+        },
+        {
+          "constraint_index": 6,
+          "category_domain": "accommodation",
+          "expression": "{'智能马桶'}",
+          "raw_label": "智能马桶",
+          "normalized_label": "Smart toilet"
+        },
+        {
+          "constraint_index": 6,
+          "category_domain": "accommodation",
+          "expression": "accommodation_type_set",
+          "raw_label": "Smart toilet",
+          "normalized_label": "Smart toilet"
+        },
+        {
+          "constraint_index": 7,
+          "category_domain": "transport",
+          "expression": "innercity_transport_type(activity_transports(activity))",
+          "raw_label": "empty",
+          "normalized_label": "empty"
+        },
+        {
+          "constraint_index": 7,
+          "category_domain": "transport",
+          "expression": "'taxi'",
+          "raw_label": "taxi",
+          "normalized_label": "taxi"
+        },
+        {
+          "constraint_index": 7,
+          "category_domain": "transport",
+          "expression": "innercity_transport_type(activity_transports(activity))",
+          "raw_label": "metro",
+          "normalized_label": "metro"
+        },
+        {
+          "constraint_index": 7,
+          "category_domain": "transport",
+          "expression": "'taxi'",
+          "raw_label": "taxi",
+          "normalized_label": "taxi"
+        },
+        {
+          "constraint_index": 7,
+          "category_domain": "transport",
+          "expression": "innercity_transport_type(activity_transports(activity))",
+          "raw_label": "metro",
+          "normalized_label": "metro"
+        },
+        {
+          "constraint_index": 7,
+          "category_domain": "transport",
+          "expression": "'taxi'",
+          "raw_label": "taxi",
+          "normalized_label": "taxi"
+        },
+        {
+          "constraint_index": 7,
+          "category_domain": "transport",
+          "expression": "innercity_transport_type(activity_transports(activity))",
+          "raw_label": "metro",
+          "normalized_label": "metro"
+        },
+        {
+          "constraint_index": 7,
+          "category_domain": "transport",
+          "expression": "'taxi'",
+          "raw_label": "taxi",
+          "normalized_label": "taxi"
+        },
+        {
+          "constraint_index": 7,
+          "category_domain": "transport",
+          "expression": "innercity_transport_type(activity_transports(activity))",
+          "raw_label": "metro",
+          "normalized_label": "metro"
+        },
+        {
+          "constraint_index": 7,
+          "category_domain": "transport",
+          "expression": "'taxi'",
+          "raw_label": "taxi",
+          "normalized_label": "taxi"
+        },
+        {
+          "constraint_index": 7,
+          "category_domain": "transport",
+          "expression": "innercity_transport_type(activity_transports(activity))",
+          "raw_label": "metro",
+          "normalized_label": "metro"
+        },
+        {
+          "constraint_index": 7,
+          "category_domain": "transport",
+          "expression": "'taxi'",
+          "raw_label": "taxi",
+          "normalized_label": "taxi"
+        },
+        {
+          "constraint_index": 7,
+          "category_domain": "transport",
+          "expression": "innercity_transport_type(activity_transports(activity))",
+          "raw_label": "taxi",
+          "normalized_label": "taxi"
+        },
+        {
+          "constraint_index": 7,
+          "category_domain": "transport",
+          "expression": "'taxi'",
+          "raw_label": "taxi",
+          "normalized_label": "taxi"
+        },
+        {
+          "constraint_index": 7,
+          "category_domain": "transport",
+          "expression": "innercity_transport_type(activity_transports(activity))",
+          "raw_label": "taxi",
+          "normalized_label": "taxi"
+        },
+        {
+          "constraint_index": 7,
+          "category_domain": "transport",
+          "expression": "'taxi'",
+          "raw_label": "taxi",
+          "normalized_label": "taxi"
+        },
+        {
+          "constraint_index": 7,
+          "category_domain": "transport",
+          "expression": "innercity_transport_type(activity_transports(activity))",
+          "raw_label": "taxi",
+          "normalized_label": "taxi"
+        },
+        {
+          "constraint_index": 7,
+          "category_domain": "transport",
+          "expression": "'taxi'",
+          "raw_label": "taxi",
+          "normalized_label": "taxi"
+        },
+        {
+          "constraint_index": 7,
+          "category_domain": "transport",
+          "expression": "innercity_transport_type(activity_transports(activity))",
+          "raw_label": "taxi",
+          "normalized_label": "taxi"
+        },
+        {
+          "constraint_index": 7,
+          "category_domain": "transport",
+          "expression": "'taxi'",
+          "raw_label": "taxi",
+          "normalized_label": "taxi"
+        }
+      ],
+      "personal_errors": [
+        "Personal constraint 5 failed: result=True\nfor activity in allactivities(plan):\n  if activity_type(activity)=='accommodation' and room_type(activity)!=1: result=False"
+      ],
+      "evaluation_errors": [],
+      "translation_errors": [],
+      "error_info": [
+        "Incorrect room_type infomation of accommodation activity, Floral Hotel·Hangzhou Zhuyin Garden Homestay in day 1. The room type should be an integer, equaling to the num_bed information of the selected accommodation.",
+        "Personal constraint 5 failed: result=True\nfor activity in allactivities(plan):\n  if activity_type(activity)=='accommodation' and room_type(activity)!=1: result=False"
+      ],
+      "passed": false,
+      "translated_plan": {
+        "people_number": 4,
+        "start_city": "Chongqing",
+        "target_city": "Hangzhou",
+        "itinerary": [
+          {
+            "day": 1,
+            "activities": [
+              {
+                "start_time": "05:16",
+                "end_time": "06:54",
+                "start": "Chongqing Jiangbei International Airport",
+                "end": "Hangzhou Xiaoshan International Airport",
+                "price": 612.57,
+                "cost": 2450.28,
+                "FlightID": "FL372",
+                "type": "airplane",
+                "tickets": 4,
+                "transports": []
+              },
+              {
+                "position": "West Lake Scenic Area",
+                "type": "attraction",
+                "transports": [
+                  {
+                    "start": "Hangzhou Xiaoshan International Airport",
+                    "end": "Xiaoshan International Airport-Metro Station",
+                    "mode": "walk",
+                    "start_time": "06:54",
+                    "end_time": "06:55",
+                    "cost": 0,
+                    "distance": 0.12,
+                    "price": 0
+                  },
+                  {
+                    "start": "Xiaoshan International Airport-Metro Station",
+                    "end": "Shuicheng Bridge-Metro Station",
+                    "mode": "metro",
+                    "start_time": "06:55",
+                    "end_time": "07:49",
+                    "cost": 24,
+                    "distance": 27.29,
+                    "price": 6,
+                    "tickets": 4
+                  },
+                  {
+                    "start": "Shuicheng Bridge-Metro Station",
+                    "end": "West Lake Scenic Area",
+                    "mode": "walk",
+                    "start_time": "07:49",
+                    "end_time": "08:32",
+                    "cost": 0,
+                    "distance": 3.6,
+                    "price": 0
+                  }
+                ],
+                "price": 0.0,
+                "cost": 0.0,
+                "tickets": 4,
+                "start_time": "08:40",
+                "end_time": "10:40"
+              },
+              {
+                "position": "Lou Wai Lou (Gushan Road Store, West Lake Scenic Area)",
+                "type": "lunch",
+                "transports": [
+                  {
+                    "start": "West Lake Scenic Area",
+                    "end": "Shuicheng Bridge-Metro Station",
+                    "mode": "walk",
+                    "start_time": "10:40",
+                    "end_time": "11:23",
+                    "cost": 0,
+                    "distance": 3.6,
+                    "price": 0
+                  },
+                  {
+                    "start": "Shuicheng Bridge-Metro Station",
+                    "end": "Yellow Dragon Cave-Metro Station",
+                    "mode": "metro",
+                    "start_time": "11:23",
+                    "end_time": "11:36",
+                    "cost": 12,
+                    "distance": 6.89,
+                    "price": 3,
+                    "tickets": 4
+                  },
+                  {
+                    "start": "Yellow Dragon Cave-Metro Station",
+                    "end": "Lou Wai Lou (Gushan Road Store, West Lake Scenic Area)",
+                    "mode": "walk",
+                    "start_time": "11:36",
+                    "end_time": "11:56",
+                    "cost": 0,
+                    "distance": 1.68,
+                    "price": 0
+                  }
+                ],
+                "price": 177.0,
+                "cost": 708.0,
+                "start_time": "12:00",
+                "end_time": "13:00"
+              },
+              {
+                "position": "Leifeng Pagoda",
+                "type": "attraction",
+                "transports": [
+                  {
+                    "start": "Lou Wai Lou (Gushan Road Store, West Lake Scenic Area)",
+                    "end": "Yellow Dragon Cave-Metro Station",
+                    "mode": "walk",
+                    "start_time": "13:00",
+                    "end_time": "13:20",
+                    "cost": 0,
+                    "distance": 1.68,
+                    "price": 0
+                  },
+                  {
+                    "start": "Yellow Dragon Cave-Metro Station",
+                    "end": "Wushan Square-Metro Station",
+                    "mode": "metro",
+                    "start_time": "13:20",
+                    "end_time": "13:27",
+                    "cost": 8,
+                    "distance": 3.58,
+                    "price": 2,
+                    "tickets": 4
+                  },
+                  {
+                    "start": "Wushan Square-Metro Station",
+                    "end": "Leifeng Pagoda",
+                    "mode": "walk",
+                    "start_time": "13:27",
+                    "end_time": "13:36",
+                    "cost": 0,
+                    "distance": 0.82,
+                    "price": 0
+                  }
+                ],
+                "price": 0.0,
+                "cost": 0.0,
+                "tickets": 4,
+                "start_time": "13:40",
+                "end_time": "15:10"
+              },
+              {
+                "position": "Qinghefang Street",
+                "type": "attraction",
+                "transports": [
+                  {
+                    "start": "Leifeng Pagoda",
+                    "end": "Wushan Square-Metro Station",
+                    "mode": "walk",
+                    "start_time": "15:10",
+                    "end_time": "15:19",
+                    "cost": 0,
+                    "distance": 0.82,
+                    "price": 0
+                  },
+                  {
+                    "start": "Wushan Square-Metro Station",
+                    "end": "City Station-Metro Station",
+                    "mode": "metro",
+                    "start_time": "15:19",
+                    "end_time": "15:22",
+                    "cost": 8,
+                    "distance": 1.77,
+                    "price": 2,
+                    "tickets": 4
+                  },
+                  {
+                    "start": "City Station-Metro Station",
+                    "end": "Qinghefang Street",
+                    "mode": "walk",
+                    "start_time": "15:22",
+                    "end_time": "15:27",
+                    "cost": 0,
+                    "distance": 0.49,
+                    "price": 0
+                  }
+                ],
+                "price": 0.0,
+                "cost": 0.0,
+                "tickets": 4,
+                "start_time": "15:30",
+                "end_time": "17:00"
+              },
+              {
+                "position": "Floral Hotel·Hangzhou Zhuyin Garden Homestay",
+                "type": "accommodation",
+                "transports": [
+                  {
+                    "start": "Qinghefang Street",
+                    "end": "City Station-Metro Station",
+                    "mode": "walk",
+                    "start_time": "17:00",
+                    "end_time": "17:05",
+                    "cost": 0,
+                    "distance": 0.49,
+                    "price": 0
+                  },
+                  {
+                    "start": "City Station-Metro Station",
+                    "end": "Gudun Road-Metro Station",
+                    "mode": "metro",
+                    "start_time": "17:05",
+                    "end_time": "17:20",
+                    "cost": 12,
+                    "distance": 7.93,
+                    "price": 3,
+                    "tickets": 4
+                  },
+                  {
+                    "start": "Gudun Road-Metro Station",
+                    "end": "Floral Hotel·Hangzhou Zhuyin Garden Homestay",
+                    "mode": "walk",
+                    "start_time": "17:20",
+                    "end_time": "17:57",
+                    "cost": 0,
+                    "distance": 3.1,
+                    "price": 0
+                  }
+                ],
+                "room_type": 2,
+                "price": 527,
+                "cost": 1054,
+                "start_time": "18:00",
+                "end_time": "24:00",
+                "rooms": 2
+              }
+            ]
+          },
+          {
+            "day": 2,
+            "activities": [
+              {
+                "position": "Lingyin Temple",
+                "type": "attraction",
+                "transports": [
+                  {
+                    "start": "Floral Hotel·Hangzhou Zhuyin Garden Homestay",
+                    "end": "Lingyin Temple",
+                    "mode": "taxi",
+                    "start_time": "08:00",
+                    "end_time": "08:01",
+                    "cost": 11,
+                    "distance": 1.02,
+                    "price": 11.0,
+                    "cars": 1
+                  }
+                ],
+                "price": 0.0,
+                "cost": 0.0,
+                "tickets": 4,
+                "start_time": "08:20",
+                "end_time": "09:50"
+              },
+              {
+                "position": "China National Tea Museum",
+                "type": "attraction",
+                "transports": [
+                  {
+                    "start": "Lingyin Temple",
+                    "end": "China National Tea Museum",
+                    "mode": "taxi",
+                    "start_time": "09:50",
+                    "end_time": "09:53",
+                    "cost": 12.02,
+                    "distance": 2.09,
+                    "price": 12.02,
+                    "cars": 1
+                  }
+                ],
+                "price": 0.0,
+                "cost": 0.0,
+                "tickets": 4,
+                "start_time": "10:00",
+                "end_time": "12:00"
+              },
+              {
+                "position": "Tea Village: The Essence of Jiangnan",
+                "type": "lunch",
+                "transports": [
+                  {
+                    "start": "China National Tea Museum",
+                    "end": "Tea Village: The Essence of Jiangnan",
+                    "mode": "taxi",
+                    "start_time": "12:00",
+                    "end_time": "12:02",
+                    "cost": 11,
+                    "distance": 1.37,
+                    "price": 11.0,
+                    "cars": 1
+                  }
+                ],
+                "price": 138.0,
+                "cost": 552.0,
+                "start_time": "12:10",
+                "end_time": "13:10"
+              },
+              {
+                "position": "Hangzhou Xiaoshan International Airport",
+                "type": "airplane",
+                "transports": [
+                  {
+                    "start": "Tea Village: The Essence of Jiangnan",
+                    "end": "Hangzhou Xiaoshan International Airport",
+                    "mode": "taxi",
+                    "start_time": "13:10",
+                    "end_time": "13:55",
+                    "cost": 130.06,
+                    "distance": 30.08,
+                    "price": 130.06,
+                    "cars": 1
+                  }
+                ],
+                "start_time": "22:10",
+                "end_time": "23:48",
+                "start": "Hangzhou Xiaoshan International Airport",
+                "end": "Chongqing Jiangbei International Airport",
+                "price": 644.86,
+                "cost": 2579.44,
+                "FlightID": "FL521",
+                "tickets": 4
+              }
+            ]
+          }
+        ]
+      },
+      "verifier_errors": [],
+      "schema_errors": [],
+      "translation_failures": []
+    },
+    "environment_context": {
+      "lang": "en"
+    },
+    "generation_metadata": {
+      "raw_response": "[{\"day\": 1,```json\n{\n    \"day\": 1,\n    \"activities\": [\n        {\n            \"start_time\": \"05:16\",\n            \"end_time\": \"06:54\",\n            \"start\": \"Chongqing Jiangbei International Airport\",\n            \"end\": \"Hangzhou Xiaoshan International Airport\",\n            \"price\": 612.57,\n            \"cost\": 2450.28,\n            \"FlightID\": \"FL372\",\n            \"type\": \"airplane\",\n            \"tickets\": 4,\n            \"transports\": \"empty\"\n        },\n        {\n            \"position\": \"West Lake Scenic Area\",\n            \"type\": \"attraction\",\n            \"transports\": {\"from\": \"Hangzhou Xiaoshan International Airport\", \"to\": \"West Lake Scenic Area\", \"mode\": \"metro\", \"start_time\": \"06:54\", \"end_time\": \"08:32\", \"cost\": 24},\n            \"price\": 0.0,\n            \"cost\": 0.0,\n            \"tickets\": 4,\n            \"start_time\": \"08:40\",\n            \"end_time\": \"10:40\"\n        },\n        {\n            \"position\": \"Lou Wai Lou (Gushan Road Store, West Lake Scenic Area)\",\n            \"type\": \"lunch\",\n            \"transports\": {\"from\": \"West Lake Scenic Area\", \"to\": \"Lou Wai Lou (Gushan Road Store, West Lake Scenic Area)\", \"mode\": \"metro\", \"start_time\": \"10:40\", \"end_time\": \"11:56\", \"cost\": 12},\n            \"price\": 177.0,\n            \"cost\": 708.0,\n            \"start_time\": \"12:00\",\n            \"end_time\": \"13:00\"\n        },\n        {\n            \"position\": \"Leifeng Pagoda\",\n            \"type\": \"attraction\",\n            \"transports\": {\"from\": \"Lou Wai Lou (Gushan Road Store, West Lake Scenic Area)\", \"to\": \"Leifeng Pagoda\", \"mode\": \"metro\", \"start_time\": \"13:00\", \"end_time\": \"13:36\", \"cost\": 8},\n            \"price\": 0.0,\n            \"cost\": 0.0,\n            \"tickets\": 4,\n            \"start_time\": \"13:40\",\n            \"end_time\": \"15:10\"\n        },\n        {\n            \"position\": \"Qinghefang Street\",\n            \"type\": \"attraction\",\n            \"transports\": {\"from\": \"Leifeng Pagoda\", \"to\": \"Qinghefang Street\", \"mode\": \"metro\", \"start_time\": \"15:10\", \"end_time\": \"15:26\", \"cost\": 8},\n            \"price\": 0.0,\n            \"cost\": 0.0,\n            \"tickets\": 4,\n            \"start_time\": \"15:30\",\n            \"end_time\": \"17:00\"\n        },\n        {\n            \"position\": \"Floral Hotel·Hangzhou Zhuyin Garden Homestay\",\n            \"type\": \"accommodation\",\n            \"transports\": {\"from\": \"Qinghefang Street\", \"to\": \"Floral Hotel·Hangzhou Zhuyin Garden Homestay\", \"mode\": \"metro\", \"start_time\": \"17:00\", \"end_time\": \"17:57\", \"cost\": 12},\n            \"room_type\": 2,\n            \"price\": 527,\n            \"cost\": 1054,\n            \"start_time\": \"18:00\",\n            \"end_time\": \"24:00\",\n            \"rooms\": 2\n        }\n    ]\n},\n{\n    \"day\": 2,\n    \"activities\": [\n        {\n            \"position\": \"Lingyin Temple\",\n            \"type\": \"attraction\",\n            \"transports\": {\"from\": \"Floral Hotel·Hangzhou Zhuyin Garden Homestay\", \"to\": \"Lingyin Temple\", \"mode\": \"taxi\", \"start_time\": \"08:00\", \"end_time\": \"08:11\", \"cost\": 11},\n            \"price\": 0.0,\n            \"cost\": 0.0,\n            \"tickets\": 4,\n            \"start_time\": \"08:20\",\n            \"end_time\": \"09:50\"\n        },\n        {\n            \"position\": \"China National Tea Museum\",\n            \"type\": \"attraction\",\n            \"transports\": {\"from\": \"Lingyin Temple\", \"to\": \"China National Tea Museum\", \"mode\": \"taxi\", \"start_time\": \"09:50\", \"end_time\": \"09:53\", \"cost\": 12.02},\n            \"price\": 0.0,\n            \"cost\": 0.0,\n            \"tickets\": 4,\n            \"start_time\": \"10:00\",\n            \"end_time\": \"12:00\"\n        },\n        {\n            \"position\": \"Tea Village: The Essence of Jiangnan\",\n            \"type\": \"lunch\",\n            \"transports\": {\"from\": \"China National Tea Museum\", \"to\": \"Tea Village: The Essence of Jiangnan\", \"mode\": \"taxi\", \"start_time\": \"12:00\", \"end_time\": \"12:02\", \"cost\": 11},\n            \"price\": 138.0,\n            \"cost\": 552.0,\n            \"start_time\": \"12:10\",\n            \"end_time\": \"13:10\"\n        },\n        {\n            \"position\": \"Hangzhou Xiaoshan International Airport\",\n            \"type\": \"airplane\",\n            \"transports\": {\"from\": \"Tea Village: The Essence of Jiangnan\", \"to\": \"Hangzhou Xiaoshan International Airport\", \"mode\": \"taxi\", \"start_time\": \"13:10\", \"end_time\": \"13:55\", \"cost\": 130.06},\n            \"start_time\": \"22:10\",\n            \"end_time\": \"23:48\",\n            \"start\": \"Hangzhou Xiaoshan International Airport\",\n            \"end\": \"Chongqing Jiangbei International Airport\",\n            \"price\": 644.86,\n            \"cost\": 2579.44,\n            \"FlightID\": \"FL521\",\n            \"tickets\": 4\n        }\n    ]\n}\n```",
+      "input_tokens": 101120,
+      "output_tokens": 1724,
+      "total_tokens": 102844,
+      "model_calls": 6,
+      "failed_model_calls": 0,
+      "elapsed_time_seconds": 44.82889199256897,
+      "llm_inference_time_seconds": 28.994882345199585,
+      "information_collection_time_seconds": 15.82375693321228,
+      "initial_generation_time_s": 44.83059090003371,
+      "initial_generation_tool_calls": 5535,
+      "initial_generation_tool_call_counts_by_type": {
+        "accommodations_select": 1,
+        "attractions_select": 1,
+        "goto": 1800,
+        "intercity_transport_select": 4,
+        "next_page": 128,
+        "poi_lat_lon_search": 3600,
+        "restaurants_select": 1
+      },
+      "shared_initialization_time_s": 45.169769500033,
+      "shared_initialization_system_metrics": {
+        "tool_call_count": 5600,
+        "successful_tool_call_count": 5600,
+        "failed_tool_call_count": 0,
+        "verification_count": 1,
+        "tool_call_counts_by_type": {
+          "accommodations_select": 3,
+          "attractions_select": 6,
+          "goto": 1818,
+          "intercity_transport_select": 6,
+          "next_page": 128,
+          "poi_lat_lon_search": 3636,
+          "restaurants_select": 3
+        }
+      }
+    }
+  },
+  "initial_plan_hash": "fc6a0a4f351d8225b0071a10c2932c924fab0fe06f02771d50944ef964282926",
+  "initial_state_hash": "466cbe8a9dde96c245dc16ec4c872e6bd918017e62135fb5cdf4952734dee0db"
+}

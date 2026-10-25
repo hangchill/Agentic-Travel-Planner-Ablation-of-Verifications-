@@ -13,7 +13,8 @@ if __package__ in (None, ""):
 from chinatravel.evaluation.train_test_split import load_manifest, filter_attempts
 from chinatravel.evaluation.constraint_families import CONSTRAINT_FAMILIES
 from chinatravel.evaluation.regression_matrix import (
-    AGGREGATE_COLUMNS, CONTRIBUTION_COLUMNS, SCOPE_AGGREGATE_COLUMNS, build_regression_matrix,
+    AGGREGATE_COLUMNS, CONTRIBUTION_COLUMNS, SCOPE_AGGREGATE_COLUMNS, SOURCE_FAMILIES,
+    build_regression_matrix,
 )
 
 
@@ -82,7 +83,7 @@ def _write_pivots(directory, aggregate, *, legacy=False):
                               ("count", "regression_count")):
             rows = [{"source_family": source, **{
                 destination: lookup.get((source, destination), {}).get(field, None if metric == "rate" else 0)
-                for destination in CONSTRAINT_FAMILIES}} for source in CONSTRAINT_FAMILIES]
+                for destination in CONSTRAINT_FAMILIES}} for source in SOURCE_FAMILIES]
             _write_csv(directory / f"{prefix}_regression_{metric}.csv", rows,
                        ("source_family", *CONSTRAINT_FAMILIES))
             if legacy and metric == "rate":

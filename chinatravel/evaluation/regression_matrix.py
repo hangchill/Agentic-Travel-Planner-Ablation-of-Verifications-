@@ -12,7 +12,10 @@ from chinatravel.evaluation.constraint_families import (
 from chinatravel.evaluation.repair_attempt import coerce_repair_attempt
 
 TAXONOMY_VERSION = "1.0.0"
-MATRIX_DEFINITION_VERSION = "1.0.0"
+MATRIX_DEFINITION_VERSION = "2.1.0"
+COMMONSENSE_REPAIR_SOURCE = "commonsense_repair"
+# Source axis is the 9 personal destination families plus one commonsense row.
+SOURCE_FAMILIES = (*CONSTRAINT_FAMILIES, COMMONSENSE_REPAIR_SOURCE)
 PERSPECTIVES = ("candidate", "accepted_trajectory")
 CONTRIBUTION_COLUMNS = (
     "run_id", "query_uid", "step", "repair_strategy", "source_constraint_index",
@@ -80,9 +83,20 @@ def _classifications(record):
                                "reason": "missing_descriptor"})
     return mapping, exclusions
 
+def _is_unchanged_attempt(record):
+    """Return True only for confirmed unchanged repair candidates."""
+    if record.changed_slot_count is not None:
+        return record.changed_slot_count == 0
+
+    return record.decision_reason == "no_progress_unchanged"
 
 def _source(record, mapping):
     targets = record.target_constraint_indices
+    # Changed commonsense-phase attempts with no personal target form their own
+    # source row; the unchanged exclusion still runs first so no-ops are dropped.
+    if (not _is_unchanged_attempt(record) and record.repair_phase == "commonsense"
+            and not targets):
+        return None, COMMONSENSE_REPAIR_SOURCE, "commonsense", None
     if len(targets) != 1:
         return None, None, None, "zero_targets" if not targets else "multiple_targets"
     index = targets[0]
@@ -110,7 +124,7 @@ def _coverage_summary(audits):
         "candidate_eligible_contributions": 0, "accepted_eligible_contributions": 0,
         "isolated_single_target_attempts": 0, "single_target_with_other_personal_failures_attempts": 0,
         "concurrent_commonsense_failure_attempts": 0, "missing_target_provenance_attempts": 0,
-        "missing_editable_scope_attempts": 0,
+        "missing_editable_scope_attempts": 0, "unchanged_attempts": 0,
     }
     queries = set()
     for record, mapping, exclusions, eligible_count, unknown_count in audits:
@@ -124,6 +138,7 @@ def _coverage_summary(audits):
         coverage["concurrent_commonsense_failure_attempts"] += int((record.concurrent_commonsense_failure_count or 0) > 0)
         coverage["missing_target_provenance_attempts"] += int(record.target_provenance is None)
         coverage["missing_editable_scope_attempts"] += int(record.editable_scope is None)
+        coverage["unchanged_attempts"] += int(_is_unchanged_attempt(record))
         if record.query_uid is None:
             coverage["missing_query_uid_attempts"] += 1
         else:
@@ -168,6 +183,8 @@ def build_regression_matrix(records, run_id="default") -> dict:
         for destination in CONSTRAINT_FAMILIES:
             indices = destinations[destination]
             reason = source_reason
+            if _is_unchanged_attempt(record):
+                reason = "unchanged_candidate"
             if reason is None:
                 if source_family == destination:
                     reason = "structurally_ineligible_diagonal"
@@ -254,7 +271,7 @@ def aggregate_contributions(contributions, *, by_scope=False) -> list[dict]:
     result = []
     for strategy, scope in sorted(strategies, key=lambda pair: (pair[0], pair[1] or "")):
         for perspective in PERSPECTIVES:
-            for source in CONSTRAINT_FAMILIES:
+            for source in SOURCE_FAMILIES:
                 for destination in CONSTRAINT_FAMILIES:
                     if source == destination:
                         continue
@@ -297,11 +314,11 @@ def load_regression_matrix(directory, perspective="candidate") -> dict:
             if reader.fieldnames != ["source_family", *CONSTRAINT_FAMILIES]:
                 raise ValueError(f"Unexpected matrix columns: {path}")
             rows = list(reader)
-        if [row["source_family"] for row in rows] != list(CONSTRAINT_FAMILIES):
+        if [row["source_family"] for row in rows] != list(SOURCE_FAMILIES):
             raise ValueError(f"Unexpected matrix rows: {path}")
         matrices[metric] = rows
     result = {}
-    for index, source in enumerate(CONSTRAINT_FAMILIES):
+    for index, source in enumerate(SOURCE_FAMILIES):
         result[source] = {}
         for destination in CONSTRAINT_FAMILIES:
             raw_rate = matrices["rate"][index][destination]

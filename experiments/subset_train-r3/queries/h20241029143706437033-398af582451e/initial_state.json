@@ -1,0 +1,2132 @@
+{
+  "run_id": "subset_train-r3",
+  "query_uid": "h20241029143706437033",
+  "state": {
+    "query_uid": "h20241029143706437033",
+    "problem": {
+      "uid": "h20241029143706437033",
+      "tag": "human",
+      "start_city": "Nanjing",
+      "target_city": "Chongqing",
+      "days": 4,
+      "people_number": 2,
+      "limit_rooms": false,
+      "limits_room_type": false,
+      "hard_logic_py": [
+        "intercity_transport_set=set()\nfor activity in allactivities(plan):\n  if activity_type(activity) in ['train', 'airplane']: intercity_transport_set.add(intercity_transport_type(activity))\nresult=({'train'}==intercity_transport_set)",
+        "total_cost=0 \nfor activity in allactivities(plan):\n    total_cost+=activity_cost(activity)\n    total_cost += innercity_transport_cost(activity_transports(activity))\nresult=(total_cost<=4000)",
+        "attraction_name_set=set()\nfor activity in allactivities(plan):\n  if activity_type(activity)=='attraction': attraction_name_set.add(activity_position(activity))\nresult=({'三峡博物馆','重庆动物园','朝天门广场','人民大礼堂'}<=attraction_name_set)",
+        "result=(day_count(plan)==4)",
+        "result=(people_count(plan)==2)",
+        "result=True\nfor activity in allactivities(plan):\n  if innercity_transport_type(activity_transports(activity))=='taxi'and taxi_cars(activity_transports(activity))!=1: result=False"
+      ],
+      "nature_language": "[Current location Nanjing, destination Chongqing, number of travelers 2, travel days 4] Currently in Nanjing, two people want to travel to Chongqing for four days. They must travel round-trip by high-speed train (G). They want to focus on visiting attractions such as the Three Gorges Museum, Chongqing Zoo, Chaotianmen, and the Great Hall of the People. Additionally, they want to experience the local dining habits of Chongqing. Can you help me create an itinerary? Budget is 4000.",
+      "nature_language_en": "[Current location Nanjing, destination Chongqing, number of travelers 2, travel days 4] Currently in Nanjing, two people want to travel to Chongqing for four days. They must travel round-trip by high-speed train (G). They want to focus on visiting attractions such as the Three Gorges Museum, Chongqing Zoo, Chaotianmen, and the Great Hall of the People. Additionally, they want to experience the local dining habits of Chongqing. Can you help me create an itinerary? Budget is 4000."
+    },
+    "raw_initial_plan": [
+      {
+        "day": 1,
+        "activities": [
+          {
+            "start_time": "07:39",
+            "end_time": "19:23",
+            "start": "Nanjing South Railway Station",
+            "end": "Chongqing West Railway Station",
+            "price": 780.77,
+            "cost": 1561.54,
+            "TrainID": "G1887",
+            "type": "train",
+            "tickets": 2,
+            "transports": "empty"
+          },
+          {
+            "position": "Qianhe Zhixuan Gaokong Hotel (Jiefangbei Hongyadong Branch)",
+            "type": "accommodation",
+            "transports": {
+              "from": "Chongqing West Railway Station",
+              "to": "Qianhe Zhixuan Gaokong Hotel (Jiefangbei Hongyadong Branch)",
+              "mode": "metro",
+              "start_time": "19:23",
+              "end_time": "19:53",
+              "cost": 10
+            },
+            "room_type": 2,
+            "price": 208,
+            "cost": 208,
+            "start_time": "20:00",
+            "end_time": "24:00",
+            "rooms": 1
+          }
+        ]
+      },
+      {
+        "day": 2,
+        "activities": [
+          {
+            "position": "Three Gorges Museum",
+            "type": "attraction",
+            "transports": {
+              "from": "Qianhe Zhixuan Gaokong Hotel (Jiefangbei Hongyadong Branch)",
+              "to": "Three Gorges Museum",
+              "mode": "metro",
+              "start_time": "08:00",
+              "end_time": "08:09",
+              "cost": 4
+            },
+            "price": 0.0,
+            "cost": 0.0,
+            "tickets": 2,
+            "start_time": "08:15",
+            "end_time": "09:45"
+          },
+          {
+            "position": "Great Hall of the People",
+            "type": "attraction",
+            "transports": {
+              "from": "Three Gorges Museum",
+              "to": "Great Hall of the People",
+              "mode": "walk",
+              "start_time": "09:45",
+              "end_time": "09:49",
+              "cost": 0
+            },
+            "price": 0.0,
+            "cost": 0.0,
+            "tickets": 2,
+            "start_time": "09:50",
+            "end_time": "11:20"
+          },
+          {
+            "position": "Yang Ji Long Fu (Liberation Monument Main Store)",
+            "type": "lunch",
+            "transports": {
+              "from": "Great Hall of the People",
+              "to": "Yang Ji Long Fu (Liberation Monument Main Store)",
+              "mode": "metro",
+              "start_time": "11:20",
+              "end_time": "11:31",
+              "cost": 4
+            },
+            "price": 96,
+            "cost": 192,
+            "start_time": "11:40",
+            "end_time": "12:30"
+          },
+          {
+            "position": "Chaotianmen Square",
+            "type": "attraction",
+            "transports": {
+              "from": "Yang Ji Long Fu (Liberation Monument Main Store)",
+              "to": "Chaotianmen Square",
+              "mode": "metro",
+              "start_time": "12:30",
+              "end_time": "12:48",
+              "cost": 4
+            },
+            "price": 0.0,
+            "cost": 0.0,
+            "tickets": 2,
+            "start_time": "12:50",
+            "end_time": "13:50"
+          },
+          {
+            "position": "Hongya Cave",
+            "type": "attraction",
+            "transports": {
+              "from": "Chaotianmen Square",
+              "to": "Hongya Cave",
+              "mode": "metro",
+              "start_time": "13:50",
+              "end_time": "14:00",
+              "cost": 4
+            },
+            "price": 0.0,
+            "cost": 0.0,
+            "tickets": 2,
+            "start_time": "14:10",
+            "end_time": "16:10"
+          },
+          {
+            "position": "General Ba's Intangible Cultural Heritage Original Flavor Hot Pot (Jiefangbei Branch)",
+            "type": "dinner",
+            "transports": {
+              "from": "Hongya Cave",
+              "to": "General Ba's Intangible Cultural Heritage Original Flavor Hot Pot (Jiefangbei Branch)",
+              "mode": "metro",
+              "start_time": "16:10",
+              "end_time": "16:20",
+              "cost": 4
+            },
+            "price": 89,
+            "cost": 178,
+            "start_time": "16:30",
+            "end_time": "17:30"
+          },
+          {
+            "position": "Qianhe Zhixuan Gaokong Hotel (Jiefangbei Hongyadong Branch)",
+            "type": "accommodation",
+            "transports": {
+              "from": "General Ba's Intangible Cultural Heritage Original Flavor Hot Pot (Jiefangbei Branch)",
+              "to": "Qianhe Zhixuan Gaokong Hotel (Jiefangbei Hongyadong Branch)",
+              "mode": "metro",
+              "start_time": "17:30",
+              "end_time": "17:36",
+              "cost": 4
+            },
+            "room_type": 2,
+            "price": 208,
+            "cost": 208,
+            "start_time": "17:40",
+            "end_time": "24:00",
+            "rooms": 1
+          }
+        ]
+      },
+      {
+        "day": 3,
+        "activities": [
+          {
+            "position": "Chongqing Zoo",
+            "type": "attraction",
+            "transports": {
+              "from": "Qianhe Zhixuan Gaokong Hotel (Jiefangbei Hongyadong Branch)",
+              "to": "Chongqing Zoo",
+              "mode": "metro",
+              "start_time": "08:00",
+              "end_time": "08:22",
+              "cost": 6
+            },
+            "price": 24.5,
+            "cost": 49.0,
+            "tickets": 2,
+            "start_time": "08:30",
+            "end_time": "10:30"
+          },
+          {
+            "position": "Qin Yun Old Lady's Stall Noodles (National Flagship Store)",
+            "type": "lunch",
+            "transports": {
+              "from": "Chongqing Zoo",
+              "to": "Qin Yun Old Lady's Stall Noodles (National Flagship Store)",
+              "mode": "metro",
+              "start_time": "10:30",
+              "end_time": "10:42",
+              "cost": 4
+            },
+            "price": 15,
+            "cost": 30,
+            "start_time": "10:50",
+            "end_time": "11:30"
+          },
+          {
+            "position": "Chongqing Huguang Guild Hall",
+            "type": "attraction",
+            "transports": {
+              "from": "Qin Yun Old Lady's Stall Noodles (National Flagship Store)",
+              "to": "Chongqing Huguang Guild Hall",
+              "mode": "metro",
+              "start_time": "11:30",
+              "end_time": "12:00",
+              "cost": 6
+            },
+            "price": 25.0,
+            "cost": 50.0,
+            "tickets": 2,
+            "start_time": "12:10",
+            "end_time": "13:40"
+          },
+          {
+            "position": "Liberation Monument Pedestrian Street",
+            "type": "attraction",
+            "transports": {
+              "from": "Chongqing Huguang Guild Hall",
+              "to": "Liberation Monument Pedestrian Street",
+              "mode": "metro",
+              "start_time": "13:40",
+              "end_time": "13:52",
+              "cost": 4
+            },
+            "price": 0.0,
+            "cost": 0.0,
+            "tickets": 2,
+            "start_time": "14:00",
+            "end_time": "15:00"
+          },
+          {
+            "position": "Instrument Factory Hot Pot (Jiefangbei Branch)",
+            "type": "dinner",
+            "transports": {
+              "from": "Liberation Monument Pedestrian Street",
+              "to": "Instrument Factory Hot Pot (Jiefangbei Branch)",
+              "mode": "walk",
+              "start_time": "15:00",
+              "end_time": "15:07",
+              "cost": 0
+            },
+            "price": 100,
+            "cost": 200,
+            "start_time": "15:30",
+            "end_time": "16:30"
+          },
+          {
+            "position": "Qianhe Zhixuan Gaokong Hotel (Jiefangbei Hongyadong Branch)",
+            "type": "accommodation",
+            "transports": {
+              "from": "Instrument Factory Hot Pot (Jiefangbei Branch)",
+              "to": "Qianhe Zhixuan Gaokong Hotel (Jiefangbei Hongyadong Branch)",
+              "mode": "metro",
+              "start_time": "16:30",
+              "end_time": "16:35",
+              "cost": 4
+            },
+            "room_type": 2,
+            "price": 208,
+            "cost": 208,
+            "start_time": "16:40",
+            "end_time": "24:00",
+            "rooms": 1
+          }
+        ]
+      },
+      {
+        "day": 4,
+        "activities": [
+          {
+            "position": "Yangtze River Cableway",
+            "type": "attraction",
+            "transports": {
+              "from": "Qianhe Zhixuan Gaokong Hotel (Jiefangbei Hongyadong Branch)",
+              "to": "Yangtze River Cableway",
+              "mode": "metro",
+              "start_time": "08:00",
+              "end_time": "08:05",
+              "cost": 4
+            },
+            "price": 20.0,
+            "cost": 40.0,
+            "tickets": 2,
+            "start_time": "08:15",
+            "end_time": "09:15"
+          },
+          {
+            "position": "At Yuli Chongqing Hot Pot (Jiefangbei Delicious Street Branch)",
+            "type": "lunch",
+            "transports": {
+              "from": "Yangtze River Cableway",
+              "to": "At Yuli Chongqing Hot Pot (Jiefangbei Delicious Street Branch)",
+              "mode": "metro",
+              "start_time": "09:15",
+              "end_time": "09:25",
+              "cost": 4
+            },
+            "price": 78,
+            "cost": 156,
+            "start_time": "09:30",
+            "end_time": "10:30"
+          },
+          {
+            "position": "Chongqing WFC Xianlai Tower Observation Deck",
+            "type": "attraction",
+            "transports": {
+              "from": "At Yuli Chongqing Hot Pot (Jiefangbei Delicious Street Branch)",
+              "to": "Chongqing WFC Xianlai Tower Observation Deck",
+              "mode": "walk",
+              "start_time": "10:30",
+              "end_time": "10:45",
+              "cost": 0
+            },
+            "price": 118.0,
+            "cost": 236.0,
+            "tickets": 2,
+            "start_time": "10:50",
+            "end_time": "11:50"
+          },
+          {
+            "start": "Chongqing West Railway Station",
+            "end": "Nanjing South Railway Station",
+            "start_time": "14:01",
+            "end_time": "22:42",
+            "TrainID": "G1888",
+            "type": "train",
+            "transports": {
+              "from": "Chongqing WFC Xianlai Tower Observation Deck",
+              "to": "Chongqing West Railway Station",
+              "mode": "metro",
+              "start_time": "11:50",
+              "end_time": "12:24",
+              "cost": 10
+            },
+            "price": 780.77,
+            "cost": 1561.54,
+            "tickets": 2
+          }
+        ]
+      }
+    ],
+    "repair_context": {
+      "go_train_info": "TrainID\tTrainType\tFrom\tTo\tBeginTime\tEndTime\tDuration\tprice\r\nG1887\tHigh-speed rail\tNanjing South Railway Station\tChongqing West Railway Station\t07:39\t19:23\t11.73\t780.77\r\nG1974\tHigh-speed rail\tNanjing South Railway Station\tChongqing West Railway Station\t08:46\t19:57\t11.28\t780.77\r\nG1975\tHigh-speed rail\tNanjing South Railway Station\tChongqing West Railway Station\t08:46\t19:57\t11.28\t780.77\r\nG1476\tHigh-speed rail\tNanjing South Railway Station\tChongqing North Railway Station\t11:32\t20:33\t9.07\t780.77\r\n",
+      "go_flight_info": "None",
+      "back_train_info": "TrainID\tTrainType\tFrom\tTo\tBeginTime\tEndTime\tDuration\tprice\r\nG1976\tHigh-speed rail\tChongqing West Railway Station\tNanjing South Railway Station\t09:20\t20:55\t11.58\t780.77\r\nG1475\tHigh-speed rail\tChongqing North Railway Station\tNanjing South Railway Station\t09:26\t18:14\t8.92\t780.77\r\nG1888\tHigh-speed rail\tChongqing West Railway Station\tNanjing South Railway Station\t10:01\t22:42\t12.68\t780.77\r\nD3074\tEMU (Electric Multiple Unit)\tChongqing North Railway Station\tNanjing South Railway Station\t06:21\t16:12\t9.85\t720.72\r\nD2214\tEMU (Electric Multiple Unit)\tChongqing North Railway Station\tNanjing South Railway Station\t07:09\t16:53\t9.73\t720.72\r\n",
+      "back_flight_info": "None",
+      "attraction_info": "name\ttype\tlat\tlon\topentime\tendtime\tprice\trecommendmintime\trecommendmaxtime\r\nThree Gorges Museum\tMuseum/Memorial Hall\t29.56842\t106.55682\t09:00\t17:00\t0.0\t1.0\t1.5\r\nChongqing Zoo\tAmusement Park/Sports Entertainment\t29.509218\t106.512622\t08:00\t17:00\t24.5\t1.0\t2.0\r\nChaotianmen Square\tCultural Landscape\t29.573221\t106.594506\t00:00\t24:00\t0.0\t0.5\t1.0\r\nGreat Hall of the People\tCultural Landscape\t29.567945\t106.560541\t08:00\t18:00\t0.0\t1.5\t2.0\r\nHongya Cave\tCultural Tourism Area\t29.568126\t106.584807\t09:00\t23:00\t0.0\t3.0\t3.5\r\nCi Qi Kou Ancient Town\thistorical site\t29.587707\t106.456424\t00:00\t24:00\t0.0\t3.0\t3.5\r\nLiberation Monument Pedestrian Street\tcommercial district\t29.563503\t106.583623\t00:00\t24:00\t0.0\t0.5\t1.5\r\nYangtze River Cableway\tAmusement Park/Sports Entertainment\t29.563863\t106.589285\t08:00\t22:00\t20.0\t0.5\t1.0\r\nChongqing Huguang Guild Hall\thistorical site\t29.563904\t106.59329\t09:00\t19:00\t25.0\t1.0\t2.5\r\nChongqing Huguang Guild Hall\thistorical site\t29.563904\t106.59329\t09:00\t19:00\t25.0\t1.0\t2.5\r\nChongqing Huguang Guild Hall\thistorical site\t29.563904\t106.59329\t09:00\t19:00\t25.0\t1.0\t2.5\r\nChongqing People's Square\tpark\t29.568293\t106.558852\t00:00\t24:00\t0.0\t2.0\t2.5\r\nHuangjueping Graffiti Art Street\tCultural Landscape\t29.495719\t106.548713\t00:00\t24:00\t0.0\t0.5\t1.0\r\nLiziba Monorail Building-Piercing Viewing Platform\tCultural Landscape\t29.559763\t106.544399\t06:30\t23:00\t0.0\t1.5\t3.0\r\nChongqing WFC Xianlai Tower Observation Deck\tCultural Landscape\t29.565159\t106.584095\t09:30\t22:00\t118.0\t0.5\t1.0\r\n",
+      "restaurant_info": "name\tlat\tlon\tprice\tcuisine\topentime\tendtime\trecommendedfood\r\nYang Ji Long Fu (Liberation Monument Main Store)\t29.5609878\t106.5781935\t96.0\tSichuan cuisine\t11:00\t22:00\tYang's Family Braised Goose, Republican Era Spicy Rabbit, Yang's Signature Fish, Traditional Sichuan Pepper Chicken, Bald Commander, Pan-Fried Heart of Cabbage, Yang's Sichuan Pepper Pork Ribs, Pan-Fried Vermicelli Casserole, Pork Intestines, Flavored Rabbit Head\r\nInstrument Factory Hot Pot (Jiefangbei Branch)\t29.5589518\t106.5710451\t100.0\tHot pot\t10:30\t23:30\tRecommended dishes\r\nGeneral Ba's Intangible Cultural Heritage Original Flavor Hot Pot (Jiefangbei Branch)\t29.556122\t106.5766709\t89.0\tHot pot\t10:00\t24:00\tRecommended dishes\r\nAt Yuli Chongqing Hot Pot (Jiefangbei Delicious Street Branch)\t29.5555135\t106.5771769\t78.0\tHot pot\t10:00\t01:00\tSalted Egg Yolk Shrimp Paste, Double Pepper Tender Tripe, Huajiezi Tender Beef, Dajing Lane Fresh Duck Intestines\r\nQin Yun Old Lady's Stall Noodles (National Flagship Store)\t29.516308\t106.5223615\t15.0\tSnacks\t07:00\t13:30\tSour plum drink, Dry mixed noodles with peas and minced meat, Dry mixed noodles with minced meat sauce, Chongqing noodles, Beef noodles, Stall noodles, Noodles with pork intestines\r\n",
+      "accommodation_info": "name\tfeaturehoteltype\tlat\tlon\tprice\tnumbed\r\nChongqing North Railway Station Atour Hotel\tFree parking\t29.603878\t106.553201\t332\t2\r\nLavande Hotel (Chongqing Jiefangbei Center Pedestrian Street)\tButler Service\t29.557208\t106.575533\t237\t1\r\nQianhe Zhixuan Gaokong Hotel (Jiefangbei Hongyadong Branch)\tRiver view room\t29.559812\t106.582407\t208\t2\r\n",
+      "innercity_transport_info": "from General Ba's Intangible Cultural Heritage Original Flavor Hot Pot (Jiefangbei Branch) to General Ba's Intangible Cultural Heritage Original Flavor Hot Pot (Jiefangbei Branch):  metro: empty.  taxi: empty.  walk: empty. \nfrom General Ba's Intangible Cultural Heritage Original Flavor Hot Pot (Jiefangbei Branch) to Yang Ji Long Fu (Liberation Monument Main Store): taxi: duration 0, cost 11.0. walk: duration 6, cost 0.0. \nfrom General Ba's Intangible Cultural Heritage Original Flavor Hot Pot (Jiefangbei Branch) to Great Hall of the People: metro: duration 10, cost 4. taxi: duration 3, cost 11.84. walk: duration 24, cost 0.0. \nfrom General Ba's Intangible Cultural Heritage Original Flavor Hot Pot (Jiefangbei Branch) to Ci Qi Kou Ancient Town: metro: duration 44, cost 8. taxi: duration 18, cost 49.45. walk: duration 145, cost 0.0. \nfrom General Ba's Intangible Cultural Heritage Original Flavor Hot Pot (Jiefangbei Branch) to Qianhe Zhixuan Gaokong Hotel (Jiefangbei Hongyadong Branch): metro: duration 6, cost 4. taxi: duration 1, cost 11.0. walk: duration 8, cost 0.0. \nfrom General Ba's Intangible Cultural Heritage Original Flavor Hot Pot (Jiefangbei Branch) to Instrument Factory Hot Pot (Jiefangbei Branch): taxi: duration 0, cost 11.0. walk: duration 7, cost 0.0. \nfrom General Ba's Intangible Cultural Heritage Original Flavor Hot Pot (Jiefangbei Branch) to Chaotianmen Square: metro: duration 17, cost 4. taxi: duration 3, cost 13.68. walk: duration 30, cost 0.0. \nfrom General Ba's Intangible Cultural Heritage Original Flavor Hot Pot (Jiefangbei Branch) to Liberation Monument Pedestrian Street: metro: duration 9, cost 4. taxi: duration 1, cost 11.0. walk: duration 12, cost 0.0. \nfrom General Ba's Intangible Cultural Heritage Original Flavor Hot Pot (Jiefangbei Branch) to Huangjueping Graffiti Art Street: metro: duration 30, cost 6. taxi: duration 10, cost 29.98. walk: duration 86, cost 0.0. \nfrom General Ba's Intangible Cultural Heritage Original Flavor Hot Pot (Jiefangbei Branch) to Yangtze River Cableway: metro: duration 10, cost 4. taxi: duration 2, cost 11.0. walk: duration 17, cost 0.0. \nfrom General Ba's Intangible Cultural Heritage Original Flavor Hot Pot (Jiefangbei Branch) to Chongqing Zoo: metro: duration 23, cost 6. taxi: duration 12, cost 33.04. walk: duration 97, cost 0.0. \nfrom General Ba's Intangible Cultural Heritage Original Flavor Hot Pot (Jiefangbei Branch) to Three Gorges Museum: metro: duration 10, cost 4. taxi: duration 3, cost 12.95. walk: duration 28, cost 0.0. \nfrom General Ba's Intangible Cultural Heritage Original Flavor Hot Pot (Jiefangbei Branch) to Chongqing WFC Xianlai Tower Observation Deck: metro: duration 11, cost 4. taxi: duration 1, cost 11.0. walk: duration 14, cost 0.0. \nfrom General Ba's Intangible Cultural Heritage Original Flavor Hot Pot (Jiefangbei Branch) to Hongya Cave: metro: duration 10, cost 4. taxi: duration 2, cost 11.0. walk: duration 18, cost 0.0. \nfrom General Ba's Intangible Cultural Heritage Original Flavor Hot Pot (Jiefangbei Branch) to Qin Yun Old Lady's Stall Noodles (National Flagship Store): metro: duration 24, cost 6. taxi: duration 10, cost 28.74. walk: duration 82, cost 0.0. \nfrom General Ba's Intangible Cultural Heritage Original Flavor Hot Pot (Jiefangbei Branch) to Chongqing North Railway Station: metro: duration 18, cost 6. taxi: duration 9, cost 26.82. walk: duration 75, cost 0.0. \nfrom General Ba's Intangible Cultural Heritage Original Flavor Hot Pot (Jiefangbei Branch) to Chongqing Huguang Guild Hall: metro: duration 14, cost 4. taxi: duration 2, cost 11.09. walk: duration 21, cost 0.0. \nfrom General Ba's Intangible Cultural Heritage Original Flavor Hot Pot (Jiefangbei Branch) to Liziba Monorail Building-Piercing Viewing Platform: metro: duration 102, cost 14. taxi: duration 53, cost 154.91. walk: duration 427, cost 0.0. \nfrom General Ba's Intangible Cultural Heritage Original Flavor Hot Pot (Jiefangbei Branch) to Chongqing People's Square: metro: duration 9, cost 4. taxi: duration 3, cost 12.37. walk: duration 26, cost 0.0. \nfrom General Ba's Intangible Cultural Heritage Original Flavor Hot Pot (Jiefangbei Branch) to Chongqing North Railway Station Atour Hotel: metro: duration 19, cost 6. taxi: duration 8, cost 24.86. walk: duration 69, cost 0.0. \nfrom General Ba's Intangible Cultural Heritage Original Flavor Hot Pot (Jiefangbei Branch) to Lavande Hotel (Chongqing Jiefangbei Center Pedestrian Street): taxi: duration 0, cost 11.0. walk: duration 1, cost 0.0. \nfrom General Ba's Intangible Cultural Heritage Original Flavor Hot Pot (Jiefangbei Branch) to Chongqing West Railway Station: metro: duration 34, cost 10. taxi: duration 22, cost 61.31. walk: duration 177, cost 0.0. \nfrom General Ba's Intangible Cultural Heritage Original Flavor Hot Pot (Jiefangbei Branch) to At Yuli Chongqing Hot Pot (Jiefangbei Delicious Street Branch): metro: duration 9, cost 4. taxi: duration 0, cost 11.0. walk: duration 1, cost 0.0. \nfrom Yang Ji Long Fu (Liberation Monument Main Store) to General Ba's Intangible Cultural Heritage Original Flavor Hot Pot (Jiefangbei Branch): taxi: duration 0, cost 11.0. walk: duration 6, cost 0.0. \nfrom Yang Ji Long Fu (Liberation Monument Main Store) to Yang Ji Long Fu (Liberation Monument Main Store):  metro: empty.  taxi: empty.  walk: empty. \nfrom Yang Ji Long Fu (Liberation Monument Main Store) to Great Hall of the People: metro: duration 11, cost 4. taxi: duration 2, cost 11.27. walk: duration 22, cost 0.0. \nfrom Yang Ji Long Fu (Liberation Monument Main Store) to Ci Qi Kou Ancient Town: metro: duration 45, cost 8. taxi: duration 18, cost 49.44. walk: duration 145, cost 0.0. \nfrom Yang Ji Long Fu (Liberation Monument Main Store) to Qianhe Zhixuan Gaokong Hotel (Jiefangbei Hongyadong Branch): metro: duration 7, cost 4. taxi: duration 0, cost 11.0. walk: duration 5, cost 0.0. \nfrom Yang Ji Long Fu (Liberation Monument Main Store) to Instrument Factory Hot Pot (Jiefangbei Branch): taxi: duration 1, cost 11.0. walk: duration 8, cost 0.0. \nfrom Yang Ji Long Fu (Liberation Monument Main Store) to Chaotianmen Square: metro: duration 18, cost 4. taxi: duration 3, cost 11.99. walk: duration 24, cost 0.0. \nfrom Yang Ji Long Fu (Liberation Monument Main Store) to Liberation Monument Pedestrian Street: metro: duration 10, cost 4. taxi: duration 0, cost 11.0. walk: duration 7, cost 0.0. \nfrom Yang Ji Long Fu (Liberation Monument Main Store) to Huangjueping Graffiti Art Street: metro: duration 31, cost 6. taxi: duration 11, cost 31.93. walk: duration 93, cost 0.0. \nfrom Yang Ji Long Fu (Liberation Monument Main Store) to Yangtze River Cableway: metro: duration 11, cost 4. taxi: duration 1, cost 11.0. walk: duration 13, cost 0.0. \nfrom Yang Ji Long Fu (Liberation Monument Main Store) to Chongqing Zoo: metro: duration 24, cost 6. taxi: duration 12, cost 34.67. walk: duration 102, cost 0.0. \nfrom Yang Ji Long Fu (Liberation Monument Main Store) to Three Gorges Museum: metro: duration 11, cost 4. taxi: duration 3, cost 12.5. walk: duration 26, cost 0.0. \nfrom Yang Ji Long Fu (Liberation Monument Main Store) to Chongqing WFC Xianlai Tower Observation Deck: metro: duration 12, cost 4. taxi: duration 1, cost 11.0. walk: duration 8, cost 0.0. \nfrom Yang Ji Long Fu (Liberation Monument Main Store) to Hongya Cave: metro: duration 11, cost 4. taxi: duration 1, cost 11.0. walk: duration 12, cost 0.0. \nfrom Yang Ji Long Fu (Liberation Monument Main Store) to Qin Yun Old Lady's Stall Noodles (National Flagship Store): metro: duration 25, cost 6. taxi: duration 11, cost 30.38. walk: duration 88, cost 0.0. \nfrom Yang Ji Long Fu (Liberation Monument Main Store) to Chongqing North Railway Station: metro: duration 19, cost 6. taxi: duration 8, cost 25.32. walk: duration 70, cost 0.0. \nfrom Yang Ji Long Fu (Liberation Monument Main Store) to Chongqing Huguang Guild Hall: metro: duration 15, cost 4. taxi: duration 2, cost 11.0. walk: duration 17, cost 0.0. \nfrom Yang Ji Long Fu (Liberation Monument Main Store) to Liziba Monorail Building-Piercing Viewing Platform: metro: duration 103, cost 14. taxi: duration 52, cost 152.95. walk: duration 421, cost 0.0. \nfrom Yang Ji Long Fu (Liberation Monument Main Store) to Chongqing People's Square: metro: duration 10, cost 4. taxi: duration 3, cost 11.85. walk: duration 24, cost 0.0. \nfrom Yang Ji Long Fu (Liberation Monument Main Store) to Chongqing North Railway Station Atour Hotel: metro: duration 20, cost 6. taxi: duration 8, cost 23.37. walk: duration 64, cost 0.0. \nfrom Yang Ji Long Fu (Liberation Monument Main Store) to Lavande Hotel (Chongqing Jiefangbei Center Pedestrian Street): taxi: duration 0, cost 11.0. walk: duration 5, cost 0.0. \nfrom Yang Ji Long Fu (Liberation Monument Main Store) to Chongqing West Railway Station: metro: duration 35, cost 10. taxi: duration 22, cost 62.95. walk: duration 182, cost 0.0. \nfrom Yang Ji Long Fu (Liberation Monument Main Store) to At Yuli Chongqing Hot Pot (Jiefangbei Delicious Street Branch): metro: duration 10, cost 4. taxi: duration 0, cost 11.0. walk: duration 7, cost 0.0. \nfrom Great Hall of the People to General Ba's Intangible Cultural Heritage Original Flavor Hot Pot (Jiefangbei Branch): metro: duration 10, cost 4. taxi: duration 3, cost 11.84. walk: duration 24, cost 0.0. \nfrom Great Hall of the People to Yang Ji Long Fu (Liberation Monument Main Store): metro: duration 11, cost 4. taxi: duration 2, cost 11.27. walk: duration 22, cost 0.0. \nfrom Great Hall of the People to Great Hall of the People:  metro: empty.  taxi: empty.  walk: empty. \nfrom Great Hall of the People to Ci Qi Kou Ancient Town: metro: duration 39, cost 8. taxi: duration 15, cost 41.15. walk: duration 123, cost 0.0. \nfrom Great Hall of the People to Qianhe Zhixuan Gaokong Hotel (Jiefangbei Hongyadong Branch): metro: duration 9, cost 4. taxi: duration 3, cost 12.76. walk: duration 27, cost 0.0. \nfrom Great Hall of the People to Instrument Factory Hot Pot (Jiefangbei Branch): metro: duration 9, cost 4. taxi: duration 2, cost 11.0. walk: duration 17, cost 0.0. \nfrom Great Hall of the People to Chaotianmen Square: metro: duration 18, cost 6. taxi: duration 5, cost 16.4. walk: duration 40, cost 0.0. \nfrom Great Hall of the People to Liberation Monument Pedestrian Street: metro: duration 12, cost 4. taxi: duration 3, cost 12.72. walk: duration 27, cost 0.0. \nfrom Great Hall of the People to Huangjueping Graffiti Art Street: metro: duration 30, cost 6. taxi: duration 12, cost 33.01. walk: duration 97, cost 0.0. \nfrom Great Hall of the People to Yangtze River Cableway: metro: duration 11, cost 4. taxi: duration 4, cost 14.58. walk: duration 33, cost 0.0. \nfrom Great Hall of the People to Chongqing Zoo: metro: duration 22, cost 6. taxi: duration 11, cost 32.69. walk: duration 95, cost 0.0. \nfrom Great Hall of the People to Three Gorges Museum: taxi: duration 0, cost 11.0. walk: duration 4, cost 0.0. \nfrom Great Hall of the People to Chongqing WFC Xianlai Tower Observation Deck: metro: duration 12, cost 4. taxi: duration 3, cost 12.76. walk: duration 27, cost 0.0. \nfrom Great Hall of the People to Hongya Cave: metro: duration 11, cost 4. taxi: duration 3, cost 12.93. walk: duration 28, cost 0.0. \nfrom Great Hall of the People to Qin Yun Old Lady's Stall Noodles (National Flagship Store): metro: duration 22, cost 6. taxi: duration 10, cost 28.56. walk: duration 81, cost 0.0. \nfrom Great Hall of the People to Chongqing North Railway Station: metro: duration 15, cost 6. taxi: duration 6, cost 20.78. walk: duration 55, cost 0.0. \nfrom Great Hall of the People to Chongqing Huguang Guild Hall: metro: duration 15, cost 4. taxi: duration 4, cost 15.92. walk: duration 38, cost 0.0. \nfrom Great Hall of the People to Liziba Monorail Building-Piercing Viewing Platform: metro: duration 99, cost 14. taxi: duration 50, cost 146.76. walk: duration 405, cost 0.0. \nfrom Great Hall of the People to Chongqing People's Square: taxi: duration 0, cost 11.0. walk: duration 2, cost 0.0. \nfrom Great Hall of the People to Chongqing North Railway Station Atour Hotel: metro: duration 15, cost 4. taxi: duration 6, cost 18.86. walk: duration 48, cost 0.0. \nfrom Great Hall of the People to Lavande Hotel (Chongqing Jiefangbei Center Pedestrian Street): metro: duration 8, cost 4. taxi: duration 2, cost 11.27. walk: duration 22, cost 0.0. \nfrom Great Hall of the People to Chongqing West Railway Station: metro: duration 31, cost 8. taxi: duration 21, cost 57.93. walk: duration 168, cost 0.0. \nfrom Great Hall of the People to At Yuli Chongqing Hot Pot (Jiefangbei Delicious Street Branch): metro: duration 11, cost 4. taxi: duration 3, cost 12.12. walk: duration 25, cost 0.0. \nfrom Ci Qi Kou Ancient Town to General Ba's Intangible Cultural Heritage Original Flavor Hot Pot (Jiefangbei Branch): metro: duration 44, cost 8. taxi: duration 18, cost 49.45. walk: duration 145, cost 0.0. \nfrom Ci Qi Kou Ancient Town to Yang Ji Long Fu (Liberation Monument Main Store): metro: duration 45, cost 8. taxi: duration 18, cost 49.44. walk: duration 145, cost 0.0. \nfrom Ci Qi Kou Ancient Town to Great Hall of the People: metro: duration 39, cost 8. taxi: duration 15, cost 41.15. walk: duration 123, cost 0.0. \nfrom Ci Qi Kou Ancient Town to Ci Qi Kou Ancient Town:  metro: empty.  taxi: empty.  walk: empty. \nfrom Ci Qi Kou Ancient Town to Qianhe Zhixuan Gaokong Hotel (Jiefangbei Hongyadong Branch): metro: duration 42, cost 8. taxi: duration 18, cost 51.37. walk: duration 151, cost 0.0. \nfrom Ci Qi Kou Ancient Town to Instrument Factory Hot Pot (Jiefangbei Branch): metro: duration 43, cost 8. taxi: duration 17, cost 46.7. walk: duration 138, cost 0.0. \nfrom Ci Qi Kou Ancient Town to Chaotianmen Square: metro: duration 51, cost 10. taxi: duration 20, cost 55.34. walk: duration 161, cost 0.0. \nfrom Ci Qi Kou Ancient Town to Liberation Monument Pedestrian Street: metro: duration 45, cost 8. taxi: duration 18, cost 51.46. walk: duration 151, cost 0.0. \nfrom Ci Qi Kou Ancient Town to Huangjueping Graffiti Art Street: metro: duration 53, cost 10. taxi: duration 20, cost 55.74. walk: duration 162, cost 0.0. \nfrom Ci Qi Kou Ancient Town to Yangtze River Cableway: metro: duration 45, cost 10. taxi: duration 19, cost 53.84. walk: duration 157, cost 0.0. \nfrom Ci Qi Kou Ancient Town to Chongqing Zoo: metro: duration 40, cost 8. taxi: duration 15, cost 40.89. walk: duration 123, cost 0.0. \nfrom Ci Qi Kou Ancient Town to Three Gorges Museum: metro: duration 39, cost 8. taxi: duration 14, cost 39.56. walk: duration 119, cost 0.0. \nfrom Ci Qi Kou Ancient Town to Chongqing WFC Xianlai Tower Observation Deck: metro: duration 46, cost 10. taxi: duration 18, cost 51.49. walk: duration 151, cost 0.0. \nfrom Ci Qi Kou Ancient Town to Hongya Cave: metro: duration 45, cost 10. taxi: duration 18, cost 51.52. walk: duration 151, cost 0.0. \nfrom Ci Qi Kou Ancient Town to Qin Yun Old Lady's Stall Noodles (National Flagship Store): metro: duration 41, cost 8. taxi: duration 15, cost 40.47. walk: duration 122, cost 0.0. \nfrom Ci Qi Kou Ancient Town to Chongqing North Railway Station: metro: duration 37, cost 8. taxi: duration 14, cost 37.78. walk: duration 113, cost 0.0. \nfrom Ci Qi Kou Ancient Town to Chongqing Huguang Guild Hall: metro: duration 49, cost 10. taxi: duration 20, cost 55.55. walk: duration 162, cost 0.0. \nfrom Ci Qi Kou Ancient Town to Liziba Monorail Building-Piercing Viewing Platform: metro: duration 100, cost 12. taxi: duration 43, cost 126.46. walk: duration 351, cost 0.0. \nfrom Ci Qi Kou Ancient Town to Chongqing People's Square: metro: duration 38, cost 8. taxi: duration 15, cost 40.4. walk: duration 121, cost 0.0. \nfrom Ci Qi Kou Ancient Town to Chongqing North Railway Station Atour Hotel: metro: duration 39, cost 8. taxi: duration 14, cost 38.11. walk: duration 114, cost 0.0. \nfrom Ci Qi Kou Ancient Town to Lavande Hotel (Chongqing Jiefangbei Center Pedestrian Street): metro: duration 42, cost 8. taxi: duration 18, cost 48.82. walk: duration 144, cost 0.0. \nfrom Ci Qi Kou Ancient Town to Chongqing West Railway Station: metro: duration 34, cost 8. taxi: duration 14, cost 39.22. walk: duration 118, cost 0.0. \nfrom Ci Qi Kou Ancient Town to At Yuli Chongqing Hot Pot (Jiefangbei Delicious Street Branch): metro: duration 44, cost 8. taxi: duration 18, cost 49.75. walk: duration 146, cost 0.0. \nfrom Qianhe Zhixuan Gaokong Hotel (Jiefangbei Hongyadong Branch) to General Ba's Intangible Cultural Heritage Original Flavor Hot Pot (Jiefangbei Branch): metro: duration 6, cost 4. taxi: duration 1, cost 11.0. walk: duration 8, cost 0.0. \nfrom Qianhe Zhixuan Gaokong Hotel (Jiefangbei Hongyadong Branch) to Yang Ji Long Fu (Liberation Monument Main Store): metro: duration 7, cost 4. taxi: duration 0, cost 11.0. walk: duration 5, cost 0.0. \nfrom Qianhe Zhixuan Gaokong Hotel (Jiefangbei Hongyadong Branch) to Great Hall of the People: metro: duration 9, cost 4. taxi: duration 3, cost 12.76. walk: duration 27, cost 0.0. \nfrom Qianhe Zhixuan Gaokong Hotel (Jiefangbei Hongyadong Branch) to Ci Qi Kou Ancient Town: metro: duration 42, cost 8. taxi: duration 18, cost 51.37. walk: duration 151, cost 0.0. \nfrom Qianhe Zhixuan Gaokong Hotel (Jiefangbei Hongyadong Branch) to Qianhe Zhixuan Gaokong Hotel (Jiefangbei Hongyadong Branch):  metro: empty.  taxi: empty.  walk: empty. \nfrom Qianhe Zhixuan Gaokong Hotel (Jiefangbei Hongyadong Branch) to Instrument Factory Hot Pot (Jiefangbei Branch): metro: duration 5, cost 4. taxi: duration 1, cost 11.0. walk: duration 13, cost 0.0. \nfrom Qianhe Zhixuan Gaokong Hotel (Jiefangbei Hongyadong Branch) to Chaotianmen Square: metro: duration 12, cost 4. taxi: duration 2, cost 11.33. walk: duration 22, cost 0.0. \nfrom Qianhe Zhixuan Gaokong Hotel (Jiefangbei Hongyadong Branch) to Liberation Monument Pedestrian Street: taxi: duration 0, cost 11.0. walk: duration 5, cost 0.0. \nfrom Qianhe Zhixuan Gaokong Hotel (Jiefangbei Hongyadong Branch) to Huangjueping Graffiti Art Street: metro: duration 28, cost 6. taxi: duration 11, cost 32.07. walk: duration 93, cost 0.0. \nfrom Qianhe Zhixuan Gaokong Hotel (Jiefangbei Hongyadong Branch) to Yangtze River Cableway: metro: duration 5, cost 4. taxi: duration 1, cost 11.0. walk: duration 9, cost 0.0. \nfrom Qianhe Zhixuan Gaokong Hotel (Jiefangbei Hongyadong Branch) to Chongqing Zoo: metro: duration 22, cost 6. taxi: duration 13, cost 35.45. walk: duration 105, cost 0.0. \nfrom Qianhe Zhixuan Gaokong Hotel (Jiefangbei Hongyadong Branch) to Three Gorges Museum: metro: duration 9, cost 4. taxi: duration 3, cost 14.0. walk: duration 31, cost 0.0. \nfrom Qianhe Zhixuan Gaokong Hotel (Jiefangbei Hongyadong Branch) to Chongqing WFC Xianlai Tower Observation Deck: metro: duration 6, cost 4. taxi: duration 0, cost 11.0. walk: duration 7, cost 0.0. \nfrom Qianhe Zhixuan Gaokong Hotel (Jiefangbei Hongyadong Branch) to Hongya Cave: metro: duration 5, cost 4. taxi: duration 1, cost 11.0. walk: duration 11, cost 0.0. \nfrom Qianhe Zhixuan Gaokong Hotel (Jiefangbei Hongyadong Branch) to Qin Yun Old Lady's Stall Noodles (National Flagship Store): metro: duration 22, cost 6. taxi: duration 11, cost 31.15. walk: duration 90, cost 0.0. \nfrom Qianhe Zhixuan Gaokong Hotel (Jiefangbei Hongyadong Branch) to Chongqing North Railway Station: metro: duration 16, cost 6. taxi: duration 9, cost 26.4. walk: duration 74, cost 0.0. \nfrom Qianhe Zhixuan Gaokong Hotel (Jiefangbei Hongyadong Branch) to Chongqing Huguang Guild Hall: metro: duration 9, cost 4. taxi: duration 1, cost 11.0. walk: duration 13, cost 0.0. \nfrom Qianhe Zhixuan Gaokong Hotel (Jiefangbei Hongyadong Branch) to Liziba Monorail Building-Piercing Viewing Platform: metro: duration 100, cost 14. taxi: duration 53, cost 154.24. walk: duration 425, cost 0.0. \nfrom Qianhe Zhixuan Gaokong Hotel (Jiefangbei Hongyadong Branch) to Chongqing People's Square: metro: duration 8, cost 4. taxi: duration 3, cost 13.34. walk: duration 29, cost 0.0. \nfrom Qianhe Zhixuan Gaokong Hotel (Jiefangbei Hongyadong Branch) to Chongqing North Railway Station Atour Hotel: metro: duration 17, cost 6. taxi: duration 8, cost 24.46. walk: duration 67, cost 0.0. \nfrom Qianhe Zhixuan Gaokong Hotel (Jiefangbei Hongyadong Branch) to Lavande Hotel (Chongqing Jiefangbei Center Pedestrian Street): metro: duration 4, cost 4. taxi: duration 1, cost 11.0. walk: duration 8, cost 0.0. \nfrom Qianhe Zhixuan Gaokong Hotel (Jiefangbei Hongyadong Branch) to Chongqing West Railway Station: metro: duration 33, cost 10. taxi: duration 23, cost 64.35. walk: duration 185, cost 0.0. \nfrom Qianhe Zhixuan Gaokong Hotel (Jiefangbei Hongyadong Branch) to At Yuli Chongqing Hot Pot (Jiefangbei Delicious Street Branch): metro: duration 7, cost 4. taxi: duration 1, cost 11.0. walk: duration 8, cost 0.0. \nfrom Instrument Factory Hot Pot (Jiefangbei Branch) to General Ba's Intangible Cultural Heritage Original Flavor Hot Pot (Jiefangbei Branch): taxi: duration 0, cost 11.0. walk: duration 7, cost 0.0. \nfrom Instrument Factory Hot Pot (Jiefangbei Branch) to Yang Ji Long Fu (Liberation Monument Main Store): taxi: duration 1, cost 11.0. walk: duration 8, cost 0.0. \nfrom Instrument Factory Hot Pot (Jiefangbei Branch) to Great Hall of the People: metro: duration 9, cost 4. taxi: duration 2, cost 11.0. walk: duration 17, cost 0.0. \nfrom Instrument Factory Hot Pot (Jiefangbei Branch) to Ci Qi Kou Ancient Town: metro: duration 43, cost 8. taxi: duration 17, cost 46.7. walk: duration 138, cost 0.0. \nfrom Instrument Factory Hot Pot (Jiefangbei Branch) to Qianhe Zhixuan Gaokong Hotel (Jiefangbei Hongyadong Branch): metro: duration 5, cost 4. taxi: duration 1, cost 11.0. walk: duration 13, cost 0.0. \nfrom Instrument Factory Hot Pot (Jiefangbei Branch) to Instrument Factory Hot Pot (Jiefangbei Branch):  metro: empty.  taxi: empty.  walk: empty. \nfrom Instrument Factory Hot Pot (Jiefangbei Branch) to Chaotianmen Square: metro: duration 16, cost 4. taxi: duration 4, cost 14.39. walk: duration 33, cost 0.0. \nfrom Instrument Factory Hot Pot (Jiefangbei Branch) to Liberation Monument Pedestrian Street: metro: duration 8, cost 4. taxi: duration 1, cost 11.0. walk: duration 15, cost 0.0. \nfrom Instrument Factory Hot Pot (Jiefangbei Branch) to Huangjueping Graffiti Art Street: metro: duration 29, cost 6. taxi: duration 11, cost 30.38. walk: duration 88, cost 0.0. \nfrom Instrument Factory Hot Pot (Jiefangbei Branch) to Yangtze River Cableway: metro: duration 9, cost 4. taxi: duration 2, cost 11.17. walk: duration 22, cost 0.0. \nfrom Instrument Factory Hot Pot (Jiefangbei Branch) to Chongqing Zoo: metro: duration 22, cost 6. taxi: duration 11, cost 32.36. walk: duration 94, cost 0.0. \nfrom Instrument Factory Hot Pot (Jiefangbei Branch) to Three Gorges Museum: metro: duration 9, cost 4. taxi: duration 2, cost 11.0. walk: duration 20, cost 0.0. \nfrom Instrument Factory Hot Pot (Jiefangbei Branch) to Chongqing WFC Xianlai Tower Observation Deck: metro: duration 10, cost 4. taxi: duration 2, cost 11.0. walk: duration 17, cost 0.0. \nfrom Instrument Factory Hot Pot (Jiefangbei Branch) to Hongya Cave: metro: duration 9, cost 4. taxi: duration 2, cost 11.0. walk: duration 20, cost 0.0. \nfrom Instrument Factory Hot Pot (Jiefangbei Branch) to Qin Yun Old Lady's Stall Noodles (National Flagship Store): metro: duration 23, cost 6. taxi: duration 10, cost 28.08. walk: duration 80, cost 0.0. \nfrom Instrument Factory Hot Pot (Jiefangbei Branch) to Chongqing North Railway Station: metro: duration 17, cost 6. taxi: duration 8, cost 25.1. walk: duration 69, cost 0.0. \nfrom Instrument Factory Hot Pot (Jiefangbei Branch) to Chongqing Huguang Guild Hall: metro: duration 13, cost 4. taxi: duration 3, cost 12.49. walk: duration 26, cost 0.0. \nfrom Instrument Factory Hot Pot (Jiefangbei Branch) to Liziba Monorail Building-Piercing Viewing Platform: metro: duration 101, cost 14. taxi: duration 52, cost 152.65. walk: duration 421, cost 0.0. \nfrom Instrument Factory Hot Pot (Jiefangbei Branch) to Chongqing People's Square: metro: duration 8, cost 4. taxi: duration 2, cost 11.0. walk: duration 18, cost 0.0. \nfrom Instrument Factory Hot Pot (Jiefangbei Branch) to Chongqing North Railway Station Atour Hotel: metro: duration 18, cost 6. taxi: duration 7, cost 23.15. walk: duration 63, cost 0.0. \nfrom Instrument Factory Hot Pot (Jiefangbei Branch) to Lavande Hotel (Chongqing Jiefangbei Center Pedestrian Street): taxi: duration 0, cost 11.0. walk: duration 5, cost 0.0. \nfrom Instrument Factory Hot Pot (Jiefangbei Branch) to Chongqing West Railway Station: metro: duration 33, cost 10. taxi: duration 21, cost 59.71. walk: duration 173, cost 0.0. \nfrom Instrument Factory Hot Pot (Jiefangbei Branch) to At Yuli Chongqing Hot Pot (Jiefangbei Delicious Street Branch): metro: duration 8, cost 4. taxi: duration 1, cost 11.0. walk: duration 8, cost 0.0. \nfrom Chaotianmen Square to General Ba's Intangible Cultural Heritage Original Flavor Hot Pot (Jiefangbei Branch): metro: duration 17, cost 4. taxi: duration 3, cost 13.68. walk: duration 30, cost 0.0. \nfrom Chaotianmen Square to Yang Ji Long Fu (Liberation Monument Main Store): metro: duration 18, cost 4. taxi: duration 3, cost 11.99. walk: duration 24, cost 0.0. \nfrom Chaotianmen Square to Great Hall of the People: metro: duration 18, cost 6. taxi: duration 5, cost 16.4. walk: duration 40, cost 0.0. \nfrom Chaotianmen Square to Ci Qi Kou Ancient Town: metro: duration 51, cost 10. taxi: duration 20, cost 55.34. walk: duration 161, cost 0.0. \nfrom Chaotianmen Square to Qianhe Zhixuan Gaokong Hotel (Jiefangbei Hongyadong Branch): metro: duration 12, cost 4. taxi: duration 2, cost 11.33. walk: duration 22, cost 0.0. \nfrom Chaotianmen Square to Instrument Factory Hot Pot (Jiefangbei Branch): metro: duration 16, cost 4. taxi: duration 4, cost 14.39. walk: duration 33, cost 0.0. \nfrom Chaotianmen Square to Chaotianmen Square:  metro: empty.  taxi: empty.  walk: empty. \nfrom Chaotianmen Square to Liberation Monument Pedestrian Street: metro: duration 15, cost 4. taxi: duration 2, cost 11.0. walk: duration 18, cost 0.0. \nfrom Chaotianmen Square to Huangjueping Graffiti Art Street: metro: duration 39, cost 8. taxi: duration 14, cost 38.54. walk: duration 116, cost 0.0. \nfrom Chaotianmen Square to Yangtze River Cableway: metro: duration 13, cost 4. taxi: duration 1, cost 11.0. walk: duration 13, cost 0.0. \nfrom Chaotianmen Square to Chongqing Zoo: metro: duration 33, cost 8. taxi: duration 15, cost 42.6. walk: duration 127, cost 0.0. \nfrom Chaotianmen Square to Three Gorges Museum: metro: duration 18, cost 6. taxi: duration 5, cost 17.62. walk: duration 44, cost 0.0. \nfrom Chaotianmen Square to Chongqing WFC Xianlai Tower Observation Deck: metro: duration 14, cost 4. taxi: duration 2, cost 11.0. walk: duration 16, cost 0.0. \nfrom Chaotianmen Square to Hongya Cave: metro: duration 13, cost 4. taxi: duration 1, cost 11.0. walk: duration 13, cost 0.0. \nfrom Chaotianmen Square to Qin Yun Old Lady's Stall Noodles (National Flagship Store): metro: duration 33, cost 8. taxi: duration 14, cost 37.66. walk: duration 113, cost 0.0. \nfrom Chaotianmen Square to Chongqing North Railway Station: metro: duration 22, cost 6. taxi: duration 8, cost 24.83. walk: duration 69, cost 0.0. \nfrom Chaotianmen Square to Chongqing Huguang Guild Hall: metro: duration 17, cost 4. taxi: duration 1, cost 11.0. walk: duration 12, cost 0.0. \nfrom Chaotianmen Square to Liziba Monorail Building-Piercing Viewing Platform: metro: duration 104, cost 14. taxi: duration 51, cost 150.52. walk: duration 415, cost 0.0. \nfrom Chaotianmen Square to Chongqing People's Square: metro: duration 17, cost 6. taxi: duration 5, cost 16.94. walk: duration 41, cost 0.0. \nfrom Chaotianmen Square to Chongqing North Railway Station Atour Hotel: metro: duration 23, cost 6. taxi: duration 7, cost 23.07. walk: duration 62, cost 0.0. \nfrom Chaotianmen Square to Lavande Hotel (Chongqing Jiefangbei Center Pedestrian Street): metro: duration 15, cost 4. taxi: duration 3, cost 13.64. walk: duration 30, cost 0.0. \nfrom Chaotianmen Square to Chongqing West Railway Station: metro: duration 43, cost 10. taxi: duration 25, cost 72.07. walk: duration 206, cost 0.0. \nfrom Chaotianmen Square to At Yuli Chongqing Hot Pot (Jiefangbei Delicious Street Branch): metro: duration 18, cost 4. taxi: duration 3, cost 13.74. walk: duration 30, cost 0.0. \nfrom Liberation Monument Pedestrian Street to General Ba's Intangible Cultural Heritage Original Flavor Hot Pot (Jiefangbei Branch): metro: duration 9, cost 4. taxi: duration 1, cost 11.0. walk: duration 12, cost 0.0. \nfrom Liberation Monument Pedestrian Street to Yang Ji Long Fu (Liberation Monument Main Store): metro: duration 10, cost 4. taxi: duration 0, cost 11.0. walk: duration 7, cost 0.0. \nfrom Liberation Monument Pedestrian Street to Great Hall of the People: metro: duration 12, cost 4. taxi: duration 3, cost 12.72. walk: duration 27, cost 0.0. \nfrom Liberation Monument Pedestrian Street to Ci Qi Kou Ancient Town: metro: duration 45, cost 8. taxi: duration 18, cost 51.46. walk: duration 151, cost 0.0. \nfrom Liberation Monument Pedestrian Street to Qianhe Zhixuan Gaokong Hotel (Jiefangbei Hongyadong Branch): taxi: duration 0, cost 11.0. walk: duration 5, cost 0.0. \nfrom Liberation Monument Pedestrian Street to Instrument Factory Hot Pot (Jiefangbei Branch): metro: duration 8, cost 4. taxi: duration 1, cost 11.0. walk: duration 15, cost 0.0. \nfrom Liberation Monument Pedestrian Street to Chaotianmen Square: metro: duration 15, cost 4. taxi: duration 2, cost 11.0. walk: duration 18, cost 0.0. \nfrom Liberation Monument Pedestrian Street to Liberation Monument Pedestrian Street:  metro: empty.  taxi: empty.  walk: empty. \nfrom Liberation Monument Pedestrian Street to Huangjueping Graffiti Art Street: metro: duration 31, cost 6. taxi: duration 12, cost 33.54. walk: duration 98, cost 0.0. \nfrom Liberation Monument Pedestrian Street to Yangtze River Cableway: metro: duration 8, cost 4. taxi: duration 0, cost 11.0. walk: duration 6, cost 0.0. \nfrom Liberation Monument Pedestrian Street to Chongqing Zoo: metro: duration 25, cost 6. taxi: duration 13, cost 36.7. walk: duration 109, cost 0.0. \nfrom Liberation Monument Pedestrian Street to Three Gorges Museum: metro: duration 12, cost 4. taxi: duration 3, cost 13.99. walk: duration 31, cost 0.0. \nfrom Liberation Monument Pedestrian Street to Chongqing WFC Xianlai Tower Observation Deck: metro: duration 9, cost 4. taxi: duration 0, cost 11.0. walk: duration 2, cost 0.0. \nfrom Liberation Monument Pedestrian Street to Hongya Cave: metro: duration 8, cost 4. taxi: duration 0, cost 11.0. walk: duration 6, cost 0.0. \nfrom Liberation Monument Pedestrian Street to Qin Yun Old Lady's Stall Noodles (National Flagship Store): metro: duration 25, cost 6. taxi: duration 11, cost 32.4. walk: duration 94, cost 0.0. \nfrom Liberation Monument Pedestrian Street to Chongqing North Railway Station: metro: duration 19, cost 6. taxi: duration 8, cost 25.38. walk: duration 70, cost 0.0. \nfrom Liberation Monument Pedestrian Street to Chongqing Huguang Guild Hall: metro: duration 12, cost 4. taxi: duration 1, cost 11.0. walk: duration 11, cost 0.0. \nfrom Liberation Monument Pedestrian Street to Liziba Monorail Building-Piercing Viewing Platform: metro: duration 103, cost 14. taxi: duration 52, cost 152.79. walk: duration 421, cost 0.0. \nfrom Liberation Monument Pedestrian Street to Chongqing People's Square: metro: duration 11, cost 4. taxi: duration 3, cost 13.3. walk: duration 29, cost 0.0. \nfrom Liberation Monument Pedestrian Street to Chongqing North Railway Station Atour Hotel: metro: duration 20, cost 6. taxi: duration 8, cost 23.46. walk: duration 64, cost 0.0. \nfrom Liberation Monument Pedestrian Street to Lavande Hotel (Chongqing Jiefangbei Center Pedestrian Street): metro: duration 7, cost 4. taxi: duration 1, cost 11.0. walk: duration 12, cost 0.0. \nfrom Liberation Monument Pedestrian Street to Chongqing West Railway Station: metro: duration 36, cost 10. taxi: duration 23, cost 65.63. walk: duration 189, cost 0.0. \nfrom Liberation Monument Pedestrian Street to At Yuli Chongqing Hot Pot (Jiefangbei Delicious Street Branch): metro: duration 10, cost 4. taxi: duration 1, cost 11.0. walk: duration 13, cost 0.0. \nfrom Huangjueping Graffiti Art Street to General Ba's Intangible Cultural Heritage Original Flavor Hot Pot (Jiefangbei Branch): metro: duration 30, cost 6. taxi: duration 10, cost 29.98. walk: duration 86, cost 0.0. \nfrom Huangjueping Graffiti Art Street to Yang Ji Long Fu (Liberation Monument Main Store): metro: duration 31, cost 6. taxi: duration 11, cost 31.93. walk: duration 93, cost 0.0. \nfrom Huangjueping Graffiti Art Street to Great Hall of the People: metro: duration 30, cost 6. taxi: duration 12, cost 33.01. walk: duration 97, cost 0.0. \nfrom Huangjueping Graffiti Art Street to Ci Qi Kou Ancient Town: metro: duration 53, cost 10. taxi: duration 20, cost 55.74. walk: duration 162, cost 0.0. \nfrom Huangjueping Graffiti Art Street to Qianhe Zhixuan Gaokong Hotel (Jiefangbei Hongyadong Branch): metro: duration 28, cost 6. taxi: duration 11, cost 32.07. walk: duration 93, cost 0.0. \nfrom Huangjueping Graffiti Art Street to Instrument Factory Hot Pot (Jiefangbei Branch): metro: duration 29, cost 6. taxi: duration 11, cost 30.38. walk: duration 88, cost 0.0. \nfrom Huangjueping Graffiti Art Street to Chaotianmen Square: metro: duration 39, cost 8. taxi: duration 14, cost 38.54. walk: duration 116, cost 0.0. \nfrom Huangjueping Graffiti Art Street to Liberation Monument Pedestrian Street: metro: duration 31, cost 6. taxi: duration 12, cost 33.54. walk: duration 98, cost 0.0. \nfrom Huangjueping Graffiti Art Street to Huangjueping Graffiti Art Street:  metro: empty.  taxi: empty.  walk: empty. \nfrom Huangjueping Graffiti Art Street to Yangtze River Cableway: metro: duration 32, cost 8. taxi: duration 12, cost 34.51. walk: duration 102, cost 0.0. \nfrom Huangjueping Graffiti Art Street to Chongqing Zoo: metro: duration 20, cost 4. taxi: duration 5, cost 18.02. walk: duration 45, cost 0.0. \nfrom Huangjueping Graffiti Art Street to Three Gorges Museum: metro: duration 30, cost 6. taxi: duration 12, cost 33.04. walk: duration 97, cost 0.0. \nfrom Huangjueping Graffiti Art Street to Chongqing WFC Xianlai Tower Observation Deck: metro: duration 33, cost 8. taxi: duration 12, cost 34.19. walk: duration 101, cost 0.0. \nfrom Huangjueping Graffiti Art Street to Hongya Cave: metro: duration 32, cost 8. taxi: duration 13, cost 35.34. walk: duration 105, cost 0.0. \nfrom Huangjueping Graffiti Art Street to Qin Yun Old Lady's Stall Noodles (National Flagship Store): metro: duration 24, cost 6. taxi: duration 5, cost 16.69. walk: duration 41, cost 0.0. \nfrom Huangjueping Graffiti Art Street to Chongqing North Railway Station: metro: duration 39, cost 8. taxi: duration 18, cost 50.99. walk: duration 150, cost 0.0. \nfrom Huangjueping Graffiti Art Street to Chongqing Huguang Guild Hall: metro: duration 36, cost 8. taxi: duration 13, cost 35.17. walk: duration 104, cost 0.0. \nfrom Huangjueping Graffiti Art Street to Liziba Monorail Building-Piercing Viewing Platform: metro: duration 121, cost 16. taxi: duration 61, cost 179.18. walk: duration 491, cost 0.0. \nfrom Huangjueping Graffiti Art Street to Chongqing People's Square: metro: duration 29, cost 6. taxi: duration 12, cost 33.06. walk: duration 97, cost 0.0. \nfrom Huangjueping Graffiti Art Street to Chongqing North Railway Station Atour Hotel: metro: duration 39, cost 8. taxi: duration 17, cost 48.69. walk: duration 143, cost 0.0. \nfrom Huangjueping Graffiti Art Street to Lavande Hotel (Chongqing Jiefangbei Center Pedestrian Street): metro: duration 28, cost 6. taxi: duration 10, cost 30.23. walk: duration 87, cost 0.0. \nfrom Huangjueping Graffiti Art Street to Chongqing West Railway Station: metro: duration 31, cost 8. taxi: duration 16, cost 43.06. walk: duration 128, cost 0.0. \nfrom Huangjueping Graffiti Art Street to At Yuli Chongqing Hot Pot (Jiefangbei Delicious Street Branch): metro: duration 29, cost 6. taxi: duration 10, cost 29.83. walk: duration 86, cost 0.0. \nfrom Yangtze River Cableway to General Ba's Intangible Cultural Heritage Original Flavor Hot Pot (Jiefangbei Branch): metro: duration 10, cost 4. taxi: duration 2, cost 11.0. walk: duration 17, cost 0.0. \nfrom Yangtze River Cableway to Yang Ji Long Fu (Liberation Monument Main Store): metro: duration 11, cost 4. taxi: duration 1, cost 11.0. walk: duration 13, cost 0.0. \nfrom Yangtze River Cableway to Great Hall of the People: metro: duration 11, cost 4. taxi: duration 4, cost 14.58. walk: duration 33, cost 0.0. \nfrom Yangtze River Cableway to Ci Qi Kou Ancient Town: metro: duration 45, cost 10. taxi: duration 19, cost 53.84. walk: duration 157, cost 0.0. \nfrom Yangtze River Cableway to Qianhe Zhixuan Gaokong Hotel (Jiefangbei Hongyadong Branch): metro: duration 5, cost 4. taxi: duration 1, cost 11.0. walk: duration 9, cost 0.0. \nfrom Yangtze River Cableway to Instrument Factory Hot Pot (Jiefangbei Branch): metro: duration 9, cost 4. taxi: duration 2, cost 11.17. walk: duration 22, cost 0.0. \nfrom Yangtze River Cableway to Chaotianmen Square: metro: duration 13, cost 4. taxi: duration 1, cost 11.0. walk: duration 13, cost 0.0. \nfrom Yangtze River Cableway to Liberation Monument Pedestrian Street: metro: duration 8, cost 4. taxi: duration 0, cost 11.0. walk: duration 6, cost 0.0. \nfrom Yangtze River Cableway to Huangjueping Graffiti Art Street: metro: duration 32, cost 8. taxi: duration 12, cost 34.51. walk: duration 102, cost 0.0. \nfrom Yangtze River Cableway to Yangtze River Cableway:  metro: empty.  taxi: empty.  walk: empty. \nfrom Yangtze River Cableway to Chongqing Zoo: metro: duration 25, cost 8. taxi: duration 14, cost 38.25. walk: duration 115, cost 0.0. \nfrom Yangtze River Cableway to Three Gorges Museum: metro: duration 11, cost 4. taxi: duration 4, cost 15.85. walk: duration 38, cost 0.0. \nfrom Yangtze River Cableway to Chongqing WFC Xianlai Tower Observation Deck: taxi: duration 0, cost 11.0. walk: duration 6, cost 0.0. \nfrom Yangtze River Cableway to Hongya Cave: taxi: duration 0, cost 11.0. walk: duration 7, cost 0.0. \nfrom Yangtze River Cableway to Qin Yun Old Lady's Stall Noodles (National Flagship Store): metro: duration 26, cost 6. taxi: duration 12, cost 33.95. walk: duration 100, cost 0.0. \nfrom Yangtze River Cableway to Chongqing North Railway Station: metro: duration 17, cost 6. taxi: duration 9, cost 26.35. walk: duration 74, cost 0.0. \nfrom Yangtze River Cableway to Chongqing Huguang Guild Hall: taxi: duration 0, cost 11.0. walk: duration 4, cost 0.0. \nfrom Yangtze River Cableway to Liziba Monorail Building-Piercing Viewing Platform: metro: duration 101, cost 14. taxi: duration 52, cost 153.68. walk: duration 423, cost 0.0. \nfrom Yangtze River Cableway to Chongqing People's Square: metro: duration 10, cost 4. taxi: duration 4, cost 15.16. walk: duration 35, cost 0.0. \nfrom Yangtze River Cableway to Chongqing North Railway Station Atour Hotel: metro: duration 18, cost 6. taxi: duration 8, cost 24.47. walk: duration 67, cost 0.0. \nfrom Yangtze River Cableway to Lavande Hotel (Chongqing Jiefangbei Center Pedestrian Street): metro: duration 8, cost 4. taxi: duration 2, cost 11.0. walk: duration 18, cost 0.0. \nfrom Yangtze River Cableway to Chongqing West Railway Station: metro: duration 36, cost 10. taxi: duration 24, cost 67.93. walk: duration 195, cost 0.0. \nfrom Yangtze River Cableway to At Yuli Chongqing Hot Pot (Jiefangbei Delicious Street Branch): metro: duration 10, cost 4. taxi: duration 2, cost 11.0. walk: duration 17, cost 0.0. \nfrom Chongqing Zoo to General Ba's Intangible Cultural Heritage Original Flavor Hot Pot (Jiefangbei Branch): metro: duration 23, cost 6. taxi: duration 12, cost 33.04. walk: duration 97, cost 0.0. \nfrom Chongqing Zoo to Yang Ji Long Fu (Liberation Monument Main Store): metro: duration 24, cost 6. taxi: duration 12, cost 34.67. walk: duration 102, cost 0.0. \nfrom Chongqing Zoo to Great Hall of the People: metro: duration 22, cost 6. taxi: duration 11, cost 32.69. walk: duration 95, cost 0.0. \nfrom Chongqing Zoo to Ci Qi Kou Ancient Town: metro: duration 40, cost 8. taxi: duration 15, cost 40.89. walk: duration 123, cost 0.0. \nfrom Chongqing Zoo to Qianhe Zhixuan Gaokong Hotel (Jiefangbei Hongyadong Branch): metro: duration 22, cost 6. taxi: duration 13, cost 35.45. walk: duration 105, cost 0.0. \nfrom Chongqing Zoo to Instrument Factory Hot Pot (Jiefangbei Branch): metro: duration 22, cost 6. taxi: duration 11, cost 32.36. walk: duration 94, cost 0.0. \nfrom Chongqing Zoo to Chaotianmen Square: metro: duration 33, cost 8. taxi: duration 15, cost 42.6. walk: duration 127, cost 0.0. \nfrom Chongqing Zoo to Liberation Monument Pedestrian Street: metro: duration 25, cost 6. taxi: duration 13, cost 36.7. walk: duration 109, cost 0.0. \nfrom Chongqing Zoo to Huangjueping Graffiti Art Street: metro: duration 20, cost 4. taxi: duration 5, cost 18.02. walk: duration 45, cost 0.0. \nfrom Chongqing Zoo to Yangtze River Cableway: metro: duration 25, cost 8. taxi: duration 14, cost 38.25. walk: duration 115, cost 0.0. \nfrom Chongqing Zoo to Chongqing Zoo:  metro: empty.  taxi: empty.  walk: empty. \nfrom Chongqing Zoo to Three Gorges Museum: metro: duration 22, cost 6. taxi: duration 11, cost 32.13. walk: duration 94, cost 0.0. \nfrom Chongqing Zoo to Chongqing WFC Xianlai Tower Observation Deck: metro: duration 26, cost 8. taxi: duration 13, cost 37.24. walk: duration 111, cost 0.0. \nfrom Chongqing Zoo to Hongya Cave: metro: duration 25, cost 8. taxi: duration 14, cost 38.2. walk: duration 114, cost 0.0. \nfrom Chongqing Zoo to Qin Yun Old Lady's Stall Noodles (National Flagship Store): metro: duration 12, cost 4. taxi: duration 1, cost 11.0. walk: duration 14, cost 0.0. \nfrom Chongqing Zoo to Chongqing North Railway Station: metro: duration 29, cost 8. taxi: duration 17, cost 47.0. walk: duration 139, cost 0.0. \nfrom Chongqing Zoo to Chongqing Huguang Guild Hall: metro: duration 29, cost 8. taxi: duration 14, cost 39.33. walk: duration 118, cost 0.0. \nfrom Chongqing Zoo to Liziba Monorail Building-Piercing Viewing Platform: metro: duration 109, cost 14. taxi: duration 58, cost 168.83. walk: duration 464, cost 0.0. \nfrom Chongqing Zoo to Chongqing People's Square: metro: duration 21, cost 6. taxi: duration 11, cost 32.47. walk: duration 95, cost 0.0. \nfrom Chongqing Zoo to Chongqing North Railway Station Atour Hotel: metro: duration 30, cost 8. taxi: duration 16, cost 45.12. walk: duration 134, cost 0.0. \nfrom Chongqing Zoo to Lavande Hotel (Chongqing Jiefangbei Center Pedestrian Street): metro: duration 21, cost 6. taxi: duration 12, cost 33.02. walk: duration 97, cost 0.0. \nfrom Chongqing Zoo to Chongqing West Railway Station: metro: duration 20, cost 6. taxi: duration 10, cost 30.26. walk: duration 87, cost 0.0. \nfrom Chongqing Zoo to At Yuli Chongqing Hot Pot (Jiefangbei Delicious Street Branch): metro: duration 23, cost 6. taxi: duration 12, cost 33.02. walk: duration 97, cost 0.0. \nfrom Three Gorges Museum to General Ba's Intangible Cultural Heritage Original Flavor Hot Pot (Jiefangbei Branch): metro: duration 10, cost 4. taxi: duration 3, cost 12.95. walk: duration 28, cost 0.0. \nfrom Three Gorges Museum to Yang Ji Long Fu (Liberation Monument Main Store): metro: duration 11, cost 4. taxi: duration 3, cost 12.5. walk: duration 26, cost 0.0. \nfrom Three Gorges Museum to Great Hall of the People: taxi: duration 0, cost 11.0. walk: duration 4, cost 0.0. \nfrom Three Gorges Museum to Ci Qi Kou Ancient Town: metro: duration 39, cost 8. taxi: duration 14, cost 39.56. walk: duration 119, cost 0.0. \nfrom Three Gorges Museum to Qianhe Zhixuan Gaokong Hotel (Jiefangbei Hongyadong Branch): metro: duration 9, cost 4. taxi: duration 3, cost 14.0. walk: duration 31, cost 0.0. \nfrom Three Gorges Museum to Instrument Factory Hot Pot (Jiefangbei Branch): metro: duration 9, cost 4. taxi: duration 2, cost 11.0. walk: duration 20, cost 0.0. \nfrom Three Gorges Museum to Chaotianmen Square: metro: duration 18, cost 6. taxi: duration 5, cost 17.62. walk: duration 44, cost 0.0. \nfrom Three Gorges Museum to Liberation Monument Pedestrian Street: metro: duration 12, cost 4. taxi: duration 3, cost 13.99. walk: duration 31, cost 0.0. \nfrom Three Gorges Museum to Huangjueping Graffiti Art Street: metro: duration 30, cost 6. taxi: duration 12, cost 33.04. walk: duration 97, cost 0.0. \nfrom Three Gorges Museum to Yangtze River Cableway: metro: duration 11, cost 4. taxi: duration 4, cost 15.85. walk: duration 38, cost 0.0. \nfrom Three Gorges Museum to Chongqing Zoo: metro: duration 22, cost 6. taxi: duration 11, cost 32.13. walk: duration 94, cost 0.0. \nfrom Three Gorges Museum to Three Gorges Museum:  metro: empty.  taxi: empty.  walk: empty. \nfrom Three Gorges Museum to Chongqing WFC Xianlai Tower Observation Deck: metro: duration 12, cost 4. taxi: duration 4, cost 14.04. walk: duration 32, cost 0.0. \nfrom Three Gorges Museum to Hongya Cave: metro: duration 11, cost 4. taxi: duration 4, cost 14.19. walk: duration 32, cost 0.0. \nfrom Three Gorges Museum to Qin Yun Old Lady's Stall Noodles (National Flagship Store): metro: duration 22, cost 6. taxi: duration 10, cost 28.05. walk: duration 80, cost 0.0. \nfrom Three Gorges Museum to Chongqing North Railway Station: metro: duration 15, cost 6. taxi: duration 6, cost 20.39. walk: duration 53, cost 0.0. \nfrom Three Gorges Museum to Chongqing Huguang Guild Hall: metro: duration 15, cost 4. taxi: duration 5, cost 17.19. walk: duration 42, cost 0.0. \nfrom Three Gorges Museum to Liziba Monorail Building-Piercing Viewing Platform: metro: duration 99, cost 14. taxi: duration 50, cost 145.94. walk: duration 403, cost 0.0. \nfrom Three Gorges Museum to Chongqing People's Square: taxi: duration 0, cost 11.0. walk: duration 2, cost 0.0. \nfrom Three Gorges Museum to Chongqing North Railway Station Atour Hotel: metro: duration 15, cost 4. taxi: duration 5, cost 18.51. walk: duration 47, cost 0.0. \nfrom Three Gorges Museum to Lavande Hotel (Chongqing Jiefangbei Center Pedestrian Street): metro: duration 8, cost 4. taxi: duration 3, cost 12.39. walk: duration 26, cost 0.0. \nfrom Three Gorges Museum to Chongqing West Railway Station: metro: duration 31, cost 8. taxi: duration 20, cost 56.7. walk: duration 165, cost 0.0. \nfrom Three Gorges Museum to At Yuli Chongqing Hot Pot (Jiefangbei Delicious Street Branch): metro: duration 11, cost 4. taxi: duration 3, cost 13.23. walk: duration 29, cost 0.0. \nfrom Chongqing WFC Xianlai Tower Observation Deck to General Ba's Intangible Cultural Heritage Original Flavor Hot Pot (Jiefangbei Branch): metro: duration 11, cost 4. taxi: duration 1, cost 11.0. walk: duration 14, cost 0.0. \nfrom Chongqing WFC Xianlai Tower Observation Deck to Yang Ji Long Fu (Liberation Monument Main Store): metro: duration 12, cost 4. taxi: duration 1, cost 11.0. walk: duration 8, cost 0.0. \nfrom Chongqing WFC Xianlai Tower Observation Deck to Great Hall of the People: metro: duration 12, cost 4. taxi: duration 3, cost 12.76. walk: duration 27, cost 0.0. \nfrom Chongqing WFC Xianlai Tower Observation Deck to Ci Qi Kou Ancient Town: metro: duration 46, cost 10. taxi: duration 18, cost 51.49. walk: duration 151, cost 0.0. \nfrom Chongqing WFC Xianlai Tower Observation Deck to Qianhe Zhixuan Gaokong Hotel (Jiefangbei Hongyadong Branch): metro: duration 6, cost 4. taxi: duration 0, cost 11.0. walk: duration 7, cost 0.0. \nfrom Chongqing WFC Xianlai Tower Observation Deck to Instrument Factory Hot Pot (Jiefangbei Branch): metro: duration 10, cost 4. taxi: duration 2, cost 11.0. walk: duration 17, cost 0.0. \nfrom Chongqing WFC Xianlai Tower Observation Deck to Chaotianmen Square: metro: duration 14, cost 4. taxi: duration 2, cost 11.0. walk: duration 16, cost 0.0. \nfrom Chongqing WFC Xianlai Tower Observation Deck to Liberation Monument Pedestrian Street: metro: duration 9, cost 4. taxi: duration 0, cost 11.0. walk: duration 2, cost 0.0. \nfrom Chongqing WFC Xianlai Tower Observation Deck to Huangjueping Graffiti Art Street: metro: duration 33, cost 8. taxi: duration 12, cost 34.19. walk: duration 101, cost 0.0. \nfrom Chongqing WFC Xianlai Tower Observation Deck to Yangtze River Cableway: taxi: duration 0, cost 11.0. walk: duration 6, cost 0.0. \nfrom Chongqing WFC Xianlai Tower Observation Deck to Chongqing Zoo: metro: duration 26, cost 8. taxi: duration 13, cost 37.24. walk: duration 111, cost 0.0. \nfrom Chongqing WFC Xianlai Tower Observation Deck to Three Gorges Museum: metro: duration 12, cost 4. taxi: duration 4, cost 14.04. walk: duration 32, cost 0.0. \nfrom Chongqing WFC Xianlai Tower Observation Deck to Chongqing WFC Xianlai Tower Observation Deck:  metro: empty.  taxi: empty.  walk: empty. \nfrom Chongqing WFC Xianlai Tower Observation Deck to Hongya Cave: taxi: duration 0, cost 11.0. walk: duration 4, cost 0.0. \nfrom Chongqing WFC Xianlai Tower Observation Deck to Qin Yun Old Lady's Stall Noodles (National Flagship Store): metro: duration 27, cost 6. taxi: duration 12, cost 32.95. walk: duration 96, cost 0.0. \nfrom Chongqing WFC Xianlai Tower Observation Deck to Chongqing North Railway Station: metro: duration 18, cost 6. taxi: duration 8, cost 24.93. walk: duration 69, cost 0.0. \nfrom Chongqing WFC Xianlai Tower Observation Deck to Chongqing Huguang Guild Hall: taxi: duration 1, cost 11.0. walk: duration 10, cost 0.0. \nfrom Chongqing WFC Xianlai Tower Observation Deck to Liziba Monorail Building-Piercing Viewing Platform: metro: duration 102, cost 14. taxi: duration 52, cost 152.12. walk: duration 419, cost 0.0. \nfrom Chongqing WFC Xianlai Tower Observation Deck to Chongqing People's Square: metro: duration 11, cost 4. taxi: duration 3, cost 13.35. walk: duration 29, cost 0.0. \nfrom Chongqing WFC Xianlai Tower Observation Deck to Chongqing North Railway Station Atour Hotel: metro: duration 19, cost 6. taxi: duration 7, cost 23.01. walk: duration 62, cost 0.0. \nfrom Chongqing WFC Xianlai Tower Observation Deck to Lavande Hotel (Chongqing Jiefangbei Center Pedestrian Street): metro: duration 9, cost 4. taxi: duration 1, cost 11.0. walk: duration 14, cost 0.0. \nfrom Chongqing WFC Xianlai Tower Observation Deck to Chongqing West Railway Station: metro: duration 37, cost 10. taxi: duration 23, cost 66.19. walk: duration 190, cost 0.0. \nfrom Chongqing WFC Xianlai Tower Observation Deck to At Yuli Chongqing Hot Pot (Jiefangbei Delicious Street Branch): metro: duration 11, cost 4. taxi: duration 1, cost 11.0. walk: duration 15, cost 0.0. \nfrom Hongya Cave to General Ba's Intangible Cultural Heritage Original Flavor Hot Pot (Jiefangbei Branch): metro: duration 10, cost 4. taxi: duration 2, cost 11.0. walk: duration 18, cost 0.0. \nfrom Hongya Cave to Yang Ji Long Fu (Liberation Monument Main Store): metro: duration 11, cost 4. taxi: duration 1, cost 11.0. walk: duration 12, cost 0.0. \nfrom Hongya Cave to Great Hall of the People: metro: duration 11, cost 4. taxi: duration 3, cost 12.93. walk: duration 28, cost 0.0. \nfrom Hongya Cave to Ci Qi Kou Ancient Town: metro: duration 45, cost 10. taxi: duration 18, cost 51.52. walk: duration 151, cost 0.0. \nfrom Hongya Cave to Qianhe Zhixuan Gaokong Hotel (Jiefangbei Hongyadong Branch): metro: duration 5, cost 4. taxi: duration 1, cost 11.0. walk: duration 11, cost 0.0. \nfrom Hongya Cave to Instrument Factory Hot Pot (Jiefangbei Branch): metro: duration 9, cost 4. taxi: duration 2, cost 11.0. walk: duration 20, cost 0.0. \nfrom Hongya Cave to Chaotianmen Square: metro: duration 13, cost 4. taxi: duration 1, cost 11.0. walk: duration 13, cost 0.0. \nfrom Hongya Cave to Liberation Monument Pedestrian Street: metro: duration 8, cost 4. taxi: duration 0, cost 11.0. walk: duration 6, cost 0.0. \nfrom Hongya Cave to Huangjueping Graffiti Art Street: metro: duration 32, cost 8. taxi: duration 13, cost 35.34. walk: duration 105, cost 0.0. \nfrom Hongya Cave to Yangtze River Cableway: taxi: duration 0, cost 11.0. walk: duration 7, cost 0.0. \nfrom Hongya Cave to Chongqing Zoo: metro: duration 25, cost 8. taxi: duration 14, cost 38.2. walk: duration 114, cost 0.0. \nfrom Hongya Cave to Three Gorges Museum: metro: duration 11, cost 4. taxi: duration 4, cost 14.19. walk: duration 32, cost 0.0. \nfrom Hongya Cave to Chongqing WFC Xianlai Tower Observation Deck: taxi: duration 0, cost 11.0. walk: duration 4, cost 0.0. \nfrom Hongya Cave to Hongya Cave:  metro: empty.  taxi: empty.  walk: empty. \nfrom Hongya Cave to Qin Yun Old Lady's Stall Noodles (National Flagship Store): metro: duration 26, cost 6. taxi: duration 12, cost 33.9. walk: duration 100, cost 0.0. \nfrom Hongya Cave to Chongqing North Railway Station: metro: duration 17, cost 6. taxi: duration 8, cost 24.12. walk: duration 66, cost 0.0. \nfrom Hongya Cave to Chongqing Huguang Guild Hall: taxi: duration 1, cost 11.0. walk: duration 11, cost 0.0. \nfrom Hongya Cave to Liziba Monorail Building-Piercing Viewing Platform: metro: duration 101, cost 14. taxi: duration 52, cost 150.92. walk: duration 416, cost 0.0. \nfrom Hongya Cave to Chongqing People's Square: metro: duration 10, cost 4. taxi: duration 3, cost 13.5. walk: duration 30, cost 0.0. \nfrom Hongya Cave to Chongqing North Railway Station Atour Hotel: metro: duration 18, cost 6. taxi: duration 7, cost 22.23. walk: duration 60, cost 0.0. \nfrom Hongya Cave to Lavande Hotel (Chongqing Jiefangbei Center Pedestrian Street): metro: duration 8, cost 4. taxi: duration 2, cost 11.0. walk: duration 18, cost 0.0. \nfrom Hongya Cave to Chongqing West Railway Station: metro: duration 36, cost 10. taxi: duration 24, cost 67.14. walk: duration 193, cost 0.0. \nfrom Hongya Cave to At Yuli Chongqing Hot Pot (Jiefangbei Delicious Street Branch): metro: duration 10, cost 4. taxi: duration 2, cost 11.0. walk: duration 18, cost 0.0. \nfrom Qin Yun Old Lady's Stall Noodles (National Flagship Store) to General Ba's Intangible Cultural Heritage Original Flavor Hot Pot (Jiefangbei Branch): metro: duration 24, cost 6. taxi: duration 10, cost 28.74. walk: duration 82, cost 0.0. \nfrom Qin Yun Old Lady's Stall Noodles (National Flagship Store) to Yang Ji Long Fu (Liberation Monument Main Store): metro: duration 25, cost 6. taxi: duration 11, cost 30.38. walk: duration 88, cost 0.0. \nfrom Qin Yun Old Lady's Stall Noodles (National Flagship Store) to Great Hall of the People: metro: duration 22, cost 6. taxi: duration 10, cost 28.56. walk: duration 81, cost 0.0. \nfrom Qin Yun Old Lady's Stall Noodles (National Flagship Store) to Ci Qi Kou Ancient Town: metro: duration 41, cost 8. taxi: duration 15, cost 40.47. walk: duration 122, cost 0.0. \nfrom Qin Yun Old Lady's Stall Noodles (National Flagship Store) to Qianhe Zhixuan Gaokong Hotel (Jiefangbei Hongyadong Branch): metro: duration 22, cost 6. taxi: duration 11, cost 31.15. walk: duration 90, cost 0.0. \nfrom Qin Yun Old Lady's Stall Noodles (National Flagship Store) to Instrument Factory Hot Pot (Jiefangbei Branch): metro: duration 23, cost 6. taxi: duration 10, cost 28.08. walk: duration 80, cost 0.0. \nfrom Qin Yun Old Lady's Stall Noodles (National Flagship Store) to Chaotianmen Square: metro: duration 33, cost 8. taxi: duration 14, cost 37.66. walk: duration 113, cost 0.0. \nfrom Qin Yun Old Lady's Stall Noodles (National Flagship Store) to Liberation Monument Pedestrian Street: metro: duration 25, cost 6. taxi: duration 11, cost 32.4. walk: duration 94, cost 0.0. \nfrom Qin Yun Old Lady's Stall Noodles (National Flagship Store) to Huangjueping Graffiti Art Street: metro: duration 24, cost 6. taxi: duration 5, cost 16.69. walk: duration 41, cost 0.0. \nfrom Qin Yun Old Lady's Stall Noodles (National Flagship Store) to Yangtze River Cableway: metro: duration 26, cost 6. taxi: duration 12, cost 33.95. walk: duration 100, cost 0.0. \nfrom Qin Yun Old Lady's Stall Noodles (National Flagship Store) to Chongqing Zoo: metro: duration 12, cost 4. taxi: duration 1, cost 11.0. walk: duration 14, cost 0.0. \nfrom Qin Yun Old Lady's Stall Noodles (National Flagship Store) to Three Gorges Museum: metro: duration 22, cost 6. taxi: duration 10, cost 28.05. walk: duration 80, cost 0.0. \nfrom Qin Yun Old Lady's Stall Noodles (National Flagship Store) to Chongqing WFC Xianlai Tower Observation Deck: metro: duration 27, cost 6. taxi: duration 12, cost 32.95. walk: duration 96, cost 0.0. \nfrom Qin Yun Old Lady's Stall Noodles (National Flagship Store) to Hongya Cave: metro: duration 26, cost 6. taxi: duration 12, cost 33.9. walk: duration 100, cost 0.0. \nfrom Qin Yun Old Lady's Stall Noodles (National Flagship Store) to Qin Yun Old Lady's Stall Noodles (National Flagship Store):  metro: empty.  taxi: empty.  walk: empty. \nfrom Qin Yun Old Lady's Stall Noodles (National Flagship Store) to Chongqing North Railway Station: metro: duration 29, cost 8. taxi: duration 15, cost 42.38. walk: duration 127, cost 0.0. \nfrom Qin Yun Old Lady's Stall Noodles (National Flagship Store) to Chongqing Huguang Guild Hall: metro: duration 30, cost 6. taxi: duration 12, cost 35.03. walk: duration 103, cost 0.0. \nfrom Qin Yun Old Lady's Stall Noodles (National Flagship Store) to Liziba Monorail Building-Piercing Viewing Platform: metro: duration 109, cost 14. taxi: duration 57, cost 166.31. walk: duration 457, cost 0.0. \nfrom Qin Yun Old Lady's Stall Noodles (National Flagship Store) to Chongqing People's Square: metro: duration 21, cost 6. taxi: duration 10, cost 28.36. walk: duration 81, cost 0.0. \nfrom Qin Yun Old Lady's Stall Noodles (National Flagship Store) to Chongqing North Railway Station Atour Hotel: metro: duration 30, cost 8. taxi: duration 15, cost 40.4. walk: duration 121, cost 0.0. \nfrom Qin Yun Old Lady's Stall Noodles (National Flagship Store) to Lavande Hotel (Chongqing Jiefangbei Center Pedestrian Street): metro: duration 22, cost 6. taxi: duration 10, cost 28.72. walk: duration 82, cost 0.0. \nfrom Qin Yun Old Lady's Stall Noodles (National Flagship Store) to Chongqing West Railway Station: metro: duration 22, cost 6. taxi: duration 12, cost 34.0. walk: duration 100, cost 0.0. \nfrom Qin Yun Old Lady's Stall Noodles (National Flagship Store) to At Yuli Chongqing Hot Pot (Jiefangbei Delicious Street Branch): metro: duration 23, cost 6. taxi: duration 10, cost 28.72. walk: duration 82, cost 0.0. \nfrom Chongqing North Railway Station to General Ba's Intangible Cultural Heritage Original Flavor Hot Pot (Jiefangbei Branch): metro: duration 18, cost 6. taxi: duration 9, cost 26.82. walk: duration 75, cost 0.0. \nfrom Chongqing North Railway Station to Yang Ji Long Fu (Liberation Monument Main Store): metro: duration 19, cost 6. taxi: duration 8, cost 25.32. walk: duration 70, cost 0.0. \nfrom Chongqing North Railway Station to Great Hall of the People: metro: duration 15, cost 6. taxi: duration 6, cost 20.78. walk: duration 55, cost 0.0. \nfrom Chongqing North Railway Station to Ci Qi Kou Ancient Town: metro: duration 37, cost 8. taxi: duration 14, cost 37.78. walk: duration 113, cost 0.0. \nfrom Chongqing North Railway Station to Qianhe Zhixuan Gaokong Hotel (Jiefangbei Hongyadong Branch): metro: duration 16, cost 6. taxi: duration 9, cost 26.4. walk: duration 74, cost 0.0. \nfrom Chongqing North Railway Station to Instrument Factory Hot Pot (Jiefangbei Branch): metro: duration 17, cost 6. taxi: duration 8, cost 25.1. walk: duration 69, cost 0.0. \nfrom Chongqing North Railway Station to Chaotianmen Square: metro: duration 22, cost 6. taxi: duration 8, cost 24.83. walk: duration 69, cost 0.0. \nfrom Chongqing North Railway Station to Liberation Monument Pedestrian Street: metro: duration 19, cost 6. taxi: duration 8, cost 25.38. walk: duration 70, cost 0.0. \nfrom Chongqing North Railway Station to Huangjueping Graffiti Art Street: metro: duration 39, cost 8. taxi: duration 18, cost 50.99. walk: duration 150, cost 0.0. \nfrom Chongqing North Railway Station to Yangtze River Cableway: metro: duration 17, cost 6. taxi: duration 9, cost 26.35. walk: duration 74, cost 0.0. \nfrom Chongqing North Railway Station to Chongqing Zoo: metro: duration 29, cost 8. taxi: duration 17, cost 47.0. walk: duration 139, cost 0.0. \nfrom Chongqing North Railway Station to Three Gorges Museum: metro: duration 15, cost 6. taxi: duration 6, cost 20.39. walk: duration 53, cost 0.0. \nfrom Chongqing North Railway Station to Chongqing WFC Xianlai Tower Observation Deck: metro: duration 18, cost 6. taxi: duration 8, cost 24.93. walk: duration 69, cost 0.0. \nfrom Chongqing North Railway Station to Hongya Cave: metro: duration 17, cost 6. taxi: duration 8, cost 24.12. walk: duration 66, cost 0.0. \nfrom Chongqing North Railway Station to Qin Yun Old Lady's Stall Noodles (National Flagship Store): metro: duration 29, cost 8. taxi: duration 15, cost 42.38. walk: duration 127, cost 0.0. \nfrom Chongqing North Railway Station to Chongqing North Railway Station:  metro: empty.  taxi: empty.  walk: empty. \nfrom Chongqing North Railway Station to Chongqing Huguang Guild Hall: metro: duration 21, cost 6. taxi: duration 9, cost 27.18. walk: duration 77, cost 0.0. \nfrom Chongqing North Railway Station to Liziba Monorail Building-Piercing Viewing Platform: metro: duration 90, cost 12. taxi: duration 43, cost 126.47. walk: duration 351, cost 0.0. \nfrom Chongqing North Railway Station to Chongqing People's Square: metro: duration 14, cost 6. taxi: duration 6, cost 20.54. walk: duration 54, cost 0.0. \nfrom Chongqing North Railway Station to Chongqing North Railway Station Atour Hotel: metro: duration 9, cost 4. taxi: duration 0, cost 11.0. walk: duration 6, cost 0.0. \nfrom Chongqing North Railway Station to Lavande Hotel (Chongqing Jiefangbei Center Pedestrian Street): metro: duration 16, cost 6. taxi: duration 9, cost 26.28. walk: duration 73, cost 0.0. \nfrom Chongqing North Railway Station to Chongqing West Railway Station: metro: duration 35, cost 10. taxi: duration 24, cost 67.85. walk: duration 195, cost 0.0. \nfrom Chongqing North Railway Station to At Yuli Chongqing Hot Pot (Jiefangbei Delicious Street Branch): metro: duration 19, cost 6. taxi: duration 9, cost 27.11. walk: duration 76, cost 0.0. \nfrom Chongqing Huguang Guild Hall to General Ba's Intangible Cultural Heritage Original Flavor Hot Pot (Jiefangbei Branch): metro: duration 14, cost 4. taxi: duration 2, cost 11.09. walk: duration 21, cost 0.0. \nfrom Chongqing Huguang Guild Hall to Yang Ji Long Fu (Liberation Monument Main Store): metro: duration 15, cost 4. taxi: duration 2, cost 11.0. walk: duration 17, cost 0.0. \nfrom Chongqing Huguang Guild Hall to Great Hall of the People: metro: duration 15, cost 4. taxi: duration 4, cost 15.92. walk: duration 38, cost 0.0. \nfrom Chongqing Huguang Guild Hall to Ci Qi Kou Ancient Town: metro: duration 49, cost 10. taxi: duration 20, cost 55.55. walk: duration 162, cost 0.0. \nfrom Chongqing Huguang Guild Hall to Qianhe Zhixuan Gaokong Hotel (Jiefangbei Hongyadong Branch): metro: duration 9, cost 4. taxi: duration 1, cost 11.0. walk: duration 13, cost 0.0. \nfrom Chongqing Huguang Guild Hall to Instrument Factory Hot Pot (Jiefangbei Branch): metro: duration 13, cost 4. taxi: duration 3, cost 12.49. walk: duration 26, cost 0.0. \nfrom Chongqing Huguang Guild Hall to Chaotianmen Square: metro: duration 17, cost 4. taxi: duration 1, cost 11.0. walk: duration 12, cost 0.0. \nfrom Chongqing Huguang Guild Hall to Liberation Monument Pedestrian Street: metro: duration 12, cost 4. taxi: duration 1, cost 11.0. walk: duration 11, cost 0.0. \nfrom Chongqing Huguang Guild Hall to Huangjueping Graffiti Art Street: metro: duration 36, cost 8. taxi: duration 13, cost 35.17. walk: duration 104, cost 0.0. \nfrom Chongqing Huguang Guild Hall to Yangtze River Cableway: taxi: duration 0, cost 11.0. walk: duration 4, cost 0.0. \nfrom Chongqing Huguang Guild Hall to Chongqing Zoo: metro: duration 29, cost 8. taxi: duration 14, cost 39.33. walk: duration 118, cost 0.0. \nfrom Chongqing Huguang Guild Hall to Three Gorges Museum: metro: duration 15, cost 4. taxi: duration 5, cost 17.19. walk: duration 42, cost 0.0. \nfrom Chongqing Huguang Guild Hall to Chongqing WFC Xianlai Tower Observation Deck: taxi: duration 1, cost 11.0. walk: duration 10, cost 0.0. \nfrom Chongqing Huguang Guild Hall to Hongya Cave: taxi: duration 1, cost 11.0. walk: duration 11, cost 0.0. \nfrom Chongqing Huguang Guild Hall to Qin Yun Old Lady's Stall Noodles (National Flagship Store): metro: duration 30, cost 6. taxi: duration 12, cost 35.03. walk: duration 103, cost 0.0. \nfrom Chongqing Huguang Guild Hall to Chongqing North Railway Station: metro: duration 21, cost 6. taxi: duration 9, cost 27.18. walk: duration 77, cost 0.0. \nfrom Chongqing Huguang Guild Hall to Chongqing Huguang Guild Hall:  metro: empty.  taxi: empty.  walk: empty. \nfrom Chongqing Huguang Guild Hall to Liziba Monorail Building-Piercing Viewing Platform: metro: duration 105, cost 14. taxi: duration 53, cost 154.43. walk: duration 425, cost 0.0. \nfrom Chongqing Huguang Guild Hall to Chongqing People's Square: metro: duration 14, cost 4. taxi: duration 5, cost 16.5. walk: duration 40, cost 0.0. \nfrom Chongqing Huguang Guild Hall to Chongqing North Railway Station Atour Hotel: metro: duration 22, cost 6. taxi: duration 8, cost 25.32. walk: duration 70, cost 0.0. \nfrom Chongqing Huguang Guild Hall to Lavande Hotel (Chongqing Jiefangbei Center Pedestrian Street): metro: duration 12, cost 4. taxi: duration 2, cost 11.26. walk: duration 22, cost 0.0. \nfrom Chongqing Huguang Guild Hall to Chongqing West Railway Station: metro: duration 40, cost 10. taxi: duration 24, cost 69.52. walk: duration 199, cost 0.0. \nfrom Chongqing Huguang Guild Hall to At Yuli Chongqing Hot Pot (Jiefangbei Delicious Street Branch): metro: duration 14, cost 4. taxi: duration 2, cost 11.06. walk: duration 21, cost 0.0. \nfrom Liziba Monorail Building-Piercing Viewing Platform to General Ba's Intangible Cultural Heritage Original Flavor Hot Pot (Jiefangbei Branch): metro: duration 102, cost 14. taxi: duration 53, cost 154.91. walk: duration 427, cost 0.0. \nfrom Liziba Monorail Building-Piercing Viewing Platform to Yang Ji Long Fu (Liberation Monument Main Store): metro: duration 103, cost 14. taxi: duration 52, cost 152.95. walk: duration 421, cost 0.0. \nfrom Liziba Monorail Building-Piercing Viewing Platform to Great Hall of the People: metro: duration 99, cost 14. taxi: duration 50, cost 146.76. walk: duration 405, cost 0.0. \nfrom Liziba Monorail Building-Piercing Viewing Platform to Ci Qi Kou Ancient Town: metro: duration 100, cost 12. taxi: duration 43, cost 126.46. walk: duration 351, cost 0.0. \nfrom Liziba Monorail Building-Piercing Viewing Platform to Qianhe Zhixuan Gaokong Hotel (Jiefangbei Hongyadong Branch): metro: duration 100, cost 14. taxi: duration 53, cost 154.24. walk: duration 425, cost 0.0. \nfrom Liziba Monorail Building-Piercing Viewing Platform to Instrument Factory Hot Pot (Jiefangbei Branch): metro: duration 101, cost 14. taxi: duration 52, cost 152.65. walk: duration 421, cost 0.0. \nfrom Liziba Monorail Building-Piercing Viewing Platform to Chaotianmen Square: metro: duration 104, cost 14. taxi: duration 51, cost 150.52. walk: duration 415, cost 0.0. \nfrom Liziba Monorail Building-Piercing Viewing Platform to Liberation Monument Pedestrian Street: metro: duration 103, cost 14. taxi: duration 52, cost 152.79. walk: duration 421, cost 0.0. \nfrom Liziba Monorail Building-Piercing Viewing Platform to Huangjueping Graffiti Art Street: metro: duration 121, cost 16. taxi: duration 61, cost 179.18. walk: duration 491, cost 0.0. \nfrom Liziba Monorail Building-Piercing Viewing Platform to Yangtze River Cableway: metro: duration 101, cost 14. taxi: duration 52, cost 153.68. walk: duration 423, cost 0.0. \nfrom Liziba Monorail Building-Piercing Viewing Platform to Chongqing Zoo: metro: duration 109, cost 14. taxi: duration 58, cost 168.83. walk: duration 464, cost 0.0. \nfrom Liziba Monorail Building-Piercing Viewing Platform to Three Gorges Museum: metro: duration 99, cost 14. taxi: duration 50, cost 145.94. walk: duration 403, cost 0.0. \nfrom Liziba Monorail Building-Piercing Viewing Platform to Chongqing WFC Xianlai Tower Observation Deck: metro: duration 102, cost 14. taxi: duration 52, cost 152.12. walk: duration 419, cost 0.0. \nfrom Liziba Monorail Building-Piercing Viewing Platform to Hongya Cave: metro: duration 101, cost 14. taxi: duration 52, cost 150.92. walk: duration 416, cost 0.0. \nfrom Liziba Monorail Building-Piercing Viewing Platform to Qin Yun Old Lady's Stall Noodles (National Flagship Store): metro: duration 109, cost 14. taxi: duration 57, cost 166.31. walk: duration 457, cost 0.0. \nfrom Liziba Monorail Building-Piercing Viewing Platform to Chongqing North Railway Station: metro: duration 90, cost 12. taxi: duration 43, cost 126.47. walk: duration 351, cost 0.0. \nfrom Liziba Monorail Building-Piercing Viewing Platform to Chongqing Huguang Guild Hall: metro: duration 105, cost 14. taxi: duration 53, cost 154.43. walk: duration 425, cost 0.0. \nfrom Liziba Monorail Building-Piercing Viewing Platform to Liziba Monorail Building-Piercing Viewing Platform:  metro: empty.  taxi: empty.  walk: empty. \nfrom Liziba Monorail Building-Piercing Viewing Platform to Chongqing People's Square: metro: duration 98, cost 14. taxi: duration 50, cost 146.32. walk: duration 404, cost 0.0. \nfrom Liziba Monorail Building-Piercing Viewing Platform to Chongqing North Railway Station Atour Hotel: metro: duration 93, cost 12. taxi: duration 44, cost 128.98. walk: duration 358, cost 0.0. \nfrom Liziba Monorail Building-Piercing Viewing Platform to Lavande Hotel (Chongqing Jiefangbei Center Pedestrian Street): metro: duration 100, cost 14. taxi: duration 53, cost 154.21. walk: duration 425, cost 0.0. \nfrom Liziba Monorail Building-Piercing Viewing Platform to Chongqing West Railway Station: metro: duration 107, cost 14. taxi: duration 58, cost 169.66. walk: duration 466, cost 0.0. \nfrom Liziba Monorail Building-Piercing Viewing Platform to At Yuli Chongqing Hot Pot (Jiefangbei Delicious Street Branch): metro: duration 103, cost 14. taxi: duration 53, cost 155.27. walk: duration 428, cost 0.0. \nfrom Chongqing People's Square to General Ba's Intangible Cultural Heritage Original Flavor Hot Pot (Jiefangbei Branch): metro: duration 9, cost 4. taxi: duration 3, cost 12.37. walk: duration 26, cost 0.0. \nfrom Chongqing People's Square to Yang Ji Long Fu (Liberation Monument Main Store): metro: duration 10, cost 4. taxi: duration 3, cost 11.85. walk: duration 24, cost 0.0. \nfrom Chongqing People's Square to Great Hall of the People: taxi: duration 0, cost 11.0. walk: duration 2, cost 0.0. \nfrom Chongqing People's Square to Ci Qi Kou Ancient Town: metro: duration 38, cost 8. taxi: duration 15, cost 40.4. walk: duration 121, cost 0.0. \nfrom Chongqing People's Square to Qianhe Zhixuan Gaokong Hotel (Jiefangbei Hongyadong Branch): metro: duration 8, cost 4. taxi: duration 3, cost 13.34. walk: duration 29, cost 0.0. \nfrom Chongqing People's Square to Instrument Factory Hot Pot (Jiefangbei Branch): metro: duration 8, cost 4. taxi: duration 2, cost 11.0. walk: duration 18, cost 0.0. \nfrom Chongqing People's Square to Chaotianmen Square: metro: duration 17, cost 6. taxi: duration 5, cost 16.94. walk: duration 41, cost 0.0. \nfrom Chongqing People's Square to Liberation Monument Pedestrian Street: metro: duration 11, cost 4. taxi: duration 3, cost 13.3. walk: duration 29, cost 0.0. \nfrom Chongqing People's Square to Huangjueping Graffiti Art Street: metro: duration 29, cost 6. taxi: duration 12, cost 33.06. walk: duration 97, cost 0.0. \nfrom Chongqing People's Square to Yangtze River Cableway: metro: duration 10, cost 4. taxi: duration 4, cost 15.16. walk: duration 35, cost 0.0. \nfrom Chongqing People's Square to Chongqing Zoo: metro: duration 21, cost 6. taxi: duration 11, cost 32.47. walk: duration 95, cost 0.0. \nfrom Chongqing People's Square to Three Gorges Museum: taxi: duration 0, cost 11.0. walk: duration 2, cost 0.0. \nfrom Chongqing People's Square to Chongqing WFC Xianlai Tower Observation Deck: metro: duration 11, cost 4. taxi: duration 3, cost 13.35. walk: duration 29, cost 0.0. \nfrom Chongqing People's Square to Hongya Cave: metro: duration 10, cost 4. taxi: duration 3, cost 13.5. walk: duration 30, cost 0.0. \nfrom Chongqing People's Square to Qin Yun Old Lady's Stall Noodles (National Flagship Store): metro: duration 21, cost 6. taxi: duration 10, cost 28.36. walk: duration 81, cost 0.0. \nfrom Chongqing People's Square to Chongqing North Railway Station: metro: duration 14, cost 6. taxi: duration 6, cost 20.54. walk: duration 54, cost 0.0. \nfrom Chongqing People's Square to Chongqing Huguang Guild Hall: metro: duration 14, cost 4. taxi: duration 5, cost 16.5. walk: duration 40, cost 0.0. \nfrom Chongqing People's Square to Liziba Monorail Building-Piercing Viewing Platform: metro: duration 98, cost 14. taxi: duration 50, cost 146.32. walk: duration 404, cost 0.0. \nfrom Chongqing People's Square to Chongqing People's Square:  metro: empty.  taxi: empty.  walk: empty. \nfrom Chongqing People's Square to Chongqing North Railway Station Atour Hotel: metro: duration 14, cost 4. taxi: duration 5, cost 18.64. walk: duration 47, cost 0.0. \nfrom Chongqing People's Square to Lavande Hotel (Chongqing Jiefangbei Center Pedestrian Street): metro: duration 7, cost 4. taxi: duration 3, cost 11.81. walk: duration 24, cost 0.0. \nfrom Chongqing People's Square to Chongqing West Railway Station: metro: duration 30, cost 8. taxi: duration 20, cost 57.41. walk: duration 167, cost 0.0. \nfrom Chongqing People's Square to At Yuli Chongqing Hot Pot (Jiefangbei Delicious Street Branch): metro: duration 10, cost 4. taxi: duration 3, cost 12.65. walk: duration 27, cost 0.0. \nfrom Chongqing North Railway Station Atour Hotel to General Ba's Intangible Cultural Heritage Original Flavor Hot Pot (Jiefangbei Branch): metro: duration 19, cost 6. taxi: duration 8, cost 24.86. walk: duration 69, cost 0.0. \nfrom Chongqing North Railway Station Atour Hotel to Yang Ji Long Fu (Liberation Monument Main Store): metro: duration 20, cost 6. taxi: duration 8, cost 23.37. walk: duration 64, cost 0.0. \nfrom Chongqing North Railway Station Atour Hotel to Great Hall of the People: metro: duration 15, cost 4. taxi: duration 6, cost 18.86. walk: duration 48, cost 0.0. \nfrom Chongqing North Railway Station Atour Hotel to Ci Qi Kou Ancient Town: metro: duration 39, cost 8. taxi: duration 14, cost 38.11. walk: duration 114, cost 0.0. \nfrom Chongqing North Railway Station Atour Hotel to Qianhe Zhixuan Gaokong Hotel (Jiefangbei Hongyadong Branch): metro: duration 17, cost 6. taxi: duration 8, cost 24.46. walk: duration 67, cost 0.0. \nfrom Chongqing North Railway Station Atour Hotel to Instrument Factory Hot Pot (Jiefangbei Branch): metro: duration 18, cost 6. taxi: duration 7, cost 23.15. walk: duration 63, cost 0.0. \nfrom Chongqing North Railway Station Atour Hotel to Chaotianmen Square: metro: duration 23, cost 6. taxi: duration 7, cost 23.07. walk: duration 62, cost 0.0. \nfrom Chongqing North Railway Station Atour Hotel to Liberation Monument Pedestrian Street: metro: duration 20, cost 6. taxi: duration 8, cost 23.46. walk: duration 64, cost 0.0. \nfrom Chongqing North Railway Station Atour Hotel to Huangjueping Graffiti Art Street: metro: duration 39, cost 8. taxi: duration 17, cost 48.69. walk: duration 143, cost 0.0. \nfrom Chongqing North Railway Station Atour Hotel to Yangtze River Cableway: metro: duration 18, cost 6. taxi: duration 8, cost 24.47. walk: duration 67, cost 0.0. \nfrom Chongqing North Railway Station Atour Hotel to Chongqing Zoo: metro: duration 30, cost 8. taxi: duration 16, cost 45.12. walk: duration 134, cost 0.0. \nfrom Chongqing North Railway Station Atour Hotel to Three Gorges Museum: metro: duration 15, cost 4. taxi: duration 5, cost 18.51. walk: duration 47, cost 0.0. \nfrom Chongqing North Railway Station Atour Hotel to Chongqing WFC Xianlai Tower Observation Deck: metro: duration 19, cost 6. taxi: duration 7, cost 23.01. walk: duration 62, cost 0.0. \nfrom Chongqing North Railway Station Atour Hotel to Hongya Cave: metro: duration 18, cost 6. taxi: duration 7, cost 22.23. walk: duration 60, cost 0.0. \nfrom Chongqing North Railway Station Atour Hotel to Qin Yun Old Lady's Stall Noodles (National Flagship Store): metro: duration 30, cost 8. taxi: duration 15, cost 40.4. walk: duration 121, cost 0.0. \nfrom Chongqing North Railway Station Atour Hotel to Chongqing North Railway Station: metro: duration 9, cost 4. taxi: duration 0, cost 11.0. walk: duration 6, cost 0.0. \nfrom Chongqing North Railway Station Atour Hotel to Chongqing Huguang Guild Hall: metro: duration 22, cost 6. taxi: duration 8, cost 25.32. walk: duration 70, cost 0.0. \nfrom Chongqing North Railway Station Atour Hotel to Liziba Monorail Building-Piercing Viewing Platform: metro: duration 93, cost 12. taxi: duration 44, cost 128.98. walk: duration 358, cost 0.0. \nfrom Chongqing North Railway Station Atour Hotel to Chongqing People's Square: metro: duration 14, cost 4. taxi: duration 5, cost 18.64. walk: duration 47, cost 0.0. \nfrom Chongqing North Railway Station Atour Hotel to Chongqing North Railway Station Atour Hotel:  metro: empty.  taxi: empty.  walk: empty. \nfrom Chongqing North Railway Station Atour Hotel to Lavande Hotel (Chongqing Jiefangbei Center Pedestrian Street): metro: duration 17, cost 6. taxi: duration 8, cost 24.33. walk: duration 67, cost 0.0. \nfrom Chongqing North Railway Station Atour Hotel to Chongqing West Railway Station: metro: duration 36, cost 10. taxi: duration 24, cost 66.8. walk: duration 192, cost 0.0. \nfrom Chongqing North Railway Station Atour Hotel to At Yuli Chongqing Hot Pot (Jiefangbei Delicious Street Branch): metro: duration 20, cost 6. taxi: duration 8, cost 25.15. walk: duration 70, cost 0.0. \nfrom Lavande Hotel (Chongqing Jiefangbei Center Pedestrian Street) to General Ba's Intangible Cultural Heritage Original Flavor Hot Pot (Jiefangbei Branch): taxi: duration 0, cost 11.0. walk: duration 1, cost 0.0. \nfrom Lavande Hotel (Chongqing Jiefangbei Center Pedestrian Street) to Yang Ji Long Fu (Liberation Monument Main Store): taxi: duration 0, cost 11.0. walk: duration 5, cost 0.0. \nfrom Lavande Hotel (Chongqing Jiefangbei Center Pedestrian Street) to Great Hall of the People: metro: duration 8, cost 4. taxi: duration 2, cost 11.27. walk: duration 22, cost 0.0. \nfrom Lavande Hotel (Chongqing Jiefangbei Center Pedestrian Street) to Ci Qi Kou Ancient Town: metro: duration 42, cost 8. taxi: duration 18, cost 48.82. walk: duration 144, cost 0.0. \nfrom Lavande Hotel (Chongqing Jiefangbei Center Pedestrian Street) to Qianhe Zhixuan Gaokong Hotel (Jiefangbei Hongyadong Branch): metro: duration 4, cost 4. taxi: duration 1, cost 11.0. walk: duration 8, cost 0.0. \nfrom Lavande Hotel (Chongqing Jiefangbei Center Pedestrian Street) to Instrument Factory Hot Pot (Jiefangbei Branch): taxi: duration 0, cost 11.0. walk: duration 5, cost 0.0. \nfrom Lavande Hotel (Chongqing Jiefangbei Center Pedestrian Street) to Chaotianmen Square: metro: duration 15, cost 4. taxi: duration 3, cost 13.64. walk: duration 30, cost 0.0. \nfrom Lavande Hotel (Chongqing Jiefangbei Center Pedestrian Street) to Liberation Monument Pedestrian Street: metro: duration 7, cost 4. taxi: duration 1, cost 11.0. walk: duration 12, cost 0.0. \nfrom Lavande Hotel (Chongqing Jiefangbei Center Pedestrian Street) to Huangjueping Graffiti Art Street: metro: duration 28, cost 6. taxi: duration 10, cost 30.23. walk: duration 87, cost 0.0. \nfrom Lavande Hotel (Chongqing Jiefangbei Center Pedestrian Street) to Yangtze River Cableway: metro: duration 8, cost 4. taxi: duration 2, cost 11.0. walk: duration 18, cost 0.0. \nfrom Lavande Hotel (Chongqing Jiefangbei Center Pedestrian Street) to Chongqing Zoo: metro: duration 21, cost 6. taxi: duration 12, cost 33.02. walk: duration 97, cost 0.0. \nfrom Lavande Hotel (Chongqing Jiefangbei Center Pedestrian Street) to Three Gorges Museum: metro: duration 8, cost 4. taxi: duration 3, cost 12.39. walk: duration 26, cost 0.0. \nfrom Lavande Hotel (Chongqing Jiefangbei Center Pedestrian Street) to Chongqing WFC Xianlai Tower Observation Deck: metro: duration 9, cost 4. taxi: duration 1, cost 11.0. walk: duration 14, cost 0.0. \nfrom Lavande Hotel (Chongqing Jiefangbei Center Pedestrian Street) to Hongya Cave: metro: duration 8, cost 4. taxi: duration 2, cost 11.0. walk: duration 18, cost 0.0. \nfrom Lavande Hotel (Chongqing Jiefangbei Center Pedestrian Street) to Qin Yun Old Lady's Stall Noodles (National Flagship Store): metro: duration 22, cost 6. taxi: duration 10, cost 28.72. walk: duration 82, cost 0.0. \nfrom Lavande Hotel (Chongqing Jiefangbei Center Pedestrian Street) to Chongqing North Railway Station: metro: duration 16, cost 6. taxi: duration 9, cost 26.28. walk: duration 73, cost 0.0. \nfrom Lavande Hotel (Chongqing Jiefangbei Center Pedestrian Street) to Chongqing Huguang Guild Hall: metro: duration 12, cost 4. taxi: duration 2, cost 11.26. walk: duration 22, cost 0.0. \nfrom Lavande Hotel (Chongqing Jiefangbei Center Pedestrian Street) to Liziba Monorail Building-Piercing Viewing Platform: metro: duration 100, cost 14. taxi: duration 53, cost 154.21. walk: duration 425, cost 0.0. \nfrom Lavande Hotel (Chongqing Jiefangbei Center Pedestrian Street) to Chongqing People's Square: metro: duration 7, cost 4. taxi: duration 3, cost 11.81. walk: duration 24, cost 0.0. \nfrom Lavande Hotel (Chongqing Jiefangbei Center Pedestrian Street) to Chongqing North Railway Station Atour Hotel: metro: duration 17, cost 6. taxi: duration 8, cost 24.33. walk: duration 67, cost 0.0. \nfrom Lavande Hotel (Chongqing Jiefangbei Center Pedestrian Street) to Lavande Hotel (Chongqing Jiefangbei Center Pedestrian Street):  metro: empty.  taxi: empty.  walk: empty. \nfrom Lavande Hotel (Chongqing Jiefangbei Center Pedestrian Street) to Chongqing West Railway Station: metro: duration 32, cost 10. taxi: duration 22, cost 61.09. walk: duration 177, cost 0.0. \nfrom Lavande Hotel (Chongqing Jiefangbei Center Pedestrian Street) to At Yuli Chongqing Hot Pot (Jiefangbei Delicious Street Branch): metro: duration 7, cost 4. taxi: duration 0, cost 11.0. walk: duration 2, cost 0.0. \nfrom Chongqing West Railway Station to General Ba's Intangible Cultural Heritage Original Flavor Hot Pot (Jiefangbei Branch): metro: duration 34, cost 10. taxi: duration 22, cost 61.31. walk: duration 177, cost 0.0. \nfrom Chongqing West Railway Station to Yang Ji Long Fu (Liberation Monument Main Store): metro: duration 35, cost 10. taxi: duration 22, cost 62.95. walk: duration 182, cost 0.0. \nfrom Chongqing West Railway Station to Great Hall of the People: metro: duration 31, cost 8. taxi: duration 21, cost 57.93. walk: duration 168, cost 0.0. \nfrom Chongqing West Railway Station to Ci Qi Kou Ancient Town: metro: duration 34, cost 8. taxi: duration 14, cost 39.22. walk: duration 118, cost 0.0. \nfrom Chongqing West Railway Station to Qianhe Zhixuan Gaokong Hotel (Jiefangbei Hongyadong Branch): metro: duration 33, cost 10. taxi: duration 23, cost 64.35. walk: duration 185, cost 0.0. \nfrom Chongqing West Railway Station to Instrument Factory Hot Pot (Jiefangbei Branch): metro: duration 33, cost 10. taxi: duration 21, cost 59.71. walk: duration 173, cost 0.0. \nfrom Chongqing West Railway Station to Chaotianmen Square: metro: duration 43, cost 10. taxi: duration 25, cost 72.07. walk: duration 206, cost 0.0. \nfrom Chongqing West Railway Station to Liberation Monument Pedestrian Street: metro: duration 36, cost 10. taxi: duration 23, cost 65.63. walk: duration 189, cost 0.0. \nfrom Chongqing West Railway Station to Huangjueping Graffiti Art Street: metro: duration 31, cost 8. taxi: duration 16, cost 43.06. walk: duration 128, cost 0.0. \nfrom Chongqing West Railway Station to Yangtze River Cableway: metro: duration 36, cost 10. taxi: duration 24, cost 67.93. walk: duration 195, cost 0.0. \nfrom Chongqing West Railway Station to Chongqing Zoo: metro: duration 20, cost 6. taxi: duration 10, cost 30.26. walk: duration 87, cost 0.0. \nfrom Chongqing West Railway Station to Three Gorges Museum: metro: duration 31, cost 8. taxi: duration 20, cost 56.7. walk: duration 165, cost 0.0. \nfrom Chongqing West Railway Station to Chongqing WFC Xianlai Tower Observation Deck: metro: duration 37, cost 10. taxi: duration 23, cost 66.19. walk: duration 190, cost 0.0. \nfrom Chongqing West Railway Station to Hongya Cave: metro: duration 36, cost 10. taxi: duration 24, cost 67.14. walk: duration 193, cost 0.0. \nfrom Chongqing West Railway Station to Qin Yun Old Lady's Stall Noodles (National Flagship Store): metro: duration 22, cost 6. taxi: duration 12, cost 34.0. walk: duration 100, cost 0.0. \nfrom Chongqing West Railway Station to Chongqing North Railway Station: metro: duration 35, cost 10. taxi: duration 24, cost 67.85. walk: duration 195, cost 0.0. \nfrom Chongqing West Railway Station to Chongqing Huguang Guild Hall: metro: duration 40, cost 10. taxi: duration 24, cost 69.52. walk: duration 199, cost 0.0. \nfrom Chongqing West Railway Station to Liziba Monorail Building-Piercing Viewing Platform: metro: duration 107, cost 14. taxi: duration 58, cost 169.66. walk: duration 466, cost 0.0. \nfrom Chongqing West Railway Station to Chongqing People's Square: metro: duration 30, cost 8. taxi: duration 20, cost 57.41. walk: duration 167, cost 0.0. \nfrom Chongqing West Railway Station to Chongqing North Railway Station Atour Hotel: metro: duration 36, cost 10. taxi: duration 24, cost 66.8. walk: duration 192, cost 0.0. \nfrom Chongqing West Railway Station to Lavande Hotel (Chongqing Jiefangbei Center Pedestrian Street): metro: duration 32, cost 10. taxi: duration 22, cost 61.09. walk: duration 177, cost 0.0. \nfrom Chongqing West Railway Station to Chongqing West Railway Station:  metro: empty.  taxi: empty.  walk: empty. \nfrom Chongqing West Railway Station to At Yuli Chongqing Hot Pot (Jiefangbei Delicious Street Branch): metro: duration 33, cost 10. taxi: duration 22, cost 61.38. walk: duration 177, cost 0.0. \nfrom At Yuli Chongqing Hot Pot (Jiefangbei Delicious Street Branch) to General Ba's Intangible Cultural Heritage Original Flavor Hot Pot (Jiefangbei Branch): metro: duration 9, cost 4. taxi: duration 0, cost 11.0. walk: duration 1, cost 0.0. \nfrom At Yuli Chongqing Hot Pot (Jiefangbei Delicious Street Branch) to Yang Ji Long Fu (Liberation Monument Main Store): metro: duration 10, cost 4. taxi: duration 0, cost 11.0. walk: duration 7, cost 0.0. \nfrom At Yuli Chongqing Hot Pot (Jiefangbei Delicious Street Branch) to Great Hall of the People: metro: duration 11, cost 4. taxi: duration 3, cost 12.12. walk: duration 25, cost 0.0. \nfrom At Yuli Chongqing Hot Pot (Jiefangbei Delicious Street Branch) to Ci Qi Kou Ancient Town: metro: duration 44, cost 8. taxi: duration 18, cost 49.75. walk: duration 146, cost 0.0. \nfrom At Yuli Chongqing Hot Pot (Jiefangbei Delicious Street Branch) to Qianhe Zhixuan Gaokong Hotel (Jiefangbei Hongyadong Branch): metro: duration 7, cost 4. taxi: duration 1, cost 11.0. walk: duration 8, cost 0.0. \nfrom At Yuli Chongqing Hot Pot (Jiefangbei Delicious Street Branch) to Instrument Factory Hot Pot (Jiefangbei Branch): metro: duration 8, cost 4. taxi: duration 1, cost 11.0. walk: duration 8, cost 0.0. \nfrom At Yuli Chongqing Hot Pot (Jiefangbei Delicious Street Branch) to Chaotianmen Square: metro: duration 18, cost 4. taxi: duration 3, cost 13.74. walk: duration 30, cost 0.0. \nfrom At Yuli Chongqing Hot Pot (Jiefangbei Delicious Street Branch) to Liberation Monument Pedestrian Street: metro: duration 10, cost 4. taxi: duration 1, cost 11.0. walk: duration 13, cost 0.0. \nfrom At Yuli Chongqing Hot Pot (Jiefangbei Delicious Street Branch) to Huangjueping Graffiti Art Street: metro: duration 29, cost 6. taxi: duration 10, cost 29.83. walk: duration 86, cost 0.0. \nfrom At Yuli Chongqing Hot Pot (Jiefangbei Delicious Street Branch) to Yangtze River Cableway: metro: duration 10, cost 4. taxi: duration 2, cost 11.0. walk: duration 17, cost 0.0. \nfrom At Yuli Chongqing Hot Pot (Jiefangbei Delicious Street Branch) to Chongqing Zoo: metro: duration 23, cost 6. taxi: duration 12, cost 33.02. walk: duration 97, cost 0.0. \nfrom At Yuli Chongqing Hot Pot (Jiefangbei Delicious Street Branch) to Three Gorges Museum: metro: duration 11, cost 4. taxi: duration 3, cost 13.23. walk: duration 29, cost 0.0. \nfrom At Yuli Chongqing Hot Pot (Jiefangbei Delicious Street Branch) to Chongqing WFC Xianlai Tower Observation Deck: metro: duration 11, cost 4. taxi: duration 1, cost 11.0. walk: duration 15, cost 0.0. \nfrom At Yuli Chongqing Hot Pot (Jiefangbei Delicious Street Branch) to Hongya Cave: metro: duration 10, cost 4. taxi: duration 2, cost 11.0. walk: duration 18, cost 0.0. \nfrom At Yuli Chongqing Hot Pot (Jiefangbei Delicious Street Branch) to Qin Yun Old Lady's Stall Noodles (National Flagship Store): metro: duration 23, cost 6. taxi: duration 10, cost 28.72. walk: duration 82, cost 0.0. \nfrom At Yuli Chongqing Hot Pot (Jiefangbei Delicious Street Branch) to Chongqing North Railway Station: metro: duration 19, cost 6. taxi: duration 9, cost 27.11. walk: duration 76, cost 0.0. \nfrom At Yuli Chongqing Hot Pot (Jiefangbei Delicious Street Branch) to Chongqing Huguang Guild Hall: metro: duration 14, cost 4. taxi: duration 2, cost 11.06. walk: duration 21, cost 0.0. \nfrom At Yuli Chongqing Hot Pot (Jiefangbei Delicious Street Branch) to Liziba Monorail Building-Piercing Viewing Platform: metro: duration 103, cost 14. taxi: duration 53, cost 155.27. walk: duration 428, cost 0.0. \nfrom At Yuli Chongqing Hot Pot (Jiefangbei Delicious Street Branch) to Chongqing People's Square: metro: duration 10, cost 4. taxi: duration 3, cost 12.65. walk: duration 27, cost 0.0. \nfrom At Yuli Chongqing Hot Pot (Jiefangbei Delicious Street Branch) to Chongqing North Railway Station Atour Hotel: metro: duration 20, cost 6. taxi: duration 8, cost 25.15. walk: duration 70, cost 0.0. \nfrom At Yuli Chongqing Hot Pot (Jiefangbei Delicious Street Branch) to Lavande Hotel (Chongqing Jiefangbei Center Pedestrian Street): metro: duration 7, cost 4. taxi: duration 0, cost 11.0. walk: duration 2, cost 0.0. \nfrom At Yuli Chongqing Hot Pot (Jiefangbei Delicious Street Branch) to Chongqing West Railway Station: metro: duration 33, cost 10. taxi: duration 22, cost 61.38. walk: duration 177, cost 0.0. \nfrom At Yuli Chongqing Hot Pot (Jiefangbei Delicious Street Branch) to At Yuli Chongqing Hot Pot (Jiefangbei Delicious Street Branch):  metro: empty.  taxi: empty.  walk: empty. \n"
+    },
+    "initial_verification": {
+      "commonsense_errors": [
+        "Incorrect duration information of given intercity transport from destination to origin G1888 [start_time -> end_time].",
+        "The attraction, Three Gorges Museum in day 2, is closed when you visiting. Its open time is [09:00 -- 17:00]",
+        "The end_time of dinner activity, Instrument Factory Hot Pot (Jiefangbei Branch) in day 3, cannot be earlier than 17:00.",
+        "The end_time of lunch activity, At Yuli Chongqing Hot Pot (Jiefangbei Delicious Street Branch) in day 4, cannot be earlier than 11:00.",
+        "The restaurant, At Yuli Chongqing Hot Pot (Jiefangbei Delicious Street Branch) in day 4, is closed when you visiting. Its open time is [10:00 -- 25:00]"
+      ],
+      "personal_constraints": [
+        true,
+        false,
+        false,
+        true,
+        true,
+        true
+      ],
+      "category_normalization": [
+        {
+          "constraint_index": 1,
+          "category_domain": "activity",
+          "expression": "activity_type(activity)",
+          "raw_label": "train",
+          "normalized_label": "train"
+        },
+        {
+          "constraint_index": 1,
+          "category_domain": "activity",
+          "expression": "['train', 'airplane']",
+          "raw_label": "train",
+          "normalized_label": "train"
+        },
+        {
+          "constraint_index": 1,
+          "category_domain": "activity",
+          "expression": "['train', 'airplane']",
+          "raw_label": "airplane",
+          "normalized_label": "airplane"
+        },
+        {
+          "constraint_index": 1,
+          "category_domain": "activity",
+          "expression": "activity_type(activity)",
+          "raw_label": "accommodation",
+          "normalized_label": "accommodation"
+        },
+        {
+          "constraint_index": 1,
+          "category_domain": "activity",
+          "expression": "['train', 'airplane']",
+          "raw_label": "train",
+          "normalized_label": "train"
+        },
+        {
+          "constraint_index": 1,
+          "category_domain": "activity",
+          "expression": "['train', 'airplane']",
+          "raw_label": "airplane",
+          "normalized_label": "airplane"
+        },
+        {
+          "constraint_index": 1,
+          "category_domain": "activity",
+          "expression": "activity_type(activity)",
+          "raw_label": "attraction",
+          "normalized_label": "attraction"
+        },
+        {
+          "constraint_index": 1,
+          "category_domain": "activity",
+          "expression": "['train', 'airplane']",
+          "raw_label": "train",
+          "normalized_label": "train"
+        },
+        {
+          "constraint_index": 1,
+          "category_domain": "activity",
+          "expression": "['train', 'airplane']",
+          "raw_label": "airplane",
+          "normalized_label": "airplane"
+        },
+        {
+          "constraint_index": 1,
+          "category_domain": "activity",
+          "expression": "activity_type(activity)",
+          "raw_label": "attraction",
+          "normalized_label": "attraction"
+        },
+        {
+          "constraint_index": 1,
+          "category_domain": "activity",
+          "expression": "['train', 'airplane']",
+          "raw_label": "train",
+          "normalized_label": "train"
+        },
+        {
+          "constraint_index": 1,
+          "category_domain": "activity",
+          "expression": "['train', 'airplane']",
+          "raw_label": "airplane",
+          "normalized_label": "airplane"
+        },
+        {
+          "constraint_index": 1,
+          "category_domain": "activity",
+          "expression": "activity_type(activity)",
+          "raw_label": "lunch",
+          "normalized_label": "lunch"
+        },
+        {
+          "constraint_index": 1,
+          "category_domain": "activity",
+          "expression": "['train', 'airplane']",
+          "raw_label": "train",
+          "normalized_label": "train"
+        },
+        {
+          "constraint_index": 1,
+          "category_domain": "activity",
+          "expression": "['train', 'airplane']",
+          "raw_label": "airplane",
+          "normalized_label": "airplane"
+        },
+        {
+          "constraint_index": 1,
+          "category_domain": "activity",
+          "expression": "activity_type(activity)",
+          "raw_label": "attraction",
+          "normalized_label": "attraction"
+        },
+        {
+          "constraint_index": 1,
+          "category_domain": "activity",
+          "expression": "['train', 'airplane']",
+          "raw_label": "train",
+          "normalized_label": "train"
+        },
+        {
+          "constraint_index": 1,
+          "category_domain": "activity",
+          "expression": "['train', 'airplane']",
+          "raw_label": "airplane",
+          "normalized_label": "airplane"
+        },
+        {
+          "constraint_index": 1,
+          "category_domain": "activity",
+          "expression": "activity_type(activity)",
+          "raw_label": "attraction",
+          "normalized_label": "attraction"
+        },
+        {
+          "constraint_index": 1,
+          "category_domain": "activity",
+          "expression": "['train', 'airplane']",
+          "raw_label": "train",
+          "normalized_label": "train"
+        },
+        {
+          "constraint_index": 1,
+          "category_domain": "activity",
+          "expression": "['train', 'airplane']",
+          "raw_label": "airplane",
+          "normalized_label": "airplane"
+        },
+        {
+          "constraint_index": 1,
+          "category_domain": "activity",
+          "expression": "activity_type(activity)",
+          "raw_label": "dinner",
+          "normalized_label": "dinner"
+        },
+        {
+          "constraint_index": 1,
+          "category_domain": "activity",
+          "expression": "['train', 'airplane']",
+          "raw_label": "train",
+          "normalized_label": "train"
+        },
+        {
+          "constraint_index": 1,
+          "category_domain": "activity",
+          "expression": "['train', 'airplane']",
+          "raw_label": "airplane",
+          "normalized_label": "airplane"
+        },
+        {
+          "constraint_index": 1,
+          "category_domain": "activity",
+          "expression": "activity_type(activity)",
+          "raw_label": "accommodation",
+          "normalized_label": "accommodation"
+        },
+        {
+          "constraint_index": 1,
+          "category_domain": "activity",
+          "expression": "['train', 'airplane']",
+          "raw_label": "train",
+          "normalized_label": "train"
+        },
+        {
+          "constraint_index": 1,
+          "category_domain": "activity",
+          "expression": "['train', 'airplane']",
+          "raw_label": "airplane",
+          "normalized_label": "airplane"
+        },
+        {
+          "constraint_index": 1,
+          "category_domain": "activity",
+          "expression": "activity_type(activity)",
+          "raw_label": "attraction",
+          "normalized_label": "attraction"
+        },
+        {
+          "constraint_index": 1,
+          "category_domain": "activity",
+          "expression": "['train', 'airplane']",
+          "raw_label": "train",
+          "normalized_label": "train"
+        },
+        {
+          "constraint_index": 1,
+          "category_domain": "activity",
+          "expression": "['train', 'airplane']",
+          "raw_label": "airplane",
+          "normalized_label": "airplane"
+        },
+        {
+          "constraint_index": 1,
+          "category_domain": "activity",
+          "expression": "activity_type(activity)",
+          "raw_label": "lunch",
+          "normalized_label": "lunch"
+        },
+        {
+          "constraint_index": 1,
+          "category_domain": "activity",
+          "expression": "['train', 'airplane']",
+          "raw_label": "train",
+          "normalized_label": "train"
+        },
+        {
+          "constraint_index": 1,
+          "category_domain": "activity",
+          "expression": "['train', 'airplane']",
+          "raw_label": "airplane",
+          "normalized_label": "airplane"
+        },
+        {
+          "constraint_index": 1,
+          "category_domain": "activity",
+          "expression": "activity_type(activity)",
+          "raw_label": "attraction",
+          "normalized_label": "attraction"
+        },
+        {
+          "constraint_index": 1,
+          "category_domain": "activity",
+          "expression": "['train', 'airplane']",
+          "raw_label": "train",
+          "normalized_label": "train"
+        },
+        {
+          "constraint_index": 1,
+          "category_domain": "activity",
+          "expression": "['train', 'airplane']",
+          "raw_label": "airplane",
+          "normalized_label": "airplane"
+        },
+        {
+          "constraint_index": 1,
+          "category_domain": "activity",
+          "expression": "activity_type(activity)",
+          "raw_label": "attraction",
+          "normalized_label": "attraction"
+        },
+        {
+          "constraint_index": 1,
+          "category_domain": "activity",
+          "expression": "['train', 'airplane']",
+          "raw_label": "train",
+          "normalized_label": "train"
+        },
+        {
+          "constraint_index": 1,
+          "category_domain": "activity",
+          "expression": "['train', 'airplane']",
+          "raw_label": "airplane",
+          "normalized_label": "airplane"
+        },
+        {
+          "constraint_index": 1,
+          "category_domain": "activity",
+          "expression": "activity_type(activity)",
+          "raw_label": "dinner",
+          "normalized_label": "dinner"
+        },
+        {
+          "constraint_index": 1,
+          "category_domain": "activity",
+          "expression": "['train', 'airplane']",
+          "raw_label": "train",
+          "normalized_label": "train"
+        },
+        {
+          "constraint_index": 1,
+          "category_domain": "activity",
+          "expression": "['train', 'airplane']",
+          "raw_label": "airplane",
+          "normalized_label": "airplane"
+        },
+        {
+          "constraint_index": 1,
+          "category_domain": "activity",
+          "expression": "activity_type(activity)",
+          "raw_label": "accommodation",
+          "normalized_label": "accommodation"
+        },
+        {
+          "constraint_index": 1,
+          "category_domain": "activity",
+          "expression": "['train', 'airplane']",
+          "raw_label": "train",
+          "normalized_label": "train"
+        },
+        {
+          "constraint_index": 1,
+          "category_domain": "activity",
+          "expression": "['train', 'airplane']",
+          "raw_label": "airplane",
+          "normalized_label": "airplane"
+        },
+        {
+          "constraint_index": 1,
+          "category_domain": "activity",
+          "expression": "activity_type(activity)",
+          "raw_label": "attraction",
+          "normalized_label": "attraction"
+        },
+        {
+          "constraint_index": 1,
+          "category_domain": "activity",
+          "expression": "['train', 'airplane']",
+          "raw_label": "train",
+          "normalized_label": "train"
+        },
+        {
+          "constraint_index": 1,
+          "category_domain": "activity",
+          "expression": "['train', 'airplane']",
+          "raw_label": "airplane",
+          "normalized_label": "airplane"
+        },
+        {
+          "constraint_index": 1,
+          "category_domain": "activity",
+          "expression": "activity_type(activity)",
+          "raw_label": "lunch",
+          "normalized_label": "lunch"
+        },
+        {
+          "constraint_index": 1,
+          "category_domain": "activity",
+          "expression": "['train', 'airplane']",
+          "raw_label": "train",
+          "normalized_label": "train"
+        },
+        {
+          "constraint_index": 1,
+          "category_domain": "activity",
+          "expression": "['train', 'airplane']",
+          "raw_label": "airplane",
+          "normalized_label": "airplane"
+        },
+        {
+          "constraint_index": 1,
+          "category_domain": "activity",
+          "expression": "activity_type(activity)",
+          "raw_label": "attraction",
+          "normalized_label": "attraction"
+        },
+        {
+          "constraint_index": 1,
+          "category_domain": "activity",
+          "expression": "['train', 'airplane']",
+          "raw_label": "train",
+          "normalized_label": "train"
+        },
+        {
+          "constraint_index": 1,
+          "category_domain": "activity",
+          "expression": "['train', 'airplane']",
+          "raw_label": "airplane",
+          "normalized_label": "airplane"
+        },
+        {
+          "constraint_index": 1,
+          "category_domain": "activity",
+          "expression": "activity_type(activity)",
+          "raw_label": "train",
+          "normalized_label": "train"
+        },
+        {
+          "constraint_index": 1,
+          "category_domain": "activity",
+          "expression": "['train', 'airplane']",
+          "raw_label": "train",
+          "normalized_label": "train"
+        },
+        {
+          "constraint_index": 1,
+          "category_domain": "activity",
+          "expression": "['train', 'airplane']",
+          "raw_label": "airplane",
+          "normalized_label": "airplane"
+        },
+        {
+          "constraint_index": 1,
+          "category_domain": "transport",
+          "expression": "{'train'}",
+          "raw_label": "train",
+          "normalized_label": "train"
+        },
+        {
+          "constraint_index": 1,
+          "category_domain": "transport",
+          "expression": "intercity_transport_set",
+          "raw_label": "train",
+          "normalized_label": "train"
+        },
+        {
+          "constraint_index": 3,
+          "category_domain": "activity",
+          "expression": "activity_type(activity)",
+          "raw_label": "train",
+          "normalized_label": "train"
+        },
+        {
+          "constraint_index": 3,
+          "category_domain": "activity",
+          "expression": "'attraction'",
+          "raw_label": "attraction",
+          "normalized_label": "attraction"
+        },
+        {
+          "constraint_index": 3,
+          "category_domain": "activity",
+          "expression": "activity_type(activity)",
+          "raw_label": "accommodation",
+          "normalized_label": "accommodation"
+        },
+        {
+          "constraint_index": 3,
+          "category_domain": "activity",
+          "expression": "'attraction'",
+          "raw_label": "attraction",
+          "normalized_label": "attraction"
+        },
+        {
+          "constraint_index": 3,
+          "category_domain": "activity",
+          "expression": "activity_type(activity)",
+          "raw_label": "attraction",
+          "normalized_label": "attraction"
+        },
+        {
+          "constraint_index": 3,
+          "category_domain": "activity",
+          "expression": "'attraction'",
+          "raw_label": "attraction",
+          "normalized_label": "attraction"
+        },
+        {
+          "constraint_index": 3,
+          "category_domain": "activity",
+          "expression": "activity_type(activity)",
+          "raw_label": "attraction",
+          "normalized_label": "attraction"
+        },
+        {
+          "constraint_index": 3,
+          "category_domain": "activity",
+          "expression": "'attraction'",
+          "raw_label": "attraction",
+          "normalized_label": "attraction"
+        },
+        {
+          "constraint_index": 3,
+          "category_domain": "activity",
+          "expression": "activity_type(activity)",
+          "raw_label": "lunch",
+          "normalized_label": "lunch"
+        },
+        {
+          "constraint_index": 3,
+          "category_domain": "activity",
+          "expression": "'attraction'",
+          "raw_label": "attraction",
+          "normalized_label": "attraction"
+        },
+        {
+          "constraint_index": 3,
+          "category_domain": "activity",
+          "expression": "activity_type(activity)",
+          "raw_label": "attraction",
+          "normalized_label": "attraction"
+        },
+        {
+          "constraint_index": 3,
+          "category_domain": "activity",
+          "expression": "'attraction'",
+          "raw_label": "attraction",
+          "normalized_label": "attraction"
+        },
+        {
+          "constraint_index": 3,
+          "category_domain": "activity",
+          "expression": "activity_type(activity)",
+          "raw_label": "attraction",
+          "normalized_label": "attraction"
+        },
+        {
+          "constraint_index": 3,
+          "category_domain": "activity",
+          "expression": "'attraction'",
+          "raw_label": "attraction",
+          "normalized_label": "attraction"
+        },
+        {
+          "constraint_index": 3,
+          "category_domain": "activity",
+          "expression": "activity_type(activity)",
+          "raw_label": "dinner",
+          "normalized_label": "dinner"
+        },
+        {
+          "constraint_index": 3,
+          "category_domain": "activity",
+          "expression": "'attraction'",
+          "raw_label": "attraction",
+          "normalized_label": "attraction"
+        },
+        {
+          "constraint_index": 3,
+          "category_domain": "activity",
+          "expression": "activity_type(activity)",
+          "raw_label": "accommodation",
+          "normalized_label": "accommodation"
+        },
+        {
+          "constraint_index": 3,
+          "category_domain": "activity",
+          "expression": "'attraction'",
+          "raw_label": "attraction",
+          "normalized_label": "attraction"
+        },
+        {
+          "constraint_index": 3,
+          "category_domain": "activity",
+          "expression": "activity_type(activity)",
+          "raw_label": "attraction",
+          "normalized_label": "attraction"
+        },
+        {
+          "constraint_index": 3,
+          "category_domain": "activity",
+          "expression": "'attraction'",
+          "raw_label": "attraction",
+          "normalized_label": "attraction"
+        },
+        {
+          "constraint_index": 3,
+          "category_domain": "activity",
+          "expression": "activity_type(activity)",
+          "raw_label": "lunch",
+          "normalized_label": "lunch"
+        },
+        {
+          "constraint_index": 3,
+          "category_domain": "activity",
+          "expression": "'attraction'",
+          "raw_label": "attraction",
+          "normalized_label": "attraction"
+        },
+        {
+          "constraint_index": 3,
+          "category_domain": "activity",
+          "expression": "activity_type(activity)",
+          "raw_label": "attraction",
+          "normalized_label": "attraction"
+        },
+        {
+          "constraint_index": 3,
+          "category_domain": "activity",
+          "expression": "'attraction'",
+          "raw_label": "attraction",
+          "normalized_label": "attraction"
+        },
+        {
+          "constraint_index": 3,
+          "category_domain": "activity",
+          "expression": "activity_type(activity)",
+          "raw_label": "attraction",
+          "normalized_label": "attraction"
+        },
+        {
+          "constraint_index": 3,
+          "category_domain": "activity",
+          "expression": "'attraction'",
+          "raw_label": "attraction",
+          "normalized_label": "attraction"
+        },
+        {
+          "constraint_index": 3,
+          "category_domain": "activity",
+          "expression": "activity_type(activity)",
+          "raw_label": "dinner",
+          "normalized_label": "dinner"
+        },
+        {
+          "constraint_index": 3,
+          "category_domain": "activity",
+          "expression": "'attraction'",
+          "raw_label": "attraction",
+          "normalized_label": "attraction"
+        },
+        {
+          "constraint_index": 3,
+          "category_domain": "activity",
+          "expression": "activity_type(activity)",
+          "raw_label": "accommodation",
+          "normalized_label": "accommodation"
+        },
+        {
+          "constraint_index": 3,
+          "category_domain": "activity",
+          "expression": "'attraction'",
+          "raw_label": "attraction",
+          "normalized_label": "attraction"
+        },
+        {
+          "constraint_index": 3,
+          "category_domain": "activity",
+          "expression": "activity_type(activity)",
+          "raw_label": "attraction",
+          "normalized_label": "attraction"
+        },
+        {
+          "constraint_index": 3,
+          "category_domain": "activity",
+          "expression": "'attraction'",
+          "raw_label": "attraction",
+          "normalized_label": "attraction"
+        },
+        {
+          "constraint_index": 3,
+          "category_domain": "activity",
+          "expression": "activity_type(activity)",
+          "raw_label": "lunch",
+          "normalized_label": "lunch"
+        },
+        {
+          "constraint_index": 3,
+          "category_domain": "activity",
+          "expression": "'attraction'",
+          "raw_label": "attraction",
+          "normalized_label": "attraction"
+        },
+        {
+          "constraint_index": 3,
+          "category_domain": "activity",
+          "expression": "activity_type(activity)",
+          "raw_label": "attraction",
+          "normalized_label": "attraction"
+        },
+        {
+          "constraint_index": 3,
+          "category_domain": "activity",
+          "expression": "'attraction'",
+          "raw_label": "attraction",
+          "normalized_label": "attraction"
+        },
+        {
+          "constraint_index": 3,
+          "category_domain": "activity",
+          "expression": "activity_type(activity)",
+          "raw_label": "train",
+          "normalized_label": "train"
+        },
+        {
+          "constraint_index": 3,
+          "category_domain": "activity",
+          "expression": "'attraction'",
+          "raw_label": "attraction",
+          "normalized_label": "attraction"
+        },
+        {
+          "constraint_index": 6,
+          "category_domain": "transport",
+          "expression": "innercity_transport_type(activity_transports(activity))",
+          "raw_label": "empty",
+          "normalized_label": "empty"
+        },
+        {
+          "constraint_index": 6,
+          "category_domain": "transport",
+          "expression": "'taxi'",
+          "raw_label": "taxi",
+          "normalized_label": "taxi"
+        },
+        {
+          "constraint_index": 6,
+          "category_domain": "transport",
+          "expression": "innercity_transport_type(activity_transports(activity))",
+          "raw_label": "metro",
+          "normalized_label": "metro"
+        },
+        {
+          "constraint_index": 6,
+          "category_domain": "transport",
+          "expression": "'taxi'",
+          "raw_label": "taxi",
+          "normalized_label": "taxi"
+        },
+        {
+          "constraint_index": 6,
+          "category_domain": "transport",
+          "expression": "innercity_transport_type(activity_transports(activity))",
+          "raw_label": "metro",
+          "normalized_label": "metro"
+        },
+        {
+          "constraint_index": 6,
+          "category_domain": "transport",
+          "expression": "'taxi'",
+          "raw_label": "taxi",
+          "normalized_label": "taxi"
+        },
+        {
+          "constraint_index": 6,
+          "category_domain": "transport",
+          "expression": "innercity_transport_type(activity_transports(activity))",
+          "raw_label": "walk",
+          "normalized_label": "walk"
+        },
+        {
+          "constraint_index": 6,
+          "category_domain": "transport",
+          "expression": "'taxi'",
+          "raw_label": "taxi",
+          "normalized_label": "taxi"
+        },
+        {
+          "constraint_index": 6,
+          "category_domain": "transport",
+          "expression": "innercity_transport_type(activity_transports(activity))",
+          "raw_label": "metro",
+          "normalized_label": "metro"
+        },
+        {
+          "constraint_index": 6,
+          "category_domain": "transport",
+          "expression": "'taxi'",
+          "raw_label": "taxi",
+          "normalized_label": "taxi"
+        },
+        {
+          "constraint_index": 6,
+          "category_domain": "transport",
+          "expression": "innercity_transport_type(activity_transports(activity))",
+          "raw_label": "metro",
+          "normalized_label": "metro"
+        },
+        {
+          "constraint_index": 6,
+          "category_domain": "transport",
+          "expression": "'taxi'",
+          "raw_label": "taxi",
+          "normalized_label": "taxi"
+        },
+        {
+          "constraint_index": 6,
+          "category_domain": "transport",
+          "expression": "innercity_transport_type(activity_transports(activity))",
+          "raw_label": "metro",
+          "normalized_label": "metro"
+        },
+        {
+          "constraint_index": 6,
+          "category_domain": "transport",
+          "expression": "'taxi'",
+          "raw_label": "taxi",
+          "normalized_label": "taxi"
+        },
+        {
+          "constraint_index": 6,
+          "category_domain": "transport",
+          "expression": "innercity_transport_type(activity_transports(activity))",
+          "raw_label": "metro",
+          "normalized_label": "metro"
+        },
+        {
+          "constraint_index": 6,
+          "category_domain": "transport",
+          "expression": "'taxi'",
+          "raw_label": "taxi",
+          "normalized_label": "taxi"
+        },
+        {
+          "constraint_index": 6,
+          "category_domain": "transport",
+          "expression": "innercity_transport_type(activity_transports(activity))",
+          "raw_label": "metro",
+          "normalized_label": "metro"
+        },
+        {
+          "constraint_index": 6,
+          "category_domain": "transport",
+          "expression": "'taxi'",
+          "raw_label": "taxi",
+          "normalized_label": "taxi"
+        },
+        {
+          "constraint_index": 6,
+          "category_domain": "transport",
+          "expression": "innercity_transport_type(activity_transports(activity))",
+          "raw_label": "metro",
+          "normalized_label": "metro"
+        },
+        {
+          "constraint_index": 6,
+          "category_domain": "transport",
+          "expression": "'taxi'",
+          "raw_label": "taxi",
+          "normalized_label": "taxi"
+        },
+        {
+          "constraint_index": 6,
+          "category_domain": "transport",
+          "expression": "innercity_transport_type(activity_transports(activity))",
+          "raw_label": "metro",
+          "normalized_label": "metro"
+        },
+        {
+          "constraint_index": 6,
+          "category_domain": "transport",
+          "expression": "'taxi'",
+          "raw_label": "taxi",
+          "normalized_label": "taxi"
+        },
+        {
+          "constraint_index": 6,
+          "category_domain": "transport",
+          "expression": "innercity_transport_type(activity_transports(activity))",
+          "raw_label": "metro",
+          "normalized_label": "metro"
+        },
+        {
+          "constraint_index": 6,
+          "category_domain": "transport",
+          "expression": "'taxi'",
+          "raw_label": "taxi",
+          "normalized_label": "taxi"
+        },
+        {
+          "constraint_index": 6,
+          "category_domain": "transport",
+          "expression": "innercity_transport_type(activity_transports(activity))",
+          "raw_label": "metro",
+          "normalized_label": "metro"
+        },
+        {
+          "constraint_index": 6,
+          "category_domain": "transport",
+          "expression": "'taxi'",
+          "raw_label": "taxi",
+          "normalized_label": "taxi"
+        },
+        {
+          "constraint_index": 6,
+          "category_domain": "transport",
+          "expression": "innercity_transport_type(activity_transports(activity))",
+          "raw_label": "walk",
+          "normalized_label": "walk"
+        },
+        {
+          "constraint_index": 6,
+          "category_domain": "transport",
+          "expression": "'taxi'",
+          "raw_label": "taxi",
+          "normalized_label": "taxi"
+        },
+        {
+          "constraint_index": 6,
+          "category_domain": "transport",
+          "expression": "innercity_transport_type(activity_transports(activity))",
+          "raw_label": "metro",
+          "normalized_label": "metro"
+        },
+        {
+          "constraint_index": 6,
+          "category_domain": "transport",
+          "expression": "'taxi'",
+          "raw_label": "taxi",
+          "normalized_label": "taxi"
+        },
+        {
+          "constraint_index": 6,
+          "category_domain": "transport",
+          "expression": "innercity_transport_type(activity_transports(activity))",
+          "raw_label": "metro",
+          "normalized_label": "metro"
+        },
+        {
+          "constraint_index": 6,
+          "category_domain": "transport",
+          "expression": "'taxi'",
+          "raw_label": "taxi",
+          "normalized_label": "taxi"
+        },
+        {
+          "constraint_index": 6,
+          "category_domain": "transport",
+          "expression": "innercity_transport_type(activity_transports(activity))",
+          "raw_label": "metro",
+          "normalized_label": "metro"
+        },
+        {
+          "constraint_index": 6,
+          "category_domain": "transport",
+          "expression": "'taxi'",
+          "raw_label": "taxi",
+          "normalized_label": "taxi"
+        },
+        {
+          "constraint_index": 6,
+          "category_domain": "transport",
+          "expression": "innercity_transport_type(activity_transports(activity))",
+          "raw_label": "walk",
+          "normalized_label": "walk"
+        },
+        {
+          "constraint_index": 6,
+          "category_domain": "transport",
+          "expression": "'taxi'",
+          "raw_label": "taxi",
+          "normalized_label": "taxi"
+        },
+        {
+          "constraint_index": 6,
+          "category_domain": "transport",
+          "expression": "innercity_transport_type(activity_transports(activity))",
+          "raw_label": "metro",
+          "normalized_label": "metro"
+        },
+        {
+          "constraint_index": 6,
+          "category_domain": "transport",
+          "expression": "'taxi'",
+          "raw_label": "taxi",
+          "normalized_label": "taxi"
+        }
+      ],
+      "personal_errors": [
+        "Personal constraint 2 failed: total_cost=0 \nfor activity in allactivities(plan):\n    total_cost+=activity_cost(activity)\n    total_cost += innercity_transport_cost(activity_transports(activity))\nresult=(total_cost<=4000)",
+        "Personal constraint 3 failed: attraction_name_set=set()\nfor activity in allactivities(plan):\n  if activity_type(activity)=='attraction': attraction_name_set.add(activity_position(activity))\nresult=({'三峡博物馆','重庆动物园','朝天门广场','人民大礼堂'}<=attraction_name_set)"
+      ],
+      "evaluation_errors": [],
+      "translation_errors": [],
+      "error_info": [
+        "Incorrect duration information of given intercity transport from destination to origin G1888 [start_time -> end_time].",
+        "The attraction, Three Gorges Museum in day 2, is closed when you visiting. Its open time is [09:00 -- 17:00]",
+        "The end_time of dinner activity, Instrument Factory Hot Pot (Jiefangbei Branch) in day 3, cannot be earlier than 17:00.",
+        "The end_time of lunch activity, At Yuli Chongqing Hot Pot (Jiefangbei Delicious Street Branch) in day 4, cannot be earlier than 11:00.",
+        "The restaurant, At Yuli Chongqing Hot Pot (Jiefangbei Delicious Street Branch) in day 4, is closed when you visiting. Its open time is [10:00 -- 25:00]",
+        "Personal constraint 2 failed: total_cost=0 \nfor activity in allactivities(plan):\n    total_cost+=activity_cost(activity)\n    total_cost += innercity_transport_cost(activity_transports(activity))\nresult=(total_cost<=4000)",
+        "Personal constraint 3 failed: attraction_name_set=set()\nfor activity in allactivities(plan):\n  if activity_type(activity)=='attraction': attraction_name_set.add(activity_position(activity))\nresult=({'三峡博物馆','重庆动物园','朝天门广场','人民大礼堂'}<=attraction_name_set)"
+      ],
+      "passed": false,
+      "translated_plan": {
+        "people_number": 2,
+        "start_city": "Nanjing",
+        "target_city": "Chongqing",
+        "itinerary": [
+          {
+            "day": 1,
+            "activities": [
+              {
+                "start_time": "07:39",
+                "end_time": "19:23",
+                "start": "Nanjing South Railway Station",
+                "end": "Chongqing West Railway Station",
+                "price": 780.77,
+                "cost": 1561.54,
+                "TrainID": "G1887",
+                "type": "train",
+                "tickets": 2,
+                "transports": []
+              },
+              {
+                "position": "Qianhe Zhixuan Gaokong Hotel (Jiefangbei Hongyadong Branch)",
+                "type": "accommodation",
+                "transports": [
+                  {
+                    "start": "Chongqing West Railway Station",
+                    "end": "Chongqing West Railway Station-Metro Station",
+                    "mode": "walk",
+                    "start_time": "19:23",
+                    "end_time": "19:24",
+                    "cost": 0,
+                    "distance": 0.1,
+                    "price": 0
+                  },
+                  {
+                    "start": "Chongqing West Railway Station-Metro Station",
+                    "end": "Xiaoshizi-Metro Station",
+                    "mode": "metro",
+                    "start_time": "19:24",
+                    "end_time": "19:55",
+                    "cost": 10,
+                    "distance": 15.5,
+                    "price": 5,
+                    "tickets": 2
+                  },
+                  {
+                    "start": "Xiaoshizi-Metro Station",
+                    "end": "Qianhe Zhixuan Gaokong Hotel (Jiefangbei Hongyadong Branch)",
+                    "mode": "walk",
+                    "start_time": "19:55",
+                    "end_time": "19:56",
+                    "cost": 0,
+                    "distance": 0.12,
+                    "price": 0
+                  }
+                ],
+                "room_type": 2,
+                "price": 208,
+                "cost": 208,
+                "start_time": "20:00",
+                "end_time": "24:00",
+                "rooms": 1
+              }
+            ]
+          },
+          {
+            "day": 2,
+            "activities": [
+              {
+                "position": "Three Gorges Museum",
+                "type": "attraction",
+                "transports": [
+                  {
+                    "start": "Qianhe Zhixuan Gaokong Hotel (Jiefangbei Hongyadong Branch)",
+                    "end": "Xiaoshizi-Metro Station",
+                    "mode": "walk",
+                    "start_time": "08:00",
+                    "end_time": "08:01",
+                    "cost": 0,
+                    "distance": 0.12,
+                    "price": 0
+                  },
+                  {
+                    "start": "Xiaoshizi-Metro Station",
+                    "end": "Daxigou-Metro Station",
+                    "mode": "metro",
+                    "start_time": "08:01",
+                    "end_time": "08:06",
+                    "cost": 4,
+                    "distance": 2.53,
+                    "price": 2,
+                    "tickets": 2
+                  },
+                  {
+                    "start": "Daxigou-Metro Station",
+                    "end": "Three Gorges Museum",
+                    "mode": "walk",
+                    "start_time": "08:06",
+                    "end_time": "08:09",
+                    "cost": 0,
+                    "distance": 0.29,
+                    "price": 0
+                  }
+                ],
+                "price": 0.0,
+                "cost": 0.0,
+                "tickets": 2,
+                "start_time": "08:15",
+                "end_time": "09:45"
+              },
+              {
+                "position": "Great Hall of the People",
+                "type": "attraction",
+                "transports": [
+                  {
+                    "start": "Three Gorges Museum",
+                    "end": "Great Hall of the People",
+                    "mode": "walk",
+                    "start_time": "09:45",
+                    "end_time": "09:49",
+                    "cost": 0,
+                    "distance": 0.3643934891496773
+                  }
+                ],
+                "price": 0.0,
+                "cost": 0.0,
+                "tickets": 2,
+                "start_time": "09:50",
+                "end_time": "11:20"
+              },
+              {
+                "position": "Yang Ji Long Fu (Liberation Monument Main Store)",
+                "type": "lunch",
+                "transports": [
+                  {
+                    "start": "Great Hall of the People",
+                    "end": "Daxigou-Metro Station",
+                    "mode": "walk",
+                    "start_time": "11:20",
+                    "end_time": "11:23",
+                    "cost": 0,
+                    "distance": 0.29,
+                    "price": 0
+                  },
+                  {
+                    "start": "Daxigou-Metro Station",
+                    "end": "Linjiangmen-Metro Station",
+                    "mode": "metro",
+                    "start_time": "11:23",
+                    "end_time": "11:26",
+                    "cost": 4,
+                    "distance": 1.77,
+                    "price": 2,
+                    "tickets": 2
+                  },
+                  {
+                    "start": "Linjiangmen-Metro Station",
+                    "end": "Yang Ji Long Fu (Liberation Monument Main Store)",
+                    "mode": "walk",
+                    "start_time": "11:26",
+                    "end_time": "11:31",
+                    "cost": 0,
+                    "distance": 0.49,
+                    "price": 0
+                  }
+                ],
+                "price": 96,
+                "cost": 192,
+                "start_time": "11:40",
+                "end_time": "12:30"
+              },
+              {
+                "position": "Chaotianmen Square",
+                "type": "attraction",
+                "transports": [
+                  {
+                    "start": "Yang Ji Long Fu (Liberation Monument Main Store)",
+                    "end": "Linjiangmen-Metro Station",
+                    "mode": "walk",
+                    "start_time": "12:30",
+                    "end_time": "12:35",
+                    "cost": 0,
+                    "distance": 0.49,
+                    "price": 0
+                  },
+                  {
+                    "start": "Linjiangmen-Metro Station",
+                    "end": "Tushan-Metro Station",
+                    "mode": "metro",
+                    "start_time": "12:35",
+                    "end_time": "12:41",
+                    "cost": 4,
+                    "distance": 3.22,
+                    "price": 2,
+                    "tickets": 2
+                  },
+                  {
+                    "start": "Tushan-Metro Station",
+                    "end": "Chaotianmen Square",
+                    "mode": "walk",
+                    "start_time": "12:41",
+                    "end_time": "12:48",
+                    "cost": 0,
+                    "distance": 0.67,
+                    "price": 0
+                  }
+                ],
+                "price": 0.0,
+                "cost": 0.0,
+                "tickets": 2,
+                "start_time": "12:50",
+                "end_time": "13:50"
+              },
+              {
+                "position": "Hongya Cave",
+                "type": "attraction",
+                "transports": [
+                  {
+                    "start": "Chaotianmen Square",
+                    "end": "Tushan-Metro Station",
+                    "mode": "walk",
+                    "start_time": "13:50",
+                    "end_time": "13:57",
+                    "cost": 0,
+                    "distance": 0.67,
+                    "price": 0
+                  },
+                  {
+                    "start": "Tushan-Metro Station",
+                    "end": "Chaotianmen-Metro Station",
+                    "mode": "metro",
+                    "start_time": "13:57",
+                    "end_time": "14:00",
+                    "cost": 4,
+                    "distance": 1.67,
+                    "price": 2,
+                    "tickets": 2
+                  },
+                  {
+                    "start": "Chaotianmen-Metro Station",
+                    "end": "Hongya Cave",
+                    "mode": "walk",
+                    "start_time": "14:00",
+                    "end_time": "14:03",
+                    "cost": 0,
+                    "distance": 0.32,
+                    "price": 0
+                  }
+                ],
+                "price": 0.0,
+                "cost": 0.0,
+                "tickets": 2,
+                "start_time": "14:10",
+                "end_time": "16:10"
+              },
+              {
+                "position": "General Ba's Intangible Cultural Heritage Original Flavor Hot Pot (Jiefangbei Branch)",
+                "type": "dinner",
+                "transports": [
+                  {
+                    "start": "Hongya Cave",
+                    "end": "Chaotianmen-Metro Station",
+                    "mode": "walk",
+                    "start_time": "16:10",
+                    "end_time": "16:13",
+                    "cost": 0,
+                    "distance": 0.32,
+                    "price": 0
+                  },
+                  {
+                    "start": "Chaotianmen-Metro Station",
+                    "end": "Linjiangmen-Metro Station",
+                    "mode": "metro",
+                    "start_time": "16:13",
+                    "end_time": "16:16",
+                    "cost": 4,
+                    "distance": 1.55,
+                    "price": 2,
+                    "tickets": 2
+                  },
+                  {
+                    "start": "Linjiangmen-Metro Station",
+                    "end": "General Ba's Intangible Cultural Heritage Original Flavor Hot Pot (Jiefangbei Branch)",
+                    "mode": "walk",
+                    "start_time": "16:16",
+                    "end_time": "16:20",
+                    "cost": 0,
+                    "distance": 0.34,
+                    "price": 0
+                  }
+                ],
+                "price": 89,
+                "cost": 178,
+                "start_time": "16:30",
+                "end_time": "17:30"
+              },
+              {
+                "position": "Qianhe Zhixuan Gaokong Hotel (Jiefangbei Hongyadong Branch)",
+                "type": "accommodation",
+                "transports": [
+                  {
+                    "start": "General Ba's Intangible Cultural Heritage Original Flavor Hot Pot (Jiefangbei Branch)",
+                    "end": "Linjiangmen-Metro Station",
+                    "mode": "walk",
+                    "start_time": "17:30",
+                    "end_time": "17:34",
+                    "cost": 0,
+                    "distance": 0.34,
+                    "price": 0
+                  },
+                  {
+                    "start": "Linjiangmen-Metro Station",
+                    "end": "Xiaoshizi-Metro Station",
+                    "mode": "metro",
+                    "start_time": "17:34",
+                    "end_time": "17:35",
+                    "cost": 4,
+                    "distance": 0.93,
+                    "price": 2,
+                    "tickets": 2
+                  },
+                  {
+                    "start": "Xiaoshizi-Metro Station",
+                    "end": "Qianhe Zhixuan Gaokong Hotel (Jiefangbei Hongyadong Branch)",
+                    "mode": "walk",
+                    "start_time": "17:35",
+                    "end_time": "17:36",
+                    "cost": 0,
+                    "distance": 0.12,
+                    "price": 0
+                  }
+                ],
+                "room_type": 2,
+                "price": 208,
+                "cost": 208,
+                "start_time": "17:40",
+                "end_time": "24:00",
+                "rooms": 1
+              }
+            ]
+          },
+          {
+            "day": 3,
+            "activities": [
+              {
+                "position": "Chongqing Zoo",
+                "type": "attraction",
+                "transports": [
+                  {
+                    "start": "Qianhe Zhixuan Gaokong Hotel (Jiefangbei Hongyadong Branch)",
+                    "end": "Xiaoshizi-Metro Station",
+                    "mode": "walk",
+                    "start_time": "08:00",
+                    "end_time": "08:01",
+                    "cost": 0,
+                    "distance": 0.12,
+                    "price": 0
+                  },
+                  {
+                    "start": "Xiaoshizi-Metro Station",
+                    "end": "Yangjiaping-Metro Station",
+                    "mode": "metro",
+                    "start_time": "08:01",
+                    "end_time": "08:18",
+                    "cost": 6,
+                    "distance": 8.74,
+                    "price": 3,
+                    "tickets": 2
+                  },
+                  {
+                    "start": "Yangjiaping-Metro Station",
+                    "end": "Chongqing Zoo",
+                    "mode": "walk",
+                    "start_time": "08:18",
+                    "end_time": "08:22",
+                    "cost": 0,
+                    "distance": 0.35,
+                    "price": 0
+                  }
+                ],
+                "price": 24.5,
+                "cost": 49.0,
+                "tickets": 2,
+                "start_time": "08:30",
+                "end_time": "10:30"
+              },
+              {
+                "position": "Qin Yun Old Lady's Stall Noodles (National Flagship Store)",
+                "type": "lunch",
+                "transports": [
+                  {
+                    "start": "Chongqing Zoo",
+                    "end": "Yangjiaping-Metro Station",
+                    "mode": "walk",
+                    "start_time": "10:30",
+                    "end_time": "10:34",
+                    "cost": 0,
+                    "distance": 0.35,
+                    "price": 0
+                  },
+                  {
+                    "start": "Yangjiaping-Metro Station",
+                    "end": "Xiejiawan-Metro Station",
+                    "mode": "metro",
+                    "start_time": "10:34",
+                    "end_time": "10:36",
+                    "cost": 4,
+                    "distance": 1.25,
+                    "price": 2,
+                    "tickets": 2
+                  },
+                  {
+                    "start": "Xiejiawan-Metro Station",
+                    "end": "Qin Yun Old Lady's Stall Noodles (National Flagship Store)",
+                    "mode": "walk",
+                    "start_time": "10:36",
+                    "end_time": "10:42",
+                    "cost": 0,
+                    "distance": 0.56,
+                    "price": 0
+                  }
+                ],
+                "price": 15,
+                "cost": 30,
+                "start_time": "10:50",
+                "end_time": "11:30"
+              },
+              {
+                "position": "Chongqing Huguang Guild Hall",
+                "type": "attraction",
+                "transports": [
+                  {
+                    "start": "Qin Yun Old Lady's Stall Noodles (National Flagship Store)",
+                    "end": "Xiejiawan-Metro Station",
+                    "mode": "walk",
+                    "start_time": "11:30",
+                    "end_time": "11:36",
+                    "cost": 0,
+                    "distance": 0.56,
+                    "price": 0
+                  },
+                  {
+                    "start": "Xiejiawan-Metro Station",
+                    "end": "Chaotianmen-Metro Station",
+                    "mode": "metro",
+                    "start_time": "11:36",
+                    "end_time": "11:53",
+                    "cost": 6,
+                    "distance": 8.55,
+                    "price": 3,
+                    "tickets": 2
+                  },
+                  {
+                    "start": "Chaotianmen-Metro Station",
+                    "end": "Chongqing Huguang Guild Hall",
+                    "mode": "walk",
+                    "start_time": "11:53",
+                    "end_time": "12:00",
+                    "cost": 0,
+                    "distance": 0.63,
+                    "price": 0
+                  }
+                ],
+                "price": 25.0,
+                "cost": 50.0,
+                "tickets": 2,
+                "start_time": "12:10",
+                "end_time": "13:40"
+              },
+              {
+                "position": "Liberation Monument Pedestrian Street",
+                "type": "attraction",
+                "transports": [
+                  {
+                    "start": "Chongqing Huguang Guild Hall",
+                    "end": "Chaotianmen-Metro Station",
+                    "mode": "walk",
+                    "start_time": "13:40",
+                    "end_time": "13:47",
+                    "cost": 0,
+                    "distance": 0.63,
+                    "price": 0
+                  },
+                  {
+                    "start": "Chaotianmen-Metro Station",
+                    "end": "Xiaoshizi-Metro Station",
+                    "mode": "metro",
+                    "start_time": "13:47",
+                    "end_time": "13:48",
+                    "cost": 4,
+                    "distance": 0.79,
+                    "price": 2,
+                    "tickets": 2
+                  },
+                  {
+                    "start": "Xiaoshizi-Metro Station",
+                    "end": "Liberation Monument Pedestrian Street",
+                    "mode": "walk",
+                    "start_time": "13:48",
+                    "end_time": "13:52",
+                    "cost": 0,
+                    "distance": 0.39,
+                    "price": 0
+                  }
+                ],
+                "price": 0.0,
+                "cost": 0.0,
+                "tickets": 2,
+                "start_time": "14:00",
+                "end_time": "15:00"
+              },
+              {
+                "position": "Instrument Factory Hot Pot (Jiefangbei Branch)",
+                "type": "dinner",
+                "transports": [
+                  {
+                    "start": "Liberation Monument Pedestrian Street",
+                    "end": "Instrument Factory Hot Pot (Jiefangbei Branch)",
+                    "mode": "walk",
+                    "start_time": "15:00",
+                    "end_time": "15:15",
+                    "cost": 0,
+                    "distance": 1.3191703052397858
+                  }
+                ],
+                "price": 100,
+                "cost": 200,
+                "start_time": "15:30",
+                "end_time": "16:30"
+              },
+              {
+                "position": "Qianhe Zhixuan Gaokong Hotel (Jiefangbei Hongyadong Branch)",
+                "type": "accommodation",
+                "transports": [
+                  {
+                    "start": "Instrument Factory Hot Pot (Jiefangbei Branch)",
+                    "end": "Linjiangmen-Metro Station",
+                    "mode": "walk",
+                    "start_time": "16:30",
+                    "end_time": "16:33",
+                    "cost": 0,
+                    "distance": 0.32,
+                    "price": 0
+                  },
+                  {
+                    "start": "Linjiangmen-Metro Station",
+                    "end": "Xiaoshizi-Metro Station",
+                    "mode": "metro",
+                    "start_time": "16:33",
+                    "end_time": "16:34",
+                    "cost": 4,
+                    "distance": 0.93,
+                    "price": 2,
+                    "tickets": 2
+                  },
+                  {
+                    "start": "Xiaoshizi-Metro Station",
+                    "end": "Qianhe Zhixuan Gaokong Hotel (Jiefangbei Hongyadong Branch)",
+                    "mode": "walk",
+                    "start_time": "16:34",
+                    "end_time": "16:35",
+                    "cost": 0,
+                    "distance": 0.12,
+                    "price": 0
+                  }
+                ],
+                "room_type": 2,
+                "price": 208,
+                "cost": 208,
+                "start_time": "16:40",
+                "end_time": "24:00",
+                "rooms": 1
+              }
+            ]
+          },
+          {
+            "day": 4,
+            "activities": [
+              {
+                "position": "Yangtze River Cableway",
+                "type": "attraction",
+                "transports": [
+                  {
+                    "start": "Qianhe Zhixuan Gaokong Hotel (Jiefangbei Hongyadong Branch)",
+                    "end": "Xiaoshizi-Metro Station",
+                    "mode": "walk",
+                    "start_time": "08:00",
+                    "end_time": "08:01",
+                    "cost": 0,
+                    "distance": 0.12,
+                    "price": 0
+                  },
+                  {
+                    "start": "Xiaoshizi-Metro Station",
+                    "end": "Chaotianmen-Metro Station",
+                    "mode": "metro",
+                    "start_time": "08:01",
+                    "end_time": "08:02",
+                    "cost": 4,
+                    "distance": 0.79,
+                    "price": 2,
+                    "tickets": 2
+                  },
+                  {
+                    "start": "Chaotianmen-Metro Station",
+                    "end": "Yangtze River Cableway",
+                    "mode": "walk",
+                    "start_time": "08:02",
+                    "end_time": "08:05",
+                    "cost": 0,
+                    "distance": 0.33,
+                    "price": 0
+                  }
+                ],
+                "price": 20.0,
+                "cost": 40.0,
+                "tickets": 2,
+                "start_time": "08:15",
+                "end_time": "09:15"
+              },
+              {
+                "position": "At Yuli Chongqing Hot Pot (Jiefangbei Delicious Street Branch)",
+                "type": "lunch",
+                "transports": [
+                  {
+                    "start": "Yangtze River Cableway",
+                    "end": "Chaotianmen-Metro Station",
+                    "mode": "walk",
+                    "start_time": "09:15",
+                    "end_time": "09:18",
+                    "cost": 0,
+                    "distance": 0.33,
+                    "price": 0
+                  },
+                  {
+                    "start": "Chaotianmen-Metro Station",
+                    "end": "Jiaochangkou-Metro Station",
+                    "mode": "metro",
+                    "start_time": "09:18",
+                    "end_time": "09:21",
+                    "cost": 4,
+                    "distance": 1.89,
+                    "price": 2,
+                    "tickets": 2
+                  },
+                  {
+                    "start": "Jiaochangkou-Metro Station",
+                    "end": "At Yuli Chongqing Hot Pot (Jiefangbei Delicious Street Branch)",
+                    "mode": "walk",
+                    "start_time": "09:21",
+                    "end_time": "09:25",
+                    "cost": 0,
+                    "distance": 0.35,
+                    "price": 0
+                  }
+                ],
+                "price": 78,
+                "cost": 156,
+                "start_time": "09:30",
+                "end_time": "10:30"
+              },
+              {
+                "position": "Chongqing WFC Xianlai Tower Observation Deck",
+                "type": "attraction",
+                "transports": [
+                  {
+                    "start": "At Yuli Chongqing Hot Pot (Jiefangbei Delicious Street Branch)",
+                    "end": "Chongqing WFC Xianlai Tower Observation Deck",
+                    "mode": "walk",
+                    "start_time": "10:30",
+                    "end_time": "10:45",
+                    "cost": 0,
+                    "distance": 1.2619681740628395
+                  }
+                ],
+                "price": 118.0,
+                "cost": 236.0,
+                "tickets": 2,
+                "start_time": "10:50",
+                "end_time": "11:50"
+              },
+              {
+                "start": "Chongqing West Railway Station",
+                "end": "Nanjing South Railway Station",
+                "start_time": "14:01",
+                "end_time": "22:42",
+                "TrainID": "G1888",
+                "type": "train",
+                "transports": [
+                  {
+                    "start": "Chongqing WFC Xianlai Tower Observation Deck",
+                    "end": "Chaotianmen-Metro Station",
+                    "mode": "walk",
+                    "start_time": "11:50",
+                    "end_time": "11:54",
+                    "cost": 0,
+                    "distance": 0.34,
+                    "price": 0
+                  },
+                  {
+                    "start": "Chaotianmen-Metro Station",
+                    "end": "Chongqing West Railway Station-Metro Station",
+                    "mode": "metro",
+                    "start_time": "11:54",
+                    "end_time": "12:26",
+                    "cost": 10,
+                    "distance": 16.14,
+                    "price": 5,
+                    "tickets": 2
+                  },
+                  {
+                    "start": "Chongqing West Railway Station-Metro Station",
+                    "end": "Chongqing West Railway Station",
+                    "mode": "walk",
+                    "start_time": "12:26",
+                    "end_time": "12:27",
+                    "cost": 0,
+                    "distance": 0.1,
+                    "price": 0
+                  }
+                ],
+                "price": 780.77,
+                "cost": 1561.54,
+                "tickets": 2
+              }
+            ]
+          }
+        ]
+      },
+      "verifier_errors": [],
+      "schema_errors": [],
+      "translation_failures": []
+    },
+    "environment_context": {
+      "lang": "en"
+    },
+    "generation_metadata": {
+      "raw_response": "[{\"day\": 1,```json\n[\n    {\n        \"day\": 1,\n        \"activities\": [\n            {\n                \"start_time\": \"07:39\",\n                \"end_time\": \"19:23\",\n                \"start\": \"Nanjing South Railway Station\",\n                \"end\": \"Chongqing West Railway Station\",\n                \"price\": 780.77,\n                \"cost\": 1561.54,\n                \"TrainID\": \"G1887\",\n                \"type\": \"train\",\n                \"tickets\": 2,\n                \"transports\": \"empty\"\n            },\n            {\n                \"position\": \"Qianhe Zhixuan Gaokong Hotel (Jiefangbei Hongyadong Branch)\",\n                \"type\": \"accommodation\",\n                \"transports\": {\n                    \"from\": \"Chongqing West Railway Station\",\n                    \"to\": \"Qianhe Zhixuan Gaokong Hotel (Jiefangbei Hongyadong Branch)\",\n                    \"mode\": \"metro\",\n                    \"start_time\": \"19:23\",\n                    \"end_time\": \"19:53\",\n                    \"cost\": 10\n                },\n                \"room_type\": 2,\n                \"price\": 208,\n                \"cost\": 208,\n                \"start_time\": \"20:00\",\n                \"end_time\": \"24:00\",\n                \"rooms\": 1\n            }\n        ]\n    },\n    {\n        \"day\": 2,\n        \"activities\": [\n            {\n                \"position\": \"Three Gorges Museum\",\n                \"type\": \"attraction\",\n                \"transports\": {\n                    \"from\": \"Qianhe Zhixuan Gaokong Hotel (Jiefangbei Hongyadong Branch)\",\n                    \"to\": \"Three Gorges Museum\",\n                    \"mode\": \"metro\",\n                    \"start_time\": \"08:00\",\n                    \"end_time\": \"08:09\",\n                    \"cost\": 4\n                },\n                \"price\": 0.0,\n                \"cost\": 0.0,\n                \"tickets\": 2,\n                \"start_time\": \"08:15\",\n                \"end_time\": \"09:45\"\n            },\n            {\n                \"position\": \"Great Hall of the People\",\n                \"type\": \"attraction\",\n                \"transports\": {\n                    \"from\": \"Three Gorges Museum\",\n                    \"to\": \"Great Hall of the People\",\n                    \"mode\": \"walk\",\n                    \"start_time\": \"09:45\",\n                    \"end_time\": \"09:49\",\n                    \"cost\": 0\n                },\n                \"price\": 0.0,\n                \"cost\": 0.0,\n                \"tickets\": 2,\n                \"start_time\": \"09:50\",\n                \"end_time\": \"11:20\"\n            },\n            {\n                \"position\": \"Yang Ji Long Fu (Liberation Monument Main Store)\",\n                \"type\": \"lunch\",\n                \"transports\": {\n                    \"from\": \"Great Hall of the People\",\n                    \"to\": \"Yang Ji Long Fu (Liberation Monument Main Store)\",\n                    \"mode\": \"metro\",\n                    \"start_time\": \"11:20\",\n                    \"end_time\": \"11:31\",\n                    \"cost\": 4\n                },\n                \"price\": 96,\n                \"cost\": 192,\n                \"start_time\": \"11:40\",\n                \"end_time\": \"12:30\"\n            },\n            {\n                \"position\": \"Chaotianmen Square\",\n                \"type\": \"attraction\",\n                \"transports\": {\n                    \"from\": \"Yang Ji Long Fu (Liberation Monument Main Store)\",\n                    \"to\": \"Chaotianmen Square\",\n                    \"mode\": \"metro\",\n                    \"start_time\": \"12:30\",\n                    \"end_time\": \"12:48\",\n                    \"cost\": 4\n                },\n                \"price\": 0.0,\n                \"cost\": 0.0,\n                \"tickets\": 2,\n                \"start_time\": \"12:50\",\n                \"end_time\": \"13:50\"\n            },\n            {\n                \"position\": \"Hongya Cave\",\n                \"type\": \"attraction\",\n                \"transports\": {\n                    \"from\": \"Chaotianmen Square\",\n                    \"to\": \"Hongya Cave\",\n                    \"mode\": \"metro\",\n                    \"start_time\": \"13:50\",\n                    \"end_time\": \"14:00\",\n                    \"cost\": 4\n                },\n                \"price\": 0.0,\n                \"cost\": 0.0,\n                \"tickets\": 2,\n                \"start_time\": \"14:10\",\n                \"end_time\": \"16:10\"\n            },\n            {\n                \"position\": \"General Ba's Intangible Cultural Heritage Original Flavor Hot Pot (Jiefangbei Branch)\",\n                \"type\": \"dinner\",\n                \"transports\": {\n                    \"from\": \"Hongya Cave\",\n                    \"to\": \"General Ba's Intangible Cultural Heritage Original Flavor Hot Pot (Jiefangbei Branch)\",\n                    \"mode\": \"metro\",\n                    \"start_time\": \"16:10\",\n                    \"end_time\": \"16:20\",\n                    \"cost\": 4\n                },\n                \"price\": 89,\n                \"cost\": 178,\n                \"start_time\": \"16:30\",\n                \"end_time\": \"17:30\"\n            },\n            {\n                \"position\": \"Qianhe Zhixuan Gaokong Hotel (Jiefangbei Hongyadong Branch)\",\n                \"type\": \"accommodation\",\n                \"transports\": {\n                    \"from\": \"General Ba's Intangible Cultural Heritage Original Flavor Hot Pot (Jiefangbei Branch)\",\n                    \"to\": \"Qianhe Zhixuan Gaokong Hotel (Jiefangbei Hongyadong Branch)\",\n                    \"mode\": \"metro\",\n                    \"start_time\": \"17:30\",\n                    \"end_time\": \"17:36\",\n                    \"cost\": 4\n                },\n                \"room_type\": 2,\n                \"price\": 208,\n                \"cost\": 208,\n                \"start_time\": \"17:40\",\n                \"end_time\": \"24:00\",\n                \"rooms\": 1\n            }\n        ]\n    },\n    {\n        \"day\": 3,\n        \"activities\": [\n            {\n                \"position\": \"Chongqing Zoo\",\n                \"type\": \"attraction\",\n                \"transports\": {\n                    \"from\": \"Qianhe Zhixuan Gaokong Hotel (Jiefangbei Hongyadong Branch)\",\n                    \"to\": \"Chongqing Zoo\",\n                    \"mode\": \"metro\",\n                    \"start_time\": \"08:00\",\n                    \"end_time\": \"08:22\",\n                    \"cost\": 6\n                },\n                \"price\": 24.5,\n                \"cost\": 49.0,\n                \"tickets\": 2,\n                \"start_time\": \"08:30\",\n                \"end_time\": \"10:30\"\n            },\n            {\n                \"position\": \"Qin Yun Old Lady's Stall Noodles (National Flagship Store)\",\n                \"type\": \"lunch\",\n                \"transports\": {\n                    \"from\": \"Chongqing Zoo\",\n                    \"to\": \"Qin Yun Old Lady's Stall Noodles (National Flagship Store)\",\n                    \"mode\": \"metro\",\n                    \"start_time\": \"10:30\",\n                    \"end_time\": \"10:42\",\n                    \"cost\": 4\n                },\n                \"price\": 15,\n                \"cost\": 30,\n                \"start_time\": \"10:50\",\n                \"end_time\": \"11:30\"\n            },\n            {\n                \"position\": \"Chongqing Huguang Guild Hall\",\n                \"type\": \"attraction\",\n                \"transports\": {\n                    \"from\": \"Qin Yun Old Lady's Stall Noodles (National Flagship Store)\",\n                    \"to\": \"Chongqing Huguang Guild Hall\",\n                    \"mode\": \"metro\",\n                    \"start_time\": \"11:30\",\n                    \"end_time\": \"12:00\",\n                    \"cost\": 6\n                },\n                \"price\": 25.0,\n                \"cost\": 50.0,\n                \"tickets\": 2,\n                \"start_time\": \"12:10\",\n                \"end_time\": \"13:40\"\n            },\n            {\n                \"position\": \"Liberation Monument Pedestrian Street\",\n                \"type\": \"attraction\",\n                \"transports\": {\n                    \"from\": \"Chongqing Huguang Guild Hall\",\n                    \"to\": \"Liberation Monument Pedestrian Street\",\n                    \"mode\": \"metro\",\n                    \"start_time\": \"13:40\",\n                    \"end_time\": \"13:52\",\n                    \"cost\": 4\n                },\n                \"price\": 0.0,\n                \"cost\": 0.0,\n                \"tickets\": 2,\n                \"start_time\": \"14:00\",\n                \"end_time\": \"15:00\"\n            },\n            {\n                \"position\": \"Instrument Factory Hot Pot (Jiefangbei Branch)\",\n                \"type\": \"dinner\",\n                \"transports\": {\n                    \"from\": \"Liberation Monument Pedestrian Street\",\n                    \"to\": \"Instrument Factory Hot Pot (Jiefangbei Branch)\",\n                    \"mode\": \"walk\",\n                    \"start_time\": \"15:00\",\n                    \"end_time\": \"15:07\",\n                    \"cost\": 0\n                },\n                \"price\": 100,\n                \"cost\": 200,\n                \"start_time\": \"15:30\",\n                \"end_time\": \"16:30\"\n            },\n            {\n                \"position\": \"Qianhe Zhixuan Gaokong Hotel (Jiefangbei Hongyadong Branch)\",\n                \"type\": \"accommodation\",\n                \"transports\": {\n                    \"from\": \"Instrument Factory Hot Pot (Jiefangbei Branch)\",\n                    \"to\": \"Qianhe Zhixuan Gaokong Hotel (Jiefangbei Hongyadong Branch)\",\n                    \"mode\": \"metro\",\n                    \"start_time\": \"16:30\",\n                    \"end_time\": \"16:35\",\n                    \"cost\": 4\n                },\n                \"room_type\": 2,\n                \"price\": 208,\n                \"cost\": 208,\n                \"start_time\": \"16:40\",\n                \"end_time\": \"24:00\",\n                \"rooms\": 1\n            }\n        ]\n    },\n    {\n        \"day\": 4,\n        \"activities\": [\n            {\n                \"position\": \"Yangtze River Cableway\",\n                \"type\": \"attraction\",\n                \"transports\": {\n                    \"from\": \"Qianhe Zhixuan Gaokong Hotel (Jiefangbei Hongyadong Branch)\",\n                    \"to\": \"Yangtze River Cableway\",\n                    \"mode\": \"metro\",\n                    \"start_time\": \"08:00\",\n                    \"end_time\": \"08:05\",\n                    \"cost\": 4\n                },\n                \"price\": 20.0,\n                \"cost\": 40.0,\n                \"tickets\": 2,\n                \"start_time\": \"08:15\",\n                \"end_time\": \"09:15\"\n            },\n            {\n                \"position\": \"At Yuli Chongqing Hot Pot (Jiefangbei Delicious Street Branch)\",\n                \"type\": \"lunch\",\n                \"transports\": {\n                    \"from\": \"Yangtze River Cableway\",\n                    \"to\": \"At Yuli Chongqing Hot Pot (Jiefangbei Delicious Street Branch)\",\n                    \"mode\": \"metro\",\n                    \"start_time\": \"09:15\",\n                    \"end_time\": \"09:25\",\n                    \"cost\": 4\n                },\n                \"price\": 78,\n                \"cost\": 156,\n                \"start_time\": \"09:30\",\n                \"end_time\": \"10:30\"\n            },\n            {\n                \"position\": \"Chongqing WFC Xianlai Tower Observation Deck\",\n                \"type\": \"attraction\",\n                \"transports\": {\n                    \"from\": \"At Yuli Chongqing Hot Pot (Jiefangbei Delicious Street Branch)\",\n                    \"to\": \"Chongqing WFC Xianlai Tower Observation Deck\",\n                    \"mode\": \"walk\",\n                    \"start_time\": \"10:30\",\n                    \"end_time\": \"10:45\",\n                    \"cost\": 0\n                },\n                \"price\": 118.0,\n                \"cost\": 236.0,\n                \"tickets\": 2,\n                \"start_time\": \"10:50\",\n                \"end_time\": \"11:50\"\n            },\n            {\n                \"start\": \"Chongqing West Railway Station\",\n                \"end\": \"Nanjing South Railway Station\",\n                \"start_time\": \"14:01\",\n                \"end_time\": \"22:42\",\n                \"TrainID\": \"G1888\",\n                \"type\": \"train\",\n                \"transports\": {\n                    \"from\": \"Chongqing WFC Xianlai Tower Observation Deck\",\n                    \"to\": \"Chongqing West Railway Station\",\n                    \"mode\": \"metro\",\n                    \"start_time\": \"11:50\",\n                    \"end_time\": \"12:24\",\n                    \"cost\": 10\n                },\n                \"price\": 780.77,\n                \"cost\": 1561.54,\n                \"tickets\": 2\n            }\n        ]\n    }\n]\n```",
+      "input_tokens": 92600,
+      "output_tokens": 3142,
+      "total_tokens": 95742,
+      "model_calls": 6,
+      "failed_model_calls": 0,
+      "elapsed_time_seconds": 69.52587890625,
+      "llm_inference_time_seconds": 52.38422083854675,
+      "information_collection_time_seconds": 17.135574102401733,
+      "initial_generation_time_s": 69.52886319998652,
+      "initial_generation_tool_calls": 4687,
+      "initial_generation_tool_call_counts_by_type": {
+        "accommodations_select": 1,
+        "attractions_select": 1,
+        "goto": 1518,
+        "intercity_transport_select": 4,
+        "next_page": 126,
+        "poi_lat_lon_search": 3036,
+        "restaurants_select": 1
+      },
+      "shared_initialization_time_s": 69.92446620005649,
+      "shared_initialization_system_metrics": {
+        "tool_call_count": 4814,
+        "successful_tool_call_count": 4814,
+        "failed_tool_call_count": 0,
+        "verification_count": 1,
+        "tool_call_counts_by_type": {
+          "accommodations_select": 4,
+          "attractions_select": 10,
+          "goto": 1554,
+          "intercity_transport_select": 6,
+          "next_page": 126,
+          "poi_lat_lon_search": 3108,
+          "restaurants_select": 6
+        }
+      }
+    }
+  },
+  "initial_plan_hash": "930880ce400f2253dc3c0bd76b3c527602ff4ae8f6c4f78e68d92127357e2b2a",
+  "initial_state_hash": "5846814bec3b1b631d032a70bf54cb3746600a04a8caf53cd550ef822c4dcff7"
+}

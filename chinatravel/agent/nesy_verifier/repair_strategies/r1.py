@@ -25,6 +25,25 @@ def find_candidate_slots(raw_plan, constraint_family):
                 candidates.append((day_idx, activity_idx))
     return candidates
 
+def find_budget_candidate_slots(raw_plan):
+    """Find cost-bearing activity slots for targeted budget repair."""
+    candidates = []
+    for day_idx, day in enumerate(raw_plan):
+        for activity_idx, activity in enumerate(
+            day.get("activities", [])):
+            if not isinstance(activity, dict):
+                continue
+            if activity.get("type") not in {
+                "accommodation", "attraction",
+                "breakfast", "lunch", "dinner",}:
+                continue
+            cost = activity.get("cost", 0)
+            if (isinstance(cost, (int, float))
+                and not isinstance(cost, bool)
+                and cost > 0):
+                candidates.append((day_idx, activity_idx))
+    return candidates
+
 def find_editable_slot(raw_plan, constraint_family):
     if constraint_family == "transport_mode":
         candidates = find_transport_slots(raw_plan)
@@ -109,7 +128,7 @@ Rules:
                    one_line=False,  json_mode=True,)
     replacement = parse_replacement_json(response)
     if not isinstance(replacement, dict):
-        raise ValueError("LLM must return one activity object") 
+        raise ValueError("LLM must return one activity object")
     return replacement
 
 def select_editable_slot(problem, raw_plan, candidates, constraint_text, llm):
@@ -242,6 +261,8 @@ def select_repair_target(problem, raw_plan, failed_indices):
         family = classify_failed_constraint(problem, target_idx)
         if family == "transport_mode":
             candidates = find_transport_slots(raw_plan)
+        elif family == "monetary_budget":
+            candidates = find_budget_candidate_slots(raw_plan)
         else:
             candidates = find_candidate_slots(raw_plan, family)
         if candidates:
@@ -408,6 +429,113 @@ def repair_commonsense_transport_cost(
                                       "corrected_cost": correct_cost,},)
     return None
 
+def is_within_opening_hours(start_time, end_time, open_time, close_time):
+    def minutes(value):
+        if not isinstance(value, str):
+            raise ValueError("Time must be a string")
+        parts = value.split(":")
+        if len(parts) != 2:
+            raise ValueError("Invalid time format")
+        hour, minute = map(int, parts)
+        if not (0 <= minute < 60):
+            raise ValueError("Invalid minutes")
+        if hour == 24 and minute == 0:
+            return 1440
+        if not (0 <= hour < 24):
+            raise ValueError("Invalid hours")
+        return hour * 60 + minute
+    opening = minutes(open_time)
+    closing = minutes(close_time)
+    start = minutes(start_time)
+    end = minutes(end_time)
+    # opening hours cross midnight
+    if closing < opening:
+        closing += 1440
+        if start < opening:
+            start += 1440
+        if end < opening:
+            end += 1440
+    return opening <= start < end <= closing
+
+def repair_commonsense_activity(
+    problem, raw_plan, verification_results, context, llm):
+    patterns = [
+        ("attraction",
+         r"The attraction, (.+?) in day (\d+), is closed "
+         r"when you visiting\. Its open time is "
+         r"\[(.+?) -- (.+?)\]",),
+         ("restaurant",
+          r"The restaurant, (.+?) in day (\d+), is closed "
+          r"when you visiting\. Its open time is "
+          r"\[(.+?) -- (.+?)\]",),]
+    for error in verification_results.get("commonsense_errors", []):
+        if not isinstance(error, str):
+            continue
+        for family, pattern in patterns:
+            match = re.fullmatch(pattern, error.strip())
+            if match is None:
+                continue
+            position = match.group(1)
+            day_idx = int(match.group(2)) - 1
+            open_time = match.group(3)
+            close_time = match.group(4)
+            if not 0 <= day_idx < len(raw_plan):
+                continue
+            matches = []
+            for activity_idx, activity in enumerate(
+                raw_plan[day_idx].get("activities", [])):
+                activity_type = activity.get("type")
+                correct_family = (
+                    activity_type == "attraction"
+                    if family == "attraction"
+                    else activity_type in
+                    {"breakfast", "lunch", "dinner"})
+                if (correct_family
+                    and activity.get("position") == position):
+                    matches.append((day_idx, activity_idx))
+            if len(matches) != 1:
+                continue
+            slot = matches[0]
+            metadata = {
+                "strategy": "R1",
+                "target_constraint_indices": [],
+                "editable_scope": "slot",
+                "scope_level": 1,
+                "editable_slot": slot,
+                "constraint_family": family,
+                "target_commonsense_error": error,
+                "repair_source": "commonsense_activity",}
+            instruction = (
+                f"Fix this commonsense violation: {error}\n"
+                f"The activity must fit within opening hours "
+                f"{open_time} to {close_time}.\n"
+                "Preserve the activity type and all unrelated "
+                "itinerary slots.")
+            try:
+                replacement = generate_replacement(
+                    problem=problem, raw_plan=raw_plan,
+                    slot=slot, constraint_text=instruction,
+                    context=context, llm=llm,)
+                if not is_within_opening_hours(
+                    replacement["start_time"],
+                    replacement["end_time"],
+                    open_time, close_time,):
+                    raise ValueError(
+                        "Replacement remains outside opening hours")
+                repaired_plan = replace_activity_slot(
+                    raw_plan, slot, replacement)
+            except (ValueError, TypeError, KeyError) as exc:
+                metadata["failure_reason"] = (
+                    "invalid_commonsense_replacement")
+                metadata["failure_detail"] = str(exc)[:200]
+                return RepairResult(
+                    repaired_plan=deepcopy(raw_plan),
+                    metadata=metadata,)
+            return RepairResult(
+                repaired_plan=repaired_plan,
+                metadata=metadata,)
+    return None
+
 class R1TargetedRepair(BaseRepairStrategy):
     def repair(self, problem, raw_plan, verification_results, context, llm):
         failed_indices = failed_constraint_indices(
@@ -419,6 +547,11 @@ class R1TargetedRepair(BaseRepairStrategy):
             if commonsense_result is None:
                 commonsense_result = repair_commonsense_transport(
                     problem, raw_plan, verification_results)
+            if commonsense_result is None:
+                commonsense_result = repair_commonsense_activity(
+                    problem=problem, raw_plan=raw_plan,
+                    verification_results=verification_results,
+                    context=context, llm=llm,)
             if commonsense_result is not None:
                 return commonsense_result
             return RepairResult(
@@ -444,10 +577,23 @@ class R1TargetedRepair(BaseRepairStrategy):
                                     "scope_level": 1,
                                     "failure_reason": "no_localizable_failed_constraint",},) 
         constraint_text = problem["hard_logic_py"][target_idx - 1]
-        editable_slot = select_editable_slot(
-            problem=problem, raw_plan=raw_plan, candidates=candidates,
-            constraint_text=constraint_text, llm=llm,)
-        
+        if constraint_family == "monetary_budget":
+            def budget_priority(slot):
+                activity = raw_plan[slot[0]]["activities"][slot[1]]
+                activity_type = activity.get("type")
+                cost = activity.get("cost", 0)
+                priority = {
+                    "attraction": 2,
+                    "lunch": 1,
+                    "dinner": 1,
+                    "breakfast": 1,
+                    "accommodation": 0,}
+                return (priority.get(activity_type, 0), cost)
+            editable_slot = max(candidates, key=budget_priority)
+        else:
+            editable_slot = select_editable_slot(
+                problem=problem, raw_plan=raw_plan,
+                candidates=candidates, constraint_text=constraint_text, llm=llm,)
         metadata = {"strategy": "R1", 
                     "target_constraint_indices": [target_idx],
                     "editable_scope": "slot",
@@ -469,10 +615,33 @@ class R1TargetedRepair(BaseRepairStrategy):
                 repaired_plan = replace_transport_slot(
                     raw_plan, editable_slot, replacement,)
             else:
+                repair_instruction = constraint_text
+                if constraint_family == "monetary_budget":
+                    repair_instruction += (
+                        "\nReduce the total cost of the selected activity. "
+                        "For accommodation, distinguish the price per room "
+                        "from the total activity cost. "
+                        "If cost is calculated as price * rooms, update both "
+                        "price and cost consistently when selecting a cheaper "
+                        "verified hotel. "
+                        "Preserve the required number of rooms, room type, "
+                        "activity type, and other user constraints. "
+                        "Use only verified sandbox alternatives. "
+                        "Do not invent prices or artificially lower costs. "
+                        "Return the complete replacement activity as JSON.")
                 replacement = generate_replacement(
-                    problem=problem, raw_plan=raw_plan,
-                    slot=editable_slot, constraint_text=constraint_text,
-                    context=context, llm=llm,)
+                    problem=problem, raw_plan=raw_plan, slot=editable_slot,
+                    constraint_text=repair_instruction, context=context, llm=llm,)
+                if constraint_family == "monetary_budget":
+                    original = raw_plan[editable_slot[0]]["activities"][editable_slot[1]]
+                    old_cost = original.get("cost")
+                    new_cost = replacement.get("cost")
+                    if (not isinstance(old_cost, (int, float))
+                        or isinstance(old_cost, bool)
+                        or not isinstance(new_cost, (int, float))
+                        or isinstance(new_cost, bool)
+                        or new_cost >= old_cost):
+                        raise ValueError("Budget replacement must reduce activity cost")
                 repaired_plan = replace_activity_slot(
                     raw_plan, editable_slot, replacement,)
         except (ValueError, TypeError, KeyError) as exc:

@@ -151,6 +151,47 @@ class LocalizationAndRegionTests(unittest.TestCase):
         plan_editable, _ = s._editable_region("plan", plan, localized)
         self.assertIn((0, 2), plan_editable)
 
+    def _two_day_plan(self):
+        return [
+            {"day": 1, "activities": [
+                {"type": "attraction", "position": "Museum", "cost": 10},
+                {"type": "lunch", "position": "Noodle House", "cost": 20},
+                {"type": "attraction", "position": "Park", "cost": 0}]},
+            {"day": 2, "activities": [
+                {"type": "attraction", "position": "Tower", "cost": 30},
+                {"type": "lunch", "position": "Noodle House", "cost": 20}]},
+        ]
+
+    def _localize(self, message, plan):
+        from chinatravel.agent.nesy_verifier.repair_strategies import r3
+        pos_to_slots, _ = r3._index_plan(plan)
+        return r3._localize_message(message, plan, pos_to_slots)
+
+    def test_named_poi_with_day_opens_only_that_slot(self):
+        plan = self._two_day_plan()
+        loc = self._localize("The attraction, Museum in day 1, is closed when you visiting.", plan)
+        self.assertEqual(loc, {(0, 0)})
+
+    def test_named_poi_repeated_on_another_day_is_not_opened(self):
+        plan = self._two_day_plan()
+        loc = self._localize("The restaurant, Noodle House in day 2, is closed when you visiting.", plan)
+        self.assertEqual(loc, {(1, 1)})
+
+    def test_day_without_name_or_activity_opens_whole_day(self):
+        plan = self._two_day_plan()
+        loc = self._localize("The activities in day 1 overlap.", plan)
+        self.assertEqual(loc, {(0, 0), (0, 1), (0, 2)})
+
+    def test_day_and_activity_number_opens_that_activity(self):
+        plan = self._two_day_plan()
+        loc = self._localize("Day 2 activity 1 has an invalid time.", plan)
+        self.assertEqual(loc, {(1, 0)})
+
+    def test_name_without_day_keeps_all_matches(self):
+        plan = self._two_day_plan()
+        loc = self._localize("Incorrect price information of Noodle House.", plan)
+        self.assertEqual(loc, {(0, 1), (1, 1)})
+
     def test_global_heuristic_picks_highest_cost_nonanchor(self):
         s = R3AdaptiveScopeRepair()
         plan = self._plan()
@@ -159,6 +200,196 @@ class LocalizationAndRegionTests(unittest.TestCase):
         # highest-cost non-anchor is the lunch (20) over attraction (10); hotel excluded.
         self.assertIn((0, 1), editable)
         self.assertNotIn((0, 2), editable)
+
+
+@unittest.skipIf(_IMPORT_ERROR is not None, _SKIP)
+class BookingUnlockTests(unittest.TestCase):
+    """Commonsense errors about a booking open it below the plan rung."""
+
+    HOTEL = "Atour Hotel"
+
+    def _plan(self):
+        leg = lambda src, dst: {"from": src, "to": dst, "mode": "metro",
+                                "start_time": "18:00", "end_time": "18:30", "cost": 6}
+        return [
+            {"day": 1, "activities": [
+                {"type": "train", "TrainID": "G1", "start": "S", "end": "T", "cost": 300},
+                {"type": "attraction", "position": "Museum", "cost": 10},
+                {"type": "accommodation", "position": self.HOTEL, "cost": 400, "rooms": 1,
+                 "start_time": "19:00", "end_time": "24:00", "transports": leg("Museum", self.HOTEL)}]},
+            {"day": 2, "activities": [
+                {"type": "attraction", "position": "Tower", "cost": 30},
+                {"type": "airplane", "FlightID": "F9", "start": "T", "end": "S", "cost": 900}]},
+        ]
+
+    def _unlocks(self, *messages, kind="commonsense"):
+        from chinatravel.agent.nesy_verifier.repair_strategies import r3
+        s = R3AdaptiveScopeRepair()
+        plan = self._plan()
+        key = "dsl" if kind == "personal" else "message"
+        targets = [{"kind": kind, "ref": f"x{i}", key: m} for i, m in enumerate(messages)]
+        localized = s._localize_targets(targets, plan)
+        return s._booking_unlocks(targets, localized, plan), localized
+
+    def test_accommodation_error_unlocks_hotel_fully(self):
+        unlocked, localized = self._unlocks("Incorrect cost information of accommodation. [cost = price * rooms]")
+        self.assertEqual(localized, [{(0, 2)}])       # not "global" any more
+        self.assertEqual(unlocked, {(0, 2): "all"})
+
+    def test_accommodation_error_with_day_unlocks_only_that_day(self):
+        unlocked, _ = self._unlocks(f"Incorrect price infomation of accommodation ,{self.HOTEL} in day 2.")
+        self.assertEqual(unlocked, {})                 # no hotel on day 2
+        unlocked, _ = self._unlocks(f"Incorrect price infomation of accommodation ,{self.HOTEL} in day 1.")
+        self.assertEqual(unlocked, {(0, 2): "all"})
+
+    def test_intercity_errors_unlock_go_and_back_bookings(self):
+        go, _ = self._unlocks("Incorrect duration information of given intercity transport "
+                              "from origin to destination G1 [start_time -> end_time].")
+        back, _ = self._unlocks("Incorrect cost information of given intercity airplane (Back) "
+                                "[cost = price * tickets].")
+        self.assertEqual(go, {(0, 0): "all"})
+        self.assertEqual(back, {(1, 1): "all"})
+
+    def test_leg_into_hotel_unlocks_only_leg_fields(self):
+        unlocked, _ = self._unlocks(f"Incorrect cost infomation of innercity transport in day 1, "
+                                    f"from Museum to {self.HOTEL}, metro. [cost = price * people_number]")
+        self.assertEqual(unlocked, {(0, 2): "legs"})
+
+    def test_whole_day_fallback_does_not_unlock_bookings(self):
+        unlocked, localized = self._unlocks("The activities in day 1 overlap.")
+        self.assertEqual(localized, [{(0, 0), (0, 1), (0, 2)}])
+        self.assertEqual(unlocked, {})
+
+    # ---- personal constraints (the priority) ----
+    ROOM_DSL = ("result=True\nfor activity in allactivities(plan):\n"
+                "  if activity_type(activity)=='accommodation' and room_type(activity)!=1: result=False")
+    INTERCITY_DSL = ("intercity_transport_set=set()\nfor activity in allactivities(plan):\n"
+                     "  if activity_type(activity) in ['train', 'airplane']: "
+                     "intercity_transport_set.add(intercity_transport_type(activity))\n"
+                     "result=({'airplane'}==intercity_transport_set)")
+    METRO_DSL = ("result=True\nfor activity in allactivities(plan):\n"
+                 "  if innercity_transport_type(activity_transports(activity))!='metro': result=False")
+    BUDGET_DSL = ("total_cost=0\nfor activity in allactivities(plan):\n"
+                  "    total_cost+=activity_cost(activity)\n"
+                  "    total_cost += innercity_transport_cost(activity_transports(activity))\n"
+                  "result=(total_cost<=1000)")
+
+    def test_personal_hotel_constraint_unlocks_hotel_fully(self):
+        unlocked, localized = self._unlocks(self.ROOM_DSL, kind="personal")
+        self.assertEqual(localized, [{(0, 2)}])
+        self.assertEqual(unlocked, {(0, 2): "all"})
+
+    def test_personal_intercity_constraint_unlocks_go_and_back(self):
+        unlocked, _ = self._unlocks(self.INTERCITY_DSL, kind="personal")
+        self.assertEqual(unlocked, {(0, 0): "all", (1, 1): "all"})
+
+    def test_personal_quoted_booking_name_unlocks_it(self):
+        unlocked, _ = self._unlocks(
+            f"result=True\nfor activity in allactivities(plan):\n"
+            f"  if activity_type(activity)=='accommodation' and activity_position(activity)!='{self.HOTEL}': "
+            f"result=False", kind="personal")
+        self.assertEqual(unlocked, {(0, 2): "all"})
+
+    def test_personal_leg_constraint_opens_legs_and_hotel_leg_fields(self):
+        unlocked, localized = self._unlocks(self.METRO_DSL, kind="personal")
+        self.assertEqual(localized, [{(0, 2)}])     # the only activity with a leg here
+        self.assertEqual(unlocked, {(0, 2): "legs"})
+
+    def test_personal_budget_unlocks_costliest_bookings(self):
+        unlocked, localized = self._unlocks(self.BUDGET_DSL, kind="personal")
+        self.assertEqual(localized, ["global"])
+        # Costs: airplane 900, hotel 400, train 300 are the 3 most expensive.
+        self.assertEqual(unlocked, {(1, 1): "all", (0, 2): "all", (0, 0): "all"})
+
+    def test_personal_non_booking_constraint_unlocks_nothing(self):
+        unlocked, _ = self._unlocks("result=(day_count(plan)==2)", kind="personal")
+        self.assertEqual(unlocked, {})
+        unlocked, _ = self._unlocks(
+            "result=True\nfor activity in allactivities(plan):\n"
+            "  if activity_type(activity)=='attraction' and activity_cost(activity)>50: result=False",
+            kind="personal")
+        self.assertEqual(unlocked, {})
+
+    def test_personal_step1_at_slot_can_change_the_hotel(self):
+        plan = self._plan()
+        verification = {"personal_constraints": [False], "commonsense_errors": [],
+                        "schema_errors": [],
+                        "error_info": [f"Personal constraint 1 failed: {self.ROOM_DSL}"]}
+        problem = {"nature_language": "q", "hard_logic_py": [self.ROOM_DSL]}
+        fixed = json.loads(json.dumps(plan))
+        fixed[0]["activities"][2]["room_type"] = 1
+        meta = R3AdaptiveScopeRepair().repair(
+            problem, plan, verification, dict(_ctx(), repair_phase="personal"),
+            _MockLLM(_continuation(fixed))).metadata
+        self.assertEqual(meta["editable_scope"], "slot")
+        self.assertEqual([(b["day"], b["activity_index"], b["fields"]) for b in meta["unlocked_bookings"]],
+                         [(0, 2, "all")])
+        self.assertEqual(meta["changed_slots"], 1)
+
+    def test_slot_region_includes_unlocked_booking(self):
+        s = R3AdaptiveScopeRepair()
+        plan = self._plan()
+        editable, _ = s._editable_region("slot", plan, [{(0, 2)}], {(0, 2): "all"})
+        self.assertIn((0, 2), editable)
+        frozen, _ = s._editable_region("slot", plan, [{(0, 2)}])
+        self.assertNotIn((0, 2), frozen)
+
+    def test_leg_only_merge_keeps_the_booking(self):
+        plan = self._plan()
+        proposal = json.loads(json.dumps(plan))
+        hotel = proposal[0]["activities"][2]
+        hotel["transports"]["cost"] = 12
+        hotel["start_time"] = "19:30"
+        hotel["position"] = "Other Hotel"   # must be ignored
+        hotel["cost"] = 1                   # must be ignored
+        merged, changed = R3AdaptiveScopeRepair._merge(plan, proposal, {(0, 2)}, frozenset({(0, 2)}))
+        got = merged[0]["activities"][2]
+        self.assertEqual(changed, 1)
+        self.assertEqual(got["transports"]["cost"], 12)
+        self.assertEqual(got["start_time"], "19:30")
+        self.assertEqual(got["position"], self.HOTEL)
+        self.assertEqual(got["cost"], 400)
+
+    def test_commonsense_step_at_slot_opens_hotel_and_logs_it(self):
+        plan = self._plan()
+        error = "Incorrect cost information of accommodation. [cost = price * rooms]"
+        leg_error = (f"Incorrect cost infomation of innercity transport in day 1, "
+                     f"from Museum to {self.HOTEL}, metro. [cost = price * people_number]")
+        verification = {"personal_constraints": [True], "commonsense_errors": [error],
+                        "schema_errors": [], "error_info": [error]}
+        problem = {"nature_language": "q", "hard_logic_py": ["result=True"]}
+        fixed = json.loads(json.dumps(plan))
+        fixed[0]["activities"][2]["cost"] = 380
+        meta = R3AdaptiveScopeRepair().repair(
+            problem, plan, verification, dict(_ctx(), repair_phase="commonsense"),
+            _MockLLM(_continuation(fixed))).metadata
+        self.assertEqual(meta["editable_scope"], "slot")
+        self.assertFalse(meta["global_targets"])
+        self.assertEqual(meta["unlocked_bookings"],
+                         [{"day": 0, "activity_index": 2, "type": "accommodation",
+                           "position": self.HOTEL, "fields": "all"}])
+        self.assertIn(f"Day 1 activity 3: {self.HOTEL}", meta["prompt"])
+        self.assertEqual(meta["changed_slots"], 1)
+        # A leg-only unlock is spelled out in the prompt.
+        verification = dict(verification, commonsense_errors=[leg_error], error_info=[leg_error])
+        meta = R3AdaptiveScopeRepair().repair(
+            problem, plan, verification, dict(_ctx(), repair_phase="commonsense"),
+            _MockLLM("not json")).metadata
+        self.assertIn("only its transports, start_time and end_time", meta["prompt"])
+        self.assertEqual(meta["unlocked_bookings"][0]["fields"], "legs")
+
+    def test_plan_scope_reports_no_unlock(self):
+        s = R3AdaptiveScopeRepair(rounds_per_rung=1)
+        plan = self._plan()
+        error = "Incorrect cost information of accommodation. [cost = price * rooms]"
+        verification = {"personal_constraints": [True], "commonsense_errors": [error],
+                        "schema_errors": [], "error_info": [error]}
+        problem = {"nature_language": "q", "hard_logic_py": ["result=True"]}
+        for _ in range(3):
+            meta = s.repair(problem, plan, verification, dict(_ctx(), repair_phase="commonsense"),
+                            _MockLLM("not json")).metadata
+        self.assertEqual(meta["editable_scope"], "plan")
+        self.assertEqual(meta["unlocked_bookings"], [])
 
 
 @unittest.skipIf(_IMPORT_ERROR is not None, _SKIP)
@@ -342,9 +573,10 @@ class PlanScopeStructureGuardTests(unittest.TestCase):
 
 
 @unittest.skipIf(_IMPORT_ERROR is not None, _SKIP)
-class PhasedR3PTests(unittest.TestCase):
-    """R3P: personal-only phase on the ladder, then a protected slot-scope
-    commonsense phase."""
+class R3PhaseTests(unittest.TestCase):
+    """R3 follows the phase the shared loop supplies. Every iteration, whatever
+    its phase, climbs the ladder; the commonsense iteration is protected and uses
+    the current rung."""
 
     CS_ALPHA = "The attraction, Alpha in day 1, is closed when you visiting."
     CS_BRAVO = "Incorrect price information of Bravo."
@@ -363,23 +595,32 @@ class PhasedR3PTests(unittest.TestCase):
                                        "Personal constraint 1 failed: result = (x == 'Bravo')"]}
         return problem, verification
 
-    def test_r3p_is_registered_and_named(self):
-        s = create_repair_strategy("R3P")
-        self.assertIsInstance(s, R3AdaptiveScopeRepair)
+    @staticmethod
+    def _phase_ctx(phase):
+        return dict(_ctx(), repair_phase=phase)
+
+    def test_r3p_is_not_registered(self):
+        with self.assertRaises(ValueError):
+            create_repair_strategy("R3P")
+        # A direct call without a shared phase: no phase keys, all feedback shown.
         problem, verification = self._personal_failing()
-        meta = s.repair(problem, self._plan(), verification, _ctx(), _MockLLM("not json")).metadata
-        self.assertEqual(meta["strategy"], "R3P")
-        # Plain R3 is unchanged: no phase keys, all feedback shown.
-        meta_r3 = create_repair_strategy("R3").repair(
+        meta = create_repair_strategy("R3").repair(
             problem, self._plan(), verification, _ctx(), _MockLLM("not json")).metadata
-        self.assertEqual(meta_r3["strategy"], "R3")
-        self.assertNotIn("repair_phase", meta_r3)
-        self.assertIn(self.CS_ALPHA, meta_r3["prompt"])
+        self.assertEqual(meta["strategy"], "R3")
+        self.assertNotIn("repair_phase", meta)
+        self.assertIn(self.CS_ALPHA, meta["prompt"])
+
+    def test_unknown_phase_is_rejected(self):
+        problem, verification = self._personal_failing()
+        with self.assertRaises(ValueError):
+            R3AdaptiveScopeRepair().repair(problem, self._plan(), verification,
+                                           self._phase_ctx("bogus"), _MockLLM("not json"))
 
     def test_personal_phase_hides_commonsense(self):
         problem, verification = self._personal_failing()
-        meta = R3AdaptiveScopeRepair(phased=True).repair(
-            problem, self._plan(), verification, _ctx(), _MockLLM("not json")).metadata
+        meta = R3AdaptiveScopeRepair().repair(
+            problem, self._plan(), verification, self._phase_ctx("personal"),
+            _MockLLM("not json")).metadata
         self.assertEqual(meta["repair_phase"], "personal")
         self.assertNotIn(self.CS_ALPHA, meta["prompt"])
         self.assertIn("Personal constraint 1 failed", meta["prompt"])
@@ -392,15 +633,16 @@ class PhasedR3PTests(unittest.TestCase):
         self.assertEqual(meta["feedback_personal_constraint_indices"], [1])
         self.assertEqual(meta["feedback_commonsense_failure_count"], 0)
 
-    def test_switches_to_protected_commonsense_when_personal_pass(self):
+    def test_commonsense_phase_is_protected(self):
         problem = {"nature_language": "q",
                    "hard_logic_py": ["result=(a<=1500)", "result=(b==1)", "result=(c==2)"]}
         verification = {"personal_constraints": [True, None, True],
                         "commonsense_errors": [self.CS_ALPHA, self.CS_BRAVO],
                         "schema_errors": [],
                         "error_info": [self.CS_ALPHA, self.CS_BRAVO]}
-        meta = R3AdaptiveScopeRepair(phased=True).repair(
-            problem, self._plan(), verification, _ctx(), _MockLLM("not json")).metadata
+        meta = R3AdaptiveScopeRepair().repair(
+            problem, self._plan(), verification, self._phase_ctx("commonsense"),
+            _MockLLM("not json")).metadata
         self.assertEqual(meta["repair_phase"], "commonsense")
         self.assertEqual(meta["editable_scope"], "slot")
         self.assertEqual(meta["scope_level"], 1)
@@ -412,37 +654,56 @@ class PhasedR3PTests(unittest.TestCase):
         self.assertNotIn("Personal constraint 2", meta["prompt"])
         self.assertEqual(meta["feedback_personal_constraint_indices"], [])
         self.assertEqual(meta["feedback_commonsense_failure_count"], 2)
-        self.assertEqual(meta["personal_iteration"], 0)   # ladder did not move
+        self.assertEqual(meta["iteration"], 1)   # the commonsense step moved the ladder
+        self.assertNotIn("personal_iteration", meta)
 
-    def test_commonsense_forced_after_personal_budget(self):
-        s = R3AdaptiveScopeRepair(phased=True)
+    def test_ladder_over_five_personal_then_commonsense(self):
+        s = R3AdaptiveScopeRepair()
         problem, verification = self._personal_failing()
         llm = _MockLLM("not json")
-        metas = [s.repair(problem, self._plan(), verification, _ctx(), llm).metadata
-                 for _ in range(6)]
-        self.assertEqual([m["repair_phase"] for m in metas], ["personal"] * 5 + ["commonsense"])
+        phases = ["personal"] * 5 + ["commonsense"]
+        metas = [s.repair(problem, self._plan(), verification, self._phase_ctx(p), llm).metadata
+                 for p in phases]
+        self.assertEqual([m["repair_phase"] for m in metas], phases)
         self.assertEqual([m["editable_scope"] for m in metas],
-                         ["slot", "slot", "day", "day", "plan", "slot"])
+                         ["slot", "slot", "day", "day", "plan", "plan"])
         self.assertNotIn("Personal constraint 1 failed", metas[5]["prompt"])
         self.assertIn(self.CS_ALPHA, metas[5]["prompt"])
         self.assertEqual(metas[5]["target_constraint_indices"], [])
+        # Plan scope: no limited-scope block, the whole plan is editable.
+        self.assertNotIn("LIMITED EDIT SCOPE", metas[5]["prompt"])
+        self.assertEqual(metas[5]["scope_fraction"], 1.0)
 
-    def test_returns_to_personal_after_a_break(self):
-        s = R3AdaptiveScopeRepair(phased=True)
+    def test_commonsense_advances_ladder(self):
+        s = R3AdaptiveScopeRepair()
         problem, failing = self._personal_failing()
         passing = dict(failing, personal_constraints=[True], error_info=[self.CS_ALPHA])
         llm = _MockLLM("not json")
-        first = s.repair(problem, self._plan(), passing, _ctx(), llm).metadata
-        second = s.repair(problem, self._plan(), failing, _ctx(), llm).metadata
+        first = s.repair(problem, self._plan(), passing, self._phase_ctx("commonsense"), llm).metadata
+        second = s.repair(problem, self._plan(), failing, self._phase_ctx("personal"), llm).metadata
+        third = s.repair(problem, self._plan(), failing, self._phase_ctx("personal"), llm).metadata
         self.assertEqual(first["repair_phase"], "commonsense")
         self.assertEqual(first["protected_constraint_indices"], [1])
-        self.assertEqual(second["repair_phase"], "personal")
-        self.assertEqual(second["personal_iteration"], 1)
-        self.assertEqual(second["editable_scope"], "slot")
-        self.assertNotIn("escalation_reason", second)
+        self.assertEqual([m["iteration"] for m in (first, second, third)], [1, 2, 3])
+        self.assertEqual([m["editable_scope"] for m in (first, second, third)],
+                         ["slot", "slot", "day"])
+        self.assertEqual(third["escalation_reason"], "scheduled_widen_slot_to_day_at_iteration_3")
+
+    def test_commonsense_step_crossing_a_rung_reports_escalation(self):
+        s = R3AdaptiveScopeRepair()
+        problem, failing = self._personal_failing()
+        passing = dict(failing, personal_constraints=[True], error_info=[self.CS_ALPHA])
+        llm = _MockLLM("not json")
+        for _ in range(2):
+            s.repair(problem, self._plan(), failing, self._phase_ctx("personal"), llm)
+        meta = s.repair(problem, self._plan(), passing, self._phase_ctx("commonsense"), llm).metadata
+        self.assertEqual(meta["repair_phase"], "commonsense")
+        self.assertEqual(meta["editable_scope"], "day")
+        self.assertEqual(meta["scope_level"], 2)
+        self.assertEqual(meta["escalation_reason"], "scheduled_widen_slot_to_day_at_iteration_3")
 
     def test_commonsense_phase_record_through_shared_loop(self):
-        problem = {"uid": "r3p-case", "people_number": 1, "start_city": "A",
+        problem = {"uid": "r3-cs-case", "people_number": 1, "start_city": "A",
                    "target_city": "B", "nature_language": "q",
                    "hard_logic_py": ["result=(a<=1500)", "result=(b==1)"]}
         plan = self._plan()
@@ -452,11 +713,11 @@ class PhasedR3PTests(unittest.TestCase):
                  "error_info": ["Personal constraint 1 failed: result=(a<=1500)"],
                  "passed": False}
         with patch.object(loop, "verify_plan", side_effect=[before, after]):
-            out = loop.run_repair_loop(problem, plan, R3AdaptiveScopeRepair(phased=True),
+            out = loop.run_repair_loop(problem, plan, R3AdaptiveScopeRepair(),
                                        _ctx(), _MockLLM(_continuation(plan)), None,
                                        max_steps=1)
         record = RepairAttemptRecord.from_dict(out["history"][1]["repair_attempt"])
-        self.assertEqual(record.repair_strategy, "R3P")
+        self.assertEqual(record.repair_strategy, "R3")
         self.assertEqual(record.target_constraint_indices, [])
         self.assertEqual(record.protected_constraint_indices, [1, 2])
         self.assertEqual(record.editable_scope, "slot")
@@ -563,40 +824,41 @@ class SharedLoopContractTests(unittest.TestCase):
 
 @unittest.skipIf(_IMPORT_ERROR is not None, _SKIP)
 class SharedR3SchedulingTests(unittest.TestCase):
-    """Exercise both real R3 variants under the authoritative shared scheduler."""
+    """Exercise R3 under the authoritative shared scheduler."""
 
-    def run_scheduled(self, phased, initial, outcomes, schema_errors=None):
+    def run_scheduled(self, initial, outcomes, schema_errors=None):
         problem = dict(uid="scheduled-r3", people_number=1, start_city="A", target_city="B",
                        nature_language="q", hard_logic_py=["result=day_count(plan)==1"])
         plan = [{"day": 1, "activities": [{"type": "attraction", "position": "Alpha", "cost": 10}]}]
         def state(values):
             personal, cs = values
-            errors = [PhasedR3PTests.CS_ALPHA] if cs else []
+            errors = [R3PhaseTests.CS_ALPHA] if cs else []
             return dict(personal_constraints=[personal], commonsense_errors=errors, schema_errors=list(schema_errors or []),
                         error_info=errors + list(schema_errors or []) + (["Personal constraint 1 failed: result=day_count(plan)==1"] if personal is False else []),
                         passed=personal is True and not cs and not schema_errors)
-        strategy = R3AdaptiveScopeRepair(phased=phased)
+        strategy = R3AdaptiveScopeRepair()
         executed = []
         feedback = strategy._feedback_lines
         def capture(problem, verification, phase):
             executed.append(phase)
             return feedback(problem, verification, phase)
-        with patch.object(strategy, '_choose_phase', side_effect=AssertionError('shared phase must bypass internal selector')), \
-             patch.object(strategy, '_feedback_lines', side_effect=capture), \
+        with patch.object(strategy, '_feedback_lines', side_effect=capture), \
              patch.object(loop, 'verify_plan', side_effect=[state(value) for value in outcomes]):
             output = loop.run_repair_loop(problem, plan, strategy, _ctx(), _MockLLM('not json'), None,
                                           max_steps=6, initial_verification=state(initial))
         records = [RepairAttemptRecord.from_dict(entry['repair_attempt']) for entry in output['history'][1:]]
         self.assertEqual([r.repair_phase for r in records], executed)
-        self.assertLessEqual(executed.count('commonsense'), 1)
+        rung_for_step = ['slot', 'slot', 'day', 'day', 'plan', 'plan']
         for record in records:
             self.assertNotIn('repair_phase', record.repair_metadata)
+            # One ladder clock: the rung follows the loop's step in both phases.
+            self.assertEqual(record.editable_scope, rung_for_step[record.step - 1])
+            self.assertEqual(record.repair_metadata['iteration'], record.step)
             targets = record.repair_metadata['targeted_constraints']
             if record.repair_phase == 'commonsense':
                 self.assertEqual(record.target_constraint_indices, [])
-                self.assertEqual(record.target_commonsense_errors, [PhasedR3PTests.CS_ALPHA])
+                self.assertEqual(record.target_commonsense_errors, [R3PhaseTests.CS_ALPHA])
                 self.assertFalse(any(t['kind'] == 'personal' for t in targets))
-                self.assertEqual(record.editable_scope, 'slot')
             else:
                 self.assertFalse(any(t['kind'] == 'commonsense' for t in targets))
                 self.assertEqual(record.feedback_commonsense_failure_count, 0)
@@ -607,72 +869,87 @@ class SharedR3SchedulingTests(unittest.TestCase):
     def test_scheduled_commonsense_excludes_schema_objective_but_preserves_evidence(self):
         from chinatravel.evaluation.regression_matrix import build_regression_matrix
         schema_errors = ['GLOBAL_SCHEMA_FAILURE unrelated to commonsense']
-        for phased in (False, True):
-            with self.subTest(phased=phased):
-                phases, records = self.run_scheduled(phased, (True, True), [(True, False)], schema_errors)
-                self.assertEqual(phases, ['commonsense'])
-                record = records[0]
-                self.assertEqual([t['kind'] for t in record.repair_metadata['targeted_constraints']], ['commonsense'])
-                self.assertFalse(record.repair_metadata['global_targets'])
-                self.assertNotIn(schema_errors[0], record.repair_metadata['prompt'])
-                self.assertEqual(record.target_constraint_indices, [])
-                self.assertEqual(record.protected_constraint_indices, [1])
-                self.assertEqual(self.last_output['history'][0]['verification']['schema_errors'], schema_errors)
-                self.assertEqual(self.last_output['verification']['schema_errors'], schema_errors)
-                analysis = build_regression_matrix([record])
-                self.assertTrue(all(r['eligible_count'] == 0 and r['regression_count'] == 0 for r in analysis['aggregate']))
+        phases, records = self.run_scheduled((True, True), [(True, False)], schema_errors)
+        self.assertEqual(phases, ['commonsense'])
+        record = records[0]
+        self.assertEqual([t['kind'] for t in record.repair_metadata['targeted_constraints']], ['commonsense'])
+        self.assertFalse(record.repair_metadata['global_targets'])
+        self.assertNotIn(schema_errors[0], record.repair_metadata['prompt'])
+        self.assertEqual(record.target_constraint_indices, [])
+        self.assertEqual(record.protected_constraint_indices, [1])
+        self.assertEqual(self.last_output['history'][0]['verification']['schema_errors'], schema_errors)
+        self.assertEqual(self.last_output['verification']['schema_errors'], schema_errors)
+        analysis = build_regression_matrix([record])
+        self.assertTrue(all(r['eligible_count'] == 0 and r['regression_count'] == 0 for r in analysis['aggregate']))
 
     def test_direct_calls_keep_historical_schema_targets(self):
         from copy import deepcopy
         problem = dict(nature_language='q', hard_logic_py=['result=True'])
-        verification = dict(personal_constraints=[True], commonsense_errors=[PhasedR3PTests.CS_ALPHA],
-                            schema_errors=['GLOBAL_SCHEMA_FAILURE'], error_info=[PhasedR3PTests.CS_ALPHA])
+        verification = dict(personal_constraints=[True], commonsense_errors=[R3PhaseTests.CS_ALPHA],
+                            schema_errors=['GLOBAL_SCHEMA_FAILURE'], error_info=[R3PhaseTests.CS_ALPHA])
         before = deepcopy(verification)
-        for phased in (False, True):
-            result = R3AdaptiveScopeRepair(phased=phased).repair(
-                problem, PhasedR3PTests()._plan(), verification, _ctx(), _MockLLM('not json'))
-            self.assertIn('schema', [t['kind'] for t in result.metadata['targeted_constraints']])
-            self.assertEqual(verification, before)
+        result = R3AdaptiveScopeRepair().repair(
+            problem, R3PhaseTests()._plan(), verification, _ctx(), _MockLLM('not json'))
+        self.assertIn('schema', [t['kind'] for t in result.metadata['targeted_constraints']])
+        self.assertEqual(verification, before)
 
     def test_returned_metadata_identifies_executed_shared_objective(self):
         problem = dict(nature_language='q', hard_logic_py=['result=True'])
         verification = dict(personal_constraints=[False],
-                            commonsense_errors=[PhasedR3PTests.CS_ALPHA],
+                            commonsense_errors=[R3PhaseTests.CS_ALPHA],
                             schema_errors=['SCHEMA_ONLY'],
-                            error_info=[PhasedR3PTests.CS_ALPHA, 'Personal constraint 1 failed: result=True'])
-        for phased in (False, True):
-            for phase in ('personal', 'commonsense'):
-                with self.subTest(phased=phased, phase=phase):
-                    strategy = R3AdaptiveScopeRepair(phased=phased)
-                    context = dict(_ctx(), repair_phase=phase)
-                    with patch.object(strategy, '_choose_phase', side_effect=AssertionError('not a scheduler')):
-                        result = strategy.repair(problem, PhasedR3PTests()._plan(), verification,
-                                                 context, _MockLLM('not json'))
-                    self.assertEqual(result.metadata['repair_phase'], phase)
-                    self.assertEqual(result.metadata['target_constraint_indices'], [1] if phase == 'personal' else [])
-                    self.assertEqual(result.metadata['target_commonsense_errors'],
-                                     [PhasedR3PTests.CS_ALPHA] if phase == 'commonsense' else [])
-                    self.assertNotIn('schema', [t['kind'] for t in result.metadata['targeted_constraints']])
+                            error_info=[R3PhaseTests.CS_ALPHA, 'Personal constraint 1 failed: result=True'])
+        for phase in ('personal', 'commonsense'):
+            with self.subTest(phase=phase):
+                context = dict(_ctx(), repair_phase=phase)
+                result = R3AdaptiveScopeRepair().repair(problem, R3PhaseTests()._plan(), verification,
+                                                        context, _MockLLM('not json'))
+                self.assertEqual(result.metadata['repair_phase'], phase)
+                self.assertEqual(result.metadata['target_constraint_indices'], [1] if phase == 'personal' else [])
+                self.assertEqual(result.metadata['target_commonsense_errors'],
+                                 [R3PhaseTests.CS_ALPHA] if phase == 'commonsense' else [])
+                self.assertNotIn('schema', [t['kind'] for t in result.metadata['targeted_constraints']])
 
     def test_shared_unknown_and_early_commonsense(self):
-        for phased in (False, True):
-            with self.subTest(phased=phased):
-                phases, records = self.run_scheduled(phased, (None, True), [(None, True), (True, True), (True, False)])
-                self.assertEqual(phases, ['personal', 'personal', 'commonsense'])
-                self.assertIn('Personal constraint 1 is UNKNOWN', records[0].repair_metadata['prompt'])
+        phases, records = self.run_scheduled((None, True), [(None, True), (True, True), (True, False)])
+        self.assertEqual(phases, ['personal', 'personal', 'commonsense'])
+        self.assertIn('Personal constraint 1 is UNKNOWN', records[0].repair_metadata['prompt'])
 
     def test_forced_commonsense_with_concurrent_personal_failure(self):
-        for phased in (False, True):
-            phases, records = self.run_scheduled(phased, (False, True), [(False, True)] * 6)
-            self.assertEqual(phases, ['personal'] * 5 + ['commonsense'])
-            self.assertEqual(records[-1].concurrent_failed_constraint_indices, [1])
+        phases, records = self.run_scheduled((False, True), [(False, True)] * 6)
+        self.assertEqual(phases, ['personal'] * 5 + ['commonsense'])
+        self.assertEqual(records[-1].concurrent_failed_constraint_indices, [1])
+        # Step 6 commonsense runs at the widest rung (plan), not slot.
+        self.assertEqual([r.editable_scope for r in records],
+                         ['slot', 'slot', 'day', 'day', 'plan', 'plan'])
 
-    def test_recovery_and_no_second_commonsense(self):
-        for phased in (False, True):
-            phases, records = self.run_scheduled(phased, (False, True),
-                [(True, True), (False, True), (False, True), (True, True)])
-            self.assertEqual(phases, ['personal', 'commonsense', 'personal', 'personal'])
-            self.assertEqual([r.editable_scope for r in records], ['slot', 'slot', 'slot', 'day'])
+    def test_recovery_then_second_commonsense(self):
+        # Commonsense at step 2 breaks the personal constraint -> personal recovery
+        # at steps 3-4 -> commonsense errors remain, so commonsense again at 5-6.
+        phases, records = self.run_scheduled((False, True),
+            [(True, True), (False, True), (False, True), (True, True), (True, True), (True, True)])
+        self.assertEqual(phases, ['personal', 'commonsense', 'personal', 'personal',
+                                  'commonsense', 'commonsense'])
+        self.assertEqual([r.editable_scope for r in records],
+                         ['slot', 'slot', 'day', 'day', 'plan', 'plan'])
+
+    def test_commonsense_at_step_three_then_recovery(self):
+        # Personal passes after step 2 -> step 3 commonsense at day scope; it
+        # breaks the personal constraint -> steps 4-6 personal at day, plan, plan.
+        phases, records = self.run_scheduled((False, True),
+            [(False, True), (True, True), (False, True), (False, True), (False, True), (False, True)])
+        self.assertEqual(phases, ['personal', 'personal', 'commonsense',
+                                  'personal', 'personal', 'personal'])
+        self.assertEqual([r.editable_scope for r in records],
+                         ['slot', 'slot', 'day', 'day', 'plan', 'plan'])
+
+    def test_commonsense_only_from_start_climbs_ladder(self):
+        # Personal passes from the start and commonsense errors never clear:
+        # six commonsense rounds, widening slot -> day -> plan.
+        phases, records = self.run_scheduled((True, True), [(True, True)] * 6)
+        self.assertEqual(phases, ['commonsense'] * 6)
+        self.assertEqual([r.editable_scope for r in records],
+                         ['slot', 'slot', 'day', 'day', 'plan', 'plan'])
 
 
 if __name__ == "__main__":

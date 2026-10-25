@@ -23,12 +23,6 @@ def _r3():
     return R3AdaptiveScopeRepair()
 
 
-def _r3p():
-    from .r3 import R3AdaptiveScopeRepair
-
-    return R3AdaptiveScopeRepair(phased=True)
-
-
 def _r4():
     import os
     from .r4 import MatrixGuidedRepair
@@ -39,7 +33,7 @@ def _r4():
     return MatrixGuidedRepair(path)
 
 
-STRATEGY_FACTORIES = {"R0": _r0, "R1": _r1, "R2": _r2, "R3": _r3, "R3P": _r3p, "R4": _r4}
+STRATEGY_FACTORIES = {"R0": _r0, "R1": _r1, "R2": _r2, "R3": _r3, "R4": _r4}
 
 
 def create_repair_strategy(name):

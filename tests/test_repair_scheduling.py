@@ -1,4 +1,9 @@
-"""Deterministic shared 5+1 scheduling, no external resources."""
+"""Deterministic shared-loop scheduling, no external resources.
+
+Rule: up to 6 rounds; stop early only on a pass or when every personal
+constraint passes with no commonsense errors. Personal rounds first (at most 5),
+then commonsense rounds while errors remain, back to personal if a commonsense
+round breaks a personal constraint and budget is left."""
 from copy import deepcopy
 from types import SimpleNamespace
 import unittest
@@ -60,8 +65,11 @@ class SchedulingTests(unittest.TestCase):
     def test_r1_noop_preserves_reserved_opportunity(self):
         self.run_loop([verification()] * 6, name='R1', noop=True)
         self.assertEqual(self.phases, ['personal'] * 5 + ['commonsense'])
-        self.run_loop([verification(False, False)], initial=verification(False, False), name='R1', noop=True)
-        self.assertEqual(self.phases, ['personal'])
+        # R1 no-ops no longer end the run: with no commonsense errors, every round stays personal.
+        result = self.run_loop([verification(False, False)] * 6, initial=verification(False, False),
+                               name='R1', noop=True)
+        self.assertEqual(self.phases, ['personal'] * 6)
+        self.assertEqual(len(result['history']) - 1, 6)
 
     def test_r1_recovery_noop_does_not_stop_remaining_recovery(self):
         result = self.run_loop([verification(), verification(True), verification(False, False),
@@ -95,14 +103,23 @@ class SchedulingTests(unittest.TestCase):
         self.assertEqual(len(result['history']) - 1, 6)
         self.assertEqual(self.phases, ['personal'] * 5 + ['commonsense'])
 
-    def test_commonsense_matrix_exclusion_and_historical_reading(self):
+    def test_commonsense_matrix_capture_and_historical_reading(self):
         result = self.run_loop([verification(False, False), verification(True, False)], initial=verification(True))
         payload = result['history'][1]['repair_attempt']
         self.assertEqual(payload['repair_phase'], 'commonsense')
         self.assertEqual(payload['target_constraint_indices'], [])
         self.assertEqual(payload['target_commonsense_errors'], ['transport failure'])
+        # The changed commonsense attempt regressed a previously-passing personal
+        # family and is now captured under the commonsense_repair source row.
         analysis = build_regression_matrix([payload])
-        self.assertTrue(all(row['eligible_count'] == 0 for row in analysis['aggregate']))
+        eligible = [row for row in analysis['aggregate'] if row['eligible_count']]
+        self.assertTrue(eligible)
+        self.assertTrue(all(row['source_family'] == 'commonsense_repair' for row in eligible))
+        regressed = next(row for row in eligible if row['perspective'] == 'candidate'
+                         and row['destination_family'] == 'trip_specification')
+        self.assertEqual(regressed['regression_count'], 1)
+        self.assertEqual(regressed['support_count'], 1)
+        self.assertEqual(regressed['regression_rate'], 1.0)
         payload.pop('repair_phase'); payload.pop('target_commonsense_errors')
         self.assertIsNone(RepairAttemptRecord.from_dict(payload).repair_phase)
 
@@ -119,11 +136,42 @@ class SchedulingTests(unittest.TestCase):
         commonsense.assert_called_once()
         self.assertEqual(result.metadata['target_constraint_indices'], [])
 
-    def test_no_repeat_commonsense_and_unknown_recovery(self):
-        self.run_loop([verification(True)], initial=verification(True))
-        self.assertEqual(self.phases, ['commonsense'])
+    def test_commonsense_repeats_until_budget_and_unknown_recovery(self):
+        result = self.run_loop([verification(True)] * 6, initial=verification(True))
+        self.assertEqual(self.phases, ['commonsense'] * 6)
+        self.assertEqual(len(result['history']) - 1, 6)
         self.run_loop([verification(None, False), verification(True, False)], initial=verification(True))
         self.assertEqual(self.phases, ['commonsense', 'personal'])
+
+    def test_commonsense_stops_once_errors_are_gone(self):
+        self.run_loop([verification(True), verification(True, False)], initial=verification(True))
+        self.assertEqual(self.phases, ['commonsense', 'commonsense'])
+
+    def test_broken_personal_returns_to_personal_then_commonsense_again(self):
+        self.run_loop([verification(True), verification(False), verification(True),
+                       verification(True), verification(True), verification(True)], initial=verification(True))
+        self.assertEqual(self.phases, ['commonsense', 'commonsense', 'personal',
+                                       'commonsense', 'commonsense', 'commonsense'])
+
+    def test_break_on_last_round_ends_run(self):
+        result = self.run_loop([verification(True)] * 5 + [verification(False)], initial=verification(True))
+        self.assertEqual(self.phases, ['commonsense'] * 6)
+        self.assertEqual(result['verification']['personal_constraints'][0], False)
+
+    def test_personal_failing_without_commonsense_uses_all_rounds(self):
+        self.run_loop([verification(False, False)] * 6, initial=verification(False, False))
+        self.assertEqual(self.phases, ['personal'] * 6)
+
+    def test_nothing_to_target_stops_even_if_not_passed(self):
+        technical = dict(verification(True, False), passed=False)
+        self.run_loop([], initial=technical)
+        self.assertEqual(self.phases, [])
+
+    def test_r1_noops_run_full_budget(self):
+        for initial in (verification(True), verification()):
+            with self.subTest(initial=initial):
+                result = self.run_loop([deepcopy(initial)] * 6, initial=initial, name='R1', noop=True)
+                self.assertEqual(len(result['history']) - 1, 6)
 
     def test_reported_phase_mismatch_fails_loudly(self):
         with self.assertRaisesRegex(ValueError, 'disagrees with scheduled'):

@@ -1,6 +1,19 @@
 
+import json
 from copy import deepcopy
 from time import perf_counter
+
+
+def _plan_fingerprint(plan):
+    """Canonical, order-stable signature of a plan for no-progress detection.
+
+    Two plans that serialize to the same canonical JSON count as the same plan,
+    so trivial key-ordering differences do not hide a genuine repeat.
+    """
+    try:
+        return json.dumps(plan, sort_keys=True, ensure_ascii=False, default=str)
+    except Exception:
+        return repr(plan)
 
 from chinatravel.agent.system_usage import (system_snapshot, system_delta, verification_execution, measured_repair_pipeline)
 
@@ -11,6 +24,68 @@ from chinatravel.evaluation.edit_footprint import compare_edit_footprint
 from chinatravel.evaluation.repair_attempt import (
     RepairAttemptRecord, failed_constraint_indices, normalize_repair_intent_metadata,
 )
+
+
+class RepeatRequestCache:
+    """Per-query LLM wrapper applied by the shared loop to every strategy.
+
+    When a strategy sends exactly the same request (same messages and call
+    options) that was already sent for this query, the earlier reply is returned
+    without calling the model. The model runs at temperature 0, so a repeat would
+    almost always get the same answer; caching keeps that saving identical across
+    R0-R4 instead of leaving it to individual strategies. A cached round still
+    counts as a round and is verified as usual. Replies are cached whether or not
+    the strategy can parse them; a call that raises is not cached.
+
+    ``hits`` counts reused replies. ``saved_input_tokens`` / ``saved_output_tokens``
+    add up what the original calls cost (``saved_unknown`` counts hits whose
+    original cost was not reported). Everything else is forwarded to the wrapped
+    LLM, so token accounting (``usage_snapshot``) only ever sees real calls.
+    """
+
+    def __init__(self, llm):
+        self._llm = llm
+        self._replies = {}
+        self.hits = 0
+        self.saved_input_tokens = 0
+        self.saved_output_tokens = 0
+        self.saved_unknown = 0
+
+    def __call__(self, messages, *args, **kwargs):
+        key = _plan_fingerprint([messages, list(args), kwargs])
+        if key in self._replies:
+            reply, input_tokens, output_tokens = self._replies[key]
+            self.hits += 1
+            if input_tokens is None or output_tokens is None:
+                self.saved_unknown += 1
+            else:
+                self.saved_input_tokens += input_tokens
+                self.saved_output_tokens += output_tokens
+            return deepcopy(reply)
+        before = usage_snapshot(self._llm)
+        reply = self._llm(messages, *args, **kwargs)
+        after = usage_snapshot(self._llm)
+        self._replies[key] = (deepcopy(reply), usage_delta(before, after, "input_tokens"),
+                              usage_delta(before, after, "output_tokens"))
+        return reply
+
+    def counters(self):
+        return (self.hits, self.saved_input_tokens, self.saved_output_tokens, self.saved_unknown)
+
+    _OWN_ATTRIBUTES = frozenset({"_llm", "_replies", "hits", "saved_input_tokens",
+                                 "saved_output_tokens", "saved_unknown"})
+
+    def __getattr__(self, name):
+        if name == "_llm":      # not yet set (e.g. during copying): avoid recursion
+            raise AttributeError(name)
+        return getattr(self._llm, name)
+
+    def __setattr__(self, name, value):
+        ## Writes meant for the LLM (e.g. token counters) go to the wrapped LLM.
+        if name in self._OWN_ATTRIBUTES:
+            object.__setattr__(self, name, value)
+        else:
+            setattr(self._llm, name, value)
 
 
 def verify_plan(*args, **kwargs):
@@ -70,6 +145,21 @@ def compare_constraint_results(before, after):
     }
 
 ## Run the same verification and repair process for R0-R4.
+##
+## Schedule (the same for every strategy; budget = min(max_steps, 6) rounds):
+##   - Stop early only when the plan passes, or when every personal constraint
+##     passes and there are no commonsense errors (nothing left to target).
+##   - Personal rounds have priority while any personal constraint is not True
+##     (False or unknown/None), up to 5 personal rounds in total.
+##   - Once all personal constraints pass, commonsense rounds repeat while
+##     commonsense errors remain.
+##   - A commonsense round that breaks a personal constraint sends the next
+##     round (if budget is left) back to personal repair.
+##   - After 5 personal rounds, the remaining round goes to commonsense when
+##     commonsense errors exist; otherwise it stays personal.
+## Every proposal, accepted or rejected, uses one round. A strategy may return
+## an unchanged plan (no-op), which still uses its round; the loop never stops
+## a run because a strategy made no progress.
 @measured_repair_pipeline
 def run_repair_loop(
     problem,
@@ -87,7 +177,6 @@ def run_repair_loop(
         raise ValueError("max_steps must be a nonnegative integer")
     total_budget = min(max_steps, 6)
     personal_attempts = 0
-    commonsense_used = False
 
     ## Keep the current accepted itinerary separate from candidates.
     current_plan = deepcopy(raw_plan)
@@ -113,6 +202,19 @@ def run_repair_loop(
         "system_metrics": system_delta(initial_system_before, system_snapshot()),
     }]
 
+    ## No-progress signal shared with strategies (optional for them to read).
+    ## Tracks how many times each distinct candidate plan has been proposed and
+    ## whether the last attempt made no change, so a strategy can change its
+    ## approach. The loop never stops a run from this.
+    plan_proposal_counts = {}
+    no_progress_streak = 0
+
+    ## Every strategy talks to the model through the same per-query cache, so an
+    ## exact repeat request reuses the earlier reply for all strategies alike.
+    ## Token accounting below reads the real LLM, so cached replies cost nothing.
+    llm_cache = RepeatRequestCache(llm) if llm is not None else None
+    strategy_llm = llm_cache if llm_cache is not None else llm
+
     ## Each proposed repair uses one attempt from the budget.
     strategy_name = type(strategy).__name__
     for step in range(1, total_budget + 1):
@@ -123,15 +225,13 @@ def run_repair_loop(
 
         personal_satisfied = all(state is True for state in current_verification["personal_constraints"])
         commonsense_errors = current_verification.get("commonsense_errors") or []
-        if not commonsense_used and (personal_satisfied or personal_attempts >= 5):
-            if not commonsense_errors:
-                break
-            repair_phase = "commonsense"
-            commonsense_used = True
-        elif not personal_satisfied and personal_attempts < 5:
+        if not personal_satisfied and (personal_attempts < 5 or not commonsense_errors):
             repair_phase = "personal"
             personal_attempts += 1
+        elif commonsense_errors:
+            repair_phase = "commonsense"
         else:
+            ## All personal constraints pass and no commonsense errors remain.
             break
         # Context intent extends the existing strategy signature. Full verification
         # stays intact so personal failures remain observable during commonsense repair.
@@ -139,8 +239,21 @@ def run_repair_loop(
 
         before_verification = deepcopy(current_verification)
         before_plan = deepcopy(current_plan)
+
+        ## Expose the no-progress signal so a strategy MAY change its approach.
+        ## Reading these is optional; the loop never forces a decision from them.
+        ##  - no_progress_streak: consecutive unchanged attempts so far
+        ##  - last_attempt_no_progress: was the previous attempt a no-op
+        ##  - accepted_plan_repeat_count: times the current accepted plan has
+        ##    already been proposed (so a strategy can see a loop forming)
+        context["no_progress_streak"] = no_progress_streak
+        context["last_attempt_no_progress"] = no_progress_streak > 0
+        context["accepted_plan_repeat_count"] = plan_proposal_counts.get(
+            _plan_fingerprint(before_plan), 0
+        )
         system_before = system_snapshot()
         usage_before = usage_snapshot(llm)
+        cache_before = llm_cache.counters() if llm_cache is not None else None
         repair_started = perf_counter()
         result = None
         failure = None
@@ -150,7 +263,7 @@ def run_repair_loop(
         try:
             result = strategy.repair(
                 problem=deepcopy(problem), raw_plan=deepcopy(current_plan),
-                verification_results=deepcopy(current_verification), context=context, llm=llm,
+                verification_results=deepcopy(current_verification), context=context, llm=strategy_llm,
             )
             executed_phase = result.metadata.get("repair_phase")
             if executed_phase is not None and executed_phase != repair_phase:
@@ -185,6 +298,24 @@ def run_repair_loop(
                 "passed": False, "verification_unavailable": True,
             }
         after_verification = deepcopy(candidate_verification)
+
+        ## Standardised no-progress DETECTION + LOGGING (shared across R0-R4).
+        ## Flag when the candidate is identical to the CURRENT ACCEPTED plan
+        ## (before_plan), not to any earlier rejected proposal -- so a rollback
+        ## strategy's genuinely new candidate is never misread as a repeat.
+        ## This only records a reason; it does NOT change `accepted` and does NOT
+        ## stop the loop; rejecting a candidate stays separate from stopping.
+        no_progress = (
+            result is not None
+            and failure is None
+            and _plan_fingerprint(result.repaired_plan) == _plan_fingerprint(before_plan)
+        )
+        ## Update the shared no-progress trackers for the next iteration's context.
+        if result is not None and failure is None:
+            fingerprint = _plan_fingerprint(result.repaired_plan)
+            plan_proposal_counts[fingerprint] = plan_proposal_counts.get(fingerprint, 0) + 1
+        no_progress_streak = no_progress_streak + 1 if no_progress else 0
+
         ## Compare constraint results before and after the proposed repair.
         ## Compare against the current accepted plan, not a rejected candidate.
         transitions = compare_constraint_results(
@@ -193,6 +324,14 @@ def run_repair_loop(
         )
 
         intent, debug_metadata = normalize_repair_intent_metadata(result.metadata if result is not None else {})
+        ## Shared repeat-request cache activity during this attempt (see
+        ## RepeatRequestCache); summarised per query by build_repair_summary.py.
+        if llm_cache is not None:
+            hits, saved_in, saved_out, unknown = (
+                after - before for after, before in zip(llm_cache.counters(), cache_before))
+            debug_metadata.update(llm_cache_hits=hits, llm_cache_saved_input_tokens=saved_in,
+                                  llm_cache_saved_output_tokens=saved_out,
+                                  llm_cache_saved_unknown=unknown)
         strategy_name = intent.pop("repair_strategy", strategy_name)
         if intent.get("repair_phase") not in (None, repair_phase):
             debug_metadata["executed_repair_phase"] = intent["repair_phase"]
@@ -209,6 +348,10 @@ def run_repair_loop(
         intent["concurrent_commonsense_failure_count"] = len(commonsense) if isinstance(commonsense, list) else None
         intent.setdefault("target_constraint_indices", [])
         intent.setdefault("target_constraint_labels", [])
+        ## Log the no-progress signal so metrics can see unchanged-plan attempts
+        ## uniformly. Do not overwrite a reason the strategy already recorded.
+        if no_progress and not intent.get("decision_reason"):
+            intent["decision_reason"] = "no_progress_unchanged"
         record = RepairAttemptRecord(
             step=step,
             query_uid=problem.get("uid") if isinstance(problem.get("uid"), str) else None,
@@ -263,23 +406,6 @@ def run_repair_loop(
         if accepted:
             current_plan = deepcopy(result.repaired_plan)
             current_verification = candidate_verification
-
-        # No-progress stopping must not suppress post-commonsense recovery.
-        # Every no-op is already recorded and consumes the unchanged hard budget.
-        recovery_available = (
-            commonsense_used
-            and not all(state is True for state in current_verification["personal_constraints"])
-            and step < total_budget
-            and personal_attempts < 5
-        )
-        if (
-            strategy_name in {"R1", "R1TargetedRepair"}
-            and result is not None
-            and result.repaired_plan == before_plan
-            and (commonsense_used or not (current_verification.get("commonsense_errors") or []))
-            and not recovery_available
-        ):
-            break
 
     ## Return the final accepted plan and the full attempt history.
     return {
