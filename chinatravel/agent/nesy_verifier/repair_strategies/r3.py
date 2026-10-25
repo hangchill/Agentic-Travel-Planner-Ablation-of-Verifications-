@@ -9,12 +9,15 @@
 ## (L2), and from iteration 5 onwards the whole plan (L3). At its tightest rung it
 ## is R1; at its widest it is R0.
 ##
-## The shared repair loop decides each iteration's phase (context["repair_phase"]):
-## up to 5 "personal" iterations, then one "commonsense" iteration, the same 5+1
-## schedule for every registered strategy. Every iteration, whatever its phase,
-## advances the ladder, so the rung always follows the loop's step number
-## (steps 1-2 slot, 3-4 day, 5-6 plan). A personal iteration shows only the
-## personal failures; the commonsense iteration shows only the commonsense errors
+## The shared repair loop decides each iteration's phase (context["repair_phase"]),
+## the same schedule for every registered strategy: personal iterations while a
+## personal constraint fails (at most 5), then commonsense iterations while
+## commonsense errors remain, back to personal if a commonsense iteration breaks
+## a personal constraint (see shared_repair_loop.py). Every iteration, whatever
+## its phase, advances the ladder, so the rung always follows the loop's step
+## number (steps 1-2 slot, 3-4 day, 5-6 plan); repeated commonsense iterations
+## widen like any other. A personal iteration shows only the
+## personal failures; a commonsense iteration shows only the commonsense errors
 ## at the current rung and lists every passing personal constraint as "must
 ## remain satisfied". Direct calls without a phase show all failures. The
 ## editable region is the union of the
@@ -54,7 +57,7 @@
 ## Why: without it, none of these failures could be fixed before step 5 - e.g.
 ## a 3-person trip whose flights and hotel alone exceed the budget wasted steps
 ## 1-4. For commonsense errors it matters most when personal constraints
-## already pass and the only (commonsense) step runs at step 1, at slot scope;
+## already pass and commonsense repair starts at step 1, at slot scope;
 ## it also stops an unlocated accommodation error from becoming "global", which
 ## opened many unrelated activities but never the hotel. Opened bookings are
 ## listed in the prompt and logged as "unlocked_bookings" in the repair metadata.

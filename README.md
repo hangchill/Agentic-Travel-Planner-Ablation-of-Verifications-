@@ -173,7 +173,7 @@ python scripts/build_regression_matrix.py \
 
 See [the experiment workflow](experiments/Commands_to_test_queries.md) and
 [the evidence/summary contract](chinatravel/evaluation/REPAIR_COMPARISON.md).
-Registered implementations are currently R0, R1, R2, R3, and R4. Registered strategies use the shared 5+1 scheduler, capped at six
+Registered implementations are currently R0, R1, R2, R3, and R4. Registered strategies use the shared scheduler (personal repairs first, at most five, then repeated commonsense repairs; all rounds used unless the plan passes), capped at six
 proposals; explicit smaller budgets are respected.
 
 ### How to implement your strategy

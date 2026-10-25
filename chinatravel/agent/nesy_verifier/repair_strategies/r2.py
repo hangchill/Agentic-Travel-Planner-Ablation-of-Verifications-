@@ -85,6 +85,8 @@ class R2ProtectedRepair(R0WholePlanRepair):
             "protected_constraint_indices": _passing_personal_indices(verification_results),
             "remembered_broken_constraint_indices": sorted(self._broken_constraints),
         }
+        # R2 has no skip rule of its own: an exact repeat request is served by
+        # the shared loop's per-query cache, the same for every strategy.
         # Case 4: R0 raises on an unparsable reply. R2 instead keeps the
         # current plan for this attempt, as does a candidate that is not a
         # usable itinerary of the requested length.
@@ -139,6 +141,7 @@ class R2ProtectedRepair(R0WholePlanRepair):
                 self._last_result.metadata["decision_reason"] = "previously_satisfied_constraint_regressed"
                 self._last_result.metadata["rolled_back_constraint_indices"] = regressed
             else:
-                self._last_result.metadata.pop("decision_reason", None)
+                if self._last_result.metadata.get("decision_reason") == "previously_satisfied_constraint_regressed":
+                    self._last_result.metadata.pop("decision_reason")
                 self._last_result.metadata.pop("rolled_back_constraint_indices", None)
         return not regressed

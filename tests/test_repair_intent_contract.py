@@ -138,8 +138,13 @@ class R0IntentTests(unittest.TestCase):
             self.assertNotIn("scope", metadata)
             self.assertFalse(set(INTENT_FIELDS + DERIVED_FIELDS) & metadata.keys())
         analysis = build_regression_matrix([value])
-        self.assertEqual(cell(analysis)["eligible_count"], 1)
+        # ver 2 excludes unchanged candidates from matrix eligibility
+        self.assertEqual(value.changed_slot_count, 0)
+        self.assertEqual(cell(analysis)["eligible_count"], 0)
+        self.assertEqual(analysis["coverage"]["unchanged_attempts"], 1)
         row = contribution(analysis)
+        self.assertEqual(row["exclusion_reason"], "unchanged_candidate")
+
         self.assertEqual(row["editable_scope"], "plan")
         self.assertEqual(row["target_count"], 1)
         self.assertEqual(row["concurrent_failed_count"], 1)
@@ -184,7 +189,12 @@ class R0IntentTests(unittest.TestCase):
         self.assertEqual(value["before_personal_constraints"], [False, None])
         self.assertIsNone(value["input_tokens_delta"])
         self.assertEqual(value["target_constraint_indices"], [1])
-        self.assertEqual(value["repair_metadata"], {"prompt": "debug"})
+        # Strategy debug keys pass through; the loop adds only its cache counters.
+        metadata = dict(value["repair_metadata"])
+        self.assertEqual({k: metadata.pop(k) for k in list(metadata) if k.startswith("llm_cache_")},
+                         {"llm_cache_hits": 0, "llm_cache_saved_input_tokens": 0,
+                          "llm_cache_saved_output_tokens": 0, "llm_cache_saved_unknown": 0})
+        self.assertEqual(metadata, {"prompt": "debug"})
 
 
 class ScopeMatrixTests(unittest.TestCase):

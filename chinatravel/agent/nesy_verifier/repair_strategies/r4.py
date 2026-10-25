@@ -24,7 +24,7 @@ class MatrixGuidedRepair(R3AdaptiveScopeRepair):
     """Let the model choose repairs using matrix advice, with full-plan freedom.
 
     R3's parsing, feedback, structure checks and metadata helpers are reused.
-    The shared loop owns the five-personal-plus-one-commonsense attempt budget.
+    The shared loop owns the attempt budget and the personal/commonsense schedule.
     Matrix rankings are recommendations and never filter the repair targets.
     """
 

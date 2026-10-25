@@ -41,9 +41,10 @@ apples-to-apples.
 ## 2. Current status — DONE vs TODO (based on code + git log, not docs)
 
 **DONE (verified in code):**
-- Shared framework: `shared_verifier.py`, `shared_repair_loop.py` (the "5+1" scheduler lives
-  *inside* `run_repair_loop`: ≤5 personal-repair iterations + 1 commonsense iteration, total
-  budget capped at 6), strategy factory registration.
+- Shared framework: `shared_verifier.py`, `shared_repair_loop.py` (the scheduler lives
+  *inside* `run_repair_loop`: personal-repair iterations first (≤5), then commonsense iterations
+  while errors remain, back to personal if one breaks a personal constraint; total budget capped
+  at 6 and always used unless the plan passes or nothing is left to fix), strategy factory registration.
 - **R0, R1, R2, R3, R3P all implemented AND registered** in
   `repair_strategies/__init__.py` (`STRATEGY_FACTORIES = {R0, R1, R2, R3, R3P}`). All five are
   selectable and executable via `run_experiments.py --strategy ...`.
@@ -84,7 +85,7 @@ apples-to-apples.
 | File | Purpose |
 |---|---|
 | `shared_verifier.py` | `verify_plan()`: structure check + commonsense + personal DSL constraints. Returns tri-state `personal_constraints` (True/False/None), `error_info` (genuine violations only), and separate technical channels (`verifier_errors`, `translation_errors`, `schema_errors`). Any technical error forces `passed=False`. |
-| `shared_repair_loop.py` | `run_repair_loop()`: the 5+1 scheduler. verify → `strategy.repair()` → verify candidate → `strategy.accept()` → record a `RepairAttemptRecord` per attempt. One strategy instance for the whole loop (strategies may hold state). `max_steps` capped at 6; rejected attempts still consume budget. Sets `context["repair_phase"]` = `"personal"` or `"commonsense"`. |
+| `shared_repair_loop.py` | `run_repair_loop()`: the personal-first / repeating-commonsense scheduler. verify → `strategy.repair()` → verify candidate → `strategy.accept()` → record a `RepairAttemptRecord` per attempt. One strategy instance for the whole loop (strategies may hold state). `max_steps` capped at 6; rejected attempts still consume budget. Sets `context["repair_phase"]` = `"personal"` or `"commonsense"`. |
 | `llm_modulo.py` | Main LLM-modulo agent; `solve()` builds initial plan + context, selects repair strategy, drives the loop. Contains the Windows path sanitisation fixes. |
 | `initial_state.py` | Builds the initial repair state. |
 | `repair_strategies/base.py` | `BaseRepairStrategy` (abstract `repair()`, default `accept()`=True) + `RepairResult(repaired_plan, metadata)` dataclass. **Read this first to implement R4.** |
@@ -197,7 +198,7 @@ in `results/`, repair logs in `cache/`.
 
 ## 6. Conventions & gotchas (read before changing anything)
 
-- **Fairness invariant:** keep **DeepSeek V3 (`deepseek/deepseek-chat`) + `--max-steps 6` (budget 5+1)
+- **Fairness invariant:** keep **DeepSeek V3 (`deepseek/deepseek-chat`) + `--max-steps 6` (≤5 personal + commonsense rounds)
   + `--lang en`** identical across all strategies. Any difference in results must be attributable
   to the repair method, not the setup. The committed pilot5-r2 manifest also shows
   `temperature=0, top_p≈0` (greedy) — keep sampling settings fixed too. `run_manifest.json`
