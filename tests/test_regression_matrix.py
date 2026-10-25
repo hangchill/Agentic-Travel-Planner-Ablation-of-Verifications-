@@ -248,6 +248,45 @@ class RegressionMatrixTests(unittest.TestCase):
             aggregate_contributions(rows)
 
 
+    def test_unchanged_attempt_excluded_from_denominator(self):
+        result = build_regression_matrix([
+            record(step=1, before=[False, True], after=[False, True],
+                   changed_slot_count=0, total_comparable_slots=2,
+                   changed_slot_rate=0.0, decision_reason="no_progress_unchanged",),
+            record(step=2, before=[False, True], after=[True, False], changed_slot_count=1,
+                   total_comparable_slots=2, changed_slot_rate=0.5,),])
+        row = cell(result)
+        self.assertEqual(row["support_count"], 1)
+        self.assertEqual(row["regression_count"], 1)
+        self.assertEqual(row["regression_rate"], 1.0)
+        self.assertEqual(result["coverage"]["unchanged_attempts"], 1)
+        self.assertEqual(result["coverage"]["total_repair_attempts"], 2)
+        unchanged = next(
+            row for row in result["contributions"]
+            if row["step"] == 1
+            and row["perspective"] == "candidate"
+            and row["destination_family"] == "monetary_budget")
+        self.assertFalse(unchanged["eligible"])
+        self.assertEqual(unchanged["exclusion_reason"], "unchanged_candidate",)
+
+    def test_changed_attempt_without_regression_still_counts(self):
+        result = build_regression_matrix([
+            record(before=[False, True], after=[True, True], changed_slot_count=1,
+                   total_comparable_slots=2, changed_slot_rate=0.5,)])
+        row = cell(result)
+        self.assertEqual(row["support_count"], 1)
+        self.assertEqual(row["regression_count"], 0)
+        self.assertEqual(row["regression_rate"], 0.0)
+
+    def test_missing_changed_slot_count_not_assumed_unchanged(self):
+        result = build_regression_matrix([
+            record(before=[False, True], after=[True, False],
+                   changed_slot_count=None, decision_reason=None,)])
+        row = cell(result)
+        self.assertEqual(row["support_count"], 1)
+        self.assertEqual(row["regression_count"], 1)
+        self.assertEqual(result["coverage"]["unchanged_attempts"], 0)
+
 class MatrixCliTests(unittest.TestCase):
     def run_cli(self, *args):
         return subprocess.run(

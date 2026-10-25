@@ -12,7 +12,7 @@ from chinatravel.evaluation.constraint_families import (
 from chinatravel.evaluation.repair_attempt import coerce_repair_attempt
 
 TAXONOMY_VERSION = "1.0.0"
-MATRIX_DEFINITION_VERSION = "1.0.0"
+MATRIX_DEFINITION_VERSION = "2.0.0"
 PERSPECTIVES = ("candidate", "accepted_trajectory")
 CONTRIBUTION_COLUMNS = (
     "run_id", "query_uid", "step", "repair_strategy", "source_constraint_index",
@@ -80,6 +80,12 @@ def _classifications(record):
                                "reason": "missing_descriptor"})
     return mapping, exclusions
 
+def _is_unchanged_attempt(record):
+    """Return True only for confirmed unchanged repair candidates."""
+    if record.changed_slot_count is not None:
+        return record.changed_slot_count == 0
+
+    return record.decision_reason == "no_progress_unchanged"
 
 def _source(record, mapping):
     targets = record.target_constraint_indices
@@ -110,7 +116,7 @@ def _coverage_summary(audits):
         "candidate_eligible_contributions": 0, "accepted_eligible_contributions": 0,
         "isolated_single_target_attempts": 0, "single_target_with_other_personal_failures_attempts": 0,
         "concurrent_commonsense_failure_attempts": 0, "missing_target_provenance_attempts": 0,
-        "missing_editable_scope_attempts": 0,
+        "missing_editable_scope_attempts": 0, "unchanged_attempts": 0,
     }
     queries = set()
     for record, mapping, exclusions, eligible_count, unknown_count in audits:
@@ -124,6 +130,7 @@ def _coverage_summary(audits):
         coverage["concurrent_commonsense_failure_attempts"] += int((record.concurrent_commonsense_failure_count or 0) > 0)
         coverage["missing_target_provenance_attempts"] += int(record.target_provenance is None)
         coverage["missing_editable_scope_attempts"] += int(record.editable_scope is None)
+        coverage["unchanged_attempts"] += int(_is_unchanged_attempt(record))
         if record.query_uid is None:
             coverage["missing_query_uid_attempts"] += 1
         else:
@@ -168,6 +175,8 @@ def build_regression_matrix(records, run_id="default") -> dict:
         for destination in CONSTRAINT_FAMILIES:
             indices = destinations[destination]
             reason = source_reason
+            if _is_unchanged_attempt(record):
+                reason = "unchanged_candidate"
             if reason is None:
                 if source_family == destination:
                     reason = "structurally_ineligible_diagonal"
