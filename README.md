@@ -472,6 +472,10 @@ The hardened evaluator additionally enforces:
 - exact entity names and canonical concept values from the installed sandbox;
 - safe DSL execution and legacy apostrophe normalization.
 
+For reproducible offline analysis of persisted R0/R1/R2/R3 repair runs, see
+[Repair analysis](scripts/REPAIR_ANALYSIS.md). This reads saved evidence without
+rerunning generation, verification, or benchmark evaluation.
+
 ## 🛠️ Agent Environment and Harness
 
 `agent_env` exposes ChinaTravel through structured Python, CLI, HTTP, MCP, Chat
