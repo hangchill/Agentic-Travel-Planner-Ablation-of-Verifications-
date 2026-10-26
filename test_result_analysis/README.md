@@ -10,8 +10,8 @@ Unless a row says otherwise, a value is computed for each query first and then a
 |---|---|
 | `table1_pc.csv` | Personal constraints (PC), benchmark: avg failed and avg passed initial vs final, queries up / same / down, 0 / 1 / 2+ failed, top failing kinds, results without named-place constraints |
 | `table1b_pc_failure_by_kind.csv` | PC failure rate by constraint kind, whole cohort |
-| `table2_cs.csv` | Commonsense (CS) checks, benchmark: avg failed checks initial vs final, queries improved / same / worse, plans with 0 / 1 / 2 / 3 / 4+ failed, plans with at most 4 failed, top failing checks |
-| `table3_repair_process.csv` | Avg tokens and repair time, efficiency, effect of a changed round, and the round split (changed / cached / other) |
+| `table2_cs.csv` | Commonsense (CS) checks, benchmark: avg failed checks and avg % passed initial vs final, queries improved / same / worse, plans with 0 / 1 / 2 / 3 / 4+ failed, plans with at most 4 failed, top failing checks |
+| `table3_repair_process.csv` | Avg tokens and repair time, effect of a changed round, and the round split (changed / cached / other) |
 | `table4_eval_exp.csv` | ChinaTravel's own micro / macro metrics on the final plans, per group |
 | `per_query.csv` | Every per-query value the tables are built from |
 
@@ -27,7 +27,6 @@ Unless a row says otherwise, a value is computed for each query first and then a
 - **Changed round:** a repair round whose candidate plan differs from the plan in place before it. Its ΔPC / ΔCS use the loop verifier's results (True count of `personal_constraints`, number of `commonsense_errors`), so ΔPC also counts constraints that were UNKNOWN before and became checkable. For R2 this includes candidates its rollback later rejected.
 - **Round split:** every round is exactly one of: plan changed; plan unchanged and the request was an exact repeat answered from the cache (`repair_metadata.llm_cache_hits > 0`); plan unchanged although the model was called with a different request.
 - **Tokens / time:** sums over the checkpoint's `repair_attempts` (`total_tokens_delta`, `repair_time_seconds`); repair only, initial plan generation excluded. A query with any missing token value has no token figure.
-- **Efficiency:** avg gain per query ÷ avg tokens per query × 100,000, over queries with token data.
 
 ## Caveats
 
@@ -35,9 +34,20 @@ Unless a row says otherwise, a value is computed for each query first and then a
 - **Missing walking-leg `price`.** `translate_innercity_transport` (`llm_modulo.py`) leaves `price` off direct walking legs, which fails the schema check and the "Incorrect Information of Inner-City Transport on price, distance, and duration" CS check for many plans.
 - **Loop time-check crash.** `collect_time_error` raises `KeyError: 'position'` on a train or flight that departs before its transport arrives. That hides timing errors from repair and can stop a query early while it is still failing.
 - **Plans the CS evaluator can't check.** When `evaluate_commonsense_constraints` crashes on a plan (for example an error placeholder with no activities), it marks only an extra `Commonsense Evaluator Exception` column. That plan would look like it passed every real check. Tables 1–3 use the 28 standard checks and count such a plan as failing all of them. Table 4 keeps ChinaTravel's own definition so it matches `benchmark_summary.json`, so its commonsense micro is inflated for runs with such plans.
+- **Failed model calls.** When a call to the model provider fails, `chinatravel/agent/llms.py` returns the text `{"error": "Request failed, please try again."}` instead of raising. The round then has no token count, the repeat-request cache stores that text and serves it to later identical requests, and a strategy that always accepts (R0) can take it as its new plan, so a working plan is replaced by an error placeholder. Table 3 shows the share of rounds affected; per-run notes list the queries.
 - **Small groups:** 10 queries per group, so differences of a query or two are noise.
 
 ## Per-run notes
+
+### R0
+- Source run: `experiments/subset_test-r0` (run_id `subset_test-r0`, split `subset_test`, model `deepseek/deepseek-chat`, 30 queries, max 6 rounds).
+- `e20241028161037866126` (medium): 1 of 6 rounds got the failed-call text instead of a plan (provider error); the final plan is that error placeholder, which replaced a working plan, so the query scores as a failure.
+- `e20241028161334777418` (medium): 1 of 6 rounds got the failed-call text instead of a plan (provider error); the final plan is that error placeholder, which replaced a working plan, so the query scores as a failure.
+- `m20241028164819146853` (easy): 6 of 6 rounds got the failed-call text instead of a plan (provider error); the final plan is that error placeholder, which replaced a working plan, so the query scores as a failure.
+- `m20241028164848577483` (easy): initial plan generation failed (error placeholder, no activities); the query scores as a failure.
+- `m20241028164848577483` (easy): 6 of 6 rounds got the failed-call text instead of a plan (provider error).
+- `t20241206171855902412` (easy): 1 of 6 rounds got the failed-call text instead of a plan (provider error).
+- Token data incomplete for 5 queries (8 rounds with no recorded token count): `e20241028161037866126`, `e20241028161334777418`, `m20241028164819146853`, `m20241028164848577483`, `t20241206171855902412`. Each of these rounds had at least one failed model request (the provider returned an error and no token usage; the model wrapper then returned the text '{"error": "Request failed, please try again."}' instead of a plan). These queries are left out of the complete-data token row; the lower-bound row counts every request that did report usage and counts failed requests as 0.
 
 ### R2
 - Source run: `experiments/subset_test-r2` (run_id `subset_test-r2`, split `subset_test`, model `deepseek/deepseek-chat`, 30 queries, max 6 rounds).
@@ -46,11 +56,27 @@ Unless a row says otherwise, a value is computed for each query first and then a
 
 ### R3
 - Source run: `experiments/subset_test-r3` (run_id `subset_test-r3`, split `subset_test`, model `deepseek/deepseek-chat`, 30 queries, max 6 rounds).
-- Token data incomplete for 1 queries (2 rounds with no recorded token count): `e20241028161340383778`. They are left out of the complete-data token and efficiency rows; the lower-bound row counts their known rounds only.
+- `e20241028161340383778` (medium): 4 of 6 rounds got the failed-call text instead of a plan (provider error).
+- Token data incomplete for 1 queries (2 rounds with no recorded token count): `e20241028161340383778`. Each of these rounds had at least one failed model request (the provider returned an error and no token usage; the model wrapper then returned the text '{"error": "Request failed, please try again."}' instead of a plan). These queries are left out of the complete-data token row; the lower-bound row counts every request that did report usage and counts failed requests as 0.
 
 ### R4
 - Source run: `experiments/subset_test-r4` (run_id `subset_test-r4`, split `subset_test`, model `deepseek/deepseek-chat`, 30 queries, max 6 rounds).
+- `e20241028160914767827` (medium): 4 of 6 rounds got the failed-call text instead of a plan (provider error).
+- `e20241028160937967706` (medium): 5 of 6 rounds got the failed-call text instead of a plan (provider error).
+- `e20241028161037866126` (medium): 6 of 6 rounds got the failed-call text instead of a plan (provider error).
+- `e20241028161125262867` (medium): 5 of 6 rounds got the failed-call text instead of a plan (provider error).
+- `e20241028161311009105` (medium): 6 of 6 rounds got the failed-call text instead of a plan (provider error).
+- `e20241028161334777418` (medium): 6 of 6 rounds got the failed-call text instead of a plan (provider error).
+- `e20241028161340383778` (medium): 6 of 6 rounds got the failed-call text instead of a plan (provider error).
+- `h20241029143522848652` (human): 4 of 6 rounds got the failed-call text instead of a plan (provider error).
+- `h20241029143551657496` (human): 6 of 6 rounds got the failed-call text instead of a plan (provider error).
 - `h20241029143556181559` (human): initial plan generation failed (error placeholder, no activities); the query scores as a failure.
+- `h20241029143556181559` (human): 6 of 6 rounds got the failed-call text instead of a plan (provider error).
+- `h20241029143630351554` (human): 4 of 6 rounds got the failed-call text instead of a plan (provider error).
+- `h20241029143652031792` (human): 5 of 6 rounds got the failed-call text instead of a plan (provider error).
+- `h20241029143729369677` (human): 4 of 6 rounds got the failed-call text instead of a plan (provider error).
+- `h20241029143820591758` (human): 6 of 6 rounds got the failed-call text instead of a plan (provider error).
+- `m20241028164819146853` (easy): 5 of 6 rounds got the failed-call text instead of a plan (provider error).
 - `m20241028164916356794` (easy): initial plan generation failed (error placeholder, no activities); the query scores as a failure.
-- Token data incomplete for 15 queries (21 rounds with no recorded token count): `e20241028160914767827`, `e20241028160937967706`, `e20241028161037866126`, `e20241028161125262867`, `e20241028161311009105`, `e20241028161334777418`, `e20241028161340383778`, `h20241029143522848652`, `h20241029143551657496`, `h20241029143556181559`, `h20241029143630351554`, `h20241029143652031792`, `h20241029143729369677`, `h20241029143820591758`, `m20241028164819146853`. They are left out of the complete-data token and efficiency rows; the lower-bound row counts their known rounds only.
+- Token data incomplete for 15 queries (21 rounds with no recorded token count): `e20241028160914767827`, `e20241028160937967706`, `e20241028161037866126`, `e20241028161125262867`, `e20241028161311009105`, `e20241028161334777418`, `e20241028161340383778`, `h20241029143522848652`, `h20241029143551657496`, `h20241029143556181559`, `h20241029143630351554`, `h20241029143652031792`, `h20241029143729369677`, `h20241029143820591758`, `m20241028164819146853`. Each of these rounds had at least one failed model request (the provider returned an error and no token usage; the model wrapper then returned the text '{"error": "Request failed, please try again."}' instead of a plan). These queries are left out of the complete-data token row; the lower-bound row counts every request that did report usage and counts failed requests as 0.
 

@@ -4,7 +4,7 @@ For each run given with --run LABEL=DIR, writes to <output-dir>/<LABEL>/:
   table1_pc.csv                  personal constraints (PC), benchmark, initial vs final plan
   table1b_pc_failure_by_kind.csv PC failure rate by constraint kind, whole cohort
   table2_cs.csv                  commonsense (CS) checks, benchmark, initial vs final plan
-  table3_repair_process.csv      tokens, time, efficiency, changed-round effect, round split
+  table3_repair_process.csv      tokens, time, changed-round effect, round split
   table4_eval_exp.csv            ChinaTravel's own micro / macro metrics on the final plans
   per_query.csv                  every per-query value the tables are built from
 and <output-dir>/README.md describing the files, definitions, sources and caveats.
@@ -44,6 +44,8 @@ GROUPS = ("easy", "medium", "human")
 COLUMNS = ("Easy", "Medium", "Human", "All")
 CS_PASS_THRESHOLD = 0.85
 CS_EXCEPTION_COLUMN = "Commonsense Evaluator Exception"
+## Text the model wrapper (chinatravel/agent/llms.py REQUEST_ERROR_RESPONSE) returns when a call fails.
+REQUEST_ERROR_TEXT = "Request failed, please try again."
 
 
 ## ---------- loading ----------
@@ -158,11 +160,13 @@ def round_data(checkpoint):
     history = checkpoint.get("repair_history") or []
     current = (history[0].get("verification") if history else None) or checkpoint.get("initial_verification") or {}
     current_plan = json.dumps(current.get("translated_plan"), sort_keys=True)
-    rounds = changed = cached = 0
+    rounds = changed = cached = error_replies = 0
     delta_pc, delta_cs = [], []
     for entry in history[1:]:
         rounds += 1
         attempt = entry.get("repair_attempt") or {}
+        if REQUEST_ERROR_TEXT in str((attempt.get("repair_metadata") or {}).get("raw_response") or ""):
+            error_replies += 1
         verification = entry.get("verification") or {}
         candidate_plan = json.dumps(verification.get("translated_plan"), sort_keys=True)
         if candidate_plan != current_plan:
@@ -175,10 +179,27 @@ def round_data(checkpoint):
             cached += 1
         if entry.get("accepted"):
             current, current_plan = verification, candidate_plan
-    return dict(rounds=rounds, changed=changed, unchanged_cache=cached,
+    return dict(rounds=rounds, error_reply_rounds=error_replies, changed=changed, unchanged_cache=cached,
                 unchanged_other=rounds - changed - cached,
                 dpc_per_changed=statistics.mean(delta_pc) if delta_pc else None,
                 dcs_per_changed=statistics.mean(delta_cs) if delta_cs else None)
+
+
+def counted_tokens(attempt):
+    """Tokens the provider reported during one round, even when the round's total is unknown.
+
+    total_tokens_delta is left empty when any request in the round returned no usage
+    (a failed request). The cumulative input/output counters still include every
+    request that did report usage, so their difference counts those tokens.
+    """
+    if attempt.get("total_tokens_delta") is not None:
+        return attempt["total_tokens_delta"]
+    total = 0
+    for side in ("input", "output"):
+        before, after = attempt.get(f"{side}_tokens_before"), attempt.get(f"{side}_tokens_after")
+        if type(before) is int and type(after) is int and after >= before:
+            total += after - before
+    return total
 
 
 def summed(values):
@@ -229,6 +250,7 @@ def build_queries(root, origin):
             execution_status=checkpoint.get("execution_status", "missing_checkpoint"),
             stop_reason=checkpoint.get("stop_reason"),
             initial_generation_failed=initial_generation_failed(initial_plans[uid]),
+            final_plan_is_error_stub=initial_generation_failed(final_plans[uid]),
             stopped_early_while_failing=(rounds["rounds"] < budget and final_loop.get("passed") is not True),
             pc_total=len(code),
             pc_passed_initial=sum(init["pc"]), pc_passed_final=sum(final["pc"]),
@@ -245,10 +267,12 @@ def build_queries(root, origin):
             cs_failed_raw_final=final["cs_failed_raw"], cs_total_raw_final=final["cs_total_raw"],
             schema_initial=init["schema"], schema_final=final["schema"],
             all_pass_initial=init["all_pass"], all_pass_final=final["all_pass"],
-            tokens_spent=summed(a.get("total_tokens_delta") for a in attempts),
-            tokens_spent_known=sum(a.get("total_tokens_delta") or 0 for a in attempts),
+            ## A completed query with no repair rounds (its initial plan already passed the
+            ## loop verifier) spent 0 repair tokens and time; only a missing checkpoint is unknown.
+            tokens_spent=(0 if checkpoint and not attempts else summed(a.get("total_tokens_delta") for a in attempts)),
+            tokens_spent_known=sum(counted_tokens(a) for a in attempts),
             rounds_missing_tokens=sum(a.get("total_tokens_delta") is None for a in attempts),
-            repair_time_s=summed(a.get("repair_time_seconds") for a in attempts),
+            repair_time_s=(0.0 if checkpoint and not attempts else summed(a.get("repair_time_seconds") for a in attempts)),
             **rounds,
         ))
     return strategy, manifest, rows, references
@@ -361,6 +385,14 @@ def table_cs(rows):
     t.append(metric_row("Avg CS checks failed per query - final plan", rows, lambda g: mean(failed_final(r) for r in g), SRC_CS))
     t.append(metric_row("Avg CS checks failed per query - change (final - initial; negative = fewer failures)", rows,
                         lambda g: mean(failed_final(r) - failed_initial(r) for r in g), SRC_CS))
+    share = lambda passed, r: 100 * passed / r["cs_total"]
+    t.append(metric_row("Avg % CS checks passed per query - initial plan", rows,
+                        lambda g: mean((share(r["cs_passed_initial"], r) for r in g), 1), SRC_CS))
+    t.append(metric_row("Avg % CS checks passed per query - final plan", rows,
+                        lambda g: mean((share(r["cs_passed_final"], r) for r in g), 1), SRC_CS))
+    t.append(metric_row("Avg % CS checks passed per query - change (percentage points)", rows,
+                        lambda g: mean((share(r["cs_passed_final"], r) - share(r["cs_passed_initial"], r) for r in g), 1),
+                        SRC_CS))
     t.append(metric_row("Queries where failed CS checks decreased (improved)", rows,
                         lambda g: sum(failed_final(r) < failed_initial(r) for r in g), SRC_CS))
     t.append(metric_row("Queries where failed CS checks stayed the same", rows,
@@ -389,13 +421,6 @@ def table_process(rows):
                  "before the round; cache = repair_attempt.repair_metadata.llm_cache_hits > 0")
     with_tokens = lambda g: [r for r in g if r["tokens_spent"] is not None]
 
-    def per_100k(g, gain):
-        g = with_tokens(g)
-        if not g:
-            return ""
-        tokens = statistics.mean(r["tokens_spent"] for r in g)
-        return round(100000 * statistics.mean(gain(r) for r in g) / tokens, 3) if tokens else ""
-
     def pct(g, key):
         total = sum(r["rounds"] for r in g)
         return round(100 * sum(r[key] for r in g) / total, 1) if total else ""
@@ -406,17 +431,12 @@ def table_process(rows):
                         lambda g: mean((r["tokens_spent"] for r in g), 0), src_ckpt + ": sum of total_tokens_delta"))
     t.append(metric_row("[per query] Rounds with no recorded token count", rows,
                         lambda g: sum(r["rounds_missing_tokens"] for r in g), src_ckpt + ": total_tokens_delta is null"))
-    t.append(metric_row("[per query] Avg tokens spent per query - known values only, all queries (lower bound)", rows,
+    t.append(metric_row("[per query] Avg tokens spent per query - all queries, failed requests counted as 0 (lower bound)", rows,
                         lambda g: mean((r["tokens_spent_known"] for r in g), 0),
-                        src_ckpt + ": sum of non-null total_tokens_delta; rounds without a count add 0"))
+                        src_ckpt + ": every request that reported usage (input/output token counters before vs after "
+                        "each round); failed requests reported none and add 0"))
     t.append(metric_row("[per query] Avg repair time per query (s)", rows,
                         lambda g: mean((r["repair_time_s"] for r in g), 1), src_ckpt + ": sum of repair_time_seconds"))
-    t.append(metric_row("[per query] Efficiency: CS checks fixed per 100k tokens", rows,
-                        lambda g: per_100k(g, lambda r: r["cs_passed_final"] - r["cs_passed_initial"]),
-                        "avg CS-check gain per query / avg tokens per query x 100k (queries with token data)"))
-    t.append(metric_row("[per query] Efficiency: PC gained per 100k tokens", rows,
-                        lambda g: per_100k(g, lambda r: r["pc_passed_final"] - r["pc_passed_initial"]),
-                        "avg PC gain per query / avg tokens per query x 100k (queries with token data)"))
     t.append(metric_row("[per query] Queries with at least one round that changed the plan", rows,
                         lambda g: sum(r["changed"] > 0 for r in g), src_round))
     t.append(metric_row("[per query] Avg change in PC passed per changed round (loop verifier)", rows,
@@ -426,6 +446,10 @@ def table_process(rows):
                         lambda g: mean(r["dcs_per_changed"] for r in g), src_round +
                         "; each query's own average, then averaged over queries with a changed round"))
     t.append(metric_row("[round-wise] Repair rounds in total", rows, lambda g: sum(r["rounds"] for r in g), src_round))
+    t.append(metric_row("[round-wise] % of rounds where the model call failed (error text instead of a plan; "
+                        "includes cached repeats of a failed reply)", rows, lambda g: pct(g, "error_reply_rounds"),
+                        "checkpoint repair_attempt.repair_metadata.raw_response contains the wrapper's "
+                        f"'{REQUEST_ERROR_TEXT}' text"))
     t.append(metric_row("[round-wise] % of rounds where the plan changed", rows, lambda g: pct(g, "changed"), src_round))
     t.append(metric_row("[round-wise] % of rounds unchanged - answered from cache (exact repeat of an earlier request)",
                         rows, lambda g: pct(g, "unchanged_cache"), src_round))
@@ -475,8 +499,8 @@ def readme(run_notes):
         "|---|---|",
         "| `table1_pc.csv` | Personal constraints (PC), benchmark: avg failed and avg passed initial vs final, queries up / same / down, 0 / 1 / 2+ failed, top failing kinds, results without named-place constraints |",
         "| `table1b_pc_failure_by_kind.csv` | PC failure rate by constraint kind, whole cohort |",
-        "| `table2_cs.csv` | Commonsense (CS) checks, benchmark: avg failed checks initial vs final, queries improved / same / worse, plans with 0 / 1 / 2 / 3 / 4+ failed, plans with at most 4 failed, top failing checks |",
-        "| `table3_repair_process.csv` | Avg tokens and repair time, efficiency, effect of a changed round, and the round split (changed / cached / other) |",
+        "| `table2_cs.csv` | Commonsense (CS) checks, benchmark: avg failed checks and avg % passed initial vs final, queries improved / same / worse, plans with 0 / 1 / 2 / 3 / 4+ failed, plans with at most 4 failed, top failing checks |",
+        "| `table3_repair_process.csv` | Avg tokens and repair time, effect of a changed round, and the round split (changed / cached / other) |",
         "| `table4_eval_exp.csv` | ChinaTravel's own micro / macro metrics on the final plans, per group |",
         "| `per_query.csv` | Every per-query value the tables are built from |",
         "",
@@ -494,7 +518,6 @@ def readme(run_notes):
         "- **Changed round:** a repair round whose candidate plan differs from the plan in place before it. Its ΔPC / ΔCS use the loop verifier's results (True count of `personal_constraints`, number of `commonsense_errors`), so ΔPC also counts constraints that were UNKNOWN before and became checkable. For R2 this includes candidates its rollback later rejected.",
         "- **Round split:** every round is exactly one of: plan changed; plan unchanged and the request was an exact repeat answered from the cache (`repair_metadata.llm_cache_hits > 0`); plan unchanged although the model was called with a different request.",
         "- **Tokens / time:** sums over the checkpoint's `repair_attempts` (`total_tokens_delta`, `repair_time_seconds`); repair only, initial plan generation excluded. A query with any missing token value has no token figure.",
-        "- **Efficiency:** avg gain per query ÷ avg tokens per query × 100,000, over queries with token data.",
         "",
         "## Caveats",
         "",
@@ -502,6 +525,7 @@ def readme(run_notes):
         "- **Missing walking-leg `price`.** `translate_innercity_transport` (`llm_modulo.py`) leaves `price` off direct walking legs, which fails the schema check and the \"Incorrect Information of Inner-City Transport on price, distance, and duration\" CS check for many plans.",
         "- **Loop time-check crash.** `collect_time_error` raises `KeyError: 'position'` on a train or flight that departs before its transport arrives. That hides timing errors from repair and can stop a query early while it is still failing.",
         "- **Plans the CS evaluator can't check.** When `evaluate_commonsense_constraints` crashes on a plan (for example an error placeholder with no activities), it marks only an extra `Commonsense Evaluator Exception` column. That plan would look like it passed every real check. Tables 1–3 use the 28 standard checks and count such a plan as failing all of them. Table 4 keeps ChinaTravel's own definition so it matches `benchmark_summary.json`, so its commonsense micro is inflated for runs with such plans.",
+        "- **Failed model calls.** When a call to the model provider fails, `chinatravel/agent/llms.py` returns the text `{\"error\": \"Request failed, please try again.\"}` instead of raising. The round then has no token count, the repeat-request cache stores that text and serves it to later identical requests, and a strategy that always accepts (R0) can take it as its new plan, so a working plan is replaced by an error placeholder. Table 3 shows the share of rounds affected; per-run notes list the queries.",
         "- **Small groups:** 10 queries per group, so differences of a query or two are noise.",
         "",
         "## Per-run notes",
@@ -520,6 +544,12 @@ def run_notes(label, root, manifest, rows):
     for r in rows:
         if r["initial_generation_failed"]:
             notes.append(f"- `{r['query_uid']}` ({r['group']}): initial plan generation failed (error placeholder, no activities); the query scores as a failure.")
+        if r["error_reply_rounds"]:
+            replaced = (r["final_plan_is_error_stub"] and not r["initial_generation_failed"])
+            notes.append(f"- `{r['query_uid']}` ({r['group']}): {r['error_reply_rounds']} of {r['rounds']} rounds got the "
+                         "failed-call text instead of a plan (provider error)"
+                         + ("; the final plan is that error placeholder, which replaced a working plan, so the query "
+                            "scores as a failure" if replaced else "") + ".")
         if r["stopped_early_while_failing"] and not r["initial_generation_failed"]:
             notes.append(f"- `{r['query_uid']}` ({r['group']}): stopped after {r['rounds']} rounds while still failing "
                          f"(saved stop reason `{r['stop_reason']}`), so its rounds, tokens and time are lower.")
@@ -528,8 +558,11 @@ def run_notes(label, root, manifest, rows):
         notes.append(f"- Token data incomplete for {len(missing)} queries ({sum(r['rounds_missing_tokens'] for r in missing)} "
                      "rounds with no recorded token count): "
                      + ", ".join(f"`{r['query_uid']}`" for r in missing)
-                     + ". They are left out of the complete-data token and efficiency rows; the lower-bound row "
-                       "counts their known rounds only.")
+                     + ". Each of these rounds had at least one failed model request (the provider returned an error "
+                       "and no token usage; the model wrapper then returned the text "
+                       "'{\"error\": \"Request failed, please try again.\"}' instead of a plan). These queries are "
+                       "left out of the complete-data token row; the lower-bound row counts every "
+                       "request that did report usage and counts failed requests as 0.")
     return notes
 
 
