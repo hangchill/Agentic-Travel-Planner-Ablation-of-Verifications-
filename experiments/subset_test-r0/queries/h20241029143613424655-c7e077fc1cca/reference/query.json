@@ -1,0 +1,20 @@
+{
+  "uid": "h20241029143613424655",
+  "tag": "human",
+  "start_city": "Beijing",
+  "target_city": "Shenzhen",
+  "days": 3,
+  "people_number": 4,
+  "limit_rooms": false,
+  "limits_room_type": false,
+  "hard_logic_py": [
+    "intercity_transport_set=set()\nfor activity in allactivities(plan):\n  if activity_type(activity) in ['train', 'airplane']: intercity_transport_set.add(intercity_transport_type(activity))\nresult=({'airplane'}==intercity_transport_set)",
+    "attraction_type_set=set()\nfor activity in allactivities(plan):\n  if activity_type(activity)=='attraction': attraction_type_set.add(attraction_type(activity, target_city(plan)))\nresult=({'大学校园'}<=attraction_type_set)",
+    "total_cost=0 \nfor activity in allactivities(plan):\n    total_cost+=activity_cost(activity)\n    total_cost += innercity_transport_cost(activity_transports(activity))\nresult=(total_cost<=10000)",
+    "result=(day_count(plan)==3)",
+    "result=(people_count(plan)==4)",
+    "result=True\nfor activity in allactivities(plan):\n  if innercity_transport_type(activity_transports(activity))=='taxi'and taxi_cars(activity_transports(activity))!=1: result=False"
+  ],
+  "nature_language": "[Current location: Beijing, Destination: Shenzhen, Number of travelers: 4, Number of travel days: 3] Four of us want to fly from Beijing to Shenzhen for three days, visit a university campus, avoid crowds where possible, and keep the total budget within 10,000 RMB.",
+  "nature_language_en": "[Current location: Beijing, Destination: Shenzhen, Number of travelers: 4, Number of travel days: 3] Four of us want to fly from Beijing to Shenzhen for three days, visit a university campus, avoid crowds where possible, and keep the total budget within 10,000 RMB."
+}
