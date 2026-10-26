@@ -46,9 +46,8 @@ candidate rate = count(candidate regression) / count(E)
 accepted rate  = count(candidate regression AND accepted) / count(E)
 ```
 
-The **candidate matrix** is the primary cross-strategy comparison of proposed
-repair harm. The **accepted matrix** measures harm entering the continuing
-trajectory. Rejected harmful proposals remain in both denominators and only the
+The **candidate matrix** reports proposed repair harm for each strategy.
+The **accepted matrix** measures harm entering the continuing trajectory. Rejected harmful proposals remain in both denominators and only the
 candidate numerator. Low accepted harm for R2 may reflect rollback rather than
 safer proposals. Zero support is None/blank, not zero. Observed zero harm is 0.0.
 Unknown exclusions and mapping coverage must accompany interpretation. Repeated
