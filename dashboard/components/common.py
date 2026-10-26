@@ -13,7 +13,7 @@ def cards(values):
             st.metric(label, value)
 
 
-def table(frame, label, columns=None):
+def table(frame, label, columns=None, precision=3):
     if frame is None or frame.empty:
         st.info(f'{label}: Unavailable — no matching persisted evidence.')
         return
@@ -22,7 +22,7 @@ def table(frame, label, columns=None):
     for c in shown:
         if shown[c].map(lambda v: isinstance(v, (dict, list))).any():
             shown[c] = shown[c].map(str)
-    st.dataframe(shown.style.format(precision=3, na_rep='Unavailable'), hide_index=True, width='stretch')
+    st.dataframe(shown.style.format(precision=precision, na_rep='Unavailable'), hide_index=True, width='stretch')
     st.download_button(f'Download {label} CSV', shown.to_csv(index=False).encode(),
                        file_name=f'{label.replace(" ", "_")}.csv', mime='text/csv',
                        key=f'download_{label}')

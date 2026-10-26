@@ -256,3 +256,19 @@ chart helpers. It has its own difficulty/strategy filters and downloads, literal
 failure-label attribution, accepted-loop message diagnostics and round comparison.
 See [CS_REPORTING.md](CS_REPORTING.md) for every source mapping, exception and
 denominator policy, unsupported check-level round metrics and comparison guards.
+
+## Table-first TEST process reporting
+
+Repair Process / Efficiency now shares the PC/CS cross-strategy structure, with
+exact Table 3 cells, token-coverage warnings, outcome breakdown, separate token/
+time charts, round diagnostics and secondary counters. See
+[PROCESS_REPORTING.md](PROCESS_REPORTING.md) for exact row mappings, denominators,
+missing-token semantics, changed-round signs, cache limitations and failure flags.
+
+## Table-first ChinaTravel Evaluation
+
+The fourth TEST tab provides final benchmark Difficulty × Strategy reporting,
+metric bars, strategy/difficulty profiles and saved query-level results, without
+round analysis. See [EVALUATION_REPORTING.md](EVALUATION_REPORTING.md) for exact
+evaluator definitions, raw exception-column footnote, percentage scaling, missing
+results and the distinction between Commonsense macro and three-way All-pass.

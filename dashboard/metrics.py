@@ -774,10 +774,10 @@ def pc_round_table(q, attempts, bundles):
     return pd.DataFrame([{'Metric': label, **{c: cells.get(c, {}).get(label) for c in columns}} for label in labels])
 
 
-def round_comparison(tables, field, endpoints=False):
+def round_comparison(tables, field, endpoints=False, endpoint_columns=True):
     """Align observed step IDs without filling absent strategies/rounds."""
     steps = sorted({int(c.split()[1]) for t in tables.values() for c in t if c.startswith('Round ')})
-    columns = ['Initial'] + [f'Round {step}' for step in steps] + ['Final']
+    columns = (["Initial"] if endpoint_columns else []) + [f'Round {step}' for step in steps] + (["Final"] if endpoint_columns else [])
     rows, points = [], []
     for strategy, t in tables.items():
         if 'Metric' not in t or not t.Metric.eq(field).any():
@@ -1027,3 +1027,306 @@ def cs_reporting_sources():
         sources.append({'Displayed metric': label, 'Source file/helper': origin,
                         'Definition / exact source row': definition, 'Evidence': 'Benchmark'})
     return pd.DataFrame(sources)
+
+
+PROCESS_REPORT_ROWS = {
+    'Queries with complete token data': '[per query] Queries with token data',
+    'Avg tokens per query (complete token data)': '[per query] Avg tokens spent per query (queries with complete token data)',
+    'Rounds with no token count': '[per query] Rounds with no recorded token count',
+    'Avg tokens, all queries (lower bound)': '[per query] Avg tokens spent per query - known values only, all queries (lower bound)',
+    'Avg repair time per query (s)': '[per query] Avg repair time per query (s)',
+    'Queries with >=1 round making changes': '[per query] Queries with at least one round that changed the plan',
+    'Δ PC passed per changed round': '[per query] Avg change in PC passed per changed round (loop verifier)',
+    'Δ CS errors per changed round': '[per query] Avg change in CS errors per changed round (loop verifier; negative = fewer errors)',
+    'Rounds in total': '[round-wise] Repair rounds in total',
+    '% rounds: model call failed': None,
+    '% rounds: plan changed': '[round-wise] % of rounds where the plan changed',
+    '% rounds: unchanged, from cache': '[round-wise] % of rounds unchanged - answered from cache (exact repeat of an earlier request)',
+    '% rounds: unchanged, new request': '[round-wise] % of rounds unchanged - from a different request (model called)',
+}
+PROCESS_ROUND_COMPARISONS = {
+    'Queries active': '# queries reaching round',
+    'Model call failure rate': '% model call failures',
+    'Plan-change rate': '% plan changed',
+    'Cache-unchanged rate': '% unchanged from cache',
+    'New-request-unchanged rate': '% unchanged from new request',
+    'Avg tokens': 'Avg tokens (known counts only)',
+    'Avg repair time': 'Avg repair time (s)',
+    'Δ PC passed per changed round': 'Δ PC passed per changed round',
+    'Δ CS errors per changed round': 'Δ CS errors per changed round',
+}
+
+
+def process_report_pivot(summaries, queries, strategies, difficulties):
+    result = reporting_pivot(summaries, queries, strategies, difficulties, PROCESS_REPORT_ROWS)
+    for column in result.columns[1:]:
+        result[column] = pd.to_numeric(result[column], errors='coerce')
+    return result
+
+
+def process_cost_detail(queries, summaries, strategies, difficulty):
+    """Cost values are exact Table 3 cells, not reaggregated rounded query totals."""
+    rows = []
+    fields = {'Complete-token queries': 'Queries with complete token data',
+              'Avg tokens/query (complete)': 'Avg tokens per query (complete token data)',
+              'Avg tokens/query lower bound': 'Avg tokens, all queries (lower bound)',
+              'Missing-token rounds': 'Rounds with no token count',
+              'Avg repair time/query (s)': 'Avg repair time per query (s)'}
+    pivot = process_report_pivot(summaries, queries, strategies, [difficulty]).set_index('Metric')
+    prefix = 'Med' if difficulty == 'Medium' else difficulty
+    for strategy in strategies:
+        q = difficulty_queries(queries[strategy], difficulty)
+        if q.empty:
+            continue
+        column = f'{prefix} {strategy}'
+        r = {'Strategy': strategy, 'Queries': len(q)}
+        for label, metric in fields.items():
+            r[label] = pivot.loc[metric, column] if column in pivot else None
+        r['Token completeness (%)'] = 100 * r['Complete-token queries'] / len(q) if pd.notna(r['Complete-token queries']) else None
+        rows.append(r)
+    columns = ['Strategy', 'Queries', 'Complete-token queries', 'Token completeness (%)',
+               'Avg tokens/query (complete)', 'Avg tokens/query lower bound',
+               'Missing-token rounds', 'Avg repair time/query (s)']
+    return pd.DataFrame(rows, columns=columns)
+
+
+def process_round_events(q, attempts, bundles):
+    """One persisted proposal per query/step, classified by the unchanged team helper.
+
+    A two-entry history supplies the exact preceding accepted verification and
+    the candidate. This preserves candidate deltas even for rejected proposals.
+    Missing translated verification evidence stays unavailable in this diagnostic
+    adapter rather than fabricating a changed/unchanged classification.
+    """
+    from scripts.result_analysis.build_test_result_tables import round_data
+    rows, seen = [], set()
+    ids = set(q.query_uid) if not q.empty else set()
+    for uid in ids:
+        cps = bundles.get(uid, {}).get('checkpoints', [])
+        if len(cps) != 1:
+            continue
+        cp = cps[0]
+        history = cp.get('repair_history') or []
+        reconstructed = trajectory(cp)['rounds']
+        for entry, state in zip(history[1:], reconstructed):
+            step = entry.get('step')
+            if not isinstance(step, int) or step <= 0:
+                continue
+            seen.add((uid, step))
+            a = entry.get('repair_attempt') or {}
+            before, candidate = state['before'], state['candidate']
+            known = before.get('translated_plan') is not None and candidate.get('translated_plan') is not None
+            metric = round_data({'repair_history': [{'verification': before}, entry]}) if known else {}
+            rows.append({'query_uid': uid, 'step': step,
+                         'plan changed': metric.get('changed'), 'unchanged cache': metric.get('unchanged_cache'),
+                         'unchanged new request': metric.get('unchanged_other'),
+                         'PC delta changed': metric.get('dpc_per_changed') if isinstance(before.get('personal_constraints'), list) and isinstance(candidate.get('personal_constraints'), list) else None,
+                         'CS delta changed': metric.get('dcs_per_changed') if isinstance(before.get('commonsense_errors'), list) and isinstance(candidate.get('commonsense_errors'), list) else None,
+                         'tokens': a.get('total_tokens_delta'), 'repair time': a.get('repair_time_seconds'),
+                         'failed model calls': a.get('failed_model_calls')})
+    # An identity-only stream observation proves a reached round, not its outcome/cost.
+    if not attempts.empty:
+        for r in attempts[attempts.query_uid.isin(ids)].to_dict('records'):
+            key = (r['query_uid'], r['step'])
+            if key not in seen:
+                rows.append({'query_uid': key[0], 'step': key[1]})
+    columns = ['query_uid', 'step', 'plan changed', 'unchanged cache', 'unchanged new request',
+               'PC delta changed', 'CS delta changed', 'tokens', 'repair time', 'failed model calls']
+    frame = pd.DataFrame(rows, columns=columns)
+    return frame[~frame.duplicated(['query_uid', 'step'], keep=False)]
+
+
+def process_outcomes(q, events):
+    """The three team outcomes are exclusive; failure flags overlap all three."""
+    def complete_sum(key):
+        return q[key].sum(min_count=len(q)) if len(q) and key in q else float('nan')
+    total = complete_sum('rounds')
+    rows = []
+    for label, key in [('Plan changed', 'changed'), ('Unchanged: cache', 'unchanged_cache'),
+                       ('Unchanged: new request', 'unchanged_other')]:
+        n = complete_sum(key)
+        rows.append({'Outcome': label, 'Count': n, '% of rounds': 100 * n / total if total > 0 else None,
+                     'Evidence rounds (N)': total})
+    known = events['failed model calls'].dropna() if 'failed model calls' in events else pd.Series(dtype=float)
+    complete = pd.notna(total) and len(events) == total and len(known) == total
+    failures = int((known > 0).sum()) if complete else None
+    rows.append({'Outcome': 'Model call failed (overlapping)', 'Count': failures,
+                 '% of rounds': 100 * failures / total if complete and total > 0 else None,
+                 'Evidence rounds (N)': len(known)})
+    return pd.DataFrame(rows)
+
+
+def process_round_table(events):
+    labels = ['# queries reaching round', '# model call failures', '% model call failures',
+              '# plan changed', '% plan changed', '# unchanged from cache', '% unchanged from cache',
+              '# unchanged from new request', '% unchanged from new request',
+              'Avg tokens (known counts only)', 'Missing token counts', 'Avg repair time (s)',
+              'Δ PC passed per changed round', 'Δ CS errors per changed round',
+              'Classification evidence (N)', 'Failure counter evidence (N)', 'Token evidence (N)']
+    columns = observed_rounds(events)
+    cells = {}
+    for step in columns:
+        g = events[events.step == step]
+        r = {'# queries reaching round': g.query_uid.nunique()}
+        for label, key in [('plan changed', 'plan changed'), ('unchanged from cache', 'unchanged cache'),
+                           ('unchanged from new request', 'unchanged new request')]:
+            values = g[key].dropna()
+            count = values.sum() if len(values) == len(g) else None
+            r[f'# {label}'] = count
+            r[f'% {label}'] = 100 * count / len(g) if count is not None else None
+        failures = g['failed model calls'].dropna()
+        n = int((failures > 0).sum()) if len(failures) == len(g) else None
+        r.update({'# model call failures': n, '% model call failures': 100 * n / len(g) if n is not None else None,
+                  'Avg tokens (known counts only)': g.tokens.mean(), 'Missing token counts': int(g.tokens.isna().sum()),
+                  'Avg repair time (s)': g['repair time'].mean(),
+                  'Δ PC passed per changed round': g['PC delta changed'].mean(),
+                  'Δ CS errors per changed round': g['CS delta changed'].mean(),
+                  'Classification evidence (N)': int(g['plan changed'].notna().sum()),
+                  'Failure counter evidence (N)': len(failures), 'Token evidence (N)': int(g.tokens.notna().sum())})
+        cells[f'Round {step}'] = r
+    return pd.DataFrame([{'Metric': label, **{c: r.get(label) for c, r in cells.items()}} for label in labels])
+
+
+def process_round_comparison(tables, metric):
+    return round_comparison(tables, PROCESS_ROUND_COMPARISONS[metric], endpoint_columns=False)
+
+
+def process_additional_diagnostics(q, attempts):
+    """Secondary persisted-counter diagnostics, with explicit valid-query N."""
+    rows = []
+    for operation in ('mean', 'median'):
+        values = q['rounds'].dropna() if 'rounds' in q else pd.Series(dtype=float)
+        rows.append({'Metric': f'{operation.title()} observed proposals/query',
+                     'Value': getattr(values, operation)(), 'Valid query N': len(values)})
+    counters = round_counters(attempts, q)
+    if counters.empty:
+        counters = q[['query_uid', 'rounds']].copy()
+        for field in ('model_calls', 'verification_count', 'changed_slot_count'):
+            counters[field] = [0 if n == 0 else float('nan') for n in counters['rounds']]
+    elif not attempts.empty:
+        observed = attempts.groupby('query_uid').size()
+        expected = q.set_index('query_uid')['rounds']
+        complete = counters.query_uid.map(lambda uid: observed.get(uid, 0) == expected.get(uid))
+        for field in counters.columns.difference(['query_uid']):
+            counters.loc[~complete, field] = float('nan')
+    for field, label in [('model_calls', 'Mean recorded model calls/query'),
+                         ('verification_count', 'Mean repair verifier calls/query'),
+                         ('changed_slot_count', 'Mean total changed-slot events/query')]:
+        values = counters[field].dropna() if field in counters else pd.Series(dtype=float)
+        rows.append({'Metric': label, 'Value': values.mean(), 'Valid query N': len(values)})
+    known = q.stop_reason.notna() if 'stop_reason' in q else pd.Series(dtype=bool)
+    rate = 100 * q.loc[known, 'stop_reason'].eq('repair_budget_exhausted').mean() if known.any() else None
+    rows.append({'Metric': 'Queries with logged repair budget exhaustion (%)', 'Value': rate, 'Valid query N': int(known.sum())})
+    return pd.DataFrame(rows)
+
+
+def process_reporting_sources():
+    return pd.DataFrame([{'Displayed metric': label, 'Source': 'table3_repair_process.csv / table_process()' if source else 'Unavailable',
+                          'Exact source row': source or 'No established Table 3 failure-percentage row; logged failures are separate diagnostics.'}
+                         for label, source in PROCESS_REPORT_ROWS.items()])
+
+
+EVALUATION_REPORT_ROWS = {
+    'Commonsense micro*': 'Commonsense micro (%) - share of all (plan, check) pairs passed',
+    'Commonsense macro': 'Commonsense macro (%) - plans passing every CS check',
+    'Logical micro': 'Logical micro (%) - share of all personal constraints passed (pooled)',
+    'Logical macro': 'Logical macro (%) - plans passing every personal constraint',
+    'All-pass ratio': 'All-pass ratio (%) - schema + CS + PC all passed',
+}
+EVALUATION_METRICS = ['Commonsense micro', 'Commonsense macro', 'Logical micro', 'Logical macro', 'All-pass ratio']
+EVALUATION_MICRO_FOOTNOTE = (
+    '* Commonsense micro retains the raw evaluator matrix, including its evaluator-exception column. '
+    'A checker crash can leave ordinary checks unmarked; the reporting documentation warns this can inflate micro. '
+    'Table 2 instead counts evaluator exceptions as failing every standard check. No correction is applied to Table 4.'
+)
+
+
+def evaluation_summary(q):
+    """Reuse the original table_eval_exp for filtered saved benchmark rows only.
+
+    Incomplete raw evaluator fields cannot be reconstructed from aggregate results.
+    Fail closed for the filtered table rather than inferring missing results.
+    """
+    required = {'cs_total_raw_final', 'cs_failed_raw_final', 'pc_total', 'pc_passed_final',
+                'pc_failed_final', 'all_pass_final', 'group', 'query_uid'}
+    if required <= set(q) and q[list(required)].notna().all().all():
+        return team_table(q, 'benchmark')
+    return pd.DataFrame([{'metric': source, 'Easy': None, 'Medium': None, 'Human': None, 'All': None,
+                          'source': 'Unavailable: incomplete saved per-query evaluator fields'}
+                         for source in EVALUATION_REPORT_ROWS.values()])
+
+
+def evaluation_pivot(summaries, queries, strategies, difficulties):
+    """Source percentages are already 0–100. Never multiply or recompute them."""
+    result = reporting_pivot(summaries, queries, strategies, difficulties, EVALUATION_REPORT_ROWS)
+    result = result.rename(columns={'Metric': 'Metric (%)'})
+    for column in result.columns[1:]:
+        result[column] = pd.to_numeric(result[column], errors='coerce')
+    return result
+
+
+def evaluation_scores(summaries, queries, strategies, difficulty, metric):
+    display = metric + '*' if metric == 'Commonsense micro' else metric
+    pivot = evaluation_pivot(summaries, queries, strategies, [difficulty]).set_index('Metric (%)')
+    prefix = 'Med' if difficulty == 'Medium' else difficulty
+    return pd.DataFrame([{'Strategy': s, 'Score (%)': pivot.loc[display, f'{prefix} {s}']}
+                         for s in strategies if f'{prefix} {s}' in pivot], columns=['Strategy', 'Score (%)'])
+
+
+def evaluation_strategy_profile(summaries, queries, strategy, difficulty):
+    frame = evaluation_pivot(summaries, queries, [strategy], [difficulty])
+    if len(frame.columns) < 2:
+        return pd.DataFrame(columns=['Metric', 'Score (%)'])
+    return frame.rename(columns={'Metric (%)': 'Metric', frame.columns[1]: 'Score (%)'})
+
+
+def evaluation_difficulty_profile(summaries, queries, strategy, metric):
+    difficulties = reporting_difficulties({strategy: queries[strategy]}) + ['All']
+    rows = []
+    for difficulty in difficulties:
+        scores = evaluation_scores(summaries, queries, [strategy], difficulty, metric)
+        if not scores.empty:
+            rows.append({'Difficulty': difficulty, 'Score (%)': scores.iloc[0]['Score (%)']})
+    return pd.DataFrame(rows, columns=['Difficulty', 'Score (%)'])
+
+
+def evaluation_query_detail(q, strategy, difficulty):
+    """Expose saved query fields and the helper's zero-failure criteria, not aggregates."""
+    q = difficulty_queries(q, difficulty)
+    source = {'query_uid': 'Query UID', 'group': 'Difficulty', 'cs_failed_raw_final': 'CS raw failed cells',
+              'cs_total_raw_final': 'CS raw check cells', 'pc_passed_final': 'PC passed', 'pc_total': 'PC total',
+              'schema_final': 'Schema passed', 'all_pass_final': 'All-pass'}
+    result = q.reindex(columns=list(source)).rename(columns=source)
+    result.insert(2, 'Strategy', strategy)
+    for field, label in [('cs_failed_raw_final', 'CS raw all-checks pass'), ('pc_failed_final', 'All PC pass')]:
+        result[label] = q[field].map(lambda v: None if pd.isna(v) else v == 0) if field in q else None
+    return result
+
+
+def evaluation_definitions():
+    rows = [
+        ('Commonsense micro*', 'commonsense_constraint.py:evaluate_commonsense_constraints',
+         'N×C minus the sum of raw failure-marker cells', 'N queries × C raw matrix columns excluding data_id, including any exception column',
+         'Pooled cells: 100 × (1 − raw failure-marker sum / (N×C)); table_eval_exp rounds to 2 decimals',
+         'Caught evaluator exceptions add a failure column and can leave other checks unmarked; retain raw convention'),
+        ('Commonsense macro', 'commonsense_constraint.py:evaluate_commonsense_constraints',
+         'Queries completing CS evaluation with raw failure-row sum zero', 'N evaluated queries',
+         '100 × successful CS plans / N; table_eval_exp uses cs_failed_raw_final == 0',
+         'A caught CS evaluator exception is not a CS success'),
+        ('Logical micro', 'hard_constraint.py:evaluate_hard_constraints_v2',
+         'True results of all reference hard_logic_py constraints', 'Total actual hard_logic_py constraints across queries, excluding padding columns',
+         'Pooled constraints: 100 × passed constraints / total constraints',
+         'DSL exceptions return False; all reference PCs, including named-place constraints, remain in denominator'),
+        ('Logical macro', 'hard_constraint.py:evaluate_hard_constraints_v2',
+         'Queries passing every reference hard_logic_py constraint', 'N evaluated queries',
+         '100 × all-PC-pass queries / N; table_eval_exp uses pc_failed_final == 0',
+         'No CS/schema gate for ordinary logical macro; separate conditional metrics are not shown'),
+        ('All-pass ratio', 'eval_exp.py:evaluate_final_plans',
+         'Query IDs in schema_pass ∩ commonsense_pass ∩ logical_pass', 'N evaluated queries',
+         '100 × size of the three-way success intersection / N; table_eval_exp uses saved all_pass_final',
+         'Schema rejection or failure in either CS/logical evaluation prevents All-pass; not identical to CS macro'),
+    ]
+    return pd.DataFrame([{'Metric': metric, 'Source CSV/helper': 'table4_eval_exp.csv / table_eval_exp()',
+                          'Evaluator': evaluator, 'Numerator': numerator, 'Denominator': denominator,
+                          'Aggregation / percentage conversion': aggregate, 'Missing/error handling': missing}
+                         for metric, evaluator, numerator, denominator, aggregate, missing in rows])

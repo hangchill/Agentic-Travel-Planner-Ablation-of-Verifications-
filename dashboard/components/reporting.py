@@ -1,4 +1,4 @@
-"""Shared presentation/filtering for benchmark PC and CS reporting."""
+"""Shared presentation/filtering for benchmark and repair-process reporting."""
 from pathlib import Path
 
 import plotly.express as px
@@ -7,7 +7,7 @@ import streamlit as st
 from dashboard import data_loader as data, metrics
 
 
-def cohorts(ctx, runs, kind, filename):
+def cohorts(ctx, runs, kind, filename, filtered_summary=None):
     queries, attempts, summaries = {}, {}, {}
     for strategy, run in runs.items():
         full = data.test_table(run, 'per_query')
@@ -17,7 +17,7 @@ def cohorts(ctx, runs, kind, filename):
         queries[strategy] = q
         attempts[strategy] = all_attempts[all_attempts.query_uid.isin(q.query_uid)] if not all_attempts.empty else all_attempts
         summaries[strategy] = (data.test_table(run, filename) if set(q.query_uid) == set(full.query_uid)
-                               else metrics.team_table(q, kind))
+                               else (filtered_summary(q) if filtered_summary else metrics.team_table(q, kind)))
     return queries, attempts, summaries
 
 
@@ -60,3 +60,11 @@ def round_chart(points, metric, field, endpoints=False):
             trace.x, trace.y = steps, group.Value.to_list()
     figure.update_traces(connectgaps=False)
     return figure
+
+
+def population_guard(queries, strategies, difficulties):
+    incompatible = metrics.incompatible_populations(queries, strategies, difficulties)
+    if incompatible:
+        st.warning('Comparison unavailable: selected runs have different query populations for ' +
+                   ', '.join(incompatible) + '. Select matching runs or inspect one strategy.')
+    return not incompatible
