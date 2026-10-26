@@ -12,11 +12,7 @@ def _cohorts(ctx, runs):
 
 
 def _population_guard(queries, strategies, difficulties):
-    incompatible = metrics.incompatible_populations(queries, strategies, difficulties)
-    if incompatible:
-        st.warning('Comparison unavailable: selected runs have different query populations for ' +
-                   ', '.join(incompatible) + '. Select matching runs or inspect one strategy.')
-    return not incompatible
+    return reporting.population_guard(queries, strategies, difficulties)
 
 
 def render(ctx):
