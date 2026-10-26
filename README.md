@@ -472,9 +472,10 @@ The hardened evaluator additionally enforces:
 - exact entity names and canonical concept values from the installed sandbox;
 - safe DSL execution and legacy apostrophe normalization.
 
-For reproducible offline analysis of persisted R0/R1/R2/R3 repair runs, see
+For reproducible offline analysis of persisted R0/R1/R2/R3/R4 repair runs, see
 [Repair analysis](scripts/REPAIR_ANALYSIS.md). This reads saved evidence without
-rerunning generation, verification, or benchmark evaluation.
+rerunning generation, verification, or benchmark evaluation. R4 TEST analysis stays
+separate from the R0–R3 TRAIN comparison tables.
 
 ## 🛠️ Agent Environment and Harness
 

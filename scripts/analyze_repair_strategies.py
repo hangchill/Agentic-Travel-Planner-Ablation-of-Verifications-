@@ -6,7 +6,7 @@ See scripts/REPAIR_ANALYSIS.md for evidence semantics and reproducibility comman
 from __future__ import annotations
 
 import argparse
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from datetime import datetime, timezone
 from itertools import combinations
 import hashlib
@@ -24,7 +24,9 @@ if __package__ in (None, ''):
 from chinatravel.evaluation.repair_attempt import RepairAttemptRecord
 from chinatravel.evaluation.repair_metrics import compute_attempt_metrics
 
-STRATEGIES = ('R0', 'R1', 'R2', 'R3')
+from scripts import repair_analysis_r4 as r4_analysis
+
+STRATEGIES = ('R0', 'R1', 'R2', 'R3', 'R4')
 SCRIPT = 'scripts/analyze_repair_strategies.py'
 COUNTERS = ('model_calls', 'repair_model_calls', 'verification_model_calls',
             'failed_model_calls', 'input_tokens_delta', 'output_tokens_delta',
@@ -77,7 +79,7 @@ def parse_runs(values):
     for entry in values:
         key, sep, path = entry.partition('=')
         if not sep or key not in STRATEGIES or not path:
-            raise ValueError('--run must be R0=DIR, R1=DIR, R2=DIR, or R3=DIR')
+            raise ValueError('--run must be R0=DIR, R1=DIR, R2=DIR, R3=DIR, or R4=DIR')
         if key in runs:
             raise ValueError(f'Duplicate strategy key: {key}')
         folder = Path(path)
@@ -141,6 +143,7 @@ class RunData:
     query_uids: list
     messages: list
     checksums: dict
+    extra: dict = field(default_factory=dict)
 
 
 def load_run(strategy, path):
@@ -148,6 +151,7 @@ def load_run(strategy, path):
     path = Path(path)
     manifest = read_json(path/'run_manifest.json') if (path/'run_manifest.json').exists() else {}
     messages = []
+    extra = r4_analysis.load_artifacts(path) if strategy == 'R4' else {}
     attempts = []
     stream = path/'attempts.jsonl'
     if stream.exists():
@@ -172,6 +176,8 @@ def load_run(strategy, path):
             summaries[uid] = row
     checkpoints, initials = {}, {}
     for p in sorted((path/'queries').glob('*/*.json')):
+        if strategy == 'R4' and p.name in ('final_state.json', 'repair_history.json', 'computational_cost.json'):
+            continue  # Selected exports are not last-accepted trial checkpoints.
         row = read_json(p)
         uid = row.get('query_uid')
         if not uid:
@@ -185,8 +191,17 @@ def load_run(strategy, path):
             if uid in checkpoints:
                 raise ValueError(f'Multiple {strategy} checkpoints for {uid}')
             checkpoints[uid] = row
+    if strategy == 'R4':
+        for trial in extra.get('trials', []):
+            uid = trial['query_uid']
+            if uid in checkpoints:
+                extra['independent_trials'] = True
+            else:
+                checkpoints[uid] = trial
     if not stream.exists():
-        for uid, cp in sorted(checkpoints.items()):
+        checkpoint_items = ([(t['query_uid'],t) for t in extra.get('trials',[])]
+                            if strategy == 'R4' and extra.get('trials') else sorted(checkpoints.items()))
+        for uid, cp in checkpoint_items:
             records = cp.get('repair_attempts')
             if not isinstance(records, list):
                 records = [e['repair_attempt'] for e in cp.get('repair_history', [])
@@ -197,12 +212,15 @@ def load_run(strategy, path):
         if attempts:
             messages.append('attempts.jsonl absent: using persisted checkpoint repair attempts')
     attempts.sort(key=lambda r: (r['query_uid'], r['step']))
-    ids = [(r['query_uid'], r['step']) for r in attempts]
+    ids = [(r['query_uid'], r['step'],r['repair_strategy'] if strategy == 'R4' else '') for r in attempts]
     if len(set(ids)) != len(ids):
         raise ValueError('Duplicate query/step proposal identity')
     evidence_ids = set(manifest.get('repair_strategies', [])) | {
         r.get('repair_strategy') for r in attempts}
-    if evidence_ids - {strategy}:
+    compatible_ids = {strategy}
+    if strategy == 'R4':
+        compatible_ids.update('R4_'+s for s in ('R0','R1','R2','R3'))
+    if evidence_ids - compatible_ids:
         messages.append(f'Supplied {strategy} disagrees with persisted identities: {sorted(evidence_ids)}')
         # One differently labelled run is analyzable with an explicit warning;
         # mixed-strategy attempt streams cannot be pooled as one strategy.
@@ -226,7 +244,7 @@ def load_run(strategy, path):
     for message in messages:
         warnings.warn(f'{path}: {message}', stacklevel=2)
     return RunData(strategy, path, manifest, attempts, checkpoints, initials,
-                   summaries, benchmarks, query_uids, messages, file_hashes(path))
+                   summaries, benchmarks, query_uids, messages, file_hashes(path), extra)
 
 
 def complete_sum(rows, key):
@@ -235,6 +253,8 @@ def complete_sum(rows, key):
 
 
 def build_tables(run):
+    if run.strategy == 'R4' and run.extra.get('independent_trials'):
+        return build_independent_trial_tables(run)
     attempt_rows, query_rows, failure_rows = [], [], []
     for uid in run.query_uids:
         rr = [r for r in run.attempts if r['query_uid'] == uid]
@@ -396,6 +416,51 @@ def build_tables(run):
         q['terminal_status_known'] = pd.Series(dtype=bool)
     return a, q, pd.DataFrame(failure_rows, columns=[
         'strategy', 'query_uid', 'step', 'repair_phase', 'failure_mode', 'present', 'evidence_available'])
+
+
+def build_independent_trial_tables(run):
+    """Apply the same shared calculations per independent trial, never concatenate states."""
+    all_a, all_q, all_f = [], [], []
+    for uid in run.query_uids:
+        trials = [t for t in run.extra['trials'] if t['query_uid']==uid]
+        if not trials:
+            subset=RunData(run.strategy,run.path,run.manifest,[],{},run.initial_states,{},
+                           run.benchmarks,[uid],run.messages,run.checksums)
+            a,q,f=build_tables(subset)
+            all_a.append(a);all_q.append(q);all_f.append(f)
+            continue
+        aq, qq = [], []
+        for trial in sorted(trials,key=lambda t:t['repair_strategy']):
+            label=trial['repair_strategy']
+            records=[r for r in run.attempts if r['query_uid']==uid and r['repair_strategy']==label]
+            subset=RunData(run.strategy,run.path,run.manifest,records,{uid:trial},run.initial_states,{},
+                           run.benchmarks,[uid],run.messages,run.checksums)
+            a,q,f=build_tables(subset)
+            a['trial_id']=label;f['trial_id']=label
+            all_a.append(a);all_f.append(f);aq.append(a);qq.append(q.iloc[0].to_dict())
+        q=dict(qq[0]);q['trajectory_source']='independent trial trajectories; no single last-accepted endpoint'
+        q.update(state_stats(None,'final_observed_'))
+        if any(t['initial_observed_states']!=q['initial_observed_states'] for t in qq):
+            q.update(state_stats(None,'initial_observed_'))
+        keys=['attempts','personal_attempts','commonsense_attempts','unknown_phase_attempts',
+              'personal_after_commonsense_attempts','total_fixed_events','total_regression_events',
+              'cumulative_net_gain','accepted_net_gain','unchanged_proposals','footprint_valid_attempts',*COUNTERS]
+        for key in keys:q[key]=complete_sum(qq,key)
+        for key in ['phase_sequence','scope_sequence']:
+            q[key]=' | '.join(t['repair_strategy']+':'+str(v[key]) for t,v in zip(sorted(trials,key=lambda t:t['repair_strategy']),qq))
+        for key in ['commonsense_regressed_indices','commonsense_regressions_ever_recovered','commonsense_regressions_final_failed']:
+            q[key]=None
+        q['trial_trajectories']=qq
+        q['terminal_status_known']=all(t['terminal_status_known'] for t in qq)
+        q['execution_status']='completed' if all(t['execution_status']=='completed' for t in qq) else None
+        q['stop_reason']='independent_trial_stops; see trial_trajectories'
+        a=pd.concat(aq,ignore_index=True);measured=a[a.changed_slot_rate.notna()]
+        denominator=measured.total_comparable_slots.sum() if len(measured) else 0
+        rate=measured.changed_slot_count.sum()/denominator if denominator else None
+        q['measured_subset_changed_slot_rate']=rate
+        q['changed_slot_rate']=rate if len(measured)==len(a) else None
+        all_q.append(pd.DataFrame([q]))
+    return pd.concat(all_a,ignore_index=True),pd.concat(all_q,ignore_index=True),pd.concat(all_f,ignore_index=True)
 
 
 def summarize(run, a, q):
@@ -584,7 +649,7 @@ def hook_r3(a):
     return {'scope_transitions': rows, 'scope_outcomes': scope}, 'Current R3 code uses fixed iteration-based scope widening (slot→day→plan), including C calls. Persisted scope/escalation sequences are evidence; do not describe the mechanism as failure-triggered. Historical runs may differ; consult their implementation hash and recorded reasons.'
 
 
-HOOKS = {'R0': hook_r0, 'R1': hook_r1, 'R2': hook_r2, 'R3': hook_r3}
+HOOKS = {'R0': hook_r0, 'R1': hook_r1, 'R2': hook_r2, 'R3': hook_r3, 'R4': r4_analysis.hook}
 
 
 def mechanism_summary(strategy, a, hooks):
@@ -619,6 +684,9 @@ def mechanism_summary(strategy, a, hooks):
             part = h[h.editable_scope == scope]
             count(scope+'_proposal_fixing_any', part.fixed_count > 0)
             count(scope+'_proposal_regressing_any', part.newly_violated_count > 0)
+    elif strategy == 'R4':
+        count('plan_scope_proposals', a.editable_scope.dropna() == 'plan')
+        count('accepted_proposals', a.accepted)
     return pd.DataFrame(rows, columns=['metric', 'count', 'valid_n', 'rate'])
 
 
@@ -680,10 +748,11 @@ def select_cases(run, a, q):
     for criterion, candidates in choices:
         for r in candidates.sort_values(['query_uid', 'step']).to_dict('records'):
             identity = (r['query_uid'], r['step'])
-            if identity in used:
+            case_identity = (*identity,r['repair_strategy']) if run.strategy=='R4' else identity
+            if case_identity in used:
                 continue
-            used.add(identity)
-            original = next(x for x in run.attempts if (x['query_uid'], x['step']) == identity)
+            used.add(case_identity)
+            original = next(x for x in run.attempts if (x['query_uid'], x['step']) == identity and x['repair_strategy']==r['repair_strategy'])
             selected.append(dict(selection=criterion, query_uid=identity[0], step=identity[1],
                                  repair_phase=r['repair_phase'], targets=r.get('target_constraint_indices'),
                                  before=r['before_personal_constraints'], candidate_after=r['after_personal_constraints'],
@@ -692,6 +761,7 @@ def select_cases(run, a, q):
                                  changed_slots=original.get('changed_slot_count'),
                                  failure_reason=r.get('failure_reason'),
                                  constraint_descriptors=original.get('constraint_descriptors')))
+            if run.strategy=='R4': selected[-1]['trial_id']=r['repair_strategy']
             break
     return selected
 
@@ -754,6 +824,7 @@ def generate_figures(folder, a, q, matrix, hook_tables):
         bar('acceptance', {'accepted': int(r.accepted.sum()), 'rejected': int(r.rejected.sum())}, 'R2 candidate decisions')
         bar('candidate_accepted_regressions', {'candidate': r.newly_violated_count.sum(), 'accepted': r.accepted_newly_violated_count.sum()}, 'R2 candidate vs accepted regression events', 'Constraint events')
         bar('protected_rejection', {'protected-harm candidates': int((r.protected_regression_count > 0).sum()), 'blocked': int(r.harmful_candidate_blocked.sum()), 'target fixed but blocked': int(r.fixed_target_but_protected_regression_rejected.sum())}, 'R2 protection evidence')
+    r4_analysis.figures(folder, hook_tables, export, bar)
     if 'scope_outcomes' in hook_tables:
         r = hook_tables['scope_outcomes'].set_index('editable_scope')
         bar('scope_usage', r.attempts.to_dict(), 'R3 recorded scope usage')
@@ -779,6 +850,17 @@ def evidence_table(run, a, q, matrix):
 def analyze(run, output, timestamp, figures=True):
     output.mkdir(parents=True, exist_ok=True)
     a, q, failures = build_tables(run)
+    r4_tables, r4_audit = {}, None
+    if run.strategy == 'R4':
+        r4_tables = r4_analysis.build_tables(run, a)
+        r4_audit = r4_analysis.audit_matrix(run.path, run.extra.get('metadata', {}))
+        selected = {r['query_uid']:r for r in run.extra.get('selections', [])}
+        extra_query = []
+        for uid in q.query_uid:
+            sel = selected.get(uid, {})
+            extra_query.append({'selected_source':sel.get('selected_source'), 'selected_step':sel.get('selected_step'),
+                                **state_stats((sel.get('selected_verification') or {}).get('personal_constraints'), 'selected_final_')})
+        q = pd.concat([q.reset_index(drop=True),pd.DataFrame(extra_query)],axis=1)
     summary, phase = summarize(run, a, q), phase_summary(a)
     matrix, matrix_messages = load_matrices(run.path/'regression_matrix')
     hooks, mechanism = HOOKS[run.strategy](a)
@@ -788,7 +870,16 @@ def analyze(run, output, timestamp, figures=True):
               'failure_summary': failure_summary(a, failures), 'footprint_bins': footprints,
               'footprint_associations': associations,
               'evidence_availability': evidence_table(run, a, q, matrix),
-              'mechanism_summary': mechanism_summary(run.strategy, a, hooks), **hooks}
+              'mechanism_summary': mechanism_summary(run.strategy, a, hooks), **hooks, **r4_tables}
+    if r4_audit is not None:
+        for name, key in [('r4_matrix_cells','cells'),('r4_matrix_sources','sources'),('r4_provenance_files','artifacts')]:
+            if r4_audit[key]: tables[name] = pd.DataFrame(r4_audit[key])
+        write_json(output/'r4_matrix_provenance.json', r4_audit)
+        write_json(output/'r4_run_metadata_snapshot.json',run.extra.get('metadata',{}))
+        tables['evidence_availability'] = pd.concat([tables['evidence_availability'],pd.DataFrame(r4_analysis.evidence_rows(run,r4_audit))],ignore_index=True)
+        benchmark_checks = r4_analysis.validate_population(run)
+        if benchmark_checks:
+            tables['r4_benchmark_plan_audit'] = pd.DataFrame(benchmark_checks)
     for name, table in tables.items():
         save_csv(output/(name+'.csv'), table, columns=['evidence_unavailable'])
     provenance = dict(strategy=run.strategy, source_run_path=str(run.path),
@@ -798,6 +889,9 @@ def analyze(run, output, timestamp, figures=True):
                       analysis_script=SCRIPT, analysis_script_sha256=hashlib.sha256(Path(__file__).read_bytes()).hexdigest(),
                       analysis_timestamp=timestamp, source_checksums=run.checksums,
                       warnings=run.messages+matrix_messages)
+    if run.strategy == 'R4':
+        helper=Path(r4_analysis.__file__)
+        provenance['analysis_helpers_sha256']={'scripts/repair_analysis_r4.py':hashlib.sha256(helper.read_bytes()).hexdigest()}
     write_json(output/'provenance.json', provenance)
     write_json(output/'existing_benchmark_summaries.json', run.benchmarks)
     cases = select_cases(run, a, q)
@@ -821,6 +915,23 @@ def analyze(run, output, timestamp, figures=True):
         ('Interpretation', 'Descriptive within-run evidence. Candidate efficacy, accepted trajectory, locality, support, no-ops and available sample sizes must be read together. Existing benchmark results are preserved verbatim in existing_benchmark_summaries.json and are not recomputed or equated with UNKNOWN-excluding personal satisfaction.'),
         ('Limitations', 'Satisfaction is True/(True+False), excluding None. All-UNKNOWN satisfaction is undefined; UNKNOWN prevents all-pass. Event net gain need not equal endpoint failure reduction when UNKNOWN occurs. Partial known token sums are not complete totals; all common usage/time metrics exclude generation/initialization. Footprint comparisons exclude unmeasurable proposals. Missing-query outcomes and terminal status are never inferred from absent attempts. Query is the comparison unit; repeated proposals/cache hits are not independent trials. No causal conclusions, significance tests or bootstrap estimates.\n\n'+'\n'.join(run.messages+matrix_messages)),
     ]
+    if run.strategy == 'R4':
+        extra = [body for _,body in r4_analysis.report_sections(run,tables,r4_audit,markdown)]
+        core = dict(sections)
+        sections = [
+            ('Data source and partition',extra[0]+'\n\n'+core['Data source and evidence coverage']),
+            ('R4 mechanism',extra[1]),('Matrix provenance',extra[2]),
+            ('Repair activity',core['Repair activity']),
+            ('Personal-constraint effectiveness',core['Personal-constraint effectiveness']),
+            ('Regression behavior',core['Regression behavior']),
+            ('Matrix-guided decisions',extra[3]),('Candidate/trial selection',extra[4]),
+            ('Scope and targeting',extra[5]+'\n\n'+core['Edit footprint']),
+            ('Protection/safety behavior',extra[6]),
+            ('Fallback behavior',extra[7]+'\n\n'+core['No-progress / stopping behavior']),
+            ('Computational cost',extra[8]),('Commonsense behavior',core['Commonsense-phase behavior']),
+            ('Failure modes',core['Failure modes']),('Case studies',core['Case studies']),
+            ('Interpretation',extra[9]+'\n\n'+extra[10]+'\n\n'+core['Interpretation']),
+            ('Limitations',core['Limitations'])]
     header = (f'# {run.strategy} repair analysis\n\nStrategy: {run.strategy}  \nSource run: `{run.path}`  \n'
               f'Manifest/run ID: `{run.manifest.get("run_id")}`  \nImplementation hash: `{run.manifest.get("implementation_hash")}`  \n'
               f'Input attempts: {len(a)}  \nAnalysis script: `{SCRIPT}`  \nAnalysis timestamp: {timestamp}  \n'
@@ -830,7 +941,7 @@ def analyze(run, output, timestamp, figures=True):
     if figures:
         folder = output/'figures'
         folder.mkdir(exist_ok=True)
-        generate_figures(folder, a, q, matrix, hooks)
+        generate_figures(folder, a, q, matrix, {**hooks, **r4_tables, **({'r4_matrix_cells':pd.DataFrame(r4_audit['cells'])} if r4_audit and r4_audit['cells'] else {})})
     else:
         (output/'figures').mkdir(exist_ok=True)
     if run.checksums != file_hashes(run.path):
@@ -856,6 +967,19 @@ def initial_plans(run):
 
 def synthesize(runs, results, output):
     output.mkdir(exist_ok=True)
+    groups = {}
+    for label, run in sorted(runs.items()):
+        key = (r4_analysis.partition(run.manifest,run.extra.get('metadata')),tuple(run.query_uids))
+        groups.setdefault(key,[]).append(label)
+    included = sorted(groups.values(), key=lambda labels:(-len(labels),tuple(labels)))[0]
+    excluded = [dict(strategy=s,partition=r4_analysis.partition(r.manifest,r.extra.get('metadata')),
+                     split=r.manifest.get('split_query_source'),source=str(r.path),
+                     reason='Different partition or query population; individual analysis only')
+                for s,r in sorted(runs.items()) if s not in included]
+    runs = {s:runs[s] for s in included}
+    results = {s:results[s] for s in included}
+    if excluded: save_csv(output/'excluded_runs.csv',excluded)
+    elif (output/'excluded_runs.csv').exists(): (output/'excluded_runs.csv').unlink()
     audit = []
     for left, right in combinations(sorted(runs), 2):
         l, r = runs[left], runs[right]
@@ -872,7 +996,7 @@ def synthesize(runs, results, output):
         row['same_scheduler_independently_verified'] = None
         row['same_query_hashes'] = hashes_l == hashes_r if hashes_l is not None and hashes_r is not None else None
         audit.append(row)
-    save_csv(output/'comparability_audit.csv', audit)
+    save_csv(output/'comparability_audit.csv', audit,columns=['left','right','same_query_population'])
     save_csv(output/'overall_summary.csv', pd.concat([results[s][2] for s in sorted(results)], ignore_index=True))
     (output/'ANALYSIS.md').write_text('# Cross-strategy observational synthesis\n\n'+markdown(pd.DataFrame(audit))+
         '\nThese comparisons are descriptive. Matching model/settings or an aggregate implementation hash does not establish shared initialization. '
@@ -880,7 +1004,8 @@ def synthesize(runs, results, output):
         'Initial equality is checked only where checkpoint or confirmed first-no-op evidence exists. Missing equality evidence is not equality. '
         'Analyze individuals regardless of incomplete comparability. Use query-level outcomes for comparisons, not proposal independence.\n\n'
         'Each per-strategy ANALYSIS.md and overall_summary.csv contains the same core definitions and valid N. '
-        'No benchmark scores are invented for incomplete runs.\n')
+        'No benchmark scores are invented for incomplete runs.\n' +
+        ('\nExcluded from direct aggregate tables (see individual reports):\n\n'+markdown(pd.DataFrame(excluded)) if excluded else ''))
 
 
 def main(argv=None):

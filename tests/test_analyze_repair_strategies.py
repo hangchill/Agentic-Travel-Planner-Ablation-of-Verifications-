@@ -304,5 +304,214 @@ class AnalysisTests(unittest.TestCase):
             main(['--run', f'R0={path}', '--output-dir', str(out), '--no-figures'])
 
 
+class R4AnalysisTests(unittest.TestCase):
+    def setUp(self):
+        self.tmp=TemporaryDirectory();self.root=Path(self.tmp.name)
+
+    def tearDown(self):
+        self.tmp.cleanup()
+
+    def fixture(self):
+        path=make_run(self.root/'r4', 'R4', declared=['q1'])
+        m=json.loads((path/'run_manifest.json').read_text());m['split_query_source']='subset_test';m['language']='en'
+        (path/'run_manifest.json').write_text(json.dumps(m))
+        r=record(strategy='R4',editable_scope='plan',scope_level=3,model_calls=1,total_tokens_delta=22)
+        r['accepted_plan_after']=r['candidate_plan']
+        ranking=dict(constraint_index=1,family='monetary_budget',expected_regressed_families=.5,support_sum=0,
+                     destination_risks=[dict(family='party_resources',regression_probability=.5,support_count=0,
+                                            support_query_count=0,evidence_status='unobserved')])
+        r['repair_metadata'].update(risk_target_ranking=[ranking],recommended_risk_target=ranking,
+                                   commonsense_source_risks=[],neutral_risk_fallback=.5,matrix_guidance_policy='advisory',
+                                   parse_failed=False,proposal_rejected_reason=None)
+        (path/'attempts.jsonl').write_text(json.dumps(r)+'\n')
+        q=path/'queries/q1';(q/'trials').mkdir(parents=True)
+        before=dict(personal_constraints=[False,True],commonsense_errors=[],schema_errors=[],passed=False,
+                    translated_plan={'itinerary':'initial'})
+        after=dict(personal_constraints=[True,True],commonsense_errors=['new1','new2'],schema_errors=[],passed=False,
+                   translated_plan={'itinerary':'candidate'})
+        plan=[{'original':True}]
+        initial=dict(query_uid='q1',state=dict(raw_initial_plan=plan,initial_verification=before))
+        (q/'initial_state.json').write_text(json.dumps(initial))
+        trial=dict(query_uid='q1',repair_strategy='R4',initial_raw_plan=plan,initial_verification=before,
+                   final_accepted_plan=r['accepted_plan_after'],final_verification=after,execution_status='completed',
+                   repair_attempts=[r],repair_history=[{'step':0,'verification':before},
+                       {'step':1,'repair_attempt':r,'candidate_plan':r['candidate_plan'],'verification':after}])
+        (q/'trials/R4-test.json').write_text(json.dumps(trial))
+        costs=dict(all_trials_model_calls=1,all_trials_total_tokens_delta=22)
+        selection=dict(query_uid='q1',mode='combined',execution_status='completed',selected_source='initial',selected_step=0,
+                       selected_plan=plan,selected_verification=before,selection_score=[1,0,1,0,0],
+                       selection_rule='saved rule',repair_attempt_count_all_trials=1,costs=costs,monetary_cost=None)
+        (path/'r4_selection_and_costs.json').write_text(json.dumps([selection]))
+        (path/'r4_run_metadata.json').write_text(json.dumps(dict(mode='combined',split='subset_test',
+             evaluation_split_partition='test',selected_query_ids=['q1'],repair_budgets={'R4':6})))
+        (q/'final_state.json').write_text(json.dumps(dict(query_uid='q1',repair_strategy='R4',
+             final_verification=before,final_accepted_plan=plan,execution_status='completed')))
+        (q/'repair_history.json').write_text(json.dumps(dict(query_uid='q1',repair_strategy='R4',
+             final_verification=before,final_accepted_plan=plan,repair_attempts=[r])))
+        (q/'final_itinerary.json').write_text(json.dumps(dict(query_uid='q1',itinerary=plan)))
+        (q/'computational_cost.json').write_text(json.dumps(dict(query_uid='q1',costs=costs,repair_attempt_count_all_trials=1)))
+        return path
+
+    def test_r4_cli_and_metadata_loading(self):
+        path=self.fixture();run=load_run('R4',path)
+        self.assertEqual(list(parse_runs([f'R4={path}'])),['R4'])
+        self.assertEqual(run.extra['metadata']['mode'],'combined')
+        self.assertEqual(len(run.extra['trials']),1)
+        self.assertEqual(run.checkpoints['q1']['final_verification']['personal_constraints'],[True,True])
+
+    def test_selected_initial_is_not_loop_endpoint(self):
+        path=self.fixture();run=load_run('R4',path)
+        a,q,_=build_tables(run)
+        from scripts.repair_analysis_r4 import build_tables as r4_tables
+        t=r4_tables(run,a)
+        self.assertEqual(q.iloc[0].final_observed_states,[True,True])
+        self.assertEqual(t['r4_selections'].iloc[0].selected_personal_states,[False,True])
+        self.assertEqual(t['r4_selections'].iloc[0].considered_outcomes,2)
+        self.assertEqual(t['r4_selections'].iloc[0].non_selected_outcomes,1)
+        self.assertFalse(t['r4_trials'].iloc[0].supplies_selected_outcome)
+
+    def test_support_fallback_and_prompt_safety_fields(self):
+        from scripts.repair_analysis_r4 import build_tables as r4_tables
+        run=load_run('R4',self.fixture());a,_,_=build_tables(run);t=r4_tables(run,a)
+        self.assertEqual(t['r4_matrix_guidance'].iloc[0].support_count,0)
+        self.assertEqual(t['r4_matrix_guidance'].iloc[0].regression_probability,.5)
+        self.assertTrue(t['r4_fallbacks'].iloc[0].has_unsupported_relationship)
+        self.assertTrue(t['r4_recommendations'].iloc[0].is_recommended)
+        self.assertIsNone(t['r4_safety_summary'].iloc[0].explicit_safety_rejection)
+        self.assertEqual(t['r4_costs'].iloc[0].all_trials_total_tokens_delta,22)
+
+    def test_missing_optional_r4_files(self):
+        path=make_run(self.root/'r', 'R4', [record(strategy='R4')], declared=['q1'])
+        run=load_run('R4',path);a,q,_=build_tables(run)
+        self.assertEqual(len(a),1);self.assertFalse(q.iloc[0].terminal_status_known)
+        self.assertEqual(run.extra['selections'],[])
+
+    def test_r4_repeat_csvs(self):
+        path=self.fixture();out=self.root/'out'
+        args=['--run',f'R4={path}','--output-dir',str(out),'--no-figures']
+        with redirect_stdout(StringIO()):
+            main(args);first={p.name:p.read_bytes() for p in (out/'R4').glob('*.csv')};main(args)
+        self.assertEqual(first,{p.name:p.read_bytes() for p in (out/'R4').glob('*.csv')})
+        q=pd.read_csv(out/'R4/query_level.csv')
+        self.assertEqual(q.iloc[0].final_observed_satisfaction,1.)
+        self.assertEqual(q.iloc[0].selected_final_satisfaction,.5)
+
+    def test_test_partition_not_in_train_aggregate(self):
+        r4=self.fixture();r0=make_run(self.root/'r0',records=[record()],declared=['q1'])
+        m=json.loads((r0/'run_manifest.json').read_text());m['split_query_source']='subset_train'
+        (r0/'run_manifest.json').write_text(json.dumps(m))
+        out=self.root/'out'
+        with redirect_stdout(StringIO()):main(['--run',f'R4={r4}','--run',f'R0={r0}','--output-dir',str(out),'--no-figures'])
+        summary=pd.read_csv(out/'cross_strategy/overall_summary.csv')
+        self.assertEqual(set(summary.strategy),{'R0'})
+        self.assertEqual(pd.read_csv(out/'cross_strategy/excluded_runs.csv').iloc[0].strategy,'R4')
+
+    def test_benchmark_policy_difference_is_audited(self):
+        from scripts.repair_analysis_r4 import validate_population
+        path=self.fixture();b=path/'benchmark_eval/R4';(b/'plans').mkdir(parents=True)
+        trial=json.loads(next((path/'queries/q1/trials').glob('*.json')).read_text())
+        (b/'plans/q1.json').write_text(json.dumps(trial['final_verification']['translated_plan']))
+        (b/'benchmark_summary.json').write_text(json.dumps(dict(query_uids=['q1'],query_count=1)))
+        checks=validate_population(load_run('R4',path))
+        self.assertFalse(checks[0]['matches_selected_outcome'])
+        self.assertTrue(checks[0]['matches_last_accepted_trial'])
+
+    def test_partition_mismatch_rejected(self):
+        from scripts.repair_analysis_r4 import partition
+        with self.assertRaises(ValueError):partition({'split_query_source':'subset_test'},{'evaluation_split_partition':'train'})
+
+    def matrix_fixture(self):
+        import hashlib
+        repo=self.root/'repo';root=repo/'experiments/test';(root/'inputs/pooled').mkdir(parents=True)
+        splits=repo/'chinatravel/evaluation/default_splits';splits.mkdir(parents=True)
+        (splits/'subset_train.txt').write_text('train-1\n')
+        inputs=[]
+        def sha(f):return hashlib.sha256(f.read_bytes()).hexdigest()
+        for label in ['R0','R1','R2','R3']:
+            d=repo/'experiments'/('train-'+label)/'regression_matrix';d.mkdir(parents=True)
+            source={'strategy':label,'directory':str(d),'commonsense_destination_evidence':{}}
+            for kind,value in [('count',0),('support',1),('rate',0)]:
+                f=d/f'candidate_regression_{kind}.csv';pd.DataFrame([[value]],index=['budget'],columns=['dining']).to_csv(f)
+                source[kind+'_sha256']=sha(f)
+            f=d/'matrix_contributions.csv';pd.DataFrame([dict(query_uid='train-1',repair_strategy=label)]).to_csv(f,index=False)
+            source['contributions_sha256']=sha(f);inputs.append(source)
+        matrix=root/'inputs/pooled/main_matrix.csv'
+        pd.DataFrame([dict(source_family='budget',destination_family='dining',regression_count=0,support_count=4,
+                           regression_probability=0,evidence_status='observed')]).to_csv(matrix,index=False)
+        manifest=dict(input_matrices=inputs,perspective='candidate',output_sha256=sha(matrix))
+        mp=matrix.with_name('main_matrix_manifest.json');mp.write_text(json.dumps(manifest))
+        meta=dict(split='subset_test',evaluation_split_partition='test',selected_query_ids=['q1'],
+                  matrices={'R4':dict(path='inputs/pooled/main_matrix.csv',sha256=sha(matrix),manifest_sha256=sha(mp))})
+        return repo,root,meta
+
+    def test_matrix_provenance_train_only(self):
+        from scripts.repair_analysis_r4 import audit_matrix
+        repo,root,meta=self.matrix_fixture();audit=audit_matrix(root,meta,repo)
+        self.assertTrue(audit['train_only_guidance_verified'])
+        self.assertTrue(audit['byte_exact_provenance_verified'])
+        self.assertEqual(audit['cells'][0]['support_count'],4)
+
+    def test_matrix_test_leakage_flagged(self):
+        from scripts.repair_analysis_r4 import audit_matrix
+        repo,root,meta=self.matrix_fixture()
+        cp=repo/'experiments/train-R0/regression_matrix/matrix_contributions.csv'
+        cp.write_text(cp.read_text().replace('train-1','q1'))
+        audit=audit_matrix(root,meta,repo)
+        self.assertFalse(audit['train_only_guidance_verified'])
+        self.assertEqual(audit['sources'][0]['test_overlap_count'],1)
+
+    def test_hash_newline_equivalence_is_not_byte_equality(self):
+        import hashlib
+        from scripts.repair_analysis_r4 import hash_evidence
+        p=self.root/'text.csv';p.write_bytes(b'a,b\n1,2\n')
+        expected=hashlib.sha256(b'a,b\r\n1,2\r\n').hexdigest()
+        self.assertEqual(hash_evidence(p,expected)['hash_status'],'CRLF_equivalent')
+
+    def test_multiple_trials_keep_independent_trajectories(self):
+        path=self.fixture();q=path/'queries/q1';first=json.loads(next((q/'trials').glob('*.json')).read_text())
+        records=[]
+        for i,label in enumerate(['R4_R0','R4_R1']):
+            t=json.loads(json.dumps(first));t['repair_strategy']=label
+            for r in t['repair_attempts']:r['repair_strategy']=label;records.append(r)
+            for e in t['repair_history'][1:]:e['repair_attempt']['repair_strategy']=label
+            (q/'trials'/(label+'.json')).write_text(json.dumps(t))
+        (q/'trials/R4-test.json').unlink()
+        (path/'attempts.jsonl').write_text(''.join(json.dumps(r)+'\n' for r in records))
+        run=load_run('R4',path);a,queries,_=build_tables(run)
+        self.assertEqual(len(a),2);self.assertEqual(queries.iloc[0].attempts,2)
+        self.assertIsNone(queries.iloc[0].final_observed_states)
+        self.assertEqual(len(queries.iloc[0].trial_trajectories),2)
+
+    def test_training_allowlist_hash_uses_documented_canonical_uid_set(self):
+        import hashlib
+        from scripts.repair_analysis_r4 import audit_matrix
+        repo,root,meta=self.matrix_fixture()
+        meta['training_uid_allowlist_sha256']=hashlib.sha256(b'train-1').hexdigest()
+        audit=audit_matrix(root,meta,repo)
+        self.assertTrue(audit['train_only_guidance_verified'])
+        check=next(r for r in audit['artifacts'] if r['role']=='training_uid_allowlist')
+        self.assertEqual(check['hash_status'],'exact_canonical_uid_set')
+        meta['training_uid_allowlist_sha256']='wrong'
+        self.assertFalse(audit_matrix(root,meta,repo)['train_only_guidance_verified'])
+
+    def test_shared_core_definitions_identical_for_all_strategies(self):
+        from scripts.analyze_repair_strategies import summarize
+        for label in ['R0','R1','R2','R3','R4']:
+            with self.subTest(label=label):
+                path=make_run(self.root/label,label,[record(strategy=label)],declared=['q1'])
+                run=load_run(label,path);a,q,_=build_tables(run);summary=summarize(run,a,q).set_index('metric')
+                self.assertEqual(summary.loc['total_attempts','value'],1)
+                self.assertEqual(summary.loc['personal_fixed_count_sum','value'],1)
+                self.assertEqual(summary.loc['personal_pooled_targeted_success','value'],1)
+                self.assertEqual(summary.loc['final_observed_satisfaction_mean','value'],1)
+
+    def test_selection_count_disagreement_rejected(self):
+        from scripts.repair_analysis_r4 import build_tables as r4_tables
+        run=load_run('R4',self.fixture());run.extra['selections'][0]['repair_attempt_count_all_trials']=2
+        a,_,_=build_tables(run)
+        with self.assertRaisesRegex(ValueError,'count disagrees'):
+            r4_tables(run,a)
+
+
 if __name__ == '__main__':
     unittest.main()
