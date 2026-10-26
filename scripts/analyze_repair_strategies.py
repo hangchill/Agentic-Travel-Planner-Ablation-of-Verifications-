@@ -278,7 +278,7 @@ def build_tables(run):
                    if k not in ('candidate_plan', 'accepted_plan_after', 'repair_metadata')}
             row.update(m)
             for key in ('editable_scope', 'scope_level', 'repair_phase', 'escalation_reason',
-                        'protected_constraint_indices', 'target_commonsense_errors'):
+                        'protected_constraint_indices', 'target_commonsense_errors', 'editable_slot'):
                 row[key] = persisted(r, key)
             phase = row['repair_phase']
             reason = persisted(r, 'decision_reason')
@@ -610,13 +610,62 @@ def hook_r0(a):
     return {'global_rewrite': out}, 'Broad-edit behavior is measured, not assumed harmful. C-phase concentration and multi-target counts are descriptive.'
 
 
-def hook_r1(a):
-    out = a[['query_uid', 'step', 'repair_phase', 'failure_reason', 'unchanged_confirmed',
-             'changed_slot_count', 'fixed_count', 'newly_violated_count']].copy()
-    out['recorded_localization_failure'] = out.failure_reason.fillna('').str.contains('localiz')
-    out['successful_local_repair'] = (out.changed_slot_count == 1) & (out.fixed_count > 0)
-    return {'localization': out}, 'Localization failure flags use explicit persisted reasons. One-slot fixes and unchanged local repairs are reported separately.'
 
+def hook_r1(a):
+    out = a.reindex(columns=[
+        'query_uid', 'step', 'repair_phase', 'failure_reason',
+        'editable_slot', 'unchanged_confirmed', 'changed_slot_count',
+        'fixed_count', 'newly_violated_count']).copy()
+    out['slot_selected'] = out['editable_slot'].map(
+        lambda value: isinstance(value, list) and len(value) == 2)
+    out['recorded_localization_failure'] = (
+        out.failure_reason.fillna('').str.contains('localiz', case=False, regex=False))
+    out['successful_local_repair'] = (
+        (out.changed_slot_count == 1) &
+        (out.fixed_count > 0))
+    out['localization_eligible'] = (
+        out.repair_phase.eq('commonsense') |
+        (out.repair_phase.eq('personal') &
+         out.failure_reason.ne('no_evaluable_personal_failure')))
+    out['invalid_replacement_after_slot'] = (
+        out.slot_selected &
+        out.failure_reason.isin([
+            'invalid_replacement', 'invalid_commonsense_replacement']))
+    return {'localization': out}, (
+        'Slot selection is based on recorded non-null two-element '
+        'editable_slot coordinates. Personal no-evaluable-failure '
+        'attempts are excluded from localization opportunities. '
+        'Slot selection is not equivalent to successful repair.')
+
+
+def r1_excel_table(attempts, origin):
+    """Build R1 strategy-specific Excel rows by difficulty."""
+    from collections import Counter
+    columns = {'Easy': 'easy',
+               'Med': 'medium',
+               'Hum': 'human',
+               'All': None,}
+    rows = []
+    for label, group in columns.items():
+        subset = attempts.copy()
+        if group is not None:
+            subset = subset[
+                subset['query_uid'].map(origin).eq(group)]
+        eligible = subset[subset['localization_eligible']]
+        selected = eligible['slot_selected'].fillna(False).astype(bool)
+        failed = eligible['recorded_localization_failure'].fillna(False).astype(bool)
+        success_queries = eligible.loc[selected, 'query_uid'].nunique()
+        failure_queries = eligible.loc[failed, 'query_uid'].nunique()
+        n = len(eligible)
+        reasons = Counter(eligible.loc[failed, 'failure_reason'].dropna())
+        rows.append({'group': label,
+                     'queries_success': success_queries,
+                     'queries_failure': failure_queries,
+                     'localization_success_rate': (selected.sum() / n if n else None),
+                     'localization_failure_rate': (failed.sum() / n if n else None),
+                     'top_failure_reasons': '; '.join(f'{reason} ({count})'
+                                                      for reason, count in reasons.most_common(3)),})
+    return rows
 
 def hook_r2(a):
     columns = ['query_uid', 'step', 'repair_phase', 'accepted', 'rejected', 'protected_constraint_indices',
@@ -665,12 +714,35 @@ def mechanism_summary(strategy, a, hooks):
         if len(a):
             count('multiple_declared_personal_targets', a.target_constraint_indices.map(len) > 1)
         count('commonsense_proposals_regressing_personal', a[a.repair_phase == 'commonsense'].newly_violated_count > 0)
+
     elif strategy == 'R1':
         h = hooks['localization']
+        # preserve existing metrics
         count('recorded_localization_failure', h.recorded_localization_failure)
         count('recorded_no_localizable_slot', h.failure_reason.fillna('') == 'no_localizable_slot')
         count('successful_measured_one_slot_repair', h[h.changed_slot_count.notna()].successful_local_repair)
         count('confirmed_unchanged_slot_proposal', a[a.editable_scope == 'slot'].unchanged_confirmed)
+        # phase specific localisation metrics
+        for phase in ('personal', 'commonsense'):
+            p = h[h.repair_phase == phase]
+            eligible = p[p.localization_eligible]
+            selected = eligible[eligible.slot_selected]
+            count(f'{phase}_localization_success',
+                eligible.slot_selected)
+            count(f'{phase}_localization_failure',
+                eligible.recorded_localization_failure)
+            count(f'{phase}_invalid_replacement_after_slot',
+                  selected['invalid_replacement_after_slot']
+                  if 'invalid_replacement_after_slot' in selected.columns
+                  else pd.Series(dtype=bool))
+            count(f'{phase}_changed_slot_after_selection',
+                  selected['changed_slot_count'] > 0
+                  if 'changed_slot_count' in selected.columns
+                  else pd.Series(dtype=bool))
+            count(f'{phase}_fixed_constraint_after_selection',
+                  selected['fixed_count'] > 0
+                  if 'fixed_count' in selected.columns
+                  else pd.Series(dtype=bool))
     elif strategy == 'R2':
         h = hooks['protection_and_rollback']
         for k in ('rejected', 'harmful_candidate_blocked',
@@ -881,6 +953,27 @@ def analyze(run, output, timestamp, figures=True):
         benchmark_checks = r4_analysis.validate_population(run)
         if benchmark_checks:
             tables['r4_benchmark_plan_audit'] = pd.DataFrame(benchmark_checks)
+    if run.strategy == 'R1':
+        origin_path = (Path(__file__).resolve().parents[1]/ 'chinatravel/evaluation/splits/subset_origin.json')
+        origin = read_json(origin_path)['origin']
+        localization = hooks['localization']
+        grouped = r1_excel_table(localization, origin)
+        lookup = {row['group']: row for row in grouped}
+        metrics = [
+            ('# queries with >=1 successful localisation', 'queries_success'),
+            ('# queries encountering localisation failure', 'queries_failure'),
+            ('Localisation success rate', 'localization_success_rate'),
+            ('Localisation failure rate', 'localization_failure_rate'),
+            ('Top localisation failure reasons', 'top_failure_reasons'),]
+        excel_rows = []
+        for label, key in metrics:
+            excel_rows.append({
+                'Repair Strategy': 'R1',
+                'Metric': label,
+                **{group: lookup[group][key]
+                   for group in ('Easy', 'Med', 'Hum', 'All')},})
+        tables['strategy_specific_table'] = pd.DataFrame(
+            excel_rows, columns=['Repair Strategy', 'Metric', 'Easy', 'Med', 'Hum', 'All'])
     for name, table in tables.items():
         save_csv(output/(name+'.csv'), table, columns=['evidence_unavailable'])
     provenance = dict(strategy=run.strategy, source_run_path=str(run.path),
