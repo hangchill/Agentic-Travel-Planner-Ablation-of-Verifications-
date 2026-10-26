@@ -79,10 +79,13 @@ def main(argv=None):
             parser.error("Per-strategy budgets must be unique, requested, and within the shared budget")
         strategy_max_steps[label] = budget
     if any(name.startswith("R4") for name in args.repair_strategies):
-        if args.splits not in ("subset_train", "combined_train", "easy_train", "medium_train", "human_train"):
-            parser.error("R4 pilot runs are training-only; test splits are disabled")
-        if not args.index or len(args.index) > 5 or args.max_steps > 6:
-            parser.error("R4 requires explicit --index with at most five queries and --max-steps <= 6")
+        if not args.prepared_r4_inputs:
+            if args.splits not in ("subset_train", "combined_train", "easy_train", "medium_train", "human_train"):
+                parser.error("R4 requires a named training split unless launched with a validated training matrix")
+            if not args.index or len(args.index) > 5 or args.max_steps > 6:
+                parser.error("Direct R4 pilot runs require explicit --index with at most five queries and --max-steps <= 6")
+        elif args.max_steps > 6:
+            parser.error("R4 allows at most six repairs per query")
         if sum(strategy_max_steps.get(name, args.max_steps) for name in args.repair_strategies) > 6:
             parser.error("R4 matrix trials share at most six repairs per query")
     if bool(args.split_manifest) != bool(args.partition):

@@ -258,6 +258,17 @@ class ComparisonTests(unittest.TestCase):
             self.run_comparison(resume=True)
         self.assertEqual(self.prepare.call_count, 1)
 
+
+    def test_missing_initial_state_cannot_be_regenerated_over_nested_trials(self):
+        config = {**self.config, "trial_subdirectory": "trials"}
+        root = self.run_comparison(config=config)
+        self.assertTrue(list((root / "queries").glob("*/trials/*.json")))
+        next((root / "queries").glob("*/initial_state.json")).unlink()
+        with self.assertRaisesRegex(ValueError, "Cannot regenerate"):
+            self.run_comparison(resume=True, config=config)
+        self.assertEqual(self.prepare.call_count, 1)
+
+
     def test_completed_attempts_survive_later_exception(self):
         calls = []
 

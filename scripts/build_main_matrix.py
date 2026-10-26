@@ -24,7 +24,8 @@ def main(argv=None):
     if sorted(labels) != list(LABELS):
         parser.error("Supply exactly one matrix directory from each of R0, R1, R2 and R3")
     _, manifest = build_main_matrix(args.input_dir, args.output, perspective=args.perspective)
-    print(f"Matrix: {args.output.resolve()} ({manifest['status']})")
+    print(f"Matrix: {args.output.resolve()} ({manifest['perspective']})")
+    print(f"Probability grid: {args.output.resolve().with_name(manifest['probability_pivot']['file'])}")
 
 
 if __name__ == "__main__":

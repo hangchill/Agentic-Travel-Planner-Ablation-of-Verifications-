@@ -54,10 +54,49 @@ def _component(value):
     return quote(str(value), safe="")[:90] + "-" + stable_hash(str(value))[:12]
 
 
+def pair_path(root, uid, strategy):
+    """Resolve both version-2 trial directories and historical flat checkpoints."""
+    directory = Path(root) / "queries" / _component(uid)
+    filename = _component(strategy) + ".json"
+    nested = directory / "trials" / filename
+    return nested if nested.exists() else directory / filename
+
+
+def checkpoint_paths(root):
+    # Use manifest identities, never derived exports with overlapping fields.
+    manifest = _load(Path(root) / "run_manifest.json")
+    for uid in manifest["query_uids"]:
+        for strategy in manifest["repair_strategies_requested"]:
+            path = pair_path(root, uid, strategy)
+            if path.is_file():
+                yield path
+
+
+def validate_prepared_inputs(root, requested):
+    """Only a fresh, hashed R4 input snapshot may precede a new checkpoint run."""
+    if {path.name for path in root.iterdir()} != {"inputs", "r4_run_metadata.json"}:
+        raise ValueError("Prepared R4 directory contains existing outputs or unexpected files")
+    metadata = _load(root / "r4_run_metadata.json")
+    if metadata.get("artifact_layout_version") != 2 or set(metadata["matrices"]) != set(requested):
+        raise ValueError("Prepared R4 metadata does not match requested trials")
+    expected = set()
+    for matrix in metadata["matrices"].values():
+        path = (root / matrix["path"]).resolve()
+        if not path.is_relative_to((root / "inputs").resolve()):
+            raise ValueError("Prepared matrix must be inside the run inputs directory")
+        manifest = path.with_name("main_matrix_manifest.json")
+        for file, key in ((path, "sha256"), (manifest, "manifest_sha256")):
+            if hashlib.sha256(file.read_bytes()).hexdigest() != matrix[key]:
+                raise ValueError("Prepared R4 input hash mismatch")
+            expected.add(file)
+    if {path.resolve() for path in (root / "inputs").rglob("*") if path.is_file()} != expected:
+        raise ValueError("Prepared R4 inputs contain unexpected files")
+
+
 def _rebuild_indexes(root, *, raw_only=False):
     """Pair checkpoints are authoritative; never append duplicate stream rows."""
     attempts, summaries = [], []
-    for path in sorted((root / "queries").glob("*/*.json")):
+    for path in sorted(checkpoint_paths(root)):
         if path.name in ("initial_state.json", "initial_failure.json"):
             continue
         result = _load(path)
@@ -110,7 +149,7 @@ def _lock(root):
 
 def run_comparison(queries, *, run_id, output_root, config, prepare_initial_state,
                    runtime_factory, strategy_factories=None, skip_unavailable=False,
-                   resume=False, retry_failed=False, raw_only=False):
+                   resume=False, retry_failed=False, raw_only=False, prepared_inputs=False):
     """Generate once per query; runtime_factory(state, name) returns (llm, translator).
 
     The runtime factory MUST return a fresh isolated model/environment runtime
@@ -142,7 +181,11 @@ def run_comparison(queries, *, run_id, output_root, config, prepare_initial_stat
                      "skip_unavailable": skip_unavailable, "runner_format_version": 1}
     if raw_only:
         compatibility["evidence_only"] = True
-    if root.exists() and not resume:
+    if prepared_inputs:
+        if resume or not root.is_dir() or not all(name.startswith("R4") for name in requested):
+            raise ValueError("Prepared inputs require a fresh R4 run")
+        validate_prepared_inputs(root, requested)
+    if root.exists() and not resume and not prepared_inputs:
         raise ValueError("Run directory already exists; use --resume or a new run_id")
     if resume and not (root / "run_manifest.json").is_file():
         raise ValueError("Cannot resume without a run manifest")
@@ -178,7 +221,8 @@ def run_comparison(queries, *, run_id, output_root, config, prepare_initial_stat
                 if stored["initial_state_hash"] != stable_hash(state.to_dict()):
                     raise ValueError("Saved initial state was modified")
             else:
-                if any(path.name != "initial_failure.json" for path in query_dir.glob("*.json")):
+                if (any(path.name != "initial_failure.json" for path in query_dir.glob("*.json"))
+                        or any((query_dir / "trials").glob("*.json"))):
                     raise ValueError("Cannot regenerate missing initial state for existing pair checkpoints")
                 try:
                     with system_usage_scope() as initial_usage:
@@ -199,6 +243,8 @@ def run_comparison(queries, *, run_id, output_root, config, prepare_initial_stat
             plan_hash = stable_hash(state.raw_initial_plan)
             for name in requested:
                 pair_path = query_dir / (_component(name) + ".json")
+                if config.get("trial_subdirectory") == "trials":
+                    pair_path = query_dir / "trials" / pair_path.name
                 if pair_path.exists():
                     old = _load(pair_path)
                     if old["initial_plan_hash"] != plan_hash:
