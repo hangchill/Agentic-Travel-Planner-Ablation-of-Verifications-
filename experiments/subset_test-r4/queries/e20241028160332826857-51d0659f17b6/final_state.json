@@ -1,0 +1,1678 @@
+{
+  "run_id": "subset_test-r4",
+  "matrix_run_id": "subset_test-r4/R4_selected",
+  "query_uid": "e20241028160332826857",
+  "repair_strategy": "R4",
+  "initial_plan_hash": "991a68636a9467035621ea406ee8015deee3364548629f55d243c14b091261c3",
+  "initial_raw_plan": [
+    {
+      "day": 1,
+      "activities": [
+        {
+          "start_time": "07:05",
+          "end_time": "11:01",
+          "start": "Beijing West Railway Station",
+          "end": "Wuhan Station",
+          "price": 684.27,
+          "cost": 684.27,
+          "TrainID": "G71",
+          "type": "train",
+          "tickets": 1,
+          "transports": "empty"
+        },
+        {
+          "position": "Yellow Crane Tower",
+          "type": "attraction",
+          "transports": {
+            "from": "Wuhan Station",
+            "to": "Yellow Crane Tower",
+            "mode": "metro",
+            "start_time": "11:01",
+            "end_time": "11:35",
+            "cost": 4
+          },
+          "price": 65.0,
+          "cost": 65.0,
+          "tickets": 1,
+          "start_time": "11:40",
+          "end_time": "12:40"
+        },
+        {
+          "position": "Old House Lotus Fragrance · Hubei Cuisine · Intangible Cultural Heritage Lotus Root Soup · Wuchang Fish (Yellow Crane Tower View Store)",
+          "type": "lunch",
+          "transports": {
+            "from": "Yellow Crane Tower",
+            "to": "Old House Lotus Fragrance · Hubei Cuisine · Intangible Cultural Heritage Lotus Root Soup · Wuchang Fish (Yellow Crane Tower View Store)",
+            "mode": "walk",
+            "start_time": "12:40",
+            "end_time": "12:46",
+            "cost": 0
+          },
+          "price": 83,
+          "cost": 83,
+          "start_time": "12:50",
+          "end_time": "13:40"
+        },
+        {
+          "position": "Hubei Provincial Museum",
+          "type": "attraction",
+          "transports": {
+            "from": "Old House Lotus Fragrance · Hubei Cuisine · Intangible Cultural Heritage Lotus Root Soup · Wuchang Fish (Yellow Crane Tower View Store)",
+            "to": "Hubei Provincial Museum",
+            "mode": "metro",
+            "start_time": "13:40",
+            "end_time": "14:05",
+            "cost": 3
+          },
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 1,
+          "start_time": "14:10",
+          "end_time": "16:10"
+        },
+        {
+          "position": "East Lake",
+          "type": "attraction",
+          "transports": {
+            "from": "Hubei Provincial Museum",
+            "to": "East Lake",
+            "mode": "metro",
+            "start_time": "16:10",
+            "end_time": "16:25",
+            "cost": 2
+          },
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 1,
+          "start_time": "16:30",
+          "end_time": "17:30"
+        },
+        {
+          "position": "Rongchu Hubei Cuisine: Rib and Lotus Root Soup in a Clay Pot (Jianghan Road Branch 1)",
+          "type": "dinner",
+          "transports": {
+            "from": "East Lake",
+            "to": "Rongchu Hubei Cuisine: Rib and Lotus Root Soup in a Clay Pot (Jianghan Road Branch 1)",
+            "mode": "metro",
+            "start_time": "17:30",
+            "end_time": "18:00",
+            "cost": 3
+          },
+          "price": 90,
+          "cost": 90,
+          "start_time": "18:10",
+          "end_time": "19:00"
+        },
+        {
+          "start": "Wuhan Station",
+          "end": "Beijing West Railway Station",
+          "start_time": "19:30",
+          "end_time": "23:28",
+          "TrainID": "G80",
+          "type": "train",
+          "transports": {
+            "from": "Rongchu Hubei Cuisine: Rib and Lotus Root Soup in a Clay Pot (Jianghan Road Branch 1)",
+            "to": "Wuhan Station",
+            "mode": "metro",
+            "start_time": "19:00",
+            "end_time": "19:34",
+            "cost": 4
+          },
+          "price": 684.27,
+          "cost": 684.27,
+          "tickets": 1
+        }
+      ]
+    }
+  ],
+  "initial_verification": {
+    "commonsense_errors": [
+      "Incorrect duration information of given intercity transport from destination to origin G80 [start_time -> end_time].",
+      "Incorrect cost infomation of innercity transport in day 1, from Hubei Provincial Museum to East Lake, metro. [cost = price * people_number]",
+      "Incorrect cost infomation of innercity transport in day 1, from East Lake to Rongchu Hubei Cuisine: Rib and Lotus Root Soup in a Clay Pot (Jianghan Road Branch 1), metro. [cost = price * people_number]"
+    ],
+    "personal_constraints": [
+      true,
+      true,
+      true,
+      true,
+      true
+    ],
+    "category_normalization": [
+      {
+        "constraint_index": 4,
+        "category_domain": "activity",
+        "expression": "activity_type(activity)",
+        "raw_label": "train",
+        "normalized_label": "train"
+      },
+      {
+        "constraint_index": 4,
+        "category_domain": "activity",
+        "expression": "['attraction', 'airplane', 'train']",
+        "raw_label": "attraction",
+        "normalized_label": "attraction"
+      },
+      {
+        "constraint_index": 4,
+        "category_domain": "activity",
+        "expression": "['attraction', 'airplane', 'train']",
+        "raw_label": "airplane",
+        "normalized_label": "airplane"
+      },
+      {
+        "constraint_index": 4,
+        "category_domain": "activity",
+        "expression": "['attraction', 'airplane', 'train']",
+        "raw_label": "train",
+        "normalized_label": "train"
+      },
+      {
+        "constraint_index": 4,
+        "category_domain": "transport",
+        "expression": "innercity_transport_type(activity_transports(activity))",
+        "raw_label": "empty",
+        "normalized_label": "empty"
+      },
+      {
+        "constraint_index": 4,
+        "category_domain": "transport",
+        "expression": "'metro'",
+        "raw_label": "metro",
+        "normalized_label": "metro"
+      },
+      {
+        "constraint_index": 4,
+        "category_domain": "activity",
+        "expression": "activity_type(activity)",
+        "raw_label": "attraction",
+        "normalized_label": "attraction"
+      },
+      {
+        "constraint_index": 4,
+        "category_domain": "activity",
+        "expression": "['attraction', 'airplane', 'train']",
+        "raw_label": "attraction",
+        "normalized_label": "attraction"
+      },
+      {
+        "constraint_index": 4,
+        "category_domain": "activity",
+        "expression": "['attraction', 'airplane', 'train']",
+        "raw_label": "airplane",
+        "normalized_label": "airplane"
+      },
+      {
+        "constraint_index": 4,
+        "category_domain": "activity",
+        "expression": "['attraction', 'airplane', 'train']",
+        "raw_label": "train",
+        "normalized_label": "train"
+      },
+      {
+        "constraint_index": 4,
+        "category_domain": "transport",
+        "expression": "innercity_transport_type(activity_transports(activity))",
+        "raw_label": "metro",
+        "normalized_label": "metro"
+      },
+      {
+        "constraint_index": 4,
+        "category_domain": "transport",
+        "expression": "'metro'",
+        "raw_label": "metro",
+        "normalized_label": "metro"
+      },
+      {
+        "constraint_index": 4,
+        "category_domain": "activity",
+        "expression": "activity_type(activity)",
+        "raw_label": "lunch",
+        "normalized_label": "lunch"
+      },
+      {
+        "constraint_index": 4,
+        "category_domain": "activity",
+        "expression": "['attraction', 'airplane', 'train']",
+        "raw_label": "attraction",
+        "normalized_label": "attraction"
+      },
+      {
+        "constraint_index": 4,
+        "category_domain": "activity",
+        "expression": "['attraction', 'airplane', 'train']",
+        "raw_label": "airplane",
+        "normalized_label": "airplane"
+      },
+      {
+        "constraint_index": 4,
+        "category_domain": "activity",
+        "expression": "['attraction', 'airplane', 'train']",
+        "raw_label": "train",
+        "normalized_label": "train"
+      },
+      {
+        "constraint_index": 4,
+        "category_domain": "transport",
+        "expression": "innercity_transport_type(activity_transports(activity))",
+        "raw_label": "walk",
+        "normalized_label": "walk"
+      },
+      {
+        "constraint_index": 4,
+        "category_domain": "transport",
+        "expression": "'metro'",
+        "raw_label": "metro",
+        "normalized_label": "metro"
+      },
+      {
+        "constraint_index": 4,
+        "category_domain": "activity",
+        "expression": "activity_type(activity)",
+        "raw_label": "attraction",
+        "normalized_label": "attraction"
+      },
+      {
+        "constraint_index": 4,
+        "category_domain": "activity",
+        "expression": "['attraction', 'airplane', 'train']",
+        "raw_label": "attraction",
+        "normalized_label": "attraction"
+      },
+      {
+        "constraint_index": 4,
+        "category_domain": "activity",
+        "expression": "['attraction', 'airplane', 'train']",
+        "raw_label": "airplane",
+        "normalized_label": "airplane"
+      },
+      {
+        "constraint_index": 4,
+        "category_domain": "activity",
+        "expression": "['attraction', 'airplane', 'train']",
+        "raw_label": "train",
+        "normalized_label": "train"
+      },
+      {
+        "constraint_index": 4,
+        "category_domain": "transport",
+        "expression": "innercity_transport_type(activity_transports(activity))",
+        "raw_label": "metro",
+        "normalized_label": "metro"
+      },
+      {
+        "constraint_index": 4,
+        "category_domain": "transport",
+        "expression": "'metro'",
+        "raw_label": "metro",
+        "normalized_label": "metro"
+      },
+      {
+        "constraint_index": 4,
+        "category_domain": "activity",
+        "expression": "activity_type(activity)",
+        "raw_label": "attraction",
+        "normalized_label": "attraction"
+      },
+      {
+        "constraint_index": 4,
+        "category_domain": "activity",
+        "expression": "['attraction', 'airplane', 'train']",
+        "raw_label": "attraction",
+        "normalized_label": "attraction"
+      },
+      {
+        "constraint_index": 4,
+        "category_domain": "activity",
+        "expression": "['attraction', 'airplane', 'train']",
+        "raw_label": "airplane",
+        "normalized_label": "airplane"
+      },
+      {
+        "constraint_index": 4,
+        "category_domain": "activity",
+        "expression": "['attraction', 'airplane', 'train']",
+        "raw_label": "train",
+        "normalized_label": "train"
+      },
+      {
+        "constraint_index": 4,
+        "category_domain": "transport",
+        "expression": "innercity_transport_type(activity_transports(activity))",
+        "raw_label": "metro",
+        "normalized_label": "metro"
+      },
+      {
+        "constraint_index": 4,
+        "category_domain": "transport",
+        "expression": "'metro'",
+        "raw_label": "metro",
+        "normalized_label": "metro"
+      },
+      {
+        "constraint_index": 4,
+        "category_domain": "activity",
+        "expression": "activity_type(activity)",
+        "raw_label": "dinner",
+        "normalized_label": "dinner"
+      },
+      {
+        "constraint_index": 4,
+        "category_domain": "activity",
+        "expression": "['attraction', 'airplane', 'train']",
+        "raw_label": "attraction",
+        "normalized_label": "attraction"
+      },
+      {
+        "constraint_index": 4,
+        "category_domain": "activity",
+        "expression": "['attraction', 'airplane', 'train']",
+        "raw_label": "airplane",
+        "normalized_label": "airplane"
+      },
+      {
+        "constraint_index": 4,
+        "category_domain": "activity",
+        "expression": "['attraction', 'airplane', 'train']",
+        "raw_label": "train",
+        "normalized_label": "train"
+      },
+      {
+        "constraint_index": 4,
+        "category_domain": "transport",
+        "expression": "innercity_transport_type(activity_transports(activity))",
+        "raw_label": "metro",
+        "normalized_label": "metro"
+      },
+      {
+        "constraint_index": 4,
+        "category_domain": "transport",
+        "expression": "'metro'",
+        "raw_label": "metro",
+        "normalized_label": "metro"
+      },
+      {
+        "constraint_index": 4,
+        "category_domain": "activity",
+        "expression": "activity_type(activity)",
+        "raw_label": "train",
+        "normalized_label": "train"
+      },
+      {
+        "constraint_index": 4,
+        "category_domain": "activity",
+        "expression": "['attraction', 'airplane', 'train']",
+        "raw_label": "attraction",
+        "normalized_label": "attraction"
+      },
+      {
+        "constraint_index": 4,
+        "category_domain": "activity",
+        "expression": "['attraction', 'airplane', 'train']",
+        "raw_label": "airplane",
+        "normalized_label": "airplane"
+      },
+      {
+        "constraint_index": 4,
+        "category_domain": "activity",
+        "expression": "['attraction', 'airplane', 'train']",
+        "raw_label": "train",
+        "normalized_label": "train"
+      },
+      {
+        "constraint_index": 4,
+        "category_domain": "transport",
+        "expression": "innercity_transport_type(activity_transports(activity))",
+        "raw_label": "metro",
+        "normalized_label": "metro"
+      },
+      {
+        "constraint_index": 4,
+        "category_domain": "transport",
+        "expression": "'metro'",
+        "raw_label": "metro",
+        "normalized_label": "metro"
+      },
+      {
+        "constraint_index": 5,
+        "category_domain": "transport",
+        "expression": "innercity_transport_type(activity_transports(activity))",
+        "raw_label": "empty",
+        "normalized_label": "empty"
+      },
+      {
+        "constraint_index": 5,
+        "category_domain": "transport",
+        "expression": "'taxi'",
+        "raw_label": "taxi",
+        "normalized_label": "taxi"
+      },
+      {
+        "constraint_index": 5,
+        "category_domain": "transport",
+        "expression": "innercity_transport_type(activity_transports(activity))",
+        "raw_label": "metro",
+        "normalized_label": "metro"
+      },
+      {
+        "constraint_index": 5,
+        "category_domain": "transport",
+        "expression": "'taxi'",
+        "raw_label": "taxi",
+        "normalized_label": "taxi"
+      },
+      {
+        "constraint_index": 5,
+        "category_domain": "transport",
+        "expression": "innercity_transport_type(activity_transports(activity))",
+        "raw_label": "walk",
+        "normalized_label": "walk"
+      },
+      {
+        "constraint_index": 5,
+        "category_domain": "transport",
+        "expression": "'taxi'",
+        "raw_label": "taxi",
+        "normalized_label": "taxi"
+      },
+      {
+        "constraint_index": 5,
+        "category_domain": "transport",
+        "expression": "innercity_transport_type(activity_transports(activity))",
+        "raw_label": "metro",
+        "normalized_label": "metro"
+      },
+      {
+        "constraint_index": 5,
+        "category_domain": "transport",
+        "expression": "'taxi'",
+        "raw_label": "taxi",
+        "normalized_label": "taxi"
+      },
+      {
+        "constraint_index": 5,
+        "category_domain": "transport",
+        "expression": "innercity_transport_type(activity_transports(activity))",
+        "raw_label": "metro",
+        "normalized_label": "metro"
+      },
+      {
+        "constraint_index": 5,
+        "category_domain": "transport",
+        "expression": "'taxi'",
+        "raw_label": "taxi",
+        "normalized_label": "taxi"
+      },
+      {
+        "constraint_index": 5,
+        "category_domain": "transport",
+        "expression": "innercity_transport_type(activity_transports(activity))",
+        "raw_label": "metro",
+        "normalized_label": "metro"
+      },
+      {
+        "constraint_index": 5,
+        "category_domain": "transport",
+        "expression": "'taxi'",
+        "raw_label": "taxi",
+        "normalized_label": "taxi"
+      },
+      {
+        "constraint_index": 5,
+        "category_domain": "transport",
+        "expression": "innercity_transport_type(activity_transports(activity))",
+        "raw_label": "metro",
+        "normalized_label": "metro"
+      },
+      {
+        "constraint_index": 5,
+        "category_domain": "transport",
+        "expression": "'taxi'",
+        "raw_label": "taxi",
+        "normalized_label": "taxi"
+      }
+    ],
+    "personal_errors": [],
+    "evaluation_errors": [],
+    "translation_errors": [],
+    "error_info": [
+      "Incorrect duration information of given intercity transport from destination to origin G80 [start_time -> end_time].",
+      "Incorrect cost infomation of innercity transport in day 1, from Hubei Provincial Museum to East Lake, metro. [cost = price * people_number]",
+      "Incorrect cost infomation of innercity transport in day 1, from East Lake to Rongchu Hubei Cuisine: Rib and Lotus Root Soup in a Clay Pot (Jianghan Road Branch 1), metro. [cost = price * people_number]"
+    ],
+    "passed": false,
+    "translated_plan": {
+      "people_number": 1,
+      "start_city": "Beijing",
+      "target_city": "Wuhan",
+      "itinerary": [
+        {
+          "day": 1,
+          "activities": [
+            {
+              "start_time": "07:05",
+              "end_time": "11:01",
+              "start": "Beijing West Railway Station",
+              "end": "Wuhan Station",
+              "price": 684.27,
+              "cost": 684.27,
+              "TrainID": "G71",
+              "type": "train",
+              "tickets": 1,
+              "transports": []
+            },
+            {
+              "position": "Yellow Crane Tower",
+              "type": "attraction",
+              "transports": [
+                {
+                  "start": "Wuhan Station",
+                  "end": "Wuhan Station East Square-Metro Station",
+                  "mode": "walk",
+                  "start_time": "11:01",
+                  "end_time": "11:03",
+                  "cost": 0,
+                  "distance": 0.19,
+                  "price": 0
+                },
+                {
+                  "start": "Wuhan Station East Square-Metro Station",
+                  "end": "Tanhualin Wushengmen-Metro Station",
+                  "mode": "metro",
+                  "start_time": "11:03",
+                  "end_time": "11:29",
+                  "cost": 4,
+                  "distance": 13.04,
+                  "price": 4,
+                  "tickets": 1
+                },
+                {
+                  "start": "Tanhualin Wushengmen-Metro Station",
+                  "end": "Yellow Crane Tower",
+                  "mode": "walk",
+                  "start_time": "11:29",
+                  "end_time": "11:35",
+                  "cost": 0,
+                  "distance": 0.56,
+                  "price": 0
+                }
+              ],
+              "price": 65.0,
+              "cost": 65.0,
+              "tickets": 1,
+              "start_time": "11:40",
+              "end_time": "12:40"
+            },
+            {
+              "position": "Old House Lotus Fragrance · Hubei Cuisine · Intangible Cultural Heritage Lotus Root Soup · Wuchang Fish (Yellow Crane Tower View Store)",
+              "type": "lunch",
+              "transports": [
+                {
+                  "start": "Yellow Crane Tower",
+                  "end": "Old House Lotus Fragrance · Hubei Cuisine · Intangible Cultural Heritage Lotus Root Soup · Wuchang Fish (Yellow Crane Tower View Store)",
+                  "mode": "walk",
+                  "start_time": "12:40",
+                  "end_time": "12:53",
+                  "cost": 0,
+                  "distance": 1.1354265031433934
+                }
+              ],
+              "price": 83,
+              "cost": 83,
+              "start_time": "12:50",
+              "end_time": "13:40"
+            },
+            {
+              "position": "Hubei Provincial Museum",
+              "type": "attraction",
+              "transports": [
+                {
+                  "start": "Old House Lotus Fragrance · Hubei Cuisine · Intangible Cultural Heritage Lotus Root Soup · Wuchang Fish (Yellow Crane Tower View Store)",
+                  "end": "Simenkou Yellow Crane Tower-Metro Station",
+                  "mode": "walk",
+                  "start_time": "13:40",
+                  "end_time": "13:45",
+                  "cost": 0,
+                  "distance": 0.43,
+                  "price": 0
+                },
+                {
+                  "start": "Simenkou Yellow Crane Tower-Metro Station",
+                  "end": "Hubei Provincial Museum Hubei Daily-Metro Station",
+                  "mode": "metro",
+                  "start_time": "13:45",
+                  "end_time": "13:57",
+                  "cost": 3,
+                  "distance": 6.35,
+                  "price": 3,
+                  "tickets": 1
+                },
+                {
+                  "start": "Hubei Provincial Museum Hubei Daily-Metro Station",
+                  "end": "Hubei Provincial Museum",
+                  "mode": "walk",
+                  "start_time": "13:57",
+                  "end_time": "14:05",
+                  "cost": 0,
+                  "distance": 0.71,
+                  "price": 0
+                }
+              ],
+              "price": 0.0,
+              "cost": 0.0,
+              "tickets": 1,
+              "start_time": "14:10",
+              "end_time": "16:10"
+            },
+            {
+              "position": "East Lake",
+              "type": "attraction",
+              "transports": [
+                {
+                  "start": "Hubei Provincial Museum",
+                  "end": "Hubei Provincial Museum Hubei Daily-Metro Station",
+                  "mode": "walk",
+                  "start_time": "16:10",
+                  "end_time": "16:18",
+                  "cost": 0,
+                  "distance": 0.71,
+                  "price": 0
+                },
+                {
+                  "start": "Hubei Provincial Museum Hubei Daily-Metro Station",
+                  "end": "Wudong-Metro Station",
+                  "mode": "metro",
+                  "start_time": "16:18",
+                  "end_time": "16:35",
+                  "cost": 2,
+                  "distance": 8.94,
+                  "price": 3,
+                  "tickets": 1
+                },
+                {
+                  "start": "Wudong-Metro Station",
+                  "end": "East Lake",
+                  "mode": "walk",
+                  "start_time": "16:35",
+                  "end_time": "17:25",
+                  "cost": 0,
+                  "distance": 4.23,
+                  "price": 0
+                }
+              ],
+              "price": 0.0,
+              "cost": 0.0,
+              "tickets": 1,
+              "start_time": "16:30",
+              "end_time": "17:30"
+            },
+            {
+              "position": "Rongchu Hubei Cuisine: Rib and Lotus Root Soup in a Clay Pot (Jianghan Road Branch 1)",
+              "type": "dinner",
+              "transports": [
+                {
+                  "start": "East Lake",
+                  "end": "Wudong-Metro Station",
+                  "mode": "walk",
+                  "start_time": "17:30",
+                  "end_time": "18:20",
+                  "cost": 0,
+                  "distance": 4.23,
+                  "price": 0
+                },
+                {
+                  "start": "Wudong-Metro Station",
+                  "end": "Xunlimen-Metro Station",
+                  "mode": "metro",
+                  "start_time": "18:20",
+                  "end_time": "18:52",
+                  "cost": 3,
+                  "distance": 16.44,
+                  "price": 5,
+                  "tickets": 1
+                },
+                {
+                  "start": "Xunlimen-Metro Station",
+                  "end": "Rongchu Hubei Cuisine: Rib and Lotus Root Soup in a Clay Pot (Jianghan Road Branch 1)",
+                  "mode": "walk",
+                  "start_time": "18:52",
+                  "end_time": "18:57",
+                  "cost": 0,
+                  "distance": 0.5,
+                  "price": 0
+                }
+              ],
+              "price": 90,
+              "cost": 90,
+              "start_time": "18:10",
+              "end_time": "19:00"
+            },
+            {
+              "start": "Wuhan Station",
+              "end": "Beijing West Railway Station",
+              "start_time": "19:30",
+              "end_time": "23:28",
+              "TrainID": "G80",
+              "type": "train",
+              "transports": [
+                {
+                  "start": "Rongchu Hubei Cuisine: Rib and Lotus Root Soup in a Clay Pot (Jianghan Road Branch 1)",
+                  "end": "Xunlimen-Metro Station",
+                  "mode": "walk",
+                  "start_time": "19:00",
+                  "end_time": "19:05",
+                  "cost": 0,
+                  "distance": 0.5,
+                  "price": 0
+                },
+                {
+                  "start": "Xunlimen-Metro Station",
+                  "end": "Wuhan Station East Square-Metro Station",
+                  "mode": "metro",
+                  "start_time": "19:05",
+                  "end_time": "19:32",
+                  "cost": 4,
+                  "distance": 13.72,
+                  "price": 4,
+                  "tickets": 1
+                },
+                {
+                  "start": "Wuhan Station East Square-Metro Station",
+                  "end": "Wuhan Station",
+                  "mode": "walk",
+                  "start_time": "19:32",
+                  "end_time": "19:34",
+                  "cost": 0,
+                  "distance": 0.19,
+                  "price": 0
+                }
+              ],
+              "price": 684.27,
+              "cost": 684.27,
+              "tickets": 1
+            }
+          ]
+        }
+      ]
+    },
+    "verifier_errors": [
+      "Raise error in symoblic commonsense feedback, <function collect_time_error at 0x00000145C724BF60>: 'position'"
+    ],
+    "schema_errors": [],
+    "translation_failures": []
+  },
+  "final_accepted_plan": [
+    {
+      "day": 1,
+      "activities": [
+        {
+          "start_time": "07:05",
+          "end_time": "11:01",
+          "start": "Beijing West Railway Station",
+          "end": "Wuhan Station",
+          "price": 684.27,
+          "cost": 684.27,
+          "TrainID": "G71",
+          "type": "train",
+          "tickets": 1,
+          "transports": "empty"
+        },
+        {
+          "position": "Yellow Crane Tower",
+          "type": "attraction",
+          "transports": {
+            "from": "Wuhan Station",
+            "to": "Yellow Crane Tower",
+            "mode": "metro",
+            "start_time": "11:01",
+            "end_time": "11:35",
+            "cost": 4
+          },
+          "price": 65.0,
+          "cost": 65.0,
+          "tickets": 1,
+          "start_time": "11:40",
+          "end_time": "12:40"
+        },
+        {
+          "position": "Old House Lotus Fragrance · Hubei Cuisine · Intangible Cultural Heritage Lotus Root Soup · Wuchang Fish (Yellow Crane Tower View Store)",
+          "type": "lunch",
+          "transports": {
+            "from": "Yellow Crane Tower",
+            "to": "Old House Lotus Fragrance · Hubei Cuisine · Intangible Cultural Heritage Lotus Root Soup · Wuchang Fish (Yellow Crane Tower View Store)",
+            "mode": "walk",
+            "start_time": "12:40",
+            "end_time": "12:46",
+            "cost": 0
+          },
+          "price": 83,
+          "cost": 83,
+          "start_time": "12:50",
+          "end_time": "13:40"
+        },
+        {
+          "position": "Hubei Provincial Museum",
+          "type": "attraction",
+          "transports": {
+            "from": "Old House Lotus Fragrance · Hubei Cuisine · Intangible Cultural Heritage Lotus Root Soup · Wuchang Fish (Yellow Crane Tower View Store)",
+            "to": "Hubei Provincial Museum",
+            "mode": "metro",
+            "start_time": "13:40",
+            "end_time": "14:05",
+            "cost": 3
+          },
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 1,
+          "start_time": "14:10",
+          "end_time": "16:10"
+        },
+        {
+          "position": "East Lake",
+          "type": "attraction",
+          "transports": {
+            "from": "Hubei Provincial Museum",
+            "to": "East Lake",
+            "mode": "metro",
+            "start_time": "16:10",
+            "end_time": "16:25",
+            "cost": 2
+          },
+          "price": 0.0,
+          "cost": 0.0,
+          "tickets": 1,
+          "start_time": "16:30",
+          "end_time": "17:30"
+        },
+        {
+          "position": "Rongchu Hubei Cuisine: Rib and Lotus Root Soup in a Clay Pot (Jianghan Road Branch 1)",
+          "type": "dinner",
+          "transports": {
+            "from": "East Lake",
+            "to": "Rongchu Hubei Cuisine: Rib and Lotus Root Soup in a Clay Pot (Jianghan Road Branch 1)",
+            "mode": "metro",
+            "start_time": "17:30",
+            "end_time": "18:00",
+            "cost": 3
+          },
+          "price": 90,
+          "cost": 90,
+          "start_time": "18:10",
+          "end_time": "19:00"
+        },
+        {
+          "start": "Wuhan Station",
+          "end": "Beijing West Railway Station",
+          "start_time": "19:30",
+          "end_time": "23:28",
+          "TrainID": "G80",
+          "type": "train",
+          "transports": {
+            "from": "Rongchu Hubei Cuisine: Rib and Lotus Root Soup in a Clay Pot (Jianghan Road Branch 1)",
+            "to": "Wuhan Station",
+            "mode": "metro",
+            "start_time": "19:00",
+            "end_time": "19:34",
+            "cost": 4
+          },
+          "price": 684.27,
+          "cost": 684.27,
+          "tickets": 1
+        }
+      ]
+    }
+  ],
+  "final_verification": {
+    "commonsense_errors": [
+      "Incorrect duration information of given intercity transport from destination to origin G80 [start_time -> end_time].",
+      "Incorrect cost infomation of innercity transport in day 1, from Hubei Provincial Museum to East Lake, metro. [cost = price * people_number]",
+      "Incorrect cost infomation of innercity transport in day 1, from East Lake to Rongchu Hubei Cuisine: Rib and Lotus Root Soup in a Clay Pot (Jianghan Road Branch 1), metro. [cost = price * people_number]"
+    ],
+    "personal_constraints": [
+      true,
+      true,
+      true,
+      true,
+      true
+    ],
+    "category_normalization": [
+      {
+        "constraint_index": 4,
+        "category_domain": "activity",
+        "expression": "activity_type(activity)",
+        "raw_label": "train",
+        "normalized_label": "train"
+      },
+      {
+        "constraint_index": 4,
+        "category_domain": "activity",
+        "expression": "['attraction', 'airplane', 'train']",
+        "raw_label": "attraction",
+        "normalized_label": "attraction"
+      },
+      {
+        "constraint_index": 4,
+        "category_domain": "activity",
+        "expression": "['attraction', 'airplane', 'train']",
+        "raw_label": "airplane",
+        "normalized_label": "airplane"
+      },
+      {
+        "constraint_index": 4,
+        "category_domain": "activity",
+        "expression": "['attraction', 'airplane', 'train']",
+        "raw_label": "train",
+        "normalized_label": "train"
+      },
+      {
+        "constraint_index": 4,
+        "category_domain": "transport",
+        "expression": "innercity_transport_type(activity_transports(activity))",
+        "raw_label": "empty",
+        "normalized_label": "empty"
+      },
+      {
+        "constraint_index": 4,
+        "category_domain": "transport",
+        "expression": "'metro'",
+        "raw_label": "metro",
+        "normalized_label": "metro"
+      },
+      {
+        "constraint_index": 4,
+        "category_domain": "activity",
+        "expression": "activity_type(activity)",
+        "raw_label": "attraction",
+        "normalized_label": "attraction"
+      },
+      {
+        "constraint_index": 4,
+        "category_domain": "activity",
+        "expression": "['attraction', 'airplane', 'train']",
+        "raw_label": "attraction",
+        "normalized_label": "attraction"
+      },
+      {
+        "constraint_index": 4,
+        "category_domain": "activity",
+        "expression": "['attraction', 'airplane', 'train']",
+        "raw_label": "airplane",
+        "normalized_label": "airplane"
+      },
+      {
+        "constraint_index": 4,
+        "category_domain": "activity",
+        "expression": "['attraction', 'airplane', 'train']",
+        "raw_label": "train",
+        "normalized_label": "train"
+      },
+      {
+        "constraint_index": 4,
+        "category_domain": "transport",
+        "expression": "innercity_transport_type(activity_transports(activity))",
+        "raw_label": "metro",
+        "normalized_label": "metro"
+      },
+      {
+        "constraint_index": 4,
+        "category_domain": "transport",
+        "expression": "'metro'",
+        "raw_label": "metro",
+        "normalized_label": "metro"
+      },
+      {
+        "constraint_index": 4,
+        "category_domain": "activity",
+        "expression": "activity_type(activity)",
+        "raw_label": "lunch",
+        "normalized_label": "lunch"
+      },
+      {
+        "constraint_index": 4,
+        "category_domain": "activity",
+        "expression": "['attraction', 'airplane', 'train']",
+        "raw_label": "attraction",
+        "normalized_label": "attraction"
+      },
+      {
+        "constraint_index": 4,
+        "category_domain": "activity",
+        "expression": "['attraction', 'airplane', 'train']",
+        "raw_label": "airplane",
+        "normalized_label": "airplane"
+      },
+      {
+        "constraint_index": 4,
+        "category_domain": "activity",
+        "expression": "['attraction', 'airplane', 'train']",
+        "raw_label": "train",
+        "normalized_label": "train"
+      },
+      {
+        "constraint_index": 4,
+        "category_domain": "transport",
+        "expression": "innercity_transport_type(activity_transports(activity))",
+        "raw_label": "walk",
+        "normalized_label": "walk"
+      },
+      {
+        "constraint_index": 4,
+        "category_domain": "transport",
+        "expression": "'metro'",
+        "raw_label": "metro",
+        "normalized_label": "metro"
+      },
+      {
+        "constraint_index": 4,
+        "category_domain": "activity",
+        "expression": "activity_type(activity)",
+        "raw_label": "attraction",
+        "normalized_label": "attraction"
+      },
+      {
+        "constraint_index": 4,
+        "category_domain": "activity",
+        "expression": "['attraction', 'airplane', 'train']",
+        "raw_label": "attraction",
+        "normalized_label": "attraction"
+      },
+      {
+        "constraint_index": 4,
+        "category_domain": "activity",
+        "expression": "['attraction', 'airplane', 'train']",
+        "raw_label": "airplane",
+        "normalized_label": "airplane"
+      },
+      {
+        "constraint_index": 4,
+        "category_domain": "activity",
+        "expression": "['attraction', 'airplane', 'train']",
+        "raw_label": "train",
+        "normalized_label": "train"
+      },
+      {
+        "constraint_index": 4,
+        "category_domain": "transport",
+        "expression": "innercity_transport_type(activity_transports(activity))",
+        "raw_label": "metro",
+        "normalized_label": "metro"
+      },
+      {
+        "constraint_index": 4,
+        "category_domain": "transport",
+        "expression": "'metro'",
+        "raw_label": "metro",
+        "normalized_label": "metro"
+      },
+      {
+        "constraint_index": 4,
+        "category_domain": "activity",
+        "expression": "activity_type(activity)",
+        "raw_label": "attraction",
+        "normalized_label": "attraction"
+      },
+      {
+        "constraint_index": 4,
+        "category_domain": "activity",
+        "expression": "['attraction', 'airplane', 'train']",
+        "raw_label": "attraction",
+        "normalized_label": "attraction"
+      },
+      {
+        "constraint_index": 4,
+        "category_domain": "activity",
+        "expression": "['attraction', 'airplane', 'train']",
+        "raw_label": "airplane",
+        "normalized_label": "airplane"
+      },
+      {
+        "constraint_index": 4,
+        "category_domain": "activity",
+        "expression": "['attraction', 'airplane', 'train']",
+        "raw_label": "train",
+        "normalized_label": "train"
+      },
+      {
+        "constraint_index": 4,
+        "category_domain": "transport",
+        "expression": "innercity_transport_type(activity_transports(activity))",
+        "raw_label": "metro",
+        "normalized_label": "metro"
+      },
+      {
+        "constraint_index": 4,
+        "category_domain": "transport",
+        "expression": "'metro'",
+        "raw_label": "metro",
+        "normalized_label": "metro"
+      },
+      {
+        "constraint_index": 4,
+        "category_domain": "activity",
+        "expression": "activity_type(activity)",
+        "raw_label": "dinner",
+        "normalized_label": "dinner"
+      },
+      {
+        "constraint_index": 4,
+        "category_domain": "activity",
+        "expression": "['attraction', 'airplane', 'train']",
+        "raw_label": "attraction",
+        "normalized_label": "attraction"
+      },
+      {
+        "constraint_index": 4,
+        "category_domain": "activity",
+        "expression": "['attraction', 'airplane', 'train']",
+        "raw_label": "airplane",
+        "normalized_label": "airplane"
+      },
+      {
+        "constraint_index": 4,
+        "category_domain": "activity",
+        "expression": "['attraction', 'airplane', 'train']",
+        "raw_label": "train",
+        "normalized_label": "train"
+      },
+      {
+        "constraint_index": 4,
+        "category_domain": "transport",
+        "expression": "innercity_transport_type(activity_transports(activity))",
+        "raw_label": "metro",
+        "normalized_label": "metro"
+      },
+      {
+        "constraint_index": 4,
+        "category_domain": "transport",
+        "expression": "'metro'",
+        "raw_label": "metro",
+        "normalized_label": "metro"
+      },
+      {
+        "constraint_index": 4,
+        "category_domain": "activity",
+        "expression": "activity_type(activity)",
+        "raw_label": "train",
+        "normalized_label": "train"
+      },
+      {
+        "constraint_index": 4,
+        "category_domain": "activity",
+        "expression": "['attraction', 'airplane', 'train']",
+        "raw_label": "attraction",
+        "normalized_label": "attraction"
+      },
+      {
+        "constraint_index": 4,
+        "category_domain": "activity",
+        "expression": "['attraction', 'airplane', 'train']",
+        "raw_label": "airplane",
+        "normalized_label": "airplane"
+      },
+      {
+        "constraint_index": 4,
+        "category_domain": "activity",
+        "expression": "['attraction', 'airplane', 'train']",
+        "raw_label": "train",
+        "normalized_label": "train"
+      },
+      {
+        "constraint_index": 4,
+        "category_domain": "transport",
+        "expression": "innercity_transport_type(activity_transports(activity))",
+        "raw_label": "metro",
+        "normalized_label": "metro"
+      },
+      {
+        "constraint_index": 4,
+        "category_domain": "transport",
+        "expression": "'metro'",
+        "raw_label": "metro",
+        "normalized_label": "metro"
+      },
+      {
+        "constraint_index": 5,
+        "category_domain": "transport",
+        "expression": "innercity_transport_type(activity_transports(activity))",
+        "raw_label": "empty",
+        "normalized_label": "empty"
+      },
+      {
+        "constraint_index": 5,
+        "category_domain": "transport",
+        "expression": "'taxi'",
+        "raw_label": "taxi",
+        "normalized_label": "taxi"
+      },
+      {
+        "constraint_index": 5,
+        "category_domain": "transport",
+        "expression": "innercity_transport_type(activity_transports(activity))",
+        "raw_label": "metro",
+        "normalized_label": "metro"
+      },
+      {
+        "constraint_index": 5,
+        "category_domain": "transport",
+        "expression": "'taxi'",
+        "raw_label": "taxi",
+        "normalized_label": "taxi"
+      },
+      {
+        "constraint_index": 5,
+        "category_domain": "transport",
+        "expression": "innercity_transport_type(activity_transports(activity))",
+        "raw_label": "walk",
+        "normalized_label": "walk"
+      },
+      {
+        "constraint_index": 5,
+        "category_domain": "transport",
+        "expression": "'taxi'",
+        "raw_label": "taxi",
+        "normalized_label": "taxi"
+      },
+      {
+        "constraint_index": 5,
+        "category_domain": "transport",
+        "expression": "innercity_transport_type(activity_transports(activity))",
+        "raw_label": "metro",
+        "normalized_label": "metro"
+      },
+      {
+        "constraint_index": 5,
+        "category_domain": "transport",
+        "expression": "'taxi'",
+        "raw_label": "taxi",
+        "normalized_label": "taxi"
+      },
+      {
+        "constraint_index": 5,
+        "category_domain": "transport",
+        "expression": "innercity_transport_type(activity_transports(activity))",
+        "raw_label": "metro",
+        "normalized_label": "metro"
+      },
+      {
+        "constraint_index": 5,
+        "category_domain": "transport",
+        "expression": "'taxi'",
+        "raw_label": "taxi",
+        "normalized_label": "taxi"
+      },
+      {
+        "constraint_index": 5,
+        "category_domain": "transport",
+        "expression": "innercity_transport_type(activity_transports(activity))",
+        "raw_label": "metro",
+        "normalized_label": "metro"
+      },
+      {
+        "constraint_index": 5,
+        "category_domain": "transport",
+        "expression": "'taxi'",
+        "raw_label": "taxi",
+        "normalized_label": "taxi"
+      },
+      {
+        "constraint_index": 5,
+        "category_domain": "transport",
+        "expression": "innercity_transport_type(activity_transports(activity))",
+        "raw_label": "metro",
+        "normalized_label": "metro"
+      },
+      {
+        "constraint_index": 5,
+        "category_domain": "transport",
+        "expression": "'taxi'",
+        "raw_label": "taxi",
+        "normalized_label": "taxi"
+      }
+    ],
+    "personal_errors": [],
+    "evaluation_errors": [],
+    "translation_errors": [],
+    "error_info": [
+      "Incorrect duration information of given intercity transport from destination to origin G80 [start_time -> end_time].",
+      "Incorrect cost infomation of innercity transport in day 1, from Hubei Provincial Museum to East Lake, metro. [cost = price * people_number]",
+      "Incorrect cost infomation of innercity transport in day 1, from East Lake to Rongchu Hubei Cuisine: Rib and Lotus Root Soup in a Clay Pot (Jianghan Road Branch 1), metro. [cost = price * people_number]"
+    ],
+    "passed": false,
+    "translated_plan": {
+      "people_number": 1,
+      "start_city": "Beijing",
+      "target_city": "Wuhan",
+      "itinerary": [
+        {
+          "day": 1,
+          "activities": [
+            {
+              "start_time": "07:05",
+              "end_time": "11:01",
+              "start": "Beijing West Railway Station",
+              "end": "Wuhan Station",
+              "price": 684.27,
+              "cost": 684.27,
+              "TrainID": "G71",
+              "type": "train",
+              "tickets": 1,
+              "transports": []
+            },
+            {
+              "position": "Yellow Crane Tower",
+              "type": "attraction",
+              "transports": [
+                {
+                  "start": "Wuhan Station",
+                  "end": "Wuhan Station East Square-Metro Station",
+                  "mode": "walk",
+                  "start_time": "11:01",
+                  "end_time": "11:03",
+                  "cost": 0,
+                  "distance": 0.19,
+                  "price": 0
+                },
+                {
+                  "start": "Wuhan Station East Square-Metro Station",
+                  "end": "Tanhualin Wushengmen-Metro Station",
+                  "mode": "metro",
+                  "start_time": "11:03",
+                  "end_time": "11:29",
+                  "cost": 4,
+                  "distance": 13.04,
+                  "price": 4,
+                  "tickets": 1
+                },
+                {
+                  "start": "Tanhualin Wushengmen-Metro Station",
+                  "end": "Yellow Crane Tower",
+                  "mode": "walk",
+                  "start_time": "11:29",
+                  "end_time": "11:35",
+                  "cost": 0,
+                  "distance": 0.56,
+                  "price": 0
+                }
+              ],
+              "price": 65.0,
+              "cost": 65.0,
+              "tickets": 1,
+              "start_time": "11:40",
+              "end_time": "12:40"
+            },
+            {
+              "position": "Old House Lotus Fragrance · Hubei Cuisine · Intangible Cultural Heritage Lotus Root Soup · Wuchang Fish (Yellow Crane Tower View Store)",
+              "type": "lunch",
+              "transports": [
+                {
+                  "start": "Yellow Crane Tower",
+                  "end": "Old House Lotus Fragrance · Hubei Cuisine · Intangible Cultural Heritage Lotus Root Soup · Wuchang Fish (Yellow Crane Tower View Store)",
+                  "mode": "walk",
+                  "start_time": "12:40",
+                  "end_time": "12:53",
+                  "cost": 0,
+                  "distance": 1.1354265031433934
+                }
+              ],
+              "price": 83,
+              "cost": 83,
+              "start_time": "12:50",
+              "end_time": "13:40"
+            },
+            {
+              "position": "Hubei Provincial Museum",
+              "type": "attraction",
+              "transports": [
+                {
+                  "start": "Old House Lotus Fragrance · Hubei Cuisine · Intangible Cultural Heritage Lotus Root Soup · Wuchang Fish (Yellow Crane Tower View Store)",
+                  "end": "Simenkou Yellow Crane Tower-Metro Station",
+                  "mode": "walk",
+                  "start_time": "13:40",
+                  "end_time": "13:45",
+                  "cost": 0,
+                  "distance": 0.43,
+                  "price": 0
+                },
+                {
+                  "start": "Simenkou Yellow Crane Tower-Metro Station",
+                  "end": "Hubei Provincial Museum Hubei Daily-Metro Station",
+                  "mode": "metro",
+                  "start_time": "13:45",
+                  "end_time": "13:57",
+                  "cost": 3,
+                  "distance": 6.35,
+                  "price": 3,
+                  "tickets": 1
+                },
+                {
+                  "start": "Hubei Provincial Museum Hubei Daily-Metro Station",
+                  "end": "Hubei Provincial Museum",
+                  "mode": "walk",
+                  "start_time": "13:57",
+                  "end_time": "14:05",
+                  "cost": 0,
+                  "distance": 0.71,
+                  "price": 0
+                }
+              ],
+              "price": 0.0,
+              "cost": 0.0,
+              "tickets": 1,
+              "start_time": "14:10",
+              "end_time": "16:10"
+            },
+            {
+              "position": "East Lake",
+              "type": "attraction",
+              "transports": [
+                {
+                  "start": "Hubei Provincial Museum",
+                  "end": "Hubei Provincial Museum Hubei Daily-Metro Station",
+                  "mode": "walk",
+                  "start_time": "16:10",
+                  "end_time": "16:18",
+                  "cost": 0,
+                  "distance": 0.71,
+                  "price": 0
+                },
+                {
+                  "start": "Hubei Provincial Museum Hubei Daily-Metro Station",
+                  "end": "Wudong-Metro Station",
+                  "mode": "metro",
+                  "start_time": "16:18",
+                  "end_time": "16:35",
+                  "cost": 2,
+                  "distance": 8.94,
+                  "price": 3,
+                  "tickets": 1
+                },
+                {
+                  "start": "Wudong-Metro Station",
+                  "end": "East Lake",
+                  "mode": "walk",
+                  "start_time": "16:35",
+                  "end_time": "17:25",
+                  "cost": 0,
+                  "distance": 4.23,
+                  "price": 0
+                }
+              ],
+              "price": 0.0,
+              "cost": 0.0,
+              "tickets": 1,
+              "start_time": "16:30",
+              "end_time": "17:30"
+            },
+            {
+              "position": "Rongchu Hubei Cuisine: Rib and Lotus Root Soup in a Clay Pot (Jianghan Road Branch 1)",
+              "type": "dinner",
+              "transports": [
+                {
+                  "start": "East Lake",
+                  "end": "Wudong-Metro Station",
+                  "mode": "walk",
+                  "start_time": "17:30",
+                  "end_time": "18:20",
+                  "cost": 0,
+                  "distance": 4.23,
+                  "price": 0
+                },
+                {
+                  "start": "Wudong-Metro Station",
+                  "end": "Xunlimen-Metro Station",
+                  "mode": "metro",
+                  "start_time": "18:20",
+                  "end_time": "18:52",
+                  "cost": 3,
+                  "distance": 16.44,
+                  "price": 5,
+                  "tickets": 1
+                },
+                {
+                  "start": "Xunlimen-Metro Station",
+                  "end": "Rongchu Hubei Cuisine: Rib and Lotus Root Soup in a Clay Pot (Jianghan Road Branch 1)",
+                  "mode": "walk",
+                  "start_time": "18:52",
+                  "end_time": "18:57",
+                  "cost": 0,
+                  "distance": 0.5,
+                  "price": 0
+                }
+              ],
+              "price": 90,
+              "cost": 90,
+              "start_time": "18:10",
+              "end_time": "19:00"
+            },
+            {
+              "start": "Wuhan Station",
+              "end": "Beijing West Railway Station",
+              "start_time": "19:30",
+              "end_time": "23:28",
+              "TrainID": "G80",
+              "type": "train",
+              "transports": [
+                {
+                  "start": "Rongchu Hubei Cuisine: Rib and Lotus Root Soup in a Clay Pot (Jianghan Road Branch 1)",
+                  "end": "Xunlimen-Metro Station",
+                  "mode": "walk",
+                  "start_time": "19:00",
+                  "end_time": "19:05",
+                  "cost": 0,
+                  "distance": 0.5,
+                  "price": 0
+                },
+                {
+                  "start": "Xunlimen-Metro Station",
+                  "end": "Wuhan Station East Square-Metro Station",
+                  "mode": "metro",
+                  "start_time": "19:05",
+                  "end_time": "19:32",
+                  "cost": 4,
+                  "distance": 13.72,
+                  "price": 4,
+                  "tickets": 1
+                },
+                {
+                  "start": "Wuhan Station East Square-Metro Station",
+                  "end": "Wuhan Station",
+                  "mode": "walk",
+                  "start_time": "19:32",
+                  "end_time": "19:34",
+                  "cost": 0,
+                  "distance": 0.19,
+                  "price": 0
+                }
+              ],
+              "price": 684.27,
+              "cost": 684.27,
+              "tickets": 1
+            }
+          ]
+        }
+      ]
+    },
+    "verifier_errors": [
+      "Raise error in symoblic commonsense feedback, <function collect_time_error at 0x00000145C724BF60>: 'position'"
+    ],
+    "schema_errors": [],
+    "translation_failures": []
+  },
+  "execution_status": "completed",
+  "stop_reason": "repair_budget_exhausted",
+  "exception": null,
+  "system_metrics": {
+    "model_call_count": 2,
+    "prompt_tokens": 77091,
+    "completion_tokens": 2074,
+    "total_tokens": 79165,
+    "tool_call_count": 258,
+    "successful_tool_call_count": 258,
+    "failed_tool_call_count": 0,
+    "repair_tool_calls": 258,
+    "repair_verification_count": 6,
+    "repair_verification_iterations": 6,
+    "strategy_execution_time_s": 49.5465242999926,
+    "total_execution_time_s": 49.5465242999926,
+    "initial_verification_count": 1,
+    "verification_count_total": 7,
+    "tool_call_counts_by_type": {
+      "attractions_select": 18,
+      "goto": 72,
+      "intercity_transport_select": 12,
+      "poi_lat_lon_search": 144,
+      "restaurants_select": 12
+    }
+  },
+  "reference_query": "reference/query.json",
+  "initial_state_path": "initial_state.json",
+  "mode": "combined",
+  "matrices_used": {
+    "R4": {
+      "matrix_used": "pooled",
+      "path": "inputs/pooled/main_matrix.csv",
+      "sha256": "459db8dcb6267610e30236af0182b4492cf7b35290cfb7a01d824e2e6ecce4e4",
+      "manifest_sha256": "a25a918f0bcb70b808bfa40129a07e329bb52b3293f1093b6c53212cfefb2776",
+      "perspective": "candidate",
+      "synthetic_matrix_fixture": false
+    }
+  },
+  "selected_matrix_used": null,
+  "selected_source": "initial",
+  "selected_step": 0,
+  "selection_score": [
+    4,
+    1,
+    0,
+    3,
+    0
+  ],
+  "selection_rule": "min (unresolved checks, unknowns, personal failures, commonsense, schema); then earliest step, source",
+  "costs": {
+    "all_trials_input_tokens_delta": 77091,
+    "including_initial_input_tokens": 172872,
+    "all_trials_output_tokens_delta": 2074,
+    "including_initial_output_tokens": 3344,
+    "all_trials_total_tokens_delta": 79165,
+    "including_initial_total_tokens": 176216,
+    "all_trials_model_calls": 2,
+    "including_initial_model_calls": 8,
+    "all_trials_failed_model_calls": 0,
+    "including_initial_failed_model_calls": 0,
+    "all_trials_tool_call_count": 258,
+    "including_initial_tool_call_count": 5835,
+    "all_trials_verification_count": 6,
+    "including_initial_verification_count": 7,
+    "all_trials_successful_tool_call_count": 258,
+    "including_initial_successful_tool_call_count": 5835,
+    "all_trials_failed_tool_call_count": 0,
+    "including_initial_failed_tool_call_count": 0,
+    "all_trials_repair_time_seconds": 48.7420420999988,
+    "all_trials_verification_time_seconds": 0.1109825000166893,
+    "all_trials_attempt_time_seconds": 48.85594510001829,
+    "all_trials_execution_time_seconds": 49.5465242999926,
+    "including_initial_execution_time_seconds": 112.8295303999912
+  },
+  "monetary_cost": null,
+  "repair_attempt_count_all_trials": 6
+}

@@ -18,6 +18,8 @@ from chinatravel.evaluation.constraint_families import (
     CONSTRAINT_FAMILIES,
     classify_constraints,
 )
+from r4.build_main_matrix import SOURCE_FAMILIES, DESTINATION_FAMILIES
+from r4.commonsense_evidence import COMMONSENSE_FAMILY, commonsense_state
 
 
 class MatrixGuidedRepair(R3AdaptiveScopeRepair):
@@ -60,13 +62,19 @@ class MatrixGuidedRepair(R3AdaptiveScopeRepair):
                 raise ValueError(f"{path}: not an R4 main_matrix.csv")
             for row in reader:
                 source, destination = row["source_family"], row["destination_family"]
-                if source not in CONSTRAINT_FAMILIES or destination not in CONSTRAINT_FAMILIES:
+                if source not in SOURCE_FAMILIES or destination not in DESTINATION_FAMILIES:
                     raise ValueError(f"{path}: unknown constraint family in {(source, destination)}")
                 if destination in matrix.setdefault(source, {}):
                     raise ValueError(f"{path}: duplicate matrix cell {(source, destination)}")
-                support = int(row["support_count"])
-                count = int(row["regression_count"])
-                if support < 0 or count < 0 or count > support:
+                unavailable = row["evidence_status"] == "unavailable"
+                support = None if unavailable else int(row["support_count"])
+                count = None if unavailable else int(row["regression_count"])
+                if unavailable and (destination != COMMONSENSE_FAMILY or source == destination
+                                    or row["support_count"] != "" or row["regression_count"] != ""
+                                    or row.get("support_query_count", "") != ""
+                                    or row["regression_probability"] != ""):
+                    raise ValueError(f"{path}: unavailable evidence must have blank counts and probability")
+                if not unavailable and (support < 0 or count < 0 or count > support):
                     raise ValueError(f"{path}: invalid counts for {(source, destination)}")
                 raw_probability = row["regression_probability"]
                 probability = None if raw_probability == "" else float(raw_probability)
@@ -84,13 +92,25 @@ class MatrixGuidedRepair(R3AdaptiveScopeRepair):
                 matrix[source][destination] = {
                     "probability": probability,
                     "support_count": support,
+                    "support_query_count": None if unavailable else int(row.get("support_query_count") or 0),
                     "regression_count": count,
                     "evidence_status": row["evidence_status"],
                 }
-        if set(matrix) != set(CONSTRAINT_FAMILIES) or any(
-            set(matrix[source]) != set(CONSTRAINT_FAMILIES) for source in CONSTRAINT_FAMILIES
-        ):
-            raise ValueError(f"{path}: expected a complete square matrix over all constraint families")
+        if set(matrix) != set(SOURCE_FAMILIES):
+            raise ValueError(f"{path}: expected all ten source families")
+        axes = [set(matrix[source]) for source in SOURCE_FAMILIES]
+        if all(axis == set(CONSTRAINT_FAMILIES) for axis in axes):
+            # Older saved runs use 10 by 9 evidence; absence is unknown.
+            for source in SOURCE_FAMILIES:
+                diagonal = source == COMMONSENSE_FAMILY
+                matrix[source][COMMONSENSE_FAMILY] = {
+                    "probability": None, "support_count": 0 if diagonal else None,
+                    "support_query_count": 0 if diagonal else None,
+                    "regression_count": 0 if diagonal else None,
+                    "evidence_status": "structural_diagonal" if diagonal else "unavailable",
+                }
+        elif any(axis != set(DESTINATION_FAMILIES) for axis in axes):
+            raise ValueError(f"{path}: expected a complete 10-by-10 matrix (or legacy 10-by-9)")
         return matrix, hashlib.sha256(path.read_bytes()).hexdigest()
 
     def _recommend_target(self, problem, verification):
@@ -115,6 +135,8 @@ class MatrixGuidedRepair(R3AdaptiveScopeRepair):
             and index in classified
             and classified[index]["classification_status"] == "mapped"
         }
+        if commonsense_state(verification) is True:
+            passing_families.add(COMMONSENSE_FAMILY)
 
         candidates = []
         for index in failed:
@@ -138,11 +160,12 @@ class MatrixGuidedRepair(R3AdaptiveScopeRepair):
                 )
                 support = cell["support_count"] if cell is not None else 0
                 total_risk += probability
-                total_support += support
+                total_support += support or 0
                 destinations.append({
                     "family": destination,
                     "regression_probability": probability,
                     "support_count": support,
+                    "support_query_count": cell.get("support_query_count") if cell else None,
                     "evidence_status": (
                         cell["evidence_status"] if cell else "unmapped_target_neutral_fallback"
                     ),
@@ -162,8 +185,31 @@ class MatrixGuidedRepair(R3AdaptiveScopeRepair):
         ))
         return candidates[0], candidates
 
+    def _commonsense_risks(self, problem, verification):
+        states = verification.get("personal_constraints", []) or []
+        descriptors = [
+            {"constraint_index": index, "hard_logic_py": constraint}
+            for index, constraint in enumerate(problem.get("hard_logic_py", []) or [], 1)
+        ]
+        mapped = {item["constraint_index"]: item for item in classify_constraints(descriptors)}
+        risks = []
+        for index, state in enumerate(states, 1):
+            item = mapped.get(index, {})
+            family = item.get("family")
+            if state is not True or item.get("classification_status") != "mapped" or family not in DESTINATION_FAMILIES:
+                continue
+            cell = self._matrix["commonsense_repair"][family]
+            risks.append({
+                "family": family,
+                "regression_probability": cell["probability"] if cell["probability"] is not None else self.neutral_risk,
+                "support_count": cell["support_count"],
+                "support_query_count": cell.get("support_query_count", 0),
+                "evidence_status": cell["evidence_status"] if cell["probability"] is not None else "unobserved_neutral_fallback",
+            })
+        return risks
+
     @staticmethod
-    def _matrix_guidance(recommended, ranking, phase):
+    def _matrix_guidance(recommended, ranking, phase, commonsense_risks=None):
         lines = [
             "R4 MATRIX GUIDANCE (advisory):",
             "You may edit the whole plan. Use the matrix as advice: choose which "
@@ -172,9 +218,17 @@ class MatrixGuidedRepair(R3AdaptiveScopeRepair):
         ]
         if phase == "commonsense":
             lines.append(
-                "This attempt targets the supplied commonsense failures. The personal "
-                "regression matrix does not rank commonsense repairs."
+                "This attempt targets the supplied commonsense failures. Historical "
+                "commonsense repairs are associated with these risks to currently passing personal families:"
             )
+            for cell in commonsense_risks or []:
+                lines.append(
+                    f"- {cell['family']}: estimated regression probability "
+                    f"{cell['regression_probability']:.3f} (attempt support={cell['support_count']}, "
+                    f"query support={cell.get('support_query_count', 0)}, evidence={cell['evidence_status']})."
+                )
+            if not commonsense_risks:
+                lines.append("No mapped passing personal family is available for a risk estimate.")
         elif recommended is None:
             lines.append(
                 "No currently failing personal constraint is available to rank. "
@@ -196,8 +250,8 @@ class MatrixGuidedRepair(R3AdaptiveScopeRepair):
                 )
                 lines.extend(
                     f"- {cell['family']}: estimated regression probability "
-                    f"{cell['regression_probability']:.3f} (support={cell['support_count']}, "
-                    f"evidence={cell['evidence_status']})"
+                    f"{cell['regression_probability']:.3f} (attempt support={cell['support_count']}, "
+                    f"query support={cell.get('support_query_count', 0)}, evidence={cell['evidence_status']})"
                     for cell in candidate["destination_risks"]
                 )
                 if not candidate["destination_risks"]:
@@ -235,9 +289,10 @@ class MatrixGuidedRepair(R3AdaptiveScopeRepair):
             (None, []) if phase == "commonsense"
             else self._recommend_target(problem, verification_results)
         )
+        commonsense_risks = self._commonsense_risks(problem, verification_results) if phase == "commonsense" else []
         query_message = self._build_prompt(
             PLAN, problem, context, raw_plan, feedback_lines, editable
-        ) + "\n\n" + self._matrix_guidance(recommended, ranking, phase)
+        ) + "\n\n" + self._matrix_guidance(recommended, ranking, phase, commonsense_risks)
         start_time = time.time()
         response = llm([{"role": "user", "content": query_message}], one_line=False)
         inference_time = time.time() - start_time
@@ -281,6 +336,7 @@ class MatrixGuidedRepair(R3AdaptiveScopeRepair):
             "matrix_guidance_policy": "advisory",
             "recommended_risk_target": recommended,
             "risk_target_ranking": ranking,
+            "commonsense_source_risks": commonsense_risks,
             "matrix_perspective": self._matrix_perspective,
             "full_verification_report": verification_results,
         }
