@@ -1,0 +1,33 @@
+
+|---|---|---|---|
+
+
+
+
+222 changed candidates | damaged 70% | good (net fewer violations) 51% | broke a personal constraint 14%
+
+## How well the score separates candidates (AUC on held-out queries; 0.5 = no better than chance)
+
+| score built from | damage (any) | broke a personal constraint | good candidate |
+|---|---|---|---|
+| round type only (baseline) | 0.46 | 0.59 | 0.60 |
+| + which parts were edited | 0.66 | 0.83 | 0.60 |
+| + unneeded edits, constraint context | 0.61 | 0.86 | 0.67 |
+
+Full model, 90% range over query resamples: damage 0.53–0.68, broke personal 0.79–0.91, good 0.62–0.72
+
+## Effect if R4 rejected the riskiest candidates (kept the previous plan instead)
+
+Net change = total violations across all candidates (negative = better). Accept-all net change: -89 over 222 candidates.
+
+| reject riskiest | candidates rejected | personal breaks avoided | net-improving candidates lost | net violation change | vs random rejection (mean of 200) |
+|---|---|---|---|---|---|
+| 10% | 22 | 1/32 | 4/113 | -151 | -77.3 |
+| 20% | 44 | 7/32 | 13/113 | -170 | -72.6 |
+| 30% | 67 | 9/32 | 22/113 | -191 | -64.8 |
+| 50% | 111 | 16/32 | 46/113 | -164 | -44.8 |
+
+## Same, split by round type (where the score helps most)
+
+- personal rounds (n=90): AUC damage 0.69, broke personal 0.77, good 0.65
+- commonsense rounds (n=132): AUC damage 0.55, broke personal 0.85, good 0.60

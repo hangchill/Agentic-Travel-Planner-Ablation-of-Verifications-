@@ -1,0 +1,2044 @@
+{
+  "run_id": "subset_test-r3",
+  "query_uid": "h20241029143522848652",
+  "state": {
+    "query_uid": "h20241029143522848652",
+    "problem": {
+      "uid": "h20241029143522848652",
+      "tag": "human",
+      "start_city": "Shenzhen",
+      "target_city": "Beijing",
+      "days": 4,
+      "people_number": 1,
+      "limit_rooms": false,
+      "limits_room_type": false,
+      "hard_logic_py": [
+        "go_end_time = 0\nfor activity in allactivities(plan):\n  if activity_type(activity) in ['train','airplane'] and intercity_transport_origin(activity) == start_city(plan): go_end_time = activity_end_time(activity)\nresult=(go_end_time<='12:00')",
+        "attraction_type_set=set()\nfor activity in allactivities(plan):\n  if activity_type(activity)=='attraction': attraction_type_set.add(attraction_type(activity, target_city(plan)))\nresult=({'大学校园','商业街区'}<=attraction_type_set)",
+        "result=(day_count(plan)==4)",
+        "result=(people_count(plan)==1)",
+        "result=True\nfor activity in allactivities(plan):\n  if innercity_transport_type(activity_transports(activity))=='taxi'and taxi_cars(activity_transports(activity))!=1: result=False"
+      ],
+      "nature_language": "[Current location: Shenzhen, Destination: Beijing, Number of travelers: 1, Travel days: 4] I am going on a business trip from Shenzhen to Beijing tomorrow. The flight will arrive at Daxing Airport in the morning. The meeting location is near Wangfujing. I will be there for a total of four days and would like to visit a food court and some universities. Do you have any recommended routes?",
+      "nature_language_en": "[Current location: Shenzhen, Destination: Beijing, Number of travelers: 1, Travel days: 4] I am going on a business trip from Shenzhen to Beijing tomorrow. The flight will arrive at Daxing Airport in the morning. The meeting location is near Wangfujing. I will be there for a total of four days and would like to visit a food court and some universities. Do you have any recommended routes?"
+    },
+    "raw_initial_plan": [
+      {
+        "day": 1,
+        "activities": [
+          {
+            "start_time": "06:08",
+            "end_time": "08:33",
+            "start": "Shenzhen Bao'an International Airport",
+            "end": "Beijing Daxing International Airport",
+            "price": 923.53,
+            "cost": 923.53,
+            "FlightID": "FL180",
+            "type": "airplane",
+            "tickets": 1,
+            "transports": "empty"
+          },
+          {
+            "position": "Crystal Orange Beijing Wangfujing Street Hotel",
+            "type": "accommodation",
+            "transports": {
+              "from": "Beijing Daxing International Airport",
+              "to": "Crystal Orange Beijing Wangfujing Street Hotel",
+              "mode": "metro",
+              "start_time": "08:33",
+              "end_time": "10:13",
+              "cost": 8
+            },
+            "room_type": 1,
+            "price": 679,
+            "cost": 679,
+            "start_time": "10:30",
+            "end_time": "24:00",
+            "rooms": 1
+          },
+          {
+            "position": "Peking University",
+            "type": "attraction",
+            "transports": {
+              "from": "Crystal Orange Beijing Wangfujing Street Hotel",
+              "to": "Peking University",
+              "mode": "metro",
+              "start_time": "14:00",
+              "end_time": "14:32",
+              "cost": 4
+            },
+            "price": 0.0,
+            "cost": 0.0,
+            "tickets": 1,
+            "start_time": "14:40",
+            "end_time": "16:40"
+          },
+          {
+            "position": "Huguosi Snacks (Huguosi Main Store)",
+            "type": "dinner",
+            "transports": {
+              "from": "Peking University",
+              "to": "Huguosi Snacks (Huguosi Main Store)",
+              "mode": "metro",
+              "start_time": "16:40",
+              "end_time": "17:07",
+              "cost": 4
+            },
+            "price": 32,
+            "cost": 32,
+            "start_time": "17:15",
+            "end_time": "18:15"
+          },
+          {
+            "position": "Crystal Orange Beijing Wangfujing Street Hotel",
+            "type": "accommodation",
+            "transports": {
+              "from": "Huguosi Snacks (Huguosi Main Store)",
+              "to": "Crystal Orange Beijing Wangfujing Street Hotel",
+              "mode": "metro",
+              "start_time": "18:15",
+              "end_time": "18:24",
+              "cost": 2
+            },
+            "room_type": 1,
+            "price": 679,
+            "cost": 679,
+            "start_time": "18:30",
+            "end_time": "24:00",
+            "rooms": 1
+          }
+        ]
+      },
+      {
+        "day": 2,
+        "activities": [
+          {
+            "position": "Tsinghua University",
+            "type": "attraction",
+            "transports": {
+              "from": "Crystal Orange Beijing Wangfujing Street Hotel",
+              "to": "Tsinghua University",
+              "mode": "metro",
+              "start_time": "09:00",
+              "end_time": "09:28",
+              "cost": 4
+            },
+            "price": 0.0,
+            "cost": 0.0,
+            "tickets": 1,
+            "start_time": "09:30",
+            "end_time": "11:30"
+          },
+          {
+            "position": "Wangfujing",
+            "type": "attraction",
+            "transports": {
+              "from": "Tsinghua University",
+              "to": "Wangfujing",
+              "mode": "metro",
+              "start_time": "11:30",
+              "end_time": "12:01",
+              "cost": 4
+            },
+            "price": 0.0,
+            "cost": 0.0,
+            "tickets": 1,
+            "start_time": "12:10",
+            "end_time": "13:10"
+          },
+          {
+            "position": "Four Seasons Minfu Roast Duck Restaurant (Forbidden City Branch)",
+            "type": "lunch",
+            "transports": {
+              "from": "Wangfujing",
+              "to": "Four Seasons Minfu Roast Duck Restaurant (Forbidden City Branch)",
+              "mode": "walk",
+              "start_time": "13:10",
+              "end_time": "13:17",
+              "cost": 0
+            },
+            "price": 180,
+            "cost": 180,
+            "start_time": "13:20",
+            "end_time": "14:20"
+          },
+          {
+            "position": "The Palace Museum",
+            "type": "attraction",
+            "transports": {
+              "from": "Four Seasons Minfu Roast Duck Restaurant (Forbidden City Branch)",
+              "to": "The Palace Museum",
+              "mode": "walk",
+              "start_time": "14:20",
+              "end_time": "14:32",
+              "cost": 0
+            },
+            "price": 0.0,
+            "cost": 0.0,
+            "tickets": 1,
+            "start_time": "14:40",
+            "end_time": "16:40"
+          },
+          {
+            "position": "Crystal Orange Beijing Wangfujing Street Hotel",
+            "type": "accommodation",
+            "transports": {
+              "from": "The Palace Museum",
+              "to": "Crystal Orange Beijing Wangfujing Street Hotel",
+              "mode": "metro",
+              "start_time": "16:40",
+              "end_time": "16:48",
+              "cost": 2
+            },
+            "room_type": 1,
+            "price": 679,
+            "cost": 679,
+            "start_time": "17:00",
+            "end_time": "24:00",
+            "rooms": 1
+          }
+        ]
+      },
+      {
+        "day": 3,
+        "activities": [
+          {
+            "position": "National Museum of China",
+            "type": "attraction",
+            "transports": {
+              "from": "Crystal Orange Beijing Wangfujing Street Hotel",
+              "to": "National Museum of China",
+              "mode": "metro",
+              "start_time": "09:00",
+              "end_time": "09:06",
+              "cost": 2
+            },
+            "price": 0.0,
+            "cost": 0.0,
+            "tickets": 1,
+            "start_time": "09:10",
+            "end_time": "11:10"
+          },
+          {
+            "position": "Qianmen Street",
+            "type": "attraction",
+            "transports": {
+              "from": "National Museum of China",
+              "to": "Qianmen Street",
+              "mode": "metro",
+              "start_time": "11:10",
+              "end_time": "11:23",
+              "cost": 2
+            },
+            "price": 0.0,
+            "cost": 0.0,
+            "tickets": 1,
+            "start_time": "11:30",
+            "end_time": "12:30"
+          },
+          {
+            "position": "Beijing Hutong Roast Duck (Qianmen Branch)",
+            "type": "lunch",
+            "transports": {
+              "from": "Qianmen Street",
+              "to": "Beijing Hutong Roast Duck (Qianmen Branch)",
+              "mode": "walk",
+              "start_time": "12:30",
+              "end_time": "12:39",
+              "cost": 0
+            },
+            "price": 106,
+            "cost": 106,
+            "start_time": "12:40",
+            "end_time": "13:40"
+          },
+          {
+            "position": "Temple of Heaven",
+            "type": "attraction",
+            "transports": {
+              "from": "Beijing Hutong Roast Duck (Qianmen Branch)",
+              "to": "Temple of Heaven",
+              "mode": "metro",
+              "start_time": "13:40",
+              "end_time": "13:52",
+              "cost": 2
+            },
+            "price": 34.0,
+            "cost": 34.0,
+            "tickets": 1,
+            "start_time": "14:00",
+            "end_time": "16:00"
+          },
+          {
+            "position": "Crystal Orange Beijing Wangfujing Street Hotel",
+            "type": "accommodation",
+            "transports": {
+              "from": "Temple of Heaven",
+              "to": "Crystal Orange Beijing Wangfujing Street Hotel",
+              "mode": "metro",
+              "start_time": "16:00",
+              "end_time": "16:09",
+              "cost": 2
+            },
+            "room_type": 1,
+            "price": 679,
+            "cost": 679,
+            "start_time": "16:30",
+            "end_time": "24:00",
+            "rooms": 1
+          }
+        ]
+      },
+      {
+        "day": 4,
+        "activities": [
+          {
+            "position": "Beijing Zoo",
+            "type": "attraction",
+            "transports": {
+              "from": "Crystal Orange Beijing Wangfujing Street Hotel",
+              "to": "Beijing Zoo",
+              "mode": "metro",
+              "start_time": "09:00",
+              "end_time": "09:26",
+              "cost": 3
+            },
+            "price": 15.0,
+            "cost": 15.0,
+            "tickets": 1,
+            "start_time": "09:30",
+            "end_time": "11:30"
+          },
+          {
+            "position": "Dongzhimen Shuan Rou: Modern Beijing Hot Pot",
+            "type": "lunch",
+            "transports": {
+              "from": "Beijing Zoo",
+              "to": "Dongzhimen Shuan Rou: Modern Beijing Hot Pot",
+              "mode": "metro",
+              "start_time": "11:30",
+              "end_time": "11:42",
+              "cost": 3
+            },
+            "price": 194,
+            "cost": 194,
+            "start_time": "12:00",
+            "end_time": "13:00"
+          },
+          {
+            "start": "Beijing West Railway Station",
+            "end": "Shenzhen North Railway Station",
+            "start_time": "14:00",
+            "end_time": "22:44",
+            "TrainID": "G81",
+            "type": "train",
+            "transports": {
+              "from": "Dongzhimen Shuan Rou: Modern Beijing Hot Pot",
+              "to": "Beijing West Railway Station",
+              "mode": "metro",
+              "start_time": "13:00",
+              "end_time": "13:25",
+              "cost": 4
+            },
+            "price": 1263.04,
+            "cost": 1263.04,
+            "tickets": 1
+          }
+        ]
+      }
+    ],
+    "repair_context": {
+      "go_train_info": "TrainID\tTrainType\tFrom\tTo\tBeginTime\tEndTime\tDuration\tprice\r\nG80\tHigh-speed rail\tShenzhen North Railway Station\tBeijing West Railway Station\t11:21\t19:30\t8.2\t1263.04\r\n",
+      "go_flight_info": "FlightID\tFrom\tTo\tBeginTime\tEndTime\tDuration\tprice\r\nFL180\tShenzhen Bao'an International Airport\tBeijing Daxing International Airport\t06:08\t08:33\t2.43\t923.53\r\nFL179\tShenzhen Bao'an International Airport\tBeijing Daxing International Airport\t17:56\t20:21\t2.43\t1008.34\r\nFL177\tShenzhen Bao'an International Airport\tBeijing Daxing International Airport\t18:52\t21:17\t2.43\t935.69\r\nFL174\tShenzhen Bao'an International Airport\tBeijing Daxing International Airport\t23:24\t01:49\t2.43\t1006.35\r\n",
+      "back_train_info": "TrainID\tTrainType\tFrom\tTo\tBeginTime\tEndTime\tDuration\tprice\r\nG79\tHigh-speed rail\tBeijing West Railway Station\tShenzhen North Railway Station\t10:00\t18:10\t8.17\t1263.04\r\nG81\tHigh-speed rail\tBeijing West Railway Station\tShenzhen North Railway Station\t14:00\t22:44\t8.73\t1263.04\r\nD901\tEMU (Electric Multiple Unit)\tBeijing West Railway Station\tShenzhen North Railway Station\t19:43\t07:15\t11.53\t1165.89\r\nD903\tEMU (Electric Multiple Unit)\tBeijing West Railway Station\tShenzhen North Railway Station\t20:08\t07:08\t11.0\t1165.89\r\nD909\tEMU (Electric Multiple Unit)\tBeijing West Railway Station\tShenzhen North Railway Station\t20:13\t07:25\t11.2\t1165.89\r\n",
+      "back_flight_info": "None",
+      "attraction_info": "name\ttype\tlat\tlon\topentime\tendtime\tprice\trecommendmintime\trecommendmaxtime\r\nPeking University\tUniversity campus\t39.997899\t116.316801\t06:30\t22:30\t0.0\t1.5\t2.0\r\nTsinghua University\tUniversity campus\t40.005106\t116.342192\t06:30\t19:00\t0.0\t0.5\t1.0\r\nWangfujing\tcommercial district\t39.91979\t116.418038\t00:00\t24:00\t0.0\t3.0\t3.5\r\nQianmen Street\tcommercial district\t39.899651\t116.40452\t00:00\t24:00\t0.0\t2.5\t4.0\r\nSanlitun\tcommercial district\t39.940602\t116.458347\t09:00\t23:00\t0.0\t1.0\t1.5\r\nDongjiaomin Lane\thistorical site\t39.90893\t116.417056\t00:00\t24:00\t0.0\t2.0\t3.0\r\nShichahai\tCultural Landscape\t39.948373\t116.391243\t00:00\t24:00\t0.0\t1.5\t3.0\r\nNanluoguxiang\tcommercial district\t39.943166\t116.4095\t00:00\t24:00\t0.0\t1.0\t2.5\r\nBeijing Zoo\tpark\t39.947726\t116.342331\t07:30\t19:00\t15.0\t1.0\t2.0\r\nSummer Palace\tCultural Tourism Area\t40.008817\t116.280234\t06:00\t20:00\t30.0\t0.5\t1.0\r\nThe Palace Museum\thistorical site\t39.924091\t116.403414\t08:30\t17:00\t0.0\t0.5\t1.0\r\nTemple of Heaven\thistorical site\t39.889918\t116.419289\t06:00\t22:00\t34.0\t2.5\t4.0\r\nNational Museum of China\tMuseum/Memorial Hall\t39.911449\t116.408018\t09:00\t17:00\t0.0\t3.0\t3.5\r\nBeihai Park\tpark\t39.934167\t116.395006\t06:00\t21:00\t0.0\t2.5\t4.0\r\nJingshan Park\tpark\t39.932136\t116.402966\t06:00\t21:00\t0.0\t2.0\t3.0\r\n",
+      "restaurant_info": "name\tlat\tlon\tprice\tcuisine\topentime\tendtime\trecommendedfood\r\nHuguosi Snacks (Huguosi Main Store)\t39.9351306\t116.374839\t32.0\tSnacks\t06:00\t21:00\tTofu pudding, sweet fried dough twists, savory pancake with vegetables, fermented mung bean juice, meat pie, pine meat (fried meat strips), fried dough nuggets, premium glutinous rice rolls with red bean paste, crispy fried dough rings, lamb offal soup\r\nFour Seasons Minfu Roast Duck Restaurant (Forbidden City Branch)\t39.9145249\t116.4028728\t180.0\tBeijing cuisine\t10:30\t21:30\tRecommended dishes\r\nBeijing Quanjude (Hepingmen Branch)\t39.8993388\t116.3850209\t197.0\tBeijing cuisine\t11:00\t20:30\tRecommended dishes\r\nDongzhimen Shuan Rou: Modern Beijing Hot Pot\t39.940358\t116.4386908\t194.0\tHot pot\t11:00\t22:00\tHand-cut lamb shoulder, Australian M9 beef, fresh tripe, lamb skewers, handmade crispy bean curd rolls, sesame pancake\r\nBeijing Hutong Roast Duck (Qianmen Branch)\t39.8985104\t116.3948931\t106.0\tBeijing cuisine\t10:30\t21:30\tPeking Duck, Old Beijing Stewed Pork Offal, Salt and Pepper Duck Carcass\r\n",
+      "accommodation_info": "name\tfeaturehoteltype\tlat\tlon\tprice\tnumbed\r\nCrystal Orange Beijing Wangfujing Street Hotel\tRobot Service\t39.91525\t116.410422\t679\t1\r\nBeijing Tiananmenwangfujing Manxin Hotel\tRobot Service\t39.915718\t116.408128\t689\t1\r\nTRUE GO HOTEL Fuxingmen Central Conservatory of Music Store\tFree parking\t39.898434\t116.347467\t529\t1\r\n",
+      "innercity_transport_info": "from Tsinghua University to Tsinghua University:  metro: empty.  taxi: empty.  walk: empty. \nfrom Tsinghua University to Dongjiaomin Lane: metro: duration 31, cost 4. taxi: duration 18, cost 50.72. walk: duration 149, cost 0.0. \nfrom Tsinghua University to Beijing West Railway Station: metro: duration 29, cost 4. taxi: duration 18, cost 50.3. walk: duration 148, cost 0.0. \nfrom Tsinghua University to Beijing Tiananmenwangfujing Manxin Hotel: metro: duration 31, cost 4. taxi: duration 17, cost 46.06. walk: duration 136, cost 0.0. \nfrom Tsinghua University to National Museum of China: metro: duration 34, cost 4. taxi: duration 17, cost 47.9. walk: duration 141, cost 0.0. \nfrom Tsinghua University to Wangfujing: metro: duration 31, cost 4. taxi: duration 17, cost 46.35. walk: duration 137, cost 0.0. \nfrom Tsinghua University to Beijing Quanjude (Hepingmen Branch): metro: duration 30, cost 4. taxi: duration 18, cost 50.05. walk: duration 147, cost 0.0. \nfrom Tsinghua University to Beijing Zoo: metro: duration 32, cost 3. taxi: duration 9, cost 27.0. walk: duration 76, cost 0.0. \nfrom Tsinghua University to Peking University: metro: duration 18, cost 2. taxi: duration 3, cost 12.79. walk: duration 27, cost 0.0. \nfrom Tsinghua University to Qianmen Street: metro: duration 36, cost 4. taxi: duration 19, cost 52.59. walk: duration 154, cost 0.0. \nfrom Tsinghua University to Crystal Orange Beijing Wangfujing Street Hotel: metro: duration 28, cost 4. taxi: duration 17, cost 46.7. walk: duration 138, cost 0.0. \nfrom Tsinghua University to Jingshan Park: metro: duration 26, cost 4. taxi: duration 14, cost 38.38. walk: duration 115, cost 0.0. \nfrom Tsinghua University to Sanlitun: metro: duration 33, cost 4. taxi: duration 18, cost 49.77. walk: duration 146, cost 0.0. \nfrom Tsinghua University to Shichahai: metro: duration 22, cost 3. taxi: duration 11, cost 31.18. walk: duration 90, cost 0.0. \nfrom Tsinghua University to Beijing Hutong Roast Duck (Qianmen Branch): metro: duration 33, cost 4. taxi: duration 18, cost 51.69. walk: duration 151, cost 0.0. \nfrom Tsinghua University to Four Seasons Minfu Roast Duck Restaurant (Forbidden City Branch): metro: duration 36, cost 4. taxi: duration 16, cost 45.62. walk: duration 135, cost 0.0. \nfrom Tsinghua University to Huguosi Snacks (Huguosi Main Store): metro: duration 23, cost 3. taxi: duration 12, cost 33.59. walk: duration 99, cost 0.0. \nfrom Tsinghua University to The Palace Museum: metro: duration 33, cost 4. taxi: duration 15, cost 41.53. walk: duration 124, cost 0.0. \nfrom Tsinghua University to Beihai Park: metro: duration 27, cost 3. taxi: duration 13, cost 36.47. walk: duration 108, cost 0.0. \nfrom Tsinghua University to TRUE GO HOTEL Fuxingmen Central Conservatory of Music Store: metro: duration 38, cost 4. taxi: duration 17, cost 48.04. walk: duration 142, cost 0.0. \nfrom Tsinghua University to Beijing Daxing International Airport: metro: duration 126, cost 9. taxi: duration 84, cost 247.16. walk: duration 673, cost 0.0. \nfrom Tsinghua University to Dongzhimen Shuan Rou: Modern Beijing Hot Pot: metro: duration 30, cost 4. taxi: duration 16, cost 43.92. walk: duration 131, cost 0.0. \nfrom Tsinghua University to Summer Palace: metro: duration 24, cost 3. taxi: duration 7, cost 23.27. walk: duration 63, cost 0.0. \nfrom Tsinghua University to Temple of Heaven: metro: duration 37, cost 4. taxi: duration 21, cost 59.44. walk: duration 172, cost 0.0. \nfrom Tsinghua University to Nanluoguxiang: metro: duration 30, cost 3. taxi: duration 13, cost 36.08. walk: duration 107, cost 0.0. \nfrom Dongjiaomin Lane to Tsinghua University: metro: duration 31, cost 4. taxi: duration 18, cost 50.72. walk: duration 149, cost 0.0. \nfrom Dongjiaomin Lane to Dongjiaomin Lane:  metro: empty.  taxi: empty.  walk: empty. \nfrom Dongjiaomin Lane to Beijing West Railway Station: metro: duration 17, cost 3. taxi: duration 12, cost 33.65. walk: duration 99, cost 0.0. \nfrom Dongjiaomin Lane to Beijing Tiananmenwangfujing Manxin Hotel: metro: duration 6, cost 2. taxi: duration 1, cost 11.0. walk: duration 12, cost 0.0. \nfrom Dongjiaomin Lane to National Museum of China: metro: duration 7, cost 2. taxi: duration 1, cost 11.0. walk: duration 9, cost 0.0. \nfrom Dongjiaomin Lane to Wangfujing: metro: duration 5, cost 2. taxi: duration 1, cost 11.0. walk: duration 14, cost 0.0. \nfrom Dongjiaomin Lane to Beijing Quanjude (Hepingmen Branch): metro: duration 8, cost 2. taxi: duration 4, cost 14.99. walk: duration 35, cost 0.0. \nfrom Dongjiaomin Lane to Beijing Zoo: metro: duration 29, cost 3. taxi: duration 11, cost 31.67. walk: duration 92, cost 0.0. \nfrom Dongjiaomin Lane to Peking University: metro: duration 35, cost 4. taxi: duration 19, cost 53.54. walk: duration 156, cost 0.0. \nfrom Dongjiaomin Lane to Qianmen Street: metro: duration 10, cost 2. taxi: duration 2, cost 11.0. walk: duration 17, cost 0.0. \nfrom Dongjiaomin Lane to Crystal Orange Beijing Wangfujing Street Hotel: metro: duration 3, cost 2. taxi: duration 1, cost 11.0. walk: duration 10, cost 0.0. \nfrom Dongjiaomin Lane to Jingshan Park: metro: duration 9, cost 2. taxi: duration 4, cost 14.66. walk: duration 34, cost 0.0. \nfrom Dongjiaomin Lane to Sanlitun: metro: duration 14, cost 3. taxi: duration 7, cost 22.14. walk: duration 59, cost 0.0. \nfrom Dongjiaomin Lane to Shichahai: metro: duration 12, cost 3. taxi: duration 7, cost 21.86. walk: duration 58, cost 0.0. \nfrom Dongjiaomin Lane to Beijing Hutong Roast Duck (Qianmen Branch): metro: duration 7, cost 2. taxi: duration 3, cost 12.47. walk: duration 26, cost 0.0. \nfrom Dongjiaomin Lane to Four Seasons Minfu Roast Duck Restaurant (Forbidden City Branch): metro: duration 11, cost 2. taxi: duration 2, cost 11.0. walk: duration 16, cost 0.0. \nfrom Dongjiaomin Lane to Huguosi Snacks (Huguosi Main Store): metro: duration 12, cost 3. taxi: duration 6, cost 20.92. walk: duration 55, cost 0.0. \nfrom Dongjiaomin Lane to The Palace Museum: metro: duration 11, cost 2. taxi: duration 3, cost 11.87. walk: duration 24, cost 0.0. \nfrom Dongjiaomin Lane to Beihai Park: metro: duration 12, cost 2. taxi: duration 5, cost 16.52. walk: duration 40, cost 0.0. \nfrom Dongjiaomin Lane to TRUE GO HOTEL Fuxingmen Central Conservatory of Music Store: metro: duration 24, cost 3. taxi: duration 9, cost 25.92. walk: duration 72, cost 0.0. \nfrom Dongjiaomin Lane to Beijing Daxing International Airport: metro: duration 100, cost 8. taxi: duration 67, cost 197.33. walk: duration 540, cost 0.0. \nfrom Dongjiaomin Lane to Dongzhimen Shuan Rou: Modern Beijing Hot Pot: metro: duration 11, cost 2. taxi: duration 5, cost 18.52. walk: duration 47, cost 0.0. \nfrom Dongjiaomin Lane to Summer Palace: metro: duration 40, cost 5. taxi: duration 24, cost 67.22. walk: duration 193, cost 0.0. \nfrom Dongjiaomin Lane to Temple of Heaven: metro: duration 8, cost 2. taxi: duration 3, cost 12.12. walk: duration 25, cost 0.0. \nfrom Dongjiaomin Lane to Nanluoguxiang: metro: duration 18, cost 3. taxi: duration 5, cost 18.2. walk: duration 46, cost 0.0. \nfrom Beijing West Railway Station to Tsinghua University: metro: duration 29, cost 4. taxi: duration 18, cost 50.3. walk: duration 148, cost 0.0. \nfrom Beijing West Railway Station to Dongjiaomin Lane: metro: duration 17, cost 3. taxi: duration 12, cost 33.65. walk: duration 99, cost 0.0. \nfrom Beijing West Railway Station to Beijing West Railway Station:  metro: empty.  taxi: empty.  walk: empty. \nfrom Beijing West Railway Station to Beijing Tiananmenwangfujing Manxin Hotel: metro: duration 19, cost 3. taxi: duration 11, cost 31.7. walk: duration 92, cost 0.0. \nfrom Beijing West Railway Station to National Museum of China: metro: duration 20, cost 3. taxi: duration 11, cost 31.22. walk: duration 90, cost 0.0. \nfrom Beijing West Railway Station to Wangfujing: metro: duration 20, cost 3. taxi: duration 12, cost 35.01. walk: duration 103, cost 0.0. \nfrom Beijing West Railway Station to Beijing Quanjude (Hepingmen Branch): metro: duration 11, cost 3. taxi: duration 8, cost 23.62. walk: duration 64, cost 0.0. \nfrom Beijing West Railway Station to Beijing Zoo: metro: duration 23, cost 3. taxi: duration 9, cost 26.1. walk: duration 73, cost 0.0. \nfrom Beijing West Railway Station to Peking University: metro: duration 30, cost 4. taxi: duration 17, cost 46.2. walk: duration 137, cost 0.0. \nfrom Beijing West Railway Station to Qianmen Street: metro: duration 19, cost 3. taxi: duration 10, cost 29.45. walk: duration 84, cost 0.0. \nfrom Beijing West Railway Station to Crystal Orange Beijing Wangfujing Street Hotel: metro: duration 16, cost 3. taxi: duration 11, cost 32.3. walk: duration 94, cost 0.0. \nfrom Beijing West Railway Station to Jingshan Park: metro: duration 18, cost 3. taxi: duration 12, cost 32.9. walk: duration 96, cost 0.0. \nfrom Beijing West Railway Station to Sanlitun: metro: duration 29, cost 4. taxi: duration 19, cost 51.89. walk: duration 152, cost 0.0. \nfrom Beijing West Railway Station to Shichahai: metro: duration 19, cost 3. taxi: duration 12, cost 34.03. walk: duration 100, cost 0.0. \nfrom Beijing West Railway Station to Beijing Hutong Roast Duck (Qianmen Branch): metro: duration 16, cost 3. taxi: duration 9, cost 26.55. walk: duration 74, cost 0.0. \nfrom Beijing West Railway Station to Four Seasons Minfu Roast Duck Restaurant (Forbidden City Branch): metro: duration 24, cost 3. taxi: duration 10, cost 30.06. walk: duration 86, cost 0.0. \nfrom Beijing West Railway Station to Huguosi Snacks (Huguosi Main Store): metro: duration 14, cost 3. taxi: duration 9, cost 26.92. walk: duration 76, cost 0.0. \nfrom Beijing West Railway Station to The Palace Museum: metro: duration 23, cost 3. taxi: duration 11, cost 31.56. walk: duration 92, cost 0.0. \nfrom Beijing West Railway Station to Beihai Park: metro: duration 19, cost 3. taxi: duration 11, cost 31.33. walk: duration 91, cost 0.0. \nfrom Beijing West Railway Station to TRUE GO HOTEL Fuxingmen Central Conservatory of Music Store: metro: duration 18, cost 2. taxi: duration 3, cost 12.43. walk: duration 26, cost 0.0. \nfrom Beijing West Railway Station to Beijing Daxing International Airport: metro: duration 97, cost 8. taxi: duration 66, cost 193.93. walk: duration 531, cost 0.0. \nfrom Beijing West Railway Station to Dongzhimen Shuan Rou: Modern Beijing Hot Pot: metro: duration 25, cost 4. taxi: duration 16, cost 44.99. walk: duration 134, cost 0.0. \nfrom Beijing West Railway Station to Summer Palace: metro: duration 33, cost 4. taxi: duration 19, cost 53.84. walk: duration 157, cost 0.0. \nfrom Beijing West Railway Station to Temple of Heaven: metro: duration 20, cost 3. taxi: duration 12, cost 33.87. walk: duration 100, cost 0.0. \nfrom Beijing West Railway Station to Nanluoguxiang: metro: duration 27, cost 4. taxi: duration 13, cost 36.89. walk: duration 110, cost 0.0. \nfrom Beijing Tiananmenwangfujing Manxin Hotel to Tsinghua University: metro: duration 31, cost 4. taxi: duration 17, cost 46.06. walk: duration 136, cost 0.0. \nfrom Beijing Tiananmenwangfujing Manxin Hotel to Dongjiaomin Lane: metro: duration 6, cost 2. taxi: duration 1, cost 11.0. walk: duration 12, cost 0.0. \nfrom Beijing Tiananmenwangfujing Manxin Hotel to Beijing West Railway Station: metro: duration 19, cost 3. taxi: duration 11, cost 31.7. walk: duration 92, cost 0.0. \nfrom Beijing Tiananmenwangfujing Manxin Hotel to Beijing Tiananmenwangfujing Manxin Hotel:  metro: empty.  taxi: empty.  walk: empty. \nfrom Beijing Tiananmenwangfujing Manxin Hotel to National Museum of China: metro: duration 9, cost 2. taxi: duration 0, cost 11.0. walk: duration 5, cost 0.0. \nfrom Beijing Tiananmenwangfujing Manxin Hotel to Wangfujing: metro: duration 7, cost 2. taxi: duration 1, cost 11.0. walk: duration 11, cost 0.0. \nfrom Beijing Tiananmenwangfujing Manxin Hotel to Beijing Quanjude (Hepingmen Branch): metro: duration 9, cost 2. taxi: duration 4, cost 14.1. walk: duration 32, cost 0.0. \nfrom Beijing Tiananmenwangfujing Manxin Hotel to Beijing Zoo: metro: duration 29, cost 3. taxi: duration 9, cost 27.99. walk: duration 79, cost 0.0. \nfrom Beijing Tiananmenwangfujing Manxin Hotel to Peking University: metro: duration 35, cost 4. taxi: duration 18, cost 48.73. walk: duration 144, cost 0.0. \nfrom Beijing Tiananmenwangfujing Manxin Hotel to Qianmen Street: metro: duration 13, cost 2. taxi: duration 2, cost 11.04. walk: duration 21, cost 0.0. \nfrom Beijing Tiananmenwangfujing Manxin Hotel to Crystal Orange Beijing Wangfujing Street Hotel: taxi: duration 0, cost 11.0. walk: duration 2, cost 0.0. \nfrom Beijing Tiananmenwangfujing Manxin Hotel to Jingshan Park: metro: duration 9, cost 2. taxi: duration 2, cost 11.26. walk: duration 22, cost 0.0. \nfrom Beijing Tiananmenwangfujing Manxin Hotel to Sanlitun: metro: duration 16, cost 3. taxi: duration 7, cost 22.57. walk: duration 61, cost 0.0. \nfrom Beijing Tiananmenwangfujing Manxin Hotel to Shichahai: metro: duration 13, cost 3. taxi: duration 5, cost 18.36. walk: duration 46, cost 0.0. \nfrom Beijing Tiananmenwangfujing Manxin Hotel to Beijing Hutong Roast Duck (Qianmen Branch): metro: duration 10, cost 2. taxi: duration 3, cost 12.47. walk: duration 26, cost 0.0. \nfrom Beijing Tiananmenwangfujing Manxin Hotel to Four Seasons Minfu Roast Duck Restaurant (Forbidden City Branch): taxi: duration 0, cost 11.0. walk: duration 5, cost 0.0. \nfrom Beijing Tiananmenwangfujing Manxin Hotel to Huguosi Snacks (Huguosi Main Store): metro: duration 12, cost 2. taxi: duration 5, cost 17.19. walk: duration 42, cost 0.0. \nfrom Beijing Tiananmenwangfujing Manxin Hotel to The Palace Museum: metro: duration 11, cost 2. taxi: duration 1, cost 11.0. walk: duration 12, cost 0.0. \nfrom Beijing Tiananmenwangfujing Manxin Hotel to Beihai Park: metro: duration 12, cost 2. taxi: duration 3, cost 12.87. walk: duration 28, cost 0.0. \nfrom Beijing Tiananmenwangfujing Manxin Hotel to TRUE GO HOTEL Fuxingmen Central Conservatory of Music Store: metro: duration 25, cost 3. taxi: duration 8, cost 24.06. walk: duration 66, cost 0.0. \nfrom Beijing Tiananmenwangfujing Manxin Hotel to Beijing Daxing International Airport: metro: duration 103, cost 8. taxi: duration 68, cost 200.77. walk: duration 549, cost 0.0. \nfrom Beijing Tiananmenwangfujing Manxin Hotel to Dongzhimen Shuan Rou: Modern Beijing Hot Pot: metro: duration 13, cost 2. taxi: duration 5, cost 17.94. walk: duration 45, cost 0.0. \nfrom Beijing Tiananmenwangfujing Manxin Hotel to Summer Palace: metro: duration 40, cost 5. taxi: duration 22, cost 62.39. walk: duration 180, cost 0.0. \nfrom Beijing Tiananmenwangfujing Manxin Hotel to Temple of Heaven: metro: duration 12, cost 2. taxi: duration 4, cost 15.27. walk: duration 36, cost 0.0. \nfrom Beijing Tiananmenwangfujing Manxin Hotel to Nanluoguxiang: metro: duration 18, cost 2. taxi: duration 4, cost 15.37. walk: duration 36, cost 0.0. \nfrom National Museum of China to Tsinghua University: metro: duration 34, cost 4. taxi: duration 17, cost 47.9. walk: duration 141, cost 0.0. \nfrom National Museum of China to Dongjiaomin Lane: metro: duration 7, cost 2. taxi: duration 1, cost 11.0. walk: duration 9, cost 0.0. \nfrom National Museum of China to Beijing West Railway Station: metro: duration 20, cost 3. taxi: duration 11, cost 31.22. walk: duration 90, cost 0.0. \nfrom National Museum of China to Beijing Tiananmenwangfujing Manxin Hotel: metro: duration 9, cost 2. taxi: duration 0, cost 11.0. walk: duration 5, cost 0.0. \nfrom National Museum of China to National Museum of China:  metro: empty.  taxi: empty.  walk: empty. \nfrom National Museum of China to Wangfujing: metro: duration 10, cost 2. taxi: duration 1, cost 11.0. walk: duration 15, cost 0.0. \nfrom National Museum of China to Beijing Quanjude (Hepingmen Branch): metro: duration 11, cost 2. taxi: duration 3, cost 13.04. walk: duration 28, cost 0.0. \nfrom National Museum of China to Beijing Zoo: metro: duration 32, cost 3. taxi: duration 10, cost 28.89. walk: duration 82, cost 0.0. \nfrom National Museum of China to Peking University: metro: duration 38, cost 4. taxi: duration 18, cost 50.34. walk: duration 148, cost 0.0. \nfrom National Museum of China to Qianmen Street: metro: duration 13, cost 2. taxi: duration 2, cost 11.0. walk: duration 16, cost 0.0. \nfrom National Museum of China to Crystal Orange Beijing Wangfujing Street Hotel: metro: duration 6, cost 2. taxi: duration 0, cost 11.0. walk: duration 5, cost 0.0. \nfrom National Museum of China to Jingshan Park: metro: duration 12, cost 2. taxi: duration 3, cost 12.88. walk: duration 28, cost 0.0. \nfrom National Museum of China to Sanlitun: metro: duration 19, cost 3. taxi: duration 8, cost 23.54. walk: duration 64, cost 0.0. \nfrom National Museum of China to Shichahai: metro: duration 16, cost 3. taxi: duration 6, cost 19.9. walk: duration 52, cost 0.0. \nfrom National Museum of China to Beijing Hutong Roast Duck (Qianmen Branch): metro: duration 10, cost 2. taxi: duration 2, cost 11.08. walk: duration 21, cost 0.0. \nfrom National Museum of China to Four Seasons Minfu Roast Duck Restaurant (Forbidden City Branch): metro: duration 14, cost 2. taxi: duration 0, cost 11.0. walk: duration 6, cost 0.0. \nfrom National Museum of China to Huguosi Snacks (Huguosi Main Store): metro: duration 15, cost 3. taxi: duration 5, cost 18.24. walk: duration 46, cost 0.0. \nfrom National Museum of China to The Palace Museum: metro: duration 15, cost 2. taxi: duration 2, cost 11.0. walk: duration 17, cost 0.0. \nfrom National Museum of China to Beihai Park: metro: duration 16, cost 2. taxi: duration 4, cost 14.35. walk: duration 33, cost 0.0. \nfrom National Museum of China to TRUE GO HOTEL Fuxingmen Central Conservatory of Music Store: metro: duration 27, cost 3. taxi: duration 8, cost 23.52. walk: duration 64, cost 0.0. \nfrom National Museum of China to Beijing Daxing International Airport: metro: duration 104, cost 8. taxi: duration 67, cost 198.63. walk: duration 543, cost 0.0. \nfrom National Museum of China to Dongzhimen Shuan Rou: Modern Beijing Hot Pot: metro: duration 16, cost 3. taxi: duration 6, cost 19.21. walk: duration 49, cost 0.0. \nfrom National Museum of China to Summer Palace: metro: duration 44, cost 5. taxi: duration 23, cost 63.84. walk: duration 184, cost 0.0. \nfrom National Museum of China to Temple of Heaven: metro: duration 12, cost 2. taxi: duration 3, cost 13.72. walk: duration 30, cost 0.0. \nfrom National Museum of China to Nanluoguxiang: metro: duration 22, cost 3. taxi: duration 5, cost 17.03. walk: duration 42, cost 0.0. \nfrom Wangfujing to Tsinghua University: metro: duration 31, cost 4. taxi: duration 17, cost 46.35. walk: duration 137, cost 0.0. \nfrom Wangfujing to Dongjiaomin Lane: metro: duration 5, cost 2. taxi: duration 1, cost 11.0. walk: duration 14, cost 0.0. \nfrom Wangfujing to Beijing West Railway Station: metro: duration 20, cost 3. taxi: duration 12, cost 35.01. walk: duration 103, cost 0.0. \nfrom Wangfujing to Beijing Tiananmenwangfujing Manxin Hotel: metro: duration 7, cost 2. taxi: duration 1, cost 11.0. walk: duration 11, cost 0.0. \nfrom Wangfujing to National Museum of China: metro: duration 10, cost 2. taxi: duration 1, cost 11.0. walk: duration 15, cost 0.0. \nfrom Wangfujing to Wangfujing:  metro: empty.  taxi: empty.  walk: empty. \nfrom Wangfujing to Beijing Quanjude (Hepingmen Branch): metro: duration 10, cost 2. taxi: duration 5, cost 17.38. walk: duration 43, cost 0.0. \nfrom Wangfujing to Beijing Zoo: metro: duration 30, cost 3. taxi: duration 10, cost 29.82. walk: duration 86, cost 0.0. \nfrom Wangfujing to Peking University: metro: duration 35, cost 4. taxi: duration 18, cost 49.82. walk: duration 146, cost 0.0. \nfrom Wangfujing to Qianmen Street: metro: duration 14, cost 2. taxi: duration 3, cost 13.51. walk: duration 30, cost 0.0. \nfrom Wangfujing to Crystal Orange Beijing Wangfujing Street Hotel: metro: duration 4, cost 2. taxi: duration 1, cost 11.0. walk: duration 9, cost 0.0. \nfrom Wangfujing to Jingshan Park: metro: duration 9, cost 2. taxi: duration 2, cost 11.28. walk: duration 22, cost 0.0. \nfrom Wangfujing to Sanlitun: metro: duration 15, cost 3. taxi: duration 6, cost 19.22. walk: duration 49, cost 0.0. \nfrom Wangfujing to Shichahai: metro: duration 13, cost 3. taxi: duration 5, cost 18.4. walk: duration 46, cost 0.0. \nfrom Wangfujing to Beijing Hutong Roast Duck (Qianmen Branch): metro: duration 11, cost 2. taxi: duration 4, cost 15.49. walk: duration 36, cost 0.0. \nfrom Wangfujing to Four Seasons Minfu Roast Duck Restaurant (Forbidden City Branch): metro: duration 12, cost 2. taxi: duration 2, cost 11.0. walk: duration 17, cost 0.0. \nfrom Wangfujing to Huguosi Snacks (Huguosi Main Store): metro: duration 13, cost 3. taxi: duration 6, cost 18.93. walk: duration 48, cost 0.0. \nfrom Wangfujing to The Palace Museum: metro: duration 11, cost 2. taxi: duration 2, cost 11.0. walk: duration 16, cost 0.0. \nfrom Wangfujing to Beihai Park: metro: duration 12, cost 2. taxi: duration 3, cost 13.57. walk: duration 30, cost 0.0. \nfrom Wangfujing to TRUE GO HOTEL Fuxingmen Central Conservatory of Music Store: metro: duration 26, cost 3. taxi: duration 9, cost 27.39. walk: duration 77, cost 0.0. \nfrom Wangfujing to Beijing Daxing International Airport: metro: duration 104, cost 8. taxi: duration 69, cost 202.75. walk: duration 554, cost 0.0. \nfrom Wangfujing to Dongzhimen Shuan Rou: Modern Beijing Hot Pot: metro: duration 12, cost 2. taxi: duration 4, cost 14.8. walk: duration 34, cost 0.0. \nfrom Wangfujing to Summer Palace: metro: duration 41, cost 5. taxi: duration 23, cost 63.88. walk: duration 184, cost 0.0. \nfrom Wangfujing to Temple of Heaven: metro: duration 12, cost 2. taxi: duration 4, cost 16.31. walk: duration 39, cost 0.0. \nfrom Wangfujing to Nanluoguxiang: metro: duration 18, cost 2. taxi: duration 4, cost 14.14. walk: duration 32, cost 0.0. \nfrom Beijing Quanjude (Hepingmen Branch) to Tsinghua University: metro: duration 30, cost 4. taxi: duration 18, cost 50.05. walk: duration 147, cost 0.0. \nfrom Beijing Quanjude (Hepingmen Branch) to Dongjiaomin Lane: metro: duration 8, cost 2. taxi: duration 4, cost 14.99. walk: duration 35, cost 0.0. \nfrom Beijing Quanjude (Hepingmen Branch) to Beijing West Railway Station: metro: duration 11, cost 3. taxi: duration 8, cost 23.62. walk: duration 64, cost 0.0. \nfrom Beijing Quanjude (Hepingmen Branch) to Beijing Tiananmenwangfujing Manxin Hotel: metro: duration 9, cost 2. taxi: duration 4, cost 14.1. walk: duration 32, cost 0.0. \nfrom Beijing Quanjude (Hepingmen Branch) to National Museum of China: metro: duration 11, cost 2. taxi: duration 3, cost 13.04. walk: duration 28, cost 0.0. \nfrom Beijing Quanjude (Hepingmen Branch) to Wangfujing: metro: duration 10, cost 2. taxi: duration 5, cost 17.38. walk: duration 43, cost 0.0. \nfrom Beijing Quanjude (Hepingmen Branch) to Beijing Quanjude (Hepingmen Branch):  metro: empty.  taxi: empty.  walk: empty. \nfrom Beijing Quanjude (Hepingmen Branch) to Beijing Zoo: metro: duration 25, cost 3. taxi: duration 9, cost 27.43. walk: duration 77, cost 0.0. \nfrom Beijing Quanjude (Hepingmen Branch) to Peking University: metro: duration 33, cost 4. taxi: duration 18, cost 50.5. walk: duration 148, cost 0.0. \nfrom Beijing Quanjude (Hepingmen Branch) to Qianmen Street: metro: duration 9, cost 2. taxi: duration 2, cost 11.0. walk: duration 20, cost 0.0. \nfrom Beijing Quanjude (Hepingmen Branch) to Crystal Orange Beijing Wangfujing Street Hotel: metro: duration 6, cost 2. taxi: duration 4, cost 14.5. walk: duration 33, cost 0.0. \nfrom Beijing Quanjude (Hepingmen Branch) to Jingshan Park: metro: duration 11, cost 3. taxi: duration 5, cost 18.53. walk: duration 47, cost 0.0. \nfrom Beijing Quanjude (Hepingmen Branch) to Sanlitun: metro: duration 20, cost 3. taxi: duration 11, cost 31.88. walk: duration 93, cost 0.0. \nfrom Beijing Quanjude (Hepingmen Branch) to Shichahai: metro: duration 13, cost 3. taxi: duration 8, cost 23.85. walk: duration 65, cost 0.0. \nfrom Beijing Quanjude (Hepingmen Branch) to Beijing Hutong Roast Duck (Qianmen Branch): metro: duration 6, cost 2. taxi: duration 1, cost 11.0. walk: duration 10, cost 0.0. \nfrom Beijing Quanjude (Hepingmen Branch) to Four Seasons Minfu Roast Duck Restaurant (Forbidden City Branch): metro: duration 14, cost 2. taxi: duration 3, cost 12.66. walk: duration 27, cost 0.0. \nfrom Beijing Quanjude (Hepingmen Branch) to Huguosi Snacks (Huguosi Main Store): metro: duration 10, cost 2. taxi: duration 6, cost 18.94. walk: duration 48, cost 0.0. \nfrom Beijing Quanjude (Hepingmen Branch) to The Palace Museum: metro: duration 14, cost 2. taxi: duration 4, cost 15.78. walk: duration 37, cost 0.0. \nfrom Beijing Quanjude (Hepingmen Branch) to Beihai Park: metro: duration 13, cost 3. taxi: duration 5, cost 18.56. walk: duration 47, cost 0.0. \nfrom Beijing Quanjude (Hepingmen Branch) to TRUE GO HOTEL Fuxingmen Central Conservatory of Music Store: metro: duration 18, cost 2. taxi: duration 4, cost 15.95. walk: duration 38, cost 0.0. \nfrom Beijing Quanjude (Hepingmen Branch) to Beijing Daxing International Airport: metro: duration 98, cost 8. taxi: duration 66, cost 192.99. walk: duration 528, cost 0.0. \nfrom Beijing Quanjude (Hepingmen Branch) to Dongzhimen Shuan Rou: Modern Beijing Hot Pot: metro: duration 16, cost 3. taxi: duration 9, cost 27.33. walk: duration 77, cost 0.0. \nfrom Beijing Quanjude (Hepingmen Branch) to Summer Palace: metro: duration 38, cost 5. taxi: duration 22, cost 62.64. walk: duration 181, cost 0.0. \nfrom Beijing Quanjude (Hepingmen Branch) to Temple of Heaven: metro: duration 11, cost 2. taxi: duration 4, cost 15.59. walk: duration 37, cost 0.0. \nfrom Beijing Quanjude (Hepingmen Branch) to Nanluoguxiang: metro: duration 20, cost 3. taxi: duration 7, cost 23.24. walk: duration 63, cost 0.0. \nfrom Beijing Zoo to Tsinghua University: metro: duration 32, cost 3. taxi: duration 9, cost 27.0. walk: duration 76, cost 0.0. \nfrom Beijing Zoo to Dongjiaomin Lane: metro: duration 29, cost 3. taxi: duration 11, cost 31.67. walk: duration 92, cost 0.0. \nfrom Beijing Zoo to Beijing West Railway Station: metro: duration 23, cost 3. taxi: duration 9, cost 26.1. walk: duration 73, cost 0.0. \nfrom Beijing Zoo to Beijing Tiananmenwangfujing Manxin Hotel: metro: duration 29, cost 3. taxi: duration 9, cost 27.99. walk: duration 79, cost 0.0. \nfrom Beijing Zoo to National Museum of China: metro: duration 32, cost 3. taxi: duration 10, cost 28.89. walk: duration 82, cost 0.0. \nfrom Beijing Zoo to Wangfujing: metro: duration 30, cost 3. taxi: duration 10, cost 29.82. walk: duration 86, cost 0.0. \nfrom Beijing Zoo to Beijing Quanjude (Hepingmen Branch): metro: duration 25, cost 3. taxi: duration 9, cost 27.43. walk: duration 77, cost 0.0. \nfrom Beijing Zoo to Beijing Zoo:  metro: empty.  taxi: empty.  walk: empty. \nfrom Beijing Zoo to Peking University: metro: duration 34, cost 3. taxi: duration 8, cost 25.64. walk: duration 71, cost 0.0. \nfrom Beijing Zoo to Qianmen Street: metro: duration 32, cost 3. taxi: duration 11, cost 31.07. walk: duration 90, cost 0.0. \nfrom Beijing Zoo to Crystal Orange Beijing Wangfujing Street Hotel: metro: duration 26, cost 3. taxi: duration 10, cost 28.66. walk: duration 82, cost 0.0. \nfrom Beijing Zoo to Jingshan Park: metro: duration 26, cost 3. taxi: duration 8, cost 23.82. walk: duration 65, cost 0.0. \nfrom Beijing Zoo to Sanlitun: metro: duration 36, cost 4. taxi: duration 14, cost 39.51. walk: duration 119, cost 0.0. \nfrom Beijing Zoo to Shichahai: metro: duration 24, cost 3. taxi: duration 6, cost 19.33. walk: duration 50, cost 0.0. \nfrom Beijing Zoo to Beijing Hutong Roast Duck (Qianmen Branch): metro: duration 29, cost 3. taxi: duration 10, cost 29.46. walk: duration 84, cost 0.0. \nfrom Beijing Zoo to Four Seasons Minfu Roast Duck Restaurant (Forbidden City Branch): metro: duration 34, cost 3. taxi: duration 9, cost 26.94. walk: duration 76, cost 0.0. \nfrom Beijing Zoo to Huguosi Snacks (Huguosi Main Store): metro: duration 20, cost 2. taxi: duration 4, cost 15.59. walk: duration 37, cost 0.0. \nfrom Beijing Zoo to The Palace Museum: metro: duration 32, cost 3. taxi: duration 8, cost 25.15. walk: duration 70, cost 0.0. \nfrom Beijing Zoo to Beihai Park: metro: duration 26, cost 3. taxi: duration 7, cost 21.31. walk: duration 56, cost 0.0. \nfrom Beijing Zoo to TRUE GO HOTEL Fuxingmen Central Conservatory of Music Store: metro: duration 32, cost 2. taxi: duration 8, cost 23.92. walk: duration 65, cost 0.0. \nfrom Beijing Zoo to Beijing Daxing International Airport: metro: duration 119, cost 8. taxi: duration 74, cost 218.71. walk: duration 597, cost 0.0. \nfrom Beijing Zoo to Dongzhimen Shuan Rou: Modern Beijing Hot Pot: metro: duration 32, cost 3. taxi: duration 12, cost 33.67. walk: duration 99, cost 0.0. \nfrom Beijing Zoo to Summer Palace: metro: duration 38, cost 3. taxi: duration 12, cost 34.84. walk: duration 103, cost 0.0. \nfrom Beijing Zoo to Temple of Heaven: metro: duration 34, cost 3. taxi: duration 13, cost 36.87. walk: duration 110, cost 0.0. \nfrom Beijing Zoo to Nanluoguxiang: metro: duration 33, cost 3. taxi: duration 8, cost 24.87. walk: duration 69, cost 0.0. \nfrom Peking University to Tsinghua University: metro: duration 18, cost 2. taxi: duration 3, cost 12.79. walk: duration 27, cost 0.0. \nfrom Peking University to Dongjiaomin Lane: metro: duration 35, cost 4. taxi: duration 19, cost 53.54. walk: duration 156, cost 0.0. \nfrom Peking University to Beijing West Railway Station: metro: duration 30, cost 4. taxi: duration 17, cost 46.2. walk: duration 137, cost 0.0. \nfrom Peking University to Beijing Tiananmenwangfujing Manxin Hotel: metro: duration 35, cost 4. taxi: duration 18, cost 48.73. walk: duration 144, cost 0.0. \nfrom Peking University to National Museum of China: metro: duration 38, cost 4. taxi: duration 18, cost 50.34. walk: duration 148, cost 0.0. \nfrom Peking University to Wangfujing: metro: duration 35, cost 4. taxi: duration 18, cost 49.82. walk: duration 146, cost 0.0. \nfrom Peking University to Beijing Quanjude (Hepingmen Branch): metro: duration 33, cost 4. taxi: duration 18, cost 50.5. walk: duration 148, cost 0.0. \nfrom Peking University to Beijing Zoo: metro: duration 34, cost 3. taxi: duration 8, cost 25.64. walk: duration 71, cost 0.0. \nfrom Peking University to Peking University:  metro: empty.  taxi: empty.  walk: empty. \nfrom Peking University to Qianmen Street: metro: duration 39, cost 4. taxi: duration 19, cost 54.26. walk: duration 158, cost 0.0. \nfrom Peking University to Crystal Orange Beijing Wangfujing Street Hotel: metro: duration 32, cost 4. taxi: duration 18, cost 49.48. walk: duration 146, cost 0.0. \nfrom Peking University to Jingshan Park: metro: duration 30, cost 4. taxi: duration 15, cost 41.36. walk: duration 124, cost 0.0. \nfrom Peking University to Sanlitun: metro: duration 38, cost 5. taxi: duration 20, cost 56.19. walk: duration 163, cost 0.0. \nfrom Peking University to Shichahai: metro: duration 27, cost 4. taxi: duration 12, cost 34.13. walk: duration 100, cost 0.0. \nfrom Peking University to Beijing Hutong Roast Duck (Qianmen Branch): metro: duration 36, cost 4. taxi: duration 19, cost 52.73. walk: duration 154, cost 0.0. \nfrom Peking University to Four Seasons Minfu Roast Duck Restaurant (Forbidden City Branch): metro: duration 40, cost 4. taxi: duration 17, cost 47.9. walk: duration 141, cost 0.0. \nfrom Peking University to Huguosi Snacks (Huguosi Main Store): metro: duration 27, cost 4. taxi: duration 12, cost 34.64. walk: duration 102, cost 0.0. \nfrom Peking University to The Palace Museum: metro: duration 38, cost 4. taxi: duration 16, cost 44.39. walk: duration 132, cost 0.0. \nfrom Peking University to Beihai Park: metro: duration 31, cost 4. taxi: duration 14, cost 38.76. walk: duration 116, cost 0.0. \nfrom Peking University to TRUE GO HOTEL Fuxingmen Central Conservatory of Music Store: metro: duration 40, cost 4. taxi: duration 17, cost 45.78. walk: duration 136, cost 0.0. \nfrom Peking University to Beijing Daxing International Airport: metro: duration 127, cost 9. taxi: duration 83, cost 244.95. walk: duration 667, cost 0.0. \nfrom Peking University to Dongzhimen Shuan Rou: Modern Beijing Hot Pot: metro: duration 35, cost 4. taxi: duration 18, cost 49.68. walk: duration 146, cost 0.0. \nfrom Peking University to Summer Palace: metro: duration 20, cost 2. taxi: duration 5, cost 16.42. walk: duration 40, cost 0.0. \nfrom Peking University to Temple of Heaven: metro: duration 41, cost 5. taxi: duration 22, cost 61.52. walk: duration 178, cost 0.0. \nfrom Peking University to Nanluoguxiang: metro: duration 35, cost 4. taxi: duration 14, cost 39.64. walk: duration 119, cost 0.0. \nfrom Qianmen Street to Tsinghua University: metro: duration 36, cost 4. taxi: duration 19, cost 52.59. walk: duration 154, cost 0.0. \nfrom Qianmen Street to Dongjiaomin Lane: metro: duration 10, cost 2. taxi: duration 2, cost 11.0. walk: duration 17, cost 0.0. \nfrom Qianmen Street to Beijing West Railway Station: metro: duration 19, cost 3. taxi: duration 10, cost 29.45. walk: duration 84, cost 0.0. \nfrom Qianmen Street to Beijing Tiananmenwangfujing Manxin Hotel: metro: duration 13, cost 2. taxi: duration 2, cost 11.04. walk: duration 21, cost 0.0. \nfrom Qianmen Street to National Museum of China: metro: duration 13, cost 2. taxi: duration 2, cost 11.0. walk: duration 16, cost 0.0. \nfrom Qianmen Street to Wangfujing: metro: duration 14, cost 2. taxi: duration 3, cost 13.51. walk: duration 30, cost 0.0. \nfrom Qianmen Street to Beijing Quanjude (Hepingmen Branch): metro: duration 9, cost 2. taxi: duration 2, cost 11.0. walk: duration 20, cost 0.0. \nfrom Qianmen Street to Beijing Zoo: metro: duration 32, cost 3. taxi: duration 11, cost 31.07. walk: duration 90, cost 0.0. \nfrom Qianmen Street to Peking University: metro: duration 39, cost 4. taxi: duration 19, cost 54.26. walk: duration 158, cost 0.0. \nfrom Qianmen Street to Qianmen Street:  metro: empty.  taxi: empty.  walk: empty. \nfrom Qianmen Street to Crystal Orange Beijing Wangfujing Street Hotel: metro: duration 10, cost 2. taxi: duration 2, cost 11.01. walk: duration 21, cost 0.0. \nfrom Qianmen Street to Jingshan Park: metro: duration 15, cost 2. taxi: duration 5, cost 17.33. walk: duration 43, cost 0.0. \nfrom Qianmen Street to Sanlitun: metro: duration 23, cost 3. taxi: duration 9, cost 27.34. walk: duration 77, cost 0.0. \nfrom Qianmen Street to Shichahai: metro: duration 18, cost 3. taxi: duration 8, cost 24.05. walk: duration 66, cost 0.0. \nfrom Qianmen Street to Beijing Hutong Roast Duck (Qianmen Branch): taxi: duration 1, cost 11.0. walk: duration 9, cost 0.0. \nfrom Qianmen Street to Four Seasons Minfu Roast Duck Restaurant (Forbidden City Branch): metro: duration 18, cost 2. taxi: duration 2, cost 11.0. walk: duration 19, cost 0.0. \nfrom Qianmen Street to Huguosi Snacks (Huguosi Main Store): metro: duration 16, cost 3. taxi: duration 7, cost 21.1. walk: duration 56, cost 0.0. \nfrom Qianmen Street to The Palace Museum: metro: duration 18, cost 2. taxi: duration 4, cost 14.2. walk: duration 32, cost 0.0. \nfrom Qianmen Street to Beihai Park: metro: duration 18, cost 3. taxi: duration 5, cost 18.41. walk: duration 47, cost 0.0. \nfrom Qianmen Street to TRUE GO HOTEL Fuxingmen Central Conservatory of Music Store: metro: duration 25, cost 2. taxi: duration 7, cost 21.78. walk: duration 58, cost 0.0. \nfrom Qianmen Street to Beijing Daxing International Airport: metro: duration 103, cost 8. taxi: duration 66, cost 192.78. walk: duration 528, cost 0.0. \nfrom Qianmen Street to Dongzhimen Shuan Rou: Modern Beijing Hot Pot: metro: duration 20, cost 3. taxi: duration 8, cost 23.54. walk: duration 64, cost 0.0. \nfrom Qianmen Street to Summer Palace: metro: duration 44, cost 5. taxi: duration 24, cost 67.22. walk: duration 193, cost 0.0. \nfrom Qianmen Street to Temple of Heaven: metro: duration 14, cost 2. taxi: duration 2, cost 11.0. walk: duration 19, cost 0.0. \nfrom Qianmen Street to Nanluoguxiang: metro: duration 25, cost 3. taxi: duration 7, cost 21.68. walk: duration 58, cost 0.0. \nfrom Crystal Orange Beijing Wangfujing Street Hotel to Tsinghua University: metro: duration 28, cost 4. taxi: duration 17, cost 46.7. walk: duration 138, cost 0.0. \nfrom Crystal Orange Beijing Wangfujing Street Hotel to Dongjiaomin Lane: metro: duration 3, cost 2. taxi: duration 1, cost 11.0. walk: duration 10, cost 0.0. \nfrom Crystal Orange Beijing Wangfujing Street Hotel to Beijing West Railway Station: metro: duration 16, cost 3. taxi: duration 11, cost 32.3. walk: duration 94, cost 0.0. \nfrom Crystal Orange Beijing Wangfujing Street Hotel to Beijing Tiananmenwangfujing Manxin Hotel: taxi: duration 0, cost 11.0. walk: duration 2, cost 0.0. \nfrom Crystal Orange Beijing Wangfujing Street Hotel to National Museum of China: metro: duration 6, cost 2. taxi: duration 0, cost 11.0. walk: duration 5, cost 0.0. \nfrom Crystal Orange Beijing Wangfujing Street Hotel to Wangfujing: metro: duration 4, cost 2. taxi: duration 1, cost 11.0. walk: duration 9, cost 0.0. \nfrom Crystal Orange Beijing Wangfujing Street Hotel to Beijing Quanjude (Hepingmen Branch): metro: duration 6, cost 2. taxi: duration 4, cost 14.5. walk: duration 33, cost 0.0. \nfrom Crystal Orange Beijing Wangfujing Street Hotel to Beijing Zoo: metro: duration 26, cost 3. taxi: duration 10, cost 28.66. walk: duration 82, cost 0.0. \nfrom Crystal Orange Beijing Wangfujing Street Hotel to Peking University: metro: duration 32, cost 4. taxi: duration 18, cost 49.48. walk: duration 146, cost 0.0. \nfrom Crystal Orange Beijing Wangfujing Street Hotel to Qianmen Street: metro: duration 10, cost 2. taxi: duration 2, cost 11.01. walk: duration 21, cost 0.0. \nfrom Crystal Orange Beijing Wangfujing Street Hotel to Crystal Orange Beijing Wangfujing Street Hotel:  metro: empty.  taxi: empty.  walk: empty. \nfrom Crystal Orange Beijing Wangfujing Street Hotel to Jingshan Park: metro: duration 6, cost 2. taxi: duration 2, cost 11.63. walk: duration 23, cost 0.0. \nfrom Crystal Orange Beijing Wangfujing Street Hotel to Sanlitun: metro: duration 13, cost 3. taxi: duration 7, cost 22.1. walk: duration 59, cost 0.0. \nfrom Crystal Orange Beijing Wangfujing Street Hotel to Shichahai: metro: duration 10, cost 3. taxi: duration 6, cost 18.79. walk: duration 48, cost 0.0. \nfrom Crystal Orange Beijing Wangfujing Street Hotel to Beijing Hutong Roast Duck (Qianmen Branch): metro: duration 7, cost 2. taxi: duration 3, cost 12.69. walk: duration 27, cost 0.0. \nfrom Crystal Orange Beijing Wangfujing Street Hotel to Four Seasons Minfu Roast Duck Restaurant (Forbidden City Branch): taxi: duration 0, cost 11.0. walk: duration 7, cost 0.0. \nfrom Crystal Orange Beijing Wangfujing Street Hotel to Huguosi Snacks (Huguosi Main Store): metro: duration 9, cost 2. taxi: duration 5, cost 17.85. walk: duration 45, cost 0.0. \nfrom Crystal Orange Beijing Wangfujing Street Hotel to The Palace Museum: metro: duration 8, cost 2. taxi: duration 1, cost 11.0. walk: duration 13, cost 0.0. \nfrom Crystal Orange Beijing Wangfujing Street Hotel to Beihai Park: metro: duration 9, cost 2. taxi: duration 3, cost 13.38. walk: duration 29, cost 0.0. \nfrom Crystal Orange Beijing Wangfujing Street Hotel to TRUE GO HOTEL Fuxingmen Central Conservatory of Music Store: metro: duration 22, cost 3. taxi: duration 8, cost 24.64. walk: duration 68, cost 0.0. \nfrom Crystal Orange Beijing Wangfujing Street Hotel to Beijing Daxing International Airport: metro: duration 100, cost 8. taxi: duration 68, cost 200.51. walk: duration 548, cost 0.0. \nfrom Crystal Orange Beijing Wangfujing Street Hotel to Dongzhimen Shuan Rou: Modern Beijing Hot Pot: metro: duration 10, cost 2. taxi: duration 5, cost 17.61. walk: duration 44, cost 0.0. \nfrom Crystal Orange Beijing Wangfujing Street Hotel to Summer Palace: metro: duration 37, cost 5. taxi: duration 22, cost 63.19. walk: duration 182, cost 0.0. \nfrom Crystal Orange Beijing Wangfujing Street Hotel to Temple of Heaven: metro: duration 9, cost 2. taxi: duration 4, cost 14.9. walk: duration 34, cost 0.0. \nfrom Crystal Orange Beijing Wangfujing Street Hotel to Nanluoguxiang: metro: duration 15, cost 2. taxi: duration 4, cost 15.55. walk: duration 37, cost 0.0. \nfrom Jingshan Park to Tsinghua University: metro: duration 26, cost 4. taxi: duration 14, cost 38.38. walk: duration 115, cost 0.0. \nfrom Jingshan Park to Dongjiaomin Lane: metro: duration 9, cost 2. taxi: duration 4, cost 14.66. walk: duration 34, cost 0.0. \nfrom Jingshan Park to Beijing West Railway Station: metro: duration 18, cost 3. taxi: duration 12, cost 32.9. walk: duration 96, cost 0.0. \nfrom Jingshan Park to Beijing Tiananmenwangfujing Manxin Hotel: metro: duration 9, cost 2. taxi: duration 2, cost 11.26. walk: duration 22, cost 0.0. \nfrom Jingshan Park to National Museum of China: metro: duration 12, cost 2. taxi: duration 3, cost 12.88. walk: duration 28, cost 0.0. \nfrom Jingshan Park to Wangfujing: metro: duration 9, cost 2. taxi: duration 2, cost 11.28. walk: duration 22, cost 0.0. \nfrom Jingshan Park to Beijing Quanjude (Hepingmen Branch): metro: duration 11, cost 3. taxi: duration 5, cost 18.53. walk: duration 47, cost 0.0. \nfrom Jingshan Park to Beijing Zoo: metro: duration 26, cost 3. taxi: duration 8, cost 23.82. walk: duration 65, cost 0.0. \nfrom Jingshan Park to Peking University: metro: duration 30, cost 4. taxi: duration 15, cost 41.36. walk: duration 124, cost 0.0. \nfrom Jingshan Park to Qianmen Street: metro: duration 15, cost 2. taxi: duration 5, cost 17.33. walk: duration 43, cost 0.0. \nfrom Jingshan Park to Crystal Orange Beijing Wangfujing Street Hotel: metro: duration 6, cost 2. taxi: duration 2, cost 11.63. walk: duration 23, cost 0.0. \nfrom Jingshan Park to Jingshan Park:  metro: empty.  taxi: empty.  walk: empty. \nfrom Jingshan Park to Sanlitun: metro: duration 14, cost 3. taxi: duration 7, cost 21.59. walk: duration 57, cost 0.0. \nfrom Jingshan Park to Shichahai: metro: duration 7, cost 2. taxi: duration 3, cost 11.92. walk: duration 24, cost 0.0. \nfrom Jingshan Park to Beijing Hutong Roast Duck (Qianmen Branch): metro: duration 12, cost 2. taxi: duration 5, cost 17.99. walk: duration 45, cost 0.0. \nfrom Jingshan Park to Four Seasons Minfu Roast Duck Restaurant (Forbidden City Branch): metro: duration 14, cost 2. taxi: duration 2, cost 11.54. walk: duration 23, cost 0.0. \nfrom Jingshan Park to Huguosi Snacks (Huguosi Main Store): metro: duration 9, cost 2. taxi: duration 3, cost 13.19. walk: duration 29, cost 0.0. \nfrom Jingshan Park to The Palace Museum: metro: duration 11, cost 2. taxi: duration 1, cost 11.0. walk: duration 10, cost 0.0. \nfrom Jingshan Park to Beihai Park: metro: duration 7, cost 2. taxi: duration 1, cost 11.0. walk: duration 8, cost 0.0. \nfrom Jingshan Park to TRUE GO HOTEL Fuxingmen Central Conservatory of Music Store: metro: duration 24, cost 3. taxi: duration 9, cost 25.85. walk: duration 72, cost 0.0. \nfrom Jingshan Park to Beijing Daxing International Airport: metro: duration 106, cost 8. taxi: duration 71, cost 209.02. walk: duration 571, cost 0.0. \nfrom Jingshan Park to Dongzhimen Shuan Rou: Modern Beijing Hot Pot: metro: duration 10, cost 2. taxi: duration 4, cost 15.85. walk: duration 38, cost 0.0. \nfrom Jingshan Park to Summer Palace: metro: duration 36, cost 4. taxi: duration 20, cost 55.48. walk: duration 162, cost 0.0. \nfrom Jingshan Park to Temple of Heaven: metro: duration 15, cost 3. taxi: duration 7, cost 21.82. walk: duration 58, cost 0.0. \nfrom Jingshan Park to Nanluoguxiang: metro: duration 13, cost 2. taxi: duration 2, cost 11.0. walk: duration 16, cost 0.0. \nfrom Sanlitun to Tsinghua University: metro: duration 33, cost 4. taxi: duration 18, cost 49.77. walk: duration 146, cost 0.0. \nfrom Sanlitun to Dongjiaomin Lane: metro: duration 14, cost 3. taxi: duration 7, cost 22.14. walk: duration 59, cost 0.0. \nfrom Sanlitun to Beijing West Railway Station: metro: duration 29, cost 4. taxi: duration 19, cost 51.89. walk: duration 152, cost 0.0. \nfrom Sanlitun to Beijing Tiananmenwangfujing Manxin Hotel: metro: duration 16, cost 3. taxi: duration 7, cost 22.57. walk: duration 61, cost 0.0. \nfrom Sanlitun to National Museum of China: metro: duration 19, cost 3. taxi: duration 8, cost 23.54. walk: duration 64, cost 0.0. \nfrom Sanlitun to Wangfujing: metro: duration 15, cost 3. taxi: duration 6, cost 19.22. walk: duration 49, cost 0.0. \nfrom Sanlitun to Beijing Quanjude (Hepingmen Branch): metro: duration 20, cost 3. taxi: duration 11, cost 31.88. walk: duration 93, cost 0.0. \nfrom Sanlitun to Beijing Zoo: metro: duration 36, cost 4. taxi: duration 14, cost 39.51. walk: duration 119, cost 0.0. \nfrom Sanlitun to Peking University: metro: duration 38, cost 5. taxi: duration 20, cost 56.19. walk: duration 163, cost 0.0. \nfrom Sanlitun to Qianmen Street: metro: duration 23, cost 3. taxi: duration 9, cost 27.34. walk: duration 77, cost 0.0. \nfrom Sanlitun to Crystal Orange Beijing Wangfujing Street Hotel: metro: duration 13, cost 3. taxi: duration 7, cost 22.1. walk: duration 59, cost 0.0. \nfrom Sanlitun to Jingshan Park: metro: duration 14, cost 3. taxi: duration 7, cost 21.59. walk: duration 57, cost 0.0. \nfrom Sanlitun to Sanlitun:  metro: empty.  taxi: empty.  walk: empty. \nfrom Sanlitun to Shichahai: metro: duration 16, cost 3. taxi: duration 8, cost 25.0. walk: duration 69, cost 0.0. \nfrom Sanlitun to Beijing Hutong Roast Duck (Qianmen Branch): metro: duration 20, cost 3. taxi: duration 10, cost 29.76. walk: duration 85, cost 0.0. \nfrom Sanlitun to Four Seasons Minfu Roast Duck Restaurant (Forbidden City Branch): metro: duration 21, cost 3. taxi: duration 8, cost 24.15. walk: duration 66, cost 0.0. \nfrom Sanlitun to Huguosi Snacks (Huguosi Main Store): metro: duration 20, cost 3. taxi: duration 10, cost 29.77. walk: duration 85, cost 0.0. \nfrom Sanlitun to The Palace Museum: metro: duration 19, cost 3. taxi: duration 7, cost 22.34. walk: duration 60, cost 0.0. \nfrom Sanlitun to Beihai Park: metro: duration 18, cost 3. taxi: duration 8, cost 23.81. walk: duration 65, cost 0.0. \nfrom Sanlitun to TRUE GO HOTEL Fuxingmen Central Conservatory of Music Store: metro: duration 35, cost 4. taxi: duration 15, cost 42.28. walk: duration 126, cost 0.0. \nfrom Sanlitun to Beijing Daxing International Airport: metro: duration 109, cost 8. taxi: duration 72, cost 213.66. walk: duration 583, cost 0.0. \nfrom Sanlitun to Dongzhimen Shuan Rou: Modern Beijing Hot Pot: metro: duration 10, cost 2. taxi: duration 2, cost 11.0. walk: duration 20, cost 0.0. \nfrom Sanlitun to Summer Palace: metro: duration 45, cost 5. taxi: duration 25, cost 71.18. walk: duration 203, cost 0.0. \nfrom Sanlitun to Temple of Heaven: metro: duration 19, cost 3. taxi: duration 9, cost 27.6. walk: duration 78, cost 0.0. \nfrom Sanlitun to Nanluoguxiang: metro: duration 20, cost 3. taxi: duration 6, cost 19.35. walk: duration 50, cost 0.0. \nfrom Shichahai to Tsinghua University: metro: duration 22, cost 3. taxi: duration 11, cost 31.18. walk: duration 90, cost 0.0. \nfrom Shichahai to Dongjiaomin Lane: metro: duration 12, cost 3. taxi: duration 7, cost 21.86. walk: duration 58, cost 0.0. \nfrom Shichahai to Beijing West Railway Station: metro: duration 19, cost 3. taxi: duration 12, cost 34.03. walk: duration 100, cost 0.0. \nfrom Shichahai to Beijing Tiananmenwangfujing Manxin Hotel: metro: duration 13, cost 3. taxi: duration 5, cost 18.36. walk: duration 46, cost 0.0. \nfrom Shichahai to National Museum of China: metro: duration 16, cost 3. taxi: duration 6, cost 19.9. walk: duration 52, cost 0.0. \nfrom Shichahai to Wangfujing: metro: duration 13, cost 3. taxi: duration 5, cost 18.4. walk: duration 46, cost 0.0. \nfrom Shichahai to Beijing Quanjude (Hepingmen Branch): metro: duration 13, cost 3. taxi: duration 8, cost 23.85. walk: duration 65, cost 0.0. \nfrom Shichahai to Beijing Zoo: metro: duration 24, cost 3. taxi: duration 6, cost 19.33. walk: duration 50, cost 0.0. \nfrom Shichahai to Peking University: metro: duration 27, cost 4. taxi: duration 12, cost 34.13. walk: duration 100, cost 0.0. \nfrom Shichahai to Qianmen Street: metro: duration 18, cost 3. taxi: duration 8, cost 24.05. walk: duration 66, cost 0.0. \nfrom Shichahai to Crystal Orange Beijing Wangfujing Street Hotel: metro: duration 10, cost 3. taxi: duration 6, cost 18.79. walk: duration 48, cost 0.0. \nfrom Shichahai to Jingshan Park: metro: duration 7, cost 2. taxi: duration 3, cost 11.92. walk: duration 24, cost 0.0. \nfrom Shichahai to Sanlitun: metro: duration 16, cost 3. taxi: duration 8, cost 25.0. walk: duration 69, cost 0.0. \nfrom Shichahai to Shichahai:  metro: empty.  taxi: empty.  walk: empty. \nfrom Shichahai to Beijing Hutong Roast Duck (Qianmen Branch): metro: duration 15, cost 3. taxi: duration 8, cost 24.11. walk: duration 66, cost 0.0. \nfrom Shichahai to Four Seasons Minfu Roast Duck Restaurant (Forbidden City Branch): metro: duration 18, cost 3. taxi: duration 5, cost 18.31. walk: duration 46, cost 0.0. \nfrom Shichahai to Huguosi Snacks (Huguosi Main Store): metro: duration 8, cost 2. taxi: duration 3, cost 11.81. walk: duration 24, cost 0.0. \nfrom Shichahai to The Palace Museum: metro: duration 15, cost 2. taxi: duration 4, cost 14.81. walk: duration 34, cost 0.0. \nfrom Shichahai to Beihai Park: metro: duration 8, cost 2. taxi: duration 2, cost 11.0. walk: duration 19, cost 0.0. \nfrom Shichahai to TRUE GO HOTEL Fuxingmen Central Conservatory of Music Store: metro: duration 25, cost 3. taxi: duration 10, cost 28.11. walk: duration 80, cost 0.0. \nfrom Shichahai to Beijing Daxing International Airport: metro: duration 110, cost 9. taxi: duration 74, cost 217.31. walk: duration 593, cost 0.0. \nfrom Shichahai to Dongzhimen Shuan Rou: Modern Beijing Hot Pot: metro: duration 12, cost 2. taxi: duration 6, cost 19.23. walk: duration 49, cost 0.0. \nfrom Shichahai to Summer Palace: metro: duration 33, cost 4. taxi: duration 17, cost 46.98. walk: duration 139, cost 0.0. \nfrom Shichahai to Temple of Heaven: metro: duration 19, cost 3. taxi: duration 10, cost 28.92. walk: duration 83, cost 0.0. \nfrom Shichahai to Nanluoguxiang: metro: duration 12, cost 2. taxi: duration 2, cost 11.0. walk: duration 19, cost 0.0. \nfrom Beijing Hutong Roast Duck (Qianmen Branch) to Tsinghua University: metro: duration 33, cost 4. taxi: duration 18, cost 51.69. walk: duration 151, cost 0.0. \nfrom Beijing Hutong Roast Duck (Qianmen Branch) to Dongjiaomin Lane: metro: duration 7, cost 2. taxi: duration 3, cost 12.47. walk: duration 26, cost 0.0. \nfrom Beijing Hutong Roast Duck (Qianmen Branch) to Beijing West Railway Station: metro: duration 16, cost 3. taxi: duration 9, cost 26.55. walk: duration 74, cost 0.0. \nfrom Beijing Hutong Roast Duck (Qianmen Branch) to Beijing Tiananmenwangfujing Manxin Hotel: metro: duration 10, cost 2. taxi: duration 3, cost 12.47. walk: duration 26, cost 0.0. \nfrom Beijing Hutong Roast Duck (Qianmen Branch) to National Museum of China: metro: duration 10, cost 2. taxi: duration 2, cost 11.08. walk: duration 21, cost 0.0. \nfrom Beijing Hutong Roast Duck (Qianmen Branch) to Wangfujing: metro: duration 11, cost 2. taxi: duration 4, cost 15.49. walk: duration 36, cost 0.0. \nfrom Beijing Hutong Roast Duck (Qianmen Branch) to Beijing Quanjude (Hepingmen Branch): metro: duration 6, cost 2. taxi: duration 1, cost 11.0. walk: duration 10, cost 0.0. \nfrom Beijing Hutong Roast Duck (Qianmen Branch) to Beijing Zoo: metro: duration 29, cost 3. taxi: duration 10, cost 29.46. walk: duration 84, cost 0.0. \nfrom Beijing Hutong Roast Duck (Qianmen Branch) to Peking University: metro: duration 36, cost 4. taxi: duration 19, cost 52.73. walk: duration 154, cost 0.0. \nfrom Beijing Hutong Roast Duck (Qianmen Branch) to Qianmen Street: taxi: duration 1, cost 11.0. walk: duration 9, cost 0.0. \nfrom Beijing Hutong Roast Duck (Qianmen Branch) to Crystal Orange Beijing Wangfujing Street Hotel: metro: duration 7, cost 2. taxi: duration 3, cost 12.69. walk: duration 27, cost 0.0. \nfrom Beijing Hutong Roast Duck (Qianmen Branch) to Jingshan Park: metro: duration 12, cost 2. taxi: duration 5, cost 17.99. walk: duration 45, cost 0.0. \nfrom Beijing Hutong Roast Duck (Qianmen Branch) to Sanlitun: metro: duration 20, cost 3. taxi: duration 10, cost 29.76. walk: duration 85, cost 0.0. \nfrom Beijing Hutong Roast Duck (Qianmen Branch) to Shichahai: metro: duration 15, cost 3. taxi: duration 8, cost 24.11. walk: duration 66, cost 0.0. \nfrom Beijing Hutong Roast Duck (Qianmen Branch) to Beijing Hutong Roast Duck (Qianmen Branch):  metro: empty.  taxi: empty.  walk: empty. \nfrom Beijing Hutong Roast Duck (Qianmen Branch) to Four Seasons Minfu Roast Duck Restaurant (Forbidden City Branch): metro: duration 15, cost 2. taxi: duration 2, cost 11.37. walk: duration 22, cost 0.0. \nfrom Beijing Hutong Roast Duck (Qianmen Branch) to Huguosi Snacks (Huguosi Main Store): metro: duration 13, cost 3. taxi: duration 6, cost 20.14. walk: duration 52, cost 0.0. \nfrom Beijing Hutong Roast Duck (Qianmen Branch) to The Palace Museum: metro: duration 15, cost 2. taxi: duration 4, cost 14.96. walk: duration 35, cost 0.0. \nfrom Beijing Hutong Roast Duck (Qianmen Branch) to Beihai Park: metro: duration 15, cost 3. taxi: duration 5, cost 18.56. walk: duration 47, cost 0.0. \nfrom Beijing Hutong Roast Duck (Qianmen Branch) to TRUE GO HOTEL Fuxingmen Central Conservatory of Music Store: metro: duration 22, cost 2. taxi: duration 6, cost 18.9. walk: duration 48, cost 0.0. \nfrom Beijing Hutong Roast Duck (Qianmen Branch) to Beijing Daxing International Airport: metro: duration 100, cost 8. taxi: duration 65, cost 192.35. walk: duration 527, cost 0.0. \nfrom Beijing Hutong Roast Duck (Qianmen Branch) to Dongzhimen Shuan Rou: Modern Beijing Hot Pot: metro: duration 17, cost 3. taxi: duration 8, cost 25.59. walk: duration 71, cost 0.0. \nfrom Beijing Hutong Roast Duck (Qianmen Branch) to Summer Palace: metro: duration 41, cost 5. taxi: duration 23, cost 65.28. walk: duration 188, cost 0.0. \nfrom Beijing Hutong Roast Duck (Qianmen Branch) to Temple of Heaven: metro: duration 11, cost 2. taxi: duration 3, cost 12.73. walk: duration 27, cost 0.0. \nfrom Beijing Hutong Roast Duck (Qianmen Branch) to Nanluoguxiang: metro: duration 22, cost 3. taxi: duration 7, cost 22.6. walk: duration 61, cost 0.0. \nfrom Four Seasons Minfu Roast Duck Restaurant (Forbidden City Branch) to Tsinghua University: metro: duration 36, cost 4. taxi: duration 16, cost 45.62. walk: duration 135, cost 0.0. \nfrom Four Seasons Minfu Roast Duck Restaurant (Forbidden City Branch) to Dongjiaomin Lane: metro: duration 11, cost 2. taxi: duration 2, cost 11.0. walk: duration 16, cost 0.0. \nfrom Four Seasons Minfu Roast Duck Restaurant (Forbidden City Branch) to Beijing West Railway Station: metro: duration 24, cost 3. taxi: duration 10, cost 30.06. walk: duration 86, cost 0.0. \nfrom Four Seasons Minfu Roast Duck Restaurant (Forbidden City Branch) to Beijing Tiananmenwangfujing Manxin Hotel: taxi: duration 0, cost 11.0. walk: duration 5, cost 0.0. \nfrom Four Seasons Minfu Roast Duck Restaurant (Forbidden City Branch) to National Museum of China: metro: duration 14, cost 2. taxi: duration 0, cost 11.0. walk: duration 6, cost 0.0. \nfrom Four Seasons Minfu Roast Duck Restaurant (Forbidden City Branch) to Wangfujing: metro: duration 12, cost 2. taxi: duration 2, cost 11.0. walk: duration 17, cost 0.0. \nfrom Four Seasons Minfu Roast Duck Restaurant (Forbidden City Branch) to Beijing Quanjude (Hepingmen Branch): metro: duration 14, cost 2. taxi: duration 3, cost 12.66. walk: duration 27, cost 0.0. \nfrom Four Seasons Minfu Roast Duck Restaurant (Forbidden City Branch) to Beijing Zoo: metro: duration 34, cost 3. taxi: duration 9, cost 26.94. walk: duration 76, cost 0.0. \nfrom Four Seasons Minfu Roast Duck Restaurant (Forbidden City Branch) to Peking University: metro: duration 40, cost 4. taxi: duration 17, cost 47.9. walk: duration 141, cost 0.0. \nfrom Four Seasons Minfu Roast Duck Restaurant (Forbidden City Branch) to Qianmen Street: metro: duration 18, cost 2. taxi: duration 2, cost 11.0. walk: duration 19, cost 0.0. \nfrom Four Seasons Minfu Roast Duck Restaurant (Forbidden City Branch) to Crystal Orange Beijing Wangfujing Street Hotel: taxi: duration 0, cost 11.0. walk: duration 7, cost 0.0. \nfrom Four Seasons Minfu Roast Duck Restaurant (Forbidden City Branch) to Jingshan Park: metro: duration 14, cost 2. taxi: duration 2, cost 11.54. walk: duration 23, cost 0.0. \nfrom Four Seasons Minfu Roast Duck Restaurant (Forbidden City Branch) to Sanlitun: metro: duration 21, cost 3. taxi: duration 8, cost 24.15. walk: duration 66, cost 0.0. \nfrom Four Seasons Minfu Roast Duck Restaurant (Forbidden City Branch) to Shichahai: metro: duration 18, cost 3. taxi: duration 5, cost 18.31. walk: duration 46, cost 0.0. \nfrom Four Seasons Minfu Roast Duck Restaurant (Forbidden City Branch) to Beijing Hutong Roast Duck (Qianmen Branch): metro: duration 15, cost 2. taxi: duration 2, cost 11.37. walk: duration 22, cost 0.0. \nfrom Four Seasons Minfu Roast Duck Restaurant (Forbidden City Branch) to Four Seasons Minfu Roast Duck Restaurant (Forbidden City Branch):  metro: empty.  taxi: empty.  walk: empty. \nfrom Four Seasons Minfu Roast Duck Restaurant (Forbidden City Branch) to Huguosi Snacks (Huguosi Main Store): metro: duration 17, cost 2. taxi: duration 4, cost 16.3. walk: duration 39, cost 0.0. \nfrom Four Seasons Minfu Roast Duck Restaurant (Forbidden City Branch) to The Palace Museum: metro: duration 16, cost 2. taxi: duration 1, cost 11.0. walk: duration 12, cost 0.0. \nfrom Four Seasons Minfu Roast Duck Restaurant (Forbidden City Branch) to Beihai Park: metro: duration 17, cost 2. taxi: duration 3, cost 12.69. walk: duration 27, cost 0.0. \nfrom Four Seasons Minfu Roast Duck Restaurant (Forbidden City Branch) to TRUE GO HOTEL Fuxingmen Central Conservatory of Music Store: metro: duration 30, cost 3. taxi: duration 7, cost 22.42. walk: duration 60, cost 0.0. \nfrom Four Seasons Minfu Roast Duck Restaurant (Forbidden City Branch) to Beijing Daxing International Airport: metro: duration 108, cost 8. taxi: duration 68, cost 200.22. walk: duration 548, cost 0.0. \nfrom Four Seasons Minfu Roast Duck Restaurant (Forbidden City Branch) to Dongzhimen Shuan Rou: Modern Beijing Hot Pot: metro: duration 18, cost 2. taxi: duration 6, cost 19.38. walk: duration 50, cost 0.0. \nfrom Four Seasons Minfu Roast Duck Restaurant (Forbidden City Branch) to Summer Palace: metro: duration 45, cost 5. taxi: duration 22, cost 61.36. walk: duration 177, cost 0.0. \nfrom Four Seasons Minfu Roast Duck Restaurant (Forbidden City Branch) to Temple of Heaven: metro: duration 17, cost 2. taxi: duration 4, cost 15.45. walk: duration 36, cost 0.0. \nfrom Four Seasons Minfu Roast Duck Restaurant (Forbidden City Branch) to Nanluoguxiang: metro: duration 23, cost 2. taxi: duration 4, cost 16.01. walk: duration 38, cost 0.0. \nfrom Huguosi Snacks (Huguosi Main Store) to Tsinghua University: metro: duration 23, cost 3. taxi: duration 12, cost 33.59. walk: duration 99, cost 0.0. \nfrom Huguosi Snacks (Huguosi Main Store) to Dongjiaomin Lane: metro: duration 12, cost 3. taxi: duration 6, cost 20.92. walk: duration 55, cost 0.0. \nfrom Huguosi Snacks (Huguosi Main Store) to Beijing West Railway Station: metro: duration 14, cost 3. taxi: duration 9, cost 26.92. walk: duration 76, cost 0.0. \nfrom Huguosi Snacks (Huguosi Main Store) to Beijing Tiananmenwangfujing Manxin Hotel: metro: duration 12, cost 2. taxi: duration 5, cost 17.19. walk: duration 42, cost 0.0. \nfrom Huguosi Snacks (Huguosi Main Store) to National Museum of China: metro: duration 15, cost 3. taxi: duration 5, cost 18.24. walk: duration 46, cost 0.0. \nfrom Huguosi Snacks (Huguosi Main Store) to Wangfujing: metro: duration 13, cost 3. taxi: duration 6, cost 18.93. walk: duration 48, cost 0.0. \nfrom Huguosi Snacks (Huguosi Main Store) to Beijing Quanjude (Hepingmen Branch): metro: duration 10, cost 2. taxi: duration 6, cost 18.94. walk: duration 48, cost 0.0. \nfrom Huguosi Snacks (Huguosi Main Store) to Beijing Zoo: metro: duration 20, cost 2. taxi: duration 4, cost 15.59. walk: duration 37, cost 0.0. \nfrom Huguosi Snacks (Huguosi Main Store) to Peking University: metro: duration 27, cost 4. taxi: duration 12, cost 34.64. walk: duration 102, cost 0.0. \nfrom Huguosi Snacks (Huguosi Main Store) to Qianmen Street: metro: duration 16, cost 3. taxi: duration 7, cost 21.1. walk: duration 56, cost 0.0. \nfrom Huguosi Snacks (Huguosi Main Store) to Crystal Orange Beijing Wangfujing Street Hotel: metro: duration 9, cost 2. taxi: duration 5, cost 17.85. walk: duration 45, cost 0.0. \nfrom Huguosi Snacks (Huguosi Main Store) to Jingshan Park: metro: duration 9, cost 2. taxi: duration 3, cost 13.19. walk: duration 29, cost 0.0. \nfrom Huguosi Snacks (Huguosi Main Store) to Sanlitun: metro: duration 20, cost 3. taxi: duration 10, cost 29.77. walk: duration 85, cost 0.0. \nfrom Huguosi Snacks (Huguosi Main Store) to Shichahai: metro: duration 8, cost 2. taxi: duration 3, cost 11.81. walk: duration 24, cost 0.0. \nfrom Huguosi Snacks (Huguosi Main Store) to Beijing Hutong Roast Duck (Qianmen Branch): metro: duration 13, cost 3. taxi: duration 6, cost 20.14. walk: duration 52, cost 0.0. \nfrom Huguosi Snacks (Huguosi Main Store) to Four Seasons Minfu Roast Duck Restaurant (Forbidden City Branch): metro: duration 17, cost 2. taxi: duration 4, cost 16.3. walk: duration 39, cost 0.0. \nfrom Huguosi Snacks (Huguosi Main Store) to Huguosi Snacks (Huguosi Main Store):  metro: empty.  taxi: empty.  walk: empty. \nfrom Huguosi Snacks (Huguosi Main Store) to The Palace Museum: metro: duration 15, cost 2. taxi: duration 4, cost 14.27. walk: duration 32, cost 0.0. \nfrom Huguosi Snacks (Huguosi Main Store) to Beihai Park: metro: duration 10, cost 2. taxi: duration 2, cost 11.0. walk: duration 20, cost 0.0. \nfrom Huguosi Snacks (Huguosi Main Store) to TRUE GO HOTEL Fuxingmen Central Conservatory of Music Store: metro: duration 20, cost 2. taxi: duration 7, cost 21.15. walk: duration 56, cost 0.0. \nfrom Huguosi Snacks (Huguosi Main Store) to Beijing Daxing International Airport: metro: duration 107, cost 8. taxi: duration 72, cost 211.11. walk: duration 577, cost 0.0. \nfrom Huguosi Snacks (Huguosi Main Store) to Dongzhimen Shuan Rou: Modern Beijing Hot Pot: metro: duration 15, cost 3. taxi: duration 8, cost 23.91. walk: duration 65, cost 0.0. \nfrom Huguosi Snacks (Huguosi Main Store) to Summer Palace: metro: duration 32, cost 4. taxi: duration 17, cost 46.45. walk: duration 138, cost 0.0. \nfrom Huguosi Snacks (Huguosi Main Store) to Temple of Heaven: metro: duration 18, cost 3. taxi: duration 9, cost 26.74. walk: duration 75, cost 0.0. \nfrom Huguosi Snacks (Huguosi Main Store) to Nanluoguxiang: metro: duration 16, cost 2. taxi: duration 4, cost 15.53. walk: duration 37, cost 0.0. \nfrom The Palace Museum to Tsinghua University: metro: duration 33, cost 4. taxi: duration 15, cost 41.53. walk: duration 124, cost 0.0. \nfrom The Palace Museum to Dongjiaomin Lane: metro: duration 11, cost 2. taxi: duration 3, cost 11.87. walk: duration 24, cost 0.0. \nfrom The Palace Museum to Beijing West Railway Station: metro: duration 23, cost 3. taxi: duration 11, cost 31.56. walk: duration 92, cost 0.0. \nfrom The Palace Museum to Beijing Tiananmenwangfujing Manxin Hotel: metro: duration 11, cost 2. taxi: duration 1, cost 11.0. walk: duration 12, cost 0.0. \nfrom The Palace Museum to National Museum of China: metro: duration 15, cost 2. taxi: duration 2, cost 11.0. walk: duration 17, cost 0.0. \nfrom The Palace Museum to Wangfujing: metro: duration 11, cost 2. taxi: duration 2, cost 11.0. walk: duration 16, cost 0.0. \nfrom The Palace Museum to Beijing Quanjude (Hepingmen Branch): metro: duration 14, cost 2. taxi: duration 4, cost 15.78. walk: duration 37, cost 0.0. \nfrom The Palace Museum to Beijing Zoo: metro: duration 32, cost 3. taxi: duration 8, cost 25.15. walk: duration 70, cost 0.0. \nfrom The Palace Museum to Peking University: metro: duration 38, cost 4. taxi: duration 16, cost 44.39. walk: duration 132, cost 0.0. \nfrom The Palace Museum to Qianmen Street: metro: duration 18, cost 2. taxi: duration 4, cost 14.2. walk: duration 32, cost 0.0. \nfrom The Palace Museum to Crystal Orange Beijing Wangfujing Street Hotel: metro: duration 8, cost 2. taxi: duration 1, cost 11.0. walk: duration 13, cost 0.0. \nfrom The Palace Museum to Jingshan Park: metro: duration 11, cost 2. taxi: duration 1, cost 11.0. walk: duration 10, cost 0.0. \nfrom The Palace Museum to Sanlitun: metro: duration 19, cost 3. taxi: duration 7, cost 22.34. walk: duration 60, cost 0.0. \nfrom The Palace Museum to Shichahai: metro: duration 15, cost 2. taxi: duration 4, cost 14.81. walk: duration 34, cost 0.0. \nfrom The Palace Museum to Beijing Hutong Roast Duck (Qianmen Branch): metro: duration 15, cost 2. taxi: duration 4, cost 14.96. walk: duration 35, cost 0.0. \nfrom The Palace Museum to Four Seasons Minfu Roast Duck Restaurant (Forbidden City Branch): metro: duration 16, cost 2. taxi: duration 1, cost 11.0. walk: duration 12, cost 0.0. \nfrom The Palace Museum to Huguosi Snacks (Huguosi Main Store): metro: duration 15, cost 2. taxi: duration 4, cost 14.27. walk: duration 32, cost 0.0. \nfrom The Palace Museum to The Palace Museum:  metro: empty.  taxi: empty.  walk: empty. \nfrom The Palace Museum to Beihai Park: metro: duration 14, cost 2. taxi: duration 1, cost 11.0. walk: duration 15, cost 0.0. \nfrom The Palace Museum to TRUE GO HOTEL Fuxingmen Central Conservatory of Music Store: metro: duration 29, cost 3. taxi: duration 8, cost 24.19. walk: duration 66, cost 0.0. \nfrom The Palace Museum to Beijing Daxing International Airport: metro: duration 109, cost 8. taxi: duration 70, cost 205.0. walk: duration 560, cost 0.0. \nfrom The Palace Museum to Dongzhimen Shuan Rou: Modern Beijing Hot Pot: metro: duration 15, cost 2. taxi: duration 5, cost 17.0. walk: duration 42, cost 0.0. \nfrom The Palace Museum to Summer Palace: metro: duration 43, cost 5. taxi: duration 21, cost 58.22. walk: duration 169, cost 0.0. \nfrom The Palace Museum to Temple of Heaven: metro: duration 17, cost 2. taxi: duration 6, cost 18.8. walk: duration 48, cost 0.0. \nfrom The Palace Museum to Nanluoguxiang: metro: duration 20, cost 2. taxi: duration 3, cost 12.33. walk: duration 26, cost 0.0. \nfrom Beihai Park to Tsinghua University: metro: duration 27, cost 3. taxi: duration 13, cost 36.47. walk: duration 108, cost 0.0. \nfrom Beihai Park to Dongjiaomin Lane: metro: duration 12, cost 2. taxi: duration 5, cost 16.52. walk: duration 40, cost 0.0. \nfrom Beihai Park to Beijing West Railway Station: metro: duration 19, cost 3. taxi: duration 11, cost 31.33. walk: duration 91, cost 0.0. \nfrom Beihai Park to Beijing Tiananmenwangfujing Manxin Hotel: metro: duration 12, cost 2. taxi: duration 3, cost 12.87. walk: duration 28, cost 0.0. \nfrom Beihai Park to National Museum of China: metro: duration 16, cost 2. taxi: duration 4, cost 14.35. walk: duration 33, cost 0.0. \nfrom Beihai Park to Wangfujing: metro: duration 12, cost 2. taxi: duration 3, cost 13.57. walk: duration 30, cost 0.0. \nfrom Beihai Park to Beijing Quanjude (Hepingmen Branch): metro: duration 13, cost 3. taxi: duration 5, cost 18.56. walk: duration 47, cost 0.0. \nfrom Beihai Park to Beijing Zoo: metro: duration 26, cost 3. taxi: duration 7, cost 21.31. walk: duration 56, cost 0.0. \nfrom Beihai Park to Peking University: metro: duration 31, cost 4. taxi: duration 14, cost 38.76. walk: duration 116, cost 0.0. \nfrom Beihai Park to Qianmen Street: metro: duration 18, cost 3. taxi: duration 5, cost 18.41. walk: duration 47, cost 0.0. \nfrom Beihai Park to Crystal Orange Beijing Wangfujing Street Hotel: metro: duration 9, cost 2. taxi: duration 3, cost 13.38. walk: duration 29, cost 0.0. \nfrom Beihai Park to Jingshan Park: metro: duration 7, cost 2. taxi: duration 1, cost 11.0. walk: duration 8, cost 0.0. \nfrom Beihai Park to Sanlitun: metro: duration 18, cost 3. taxi: duration 8, cost 23.81. walk: duration 65, cost 0.0. \nfrom Beihai Park to Shichahai: metro: duration 8, cost 2. taxi: duration 2, cost 11.0. walk: duration 19, cost 0.0. \nfrom Beihai Park to Beijing Hutong Roast Duck (Qianmen Branch): metro: duration 15, cost 3. taxi: duration 5, cost 18.56. walk: duration 47, cost 0.0. \nfrom Beihai Park to Four Seasons Minfu Roast Duck Restaurant (Forbidden City Branch): metro: duration 17, cost 2. taxi: duration 3, cost 12.69. walk: duration 27, cost 0.0. \nfrom Beihai Park to Huguosi Snacks (Huguosi Main Store): metro: duration 10, cost 2. taxi: duration 2, cost 11.0. walk: duration 20, cost 0.0. \nfrom Beihai Park to The Palace Museum: metro: duration 14, cost 2. taxi: duration 1, cost 11.0. walk: duration 15, cost 0.0. \nfrom Beihai Park to Beihai Park:  metro: empty.  taxi: empty.  walk: empty. \nfrom Beihai Park to TRUE GO HOTEL Fuxingmen Central Conservatory of Music Store: metro: duration 26, cost 3. taxi: duration 8, cost 24.58. walk: duration 68, cost 0.0. \nfrom Beihai Park to Beijing Daxing International Airport: metro: duration 109, cost 8. taxi: duration 71, cost 210.15. walk: duration 574, cost 0.0. \nfrom Beihai Park to Dongzhimen Shuan Rou: Modern Beijing Hot Pot: metro: duration 13, cost 2. taxi: duration 5, cost 17.99. walk: duration 45, cost 0.0. \nfrom Beihai Park to Summer Palace: metro: duration 36, cost 4. taxi: duration 19, cost 52.48. walk: duration 154, cost 0.0. \nfrom Beihai Park to Temple of Heaven: metro: duration 18, cost 3. taxi: duration 8, cost 23.37. walk: duration 64, cost 0.0. \nfrom Beihai Park to Nanluoguxiang: metro: duration 15, cost 2. taxi: duration 2, cost 11.0. walk: duration 19, cost 0.0. \nfrom TRUE GO HOTEL Fuxingmen Central Conservatory of Music Store to Tsinghua University: metro: duration 38, cost 4. taxi: duration 17, cost 48.04. walk: duration 142, cost 0.0. \nfrom TRUE GO HOTEL Fuxingmen Central Conservatory of Music Store to Dongjiaomin Lane: metro: duration 24, cost 3. taxi: duration 9, cost 25.92. walk: duration 72, cost 0.0. \nfrom TRUE GO HOTEL Fuxingmen Central Conservatory of Music Store to Beijing West Railway Station: metro: duration 18, cost 2. taxi: duration 3, cost 12.43. walk: duration 26, cost 0.0. \nfrom TRUE GO HOTEL Fuxingmen Central Conservatory of Music Store to Beijing Tiananmenwangfujing Manxin Hotel: metro: duration 25, cost 3. taxi: duration 8, cost 24.06. walk: duration 66, cost 0.0. \nfrom TRUE GO HOTEL Fuxingmen Central Conservatory of Music Store to National Museum of China: metro: duration 27, cost 3. taxi: duration 8, cost 23.52. walk: duration 64, cost 0.0. \nfrom TRUE GO HOTEL Fuxingmen Central Conservatory of Music Store to Wangfujing: metro: duration 26, cost 3. taxi: duration 9, cost 27.39. walk: duration 77, cost 0.0. \nfrom TRUE GO HOTEL Fuxingmen Central Conservatory of Music Store to Beijing Quanjude (Hepingmen Branch): metro: duration 18, cost 2. taxi: duration 4, cost 15.95. walk: duration 38, cost 0.0. \nfrom TRUE GO HOTEL Fuxingmen Central Conservatory of Music Store to Beijing Zoo: metro: duration 32, cost 2. taxi: duration 8, cost 23.92. walk: duration 65, cost 0.0. \nfrom TRUE GO HOTEL Fuxingmen Central Conservatory of Music Store to Peking University: metro: duration 40, cost 4. taxi: duration 17, cost 45.78. walk: duration 136, cost 0.0. \nfrom TRUE GO HOTEL Fuxingmen Central Conservatory of Music Store to Qianmen Street: metro: duration 25, cost 2. taxi: duration 7, cost 21.78. walk: duration 58, cost 0.0. \nfrom TRUE GO HOTEL Fuxingmen Central Conservatory of Music Store to Crystal Orange Beijing Wangfujing Street Hotel: metro: duration 22, cost 3. taxi: duration 8, cost 24.64. walk: duration 68, cost 0.0. \nfrom TRUE GO HOTEL Fuxingmen Central Conservatory of Music Store to Jingshan Park: metro: duration 24, cost 3. taxi: duration 9, cost 25.85. walk: duration 72, cost 0.0. \nfrom TRUE GO HOTEL Fuxingmen Central Conservatory of Music Store to Sanlitun: metro: duration 35, cost 4. taxi: duration 15, cost 42.28. walk: duration 126, cost 0.0. \nfrom TRUE GO HOTEL Fuxingmen Central Conservatory of Music Store to Shichahai: metro: duration 25, cost 3. taxi: duration 10, cost 28.11. walk: duration 80, cost 0.0. \nfrom TRUE GO HOTEL Fuxingmen Central Conservatory of Music Store to Beijing Hutong Roast Duck (Qianmen Branch): metro: duration 22, cost 2. taxi: duration 6, cost 18.9. walk: duration 48, cost 0.0. \nfrom TRUE GO HOTEL Fuxingmen Central Conservatory of Music Store to Four Seasons Minfu Roast Duck Restaurant (Forbidden City Branch): metro: duration 30, cost 3. taxi: duration 7, cost 22.42. walk: duration 60, cost 0.0. \nfrom TRUE GO HOTEL Fuxingmen Central Conservatory of Music Store to Huguosi Snacks (Huguosi Main Store): metro: duration 20, cost 2. taxi: duration 7, cost 21.15. walk: duration 56, cost 0.0. \nfrom TRUE GO HOTEL Fuxingmen Central Conservatory of Music Store to The Palace Museum: metro: duration 29, cost 3. taxi: duration 8, cost 24.19. walk: duration 66, cost 0.0. \nfrom TRUE GO HOTEL Fuxingmen Central Conservatory of Music Store to Beihai Park: metro: duration 26, cost 3. taxi: duration 8, cost 24.58. walk: duration 68, cost 0.0. \nfrom TRUE GO HOTEL Fuxingmen Central Conservatory of Music Store to TRUE GO HOTEL Fuxingmen Central Conservatory of Music Store:  metro: empty.  taxi: empty.  walk: empty. \nfrom TRUE GO HOTEL Fuxingmen Central Conservatory of Music Store to Beijing Daxing International Airport: metro: duration 111, cost 8. taxi: duration 66, cost 194.05. walk: duration 531, cost 0.0. \nfrom TRUE GO HOTEL Fuxingmen Central Conservatory of Music Store to Dongzhimen Shuan Rou: Modern Beijing Hot Pot: metro: duration 31, cost 3. taxi: duration 13, cost 36.49. walk: duration 108, cost 0.0. \nfrom TRUE GO HOTEL Fuxingmen Central Conservatory of Music Store to Summer Palace: metro: duration 44, cost 4. taxi: duration 20, cost 55.61. walk: duration 162, cost 0.0. \nfrom TRUE GO HOTEL Fuxingmen Central Conservatory of Music Store to Temple of Heaven: metro: duration 27, cost 3. taxi: duration 9, cost 26.45. walk: duration 74, cost 0.0. \nfrom TRUE GO HOTEL Fuxingmen Central Conservatory of Music Store to Nanluoguxiang: metro: duration 33, cost 3. taxi: duration 10, cost 30.13. walk: duration 87, cost 0.0. \nfrom Beijing Daxing International Airport to Tsinghua University: metro: duration 126, cost 9. taxi: duration 84, cost 247.16. walk: duration 673, cost 0.0. \nfrom Beijing Daxing International Airport to Dongjiaomin Lane: metro: duration 100, cost 8. taxi: duration 67, cost 197.33. walk: duration 540, cost 0.0. \nfrom Beijing Daxing International Airport to Beijing West Railway Station: metro: duration 97, cost 8. taxi: duration 66, cost 193.93. walk: duration 531, cost 0.0. \nfrom Beijing Daxing International Airport to Beijing Tiananmenwangfujing Manxin Hotel: metro: duration 103, cost 8. taxi: duration 68, cost 200.77. walk: duration 549, cost 0.0. \nfrom Beijing Daxing International Airport to National Museum of China: metro: duration 104, cost 8. taxi: duration 67, cost 198.63. walk: duration 543, cost 0.0. \nfrom Beijing Daxing International Airport to Wangfujing: metro: duration 104, cost 8. taxi: duration 69, cost 202.75. walk: duration 554, cost 0.0. \nfrom Beijing Daxing International Airport to Beijing Quanjude (Hepingmen Branch): metro: duration 98, cost 8. taxi: duration 66, cost 192.99. walk: duration 528, cost 0.0. \nfrom Beijing Daxing International Airport to Beijing Zoo: metro: duration 119, cost 8. taxi: duration 74, cost 218.71. walk: duration 597, cost 0.0. \nfrom Beijing Daxing International Airport to Peking University: metro: duration 127, cost 9. taxi: duration 83, cost 244.95. walk: duration 667, cost 0.0. \nfrom Beijing Daxing International Airport to Qianmen Street: metro: duration 103, cost 8. taxi: duration 66, cost 192.78. walk: duration 528, cost 0.0. \nfrom Beijing Daxing International Airport to Crystal Orange Beijing Wangfujing Street Hotel: metro: duration 100, cost 8. taxi: duration 68, cost 200.51. walk: duration 548, cost 0.0. \nfrom Beijing Daxing International Airport to Jingshan Park: metro: duration 106, cost 8. taxi: duration 71, cost 209.02. walk: duration 571, cost 0.0. \nfrom Beijing Daxing International Airport to Sanlitun: metro: duration 109, cost 8. taxi: duration 72, cost 213.66. walk: duration 583, cost 0.0. \nfrom Beijing Daxing International Airport to Shichahai: metro: duration 110, cost 9. taxi: duration 74, cost 217.31. walk: duration 593, cost 0.0. \nfrom Beijing Daxing International Airport to Beijing Hutong Roast Duck (Qianmen Branch): metro: duration 100, cost 8. taxi: duration 65, cost 192.35. walk: duration 527, cost 0.0. \nfrom Beijing Daxing International Airport to Four Seasons Minfu Roast Duck Restaurant (Forbidden City Branch): metro: duration 108, cost 8. taxi: duration 68, cost 200.22. walk: duration 548, cost 0.0. \nfrom Beijing Daxing International Airport to Huguosi Snacks (Huguosi Main Store): metro: duration 107, cost 8. taxi: duration 72, cost 211.11. walk: duration 577, cost 0.0. \nfrom Beijing Daxing International Airport to The Palace Museum: metro: duration 109, cost 8. taxi: duration 70, cost 205.0. walk: duration 560, cost 0.0. \nfrom Beijing Daxing International Airport to Beihai Park: metro: duration 109, cost 8. taxi: duration 71, cost 210.15. walk: duration 574, cost 0.0. \nfrom Beijing Daxing International Airport to TRUE GO HOTEL Fuxingmen Central Conservatory of Music Store: metro: duration 111, cost 8. taxi: duration 66, cost 194.05. walk: duration 531, cost 0.0. \nfrom Beijing Daxing International Airport to Beijing Daxing International Airport:  metro: empty.  taxi: empty.  walk: empty. \nfrom Beijing Daxing International Airport to Dongzhimen Shuan Rou: Modern Beijing Hot Pot: metro: duration 109, cost 8. taxi: duration 72, cost 213.15. walk: duration 582, cost 0.0. \nfrom Beijing Daxing International Airport to Summer Palace: metro: duration 130, cost 9. taxi: duration 86, cost 252.91. walk: duration 688, cost 0.0. \nfrom Beijing Daxing International Airport to Temple of Heaven: metro: duration 99, cost 8. taxi: duration 64, cost 187.83. walk: duration 515, cost 0.0. \nfrom Beijing Daxing International Airport to Nanluoguxiang: metro: duration 116, cost 9. taxi: duration 73, cost 214.47. walk: duration 586, cost 0.0. \nfrom Dongzhimen Shuan Rou: Modern Beijing Hot Pot to Tsinghua University: metro: duration 30, cost 4. taxi: duration 16, cost 43.92. walk: duration 131, cost 0.0. \nfrom Dongzhimen Shuan Rou: Modern Beijing Hot Pot to Dongjiaomin Lane: metro: duration 11, cost 2. taxi: duration 5, cost 18.52. walk: duration 47, cost 0.0. \nfrom Dongzhimen Shuan Rou: Modern Beijing Hot Pot to Beijing West Railway Station: metro: duration 25, cost 4. taxi: duration 16, cost 44.99. walk: duration 134, cost 0.0. \nfrom Dongzhimen Shuan Rou: Modern Beijing Hot Pot to Beijing Tiananmenwangfujing Manxin Hotel: metro: duration 13, cost 2. taxi: duration 5, cost 17.94. walk: duration 45, cost 0.0. \nfrom Dongzhimen Shuan Rou: Modern Beijing Hot Pot to National Museum of China: metro: duration 16, cost 3. taxi: duration 6, cost 19.21. walk: duration 49, cost 0.0. \nfrom Dongzhimen Shuan Rou: Modern Beijing Hot Pot to Wangfujing: metro: duration 12, cost 2. taxi: duration 4, cost 14.8. walk: duration 34, cost 0.0. \nfrom Dongzhimen Shuan Rou: Modern Beijing Hot Pot to Beijing Quanjude (Hepingmen Branch): metro: duration 16, cost 3. taxi: duration 9, cost 27.33. walk: duration 77, cost 0.0. \nfrom Dongzhimen Shuan Rou: Modern Beijing Hot Pot to Beijing Zoo: metro: duration 32, cost 3. taxi: duration 12, cost 33.67. walk: duration 99, cost 0.0. \nfrom Dongzhimen Shuan Rou: Modern Beijing Hot Pot to Peking University: metro: duration 35, cost 4. taxi: duration 18, cost 49.68. walk: duration 146, cost 0.0. \nfrom Dongzhimen Shuan Rou: Modern Beijing Hot Pot to Qianmen Street: metro: duration 20, cost 3. taxi: duration 8, cost 23.54. walk: duration 64, cost 0.0. \nfrom Dongzhimen Shuan Rou: Modern Beijing Hot Pot to Crystal Orange Beijing Wangfujing Street Hotel: metro: duration 10, cost 2. taxi: duration 5, cost 17.61. walk: duration 44, cost 0.0. \nfrom Dongzhimen Shuan Rou: Modern Beijing Hot Pot to Jingshan Park: metro: duration 10, cost 2. taxi: duration 4, cost 15.85. walk: duration 38, cost 0.0. \nfrom Dongzhimen Shuan Rou: Modern Beijing Hot Pot to Sanlitun: metro: duration 10, cost 2. taxi: duration 2, cost 11.0. walk: duration 20, cost 0.0. \nfrom Dongzhimen Shuan Rou: Modern Beijing Hot Pot to Shichahai: metro: duration 12, cost 2. taxi: duration 6, cost 19.23. walk: duration 49, cost 0.0. \nfrom Dongzhimen Shuan Rou: Modern Beijing Hot Pot to Beijing Hutong Roast Duck (Qianmen Branch): metro: duration 17, cost 3. taxi: duration 8, cost 25.59. walk: duration 71, cost 0.0. \nfrom Dongzhimen Shuan Rou: Modern Beijing Hot Pot to Four Seasons Minfu Roast Duck Restaurant (Forbidden City Branch): metro: duration 18, cost 2. taxi: duration 6, cost 19.38. walk: duration 50, cost 0.0. \nfrom Dongzhimen Shuan Rou: Modern Beijing Hot Pot to Huguosi Snacks (Huguosi Main Store): metro: duration 15, cost 3. taxi: duration 8, cost 23.91. walk: duration 65, cost 0.0. \nfrom Dongzhimen Shuan Rou: Modern Beijing Hot Pot to The Palace Museum: metro: duration 15, cost 2. taxi: duration 5, cost 17.0. walk: duration 42, cost 0.0. \nfrom Dongzhimen Shuan Rou: Modern Beijing Hot Pot to Beihai Park: metro: duration 13, cost 2. taxi: duration 5, cost 17.99. walk: duration 45, cost 0.0. \nfrom Dongzhimen Shuan Rou: Modern Beijing Hot Pot to TRUE GO HOTEL Fuxingmen Central Conservatory of Music Store: metro: duration 31, cost 3. taxi: duration 13, cost 36.49. walk: duration 108, cost 0.0. \nfrom Dongzhimen Shuan Rou: Modern Beijing Hot Pot to Beijing Daxing International Airport: metro: duration 109, cost 8. taxi: duration 72, cost 213.15. walk: duration 582, cost 0.0. \nfrom Dongzhimen Shuan Rou: Modern Beijing Hot Pot to Dongzhimen Shuan Rou: Modern Beijing Hot Pot:  metro: empty.  taxi: empty.  walk: empty. \nfrom Dongzhimen Shuan Rou: Modern Beijing Hot Pot to Summer Palace: metro: duration 41, cost 5. taxi: duration 23, cost 64.56. walk: duration 186, cost 0.0. \nfrom Dongzhimen Shuan Rou: Modern Beijing Hot Pot to Temple of Heaven: metro: duration 18, cost 3. taxi: duration 8, cost 25.14. walk: duration 70, cost 0.0. \nfrom Dongzhimen Shuan Rou: Modern Beijing Hot Pot to Nanluoguxiang: metro: duration 16, cost 2. taxi: duration 3, cost 13.5. walk: duration 30, cost 0.0. \nfrom Summer Palace to Tsinghua University: metro: duration 24, cost 3. taxi: duration 7, cost 23.27. walk: duration 63, cost 0.0. \nfrom Summer Palace to Dongjiaomin Lane: metro: duration 40, cost 5. taxi: duration 24, cost 67.22. walk: duration 193, cost 0.0. \nfrom Summer Palace to Beijing West Railway Station: metro: duration 33, cost 4. taxi: duration 19, cost 53.84. walk: duration 157, cost 0.0. \nfrom Summer Palace to Beijing Tiananmenwangfujing Manxin Hotel: metro: duration 40, cost 5. taxi: duration 22, cost 62.39. walk: duration 180, cost 0.0. \nfrom Summer Palace to National Museum of China: metro: duration 44, cost 5. taxi: duration 23, cost 63.84. walk: duration 184, cost 0.0. \nfrom Summer Palace to Wangfujing: metro: duration 41, cost 5. taxi: duration 23, cost 63.88. walk: duration 184, cost 0.0. \nfrom Summer Palace to Beijing Quanjude (Hepingmen Branch): metro: duration 38, cost 5. taxi: duration 22, cost 62.64. walk: duration 181, cost 0.0. \nfrom Summer Palace to Beijing Zoo: metro: duration 38, cost 3. taxi: duration 12, cost 34.84. walk: duration 103, cost 0.0. \nfrom Summer Palace to Peking University: metro: duration 20, cost 2. taxi: duration 5, cost 16.42. walk: duration 40, cost 0.0. \nfrom Summer Palace to Qianmen Street: metro: duration 44, cost 5. taxi: duration 24, cost 67.22. walk: duration 193, cost 0.0. \nfrom Summer Palace to Crystal Orange Beijing Wangfujing Street Hotel: metro: duration 37, cost 5. taxi: duration 22, cost 63.19. walk: duration 182, cost 0.0. \nfrom Summer Palace to Jingshan Park: metro: duration 36, cost 4. taxi: duration 20, cost 55.48. walk: duration 162, cost 0.0. \nfrom Summer Palace to Sanlitun: metro: duration 45, cost 5. taxi: duration 25, cost 71.18. walk: duration 203, cost 0.0. \nfrom Summer Palace to Shichahai: metro: duration 33, cost 4. taxi: duration 17, cost 46.98. walk: duration 139, cost 0.0. \nfrom Summer Palace to Beijing Hutong Roast Duck (Qianmen Branch): metro: duration 41, cost 5. taxi: duration 23, cost 65.28. walk: duration 188, cost 0.0. \nfrom Summer Palace to Four Seasons Minfu Roast Duck Restaurant (Forbidden City Branch): metro: duration 45, cost 5. taxi: duration 22, cost 61.36. walk: duration 177, cost 0.0. \nfrom Summer Palace to Huguosi Snacks (Huguosi Main Store): metro: duration 32, cost 4. taxi: duration 17, cost 46.45. walk: duration 138, cost 0.0. \nfrom Summer Palace to The Palace Museum: metro: duration 43, cost 5. taxi: duration 21, cost 58.22. walk: duration 169, cost 0.0. \nfrom Summer Palace to Beihai Park: metro: duration 36, cost 4. taxi: duration 19, cost 52.48. walk: duration 154, cost 0.0. \nfrom Summer Palace to TRUE GO HOTEL Fuxingmen Central Conservatory of Music Store: metro: duration 44, cost 4. taxi: duration 20, cost 55.61. walk: duration 162, cost 0.0. \nfrom Summer Palace to Beijing Daxing International Airport: metro: duration 130, cost 9. taxi: duration 86, cost 252.91. walk: duration 688, cost 0.0. \nfrom Summer Palace to Dongzhimen Shuan Rou: Modern Beijing Hot Pot: metro: duration 41, cost 5. taxi: duration 23, cost 64.56. walk: duration 186, cost 0.0. \nfrom Summer Palace to Summer Palace:  metro: empty.  taxi: empty.  walk: empty. \nfrom Summer Palace to Temple of Heaven: metro: duration 46, cost 5. taxi: duration 26, cost 74.63. walk: duration 213, cost 0.0. \nfrom Summer Palace to Nanluoguxiang: metro: duration 41, cost 4. taxi: duration 19, cost 54.24. walk: duration 158, cost 0.0. \nfrom Temple of Heaven to Tsinghua University: metro: duration 37, cost 4. taxi: duration 21, cost 59.44. walk: duration 172, cost 0.0. \nfrom Temple of Heaven to Dongjiaomin Lane: metro: duration 8, cost 2. taxi: duration 3, cost 12.12. walk: duration 25, cost 0.0. \nfrom Temple of Heaven to Beijing West Railway Station: metro: duration 20, cost 3. taxi: duration 12, cost 33.87. walk: duration 100, cost 0.0. \nfrom Temple of Heaven to Beijing Tiananmenwangfujing Manxin Hotel: metro: duration 12, cost 2. taxi: duration 4, cost 15.27. walk: duration 36, cost 0.0. \nfrom Temple of Heaven to National Museum of China: metro: duration 12, cost 2. taxi: duration 3, cost 13.72. walk: duration 30, cost 0.0. \nfrom Temple of Heaven to Wangfujing: metro: duration 12, cost 2. taxi: duration 4, cost 16.31. walk: duration 39, cost 0.0. \nfrom Temple of Heaven to Beijing Quanjude (Hepingmen Branch): metro: duration 11, cost 2. taxi: duration 4, cost 15.59. walk: duration 37, cost 0.0. \nfrom Temple of Heaven to Beijing Zoo: metro: duration 34, cost 3. taxi: duration 13, cost 36.87. walk: duration 110, cost 0.0. \nfrom Temple of Heaven to Peking University: metro: duration 41, cost 5. taxi: duration 22, cost 61.52. walk: duration 178, cost 0.0. \nfrom Temple of Heaven to Qianmen Street: metro: duration 14, cost 2. taxi: duration 2, cost 11.0. walk: duration 19, cost 0.0. \nfrom Temple of Heaven to Crystal Orange Beijing Wangfujing Street Hotel: metro: duration 9, cost 2. taxi: duration 4, cost 14.9. walk: duration 34, cost 0.0. \nfrom Temple of Heaven to Jingshan Park: metro: duration 15, cost 3. taxi: duration 7, cost 21.82. walk: duration 58, cost 0.0. \nfrom Temple of Heaven to Sanlitun: metro: duration 19, cost 3. taxi: duration 9, cost 27.6. walk: duration 78, cost 0.0. \nfrom Temple of Heaven to Shichahai: metro: duration 19, cost 3. taxi: duration 10, cost 28.92. walk: duration 83, cost 0.0. \nfrom Temple of Heaven to Beijing Hutong Roast Duck (Qianmen Branch): metro: duration 11, cost 2. taxi: duration 3, cost 12.73. walk: duration 27, cost 0.0. \nfrom Temple of Heaven to Four Seasons Minfu Roast Duck Restaurant (Forbidden City Branch): metro: duration 17, cost 2. taxi: duration 4, cost 15.45. walk: duration 36, cost 0.0. \nfrom Temple of Heaven to Huguosi Snacks (Huguosi Main Store): metro: duration 18, cost 3. taxi: duration 9, cost 26.74. walk: duration 75, cost 0.0. \nfrom Temple of Heaven to The Palace Museum: metro: duration 17, cost 2. taxi: duration 6, cost 18.8. walk: duration 48, cost 0.0. \nfrom Temple of Heaven to Beihai Park: metro: duration 18, cost 3. taxi: duration 8, cost 23.37. walk: duration 64, cost 0.0. \nfrom Temple of Heaven to TRUE GO HOTEL Fuxingmen Central Conservatory of Music Store: metro: duration 27, cost 3. taxi: duration 9, cost 26.45. walk: duration 74, cost 0.0. \nfrom Temple of Heaven to Beijing Daxing International Airport: metro: duration 99, cost 8. taxi: duration 64, cost 187.83. walk: duration 515, cost 0.0. \nfrom Temple of Heaven to Dongzhimen Shuan Rou: Modern Beijing Hot Pot: metro: duration 18, cost 3. taxi: duration 8, cost 25.14. walk: duration 70, cost 0.0. \nfrom Temple of Heaven to Summer Palace: metro: duration 46, cost 5. taxi: duration 26, cost 74.63. walk: duration 213, cost 0.0. \nfrom Temple of Heaven to Temple of Heaven:  metro: empty.  taxi: empty.  walk: empty. \nfrom Temple of Heaven to Nanluoguxiang: metro: duration 24, cost 3. taxi: duration 8, cost 25.6. walk: duration 71, cost 0.0. \nfrom Nanluoguxiang to Tsinghua University: metro: duration 30, cost 3. taxi: duration 13, cost 36.08. walk: duration 107, cost 0.0. \nfrom Nanluoguxiang to Dongjiaomin Lane: metro: duration 18, cost 3. taxi: duration 5, cost 18.2. walk: duration 46, cost 0.0. \nfrom Nanluoguxiang to Beijing West Railway Station: metro: duration 27, cost 4. taxi: duration 13, cost 36.89. walk: duration 110, cost 0.0. \nfrom Nanluoguxiang to Beijing Tiananmenwangfujing Manxin Hotel: metro: duration 18, cost 2. taxi: duration 4, cost 15.37. walk: duration 36, cost 0.0. \nfrom Nanluoguxiang to National Museum of China: metro: duration 22, cost 3. taxi: duration 5, cost 17.03. walk: duration 42, cost 0.0. \nfrom Nanluoguxiang to Wangfujing: metro: duration 18, cost 2. taxi: duration 4, cost 14.14. walk: duration 32, cost 0.0. \nfrom Nanluoguxiang to Beijing Quanjude (Hepingmen Branch): metro: duration 20, cost 3. taxi: duration 7, cost 23.24. walk: duration 63, cost 0.0. \nfrom Nanluoguxiang to Beijing Zoo: metro: duration 33, cost 3. taxi: duration 8, cost 24.87. walk: duration 69, cost 0.0. \nfrom Nanluoguxiang to Peking University: metro: duration 35, cost 4. taxi: duration 14, cost 39.64. walk: duration 119, cost 0.0. \nfrom Nanluoguxiang to Qianmen Street: metro: duration 25, cost 3. taxi: duration 7, cost 21.68. walk: duration 58, cost 0.0. \nfrom Nanluoguxiang to Crystal Orange Beijing Wangfujing Street Hotel: metro: duration 15, cost 2. taxi: duration 4, cost 15.55. walk: duration 37, cost 0.0. \nfrom Nanluoguxiang to Jingshan Park: metro: duration 13, cost 2. taxi: duration 2, cost 11.0. walk: duration 16, cost 0.0. \nfrom Nanluoguxiang to Sanlitun: metro: duration 20, cost 3. taxi: duration 6, cost 19.35. walk: duration 50, cost 0.0. \nfrom Nanluoguxiang to Shichahai: metro: duration 12, cost 2. taxi: duration 2, cost 11.0. walk: duration 19, cost 0.0. \nfrom Nanluoguxiang to Beijing Hutong Roast Duck (Qianmen Branch): metro: duration 22, cost 3. taxi: duration 7, cost 22.6. walk: duration 61, cost 0.0. \nfrom Nanluoguxiang to Four Seasons Minfu Roast Duck Restaurant (Forbidden City Branch): metro: duration 23, cost 2. taxi: duration 4, cost 16.01. walk: duration 38, cost 0.0. \nfrom Nanluoguxiang to Huguosi Snacks (Huguosi Main Store): metro: duration 16, cost 2. taxi: duration 4, cost 15.53. walk: duration 37, cost 0.0. \nfrom Nanluoguxiang to The Palace Museum: metro: duration 20, cost 2. taxi: duration 3, cost 12.33. walk: duration 26, cost 0.0. \nfrom Nanluoguxiang to Beihai Park: metro: duration 15, cost 2. taxi: duration 2, cost 11.0. walk: duration 19, cost 0.0. \nfrom Nanluoguxiang to TRUE GO HOTEL Fuxingmen Central Conservatory of Music Store: metro: duration 33, cost 3. taxi: duration 10, cost 30.13. walk: duration 87, cost 0.0. \nfrom Nanluoguxiang to Beijing Daxing International Airport: metro: duration 116, cost 9. taxi: duration 73, cost 214.47. walk: duration 586, cost 0.0. \nfrom Nanluoguxiang to Dongzhimen Shuan Rou: Modern Beijing Hot Pot: metro: duration 16, cost 2. taxi: duration 3, cost 13.5. walk: duration 30, cost 0.0. \nfrom Nanluoguxiang to Summer Palace: metro: duration 41, cost 4. taxi: duration 19, cost 54.24. walk: duration 158, cost 0.0. \nfrom Nanluoguxiang to Temple of Heaven: metro: duration 24, cost 3. taxi: duration 8, cost 25.6. walk: duration 71, cost 0.0. \nfrom Nanluoguxiang to Nanluoguxiang:  metro: empty.  taxi: empty.  walk: empty. \n"
+    },
+    "initial_verification": {
+      "commonsense_errors": [],
+      "personal_constraints": [
+        true,
+        true,
+        true,
+        true,
+        true
+      ],
+      "category_normalization": [
+        {
+          "constraint_index": 1,
+          "category_domain": "activity",
+          "expression": "activity_type(activity)",
+          "raw_label": "airplane",
+          "normalized_label": "airplane"
+        },
+        {
+          "constraint_index": 1,
+          "category_domain": "activity",
+          "expression": "['train', 'airplane']",
+          "raw_label": "train",
+          "normalized_label": "train"
+        },
+        {
+          "constraint_index": 1,
+          "category_domain": "activity",
+          "expression": "['train', 'airplane']",
+          "raw_label": "airplane",
+          "normalized_label": "airplane"
+        },
+        {
+          "constraint_index": 1,
+          "category_domain": "activity",
+          "expression": "activity_type(activity)",
+          "raw_label": "accommodation",
+          "normalized_label": "accommodation"
+        },
+        {
+          "constraint_index": 1,
+          "category_domain": "activity",
+          "expression": "['train', 'airplane']",
+          "raw_label": "train",
+          "normalized_label": "train"
+        },
+        {
+          "constraint_index": 1,
+          "category_domain": "activity",
+          "expression": "['train', 'airplane']",
+          "raw_label": "airplane",
+          "normalized_label": "airplane"
+        },
+        {
+          "constraint_index": 1,
+          "category_domain": "activity",
+          "expression": "activity_type(activity)",
+          "raw_label": "attraction",
+          "normalized_label": "attraction"
+        },
+        {
+          "constraint_index": 1,
+          "category_domain": "activity",
+          "expression": "['train', 'airplane']",
+          "raw_label": "train",
+          "normalized_label": "train"
+        },
+        {
+          "constraint_index": 1,
+          "category_domain": "activity",
+          "expression": "['train', 'airplane']",
+          "raw_label": "airplane",
+          "normalized_label": "airplane"
+        },
+        {
+          "constraint_index": 1,
+          "category_domain": "activity",
+          "expression": "activity_type(activity)",
+          "raw_label": "dinner",
+          "normalized_label": "dinner"
+        },
+        {
+          "constraint_index": 1,
+          "category_domain": "activity",
+          "expression": "['train', 'airplane']",
+          "raw_label": "train",
+          "normalized_label": "train"
+        },
+        {
+          "constraint_index": 1,
+          "category_domain": "activity",
+          "expression": "['train', 'airplane']",
+          "raw_label": "airplane",
+          "normalized_label": "airplane"
+        },
+        {
+          "constraint_index": 1,
+          "category_domain": "activity",
+          "expression": "activity_type(activity)",
+          "raw_label": "accommodation",
+          "normalized_label": "accommodation"
+        },
+        {
+          "constraint_index": 1,
+          "category_domain": "activity",
+          "expression": "['train', 'airplane']",
+          "raw_label": "train",
+          "normalized_label": "train"
+        },
+        {
+          "constraint_index": 1,
+          "category_domain": "activity",
+          "expression": "['train', 'airplane']",
+          "raw_label": "airplane",
+          "normalized_label": "airplane"
+        },
+        {
+          "constraint_index": 1,
+          "category_domain": "activity",
+          "expression": "activity_type(activity)",
+          "raw_label": "attraction",
+          "normalized_label": "attraction"
+        },
+        {
+          "constraint_index": 1,
+          "category_domain": "activity",
+          "expression": "['train', 'airplane']",
+          "raw_label": "train",
+          "normalized_label": "train"
+        },
+        {
+          "constraint_index": 1,
+          "category_domain": "activity",
+          "expression": "['train', 'airplane']",
+          "raw_label": "airplane",
+          "normalized_label": "airplane"
+        },
+        {
+          "constraint_index": 1,
+          "category_domain": "activity",
+          "expression": "activity_type(activity)",
+          "raw_label": "attraction",
+          "normalized_label": "attraction"
+        },
+        {
+          "constraint_index": 1,
+          "category_domain": "activity",
+          "expression": "['train', 'airplane']",
+          "raw_label": "train",
+          "normalized_label": "train"
+        },
+        {
+          "constraint_index": 1,
+          "category_domain": "activity",
+          "expression": "['train', 'airplane']",
+          "raw_label": "airplane",
+          "normalized_label": "airplane"
+        },
+        {
+          "constraint_index": 1,
+          "category_domain": "activity",
+          "expression": "activity_type(activity)",
+          "raw_label": "lunch",
+          "normalized_label": "lunch"
+        },
+        {
+          "constraint_index": 1,
+          "category_domain": "activity",
+          "expression": "['train', 'airplane']",
+          "raw_label": "train",
+          "normalized_label": "train"
+        },
+        {
+          "constraint_index": 1,
+          "category_domain": "activity",
+          "expression": "['train', 'airplane']",
+          "raw_label": "airplane",
+          "normalized_label": "airplane"
+        },
+        {
+          "constraint_index": 1,
+          "category_domain": "activity",
+          "expression": "activity_type(activity)",
+          "raw_label": "attraction",
+          "normalized_label": "attraction"
+        },
+        {
+          "constraint_index": 1,
+          "category_domain": "activity",
+          "expression": "['train', 'airplane']",
+          "raw_label": "train",
+          "normalized_label": "train"
+        },
+        {
+          "constraint_index": 1,
+          "category_domain": "activity",
+          "expression": "['train', 'airplane']",
+          "raw_label": "airplane",
+          "normalized_label": "airplane"
+        },
+        {
+          "constraint_index": 1,
+          "category_domain": "activity",
+          "expression": "activity_type(activity)",
+          "raw_label": "accommodation",
+          "normalized_label": "accommodation"
+        },
+        {
+          "constraint_index": 1,
+          "category_domain": "activity",
+          "expression": "['train', 'airplane']",
+          "raw_label": "train",
+          "normalized_label": "train"
+        },
+        {
+          "constraint_index": 1,
+          "category_domain": "activity",
+          "expression": "['train', 'airplane']",
+          "raw_label": "airplane",
+          "normalized_label": "airplane"
+        },
+        {
+          "constraint_index": 1,
+          "category_domain": "activity",
+          "expression": "activity_type(activity)",
+          "raw_label": "attraction",
+          "normalized_label": "attraction"
+        },
+        {
+          "constraint_index": 1,
+          "category_domain": "activity",
+          "expression": "['train', 'airplane']",
+          "raw_label": "train",
+          "normalized_label": "train"
+        },
+        {
+          "constraint_index": 1,
+          "category_domain": "activity",
+          "expression": "['train', 'airplane']",
+          "raw_label": "airplane",
+          "normalized_label": "airplane"
+        },
+        {
+          "constraint_index": 1,
+          "category_domain": "activity",
+          "expression": "activity_type(activity)",
+          "raw_label": "attraction",
+          "normalized_label": "attraction"
+        },
+        {
+          "constraint_index": 1,
+          "category_domain": "activity",
+          "expression": "['train', 'airplane']",
+          "raw_label": "train",
+          "normalized_label": "train"
+        },
+        {
+          "constraint_index": 1,
+          "category_domain": "activity",
+          "expression": "['train', 'airplane']",
+          "raw_label": "airplane",
+          "normalized_label": "airplane"
+        },
+        {
+          "constraint_index": 1,
+          "category_domain": "activity",
+          "expression": "activity_type(activity)",
+          "raw_label": "lunch",
+          "normalized_label": "lunch"
+        },
+        {
+          "constraint_index": 1,
+          "category_domain": "activity",
+          "expression": "['train', 'airplane']",
+          "raw_label": "train",
+          "normalized_label": "train"
+        },
+        {
+          "constraint_index": 1,
+          "category_domain": "activity",
+          "expression": "['train', 'airplane']",
+          "raw_label": "airplane",
+          "normalized_label": "airplane"
+        },
+        {
+          "constraint_index": 1,
+          "category_domain": "activity",
+          "expression": "activity_type(activity)",
+          "raw_label": "attraction",
+          "normalized_label": "attraction"
+        },
+        {
+          "constraint_index": 1,
+          "category_domain": "activity",
+          "expression": "['train', 'airplane']",
+          "raw_label": "train",
+          "normalized_label": "train"
+        },
+        {
+          "constraint_index": 1,
+          "category_domain": "activity",
+          "expression": "['train', 'airplane']",
+          "raw_label": "airplane",
+          "normalized_label": "airplane"
+        },
+        {
+          "constraint_index": 1,
+          "category_domain": "activity",
+          "expression": "activity_type(activity)",
+          "raw_label": "accommodation",
+          "normalized_label": "accommodation"
+        },
+        {
+          "constraint_index": 1,
+          "category_domain": "activity",
+          "expression": "['train', 'airplane']",
+          "raw_label": "train",
+          "normalized_label": "train"
+        },
+        {
+          "constraint_index": 1,
+          "category_domain": "activity",
+          "expression": "['train', 'airplane']",
+          "raw_label": "airplane",
+          "normalized_label": "airplane"
+        },
+        {
+          "constraint_index": 1,
+          "category_domain": "activity",
+          "expression": "activity_type(activity)",
+          "raw_label": "attraction",
+          "normalized_label": "attraction"
+        },
+        {
+          "constraint_index": 1,
+          "category_domain": "activity",
+          "expression": "['train', 'airplane']",
+          "raw_label": "train",
+          "normalized_label": "train"
+        },
+        {
+          "constraint_index": 1,
+          "category_domain": "activity",
+          "expression": "['train', 'airplane']",
+          "raw_label": "airplane",
+          "normalized_label": "airplane"
+        },
+        {
+          "constraint_index": 1,
+          "category_domain": "activity",
+          "expression": "activity_type(activity)",
+          "raw_label": "lunch",
+          "normalized_label": "lunch"
+        },
+        {
+          "constraint_index": 1,
+          "category_domain": "activity",
+          "expression": "['train', 'airplane']",
+          "raw_label": "train",
+          "normalized_label": "train"
+        },
+        {
+          "constraint_index": 1,
+          "category_domain": "activity",
+          "expression": "['train', 'airplane']",
+          "raw_label": "airplane",
+          "normalized_label": "airplane"
+        },
+        {
+          "constraint_index": 1,
+          "category_domain": "activity",
+          "expression": "activity_type(activity)",
+          "raw_label": "train",
+          "normalized_label": "train"
+        },
+        {
+          "constraint_index": 1,
+          "category_domain": "activity",
+          "expression": "['train', 'airplane']",
+          "raw_label": "train",
+          "normalized_label": "train"
+        },
+        {
+          "constraint_index": 1,
+          "category_domain": "activity",
+          "expression": "['train', 'airplane']",
+          "raw_label": "airplane",
+          "normalized_label": "airplane"
+        },
+        {
+          "constraint_index": 2,
+          "category_domain": "activity",
+          "expression": "activity_type(activity)",
+          "raw_label": "airplane",
+          "normalized_label": "airplane"
+        },
+        {
+          "constraint_index": 2,
+          "category_domain": "activity",
+          "expression": "'attraction'",
+          "raw_label": "attraction",
+          "normalized_label": "attraction"
+        },
+        {
+          "constraint_index": 2,
+          "category_domain": "activity",
+          "expression": "activity_type(activity)",
+          "raw_label": "accommodation",
+          "normalized_label": "accommodation"
+        },
+        {
+          "constraint_index": 2,
+          "category_domain": "activity",
+          "expression": "'attraction'",
+          "raw_label": "attraction",
+          "normalized_label": "attraction"
+        },
+        {
+          "constraint_index": 2,
+          "category_domain": "activity",
+          "expression": "activity_type(activity)",
+          "raw_label": "attraction",
+          "normalized_label": "attraction"
+        },
+        {
+          "constraint_index": 2,
+          "category_domain": "activity",
+          "expression": "'attraction'",
+          "raw_label": "attraction",
+          "normalized_label": "attraction"
+        },
+        {
+          "constraint_index": 2,
+          "category_domain": "activity",
+          "expression": "activity_type(activity)",
+          "raw_label": "dinner",
+          "normalized_label": "dinner"
+        },
+        {
+          "constraint_index": 2,
+          "category_domain": "activity",
+          "expression": "'attraction'",
+          "raw_label": "attraction",
+          "normalized_label": "attraction"
+        },
+        {
+          "constraint_index": 2,
+          "category_domain": "activity",
+          "expression": "activity_type(activity)",
+          "raw_label": "accommodation",
+          "normalized_label": "accommodation"
+        },
+        {
+          "constraint_index": 2,
+          "category_domain": "activity",
+          "expression": "'attraction'",
+          "raw_label": "attraction",
+          "normalized_label": "attraction"
+        },
+        {
+          "constraint_index": 2,
+          "category_domain": "activity",
+          "expression": "activity_type(activity)",
+          "raw_label": "attraction",
+          "normalized_label": "attraction"
+        },
+        {
+          "constraint_index": 2,
+          "category_domain": "activity",
+          "expression": "'attraction'",
+          "raw_label": "attraction",
+          "normalized_label": "attraction"
+        },
+        {
+          "constraint_index": 2,
+          "category_domain": "activity",
+          "expression": "activity_type(activity)",
+          "raw_label": "attraction",
+          "normalized_label": "attraction"
+        },
+        {
+          "constraint_index": 2,
+          "category_domain": "activity",
+          "expression": "'attraction'",
+          "raw_label": "attraction",
+          "normalized_label": "attraction"
+        },
+        {
+          "constraint_index": 2,
+          "category_domain": "activity",
+          "expression": "activity_type(activity)",
+          "raw_label": "lunch",
+          "normalized_label": "lunch"
+        },
+        {
+          "constraint_index": 2,
+          "category_domain": "activity",
+          "expression": "'attraction'",
+          "raw_label": "attraction",
+          "normalized_label": "attraction"
+        },
+        {
+          "constraint_index": 2,
+          "category_domain": "activity",
+          "expression": "activity_type(activity)",
+          "raw_label": "attraction",
+          "normalized_label": "attraction"
+        },
+        {
+          "constraint_index": 2,
+          "category_domain": "activity",
+          "expression": "'attraction'",
+          "raw_label": "attraction",
+          "normalized_label": "attraction"
+        },
+        {
+          "constraint_index": 2,
+          "category_domain": "activity",
+          "expression": "activity_type(activity)",
+          "raw_label": "accommodation",
+          "normalized_label": "accommodation"
+        },
+        {
+          "constraint_index": 2,
+          "category_domain": "activity",
+          "expression": "'attraction'",
+          "raw_label": "attraction",
+          "normalized_label": "attraction"
+        },
+        {
+          "constraint_index": 2,
+          "category_domain": "activity",
+          "expression": "activity_type(activity)",
+          "raw_label": "attraction",
+          "normalized_label": "attraction"
+        },
+        {
+          "constraint_index": 2,
+          "category_domain": "activity",
+          "expression": "'attraction'",
+          "raw_label": "attraction",
+          "normalized_label": "attraction"
+        },
+        {
+          "constraint_index": 2,
+          "category_domain": "activity",
+          "expression": "activity_type(activity)",
+          "raw_label": "attraction",
+          "normalized_label": "attraction"
+        },
+        {
+          "constraint_index": 2,
+          "category_domain": "activity",
+          "expression": "'attraction'",
+          "raw_label": "attraction",
+          "normalized_label": "attraction"
+        },
+        {
+          "constraint_index": 2,
+          "category_domain": "activity",
+          "expression": "activity_type(activity)",
+          "raw_label": "lunch",
+          "normalized_label": "lunch"
+        },
+        {
+          "constraint_index": 2,
+          "category_domain": "activity",
+          "expression": "'attraction'",
+          "raw_label": "attraction",
+          "normalized_label": "attraction"
+        },
+        {
+          "constraint_index": 2,
+          "category_domain": "activity",
+          "expression": "activity_type(activity)",
+          "raw_label": "attraction",
+          "normalized_label": "attraction"
+        },
+        {
+          "constraint_index": 2,
+          "category_domain": "activity",
+          "expression": "'attraction'",
+          "raw_label": "attraction",
+          "normalized_label": "attraction"
+        },
+        {
+          "constraint_index": 2,
+          "category_domain": "activity",
+          "expression": "activity_type(activity)",
+          "raw_label": "accommodation",
+          "normalized_label": "accommodation"
+        },
+        {
+          "constraint_index": 2,
+          "category_domain": "activity",
+          "expression": "'attraction'",
+          "raw_label": "attraction",
+          "normalized_label": "attraction"
+        },
+        {
+          "constraint_index": 2,
+          "category_domain": "activity",
+          "expression": "activity_type(activity)",
+          "raw_label": "attraction",
+          "normalized_label": "attraction"
+        },
+        {
+          "constraint_index": 2,
+          "category_domain": "activity",
+          "expression": "'attraction'",
+          "raw_label": "attraction",
+          "normalized_label": "attraction"
+        },
+        {
+          "constraint_index": 2,
+          "category_domain": "activity",
+          "expression": "activity_type(activity)",
+          "raw_label": "lunch",
+          "normalized_label": "lunch"
+        },
+        {
+          "constraint_index": 2,
+          "category_domain": "activity",
+          "expression": "'attraction'",
+          "raw_label": "attraction",
+          "normalized_label": "attraction"
+        },
+        {
+          "constraint_index": 2,
+          "category_domain": "activity",
+          "expression": "activity_type(activity)",
+          "raw_label": "train",
+          "normalized_label": "train"
+        },
+        {
+          "constraint_index": 2,
+          "category_domain": "activity",
+          "expression": "'attraction'",
+          "raw_label": "attraction",
+          "normalized_label": "attraction"
+        },
+        {
+          "constraint_index": 2,
+          "category_domain": "attraction",
+          "expression": "{'大学校园', '商业街区'}",
+          "raw_label": "商业街区",
+          "normalized_label": "commercial district"
+        },
+        {
+          "constraint_index": 2,
+          "category_domain": "attraction",
+          "expression": "{'大学校园', '商业街区'}",
+          "raw_label": "大学校园",
+          "normalized_label": "University campus"
+        },
+        {
+          "constraint_index": 2,
+          "category_domain": "attraction",
+          "expression": "attraction_type_set",
+          "raw_label": "University campus",
+          "normalized_label": "University campus"
+        },
+        {
+          "constraint_index": 2,
+          "category_domain": "attraction",
+          "expression": "attraction_type_set",
+          "raw_label": "historical site",
+          "normalized_label": "historical site"
+        },
+        {
+          "constraint_index": 2,
+          "category_domain": "attraction",
+          "expression": "attraction_type_set",
+          "raw_label": "commercial district",
+          "normalized_label": "commercial district"
+        },
+        {
+          "constraint_index": 2,
+          "category_domain": "attraction",
+          "expression": "attraction_type_set",
+          "raw_label": "park",
+          "normalized_label": "park"
+        },
+        {
+          "constraint_index": 2,
+          "category_domain": "attraction",
+          "expression": "attraction_type_set",
+          "raw_label": "Museum/Memorial Hall",
+          "normalized_label": "Museum/Memorial Hall"
+        },
+        {
+          "constraint_index": 5,
+          "category_domain": "transport",
+          "expression": "innercity_transport_type(activity_transports(activity))",
+          "raw_label": "empty",
+          "normalized_label": "empty"
+        },
+        {
+          "constraint_index": 5,
+          "category_domain": "transport",
+          "expression": "'taxi'",
+          "raw_label": "taxi",
+          "normalized_label": "taxi"
+        },
+        {
+          "constraint_index": 5,
+          "category_domain": "transport",
+          "expression": "innercity_transport_type(activity_transports(activity))",
+          "raw_label": "metro",
+          "normalized_label": "metro"
+        },
+        {
+          "constraint_index": 5,
+          "category_domain": "transport",
+          "expression": "'taxi'",
+          "raw_label": "taxi",
+          "normalized_label": "taxi"
+        },
+        {
+          "constraint_index": 5,
+          "category_domain": "transport",
+          "expression": "innercity_transport_type(activity_transports(activity))",
+          "raw_label": "metro",
+          "normalized_label": "metro"
+        },
+        {
+          "constraint_index": 5,
+          "category_domain": "transport",
+          "expression": "'taxi'",
+          "raw_label": "taxi",
+          "normalized_label": "taxi"
+        },
+        {
+          "constraint_index": 5,
+          "category_domain": "transport",
+          "expression": "innercity_transport_type(activity_transports(activity))",
+          "raw_label": "metro",
+          "normalized_label": "metro"
+        },
+        {
+          "constraint_index": 5,
+          "category_domain": "transport",
+          "expression": "'taxi'",
+          "raw_label": "taxi",
+          "normalized_label": "taxi"
+        },
+        {
+          "constraint_index": 5,
+          "category_domain": "transport",
+          "expression": "innercity_transport_type(activity_transports(activity))",
+          "raw_label": "metro",
+          "normalized_label": "metro"
+        },
+        {
+          "constraint_index": 5,
+          "category_domain": "transport",
+          "expression": "'taxi'",
+          "raw_label": "taxi",
+          "normalized_label": "taxi"
+        },
+        {
+          "constraint_index": 5,
+          "category_domain": "transport",
+          "expression": "innercity_transport_type(activity_transports(activity))",
+          "raw_label": "metro",
+          "normalized_label": "metro"
+        },
+        {
+          "constraint_index": 5,
+          "category_domain": "transport",
+          "expression": "'taxi'",
+          "raw_label": "taxi",
+          "normalized_label": "taxi"
+        },
+        {
+          "constraint_index": 5,
+          "category_domain": "transport",
+          "expression": "innercity_transport_type(activity_transports(activity))",
+          "raw_label": "metro",
+          "normalized_label": "metro"
+        },
+        {
+          "constraint_index": 5,
+          "category_domain": "transport",
+          "expression": "'taxi'",
+          "raw_label": "taxi",
+          "normalized_label": "taxi"
+        },
+        {
+          "constraint_index": 5,
+          "category_domain": "transport",
+          "expression": "innercity_transport_type(activity_transports(activity))",
+          "raw_label": "walk",
+          "normalized_label": "walk"
+        },
+        {
+          "constraint_index": 5,
+          "category_domain": "transport",
+          "expression": "'taxi'",
+          "raw_label": "taxi",
+          "normalized_label": "taxi"
+        },
+        {
+          "constraint_index": 5,
+          "category_domain": "transport",
+          "expression": "innercity_transport_type(activity_transports(activity))",
+          "raw_label": "walk",
+          "normalized_label": "walk"
+        },
+        {
+          "constraint_index": 5,
+          "category_domain": "transport",
+          "expression": "'taxi'",
+          "raw_label": "taxi",
+          "normalized_label": "taxi"
+        },
+        {
+          "constraint_index": 5,
+          "category_domain": "transport",
+          "expression": "innercity_transport_type(activity_transports(activity))",
+          "raw_label": "metro",
+          "normalized_label": "metro"
+        },
+        {
+          "constraint_index": 5,
+          "category_domain": "transport",
+          "expression": "'taxi'",
+          "raw_label": "taxi",
+          "normalized_label": "taxi"
+        },
+        {
+          "constraint_index": 5,
+          "category_domain": "transport",
+          "expression": "innercity_transport_type(activity_transports(activity))",
+          "raw_label": "metro",
+          "normalized_label": "metro"
+        },
+        {
+          "constraint_index": 5,
+          "category_domain": "transport",
+          "expression": "'taxi'",
+          "raw_label": "taxi",
+          "normalized_label": "taxi"
+        },
+        {
+          "constraint_index": 5,
+          "category_domain": "transport",
+          "expression": "innercity_transport_type(activity_transports(activity))",
+          "raw_label": "metro",
+          "normalized_label": "metro"
+        },
+        {
+          "constraint_index": 5,
+          "category_domain": "transport",
+          "expression": "'taxi'",
+          "raw_label": "taxi",
+          "normalized_label": "taxi"
+        },
+        {
+          "constraint_index": 5,
+          "category_domain": "transport",
+          "expression": "innercity_transport_type(activity_transports(activity))",
+          "raw_label": "walk",
+          "normalized_label": "walk"
+        },
+        {
+          "constraint_index": 5,
+          "category_domain": "transport",
+          "expression": "'taxi'",
+          "raw_label": "taxi",
+          "normalized_label": "taxi"
+        },
+        {
+          "constraint_index": 5,
+          "category_domain": "transport",
+          "expression": "innercity_transport_type(activity_transports(activity))",
+          "raw_label": "metro",
+          "normalized_label": "metro"
+        },
+        {
+          "constraint_index": 5,
+          "category_domain": "transport",
+          "expression": "'taxi'",
+          "raw_label": "taxi",
+          "normalized_label": "taxi"
+        },
+        {
+          "constraint_index": 5,
+          "category_domain": "transport",
+          "expression": "innercity_transport_type(activity_transports(activity))",
+          "raw_label": "metro",
+          "normalized_label": "metro"
+        },
+        {
+          "constraint_index": 5,
+          "category_domain": "transport",
+          "expression": "'taxi'",
+          "raw_label": "taxi",
+          "normalized_label": "taxi"
+        },
+        {
+          "constraint_index": 5,
+          "category_domain": "transport",
+          "expression": "innercity_transport_type(activity_transports(activity))",
+          "raw_label": "metro",
+          "normalized_label": "metro"
+        },
+        {
+          "constraint_index": 5,
+          "category_domain": "transport",
+          "expression": "'taxi'",
+          "raw_label": "taxi",
+          "normalized_label": "taxi"
+        },
+        {
+          "constraint_index": 5,
+          "category_domain": "transport",
+          "expression": "innercity_transport_type(activity_transports(activity))",
+          "raw_label": "metro",
+          "normalized_label": "metro"
+        },
+        {
+          "constraint_index": 5,
+          "category_domain": "transport",
+          "expression": "'taxi'",
+          "raw_label": "taxi",
+          "normalized_label": "taxi"
+        },
+        {
+          "constraint_index": 5,
+          "category_domain": "transport",
+          "expression": "innercity_transport_type(activity_transports(activity))",
+          "raw_label": "metro",
+          "normalized_label": "metro"
+        },
+        {
+          "constraint_index": 5,
+          "category_domain": "transport",
+          "expression": "'taxi'",
+          "raw_label": "taxi",
+          "normalized_label": "taxi"
+        }
+      ],
+      "personal_errors": [],
+      "evaluation_errors": [],
+      "translation_errors": [],
+      "error_info": [],
+      "passed": true,
+      "translated_plan": {
+        "people_number": 1,
+        "start_city": "Shenzhen",
+        "target_city": "Beijing",
+        "itinerary": [
+          {
+            "day": 1,
+            "activities": [
+              {
+                "start_time": "06:08",
+                "end_time": "08:33",
+                "start": "Shenzhen Bao'an International Airport",
+                "end": "Beijing Daxing International Airport",
+                "price": 923.53,
+                "cost": 923.53,
+                "FlightID": "FL180",
+                "type": "airplane",
+                "tickets": 1,
+                "transports": []
+              },
+              {
+                "position": "Crystal Orange Beijing Wangfujing Street Hotel",
+                "type": "accommodation",
+                "transports": [
+                  {
+                    "start": "Beijing Daxing International Airport",
+                    "end": "Daxing Airport-Metro Station",
+                    "mode": "walk",
+                    "start_time": "08:33",
+                    "end_time": "08:44",
+                    "cost": 0,
+                    "distance": 0.93,
+                    "price": 0
+                  },
+                  {
+                    "start": "Daxing Airport-Metro Station",
+                    "end": "Goldfish Alley-Metro Station",
+                    "mode": "metro",
+                    "start_time": "08:44",
+                    "end_time": "10:13",
+                    "cost": 8,
+                    "distance": 44.86,
+                    "price": 8,
+                    "tickets": 1
+                  },
+                  {
+                    "start": "Goldfish Alley-Metro Station",
+                    "end": "Crystal Orange Beijing Wangfujing Street Hotel",
+                    "mode": "walk",
+                    "start_time": "10:13",
+                    "end_time": "10:13",
+                    "cost": 0,
+                    "distance": 0.07,
+                    "price": 0
+                  }
+                ],
+                "room_type": 1,
+                "price": 679,
+                "cost": 679,
+                "start_time": "10:30",
+                "end_time": "24:00",
+                "rooms": 1
+              },
+              {
+                "position": "Peking University",
+                "type": "attraction",
+                "transports": [
+                  {
+                    "start": "Crystal Orange Beijing Wangfujing Street Hotel",
+                    "end": "Goldfish Alley-Metro Station",
+                    "mode": "walk",
+                    "start_time": "14:00",
+                    "end_time": "14:00",
+                    "cost": 0,
+                    "distance": 0.07,
+                    "price": 0
+                  },
+                  {
+                    "start": "Goldfish Alley-Metro Station",
+                    "end": "Old Summer Palace-Metro Station",
+                    "mode": "metro",
+                    "start_time": "14:00",
+                    "end_time": "14:25",
+                    "cost": 4,
+                    "distance": 12.73,
+                    "price": 4,
+                    "tickets": 1
+                  },
+                  {
+                    "start": "Old Summer Palace-Metro Station",
+                    "end": "Peking University",
+                    "mode": "walk",
+                    "start_time": "14:25",
+                    "end_time": "14:32",
+                    "cost": 0,
+                    "distance": 0.6,
+                    "price": 0
+                  }
+                ],
+                "price": 0.0,
+                "cost": 0.0,
+                "tickets": 1,
+                "start_time": "14:40",
+                "end_time": "16:40"
+              },
+              {
+                "position": "Huguosi Snacks (Huguosi Main Store)",
+                "type": "dinner",
+                "transports": [
+                  {
+                    "start": "Peking University",
+                    "end": "Old Summer Palace-Metro Station",
+                    "mode": "walk",
+                    "start_time": "16:40",
+                    "end_time": "16:47",
+                    "cost": 0,
+                    "distance": 0.6,
+                    "price": 0
+                  },
+                  {
+                    "start": "Old Summer Palace-Metro Station",
+                    "end": "Ping'anli-Metro Station",
+                    "mode": "metro",
+                    "start_time": "16:47",
+                    "end_time": "17:05",
+                    "cost": 4,
+                    "distance": 9.05,
+                    "price": 4,
+                    "tickets": 1
+                  },
+                  {
+                    "start": "Ping'anli-Metro Station",
+                    "end": "Huguosi Snacks (Huguosi Main Store)",
+                    "mode": "walk",
+                    "start_time": "17:05",
+                    "end_time": "17:07",
+                    "cost": 0,
+                    "distance": 0.21,
+                    "price": 0
+                  }
+                ],
+                "price": 32,
+                "cost": 32,
+                "start_time": "17:15",
+                "end_time": "18:15"
+              },
+              {
+                "position": "Crystal Orange Beijing Wangfujing Street Hotel",
+                "type": "accommodation",
+                "transports": [
+                  {
+                    "start": "Huguosi Snacks (Huguosi Main Store)",
+                    "end": "Ping'anli-Metro Station",
+                    "mode": "walk",
+                    "start_time": "18:15",
+                    "end_time": "18:17",
+                    "cost": 0,
+                    "distance": 0.21,
+                    "price": 0
+                  },
+                  {
+                    "start": "Ping'anli-Metro Station",
+                    "end": "Goldfish Alley-Metro Station",
+                    "mode": "metro",
+                    "start_time": "18:17",
+                    "end_time": "18:24",
+                    "cost": 2,
+                    "distance": 3.87,
+                    "price": 2,
+                    "tickets": 1
+                  },
+                  {
+                    "start": "Goldfish Alley-Metro Station",
+                    "end": "Crystal Orange Beijing Wangfujing Street Hotel",
+                    "mode": "walk",
+                    "start_time": "18:24",
+                    "end_time": "18:24",
+                    "cost": 0,
+                    "distance": 0.07,
+                    "price": 0
+                  }
+                ],
+                "room_type": 1,
+                "price": 679,
+                "cost": 679,
+                "start_time": "18:30",
+                "end_time": "24:00",
+                "rooms": 1
+              }
+            ]
+          },
+          {
+            "day": 2,
+            "activities": [
+              {
+                "position": "Tsinghua University",
+                "type": "attraction",
+                "transports": [
+                  {
+                    "start": "Crystal Orange Beijing Wangfujing Street Hotel",
+                    "end": "Goldfish Alley-Metro Station",
+                    "mode": "walk",
+                    "start_time": "09:00",
+                    "end_time": "09:00",
+                    "cost": 0,
+                    "distance": 0.07,
+                    "price": 0
+                  },
+                  {
+                    "start": "Goldfish Alley-Metro Station",
+                    "end": "West Entrance of Qinghua East Road-Metro Station",
+                    "mode": "metro",
+                    "start_time": "09:00",
+                    "end_time": "09:22",
+                    "cost": 4,
+                    "distance": 11.28,
+                    "price": 4,
+                    "tickets": 1
+                  },
+                  {
+                    "start": "West Entrance of Qinghua East Road-Metro Station",
+                    "end": "Tsinghua University",
+                    "mode": "walk",
+                    "start_time": "09:22",
+                    "end_time": "09:28",
+                    "cost": 0,
+                    "distance": 0.54,
+                    "price": 0
+                  }
+                ],
+                "price": 0.0,
+                "cost": 0.0,
+                "tickets": 1,
+                "start_time": "09:30",
+                "end_time": "11:30"
+              },
+              {
+                "position": "Wangfujing",
+                "type": "attraction",
+                "transports": [
+                  {
+                    "start": "Tsinghua University",
+                    "end": "West Entrance of Qinghua East Road-Metro Station",
+                    "mode": "walk",
+                    "start_time": "11:30",
+                    "end_time": "11:36",
+                    "cost": 0,
+                    "distance": 0.54,
+                    "price": 0
+                  },
+                  {
+                    "start": "West Entrance of Qinghua East Road-Metro Station",
+                    "end": "Dengshikou-Metro Station",
+                    "mode": "metro",
+                    "start_time": "11:36",
+                    "end_time": "11:58",
+                    "cost": 4,
+                    "distance": 11.44,
+                    "price": 4,
+                    "tickets": 1
+                  },
+                  {
+                    "start": "Dengshikou-Metro Station",
+                    "end": "Wangfujing",
+                    "mode": "walk",
+                    "start_time": "11:58",
+                    "end_time": "12:01",
+                    "cost": 0,
+                    "distance": 0.3,
+                    "price": 0
+                  }
+                ],
+                "price": 0.0,
+                "cost": 0.0,
+                "tickets": 1,
+                "start_time": "12:10",
+                "end_time": "13:10"
+              },
+              {
+                "position": "Four Seasons Minfu Roast Duck Restaurant (Forbidden City Branch)",
+                "type": "lunch",
+                "transports": [
+                  {
+                    "start": "Wangfujing",
+                    "end": "Four Seasons Minfu Roast Duck Restaurant (Forbidden City Branch)",
+                    "mode": "walk",
+                    "start_time": "13:10",
+                    "end_time": "13:27",
+                    "cost": 0,
+                    "distance": 1.4222774343281472
+                  }
+                ],
+                "price": 180,
+                "cost": 180,
+                "start_time": "13:20",
+                "end_time": "14:20"
+              },
+              {
+                "position": "The Palace Museum",
+                "type": "attraction",
+                "transports": [
+                  {
+                    "start": "Four Seasons Minfu Roast Duck Restaurant (Forbidden City Branch)",
+                    "end": "The Palace Museum",
+                    "mode": "walk",
+                    "start_time": "14:20",
+                    "end_time": "14:32",
+                    "cost": 0,
+                    "distance": 1.063160886548407
+                  }
+                ],
+                "price": 0.0,
+                "cost": 0.0,
+                "tickets": 1,
+                "start_time": "14:40",
+                "end_time": "16:40"
+              },
+              {
+                "position": "Crystal Orange Beijing Wangfujing Street Hotel",
+                "type": "accommodation",
+                "transports": [
+                  {
+                    "start": "The Palace Museum",
+                    "end": "National Art Museum of China-Metro Station",
+                    "mode": "walk",
+                    "start_time": "16:40",
+                    "end_time": "16:47",
+                    "cost": 0,
+                    "distance": 0.63,
+                    "price": 0
+                  },
+                  {
+                    "start": "National Art Museum of China-Metro Station",
+                    "end": "Goldfish Alley-Metro Station",
+                    "mode": "metro",
+                    "start_time": "16:47",
+                    "end_time": "16:48",
+                    "cost": 2,
+                    "distance": 0.92,
+                    "price": 2,
+                    "tickets": 1
+                  },
+                  {
+                    "start": "Goldfish Alley-Metro Station",
+                    "end": "Crystal Orange Beijing Wangfujing Street Hotel",
+                    "mode": "walk",
+                    "start_time": "16:48",
+                    "end_time": "16:48",
+                    "cost": 0,
+                    "distance": 0.07,
+                    "price": 0
+                  }
+                ],
+                "room_type": 1,
+                "price": 679,
+                "cost": 679,
+                "start_time": "17:00",
+                "end_time": "24:00",
+                "rooms": 1
+              }
+            ]
+          },
+          {
+            "day": 3,
+            "activities": [
+              {
+                "position": "National Museum of China",
+                "type": "attraction",
+                "transports": [
+                  {
+                    "start": "Crystal Orange Beijing Wangfujing Street Hotel",
+                    "end": "Goldfish Alley-Metro Station",
+                    "mode": "walk",
+                    "start_time": "09:00",
+                    "end_time": "09:00",
+                    "cost": 0,
+                    "distance": 0.07,
+                    "price": 0
+                  },
+                  {
+                    "start": "Goldfish Alley-Metro Station",
+                    "end": "Wangfujing-Metro Station",
+                    "mode": "metro",
+                    "start_time": "09:00",
+                    "end_time": "09:01",
+                    "cost": 2,
+                    "distance": 0.81,
+                    "price": 2,
+                    "tickets": 1
+                  },
+                  {
+                    "start": "Wangfujing-Metro Station",
+                    "end": "National Museum of China",
+                    "mode": "walk",
+                    "start_time": "09:01",
+                    "end_time": "09:06",
+                    "cost": 0,
+                    "distance": 0.48,
+                    "price": 0
+                  }
+                ],
+                "price": 0.0,
+                "cost": 0.0,
+                "tickets": 1,
+                "start_time": "09:10",
+                "end_time": "11:10"
+              },
+              {
+                "position": "Qianmen Street",
+                "type": "attraction",
+                "transports": [
+                  {
+                    "start": "National Museum of China",
+                    "end": "Wangfujing-Metro Station",
+                    "mode": "walk",
+                    "start_time": "11:10",
+                    "end_time": "11:15",
+                    "cost": 0,
+                    "distance": 0.48,
+                    "price": 0
+                  },
+                  {
+                    "start": "Wangfujing-Metro Station",
+                    "end": "Qianmen-Metro Station",
+                    "mode": "metro",
+                    "start_time": "11:15",
+                    "end_time": "11:17",
+                    "cost": 2,
+                    "distance": 1.46,
+                    "price": 2,
+                    "tickets": 1
+                  },
+                  {
+                    "start": "Qianmen-Metro Station",
+                    "end": "Qianmen Street",
+                    "mode": "walk",
+                    "start_time": "11:17",
+                    "end_time": "11:23",
+                    "cost": 0,
+                    "distance": 0.57,
+                    "price": 0
+                  }
+                ],
+                "price": 0.0,
+                "cost": 0.0,
+                "tickets": 1,
+                "start_time": "11:30",
+                "end_time": "12:30"
+              },
+              {
+                "position": "Beijing Hutong Roast Duck (Qianmen Branch)",
+                "type": "lunch",
+                "transports": [
+                  {
+                    "start": "Qianmen Street",
+                    "end": "Beijing Hutong Roast Duck (Qianmen Branch)",
+                    "mode": "walk",
+                    "start_time": "12:30",
+                    "end_time": "12:39",
+                    "cost": 0,
+                    "distance": 0.8329707415743489
+                  }
+                ],
+                "price": 106,
+                "cost": 106,
+                "start_time": "12:40",
+                "end_time": "13:40"
+              },
+              {
+                "position": "Temple of Heaven",
+                "type": "attraction",
+                "transports": [
+                  {
+                    "start": "Beijing Hutong Roast Duck (Qianmen Branch)",
+                    "end": "Qianmen-Metro Station",
+                    "mode": "walk",
+                    "start_time": "13:40",
+                    "end_time": "13:43",
+                    "cost": 0,
+                    "distance": 0.32,
+                    "price": 0
+                  },
+                  {
+                    "start": "Qianmen-Metro Station",
+                    "end": "Ci Qi Kou-Metro Station",
+                    "mode": "metro",
+                    "start_time": "13:43",
+                    "end_time": "13:47",
+                    "cost": 2,
+                    "distance": 2.04,
+                    "price": 2,
+                    "tickets": 1
+                  },
+                  {
+                    "start": "Ci Qi Kou-Metro Station",
+                    "end": "Temple of Heaven",
+                    "mode": "walk",
+                    "start_time": "13:47",
+                    "end_time": "13:51",
+                    "cost": 0,
+                    "distance": 0.37,
+                    "price": 0
+                  }
+                ],
+                "price": 34.0,
+                "cost": 34.0,
+                "tickets": 1,
+                "start_time": "14:00",
+                "end_time": "16:00"
+              },
+              {
+                "position": "Crystal Orange Beijing Wangfujing Street Hotel",
+                "type": "accommodation",
+                "transports": [
+                  {
+                    "start": "Temple of Heaven",
+                    "end": "Ci Qi Kou-Metro Station",
+                    "mode": "walk",
+                    "start_time": "16:00",
+                    "end_time": "16:04",
+                    "cost": 0,
+                    "distance": 0.37,
+                    "price": 0
+                  },
+                  {
+                    "start": "Ci Qi Kou-Metro Station",
+                    "end": "Goldfish Alley-Metro Station",
+                    "mode": "metro",
+                    "start_time": "16:04",
+                    "end_time": "16:09",
+                    "cost": 2,
+                    "distance": 2.58,
+                    "price": 2,
+                    "tickets": 1
+                  },
+                  {
+                    "start": "Goldfish Alley-Metro Station",
+                    "end": "Crystal Orange Beijing Wangfujing Street Hotel",
+                    "mode": "walk",
+                    "start_time": "16:09",
+                    "end_time": "16:09",
+                    "cost": 0,
+                    "distance": 0.07,
+                    "price": 0
+                  }
+                ],
+                "room_type": 1,
+                "price": 679,
+                "cost": 679,
+                "start_time": "16:30",
+                "end_time": "24:00",
+                "rooms": 1
+              }
+            ]
+          },
+          {
+            "day": 4,
+            "activities": [
+              {
+                "position": "Beijing Zoo",
+                "type": "attraction",
+                "transports": [
+                  {
+                    "start": "Crystal Orange Beijing Wangfujing Street Hotel",
+                    "end": "Goldfish Alley-Metro Station",
+                    "mode": "walk",
+                    "start_time": "09:00",
+                    "end_time": "09:00",
+                    "cost": 0,
+                    "distance": 0.07,
+                    "price": 0
+                  },
+                  {
+                    "start": "Goldfish Alley-Metro Station",
+                    "end": "Zoo-Metro Station",
+                    "mode": "metro",
+                    "start_time": "09:00",
+                    "end_time": "09:13",
+                    "cost": 3,
+                    "distance": 6.67,
+                    "price": 3,
+                    "tickets": 1
+                  },
+                  {
+                    "start": "Zoo-Metro Station",
+                    "end": "Beijing Zoo",
+                    "mode": "walk",
+                    "start_time": "09:13",
+                    "end_time": "09:26",
+                    "cost": 0,
+                    "distance": 1.09,
+                    "price": 0
+                  }
+                ],
+                "price": 15.0,
+                "cost": 15.0,
+                "tickets": 1,
+                "start_time": "09:30",
+                "end_time": "11:30"
+              },
+              {
+                "position": "Dongzhimen Shuan Rou: Modern Beijing Hot Pot",
+                "type": "lunch",
+                "transports": [
+                  {
+                    "start": "Beijing Zoo",
+                    "end": "Zoo-Metro Station",
+                    "mode": "walk",
+                    "start_time": "11:30",
+                    "end_time": "11:43",
+                    "cost": 0,
+                    "distance": 1.09,
+                    "price": 0
+                  },
+                  {
+                    "start": "Zoo-Metro Station",
+                    "end": "Dongzhimen-Metro Station",
+                    "mode": "metro",
+                    "start_time": "11:43",
+                    "end_time": "11:59",
+                    "cost": 3,
+                    "distance": 8.28,
+                    "price": 3,
+                    "tickets": 1
+                  },
+                  {
+                    "start": "Dongzhimen-Metro Station",
+                    "end": "Dongzhimen Shuan Rou: Modern Beijing Hot Pot",
+                    "mode": "walk",
+                    "start_time": "11:59",
+                    "end_time": "12:02",
+                    "cost": 0,
+                    "distance": 0.28,
+                    "price": 0
+                  }
+                ],
+                "price": 194,
+                "cost": 194,
+                "start_time": "12:00",
+                "end_time": "13:00"
+              },
+              {
+                "start": "Beijing West Railway Station",
+                "end": "Shenzhen North Railway Station",
+                "start_time": "14:00",
+                "end_time": "22:44",
+                "TrainID": "G81",
+                "type": "train",
+                "transports": [
+                  {
+                    "start": "Dongzhimen Shuan Rou: Modern Beijing Hot Pot",
+                    "end": "Dongzhimen-Metro Station",
+                    "mode": "walk",
+                    "start_time": "13:00",
+                    "end_time": "13:03",
+                    "cost": 0,
+                    "distance": 0.28,
+                    "price": 0
+                  },
+                  {
+                    "start": "Dongzhimen-Metro Station",
+                    "end": "Beijing West Railway Station-Metro Station",
+                    "mode": "metro",
+                    "start_time": "13:03",
+                    "end_time": "13:25",
+                    "cost": 4,
+                    "distance": 11.1,
+                    "price": 4,
+                    "tickets": 1
+                  },
+                  {
+                    "start": "Beijing West Railway Station-Metro Station",
+                    "end": "Beijing West Railway Station",
+                    "mode": "walk",
+                    "start_time": "13:25",
+                    "end_time": "13:25",
+                    "cost": 0,
+                    "distance": 0.08,
+                    "price": 0
+                  }
+                ],
+                "price": 1263.04,
+                "cost": 1263.04,
+                "tickets": 1
+              }
+            ]
+          }
+        ]
+      },
+      "verifier_errors": [],
+      "schema_errors": [],
+      "translation_failures": []
+    },
+    "environment_context": {
+      "lang": "en"
+    },
+    "generation_metadata": {
+      "raw_response": "[{\"day\": 1,```json\n{\n    \"day\": 1,\n    \"activities\": [\n        {\n            \"start_time\": \"06:08\",\n            \"end_time\": \"08:33\",\n            \"start\": \"Shenzhen Bao'an International Airport\",\n            \"end\": \"Beijing Daxing International Airport\",\n            \"price\": 923.53,\n            \"cost\": 923.53,\n            \"FlightID\": \"FL180\",\n            \"type\": \"airplane\",\n            \"tickets\": 1,\n            \"transports\": \"empty\"\n        },\n        {\n            \"position\": \"Crystal Orange Beijing Wangfujing Street Hotel\",\n            \"type\": \"accommodation\",\n            \"transports\": {\"from\": \"Beijing Daxing International Airport\", \"to\": \"Crystal Orange Beijing Wangfujing Street Hotel\", \"mode\": \"metro\", \"start_time\": \"08:33\", \"end_time\": \"10:13\", \"cost\": 8},\n            \"room_type\": 1,\n            \"price\": 679,\n            \"cost\": 679,\n            \"start_time\": \"10:30\",\n            \"end_time\": \"24:00\",\n            \"rooms\": 1\n        },\n        {\n            \"position\": \"Peking University\",\n            \"type\": \"attraction\",\n            \"transports\": {\"from\": \"Crystal Orange Beijing Wangfujing Street Hotel\", \"to\": \"Peking University\", \"mode\": \"metro\", \"start_time\": \"14:00\", \"end_time\": \"14:32\", \"cost\": 4},\n            \"price\": 0.0,\n            \"cost\": 0.0,\n            \"tickets\": 1,\n            \"start_time\": \"14:40\",\n            \"end_time\": \"16:40\"\n        },\n        {\n            \"position\": \"Huguosi Snacks (Huguosi Main Store)\",\n            \"type\": \"dinner\",\n            \"transports\": {\"from\": \"Peking University\", \"to\": \"Huguosi Snacks (Huguosi Main Store)\", \"mode\": \"metro\", \"start_time\": \"16:40\", \"end_time\": \"17:07\", \"cost\": 4},\n            \"price\": 32,\n            \"cost\": 32,\n            \"start_time\": \"17:15\",\n            \"end_time\": \"18:15\"\n        },\n        {\n            \"position\": \"Crystal Orange Beijing Wangfujing Street Hotel\",\n            \"type\": \"accommodation\",\n            \"transports\": {\"from\": \"Huguosi Snacks (Huguosi Main Store)\", \"to\": \"Crystal Orange Beijing Wangfujing Street Hotel\", \"mode\": \"metro\", \"start_time\": \"18:15\", \"end_time\": \"18:24\", \"cost\": 2},\n            \"room_type\": 1,\n            \"price\": 679,\n            \"cost\": 679,\n            \"start_time\": \"18:30\",\n            \"end_time\": \"24:00\",\n            \"rooms\": 1\n        }\n    ]\n},\n{\n    \"day\": 2,\n    \"activities\": [\n        {\n            \"position\": \"Tsinghua University\",\n            \"type\": \"attraction\",\n            \"transports\": {\"from\": \"Crystal Orange Beijing Wangfujing Street Hotel\", \"to\": \"Tsinghua University\", \"mode\": \"metro\", \"start_time\": \"09:00\", \"end_time\": \"09:28\", \"cost\": 4},\n            \"price\": 0.0,\n            \"cost\": 0.0,\n            \"tickets\": 1,\n            \"start_time\": \"09:30\",\n            \"end_time\": \"11:30\"\n        },\n        {\n            \"position\": \"Wangfujing\",\n            \"type\": \"attraction\",\n            \"transports\": {\"from\": \"Tsinghua University\", \"to\": \"Wangfujing\", \"mode\": \"metro\", \"start_time\": \"11:30\", \"end_time\": \"12:01\", \"cost\": 4},\n            \"price\": 0.0,\n            \"cost\": 0.0,\n            \"tickets\": 1,\n            \"start_time\": \"12:10\",\n            \"end_time\": \"13:10\"\n        },\n        {\n            \"position\": \"Four Seasons Minfu Roast Duck Restaurant (Forbidden City Branch)\",\n            \"type\": \"lunch\",\n            \"transports\": {\"from\": \"Wangfujing\", \"to\": \"Four Seasons Minfu Roast Duck Restaurant (Forbidden City Branch)\", \"mode\": \"walk\", \"start_time\": \"13:10\", \"end_time\": \"13:17\", \"cost\": 0},\n            \"price\": 180,\n            \"cost\": 180,\n            \"start_time\": \"13:20\",\n            \"end_time\": \"14:20\"\n        },\n        {\n            \"position\": \"The Palace Museum\",\n            \"type\": \"attraction\",\n            \"transports\": {\"from\": \"Four Seasons Minfu Roast Duck Restaurant (Forbidden City Branch)\", \"to\": \"The Palace Museum\", \"mode\": \"walk\", \"start_time\": \"14:20\", \"end_time\": \"14:32\", \"cost\": 0},\n            \"price\": 0.0,\n            \"cost\": 0.0,\n            \"tickets\": 1,\n            \"start_time\": \"14:40\",\n            \"end_time\": \"16:40\"\n        },\n        {\n            \"position\": \"Crystal Orange Beijing Wangfujing Street Hotel\",\n            \"type\": \"accommodation\",\n            \"transports\": {\"from\": \"The Palace Museum\", \"to\": \"Crystal Orange Beijing Wangfujing Street Hotel\", \"mode\": \"metro\", \"start_time\": \"16:40\", \"end_time\": \"16:48\", \"cost\": 2},\n            \"room_type\": 1,\n            \"price\": 679,\n            \"cost\": 679,\n            \"start_time\": \"17:00\",\n            \"end_time\": \"24:00\",\n            \"rooms\": 1\n        }\n    ]\n},\n{\n    \"day\": 3,\n    \"activities\": [\n        {\n            \"position\": \"National Museum of China\",\n            \"type\": \"attraction\",\n            \"transports\": {\"from\": \"Crystal Orange Beijing Wangfujing Street Hotel\", \"to\": \"National Museum of China\", \"mode\": \"metro\", \"start_time\": \"09:00\", \"end_time\": \"09:06\", \"cost\": 2},\n            \"price\": 0.0,\n            \"cost\": 0.0,\n            \"tickets\": 1,\n            \"start_time\": \"09:10\",\n            \"end_time\": \"11:10\"\n        },\n        {\n            \"position\": \"Qianmen Street\",\n            \"type\": \"attraction\",\n            \"transports\": {\"from\": \"National Museum of China\", \"to\": \"Qianmen Street\", \"mode\": \"metro\", \"start_time\": \"11:10\", \"end_time\": \"11:23\", \"cost\": 2},\n            \"price\": 0.0,\n            \"cost\": 0.0,\n            \"tickets\": 1,\n            \"start_time\": \"11:30\",\n            \"end_time\": \"12:30\"\n        },\n        {\n            \"position\": \"Beijing Hutong Roast Duck (Qianmen Branch)\",\n            \"type\": \"lunch\",\n            \"transports\": {\"from\": \"Qianmen Street\", \"to\": \"Beijing Hutong Roast Duck (Qianmen Branch)\", \"mode\": \"walk\", \"start_time\": \"12:30\", \"end_time\": \"12:39\", \"cost\": 0},\n            \"price\": 106,\n            \"cost\": 106,\n            \"start_time\": \"12:40\",\n            \"end_time\": \"13:40\"\n        },\n        {\n            \"position\": \"Temple of Heaven\",\n            \"type\": \"attraction\",\n            \"transports\": {\"from\": \"Beijing Hutong Roast Duck (Qianmen Branch)\", \"to\": \"Temple of Heaven\", \"mode\": \"metro\", \"start_time\": \"13:40\", \"end_time\": \"13:52\", \"cost\": 2},\n            \"price\": 34.0,\n            \"cost\": 34.0,\n            \"tickets\": 1,\n            \"start_time\": \"14:00\",\n            \"end_time\": \"16:00\"\n        },\n        {\n            \"position\": \"Crystal Orange Beijing Wangfujing Street Hotel\",\n            \"type\": \"accommodation\",\n            \"transports\": {\"from\": \"Temple of Heaven\", \"to\": \"Crystal Orange Beijing Wangfujing Street Hotel\", \"mode\": \"metro\", \"start_time\": \"16:00\", \"end_time\": \"16:09\", \"cost\": 2},\n            \"room_type\": 1,\n            \"price\": 679,\n            \"cost\": 679,\n            \"start_time\": \"16:30\",\n            \"end_time\": \"24:00\",\n            \"rooms\": 1\n        }\n    ]\n},\n{\n    \"day\": 4,\n    \"activities\": [\n        {\n            \"position\": \"Beijing Zoo\",\n            \"type\": \"attraction\",\n            \"transports\": {\"from\": \"Crystal Orange Beijing Wangfujing Street Hotel\", \"to\": \"Beijing Zoo\", \"mode\": \"metro\", \"start_time\": \"09:00\", \"end_time\": \"09:26\", \"cost\": 3},\n            \"price\": 15.0,\n            \"cost\": 15.0,\n            \"tickets\": 1,\n            \"start_time\": \"09:30\",\n            \"end_time\": \"11:30\"\n        },\n        {\n            \"position\": \"Dongzhimen Shuan Rou: Modern Beijing Hot Pot\",\n            \"type\": \"lunch\",\n            \"transports\": {\"from\": \"Beijing Zoo\", \"to\": \"Dongzhimen Shuan Rou: Modern Beijing Hot Pot\", \"mode\": \"metro\", \"start_time\": \"11:30\", \"end_time\": \"11:42\", \"cost\": 3},\n            \"price\": 194,\n            \"cost\": 194,\n            \"start_time\": \"12:00\",\n            \"end_time\": \"13:00\"\n        },\n        {\n            \"start\": \"Beijing West Railway Station\",\n            \"end\": \"Shenzhen North Railway Station\",\n            \"start_time\": \"14:00\",\n            \"end_time\": \"22:44\",\n            \"TrainID\": \"G81\",\n            \"type\": \"train\",\n            \"transports\": {\"from\": \"Dongzhimen Shuan Rou: Modern Beijing Hot Pot\", \"to\": \"Beijing West Railway Station\", \"mode\": \"metro\", \"start_time\": \"13:00\", \"end_time\": \"13:25\", \"cost\": 4},\n            \"price\": 1263.04,\n            \"cost\": 1263.04,\n            \"tickets\": 1\n        }\n    ]\n}\n]\n```",
+      "input_tokens": 97370,
+      "output_tokens": 2610,
+      "total_tokens": 99980,
+      "model_calls": 6,
+      "failed_model_calls": 0,
+      "elapsed_time_seconds": 65.05306220054626,
+      "llm_inference_time_seconds": 50.09922432899475,
+      "information_collection_time_seconds": 14.952734470367432,
+      "initial_generation_time_s": 65.05227480002213,
+      "initial_generation_tool_calls": 5534,
+      "initial_generation_tool_call_counts_by_type": {
+        "accommodations_select": 1,
+        "attractions_select": 1,
+        "goto": 1800,
+        "intercity_transport_select": 4,
+        "next_page": 127,
+        "poi_lat_lon_search": 3600,
+        "restaurants_select": 1
+      },
+      "shared_initialization_time_s": 65.57248850003816,
+      "shared_initialization_system_metrics": {
+        "tool_call_count": 5662,
+        "successful_tool_call_count": 5662,
+        "failed_tool_call_count": 0,
+        "verification_count": 1,
+        "tool_call_counts_by_type": {
+          "accommodations_select": 5,
+          "attractions_select": 17,
+          "goto": 1834,
+          "intercity_transport_select": 6,
+          "next_page": 127,
+          "poi_lat_lon_search": 3668,
+          "restaurants_select": 5
+        }
+      }
+    }
+  },
+  "initial_plan_hash": "48b4fdd85e945242494b9cac2031ec5543483c4351b71278854a87906a19e32e",
+  "initial_state_hash": "b2cab86bf5cd4c1eaa6aa5dafb1720902a05beec0e79ad329e6913638f149fcd"
+}

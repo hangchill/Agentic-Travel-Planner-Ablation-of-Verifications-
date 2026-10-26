@@ -2,7 +2,7 @@
 
 Keep reusable regression matrices and pooled R4 inputs here.
 
-- `scripts/build_regression_matrix.py` defaults to `<strategy>/`, such as `R0/`.
+- `scripts/matrix_building/build_regression_matrix.py` defaults to `<strategy>/`, such as `R0/`.
 - Both main-matrix builder entry points default to `pooled/main_matrix.csv` plus `pooled/main_matrix_manifest.json`.
 - The [full workflow](../r4/README.md) uses `<source-run-id>/R0/` through `R3/` and `<source-run-id>/pooled/` to keep batches separate.
 

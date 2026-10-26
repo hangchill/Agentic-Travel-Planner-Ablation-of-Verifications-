@@ -11,7 +11,7 @@ database and model credentials as described in the main README:
 
 ```powershell
 python -m pip install -r requirements.txt
-python scripts/setup_project.py
+python scripts/experiment_setup/setup_project.py
 ```
 
 Set `CHINATRAVEL_OPENAI_API_KEY`, `CHINATRAVEL_OPENAI_BASE_URL`, and

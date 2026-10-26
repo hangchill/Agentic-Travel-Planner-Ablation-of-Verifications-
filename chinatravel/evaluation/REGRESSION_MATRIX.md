@@ -90,7 +90,7 @@ representativeness.
 ## CLI and outputs
 
 ```bash
-python scripts/build_regression_matrix.py \
+python scripts/matrix_building/build_regression_matrix.py \
   --input attempts.jsonl --repair-strategy R0 --output-dir artifacts/matrix-r0
 ```
 

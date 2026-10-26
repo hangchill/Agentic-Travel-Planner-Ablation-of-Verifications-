@@ -104,7 +104,7 @@ identity. Generate the split from pre-release records to retain that provenance.
 Do not treat filenames or `seed_plan_path` as undocumented semantic identities.
 
 ```bash
-python scripts/build_train_test_split.py \
+python scripts/experiment_setup/build_train_test_split.py \
   --input path/to/queries.json --output artifacts/train_test.json \
   --train-fraction 0.7 --seed 42
 ```
@@ -129,7 +129,7 @@ recovered, so the UID fallback cannot guarantee absence of unknown variants.
 python run_experiments.py --splits SOURCE --llm MODEL \
   --strategy R0 --split-manifest artifacts/train_test.json \
   --partition train --run-id train-r0
-python scripts/build_regression_matrix.py --input attempts.jsonl \
+python scripts/matrix_building/build_regression_matrix.py --input attempts.jsonl \
   --repair-strategy R0 --split-manifest artifacts/train_test.json \
   --partition train --output-dir artifacts/train-matrix
 ```
@@ -161,9 +161,9 @@ summary mode for compatibility; `_rebuild_indexes()` is preserved.
 ```bash
 python run_experiments.py --splits pilot5 --strategy R0 --lang zh \
   --llm YOUR_PROVIDER_MODEL_ID --max-steps 5 --seed 42 --run-id pilot5-r0
-python scripts/evaluate_repair_run.py --run-dir results/experiments/pilot5-r0
-python scripts/build_repair_summary.py --input results/experiments/pilot5-r0
-python scripts/build_regression_matrix.py \
+python scripts/result_analysis/evaluate_repair_run.py --run-dir results/experiments/pilot5-r0
+python scripts/result_analysis/build_repair_summary.py --input results/experiments/pilot5-r0
+python scripts/matrix_building/build_regression_matrix.py \
   --input results/experiments/pilot5-r0/attempts.jsonl \
   --output-dir results/experiments/pilot5-r0/regression_matrix
 ```

@@ -116,11 +116,11 @@ accommodation, dining, attraction, transport_mode, travel_extent, schedule_order
 **Scripts — `scripts/`**
 | File | Purpose |
 |---|---|
-| `setup_project.py` | Downloads both sandboxes from Hugging Face (`database/` zh, `database_en/` en). Run once after `pip install`. |
-| `build_regression_matrix.py` | Build regression-matrix CSVs from `attempts.jsonl` (or a history JSON). Supports `--repair-strategy`, `--split-manifest`+`--partition` for leakage-free train/test slicing. |
-| `build_repair_summary.py` | Per-run `summaries.csv`. |
-| `evaluate_repair_run.py` | Offline benchmark eval of a run dir (schema/commonsense/logical CSVs). |
-| `build_train_test_split.py` | Generate a train/test split config. |
+| `experiment_setup/setup_project.py` | Downloads both sandboxes from Hugging Face (`database/` zh, `database_en/` en). Run once after `pip install`. |
+| `matrix_building/build_regression_matrix.py` | Build regression-matrix CSVs from `attempts.jsonl` (or a history JSON). Supports `--repair-strategy`, `--split-manifest`+`--partition` for leakage-free train/test slicing. |
+| `result_analysis/build_repair_summary.py` | Per-run `summaries.csv`. |
+| `result_analysis/evaluate_repair_run.py` | Offline benchmark eval of a run dir (schema/commonsense/logical CSVs). |
+| `experiment_setup/build_train_test_split.py` | Generate a train/test split config. |
 
 **Runners (repo root)**
 | File | Purpose |
@@ -150,9 +150,9 @@ experiments/<run-id>/
    ├── attempts.jsonl      (one JSON repair-attempt record per line)  ◄── matrix/metrics input
    └── queries/<uid-hash>/ (per-query final plan + initial_state.json + reference/query.json)
       │
-      ├─► scripts/evaluate_repair_run.py  --run-dir <run>        → benchmark_eval/*.csv
-      ├─► scripts/build_repair_summary.py --input <run>          → summaries.csv
-      └─► scripts/build_regression_matrix.py
+      ├─► scripts/result_analysis/evaluate_repair_run.py  --run-dir <run>        → benchmark_eval/*.csv
+      ├─► scripts/result_analysis/build_repair_summary.py --input <run>          → summaries.csv
+      └─► scripts/matrix_building/build_regression_matrix.py
              --input <run>/attempts.jsonl
              --output-dir <run>/regression_matrix
              --repair-strategy <STRATEGY>                        → regression matrix CSVs
@@ -243,7 +243,7 @@ in `results/`, repair logs in `cache/`.
 python3.12 -m venv .venv
 source .venv/bin/activate          # Windows: .venv\Scripts\activate
 python -m pip install -r requirements.txt
-python scripts/setup_project.py    # downloads both sandboxes (database/, database_en/)
+python scripts/experiment_setup/setup_project.py    # downloads both sandboxes (database/, database_en/)
 cp .env.example .env               # then paste the OpenRouter key into .env
 set -a; source .env; set +a        # macOS/Linux: load env vars
 ```
@@ -263,9 +263,9 @@ Other `run_experiments.py` flags: `--index UID [UID ...]`, `--temperature`, `--t
 
 **(c) Produce eval / summaries / matrix**
 ```bash
-python scripts/evaluate_repair_run.py  --run-dir experiments/pilot5-r3
-python scripts/build_repair_summary.py --input   experiments/pilot5-r3
-python scripts/build_regression_matrix.py \
+python scripts/result_analysis/evaluate_repair_run.py  --run-dir experiments/pilot5-r3
+python scripts/result_analysis/build_repair_summary.py --input   experiments/pilot5-r3
+python scripts/matrix_building/build_regression_matrix.py \
   --input experiments/pilot5-r3/attempts.jsonl \
   --output-dir experiments/pilot5-r3/regression_matrix \
   --repair-strategy R3

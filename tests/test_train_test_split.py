@@ -10,8 +10,8 @@ from unittest.mock import patch
 from chinatravel.evaluation.train_test_split import (
     build_split, validate_manifest, query_group, filter_attempts, select_queries,
 )
-from scripts.build_train_test_split import main as split_main
-from scripts.build_regression_matrix import main as matrix_main, load_input
+from scripts.experiment_setup.build_train_test_split import main as split_main
+from scripts.matrix_building.build_regression_matrix import main as matrix_main, load_input
 ## Allow importing sibling test modules (e.g. test_regression_matrix) regardless
 ## of how the suite is launched (plain `unittest discover` doesn't add the tests
 ## dir to sys.path, unlike pytest).
@@ -96,7 +96,7 @@ class SplitTests(unittest.TestCase):
             # Filter precedes existing matrix computation; no formula changes.
             attempts = [{"run_id": "run", "repair_attempt": record(query_uid=uid).to_dict()}
                         for uid in (manifest["train"][0], manifest["test"][0])]
-            with patch("scripts.build_regression_matrix.load_input", return_value=attempts), patch("scripts.build_regression_matrix.build_regression_matrix") as build:
+            with patch("scripts.matrix_building.build_regression_matrix.load_input", return_value=attempts), patch("scripts.matrix_building.build_regression_matrix.build_regression_matrix") as build:
                 build.return_value = {"aggregate": [], "aggregate_by_scope": [], "contributions": [], "coverage": {}}
                 matrix_main(["--input", str(source), "--output-dir", str(root / "matrix"),
                              "--split-manifest", str(output), "--partition", "train"])

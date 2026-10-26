@@ -1,0 +1,13 @@
+# Numeric claims made in the doc "R4 Repair-Risk Evidence from subset_train" (to verify)
+
+Lead: current matrix 2 breaks in R0's 331 rounds; AUC 0.86 for breaking a passing personal constraint; rejecting riskiest 30% roughly doubled net drop in violations offline.
+
+S1 Why empty: 161 of 187 personal rounds unchanged; after first echo plan never changed again in any of 35 queries; 144 commonsense rounds, 83 changed; caused 16 of 18 personal breaks (8 hotel, 6 trip); 21 passing constraints became uncheckable, all in commonsense rounds; 62% of changed personal rounds added a new commonsense error; budget fails at start in 17 of 60 queries, others 6 or fewer; no travel-extent/schedule-order constraints; transport never fails; v2 branch: chances 356 -> 43, budget->trip 1/70 -> 1/3, numerators stay 2.
+
+S2 Scoreboard: A0 non-zero 2 of 22, skill 0.00 / -0.03, strict +0.03; A1 24 of 77, +0.06/+0.21, strict +0.05; A2 144 of 171, +0.27/+0.26, strict +0.04; A3 34 of 106; A5 38 of 48, +0.26/+0.31, strict -0.01; A7 A2 pooled 147 of 177, +0.24, median support 31, strict +0.04.
+
+S3 Edit effects (pooled, 222 changed candidates; OR, 90% range, R0, R3): intercity->new intercity error 18.5 (10.1-31.8) 12.3 7.6, base 11%; inner transport->new inner error 8.7 (5.3-13.4) 5.3 5.1, base 39%; hotel->hotel breaks 8.1 (4.1-14.6) 6.5 3.9, base 8%; restaurant->new dining error 7.6 (3.5-14.5) 1.5 11.2, base 23%; hotel->new hotel error 6.4 (2.9-11.6) 2.2 7.8, base 10%; commonsense round->any personal break 5.4 (2.6-13.0) 3.9 3.8, base 14%; attraction->budget breaks 4.2 (1.5-8.9) 2.9 2.2, base 4%; structure->trip breaks 4.1 (2.2-6.9) 2.7 1.9, base 6%. All kept direction in all 300 resamples. Only 30 of 222 change one thing.
+
+S4 Fixability (R0/R3): budget rounds 80/55, unchanged 96%/30%, fixed 29% (3.5)/22% (38.5); attraction 25/20, 98%/92%, 0/0; hotel 18/15, 47%/23%, 62%/34%; trip 17/15, 61%/41%, 60%/0%; dining 10/12, 84%/30%, 0/0. Commonsense repair breaks pooled: hotel 38% of 42, budget 23% of 31, trip 9% of 121, attraction 9% of 23, transport 5% of 38, party 4% of 127, dining 0% of 28. Budget levers: restaurant 47% vs 4% (17 rounds); attraction 43% vs 16% (7); restaurant edits lowered cost 78% (R0) / 75% (R3); hotel & inner transport ~a third. Avoidable: 59 of 223 (26%); 11 of 13 trip breaks; 33 of 86 new inner transport errors; 40 of 222 (18%) rounds touched a major unneeded part.
+
+S5 AUCs: baseline 0.46/0.59/0.60; +edits 0.66/0.83/0.60; full 0.61 (0.53-0.68)/0.86 (0.79-0.91)/0.67 (0.62-0.72); personal rounds 0.77 breaks, commonsense rounds 0.85. Rejection: accept-all -89; 10% 22 rejected 1/32 breaks 4/113 good -151 random -77; 20% 44 7/32 13/113 -170 -73; 30% 67 9/32 22/113 -191 -65; 50% 111 16/32 46/113 -164 -45; 2.1x accept-all, 2.9x random.

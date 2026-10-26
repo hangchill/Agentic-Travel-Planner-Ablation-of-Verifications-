@@ -79,13 +79,13 @@ git diff d3a4e7b main -- <path/to/file>
 | `experiments/r0_deepseek-chat_pilot5/*.json` | En Rui | Current committed R0 baseline: DeepSeek-V3, English, budget 5, on the shared `pilot5` queries with the language-aware verifier. The baseline teammates compare R1–R4 against. |
 | `experiments/_archive_gpt4.1/*` | En Rui | Earlier GPT-4.1 R0 samples, archived for reference. Superseded by the DeepSeek baseline (they predate the language-aware verifier fix, so their transport-error counts are inflated). |
 | `run_experiments.py` | Nancy Shen | Single-strategy experiment entrypoint, consolidated from the former paired CLI. |
-| `scripts/build_regression_matrix.py` | Nancy Shen | Build the regression matrix from logged attempts. |
-| `scripts/build_train_test_split.py` | Nancy Shen | Generate the train/test split config. |
-| `scripts/setup_project.py` | En Rui | Download/setup the ChinaTravel sandbox and configure `.env`. |
+| `scripts/matrix_building/build_regression_matrix.py` | Nancy Shen | Build the regression matrix from logged attempts. |
+| `scripts/experiment_setup/build_train_test_split.py` | Nancy Shen | Generate the train/test split config. |
+| `scripts/experiment_setup/setup_project.py` | En Rui | Download/setup the ChinaTravel sandbox and configure `.env`. |
 
-> Note: these files stay at their current locations because the test suite imports
-> them by path (e.g. `import run_experiments`, `from scripts.build_regression_matrix import ...`).
-> Moving them would break those tests.
+> Note: the test suite imports these files by path (e.g. `import run_experiments`,
+> `from scripts.matrix_building.build_regression_matrix import ...`). If you move a file,
+> update those imports too.
 
 ### New tests (`tests/`)
 

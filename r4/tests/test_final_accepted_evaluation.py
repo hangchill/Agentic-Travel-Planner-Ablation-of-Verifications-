@@ -8,7 +8,7 @@ from unittest.mock import Mock, patch
 
 from chinatravel.evaluation.repair_comparison import _component, _save
 from r4.safety import split_uids
-from scripts.evaluate_repair_run import main as evaluate_run
+from scripts.result_analysis.evaluate_repair_run import main as evaluate_run
 
 
 class FinalAcceptedEvaluationTests(unittest.TestCase):

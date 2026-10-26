@@ -58,7 +58,7 @@ For Windows, activate the environment using `.venv\Scripts\activate`.
 ### 3. Download the ChinaTravel sandbox
 
 ```bash
-python scripts/setup_project.py
+python scripts/experiment_setup/setup_project.py
 ```
 
 This automatically downloads and extracts **both** official sandboxes:
@@ -164,9 +164,9 @@ This is checkpoint-based resume, not skipping arbitrary existing final-plan file
 Run the independent offline stages explicitly:
 
 ```bash
-python scripts/build_repair_summary.py --input results/experiments/pilot5-r1
-python scripts/evaluate_repair_run.py --run-dir results/experiments/pilot5-r1
-python scripts/build_regression_matrix.py \
+python scripts/result_analysis/build_repair_summary.py --input results/experiments/pilot5-r1
+python scripts/result_analysis/evaluate_repair_run.py --run-dir results/experiments/pilot5-r1
+python scripts/matrix_building/build_regression_matrix.py \
   --input results/experiments/pilot5-r1/attempts.jsonl \
   --output-dir results/experiments/pilot5-r1/regression_matrix
 ```

@@ -19,7 +19,7 @@ from chinatravel.agent.nesy_verifier import shared_repair_loop as loop
 from chinatravel.agent.model_usage import reported_token_count
 from chinatravel.evaluation import repair_comparison as comparison
 from chinatravel.evaluation.repair_metrics import summarize_repair_history
-from scripts.build_regression_matrix import load_input
+from scripts.matrix_building.build_regression_matrix import load_input
 from chinatravel.evaluation.regression_matrix import build_regression_matrix
 
 
@@ -80,7 +80,7 @@ class ComparisonTests(unittest.TestCase):
                 if path.name not in ("initial_state.json", "initial_failure.json")]
 
     def test_raw_only_then_offline_summary_matches_legacy(self):
-        from scripts.build_repair_summary import build_repair_summary
+        from scripts.result_analysis.build_repair_summary import build_repair_summary
         with patch("chinatravel.evaluation.repair_metrics.summarize_repair_history",
                    side_effect=AssertionError("runner must not compute summaries")):
             root = self.run_comparison(raw_only=True)
@@ -104,7 +104,7 @@ class ComparisonTests(unittest.TestCase):
                 self.assertEqual(row[key], value, key)
 
     def test_raw_initial_failure_offline_population(self):
-        from scripts.build_repair_summary import build_repair_summary
+        from scripts.result_analysis.build_repair_summary import build_repair_summary
         self.prepare.side_effect = RuntimeError("generation failed")
         root = self.run_comparison(raw_only=True)
         self.assertFalse((root / "summaries.csv").exists())
@@ -115,7 +115,7 @@ class ComparisonTests(unittest.TestCase):
         self.assertTrue((root / 'queries' / comparison._component('q1') / 'reference/query.json').exists())
 
     def test_raw_zero_attempt_offline_summary(self):
-        from scripts.build_repair_summary import build_repair_summary
+        from scripts.result_analysis.build_repair_summary import build_repair_summary
         self.config['max_steps'] = 0
         root = self.run_comparison(raw_only=True)
         rows = build_repair_summary(root)
