@@ -12,7 +12,7 @@ import pandas as pd
 from scripts.analyze_repair_strategies import (
     accepted_states, analyze, build_tables, file_hashes, hook_r2, hook_r3,
     load_matrices, load_run, main, parse_runs, record_metrics, state_stats,
-)
+    hook_r1, mechanism_summary)
 from chinatravel.evaluation.repair_attempt import RepairAttemptRecord
 
 
@@ -270,6 +270,75 @@ class AnalysisTests(unittest.TestCase):
             self.assertTrue(q.attempts.isna().all())
             self.assertFalse(q.terminal_status_known.any())
 
+
+    def test_r1_localization_metrics_by_phase(self):
+        """R1 rates must use eligible localisation and selected-slot denominators."""
+        rows = [dict(repair_phase='personal',
+                failure_reason='no_evaluable_personal_failure',
+                editable_slot=None, changed_slot_count=None, fixed_count=0),
+                dict(repair_phase='personal', failure_reason='no_localizable_slot',
+                     editable_slot=None, changed_slot_count=None, fixed_count=0),
+                dict(repair_phase='personal', failure_reason='invalid_replacement',
+                     editable_slot=[0, 1], changed_slot_count=0, fixed_count=0),
+                dict(repair_phase='personal', failure_reason=None,
+                     editable_slot=[0, 2], changed_slot_count=1, fixed_count=1),
+                dict(repair_phase='commonsense', failure_reason='no_localizable_failure',
+                     editable_slot=None, changed_slot_count=None, fixed_count=0),
+                dict(repair_phase='commonsense', failure_reason='invalid_commonsense_replacement',
+                     editable_slot=[1, 0], changed_slot_count=0, fixed_count=0),
+                dict(repair_phase='commonsense', failure_reason=None,
+                     editable_slot=[1, 1], changed_slot_count=1, fixed_count=0),]
+        for index, row in enumerate(rows, 1):
+            row.update(query_uid='test-query', step=index,
+                unchanged_confirmed=row['changed_slot_count'] == 0,
+                editable_scope='slot', newly_violated_count=0)
+        attempts = pd.DataFrame(rows)
+        hooks, _ = hook_r1(attempts)
+        summary = mechanism_summary('R1', attempts, hooks)
+        metrics = {row['metric']: row
+                   for _, row in summary.iterrows()}
+        def check(name, expected_count, expected_n):
+            self.assertEqual(metrics[name]['count'], expected_count)
+            self.assertEqual(metrics[name]['valid_n'], expected_n)
+            self.assertAlmostEqual(
+                metrics[name]['rate'],
+                expected_count / expected_n)
+        check('personal_localization_success', 2, 3)
+        check('personal_localization_failure', 1, 3)
+        check('personal_invalid_replacement_after_slot', 1, 2)
+        check('personal_changed_slot_after_selection', 1, 2)
+        check('personal_fixed_constraint_after_selection', 1, 2)
+        check('commonsense_localization_success', 2, 3)
+        check('commonsense_localization_failure', 1, 3)
+        check('commonsense_invalid_replacement_after_slot', 1, 2)
+        check('commonsense_changed_slot_after_selection', 1, 2)
+        check('commonsense_fixed_constraint_after_selection', 0, 2)
+
+
+    def test_r1_localization_metadata_extracted_from_jsonl(self):
+        """R1 slot selection must survive JSONL loading and normalization."""
+        selected = record(strategy='R1', uid='q1', step=1,
+                          before=(False, True), after=(True, True),)
+        selected['repair_metadata'] = {'editable_slot': [0, 1], 'constraint_family': 'monetary_budget',}
+        not_localized = record(strategy='R1', uid='q2', step=1,
+                               before=(False, True), after=(False, True),)
+        not_localized['repair_metadata'] = { 'editable_slot': None, 'failure_reason': 'no_localizable_slot',}
+        path = make_run(self.root / 'r1-jsonl', strategy='R1',
+                        records=[selected, not_localized], declared=['q1', 'q2'],)
+        run = load_run('R1', path)
+        attempts, _, _ = build_tables(run)
+        self.assertEqual(len(attempts), 2)
+        by_uid = attempts.set_index('query_uid')
+        self.assertEqual(by_uid.loc['q1', 'editable_slot'], [0, 1])
+        self.assertIsNone(by_uid.loc['q2', 'editable_slot'])
+        hooks, _ = hook_r1(attempts)
+        summary = mechanism_summary('R1', attempts, hooks)
+        metrics = summary.set_index('metric')
+        self.assertEqual(metrics.loc['personal_localization_success', 'count'], 1)
+        self.assertEqual(metrics.loc['personal_localization_success', 'valid_n'], 2)
+        self.assertEqual(metrics.loc['personal_localization_failure', 'count'], 1)
+        self.assertEqual(metrics.loc['personal_localization_failure', 'valid_n'], 2)
+
     def test_r2_missing_protection_stays_unavailable(self):
         r = record(strategy='R2'); r.pop('protected_constraint_indices')
         path = make_run(self.root/'r', 'R2', [r])
@@ -301,10 +370,35 @@ class AnalysisTests(unittest.TestCase):
     def test_symlink_output_cannot_overwrite_source(self):
         path = make_run(self.root/'r', records=[record()])
         out = self.root/'out'; out.mkdir()
-        (out/'R0').symlink_to(path, target_is_directory=True)
+        try:
+            (out/'R0').symlink_to(path, target_is_directory=True)
+        except OSError as exc:
+            if getattr(exc, "winerror", None) == 1314:
+                self.skipTest("Windows symlink privilege unavailable")
+            raise
         with self.assertRaises(SystemExit), redirect_stderr(StringIO()):
             main(['--run', f'R0={path}', '--output-dir', str(out), '--no-figures'])
 
+    def test_r1_strategy_specific_csv_export(self):
+        """R1 analysis exports the five Excel-ready metrics."""
+        selected = record(strategy='R1', uid='q1')
+        selected['repair_metadata'] = {'editable_slot': [0, 1],}
+        failed = record(strategy='R1', uid='q2')
+        failed['repair_metadata'] = {'failure_reason': 'no_localizable_slot',}
+        path = make_run(self.root / 'r1-export', strategy='R1', records=[selected, failed], declared=['q1', 'q2'],)
+        output = self.root / 'output'
+        with redirect_stdout(StringIO()):
+            main(['--run', f'R1={path}', '--output-dir', str(output), '--no-figures',])
+        csv_path = output / 'R1' / 'strategy_specific_table.csv'
+        self.assertTrue(csv_path.is_file())
+        table = pd.read_csv(csv_path)
+        self.assertEqual(len(table), 5)
+        self.assertEqual(list(table.columns),
+                         ['Repair Strategy', 'Metric', 'Easy', 'Med', 'Hum', 'All'])
+        success = table.loc[table['Metric'] == 'Localisation success rate', 'All'].iloc[0]
+        failure = table.loc[table['Metric'] == 'Localisation failure rate', 'All'].iloc[0]
+        self.assertAlmostEqual(float(success), 0.5)
+        self.assertAlmostEqual(float(failure), 0.5)
 
 class R4AnalysisTests(unittest.TestCase):
     def setUp(self):
@@ -519,7 +613,6 @@ class R4AnalysisTests(unittest.TestCase):
         a,_,_=build_tables(run)
         with self.assertRaisesRegex(ValueError,'count disagrees'):
             r4_tables(run,a)
-
 
 if __name__ == '__main__':
     unittest.main()
