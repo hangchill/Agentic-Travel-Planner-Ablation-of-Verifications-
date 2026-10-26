@@ -9,7 +9,7 @@ adds **R3 (adaptive-scope repair)** as a plug-and-play strategy selectable via
 `--repair_strategy R3`, and specifies the per-prompt logging of the raw components from which
 the constraint-interdependency matrix `M` is built later.
 
-> Cross-strategy **evaluation metrics and difficulty-tier logging** are a *separate* PRD
+> Shared **evaluation metrics and difficulty-tier logging** are a *separate* PRD
 > (`docs/PRD_eval_metrics.md`, forthcoming), since they apply to R0–R4, not just R3.
 
 ### Teammate progress — verification result (verified by code inspection)

@@ -64,10 +64,10 @@ apples-to-apples.
 - **Build the matrix `M`** from R0–R3 **train** trajectories (`subset_train`) via
   `build_regression_matrix.py`. Pipeline exists; the matrices for the real learning runs still
   need to be produced/collected.
-- **Full experiment runs on `subset_test`** for R0–R3 (results comparison) and R4 on
+- **Full experiment runs on `subset_test`** for R0–R3 (individual results) and R4 on
   `subset_test` only (held-out hypothesis test). The current committed results are the 5-query
   `pilot5` smoke runs, not the subset runs.
-- **Final cross-strategy comparison / write-up.**
+- **Individual per-strategy analyses / write-ups.**
 
 > ✅ **Current facts (README/CONTRIBUTIONS/notebooks updated to match):** R0, R1, R2, R3, R3P
 > are all implemented and registered (`STRATEGY_FACTORIES`); only **R4** remains. The test suite
@@ -291,10 +291,10 @@ python -m unittest discover -s tests -p "test_*.py"
    `build_regression_matrix.py --partition train` per strategy; decide the fusion scheme
    (per-strategy matrices vs one fused universal matrix — see `Commands_to_test_queries.md`
    "Scenario 1 / Scenario 2").
-3. **Run the real comparison:** R0–R3 + R4 on `subset_test` (held-out), fixed DeepSeek/budget/en
+3. **Run the individual studies:** R0–R3 + R4 on `subset_test` (held-out), fixed DeepSeek/budget/en
    settings; collect metrics and the cascade (`newly_violated`) analysis.
-4. **Write-up + final comparison tables;** quantify whether matrix-guidance (R4) reduces
-   cascading violations vs R0–R3.
+4. **Write-up + individual strategy reports;** describe recorded cascading violations
+   and matrix-guidance evidence within each run.
 5. (Done) Doc drift in README/CONTRIBUTIONS/notebooks ("R2/R4 not registered", "221 tests",
    subset "69/31") has been corrected to R0–R3P registered / 277 tests / 60(20·20·20)·30(10·10·10).
    Re-check only if the code moves again.

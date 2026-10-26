@@ -1,7 +1,7 @@
 # Offline repair-strategy analysis
 
-`scripts/analyze_repair_strategies.py` analyzes any explicitly supplied subset of
-R0/R1/R2/R3/R4 with a common loader, shared `compute_attempt_metrics()` definitions,
+`scripts/analyze_repair_strategies.py` is a generic per-strategy analysis framework for
+R0/R1/R2/R3/R4, with a common loader, shared `compute_attempt_metrics()` definitions,
 and separate mechanism hooks. It never runs experiments, calls providers,
 executes a verifier, evaluates benchmarks, or rebuilds matrices. R3P is excluded.
 
@@ -18,7 +18,8 @@ python scripts/analyze_repair_strategies.py \
   --output-dir results/analysis/repair_strategies
 ```
 
-Each `--run` is optional individually, but at least one is required. For example:
+Each `--run` is optional individually, but at least one is required. Multiple
+arguments simply generate one independent analysis folder for each supplied strategy. For example:
 
 ```sh
 python scripts/analyze_repair_strategies.py --run R0=experiments/subset_train-r0
@@ -100,10 +101,6 @@ are opportunities, not independent queries; support ≥5 is only a display filte
   case_studies.md
   ANALYSIS.md
   figures/*.png, *.svg
-<output>/cross_strategy/       # created only for multi-strategy invocations
-  comparability_audit.csv
-  overall_summary.csv
-  ANALYSIS.md
 ```
 
 R0 hook: global scope, broad footprints, collateral regressions, target counts.
@@ -118,39 +115,25 @@ Failure flags overlap. Metadata reason rates use all proposals as denominator;
 unavailable schema/protection evidence remains missing. Case studies use fixed
 criteria, then UID and step, without random sampling. Correlations are descriptive
 Spearman rank associations without significance tests or independence claims.
-Cross-strategy synthesis audits populations/query hashes, model/settings, budget,
-implementation hashes and initial plans where observable. Verifier/scheduler
-are not independently hashed; no equality is inferred from missing evidence.
 
-## Run selection and existing baseline
+## Explicit individual run sources
 
-The requested `scripts/analyze_r0_r1_individual.py` and its individual outputs do
-not exist in this checkout. There were no references to migrate or wrapper to
-retain. The available reproducible baseline is the ignored
-`results/analysis/r0_r1_final/analyze.py` and its tables. The generic implementation
-preserves those R0/R1 numerical definitions; it does not alter that baseline.
+Supply the desired source directory explicitly with each `--run`. There is no
+implicit run substitution or relationship required between separate arguments.
+Each invocation writes only that strategy's evidence tables, report and figures.
 
-Candidate audit (local manifests/artifacts inspected 2026-10-26):
+| Strategy | Current source directory | Partition |
+| --- | --- | --- |
+| R0 | experiments/subset_train-r0 | TRAIN |
+| R1 | experiments/subset_train-r1 | TRAIN |
+| R2 | experiments/subset_train-r2 | TRAIN |
+| R3 | experiments/subset_train-r3-new | TRAIN |
+| R4 | experiments/subset_test-r4 | TEST |
 
-| Run | Split / declared queries | Proposals / represented queries | Evidence | Selection |
-| --- | --- | --- | --- | --- |
-| experiments/subset_train-r2 | subset_train / 60 | 332 / 57 | 60 strategy + 60 initial checkpoints, summaries, benchmark, matrices | strongest full TRAIN R2 candidate; analyzed |
-| experiments/smoke-r2-train2 | subset_train / 2 | 12 / 2 | checkpoints, no summary/benchmark/matrix | smoke only |
-| experiments/pilot5-r2-v1 | pilot5 / 5 | 11 / 5 | checkpoints, summary/benchmark/matrix; budget 5 | pilot, not full TRAIN |
-| experiments/subset_train-r3 | subset_train / 60 | 199 / 60 | checkpoints, summary/benchmark/matrix, older hash | older plausible TRAIN run; not selected |
-| experiments/subset_train-r3-new | subset_train / 60 | 325 / 57 | 60 strategy + 60 initial checkpoints, summaries, benchmark, matrices | user explicitly confirmed authoritative; analyzed |
-| experiments/subset_test-r3 | subset_test / 30 | 111 / 29 | checkpoints, summary/benchmark/matrix | TEST, excluded |
-
-All listed manifests use English and deepseek/deepseek-chat. Full R2 uses budget
-6 and the same aggregate implementation hash as authoritative R0/R1. New R3 uses
-budget 6 and a different hash; older R3 uses another hash. Repository run-command
-documentation describes naming conventions, not authoritative final selection.
-No manifest was found in the R3 pilot directory. No R3P data are analyzed.
-
-The R1 declared UID `h20241029143754236194` has no attempt or terminal evidence;
-its row remains unknown. At least 23 reconstructable R0/R1 initial plans differ.
-These data use repeated commonsense repair, not a presumed strict one-C policy.
-All cross-strategy comparisons remain observational.
+R1's declared UID `h20241029143754236194` has no attempt or terminal evidence;
+its row remains unknown. Each run's recorded phases and budgets are analyzed as
+persisted, including repeated commonsense rounds where present. No R3P data are
+included. Interpret each run descriptively from its own persisted evidence.
 
 ## Tests
 
@@ -262,13 +245,14 @@ benchmark population/policy and verifies both identities without rerunning or
 changing evaluation. Existing scores must not be described as selected-outcome
 scores for those differing plans.
 
-### Cross-strategy separation
+## Analysis output lifecycle
 
-Synthesis groups by explicit partition and query population. Only the largest
-aligned group enters the direct aggregate table; excluded sources are listed in
-`cross_strategy/excluded_runs.csv` and its report. Thus an invocation supplying
-R0–R3 TRAIN and R4 TEST keeps the existing TRAIN numerical tables unchanged and
-adds a separate R4 TEST note. Different model/settings/initial plans still limit
-any aligned comparison to descriptive evidence. No alternative TEST run is
-silently substituted. `experiments/subset_test-r3/` is a possible matching TEST
-population, but has not been selected as authoritative for this analysis.
+`results/analysis/repair_strategies/` is the single active output tree. R0–R4,
+current VALIDATION.md, and r4_extension_validation.json are
+current outputs or validation evidence. The provenance/ directory contains
+source-integrity and regeneration records, not another active analysis or a
+runtime dependency. Keep the documented per-strategy files and
+PNG/SVG export pairs even when two strategies happen to yield identical charts.
+Superseded ad hoc reports, scripts, inventories and plots were removed after
+preserving genuinely useful unique evidence; regenerate active outputs from the
+experiment sources with the commands above.

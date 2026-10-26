@@ -222,7 +222,9 @@ class AnalysisTests(unittest.TestCase):
                 args.extend(['--run', entry])
             with redirect_stdout(StringIO()):
                 main(args)
-        for strategy in ('R0', 'R2', 'cross_strategy'):
+        for name in ('out1','out2'):
+            self.assertEqual({p.name for p in (self.root/name).iterdir()},{'R0','R2'})
+        for strategy in ('R0', 'R2'):
             for p in (self.root/'out1'/strategy).glob('*.csv'):
                 self.assertEqual(p.read_bytes(), (self.root/'out2'/strategy/p.name).read_bytes())
 
@@ -396,15 +398,21 @@ class R4AnalysisTests(unittest.TestCase):
         self.assertEqual(q.iloc[0].final_observed_satisfaction,1.)
         self.assertEqual(q.iloc[0].selected_final_satisfaction,.5)
 
-    def test_test_partition_not_in_train_aggregate(self):
+    def test_cli_independent_train_and_test_runs(self):
         r4=self.fixture();r0=make_run(self.root/'r0',records=[record()],declared=['q1'])
         m=json.loads((r0/'run_manifest.json').read_text());m['split_query_source']='subset_train'
         (r0/'run_manifest.json').write_text(json.dumps(m))
         out=self.root/'out'
-        with redirect_stdout(StringIO()):main(['--run',f'R4={r4}','--run',f'R0={r0}','--output-dir',str(out),'--no-figures'])
-        summary=pd.read_csv(out/'cross_strategy/overall_summary.csv')
-        self.assertEqual(set(summary.strategy),{'R0'})
-        self.assertEqual(pd.read_csv(out/'cross_strategy/excluded_runs.csv').iloc[0].strategy,'R4')
+        with redirect_stdout(StringIO()):
+            main(['--run',f'R4={r4}','--run',f'R0={r0}','--output-dir',str(out),'--no-figures'])
+        self.assertEqual({p.name for p in out.iterdir()},{'R0','R4'})
+        for strategy in ('R0','R4'):
+            q=pd.read_csv(out/strategy/'query_level.csv')
+            self.assertEqual(q.query_uid.tolist(),['q1'])
+            self.assertEqual(q.iloc[0].attempts,1)
+        from scripts.repair_analysis_r4 import partition
+        r4_run=load_run('R4',r4)
+        self.assertEqual(partition(r4_run.manifest,r4_run.extra['metadata']),'test')
 
     def test_benchmark_policy_difference_is_audited(self):
         from scripts.repair_analysis_r4 import validate_population

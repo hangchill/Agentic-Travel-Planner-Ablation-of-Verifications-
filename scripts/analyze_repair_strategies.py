@@ -1,4 +1,6 @@
-"""Deterministic offline descriptive analysis of explicitly selected repair runs.
+"""Generic per-strategy analysis of explicitly selected repair runs.
+
+Multiple --run arguments produce independent strategy folders only.
 
 No experiment, strategy, verifier, benchmark evaluator, or matrix builder is run.
 See scripts/REPAIR_ANALYSIS.md for evidence semantics and reproducibility commands.
@@ -8,7 +10,6 @@ from __future__ import annotations
 import argparse
 from dataclasses import dataclass, field
 from datetime import datetime, timezone
-from itertools import combinations
 import hashlib
 import json
 from pathlib import Path
@@ -913,7 +914,7 @@ def analyze(run, output, timestamp, figures=True):
         ('Strategy-specific mechanism analysis', mechanism+'\n\n'+markdown(tables['mechanism_summary'])+'\n'+ '\n'.join(f'See `{name}.csv`.' for name in hooks)),
         ('Case studies', 'See [case_studies.md](case_studies.md) for deterministic selection criteria, UIDs, steps, candidate and accepted states.'),
         ('Interpretation', 'Descriptive within-run evidence. Candidate efficacy, accepted trajectory, locality, support, no-ops and available sample sizes must be read together. Existing benchmark results are preserved verbatim in existing_benchmark_summaries.json and are not recomputed or equated with UNKNOWN-excluding personal satisfaction.'),
-        ('Limitations', 'Satisfaction is True/(True+False), excluding None. All-UNKNOWN satisfaction is undefined; UNKNOWN prevents all-pass. Event net gain need not equal endpoint failure reduction when UNKNOWN occurs. Partial known token sums are not complete totals; all common usage/time metrics exclude generation/initialization. Footprint comparisons exclude unmeasurable proposals. Missing-query outcomes and terminal status are never inferred from absent attempts. Query is the comparison unit; repeated proposals/cache hits are not independent trials. No causal conclusions, significance tests or bootstrap estimates.\n\n'+'\n'.join(run.messages+matrix_messages)),
+        ('Limitations', 'Satisfaction is True/(True+False), excluding None. All-UNKNOWN satisfaction is undefined; UNKNOWN prevents all-pass. Event net gain need not equal endpoint failure reduction when UNKNOWN occurs. Partial known token sums are not complete totals; all common usage/time metrics exclude generation/initialization. Footprint statistics exclude unmeasurable proposals. Missing-query outcomes and terminal status are never inferred from absent attempts. Query-level outcomes use queries; repeated proposals/cache hits are not independent trials. No causal conclusions, significance tests or bootstrap estimates.\n\n'+'\n'.join(run.messages+matrix_messages)),
     ]
     if run.strategy == 'R4':
         extra = [body for _,body in r4_analysis.report_sections(run,tables,r4_audit,markdown)]
@@ -951,74 +952,17 @@ def analyze(run, output, timestamp, figures=True):
     return a, q, summary
 
 
-def initial_plans(run):
-    plans = {}
-    for uid, cp in run.checkpoints.items():
-        if cp.get('initial_raw_plan') is not None:
-            plans[uid] = canonical_hash(cp['initial_raw_plan'])
-    for uid, initial in run.initial_states.items():
-        if initial.get('raw_initial_plan') is not None:
-            plans[uid] = canonical_hash(initial['raw_initial_plan'])
-    for r in run.attempts:
-        if r['step'] == 1 and persisted(r, 'decision_reason') == 'no_progress_unchanged':
-            plans.setdefault(r['query_uid'], canonical_hash(r['candidate_plan']))
-    return plans
-
-
-def synthesize(runs, results, output):
-    output.mkdir(exist_ok=True)
-    groups = {}
-    for label, run in sorted(runs.items()):
-        key = (r4_analysis.partition(run.manifest,run.extra.get('metadata')),tuple(run.query_uids))
-        groups.setdefault(key,[]).append(label)
-    included = sorted(groups.values(), key=lambda labels:(-len(labels),tuple(labels)))[0]
-    excluded = [dict(strategy=s,partition=r4_analysis.partition(r.manifest,r.extra.get('metadata')),
-                     split=r.manifest.get('split_query_source'),source=str(r.path),
-                     reason='Different partition or query population; individual analysis only')
-                for s,r in sorted(runs.items()) if s not in included]
-    runs = {s:runs[s] for s in included}
-    results = {s:results[s] for s in included}
-    if excluded: save_csv(output/'excluded_runs.csv',excluded)
-    elif (output/'excluded_runs.csv').exists(): (output/'excluded_runs.csv').unlink()
-    audit = []
-    for left, right in combinations(sorted(runs), 2):
-        l, r = runs[left], runs[right]
-        lp, rp = initial_plans(l), initial_plans(r)
-        shared = sorted(set(lp) & set(rp) & set(l.query_uids) & set(r.query_uids))
-        row = dict(left=left, right=right, same_query_population=set(l.query_uids) == set(r.query_uids),
-                   initial_plans_comparable=len(shared), initial_plans_equal=sum(lp[u] == rp[u] for u in shared),
-                   initial_plans_different=sum(lp[u] != rp[u] for u in shared))
-        for key in ('model_identifier', 'language', 'sampling_settings', 'max_steps', 'implementation_hash'):
-            row['same_'+key] = l.manifest.get(key) == r.manifest.get(key) if l.manifest.get(key) is not None and r.manifest.get(key) is not None else None
-        hashes_l = l.manifest.get('compatibility', {}).get('query_hashes')
-        hashes_r = r.manifest.get('compatibility', {}).get('query_hashes')
-        row['same_verifier_independently_verified'] = None
-        row['same_scheduler_independently_verified'] = None
-        row['same_query_hashes'] = hashes_l == hashes_r if hashes_l is not None and hashes_r is not None else None
-        audit.append(row)
-    save_csv(output/'comparability_audit.csv', audit,columns=['left','right','same_query_population'])
-    save_csv(output/'overall_summary.csv', pd.concat([results[s][2] for s in sorted(results)], ignore_index=True))
-    (output/'ANALYSIS.md').write_text('# Cross-strategy observational synthesis\n\n'+markdown(pd.DataFrame(audit))+
-        '\nThese comparisons are descriptive. Matching model/settings or an aggregate implementation hash does not establish shared initialization. '
-        'Verifier and scheduler are not separately hashed in these manifests; the implementation hash is a proxy, not proof of independently identical components. '
-        'Initial equality is checked only where checkpoint or confirmed first-no-op evidence exists. Missing equality evidence is not equality. '
-        'Analyze individuals regardless of incomplete comparability. Use query-level outcomes for comparisons, not proposal independence.\n\n'
-        'Each per-strategy ANALYSIS.md and overall_summary.csv contains the same core definitions and valid N. '
-        'No benchmark scores are invented for incomplete runs.\n' +
-        ('\nExcluded from direct aggregate tables (see individual reports):\n\n'+markdown(pd.DataFrame(excluded)) if excluded else ''))
-
-
 def main(argv=None):
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument('--run', action='append', required=True, metavar='STRATEGY=DIR')
+    parser.add_argument('--run', action='append', required=True, metavar='STRATEGY=DIR',
+                        help='Repeat to analyze each supplied strategy independently')
     parser.add_argument('--output-dir', type=Path, default=Path('results/analysis/repair_strategies'))
     parser.add_argument('--no-figures', action='store_true', help='Produce tables/reports without importing matplotlib')
     args = parser.parse_args(argv)
     try:
         paths = parse_runs(args.run)
         output = args.output_dir.resolve()
-        destinations = [output, *((output/key).resolve() for key in paths),
-                        (output/'cross_strategy').resolve()]
+        destinations = [output, *((output/key).resolve() for key in paths)]
         for source in paths.values():
             src = source.resolve()
             for target in destinations:
@@ -1026,9 +970,8 @@ def main(argv=None):
                     raise ValueError('Output directory must be disjoint from every source run')
         timestamp = datetime.now(timezone.utc).isoformat()
         runs = {s: load_run(s, p) for s, p in paths.items()}
-        results = {s: analyze(r, args.output_dir/s, timestamp, not args.no_figures) for s, r in runs.items()}
-        if len(runs) > 1:
-            synthesize(runs, results, args.output_dir/'cross_strategy')
+        for strategy, run in runs.items():
+            analyze(run, args.output_dir/strategy, timestamp, not args.no_figures)
         for r in runs.values():
             if r.checksums != file_hashes(r.path):
                 raise ValueError(f'Source changed: {r.path}')
