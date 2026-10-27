@@ -236,6 +236,13 @@ its `README.md` for metric definitions and data caveats). Note: the `subset_test
 needs its `summaries.csv`/`pass_rates.csv` and `regression_matrix/` built (only `attempts.jsonl`
 and `benchmark_eval` exist so far).
 
+**Comparison & visualisation layer:** `scripts/result_analysis/ablation_comparisons/` builds
+offline pairwise comparisons from the test reporting (R0↔R2 rollback protection, R1↔R3
+editing-scope, R3↔R4 advanced strategies, R0↔R4 matrix-guidance; delta = Right − Left). A local,
+read-only **Streamlit dashboard** (`dashboard/`, launched with
+`streamlit run dashboard/app.py` after `pip install -r requirements-dashboard.txt`) visualises
+these tables and comparisons. Neither runs experiments, scores plans, or calls a model.
+
 For the full, standalone project brief — status, methodology, commands, and how to read the
 results without touching code — see **[`HANDOVER.md`](HANDOVER.md)**.
 

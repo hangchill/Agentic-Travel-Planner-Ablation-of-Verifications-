@@ -4,9 +4,9 @@
 > You do not need to open any Python file to follow what we did, why, and what is left.
 > Code-level pointers are given only so you know *where* to look if you choose to.
 >
-> Last updated against `main` after the R0 `subset_test` rerun/merge (commit history around
-> the "Rerun 5 failed R0 subset_test queries" commit, on top of `b87d66e`). Working tree clean.
-> Where a number or claim could be stale, it is flagged.
+> Last updated against `main` @ `2ae0ed1` (after the ablation-comparisons + dashboard work and
+> the R0/R4 comparison were merged). Working tree clean. Where a number or claim could be stale,
+> it is flagged.
 
 ---
 
@@ -71,6 +71,12 @@ to the repair method, not the checker.
 - **Test runs** on `subset_test` (30 queries) committed for **all five: R0, R1, R2, R3, R4**.
 - Per-method **result tables** (personal-constraint, commonsense, repair-process, benchmark
   metrics) under `test_result_analysis/` for R0–R4, plus a merged side-by-side comparison.
+- **Ablation / comparison layer** (`scripts/result_analysis/ablation_comparisons/`): offline,
+  read-only pairwise comparisons over the test reporting — R0↔R2 (rollback protection), R1↔R3
+  (editing-scope flexibility), R3↔R4 (advanced strategies), and R0↔R4 (matrix-guidance; delta =
+  R4 − R0). It reads the generated CSVs; it never runs experiments or scores plans.
+- **Results dashboard** (`dashboard/`): a local, read-only Streamlit app that visualises the test
+  reporting and ablation comparisons. No models/evaluators/writers are invoked.
 - Language-aware verifier (English itineraries checked against the English sandbox) and
   **named-place translation** for scoring (Chinese place names in the DSL are matched to the
   English plan at eval time). Cross-platform (Windows) logging fixes.
@@ -255,6 +261,22 @@ python scripts/result_analysis/build_test_result_tables.py \
   --run experiments/subset_test-r3 --run experiments/subset_test-r4
 ```
 
+**Build the ablation comparisons** (offline, reads the tables above)
+```bash
+python -m scripts.result_analysis.ablation_comparisons.build_ablation_comparisons \
+  --r0 experiments/subset_test-r0 --r1 experiments/subset_test-r1 \
+  --r2 experiments/subset_test-r2 --r3 experiments/subset_test-r3 \
+  --r4 experiments/subset_test-r4 \
+  --test-reporting-dir test_result_analysis \
+  --output-dir results/analysis/ablation_comparisons
+```
+
+**Launch the results dashboard** (local, read-only; separate requirements file)
+```bash
+python -m pip install -r requirements-dashboard.txt
+streamlit run dashboard/app.py          # binds to 127.0.0.1; "Refresh local data" after edits
+```
+
 **Tests**
 ```bash
 python -m unittest discover -s tests -p "test_*.py"
@@ -294,11 +316,19 @@ curl -s -H "Authorization: Bearer $(grep -m1 '^CHINATRAVEL_OPENAI_API_KEY=' .env
   optional helpers (the normal path is `run_experiments.py --strategy R4 --r4-matrix ...`).
 
 **Analysis output — `test_result_analysis/`**
-- One folder per method (`R0`, `R2`, `R3`, `R4`) with `table1_pc.csv` (personal constraints),
+- One folder per method (`R0`, `R1`, `R2`, `R3`, `R4`) with `table1_pc.csv` (personal constraints),
   `table2_cs.csv` (commonsense), `table3_repair_process.csv` (tokens/time/rounds),
   `table4_eval_exp.csv` (benchmark metrics), and `per_query.csv`.
 - `merged/` + `MERGED_TABLES.md` — all methods side by side. `README.md` there defines every
   metric and lists all data caveats. **Read that README to interpret any number correctly.**
+
+**Ablation comparisons + dashboard**
+- `scripts/result_analysis/ablation_comparisons/` — the offline pairwise-comparison builder
+  (`build_ablation_comparisons.py`) and its README (defines the four canonical pairs and the
+  delta = Right − Left convention). Output lands under `results/analysis/ablation_comparisons/`.
+- `dashboard/` — the Streamlit app (`app.py`, `pages/`, `components/`) plus `*_REPORTING.md` and
+  `DATA_AUDIT.md`. Read `dashboard/DATA_AUDIT.md` for which metrics are available and where
+  TEST-reporting and the analyzer disagree.
 
 **Runners / docs**
 - `run_experiments.py` — the canonical study runner. `run_exp.py` — the general ChinaTravel
