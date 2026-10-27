@@ -141,9 +141,11 @@ The top navigation uses this exact order:
    candidate/accepted states, final itinerary and separate post-hoc selection.
 3. **TRAIN set**: TRAIN R0–R3 development matrices, support, relationship filters and downloads.
 4. **TEST set**: TEST-only Tables 1–4, with existing local comparison and round filters.
-5. **Strategy-Specific**: TEST strategy diagnostics, including localisation, protection,
+5. **Ablations & Comparisons**: generated TEST pairwise results, validity checks, mechanism evidence,
+   difficulty filters and reproducibility. See [ABLATION_COMPARISONS.md](ABLATION_COMPARISONS.md).
+6. **Strategy-Specific**: TEST strategy diagnostics, including localisation, protection,
    widening, matrix guidance, guards and trial selection.
-6. **Examples**: four canonical mechanism sections with automatic source binding,
+7. **Examples**: four canonical mechanism sections with automatic source binding,
    alternative qualifying selections and Markdown exports. These illustrate mechanisms,
    not aggregate evidence. See [EXAMPLES_REPORTING.md](EXAMPLES_REPORTING.md).
 
@@ -264,7 +266,7 @@ results and the distinction between Commonsense macro and three-way All-pass.
 
 ### Page navigation and partition policy
 
-The persistent top navigation contains only the six pages. There is no global
+The persistent top navigation contains only the seven pages. There is no global
 run, partition or analytical filter state; the sidebar retains only Refresh local data.
 
 | Page | Partition | Local controls |
@@ -273,6 +275,7 @@ run, partition or analytical filter state; the sidebar retains only Refresh loca
 | Query Explorer | TEST default; local TRAIN option | Partition, strategy/run, difficulty, query UID, phase/round/family/outcome |
 | TRAIN set | TRAIN R0–R3 | Source strategies, matrix perspective, repaired/regressed family, minimum support, relationship sort/top N |
 | TEST set | TEST reporting only | Existing independent Table 1–4 difficulty, strategies, metric/failure-family and round comparison controls |
+| Ablations & Comparisons | TEST only | Comparison, difficulty, supplementary metric; generated validity and cohort safeguards |
 | Strategy-Specific | TEST only | Strategy/run, difficulty where reporting exists, proposal phase/round/family/outcome/UID |
 | Examples | TRAIN cascade; TEST R2/R3/R4 | Qualifying example selector per canonical section; Markdown exports |
 

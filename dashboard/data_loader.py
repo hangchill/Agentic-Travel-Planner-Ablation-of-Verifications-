@@ -299,3 +299,42 @@ def available_pc_runs(runs):
 def pc_references(run):
     folders = sorted((Path(run.path) / 'benchmark_eval').glob(f'{run.strategy}-*'))
     return read_json(folders[0] / 'evaluation_population.json').get('queries', {}) if len(folders) == 1 else {}
+
+
+def comparison_bundle(identifier):
+    """Read CLI-generated comparisons; fail closed on stale inputs or edited outputs.
+
+    No analysis helper, evaluator or subprocess runs on a Streamlit rerun.
+    """
+    from scripts.result_analysis.ablation_comparisons import COMPARISONS
+    if identifier not in COMPARISONS:
+        raise ValueError('Unknown comparison')
+    folder = ROOT / 'results/analysis/ablation_comparisons' / identifier
+    required = [folder / name for name in ('summary.csv','mechanism.csv','validity.json','metadata.json')]
+    if any(not p.is_file() for p in required):
+        return {'ready': False, 'reason': 'Generated comparison outputs are unavailable. Run the standalone comparison builder.', 'folder': str(folder)}
+    try:
+        metadata = read_json(folder / 'metadata.json')
+        validity = read_json(folder / 'validity.json')
+        if metadata.get('schema_version') != 1 or metadata.get('comparison_id') != identifier:
+            raise ValueError('Comparison output identity/schema mismatch')
+        if set(metadata.get('output_checksums', {})) != {'summary.csv','mechanism.csv','validity.json'} or not metadata.get('analysis_code_checksums'):
+            raise ValueError('Required output/code provenance is missing')
+        changed = []
+        for source in ('source_checksums','analysis_code_checksums'):
+            for name, expected in metadata.get(source, {}).items():
+                p = Path(name)
+                if not p.is_file() or digest(p) != expected:
+                    changed.append(name)
+        for name, expected in metadata.get('output_checksums', {}).items():
+            p = folder / name
+            if not p.is_file() or digest(p) != expected:
+                changed.append(str(p))
+        if changed:
+            return {'ready': False, 'reason': 'Comparison outputs are stale or changed. Regenerate analysis before displaying values or deltas.',
+                    'changed': changed, 'folder': str(folder)}
+        return {'ready': True, 'metadata': metadata, 'validity': validity,
+                'summary': read_csv(folder / 'summary.csv'), 'mechanism': read_csv(folder / 'mechanism.csv'),
+                'folder': str(folder)}
+    except (ValueError, OSError, KeyError, TypeError) as exc:
+        return {'ready': False, 'reason': 'Comparison outputs cannot be verified: ' + str(exc), 'folder': str(folder)}
