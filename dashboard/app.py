@@ -10,7 +10,7 @@ import streamlit as st
 
 from dashboard import data_loader as data
 from dashboard.pages import (overview, train_interdependencies, test_results,
-                             strategy_details, query_explorer, representative_examples)
+                             strategy_details, query_explorer, representative_examples, ablation_comparisons)
 
 
 # Labels and order are presentation-only; module URL paths remain stable.
@@ -19,6 +19,7 @@ PAGE_SPECS = (
     (query_explorer, 'Query Explorer'),
     (train_interdependencies, 'TRAIN set'),
     (test_results, 'TEST set'),
+    (ablation_comparisons, 'Ablations & Comparisons'),
     (strategy_details, 'Strategy-Specific'),
     (representative_examples, 'Examples'),
 )

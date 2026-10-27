@@ -1,3 +1,45 @@
+## Ablations & Comparisons revision
+
+Added the seventh page, ordered Overview, Query Explorer, TRAIN set, TEST set,
+Ablations & Comparisons, Strategy-Specific, Examples. The new page reads generated
+CSV/JSON only. It shows pair questions, validity/checklists, difficulty-specific
+common results and Right − Left deltas, distinct mechanism evidence, downloads,
+one supplementary chart, definitions, and reproduction commands/provenance.
+
+New offline package: `scripts/result_analysis/ablation_comparisons/`, with CLI,
+input adapters, validity rules, metric catalog and documentation. It reuses the
+original TEST table cells/pure reporting helpers, original strategy analyzer and
+hooks, shared transition metrics, R4 selection tables and TRAIN matrix audit.
+No scorer, experiment, verifier or model is run. Existing source helpers and
+metric definitions are unchanged. Explicit matched-query subset mode records
+original/matched counts and exclusions. Missing controls downgrade validity;
+contradictory populations/difficulty/treatment block deltas. Only fully controlled
+matrix guidance comparisons license causal interpretation.
+
+Generated outputs live under `results/analysis/ablation_comparisons/`: one folder
+per predefined pair, each with summary.csv, mechanism.csv, validity.json and
+metadata.json, plus root tidy metric/mechanism CSVs, index and README. Inputs,
+analysis code and generated outputs are hashed; the frontend rejects stale or
+edited results rather than recomputing them on rerun.
+
+Current availability: R0/R2 and R3/R4 are descriptive comparisons only (initial
+plans and implementations differ; scheduler/verifier/evaluator controls and seed
+agreement are not established). R1 TEST is absent. No-matrix R4 TEST is absent and
+explicitly unavailable. New standard-CS violations/net standard-CS change are
+unavailable because persisted loop messages do not supply check-level transitions.
+R4 post-hoc selections remain separate from final accepted benchmark trajectories.
+
+Validation: 15 standalone comparison tests, 141 dashboard tests, and 48 existing
+analysis tests pass. CLI smoke, all four comparison selections, all six existing
+pages, actual app startup, imports/compilation, source-cell parity, Right − Left
+parity, and whitespace checks pass. All 2,572 pre-existing protected source and
+artifact files remain unchanged; only the explicitly requested new analysis
+package was added within scripts/. No model/API calls, commits or pushes.
+
+See `dashboard/ABLATION_COMPARISONS.md` and the offline package README for the
+complete source catalog, control metadata contract, limitations, output schema,
+current commands and future final-run/no-matrix commands.
+
 ## Navigation labels and order revision
 
 Validation: 135 dashboard tests and 48 existing analysis tests pass. Actual app
