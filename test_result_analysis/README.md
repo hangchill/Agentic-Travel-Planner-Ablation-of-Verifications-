@@ -56,8 +56,6 @@ Unless a row says otherwise, a value is computed for each query first and then a
 
 ### R3
 - Source run: `experiments/subset_test-r3` (run_id `subset_test-r3`, split `subset_test`, model `deepseek/deepseek-chat`, 30 queries, max 6 rounds).
-- `e20241028161340383778` (medium): 4 of 6 rounds got the failed-call text instead of a plan (provider error).
-- Token data incomplete for 1 queries (2 rounds with no recorded token count): `e20241028161340383778`. Each of these rounds had at least one failed model request (the provider returned an error and no token usage; the model wrapper then returned the text '{"error": "Request failed, please try again."}' instead of a plan). These queries are left out of the complete-data token row; the lower-bound row counts every request that did report usage and counts failed requests as 0.
 
 ### R4
 - Source run: `experiments/subset_test-r4` (run_id `subset_test-r4`, split `subset_test`, model `deepseek/deepseek-chat`, 30 queries, max 6 rounds).
