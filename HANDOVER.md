@@ -68,18 +68,19 @@ to the repair method, not the checker.
 - The **learned matrix `M`** has been built by pooling R0–R3 **training** trajectories
   (`r4/main_matrix_from_subset_train_r0_r3_10x10.csv` and its `_probabilities.csv`).
 - **Training runs** on `subset_train` (60 queries) committed for **R0, R1, R2, R3**.
-- **Test runs** on `subset_test` (30 queries) committed for **R0, R2, R3, R4**.
+- **Test runs** on `subset_test` (30 queries) committed for **all five: R0, R1, R2, R3, R4**.
 - Per-method **result tables** (personal-constraint, commonsense, repair-process, benchmark
-  metrics) under `test_result_analysis/`, plus a merged side-by-side comparison.
+  metrics) under `test_result_analysis/` for R0–R4, plus a merged side-by-side comparison.
 - Language-aware verifier (English itineraries checked against the English sandbox) and
   **named-place translation** for scoring (Chinese place names in the DSL are matched to the
   English plan at eval time). Cross-platform (Windows) logging fixes.
 - Test suite green (41 test files under `tests/`; run it to get the exact assertion count).
 
 **TODO / gaps to be aware of**
-- **No `subset_test-r1`** run is committed. R1 has a training run but not a test run, so the main
-  (test-set) comparison currently covers R0, R2, R3, R4 but **not R1**. If the comparison needs
-  R1, run it (see §7) — budget permitting.
+- The `subset_test-r1` run has `attempts.jsonl` + `benchmark_eval` (and is in the analysis
+  tables) but is **missing its `summaries.csv`, `pass_rates.csv`, and `regression_matrix/`** —
+  the summary and matrix steps weren't run for it. Run those two offline steps (see §7) to make
+  R1 consistent with the other test runs.
 - **No `subset_train-r4`** run. R4 is evaluated on `subset_test` only (correct, since R4 must be
   tested on held-out data), and there is a small training-only R4 pilot path if needed.
 - **Write-up / interpretation.** The tables exist; the narrative comparing strategies (does
@@ -141,6 +142,7 @@ the id prefix — the analysis tables group Easy/Medium/Human using that map.
 | `subset_train-r2` | R2 | train | |
 | `subset_train-r3-new` | R3 | train | current R3 training run |
 | `subset_test-r0` | R0 | test | 5 queries were reran after provider failures — see §6 and their `rerun_provenance.json` |
+| `subset_test-r1` | R1 | test | has `attempts.jsonl` + `benchmark_eval` only; `summaries.csv`/`pass_rates.csv`/`regression_matrix/` not yet built (see §3) |
 | `subset_test-r2` | R2 | test | |
 | `subset_test-r3` | R3 | test | 1 query reran after provider failures (`rerun_provenance.json`) |
 | `subset_test-r4` | R4 | test | matrix-guided; its matrix inputs are under `inputs/pooled/` |
@@ -149,12 +151,14 @@ the id prefix — the analysis tables group Easy/Medium/Human using that map.
 `.gitignore` ignores `results/` and `cache/`; `experiments/` **is** tracked. Per team convention
 we commit each run folder **except its `logs/` subfolder**.
 
-**Headline test-set results** (final pass rate = whole plan passes every check; from each run's
-`pass_rates.csv`). Treat small differences as noise — only 10 queries per difficulty group.
+**Headline test-set results** (final full-pass rate = whole plan passes every check). R0/R2/R3/R4
+are from each run's `pass_rates.csv`; R1 is from its benchmark summary + analysis table (it has no
+`pass_rates.csv` yet). Treat small differences as noise — only 10 queries per difficulty group.
 
 | Strategy (subset_test) | Final full-pass rate | Final "all personal constraints pass" rate |
 |---|---|---|
 | R0 | 2/30 (6.7%) | 43% |
+| R1 | 1/30 (3.3%) | ~47% (14/30 final plans with 0 failed personal constraints) |
 | R2 | 1/30 (3.3%) | 53% |
 | R3 | 3/30 (10%) | 50% |
 | R4 | 1/30 (3.3%) | 43% |
@@ -307,8 +311,9 @@ curl -s -H "Authorization: Bearer $(grep -m1 '^CHINATRAVEL_OPENAI_API_KEY=' .env
 
 ## 9. What the next person should probably do
 
-1. **Run R1 on `subset_test`** so the main comparison is complete across all five strategies
-   (currently R1 is missing from the test set).
+1. **Finish the `subset_test-r1` eval** — build its `summaries.csv`/`pass_rates.csv` and its
+   `regression_matrix/` (run the two offline steps in §7 on `experiments/subset_test-r1`) so R1
+   is consistent with the other four test runs. The run and benchmark eval already exist.
 2. **Write the results narrative** from `test_result_analysis/` + the regression matrices: does
    matrix-guided R4 actually reduce cascades (`newly_violated`) relative to R0, and how do R1/R2/R3
    sit in between? Use the cascade/fix transitions, not raw full-pass rates.
@@ -325,4 +330,6 @@ curl -s -H "Authorization: Bearer $(grep -m1 '^CHINATRAVEL_OPENAI_API_KEY=' .env
 `subset_test` run. The exact unit-test assertion count isn't pinned here — run the suite for it.
 Known data-quality caveats (named-place translation, failed-model-call stubs, walking-leg price,
 timing-check crash) are real and documented in `test_result_analysis/README.md`; they shape the
-numbers and are not new bugs. R1 is not yet run on `subset_test`.*
+numbers and are not new bugs. All five strategies now have a `subset_test` run, but
+`subset_test-r1` still lacks its summary/matrix outputs (only `attempts.jsonl` + `benchmark_eval`
+exist).*

@@ -230,9 +230,11 @@ Named-place constraints are translated to English at scoring time. Experiments r
 V3** (far cheaper than GPT-4.1), and logging is **cross-platform** (Windows long-path fixes).
 
 **Experiments committed so far:** training runs on `subset_train` for R0–R3, and test runs on
-`subset_test` for R0, R2, R3, R4. The learned matrix `M` is built and committed under `r4/`.
-Per-method result tables are in `test_result_analysis/` (see its `README.md` for metric
-definitions and data caveats). **Not yet run: R1 on `subset_test`.**
+`subset_test` for **all five strategies (R0, R1, R2, R3, R4)**. The learned matrix `M` is built
+and committed under `r4/`. Per-method result tables for R0–R4 are in `test_result_analysis/` (see
+its `README.md` for metric definitions and data caveats). Note: the `subset_test-r1` run still
+needs its `summaries.csv`/`pass_rates.csv` and `regression_matrix/` built (only `attempts.jsonl`
+and `benchmark_eval` exist so far).
 
 For the full, standalone project brief — status, methodology, commands, and how to read the
 results without touching code — see **[`HANDOVER.md`](HANDOVER.md)**.
