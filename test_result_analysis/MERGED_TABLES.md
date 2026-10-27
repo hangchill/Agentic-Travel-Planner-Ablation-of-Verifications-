@@ -12,31 +12,31 @@ Initial = plan before any repair round; final = plan the benchmark scored. Named
 |---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
 | Queries (n) | 10 | 10 | 10 | 10 | 10 | 10 | 10 | 10 | 10 | 10 | 10 | 10 | 30 | 30 | 30 | 30 |
 | Avg personal constraints per query | 5.2 | 5.2 | 5.2 | 5.2 | 8.5 | 8.5 | 8.5 | 8.5 | 5.1 | 5.1 | 5.1 | 5.1 | 6.27 | 6.27 | 6.27 | 6.27 |
-| Avg PC failed per query - initial plan | 1 | 0.9 | 0.7 | 1.1 | 1 | 0.8 | 0.7 | 1 | 0.7 | 0.3 | 0.4 | 0.9 | 0.9 | 0.67 | 0.6 | 1 |
-| Avg PC failed per query - final plan | 1.4 | 0.6 | 0.5 | 0.9 | 2.4 | 0.8 | 0.6 | 1 | 0.6 | 0.3 | 0.4 | 0.7 | 1.47 | 0.57 | 0.5 | 0.87 |
-| Avg PC passed per query - initial plan | 4.2 | 4.3 | 4.5 | 4.1 | 7.5 | 7.7 | 7.8 | 7.5 | 4.4 | 4.8 | 4.7 | 4.2 | 5.37 | 5.6 | 5.67 | 5.27 |
-| Avg PC passed per query - final plan | 3.8 | 4.6 | 4.7 | 4.3 | 6.1 | 7.7 | 7.9 | 7.5 | 4.5 | 4.8 | 4.7 | 4.4 | 4.8 | 5.7 | 5.77 | 5.4 |
-| Avg PC passed per query - change (final - initial) | -0.4 | 0.3 | 0.2 | 0.2 | -1.4 | 0 | 0.1 | 0 | 0.1 | 0 | 0 | 0.2 | -0.57 | 0.1 | 0.1 | 0.13 |
-| Avg % PC passed per query - initial plan | 80.6 | 82.6 | 86.6 | 78.6 | 89.2 | 91.5 | 92.5 | 89.2 | 87.0 | 94.3 | 92.3 | 83.0 | 85.6 | 89.5 | 90.5 | 83.6 |
-| Avg % PC passed per query - final plan | 75.4 | 88.0 | 90.0 | 82.0 | 73.2 | 91.5 | 93.5 | 89.2 | 89.0 | 94.3 | 92.3 | 86.7 | 79.2 | 91.3 | 91.9 | 86.0 |
-| Avg % PC passed per query - change (percentage points) | -5.1 | 5.4 | 3.4 | 3.4 | -16.0 | 0.0 | 1.0 | 0.0 | 2.0 | 0.0 | 0.0 | 3.7 | -6.4 | 1.8 | 1.5 | 2.4 |
-| Queries where % PC passed increased | 1 | 2 | 2 | 2 | 1 | 0 | 1 | 0 | 1 | 0 | 0 | 2 | 3 | 2 | 3 | 4 |
+| Avg PC failed per query - initial plan | 1 | 0.9 | 0.7 | 1.1 | 1 | 0.8 | 0.6 | 1 | 0.7 | 0.3 | 0.4 | 0.9 | 0.9 | 0.67 | 0.57 | 1 |
+| Avg PC failed per query - final plan | 1.4 | 0.6 | 0.5 | 0.9 | 2.4 | 0.8 | 0.7 | 1 | 0.6 | 0.3 | 0.4 | 0.7 | 1.47 | 0.57 | 0.53 | 0.87 |
+| Avg PC passed per query - initial plan | 4.2 | 4.3 | 4.5 | 4.1 | 7.5 | 7.7 | 7.9 | 7.5 | 4.4 | 4.8 | 4.7 | 4.2 | 5.37 | 5.6 | 5.7 | 5.27 |
+| Avg PC passed per query - final plan | 3.8 | 4.6 | 4.7 | 4.3 | 6.1 | 7.7 | 7.8 | 7.5 | 4.5 | 4.8 | 4.7 | 4.4 | 4.8 | 5.7 | 5.73 | 5.4 |
+| Avg PC passed per query - change (final - initial) | -0.4 | 0.3 | 0.2 | 0.2 | -1.4 | 0 | -0.1 | 0 | 0.1 | 0 | 0 | 0.2 | -0.57 | 0.1 | 0.03 | 0.13 |
+| Avg % PC passed per query - initial plan | 80.6 | 82.6 | 86.6 | 78.6 | 89.2 | 91.5 | 93.5 | 89.2 | 87.0 | 94.3 | 92.3 | 83.0 | 85.6 | 89.5 | 90.8 | 83.6 |
+| Avg % PC passed per query - final plan | 75.4 | 88.0 | 90.0 | 82.0 | 73.2 | 91.5 | 92.5 | 89.2 | 89.0 | 94.3 | 92.3 | 86.7 | 79.2 | 91.3 | 91.6 | 86.0 |
+| Avg % PC passed per query - change (percentage points) | -5.1 | 5.4 | 3.4 | 3.4 | -16.0 | 0.0 | -1.0 | 0.0 | 2.0 | 0.0 | 0.0 | 3.7 | -6.4 | 1.8 | 0.8 | 2.4 |
+| Queries where % PC passed increased | 1 | 2 | 2 | 2 | 1 | 0 | 0 | 0 | 1 | 0 | 0 | 2 | 3 | 2 | 2 | 4 |
 | Queries where % PC passed remained the same | 8 | 8 | 8 | 8 | 6 | 10 | 9 | 10 | 9 | 10 | 10 | 8 | 23 | 28 | 27 | 26 |
 |   of which already 100% in the initial plan | 4 | 3 | 4 | 3 | 5 | 6 | 7 | 5 | 4 | 7 | 6 | 5 | 13 | 16 | 17 | 13 |
-| Queries where % PC passed decreased | 1 | 0 | 0 | 0 | 3 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 4 | 0 | 0 | 0 |
+| Queries where % PC passed decreased | 1 | 0 | 0 | 0 | 3 | 0 | 1 | 0 | 0 | 0 | 0 | 0 | 4 | 0 | 1 | 0 |
 | Final plans with 0 failed PC | 4 | 4 | 5 | 4 | 5 | 6 | 7 | 5 | 5 | 7 | 6 | 7 | 14 | 17 | 18 | 16 |
 | Final plans with 1 failed PC | 4 | 6 | 5 | 5 | 1 | 3 | 2 | 3 | 4 | 3 | 4 | 1 | 9 | 12 | 11 | 9 |
 | Final plans with 2 failed PC | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 1 | 1 | 0 | 0 | 1 | 1 | 0 | 0 | 2 |
 | Final plans with 3+ failed PC | 2 | 0 | 0 | 1 | 4 | 1 | 1 | 1 | 0 | 0 | 0 | 1 | 6 | 1 | 1 | 3 |
 | Final plans passing all PC, excluding named-place constraints | 8 | 10 | 10 | 9 | 5 | 6 | 7 | 5 | 5 | 7 | 6 | 7 | 18 | 23 | 23 | 21 |
-| Avg % PC passed per query - final plan, excluding named-place constraints | 83.9 | 100.0 | 100.0 | 92.5 | 73.2 | 91.2 | 93.3 | 88.8 | 89.0 | 94.3 | 92.3 | 86.7 | 82.0 | 95.2 | 95.2 | 89.3 |
+| Avg % PC passed per query - final plan, excluding named-place constraints | 83.9 | 100.0 | 100.0 | 92.5 | 73.2 | 91.2 | 92.3 | 88.8 | 89.0 | 94.3 | 92.3 | 86.7 | 82.0 | 95.2 | 94.9 | 89.3 |
 
 **Top 3 failing PC kinds in final plans (failures)**
 
 | Group | R0 | R2 | R3 | R4 |
 |---|---|---|---|---|
 | Easy | Must include a named place (5); Ticket / taxi counts (4); Days / people count (2) | Must include a named place (6) | Must include a named place (5) | Must include a named place (6); Ticket / taxi counts (2); Days / people count (1) |
-| Medium | Rooms / room type (7); Total budget (5); Ticket / taxi counts (4) | Total budget (2); Intercity transport mode (2); Rooms / room type (2) | Total budget (3); Intercity transport mode (1); Required attraction / restaurant / hotel type (1) | Total budget (3); Rooms / room type (3); Intercity transport mode (2) |
+| Medium | Rooms / room type (7); Total budget (5); Ticket / taxi counts (4) | Total budget (2); Intercity transport mode (2); Rooms / room type (2) | Total budget (3); Rooms / room type (2); Required attraction / restaurant / hotel type (1) | Total budget (3); Rooms / room type (3); Intercity transport mode (2) |
 | Human | Required attraction / restaurant / hotel type (2); Total budget (2); Intercity transport mode (1) | Required attraction / restaurant / hotel type (2); Total budget (1) | Required attraction / restaurant / hotel type (2); Total budget (2) | Required attraction / restaurant / hotel type (3); Days / people count (2); Ticket / taxi counts (1) |
 | All | Rooms / room type (9); Ticket / taxi counts (8); Total budget (7) | Must include a named place (6); Total budget (3); Required attraction / restaurant / hotel type (3) | Total budget (5); Must include a named place (5); Required attraction / restaurant / hotel type (3) | Must include a named place (6); Total budget (4); Ticket / taxi counts (4) |
 
@@ -49,9 +49,9 @@ Failed / total constraints of each kind in the final plans.
 | Must include a named place | 6/9 (66.7%) | 6/9 (66.7%) | 5/9 (55.6%) | 6/9 (66.7%) |
 | Inner-city transport mode | 1/2 (50.0%) | 0/2 (0.0%) | 0/2 (0.0%) | 0/2 (0.0%) |
 | Total budget | 7/15 (46.7%) | 3/15 (20.0%) | 5/15 (33.3%) | 4/15 (26.7%) |
-| Rooms / room type | 9/21 (42.9%) | 2/21 (9.5%) | 0/21 (0.0%) | 3/21 (14.3%) |
+| Rooms / room type | 9/21 (42.9%) | 2/21 (9.5%) | 2/21 (9.5%) | 3/21 (14.3%) |
 | Required attraction / restaurant / hotel type | 5/16 (31.2%) | 3/16 (18.8%) | 3/16 (18.8%) | 4/16 (25.0%) |
-| Intercity transport mode | 3/12 (25.0%) | 2/12 (16.7%) | 1/12 (8.3%) | 2/12 (16.7%) |
+| Intercity transport mode | 3/12 (25.0%) | 2/12 (16.7%) | 0/12 (0.0%) | 2/12 (16.7%) |
 | Ticket / taxi counts | 8/50 (16.0%) | 1/50 (2.0%) | 0/50 (0.0%) | 4/50 (8.0%) |
 | Days / people count | 5/60 (8.3%) | 0/60 (0.0%) | 0/60 (0.0%) | 3/60 (5.0%) |
 | Departure / return times | 0/2 (0.0%) | 0/2 (0.0%) | 0/2 (0.0%) | 0/2 (0.0%) |
@@ -63,12 +63,12 @@ Each plan is checked against the same 28 checks; fewer failed is better. A plan 
 
 | Metric | Easy R0 | Easy R2 | Easy R3 | Easy R4 | Medium R0 | Medium R2 | Medium R3 | Medium R4 | Human R0 | Human R2 | Human R3 | Human R4 | All R0 | All R2 | All R3 | All R4 |
 |---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
-| Avg CS checks failed per query - initial plan | 7.3 | 6.3 | 6.4 | 8.2 | 6.2 | 5.6 | 5.6 | 5.8 | 6.5 | 5.3 | 4.5 | 6.5 | 6.67 | 5.73 | 5.5 | 6.83 |
-| Avg CS checks failed per query - final plan | 7.8 | 3.9 | 3.5 | 6 | 9.4 | 4.4 | 3.9 | 5.5 | 3.6 | 3.4 | 3.2 | 5.5 | 6.93 | 3.9 | 3.53 | 5.67 |
-| Avg CS checks failed per query - change (final - initial; negative = fewer failures) | 0.5 | -2.4 | -2.9 | -2.2 | 3.2 | -1.2 | -1.7 | -0.3 | -2.9 | -1.9 | -1.3 | -1 | 0.27 | -1.83 | -1.97 | -1.17 |
-| Avg % CS checks passed per query - initial plan | 73.9 | 77.5 | 77.1 | 70.7 | 77.9 | 80.0 | 80.0 | 79.3 | 76.8 | 81.1 | 83.9 | 76.8 | 76.2 | 79.5 | 80.4 | 75.6 |
-| Avg % CS checks passed per query - final plan | 72.1 | 86.1 | 87.5 | 78.6 | 66.4 | 84.3 | 86.1 | 80.4 | 87.1 | 87.9 | 88.6 | 80.4 | 75.2 | 86.1 | 87.4 | 79.8 |
-| Avg % CS checks passed per query - change (percentage points) | -1.8 | 8.6 | 10.4 | 7.9 | -11.4 | 4.3 | 6.1 | 1.1 | 10.4 | 6.8 | 4.6 | 3.6 | -1.0 | 6.5 | 7.0 | 4.2 |
+| Avg CS checks failed per query - initial plan | 7.3 | 6.3 | 6.4 | 8.2 | 6.2 | 5.6 | 5.5 | 5.8 | 6.5 | 5.3 | 4.5 | 6.5 | 6.67 | 5.73 | 5.47 | 6.83 |
+| Avg CS checks failed per query - final plan | 7.8 | 3.9 | 3.5 | 6 | 9.4 | 4.4 | 4.2 | 5.5 | 3.6 | 3.4 | 3.2 | 5.5 | 6.93 | 3.9 | 3.63 | 5.67 |
+| Avg CS checks failed per query - change (final - initial; negative = fewer failures) | 0.5 | -2.4 | -2.9 | -2.2 | 3.2 | -1.2 | -1.3 | -0.3 | -2.9 | -1.9 | -1.3 | -1 | 0.27 | -1.83 | -1.83 | -1.17 |
+| Avg % CS checks passed per query - initial plan | 73.9 | 77.5 | 77.1 | 70.7 | 77.9 | 80.0 | 80.4 | 79.3 | 76.8 | 81.1 | 83.9 | 76.8 | 76.2 | 79.5 | 80.5 | 75.6 |
+| Avg % CS checks passed per query - final plan | 72.1 | 86.1 | 87.5 | 78.6 | 66.4 | 84.3 | 85.0 | 80.4 | 87.1 | 87.9 | 88.6 | 80.4 | 75.2 | 86.1 | 87.0 | 79.8 |
+| Avg % CS checks passed per query - change (percentage points) | -1.8 | 8.6 | 10.4 | 7.9 | -11.4 | 4.3 | 4.6 | 1.1 | 10.4 | 6.8 | 4.6 | 3.6 | -1.0 | 6.5 | 6.5 | 4.2 |
 | Queries where failed CS checks decreased (improved) | 5 | 7 | 9 | 7 | 6 | 5 | 7 | 3 | 7 | 6 | 6 | 5 | 18 | 18 | 22 | 15 |
 | Queries where failed CS checks stayed the same | 4 | 3 | 0 | 2 | 1 | 5 | 3 | 6 | 3 | 3 | 2 | 4 | 8 | 11 | 5 | 12 |
 | Queries where failed CS checks increased (got worse) | 1 | 0 | 1 | 1 | 3 | 0 | 0 | 1 | 0 | 1 | 2 | 1 | 4 | 1 | 3 | 3 |
@@ -77,7 +77,7 @@ Each plan is checked against the same 28 checks; fewer failed is better. A plan 
 | Final plans with 2 failed CS checks | 5 | 3 | 2 | 3 | 1 | 1 | 0 | 1 | 2 | 2 | 2 | 1 | 8 | 6 | 4 | 5 |
 | Final plans with 3 failed CS checks | 1 | 0 | 3 | 3 | 1 | 4 | 5 | 2 | 3 | 2 | 3 | 1 | 5 | 6 | 11 | 6 |
 | Final plans with 4+ failed CS checks | 4 | 5 | 4 | 4 | 7 | 5 | 4 | 6 | 4 | 4 | 4 | 6 | 15 | 14 | 12 | 16 |
-| Final plans with at most 4 failed CS checks (more than 85% of the 28 checks passed) | 7 | 6 | 8 | 8 | 4 | 6 | 7 | 5 | 7 | 6 | 9 | 9 | 18 | 18 | 24 | 22 |
+| Final plans with at most 4 failed CS checks (more than 85% of the 28 checks passed) | 7 | 6 | 8 | 8 | 4 | 6 | 6 | 5 | 7 | 6 | 9 | 9 | 18 | 18 | 23 | 22 |
 | Final plans the CS evaluator could not check (counted as failing every check) | 2 | 0 | 0 | 1 | 2 | 0 | 0 | 0 | 0 | 0 | 0 | 1 | 4 | 0 | 0 | 2 |
 
 **Top 3 failing CS checks in final plans (plans failing)**
@@ -95,18 +95,18 @@ Each plan is checked against the same 28 checks; fewer failed is better. A plan 
 
 | Metric | Easy R0 | Easy R2 | Easy R3 | Easy R4 | Medium R0 | Medium R2 | Medium R3 | Medium R4 | Human R0 | Human R2 | Human R3 | Human R4 | All R0 | All R2 | All R3 | All R4 |
 |---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
-| [per query] Queries with token data | 7 | 10 | 10 | 9 | 8 | 10 | 9 | 3 | 10 | 10 | 10 | 3 | 25 | 30 | 29 | 15 |
-| [per query] Avg tokens spent per query (queries with complete token data) | 73890 | 80298 | 163535 | 104673 | 104615 | 123354 | 198367 | 113704 | 94304 | 74269 | 193696 | 131993 | 91888 | 92640 | 184745 | 111943 |
-| [per query] Rounds with no recorded token count | 5 | 0 | 0 | 1 | 3 | 0 | 2 | 12 | 0 | 0 | 0 | 8 | 8 | 0 | 2 | 21 |
-| [per query] Avg tokens spent per query - all queries, failed requests counted as 0 (lower bound) | 70944 | 80298 | 163535 | 98406 | 94308 | 123354 | 186326 | 50791 | 94304 | 74269 | 193696 | 67589 | 86519 | 92640 | 181185 | 72262 |
-| [per query] Avg repair time per query (s) | 114.4 | 68.3 | 133.1 | 100.1 | 99.5 | 103.4 | 149.8 | 61.6 | 133.7 | 104.4 | 209.1 | 101.2 | 115.9 | 92.1 | 164.0 | 87.6 |
+| [per query] Queries with token data | 7 | 10 | 10 | 9 | 8 | 10 | 10 | 3 | 10 | 10 | 10 | 3 | 25 | 30 | 30 | 15 |
+| [per query] Avg tokens spent per query (queries with complete token data) | 73890 | 80298 | 163535 | 104673 | 104615 | 123354 | 194460 | 113704 | 94304 | 74269 | 193696 | 131993 | 91888 | 92640 | 183897 | 111943 |
+| [per query] Rounds with no recorded token count | 5 | 0 | 0 | 1 | 3 | 0 | 0 | 12 | 0 | 0 | 0 | 8 | 8 | 0 | 0 | 21 |
+| [per query] Avg tokens spent per query - all queries, failed requests counted as 0 (lower bound) | 70944 | 80298 | 163535 | 98406 | 94308 | 123354 | 194460 | 50791 | 94304 | 74269 | 193696 | 67589 | 86519 | 92640 | 183897 | 72262 |
+| [per query] Avg repair time per query (s) | 114.4 | 68.3 | 133.1 | 100.1 | 99.5 | 103.4 | 161.2 | 61.6 | 133.7 | 104.4 | 209.1 | 101.2 | 115.9 | 92.1 | 167.8 | 87.6 |
 | [per query] Queries with at least one round that changed the plan | 6 | 8 | 10 | 9 | 9 | 8 | 9 | 6 | 8 | 8 | 10 | 6 | 23 | 24 | 29 | 21 |
-| [per query] Avg change in PC passed per changed round (loop verifier) | -0.17 | 1.25 | 0.88 | 0.72 | -1.37 | 0.06 | 0.06 | 0 | 0.04 | 0.62 | 0 | -0.29 | -0.57 | 0.65 | 0.32 | 0.23 |
-| [per query] Avg change in CS errors per changed round (loop verifier; negative = fewer errors) | 0.36 | -0.31 | -0.94 | -0.79 | -0.56 | 0.77 | -0.13 | 1.25 | 0.68 | -1 | 0.04 | -0.71 | 0.11 | -0.18 | -0.35 | -0.18 |
+| [per query] Avg change in PC passed per changed round (loop verifier) | -0.17 | 1.25 | 0.88 | 0.72 | -1.37 | 0.06 | -0.04 | 0 | 0.04 | 0.62 | 0 | -0.29 | -0.57 | 0.65 | 0.29 | 0.23 |
+| [per query] Avg change in CS errors per changed round (loop verifier; negative = fewer errors) | 0.36 | -0.31 | -0.94 | -0.79 | -0.56 | 0.77 | -0.06 | 1.25 | 0.68 | -1 | 0.04 | -0.71 | 0.11 | -0.18 | -0.33 | -0.18 |
 | [round-wise] Repair rounds in total | 60 | 53 | 60 | 60 | 60 | 60 | 57 | 55 | 54 | 56 | 57 | 60 | 174 | 169 | 174 | 175 |
-| [round-wise] % of rounds where the model call failed (error text instead of a plan; includes cached repeats of a failed reply) | 21.7 | 0.0 | 0.0 | 8.3 | 3.3 | 0.0 | 7.0 | 69.1 | 0.0 | 0.0 | 0.0 | 58.3 | 8.6 | 0.0 | 2.3 | 44.6 |
-| [round-wise] % of rounds where the plan changed | 20.0 | 22.6 | 45.0 | 33.3 | 28.3 | 38.3 | 54.4 | 18.2 | 29.6 | 19.6 | 61.4 | 23.3 | 25.9 | 27.2 | 53.4 | 25.1 |
-| [round-wise] % of rounds unchanged - answered from cache (exact repeat of an earlier request) | 61.7 | 60.4 | 25.0 | 51.7 | 56.7 | 48.3 | 17.5 | 56.4 | 53.7 | 62.5 | 7.0 | 56.7 | 57.5 | 56.8 | 16.7 | 54.9 |
+| [round-wise] % of rounds where the model call failed (error text instead of a plan; includes cached repeats of a failed reply) | 21.7 | 0.0 | 0.0 | 8.3 | 3.3 | 0.0 | 0.0 | 69.1 | 0.0 | 0.0 | 0.0 | 58.3 | 8.6 | 0.0 | 0.0 | 44.6 |
+| [round-wise] % of rounds where the plan changed | 20.0 | 22.6 | 45.0 | 33.3 | 28.3 | 38.3 | 56.1 | 18.2 | 29.6 | 19.6 | 61.4 | 23.3 | 25.9 | 27.2 | 54.0 | 25.1 |
+| [round-wise] % of rounds unchanged - answered from cache (exact repeat of an earlier request) | 61.7 | 60.4 | 25.0 | 51.7 | 56.7 | 48.3 | 15.8 | 56.4 | 53.7 | 62.5 | 7.0 | 56.7 | 57.5 | 56.8 | 16.1 | 54.9 |
 | [round-wise] % of rounds unchanged - from a different request (model called) | 18.3 | 17.0 | 30.0 | 15.0 | 15.0 | 13.3 | 28.1 | 25.5 | 16.7 | 17.9 | 31.6 | 20.0 | 16.7 | 16.0 | 29.9 | 20.0 |
 
 ## Table 4: ChinaTravel's own metrics (eval_exp definitions), final plans
@@ -115,8 +115,8 @@ The All columns match each run's benchmark_eval/*/benchmark_summary.json. Common
 
 | Metric | Easy R0 | Easy R2 | Easy R3 | Easy R4 | Medium R0 | Medium R2 | Medium R3 | Medium R4 | Human R0 | Human R2 | Human R3 | Human R4 | All R0 | All R2 | All R3 | All R4 |
 |---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
-| Commonsense micro (%) - share of all (plan, check) pairs passed | 91.72 | 86.07 | 87.5 | 88.62 | 86.21 | 84.29 | 86.07 | 81.03 | 87.59 | 87.86 | 88.57 | 90.34 | 88.51 | 86.07 | 87.38 | 86.67 |
+| Commonsense micro (%) - share of all (plan, check) pairs passed | 91.72 | 86.07 | 87.5 | 88.62 | 86.21 | 84.29 | 85.0 | 81.03 | 87.59 | 87.86 | 88.57 | 90.34 | 88.51 | 86.07 | 87.02 | 86.67 |
 | Commonsense macro (%) - plans passing every CS check | 0.0 | 0.0 | 10.0 | 0.0 | 0.0 | 0.0 | 10.0 | 0.0 | 0.0 | 0.0 | 0.0 | 0.0 | 0.0 | 0.0 | 6.67 | 0.0 |
-| Logical micro (%) - share of all personal constraints passed (pooled) | 73.08 | 88.46 | 90.38 | 82.69 | 71.76 | 90.59 | 92.94 | 88.24 | 88.24 | 94.12 | 92.16 | 86.27 | 76.6 | 90.96 | 92.02 | 86.17 |
+| Logical micro (%) - share of all personal constraints passed (pooled) | 73.08 | 88.46 | 90.38 | 82.69 | 71.76 | 90.59 | 91.76 | 88.24 | 88.24 | 94.12 | 92.16 | 86.27 | 76.6 | 90.96 | 91.49 | 86.17 |
 | Logical macro (%) - plans passing every personal constraint | 40.0 | 40.0 | 50.0 | 40.0 | 50.0 | 60.0 | 70.0 | 50.0 | 50.0 | 70.0 | 60.0 | 70.0 | 46.67 | 56.67 | 60.0 | 53.33 |
 | All-pass ratio (%) - schema + CS + PC all passed | 0.0 | 0.0 | 10.0 | 0.0 | 0.0 | 0.0 | 10.0 | 0.0 | 0.0 | 0.0 | 0.0 | 0.0 | 0.0 | 0.0 | 6.67 | 0.0 |
