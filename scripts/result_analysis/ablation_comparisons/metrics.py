@@ -40,6 +40,15 @@ CATALOG = [
 ]
 
 
+MATRIX_DIAGNOSTICS = (
+    'Guidance: supported','Guidance: unsupported','Guidance: no logged relationship',
+    'Supported relationship occurrences','Unsupported relationship occurrences',
+    'Mean support per supported relationship occurrence','Structural guard failures',
+    'Initial outcomes selected','Repaired outcomes selected','Candidate outcomes considered/query',
+    'Proposals with any unsupported relationship',
+)
+
+
 def number(value):
     try:
         x=float(value)
@@ -120,13 +129,17 @@ def common_value(spec,q,a,tables,difficulty):
     return None,0
 
 
-def mechanism(evidence,uids,difficulty):
+def mechanism(evidence,uids,difficulty,matrix_comparison=False):
     """Tidy diagnostics reuse analyzer hooks and shared accepted-state events."""
     if evidence is None or evidence.error:
         return []
     q,a=subset(evidence,uids,difficulty)
+    na_rows=[{'run':evidence.key,'difficulty':difficulty,'metric':metric,'value':None,'evidence_n':0,
+              'source':'Not applicable: R0 is the no-matrix baseline; this mechanism is absent.',
+              'denominator':'Not applicable','unit':'Not applicable','direction':'descriptive'}
+             for metric in MATRIX_DIAGNOSTICS] if matrix_comparison and evidence.strategy=='R0' else []
     if a.empty:
-        return []
+        return na_rows
     rows=[]
     def emit(metric,value,n,source,direction='descriptive',unit='count',denominator=None):
         rows.append({'run':evidence.key,'difficulty':difficulty,'metric':metric,'value':number(value),
@@ -196,8 +209,6 @@ def mechanism(evidence,uids,difficulty):
                 if raw['query_uid'] not in set(q.query_uid):
                     continue
                 meta=raw.get('repair_metadata') or {}
-                if evidence.key=='R4-no-matrix' and not any(k in meta for k in ('risk_target_ranking','commonsense_source_risks')):
-                    continue  # Do not manufacture guidance fields for a no-matrix run.
                 cells=list(meta.get('commonsense_source_risks') or [])
                 for ranked in meta.get('risk_target_ranking') or []:
                     cells.extend(ranked.get('destination_risks') or [])
@@ -222,6 +233,16 @@ def mechanism(evidence,uids,difficulty):
         considered=[number(r.get('considered_outcomes',r.get('candidate_outcomes_considered'))) for r in selections]
         considered=[v for v in considered if v is not None]
         emit('Candidate outcomes considered/query',sum(considered)/len(considered) if considered else None,len(considered),'R4 selection artifact considered_outcomes; includes initial when recorded',unit='outcomes/query',denominator='queries with validated recorded outcome pools')
+    if matrix_comparison:
+        if evidence.strategy=='R0':
+            rows.extend(na_rows)
+        elif evidence.strategy=='R4':
+            fallbacks=evidence.raw.extra.get('_comparison_tables',{}).get('r4_fallbacks',pd.DataFrame())
+            if {'query_uid','has_unsupported_relationship'} <= set(fallbacks):
+                flags=fallbacks.loc[fallbacks.query_uid.isin(q.query_uid),'has_unsupported_relationship']
+            else:
+                flags=pd.Series(dtype=object)
+            count('Proposals with any unsupported relationship',flags,'repair_analysis_r4.r4_fallbacks.has_unsupported_relationship; may coexist with supported cells')
     return rows
 
 

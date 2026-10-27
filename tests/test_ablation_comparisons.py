@@ -1,11 +1,9 @@
 """Offline comparison contracts; synthetic artifacts and original helper parity."""
 import copy
-from dataclasses import replace
 import io
 import json
 from pathlib import Path
 import subprocess
-import shutil
 import sys
 import unittest
 from contextlib import redirect_stdout
@@ -16,7 +14,7 @@ import pandas as pd
 from dashboard.tests.fixtures import Repository
 from scripts.result_analysis.ablation_comparisons import COMPARISONS
 from scripts.result_analysis.ablation_comparisons.inputs import load_evidence
-from scripts.result_analysis.ablation_comparisons.comparison_validity import assess
+from scripts.result_analysis.ablation_comparisons.comparison_validity import assess, MATRIX_COMPONENT_CONTROLS
 from scripts.result_analysis.ablation_comparisons.metrics import mechanism
 from scripts.result_analysis.ablation_comparisons.build_ablation_comparisons import build_comparison, main
 
@@ -52,6 +50,9 @@ class AblationTests(unittest.TestCase):
             e.manifest.setdefault('compatibility',{})['query_hashes']={uid:'query-'+uid for uid in e.population}
             e.initial_hashes={uid:'initial-'+uid for uid in e.population}
         if matrix:
+            for e in (left,right):
+                for component in MATRIX_COMPONENT_CONTROLS:
+                    e.manifest[component]='equivalent-'+component
             right.raw.extra['_comparison_matrix_audit']={'train_only_guidance_verified':True}
             for row in left.raw.attempts:
                 row['repair_metadata']={}
@@ -63,6 +64,7 @@ class AblationTests(unittest.TestCase):
                 snapshot={k:copy.deepcopy(e.manifest[k]) for k in ('scheduler_version','repair_implementation_hash',
                           'verifier_config','evaluator_config','benchmark_population_hash','seed','language','oracle_translation',
                           'max_steps','model_identifier','sampling_settings','matrix_guidance_enabled')}
+                snapshot.update({key:e.manifest[key] for key in MATRIX_COMPONENT_CONTROLS})
                 snapshot['other_settings']={}
                 e.manifest.update(ablation_settings=snapshot,ablation_settings_complete=True)
 
@@ -75,9 +77,9 @@ class AblationTests(unittest.TestCase):
             with redirect_stdout(io.StringIO()):
                 self.assertEqual(main(self.args()),0)
         self.assertEqual(first,{str(p.relative_to(self.output)):p.read_bytes() for p in self.output.rglob('*.csv')})
-        matrix=json.loads((self.output/'r4_matrix_ablation/validity.json').read_text())
-        self.assertEqual(matrix['reason'],'Required no-matrix R4 TEST run is not currently available.')
-        self.assertFalse(matrix['allow_deltas'])
+        matrix=json.loads((self.output/'r0_vs_r4_matrix/validity.json').read_text())
+        self.assertTrue(matrix['available'])
+        self.assertTrue(matrix['allow_deltas'])
         self.assertFalse(json.loads((self.output/'r1_vs_r3/validity.json').read_text())['available'])
         tidy=pd.read_csv(self.output/'comparison_metrics.csv')
         self.assertEqual(set(tidy.comparison_id),set(COMPARISONS))
@@ -87,7 +89,9 @@ class AblationTests(unittest.TestCase):
                  "import sys; from scripts.result_analysis.ablation_comparisons.build_ablation_comparisons import main; assert 'streamlit' not in sys.modules; raise SystemExit(main(['--help']))"]
         result=subprocess.run(command,capture_output=True,text=True)
         self.assertEqual(result.returncode,0,result.stderr)
-        self.assertIn('--r4-no-matrix-reporting-dir',result.stdout)
+        self.assertIn('--r0',result.stdout)
+        self.assertIn('--r4',result.stdout)
+        self.assertNotIn('reporting-dir for the second',result.stdout)
 
     def test_delta_and_existing_test_table_values(self):
         left,right=self.evidence['R0'],self.evidence['R2']
@@ -130,18 +134,17 @@ class AblationTests(unittest.TestCase):
         self.assertTrue(assess(left,right,'r0_vs_r2')['allow_deltas'])
 
     def test_matrix_ablation_requires_explicit_controls_and_pairing(self):
-        right=self.evidence['R4'];left=copy.deepcopy(right)
-        left.key='R4-no-matrix';left.path=left.path.with_name('final_test-r4-no-matrix')
+        right=self.evidence['R4'];left=self.evidence['R0']
         self.controls(left,right,matrix=True)
-        result=assess(left,right,'r4_matrix_ablation')
+        result=assess(left,right,'r0_vs_r4_matrix')
         self.assertEqual(result['classification'],'Controlled ablation')
         right.manifest['ablation_settings']['other_settings']={'guard':'different'}
-        self.assertEqual(assess(left,right,'r4_matrix_ablation')['classification'],'Descriptive comparison only')
+        self.assertEqual(assess(left,right,'r0_vs_r4_matrix')['classification'],'Descriptive comparison only')
         right.manifest['ablation_settings']['other_settings']={}
         left.manifest.pop('matrix_guidance_enabled')
-        self.assertNotEqual(assess(left,right,'r4_matrix_ablation')['classification'],'Controlled ablation')
+        self.assertNotEqual(assess(left,right,'r0_vs_r4_matrix')['classification'],'Controlled ablation')
         left.path=right.path
-        self.assertFalse(assess(left,right,'r4_matrix_ablation')['allow_deltas'])
+        self.assertFalse(assess(left,right,'r0_vs_r4_matrix')['allow_deltas'])
 
     def test_r2_candidate_harm_rejected_and_preserved_are_distinct(self):
         e=self.evidence['R2']
@@ -201,47 +204,61 @@ class AblationTests(unittest.TestCase):
         self.assertEqual(rows['Supported relationship occurrences']['value'],len(e.raw.attempts))
         self.assertEqual(rows['Mean support per supported relationship occurrence']['value'],1400)
 
-    def test_cli_pairs_two_r4_runs_with_separate_reporting(self):
-        right=self.evidence['R4']
-        clone=self.repo.root/'experiments/final_test-r4-no-matrix'
-        shutil.copytree(right.path,clone)
-        m=json.loads((clone/'run_manifest.json').read_text());m.update(run_id='R4-no-matrix-run',matrix_guidance_enabled=False)
-        (clone/'run_manifest.json').write_text(json.dumps(m))
-        right_manifest=json.loads((right.path/'run_manifest.json').read_text());right_manifest['matrix_guidance_enabled']=True
-        (right.path/'run_manifest.json').write_text(json.dumps(right_manifest))
-        records=[json.loads(line) for line in (clone/'attempts.jsonl').read_text().splitlines()]
-        for row in records:
-            row['repair_metadata']={}
-        (clone/'attempts.jsonl').write_text(''.join(json.dumps(row)+'\n' for row in records))
-        for path in (clone/'queries').rglob('*.json'):
-            cp=json.loads(path.read_text())
-            if 'repair_history' in cp and isinstance(cp['repair_history'],list):
-                for entry in cp['repair_history'][1:]:
-                    entry.get('repair_attempt',{})['repair_metadata']={}
-                path.write_text(json.dumps(cp))
-        alternate=self.repo.root/'no-matrix-reporting'
-        shutil.copytree(self.repo.reporting,alternate)
-        notes=(alternate/'README.md').read_text().replace(str(right.path),str(clone)).replace(right.manifest['run_id'],m['run_id'])
-        (alternate/'README.md').write_text(notes)
-        with redirect_stdout(io.StringIO()):
-            main(self.args()+['--r4-no-matrix',str(clone),'--r4-no-matrix-reporting-dir',str(alternate),'--comparison','r4_matrix_ablation'])
-        summary=pd.read_csv(self.output/'r4_matrix_ablation/summary.csv')
-        self.assertTrue(summary.left_run.eq(m['run_id']).all())
-        self.assertTrue(summary.right_run.eq(right.manifest['run_id']).all())
-        self.assertTrue(summary.left_strategy.eq('R4-no-matrix').all())
-        self.assertFalse(summary[summary.difficulty=='All'].delta.isna().all())
-        self.assertFalse(json.loads((self.output/'r4_matrix_ablation/metadata.json').read_text())['causal_language_allowed'])
-        mechanism_table=pd.read_csv(self.output/'r4_matrix_ablation/mechanism.csv')
-        no_matrix=mechanism_table[(mechanism_table.side=='Left') & (mechanism_table.metric=='Guidance: supported')]
-        self.assertTrue(no_matrix.value.isna().all())
+    def test_r0_r4_available_delta_and_not_applicable_matrix_rows(self):
+        left,right=self.evidence['R0'],self.evidence['R4']
+        summary,mechanisms,validity=build_comparison('r0_vs_r4_matrix',left,right)
+        self.assertTrue(validity['available'])
+        self.assertTrue(summary.left_strategy.eq('R0').all())
+        self.assertTrue(summary.right_strategy.eq('R4').all())
+        defined=summary.dropna(subset=['left_value','right_value','delta'])
+        self.assertTrue(((defined.right_value-defined.left_value)-defined.delta).abs().lt(1e-9).all())
+        baseline=mechanisms[(mechanisms.run=='R0') & mechanisms.metric.str.startswith('Guidance:')]
+        self.assertTrue(baseline.value.isna().all())
+        self.assertTrue(baseline.unit.eq('Not applicable').all())
+        self.assertFalse(baseline.empty)
+        active=mechanisms[(mechanisms.run=='R4') & (mechanisms.metric=='Guidance: supported') & (mechanisms.difficulty=='All')]
+        self.assertEqual(active.value.iloc[0],len(right.raw.attempts))
 
-    def test_matrix_fields_not_manufactured_without_logging(self):
-        e=self.evidence['R4'];e.key='R4-no-matrix'
-        for r in e.raw.attempts:
-            r['repair_metadata']={}
-        values={r['metric']:r for r in mechanism(e,e.population,'All')}
-        self.assertIsNone(values['Guidance: supported']['value'])
-        self.assertIsNone(values['Supported relationship occurrences']['value'])
+    def test_fourth_pair_does_not_mutate_other_pair_values(self):
+        previous={key:build_comparison(key,self.evidence[roles[1]],self.evidence[roles[2]])[:2]
+                  for key,roles in COMPARISONS.items() if key!='r0_vs_r4_matrix'}
+        build_comparison('r0_vs_r4_matrix',self.evidence['R0'],self.evidence['R4'])
+        for key,frames in previous.items():
+            roles=COMPARISONS[key]
+            current=build_comparison(key,self.evidence[roles[1]],self.evidence[roles[2]])[:2]
+            for left,right in zip(frames,current):
+                pd.testing.assert_frame_equal(left,right)
+
+    def test_missing_r0_or_r4_blocks_pair_without_substitution(self):
+        for left,right,missing in [(None,self.evidence['R4'],'R0 TEST'),(self.evidence['R0'],None,'R4 TEST')]:
+            validity=assess(left,right,'r0_vs_r4_matrix')
+            self.assertFalse(validity['available'])
+            self.assertFalse(validity['allow_deltas'])
+            self.assertIn(missing,validity['reason'])
+
+    def test_component_differences_prevent_causal_classification(self):
+        left,right=self.evidence['R0'],self.evidence['R4']
+        self.controls(left,right,matrix=True)
+        for component in MATRIX_COMPONENT_CONTROLS:
+            right.manifest[component]='different'
+            self.assertEqual(assess(left,right,'r0_vs_r4_matrix')['classification'],'Descriptive comparison only',component)
+            right.manifest[component]=left.manifest[component]
+        left.manifest['ablation_settings_complete']=False
+        self.assertEqual(assess(left,right,'r0_vs_r4_matrix')['classification'],'Matched strategy comparison')
+
+    def test_cli_uses_five_run_inputs_and_retires_obsolete_generated_folder(self):
+        from scripts.result_analysis.ablation_comparisons.build_ablation_comparisons import parser
+        run_destinations={a.dest for a in parser()._actions if a.dest.startswith('r') and a.dest!='repository_root'}
+        self.assertEqual(run_destinations,{'r0','r1','r2','r3','r4'})
+        retired=self.output/('r4_'+'matrix_ablation')
+        retired.mkdir(parents=True);(retired/'summary.csv').write_text('obsolete')
+        with redirect_stdout(io.StringIO()):
+            main(self.args())
+        self.assertFalse(retired.exists())
+        self.assertEqual(set(pd.read_csv(self.output/'comparison_metrics.csv').comparison_id),set(COMPARISONS))
+        metadata=json.loads((self.output/'r0_vs_r4_matrix/metadata.json').read_text())
+        self.assertEqual(set(metadata['source_runs']),{'R0','R4'})
+        self.assertFalse(metadata['causal_language_allowed'])
 
     def test_wrong_partition_and_reporting_binding(self):
         path,_=self.repo.manifests[('TRAIN','R2')]

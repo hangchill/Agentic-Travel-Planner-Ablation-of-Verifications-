@@ -1,85 +1,70 @@
 # Ablations & Comparisons
 
-The page sits between TEST set and Strategy-Specific. It asks pairwise questions
-rather than repeating every TEST table. Its only source is the offline builder's
-outputs under `results/analysis/ablation_comparisons/`.
+The page follows TEST set in the seven-page navigation. It reads only generated
+outputs under `results/analysis/ablation_comparisons/` and offers exactly:
 
-| Selector | Interpretation |
-| --- | --- |
-| R0 vs R2 — Rollback protection | Mechanism / ablation-like comparison; candidate regressions and R2 harmful-candidate rejection/preservation |
-| R1 vs R3 — Editing-scope flexibility | Mechanism comparison; localization versus scheduled widening |
-| R3 vs R4 — Advanced strategies | Strategy comparison — not a matrix ablation |
-| R4 without vs with matrix — Matrix-guidance ablation | Controlled only when all recorded controls and treatment checks pass |
+1. **R0 vs R2 — Rollback protection**
+2. **R1 vs R3 — Editing-scope flexibility**
+3. **R3 vs R4 — Advanced repair strategies**
+4. **R0 vs R4 — Matrix-guidance comparison**
 
-The page displays the research question, generated validity classification,
-compatibility checklist, original/matched N, excluded UIDs for an explicitly
-requested subset, difficulty-filtered common results, Right − Left deltas,
-mechanism evidence, one optional metric chart, and command/provenance details.
+The fourth pair maps **R0 = no-matrix baseline**, **R4 = matrix-guided strategy**.
+It requires the existing R0 and R4 TEST runs only. Its values/deltas are generated
+under `r0_vs_r4_matrix/`, with **Delta (R4 - R0)**. If either input is absent,
+the page names the missing R0 TEST or R4 TEST input. TRAIN and other strategies
+are never substituted.
 
-## Sources and denominators
+## Intended question versus empirical validity
 
-All values, deltas, sample counts, units, preferred directions and evidence coverage
-are saved by the CLI. The frontend only filters/renames/plots rows; it never
-computes a comparison metric. CSV downloads use the displayed dataframe.
+Intended question: Does adding matrix-guided repair improve outcomes relative
+to R0? Empirical validity: Are these runs sufficiently controlled to isolate
+matrix guidance? The page presents both explicitly.
 
-- **PC**: original `table1_pc.csv` final/change/zero-failure/decreased cells.
-  All-PC-pass rate uses its saved zero-failure count / query N. New violations and
-  net change are explicitly labelled candidate-loop diagnostics from the shared
-  proposal metric helper, including rejected proposals. Accepted regressions are
-  a separate metric.
-- **CS**: original `table2_cs.csv` final/change/zero-failure cells and strict >85%
-  threshold count / N. Standard-check new/net transitions are unavailable rather
-  than inferred from loop error messages.
-- **Process**: saved per-query rounds, original `table3_repair_process.csv` token,
-  completeness, time, plan-change, error-reply and cache rows. Explicit no-progress
-  uses the shared analyzer's logged marker. Complete-token and lower-bound token
-  definitions remain separate; lower-bound missing tokens never prove free calls.
-- **Evaluation**: all five original `table4_eval_exp.csv` rows. Percentages are
-  already 0–100; no additional scaling occurs. Raw CS micro includes the original
-  evaluator-exception caveat. CS macro and all-pass remain distinct definitions.
-- **Mechanisms**: original strategy analyzer hooks, validated candidate/accepted
-  metrics, checkpoint raw-plan equality, logged R4 relationships/guards, validated
-  R4 selection pool and existing TRAIN-matrix audit. Missing evidence is blank.
+R0/R4 is not automatically a causal ablation. The offline audit checks population,
+initial plans, model/config, budgets, scheduler, verifier/evaluator, and equivalent
+prompt/repair logic, scope, acceptance, structural guards, candidate generation
+and selection. Current source uses different prompt/parsing/guard paths and R4
+has separate post-hoc selection. Both use whole-plan repair; R4 does not adopt
+R3's widening schedule merely because it inherits its implementation contract.
+Actual run metadata also has differing initial identities/implementations and
+recorded configuration. The current fourth pair is **Descriptive comparison only**.
 
-Every common row has its exact source row, denominator, known-value N and
-unavailable reason in the page's definitions expander and `summary.csv`.
-The full catalog and mechanism definitions are documented in
-[`scripts/result_analysis/ablation_comparisons/README.md`](../scripts/result_analysis/ablation_comparisons/README.md).
+Only fully verified matrix-only component controls and a complete settings
+snapshot permit **Controlled ablation**. Matching controls without complete
+isolation may yield **Matched strategy comparison**; unknown/different controls
+yield descriptive interpretation. Population/difficulty mismatch blocks deltas.
+R3/R4 always retains **Strategy comparison — not a matrix ablation**.
 
-## Safeguards
+## Sources and presentation
 
-Population or difficulty mismatch blocks headline deltas. Explicit intersection
-analysis must be requested using `--matched-query-subset`; the page labels it
-**Matched-query subset**, retaining original N, matched N and excluded UIDs.
-Other missing/differing controls downgrade to descriptive comparison. Initial
-plans, implementation, scheduler, model/config, effective repair budgets,
-verifier/evaluator, benchmark identities and intended differences are checked.
-Only **Controlled ablation** permits causal language; the page otherwise displays
-an explicit no-causal-effect warning. R3 vs R4 always retains its strategy
-comparison label. R3 widening is scheduled, and R4 post-hoc selection is separate
-from the final accepted TEST trajectory.
+The page remains table-first: research question, classification, compatibility
+checklist/repository audit, original/matched N, per-difficulty pairwise results,
+mechanism evidence, one supplementary chart, definitions/coverage and provenance.
+Easy/Medium/Human/All filters select generated rows with identical nonempty UID
+cohorts. Explicit CLI intersection mode is labelled **Matched-query subset**, with
+original N, matched N and excluded UIDs. It is never silently substituted.
 
-Missing R1 TEST never uses R1 TRAIN. Missing no-matrix R4 never uses R3 or the
-with-matrix R4 run. Matrix ablation requires two independently bound R4 reporting
-roots, explicit enabled/disabled flags, a declared complete matching control
-snapshot, and verified TRAIN-only matrix provenance. Current metadata is never
-edited to obtain a stronger classification.
+PC/CS values retain original TEST Tables 1–2; costs/process retain Table 3 and
+saved per-query rounds; evaluation retains all five Table 4 definitions. Candidate
+versus accepted transitions, loop messages versus benchmark checks, complete
+versus lower-bound tokens, raw evaluator exceptions and post-hoc outcomes remain
+separate. No metric formula is implemented in this frontend. Definitions, exact
+source cells and denominators are saved in `summary.csv` and documented in the
+[offline README](../scripts/result_analysis/ablation_comparisons/README.md).
 
-## Reproduction and refresh
+In the fourth pair, R4 shows logged supported/unsupported/no-relationship guidance,
+support, structural guards, considered outcomes and initial/repaired selections.
+R0's corresponding matrix-specific entries are **Not applicable**, never zero.
+Machine-readable rows have blank numeric values and explicit N/A units; frontend
+formatting and CSV export preserve that distinction. R0's general proposal and
+outcome metrics remain applicable. Missing R4 evidence remains unavailable.
 
-1. Finish final experiments.
-2. Regenerate the existing TEST tables with their unchanged builder. Include all
-   canonical strategies together; build no-matrix R4 into a separate reporting root.
-3. Run the standalone comparison CLI with the final source paths. Optional
-   partition-bound strategy diagnostics can be regenerated independently; the
-   comparison CLI also reuses the same read-only analysis helpers directly.
-4. Refresh/restart Streamlit. No dashboard source edits or file copying are needed.
-
-Current command:
+## Reproduction
 
 ```bash
-python -m scripts.result_analysis.ablation_comparisons.build_ablation_comparisons \
+.venv/bin/python -m scripts.result_analysis.ablation_comparisons.build_ablation_comparisons \
   --r0 experiments/subset_test-r0 \
+  --r1 experiments/subset_test-r1 \
   --r2 experiments/subset_test-r2 \
   --r3 experiments/subset_test-r3 \
   --r4 experiments/subset_test-r4 \
@@ -88,13 +73,13 @@ python -m scripts.result_analysis.ablation_comparisons.build_ablation_comparison
   --output-dir results/analysis/ablation_comparisons
 ```
 
-The CLI README includes complete future-run/no-matrix commands and the required
-control metadata schema. No-matrix arguments are optional; unavailable comparisons
-are emitted explicitly. Regenerating only one comparison is supported.
+Optional inputs are only R0–R4. The fourth pair needs no additional run, reporting
+root or CLI flag. The output folder contains `summary.csv`, `mechanism.csv`,
+`validity.json`, `metadata.json`; root tidy/index outputs use the four canonical
+pairs. The obsolete generated comparison is retired on regeneration.
 
-The loader verifies generated output hashes and recorded input/code hashes before
-showing values. If inputs or analysis code changed, the page requests CLI
-regeneration; it does not show stale deltas or launch a subprocess on rerun.
-Missing output directories yield a generation hint without breaking the other
-pages. This adds no global filters and leaves existing pages and numerical results
+After final experiments, regenerate existing TEST tables/diagnostics, run the CLI,
+and refresh/restart Streamlit. Source/output/code hashes remain mandatory; stale
+outputs block display and require regeneration. No metric calculation or subprocess
+runs on reruns. Other pages, experiment artifacts and metric definitions remain
 unchanged.

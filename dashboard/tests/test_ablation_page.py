@@ -60,14 +60,51 @@ class AblationPageTests(unittest.TestCase):
         self.assertTrue(any('populations are unavailable or incompatible' in x.value for x in app.info))
 
     def test_missing_runs_do_not_break_page_and_advanced_label(self):
+        path=self.repo.manifests[('TEST','R4')][0]/'run_manifest.json'
+        manifest=json.loads(path.read_text());manifest['implementation_hash']='different-R4-implementation'
+        path.write_text(json.dumps(manifest));self.build()
         app=self.app()
-        app.selectbox[0].set_value('r4_matrix_ablation').run(timeout=90)
+        app.selectbox[0].set_value('r0_vs_r4_matrix').run(timeout=90)
         self.assertFalse(app.exception)
-        self.assertTrue(any('Required no-matrix R4 TEST run is not currently available.'==x.value for x in app.markdown))
-        self.assertFalse(any('Delta (Right - Left)' in x.value for x in app.dataframe))
+        self.assertTrue(any('Delta (R4 - R0)' in x.value for x in app.dataframe))
+        self.assertFalse(any('current runs differ in additional implementation details' in x.value for x in app.warning))
+        self.assertTrue(any(x.value=='Descriptive comparison only' for x in app.subheader))
+        mechanisms=next(x.value for x in app.dataframe if 'evidence_n' in x.value)
+        baseline=mechanisms[(mechanisms.run=='R0') & mechanisms.metric.str.startswith('Guidance:')]
+        self.assertTrue(baseline.value.eq('Not applicable').all())
+        self.assertFalse(baseline.empty)
         app.selectbox[0].set_value('r3_vs_r4').run(timeout=90)
         self.assertTrue(any(x.value=='Strategy comparison — not a matrix ablation' for x in app.caption))
         self.assertTrue(any('does not establish a causal' in x.value for x in app.warning))
+
+    def test_missing_r0_or_r4_is_explicit_on_fourth_page(self):
+        original=list(self.args)
+        for role in ('R0','R4'):
+            with self.subTest(role=role):
+                self.args=list(original)
+                i=self.args.index('--'+role.lower());del self.args[i:i+2]
+                self.build()
+                app=self.app();app.selectbox[0].set_value('r0_vs_r4_matrix').run(timeout=90)
+                self.assertFalse(app.exception)
+                self.assertTrue(any(role+' TEST' in x.value and 'not currently available' in x.value for x in app.markdown))
+                self.assertFalse(any('Delta (R4 - R0)' in x.value for x in app.dataframe))
+
+    def test_fourth_matrix_na_export_preserves_displayed_cells(self):
+        app=self.app();app.selectbox[0].set_value('r0_vs_r4_matrix').run(timeout=90)
+        shown=next(x.value for x in app.dataframe if 'evidence_n' in x.value)
+        with patch('dashboard.components.common.st.dataframe'),patch('dashboard.components.common.st.download_button') as download:
+            from dashboard.components.common import table
+            table(shown,'matrix evidence export test')
+        exported=pd.read_csv(io.StringIO(download.call_args.args[1].decode()),dtype=str)
+        rows=exported[(exported.run=='R0') & exported.metric.str.startswith('Guidance:')]
+        self.assertTrue(rows.value.eq('Not applicable').all())
+        self.assertFalse(rows.empty)
+
+    def test_retired_browser_selection_migrates_to_current_fourth_pair(self):
+        app=AppTest.from_string("import streamlit as st\nst.session_state['ablation_comparison']='retired-selection'\nfrom dashboard.pages.ablation_comparisons import render\nrender({'runs': []})").run(timeout=90)
+        self.assertFalse(app.exception)
+        self.assertEqual(app.selectbox[0].value,'r0_vs_r4_matrix')
+        self.assertTrue(any('Delta (R4 - R0)' in x.value for x in app.dataframe))
 
     def test_stale_inputs_and_edited_outputs_block_values(self):
         self.assertTrue(d.comparison_bundle('r0_vs_r2')['ready'])

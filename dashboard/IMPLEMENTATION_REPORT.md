@@ -1,3 +1,44 @@
+## R0/R4 matrix-guidance comparison revision
+
+The canonical fourth pair is now **R0 vs R4 — Matrix-guidance comparison**,
+left R0 (no-matrix baseline), right R4 (matrix-guided strategy), delta R4 − R0.
+The CLI accepts only R0–R4. Registry, adapters, missing-run checks, metadata,
+examples and tests no longer require an additional run. Regeneration retires the
+obsolete generated folder and writes `r0_vs_r4_matrix/`; root tidy/index outputs
+contain exactly the four current pairs. A retired browser selection maps to the
+new fourth pair. Previous generated refresh-audit sidecars were archived under
+`/tmp/ablation-comparison-previous-refresh-audit/` rather than left as current data.
+
+The fourth page shows intended question versus empirical validity, compatibility
+checks and a read-only implementation audit. All existing common metrics retain
+their source definitions. R0 matrix-only diagnostics are explicitly Not applicable,
+not zero, while R4 uses logged support, guards and validated outcome-pool/selection
+evidence. Candidate/accepted/benchmark/post-hoc endpoints remain distinct. The
+other three pairs' summary and mechanism CSVs are byte-for-byte unchanged.
+
+Current R0/R4 validity is **Descriptive comparison only**: populations match at
+30/30/30, but recorded initial identities and implementation/configuration differ,
+and several controls are unknown. Repository code also shows distinct prompts,
+parsing and structural guards, plus R4 post-hoc selection. Both use whole-plan
+scope. The page displays the recorded validity classification. Controlled status additionally requires recorded equivalence for prompt/
+logic excluding guidance, scope, acceptance, guards, candidate generation and
+selection, existing common controls, correct treatment/provenance, and a complete
+matching settings snapshot. Missing isolation evidence cannot produce a causal label.
+
+Current availability: R0/R2, R1/R3, R3/R4 and R0/R4 all available, each N=30 on
+both sides and matched N=30; all are descriptive comparisons only. Reproduction
+uses the five current TEST run paths documented in the CLI/dashboard READMEs.
+
+Validation: 18 standalone comparison tests, 9 comparison-page tests, and 48 existing
+analysis tests pass. Full dashboard suite: 142 passed and 2 pre-existing errors
+out of 144, both expecting the legacy PC 2+ failure source row while the current
+team builder emits separate 2 and 3+ bins. This unrelated definition/source issue
+was not altered or hidden. All four real-data comparison views, existing pages,
+startup/imports, compilation, exact other-pair CSV parity and whitespace checks pass.
+All experiment artifacts, existing TEST reporting/strategy-analysis outputs, TRAIN
+matrices/analysis, repair/verifier/evaluator implementations remain unchanged.
+No model/API calls, commits or pushes.
+
 ## Ablations & Comparisons revision
 
 Added the seventh page, ordered Overview, Query Explorer, TRAIN set, TEST set,
@@ -22,12 +63,10 @@ metadata.json, plus root tidy metric/mechanism CSVs, index and README. Inputs,
 analysis code and generated outputs are hashed; the frontend rejects stale or
 edited results rather than recomputing them on rerun.
 
-Current availability: R0/R2 and R3/R4 are descriptive comparisons only (initial
-plans and implementations differ; scheduler/verifier/evaluator controls and seed
-agreement are not established). R1 TEST is absent. No-matrix R4 TEST is absent and
-explicitly unavailable. New standard-CS violations/net standard-CS change are
-unavailable because persisted loop messages do not supply check-level transitions.
-R4 post-hoc selections remain separate from final accepted benchmark trajectories.
+Current canonical availability uses R0/R2, R1/R3, R3/R4 and R0/R4. The fourth
+pair is the intended matrix-guidance comparison, with R0 as baseline. All current
+pairs are descriptive; standard-CS new/net transition metrics remain unavailable.
+R4 post-hoc choices stay separate from final accepted benchmark trajectories.
 
 Validation: 15 standalone comparison tests, 141 dashboard tests, and 48 existing
 analysis tests pass. CLI smoke, all four comparison selections, all six existing
@@ -38,7 +77,7 @@ package was added within scripts/. No model/API calls, commits or pushes.
 
 See `dashboard/ABLATION_COMPARISONS.md` and the offline package README for the
 complete source catalog, control metadata contract, limitations, output schema,
-current commands and future final-run/no-matrix commands.
+current commands and future final-run commands.
 
 ## Navigation labels and order revision
 

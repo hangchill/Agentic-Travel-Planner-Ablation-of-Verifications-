@@ -46,7 +46,7 @@ class Evidence:
 
     @property
     def strategy(self):
-        return 'R4' if self.key == 'R4-no-matrix' else self.key
+        return self.key
 
 
 def reporting(evidence, root, repository):
