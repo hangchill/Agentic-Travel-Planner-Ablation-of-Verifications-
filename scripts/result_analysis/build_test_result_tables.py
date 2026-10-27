@@ -354,7 +354,8 @@ def table_pc(rows):
                         lambda g: sum(r["pc_passed_final"] < r["pc_passed_initial"] for r in g), SRC_PC))
     t.append(metric_row("Final plans with 0 failed PC", rows, lambda g: sum(r["pc_failed_final"] == 0 for r in g), SRC_PC))
     t.append(metric_row("Final plans with 1 failed PC", rows, lambda g: sum(r["pc_failed_final"] == 1 for r in g), SRC_PC))
-    t.append(metric_row("Final plans with 2+ failed PC", rows, lambda g: sum(r["pc_failed_final"] >= 2 for r in g), SRC_PC))
+    t.append(metric_row("Final plans with 2 failed PC", rows, lambda g: sum(r["pc_failed_final"] == 2 for r in g), SRC_PC))
+    t.append(metric_row("Final plans with 3+ failed PC", rows, lambda g: sum(r["pc_failed_final"] >= 3 for r in g), SRC_PC))
     t.append(metric_row("Top 3 failing PC kinds in final plans (failures)", rows,
                         lambda g: top_three(Counter(k for r in g for k in r["pc_failed_kinds_final"].split("; ") if k)),
                         SRC_PC + "; kind classified from hard_logic_py"))
@@ -503,7 +504,7 @@ def readme(run_notes):
         "",
         "| File | Contents |",
         "|---|---|",
-        "| `table1_pc.csv` | Personal constraints (PC), benchmark: avg failed and avg passed initial vs final, queries up / same / down, 0 / 1 / 2+ failed, top failing kinds, results without named-place constraints |",
+        "| `table1_pc.csv` | Personal constraints (PC), benchmark: avg failed and avg passed initial vs final, queries up / same / down, 0 / 1 / 2 / 3+ failed, top failing kinds, results without named-place constraints |",
         "| `table1b_pc_failure_by_kind.csv` | PC failure rate by constraint kind, whole cohort |",
         "| `table2_cs.csv` | Commonsense (CS) checks, benchmark: avg failed checks and avg % passed initial vs final, queries improved / same / worse, plans with 0 / 1 / 2 / 3 / 4+ failed, plans with at most 4 failed, top failing checks |",
         "| `table3_repair_process.csv` | Avg tokens and repair time, effect of a changed round, and the round split (changed / cached / other) |",
