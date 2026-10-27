@@ -2,21 +2,23 @@ from pathlib import Path
 import pandas as pd
 import streamlit as st
 from dashboard import data_loader as data
-from dashboard.metrics import pool_saved_cells, eligible_matrix_attempts
+from dashboard.metrics import pool_saved_cells, eligible_matrix_attempts, matrix_support_limit
 from dashboard.components import matrix
 from dashboard.components.common import table
 
 
 def render(ctx):
-    st.title('TRAIN interdependencies')
+    st.title('TRAIN set')
     st.caption('Development evidence only — R0–R3 TRAIN. Observed repair-regression relationships are not causal effects.')
-    if ctx['run'].partition != 'TRAIN' or ctx['run'].strategy == 'R4':
-        st.warning('This page requires TRAIN R0–R3. Change Dataset/Strategy in the sidebar.')
+    runs = [r for r in ctx['runs'] if r.partition == 'TRAIN' and r.strategy in ('R0', 'R1', 'R2', 'R3')]
+    if not runs:
+        st.info('TRAIN R0–R3 development evidence: Unavailable.')
         return
-    strategies = st.multiselect('Source strategies', ['R0', 'R1', 'R2', 'R3'], default=[ctx['run'].strategy])
-    perspective = st.radio('Matrix perspective', ['candidate', 'accepted_trajectory'], horizontal=True)
+    available = sorted({r.strategy for r in runs})
+    strategies = st.multiselect('Source strategies', available, default=available, key='train_strategies')
+    perspective = st.radio('Matrix perspective', ['candidate', 'accepted_trajectory'], horizontal=True, key='train_perspective')
     frames, coverage = [], []
-    for run in ctx['runs']:
+    for run in runs:
         if run.partition != 'TRAIN' or run.strategy not in strategies:
             continue
         m = data.matrix_table(run)
@@ -32,7 +34,16 @@ def render(ctx):
     table(pd.DataFrame(coverage), 'Persisted matrix construction coverage')
     st.caption('The saved single-target count is a construction-stage count; eligible relationship contributions have a different denominator. No dashboard eligibility rule is substituted. Matrix controls apply to persisted aggregate cells; query/round/phase/outcome filters do not rebuild this matrix.')
     m = pool_saved_cells(frames)
-    if ctx['filters']['family'] != 'All' and not m.empty:
-        family = ctx['filters']['family']
-        m = m[(m.source_family == family) | (m.destination_family == family)]
-    matrix.render(m, ctx['filters']['minimum'])
+    families = sorted(set(m.source_family) | set(m.destination_family)) if not m.empty else []
+    source = st.selectbox('Repaired family', ['All'] + families, key='train_repaired_family')
+    destination = st.selectbox('Regressed family', ['All'] + families, key='train_regressed_family')
+    maximum = matrix_support_limit([m])
+    minimum = st.slider('Minimum matrix support', 0, max(1, maximum), min(5, maximum),
+                        disabled=maximum == 0, key='train_matrix_support')
+    st.caption('Matrix support filters affect saved matrices only.')
+    if not m.empty:
+        if source != 'All':
+            m = m[m.source_family == source]
+        if destination != 'All':
+            m = m[m.destination_family == destination]
+    matrix.render(m, minimum)

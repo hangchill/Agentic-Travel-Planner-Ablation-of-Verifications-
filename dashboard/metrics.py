@@ -1033,7 +1033,7 @@ PROCESS_REPORT_ROWS = {
     'Queries with complete token data': '[per query] Queries with token data',
     'Avg tokens per query (complete token data)': '[per query] Avg tokens spent per query (queries with complete token data)',
     'Rounds with no token count': '[per query] Rounds with no recorded token count',
-    'Avg tokens, all queries (lower bound)': '[per query] Avg tokens spent per query - known values only, all queries (lower bound)',
+    'Avg tokens, all queries (lower bound)': '[per query] Avg tokens spent per query - all queries, failed requests counted as 0 (lower bound)',
     'Avg repair time per query (s)': '[per query] Avg repair time per query (s)',
     'Queries with >=1 round making changes': '[per query] Queries with at least one round that changed the plan',
     'Δ PC passed per changed round': '[per query] Avg change in PC passed per changed round (loop verifier)',
@@ -1058,6 +1058,12 @@ PROCESS_ROUND_COMPARISONS = {
 
 
 def process_report_pivot(summaries, queries, strategies, difficulties):
+    # Upstream renamed this row without changing its tokens_spent_known mean.
+    # Preserve the older generated tables as well as future regenerated outputs.
+    summaries = {strategy: frame.assign(metric=frame.metric.replace({
+        '[per query] Avg tokens spent per query - known values only, all queries (lower bound)':
+        PROCESS_REPORT_ROWS['Avg tokens, all queries (lower bound)']}))
+        if 'metric' in frame else frame for strategy, frame in summaries.items()}
     result = reporting_pivot(summaries, queries, strategies, difficulties, PROCESS_REPORT_ROWS)
     for column in result.columns[1:]:
         result[column] = pd.to_numeric(result[column], errors='coerce')

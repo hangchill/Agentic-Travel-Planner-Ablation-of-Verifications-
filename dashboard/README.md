@@ -119,7 +119,7 @@ and query counts for each R0–R4 strategy, plus individual source runs. Generat
 diagnostics availability is distinct from raw proposal diagnostics that can be
 computed through the existing shared metric helper.
 
-Overview and TEST Results show the selected source path/run ID, generated output
+Overview and TEST set show the selected source path/run ID, generated output
 paths, manifest query population/count and generation timestamps when recorded.
 Timestamps are Unavailable for the TEST builder, which does not emit generation
 metadata; filesystem modification time is not presented as a generation timestamp.
@@ -134,36 +134,26 @@ identities remain the same. Artifact publication should finish before refreshing
 
 ## Pages and filters
 
-- Overview: run population, proposal/phase coverage, model/settings, paths,
-  comparison compatibility checks.
-- TRAIN Interdependencies: R0–R3 development evidence only; candidate/accepted
-  saved cells, support, observed zeros, relationship ranking and CSV download.
-- TEST Results: established team PC/CS/process tables, filtered summaries,
-  additional display percentages, observed round diagnostics and raw benchmark tab.
-- Strategy Details: R0 footprints; R1 recorded localisation; R2 protection/rollback;
-  R3 observed Slot/Day/Plan widening; R4 advisory guidance, guards, trials/selection.
-- Query Explorer: initial, before/candidate/accepted round states, costs, decisions,
-  targets, scope/guidance metadata, final itinerary, separate post-hoc selection,
-  and benchmark reporting row.
-- Representative Examples: narrative candidate filters and Markdown export.
-  Examples require manual selection and have no statistical representative claim.
+The top navigation uses this exact order:
 
-Global filters: TRAIN/TEST, R0–R4, phase, observed round IDs, literal UID substring, target
-constraint family, candidate outcome and minimum matrix support. The support
-maximum comes from loaded saved-cell supports (including pooled TRAIN counts) and
-logged guidance; empty support disables the control. TEST also has
-an easy/medium/human difficulty filter. Invalid combinations show a message.
-PC family and TEST failure kind are different taxonomies.
+1. **Overview**: TRAIN/TEST inventory, run coverage and provenance.
+2. **Query Explorer**: local partition (TEST default), strategy, query and trajectory filters;
+   candidate/accepted states, final itinerary and separate post-hoc selection.
+3. **TRAIN set**: TRAIN R0–R3 development matrices, support, relationship filters and downloads.
+4. **TEST set**: TEST-only Tables 1–4, with existing local comparison and round filters.
+5. **Strategy-Specific**: TEST strategy diagnostics, including localisation, protection,
+   widening, matrix guidance, guards and trial selection.
+6. **Examples**: four canonical mechanism sections with automatic source binding,
+   alternative qualifying selections and Markdown exports. These illustrate mechanisms,
+   not aggregate evidence. See [EXAMPLES_REPORTING.md](EXAMPLES_REPORTING.md).
 
-Proposal filters select a cohort of queries with matching proposals. TEST
-before/final metrics remain whole-query endpoints for that cohort. Round tables
-use only matching observed rounds. Scope/example narratives use the filtered
-proposal stream; clear round filters to inspect complete trajectories. The query
-explorer always retains initial/final endpoints and filters expanded rounds by
-phase/round/family/outcome. Saved aggregate matrices cannot be filtered by query/round/outcome
-without rebuilding them, so the matrix page explicitly limits its controls to
-TRAIN source strategies, perspective, family and support. Coverage denominators
-are the selected off-diagonal PC cells, before the minimum-support display filter.
+All analytical filters are local to their page. TEST set binds TEST reporting
+regardless of selections elsewhere; TRAIN set binds TRAIN R0–R3 evidence.
+Query Explorer retains initial/final endpoints while filtering expanded rounds.
+Examples searches complete independent trajectories using its canonical criteria.
+Saved aggregate matrices use local strategy/perspective/family/support controls;
+proposal filters never rebuild them. PC family and TEST failure kind remain
+different taxonomies.
 
 ## Derivation and missing-data contract
 
@@ -246,8 +236,7 @@ audit snapshot, not a permanent claim about current availability.
 The PC tab compares available strategies side by side with difficulty columns,
 failure-kind filters, accepted-loop round tables and a supplementary comparison
 chart. See [PC_REPORTING.md](PC_REPORTING.md) for every source-row mapping,
-Initial/Final semantics, denominators and unavailable metrics. The PC tab remains
-usable when the sidebar-selected strategy lacks its own reporting tables.
+Initial/Final semantics, denominators and unavailable metrics. The PC tab discovers available TEST reporting strategies independently of other pages.
 
 ## Table-first TEST CS reporting
 
@@ -272,3 +261,23 @@ metric bars, strategy/difficulty profiles and saved query-level results, without
 round analysis. See [EVALUATION_REPORTING.md](EVALUATION_REPORTING.md) for exact
 evaluator definitions, raw exception-column footnote, percentage scaling, missing
 results and the distinction between Commonsense macro and three-way All-pass.
+
+### Page navigation and partition policy
+
+The persistent top navigation contains only the six pages. There is no global
+run, partition or analytical filter state; the sidebar retains only Refresh local data.
+
+| Page | Partition | Local controls |
+| --- | --- | --- |
+| Overview | TRAIN and TEST inventory | Run provenance |
+| Query Explorer | TEST default; local TRAIN option | Partition, strategy/run, difficulty, query UID, phase/round/family/outcome |
+| TRAIN set | TRAIN R0–R3 | Source strategies, matrix perspective, repaired/regressed family, minimum support, relationship sort/top N |
+| TEST set | TEST reporting only | Existing independent Table 1–4 difficulty, strategies, metric/failure-family and round comparison controls |
+| Strategy-Specific | TEST only | Strategy/run, difficulty where reporting exists, proposal phase/round/family/outcome/UID |
+| Examples | TRAIN cascade; TEST R2/R3/R4 | Qualifying example selector per canonical section; Markdown exports |
+
+Missing TEST runs remain unavailable; TRAIN is never substituted. Changing pages
+cannot carry a partition or proposal filter into benchmark reporting. The reporting
+pages use the same saved tables and metric helpers as before; removing proposal
+filters restores the full benchmark cohort by default. Restart Streamlit after
+updating source (file watching is disabled in the repository configuration).

@@ -17,7 +17,7 @@ def render(run, uid, filters):
     bundle = data.query_artifacts(run, uid)
     cps = bundle['checkpoints']
     if not cps:
-        st.info('Checkpoint unavailable. The logged proposal evidence, if any, remains available on Strategy Details.')
+        st.info('Checkpoint unavailable. The logged proposal evidence, if any, remains available on Strategy-Specific.')
         return
     cp = cps[0]
     if len(cps) > 1:
@@ -26,7 +26,7 @@ def render(run, uid, filters):
         cp = cps[index]
     t = trajectory(cp)
     state('Initial state — loop verifier', t['initial'])
-    st.caption('CS here counts loop error messages; benchmark CS check pass rates are on TEST Results. Rejected candidates never advance the accepted trajectory.')
+    st.caption('CS here counts loop error messages; benchmark CS check pass rates are on TEST set. Rejected candidates never advance the accepted trajectory.')
     for r in t['rounds']:
         attempt = r['attempt']
         allowed = filters.get('allowed_steps')

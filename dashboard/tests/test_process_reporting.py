@@ -44,6 +44,14 @@ class ProcessReportingTests(unittest.TestCase):
         return next(frame.value for frame in app.dataframe if 'Metric' in frame.value
                     and frame.value.Metric.eq('Queries with complete token data').any())
 
+    def test_legacy_token_row_name_preserves_saved_values(self):
+        runs, q, _, summaries = self.cohorts()
+        old = '[per query] Avg tokens spent per query - known values only, all queries (lower bound)'
+        current = m.PROCESS_REPORT_ROWS['Avg tokens, all queries (lower bound)']
+        legacy = {s: frame.assign(metric=frame.metric.replace({current: old})) for s, frame in summaries.items()}
+        pd.testing.assert_frame_equal(m.process_report_pivot(summaries, q, list(runs), ['All']),
+                                      m.process_report_pivot(legacy, q, list(runs), ['All']))
+
     def test_pivot_exact_table3_values_and_order(self):
         runs, q, _, summaries = self.cohorts()
         pivot = m.process_report_pivot(summaries, q, list(runs), ['Easy', 'Medium', 'Human', 'All'])

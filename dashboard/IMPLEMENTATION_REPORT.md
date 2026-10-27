@@ -1,3 +1,81 @@
+## Navigation labels and order revision
+
+Validation: 135 dashboard tests and 48 existing analysis tests pass. Actual app
+startup, imports, compilation and whitespace checks pass. Exact navigation labels,
+order, stable routes and all six headings are covered by tests. Protected source
+and experiment artifacts (2,572 files) remain unchanged. No commits or pushes.
+
+Top navigation and page headings now read, in order: Overview, Query Explorer,
+TRAIN set, TEST set, Strategy-Specific, Examples. `PAGE_SPECS` keeps the visible
+ordering explicit. Existing module URL paths (Overview at the root) are preserved.
+UI cross-references, README order/filter policy, and navigation/headings tests are
+updated. Only presentation, tests and documentation changed; page dataset bindings,
+comparison safeguards, canonical examples, diagnostic filters, numerical metrics
+and experiment artifacts are preserved.
+
+## Canonical representative examples revision
+
+Validation: 133 dashboard tests (including 15 canonical-example tests) and 48
+existing analysis tests pass. All six pages render with real data. The final
+canonical page has five populated selections and Markdown exports, with no
+exceptions. Compilation/import and whitespace checks pass. All 2,572 protected
+source/artifact files remain unchanged, with no additions. No model/API calls,
+commits or pushes were made.
+
+Replaced manual example-type/partition/strategy filters with four automatically
+bound canonical sections and an R4 contrast subsection. `example_selection.py`
+selects from independent checkpoint trajectories. The component loads only saved
+matrices, contributions, difficulty labels and selection artifacts. No aggregate
+metrics, scoring functions or experiment/source artifacts are changed.
+
+Detection and source details are documented in `EXAMPLES_REPORTING.md`.
+R2 requires the logged regression rejection reason and raw-plan preservation.
+R3 narratives describe fixed scheduled widening. R4 supported examples require
+logged cells matching the frozen TRAIN matrix with recorded hash agreement
+(allowing only LF/CRLF variants); post-hoc selection is separately identified.
+Missing or ambiguous evidence stays unavailable. Markdown exports contain the
+same selected trajectory and states displayed in the section, plus its heading.
+
+Current automatic defaults (not hard-coded into the application):
+
+| Category | Partition / strategy | Query UID | Attempt |
+| --- | --- | --- | --- |
+| Interdependency | TRAIN R0 | e20241028160908981620 | 1 |
+| Protection | TEST R2 | e20241028161340383778 | 1 |
+| Widening | TEST R3 | e20241028160914767827 | 3 |
+| Supported guidance | TEST R4 | e20241028160902013119 | 1 |
+| Structural guard contrast | TEST R4 | m20241028164916356794 | 1 |
+
+All categories currently have qualifying examples. Qualifying proposal counts:
+2 TRAIN cascades, 11 R2 rollbacks, 15 R3 sequences, 11 supported R4 repairs,
+164 R4 limitation proposals. These are selection inventory counts, not new
+aggregate performance metrics or independent sample sizes.
+
+## Page-scoped navigation revision
+
+Validation: 117 dashboard tests and 48 existing analysis tests pass. Six additional
+local-navigation checks passed after strengthening the matrix-family assertion.
+All six pages and the app entry point render against real data; all four report
+summary frames equal the corresponding saved CSV frames. Compilation/imports and
+whitespace checks pass. 2,572 protected source/artifact files are unchanged, with
+no additions. No model/API calls, commits or pushes were made.
+
+Removed the global Repair-analysis explorer title and dataset/strategy/proposal
+controls. Top navigation is persistent and contains only the six page links.
+`page_context.py` owns explicitly scoped diagnostic selectors with distinct widget
+keys; the app passes only discovered runs. TRAIN matrices use TRAIN R0–R3,
+TEST Tables 1–4 use TEST reporting, Strategy-Specific uses TEST. Query Explorer
+and Examples default to TEST with their own local partition controls. Overview
+summarizes both partitions. Refresh remains in the sidebar.
+
+Table selectors/downloads, source bindings, formulas and saved numerical cells
+are unchanged. TEST set discards any stale supplied global filters. Matrix
+family/support controls and candidate-transition explanations now live on their
+relevant pages. Synthetic fixtures include the upstream builder's newly required
+`error_reply_rounds=0`; no builder changes were made. The token lower-bound
+row also accepts both the old and newly renamed upstream labels; this is a label
+adapter only and preserves the exact saved value.
+
 # Table-first ChinaTravel Evaluation revision
 
 The fourth TEST tab is now ChinaTravel Evaluation, with the same independent
@@ -107,7 +185,7 @@ The reports below describe preceding revisions.
 
 # Table-first TEST CS revision
 
-TEST Results → Commonsense Constraints now mirrors the PC reporting structure:
+TEST set → Commonsense Constraints now mirrors the PC reporting structure:
 Difficulty × Strategy comparison, exact saved failure-label attribution, loop
 round diagnostics, round-wise strategy comparison and filtered CSV downloads.
 Both PC and CS views load available reporting runs independently of the sidebar
@@ -161,7 +239,7 @@ The reports below describe preceding revisions.
 
 # Table-first TEST PC revision
 
-TEST Results → Personal Constraints now starts with the report-ready
+TEST set → Personal Constraints now starts with the report-ready
 Metric × difficulty/strategy table. Its local controls default to all observed
 difficulties and all canonically bound TEST reporting strategies. Available runs
 remain visible even if the sidebar-selected run lacks reporting. Missing/future

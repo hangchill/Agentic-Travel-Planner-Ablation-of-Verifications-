@@ -1,14 +1,19 @@
 import streamlit as st
+from dashboard.page_context import diagnostics, local_partition
 from dashboard.components.query_explorer import render as explorer
 
 
 def render(ctx):
-    st.title('Query explorer')
+    st.title('Query Explorer')
+    partition = local_partition(ctx['runs'], 'query')
+    ctx = diagnostics(ctx['runs'], partition, 'query')
+    if ctx is None:
+        return
     q = ctx['q']
     if q.empty:
         st.info('No query evidence matches the current filters.')
         return
-    uid = st.selectbox('Query UID', sorted(q.query_uid.unique()))
+    uid = st.selectbox('Query UID', sorted(q.query_uid.unique()), key='query_selected_uid')
     filters = dict(ctx['filters'])
     if any(filters.get(k, 'All') != 'All' for k in ('phase', 'round', 'family', 'outcome')):
         filters['allowed_steps'] = set(zip(ctx['a'].query_uid, ctx['a'].step, ctx['a'].repair_strategy)) if not ctx['a'].empty else set()

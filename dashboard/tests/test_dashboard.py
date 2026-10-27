@@ -204,15 +204,8 @@ class UISmokeTests(FixtureCase):
         from streamlit.testing.v1 import AppTest
         app = AppTest.from_file(str(Path(__file__).resolve().parents[1] / 'app.py')).run(timeout=90)
         self.assertFalse(app.exception)
-        app.sidebar.selectbox[0].select('TEST').run(timeout=90)
-        self.assertFalse(app.exception)
-        app.sidebar.selectbox[1].select('R1').run(timeout=90)
-        self.assertFalse(app.exception)
-        self.assertFalse(app.sidebar.warning)
-        runs = [r for r in d.discover_runs() if not (r.partition == 'TEST' and r.strategy == 'R1')]
-        with patch.object(d, 'discover_runs', return_value=runs):
-            app.run(timeout=90)
-            self.assertTrue(any('run unavailable' in x.value for x in app.sidebar.warning))
+        self.assertFalse(app.sidebar.selectbox)
+        self.assertFalse(any('Repair-analysis explorer' in x.value for x in app.title))
 
     def test_all_pages_fixture_data(self):
         from streamlit.testing.v1 import AppTest
@@ -277,13 +270,13 @@ render(ctx)
         app = AppTest.from_string(script).run(timeout=90)
         self.assertFalse(app.exception)
 
-    def test_r2_and_r3_candidate_examples_render(self):
+    def test_canonical_examples_render_without_global_selection(self):
         from streamlit.testing.v1 import AppTest
-        for strategy, category in [('R2', 'R2 protection'), ('R3', 'R3 widening')]:
-            script = f"from dashboard.tests.test_dashboard import context\nfrom dashboard.pages.representative_examples import render\nrender(context('TEST', {strategy!r}))"
-            app = AppTest.from_string(script).run(timeout=90)
-            app.selectbox[0].select(category).run(timeout=90)
-            self.assertFalse(app.exception)
+        from dashboard.example_selection import TITLES
+        app = AppTest.from_string("from dashboard import data_loader as d\nfrom dashboard.pages.representative_examples import render\nrender({'runs': d.discover_runs()})").run(timeout=90)
+        self.assertFalse(app.exception)
+        self.assertEqual([x.value for x in app.subheader], list(TITLES.values()))
+        self.assertFalse(any(x.label in ('Partition', 'Strategy', 'Example criteria') for x in app.selectbox))
 
     def test_r2_examples_require_verified_preservation(self):
         a = pd.DataFrame({'query_uid': ['x'], 'step': [1], 'protected_regression_count': [1], 'rejected': [True]})

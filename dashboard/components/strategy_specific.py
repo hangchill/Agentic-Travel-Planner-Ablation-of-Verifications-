@@ -13,7 +13,7 @@ def render(run, a, q):
         st.info('No matching proposals for strategy diagnostics.')
         return
     if run.strategy == 'R0':
-        st.caption('Global baseline: measured edit footprint only; common performance metrics are on TEST Results.')
+        st.caption('Global baseline: measured edit footprint only; common performance metrics are on TEST set.')
         table(a, 'R0 edit footprints', ['query_uid', 'step', 'changed_slot_count', 'changed_slot_rate'])
         st.bar_chart(value_distribution(a, 'changed_slot_count'))
     elif run.strategy == 'R1':

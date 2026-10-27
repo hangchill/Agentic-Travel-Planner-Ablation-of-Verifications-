@@ -1,9 +1,9 @@
 import streamlit as st
-from dashboard import data_loader as data
 from dashboard.components.examples import render as examples
 
 
 def render(ctx):
-    st.title('Representative examples — candidate finder')
-    st.caption('Review candidate examples manually before selecting them for reporting.')
-    examples(ctx['run'], ctx['a'], data.analysis_table(ctx['run'], 'r4_selections'))
+    st.title('Examples')
+    st.write('These examples are selected to illustrate the mechanisms studied in the project rather than to provide additional aggregate performance evidence.')
+    st.caption('Sources are bound automatically: TRAIN R0–R3 interdependencies; TEST R2 protection, R3 widening, and R4 matrix guidance. Candidate, accepted, and post-hoc selected states remain distinct.')
+    examples(ctx['runs'])

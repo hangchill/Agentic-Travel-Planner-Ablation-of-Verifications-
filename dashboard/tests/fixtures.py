@@ -97,7 +97,7 @@ class Repository:
                 cs_evaluator_exception_final=False, cs_failed_raw_final=1, cs_total_raw_final=28,
                 schema_initial=True, schema_final=True, all_pass_initial=False, all_pass_final=False,
                 tokens_spent=100 * len(steps), tokens_spent_known=100 * len(steps), rounds_missing_tokens=0,
-                repair_time_s=float(len(steps)), rounds=len(steps), changed=len(steps), unchanged_cache=0,
+                repair_time_s=float(len(steps)), rounds=len(steps), error_reply_rounds=0, changed=len(steps), unchanged_cache=0,
                 unchanged_other=0, dpc_per_changed=.5, dcs_per_changed=-.5))
         (folder / 'attempts.jsonl').write_text(''.join(json.dumps(row) + '\n' for row in raw))
         bench = folder / 'benchmark_eval' / f'{strategy}-fixture'
