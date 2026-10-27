@@ -2,6 +2,7 @@
 import argparse
 from datetime import datetime, timezone
 import json
+import shutil
 from pathlib import Path
 import sys
 
@@ -18,6 +19,14 @@ SUMMARY_COLUMNS = ['comparison_id','comparison_type','cohort_label','difficulty'
                    'unit','direction','n_left','n_right','n_matched','n_values_left','n_values_right','validity_class',
                    'source','denominator','cohort_compatible','unavailable_reason']
 MECHANISM_COLUMNS = ['comparison_id','side','run','difficulty','metric','value','evidence_n','source','denominator','unit','direction']
+
+
+def interpretation(identifier,validity):
+    if identifier=='r3_vs_r4':
+        return 'Strategy comparison — not a matrix ablation'
+    if identifier=='r0_vs_r4_matrix':
+        return validity['classification']
+    return COMPARISONS[identifier][3]
 
 
 def build_comparison(identifier,left,right,intersection=False):
@@ -52,7 +61,7 @@ def build_comparison(identifier,left,right,intersection=False):
         # No incompatible-cohort mechanism counts are presented as paired evidence.
         if compatible:
             for side,e in [('Left',left),('Right',right)]:
-                for row in mechanism(e,uids,difficulty):
+                for row in mechanism(e,uids,difficulty,matrix_comparison=identifier=='r0_vs_r4_matrix'):
                     mechanisms.append(dict(row,comparison_id=identifier,side=side))
     validity['difficulty_cohorts']=cohorts
     return pd.DataFrame(rows,columns=SUMMARY_COLUMNS),pd.DataFrame(mechanisms,columns=MECHANISM_COLUMNS),validity
@@ -60,12 +69,10 @@ def build_comparison(identifier,left,right,intersection=False):
 
 def parser():
     p=argparse.ArgumentParser(description=__doc__)
-    for name in ('r0','r1','r2','r3','r4','r4-no-matrix'):
+    for name in ('r0','r1','r2','r3','r4'):
         p.add_argument('--'+name,type=Path)
     p.add_argument('--test-reporting-dir',type=Path,default=Path('test_result_analysis'))
     p.add_argument('--analysis-dir',type=Path,default=Path('results/analysis/repair_strategies/test'))
-    p.add_argument('--r4-no-matrix-reporting-dir',type=Path,help='Separate team TEST-reporting root for the second R4 run (contains R4/ and README.md).')
-    p.add_argument('--r4-no-matrix-analysis-dir',type=Path)
     p.add_argument('--output-dir',type=Path,default=Path('results/analysis/ablation_comparisons'))
     p.add_argument('--repository-root',type=Path,default=Path.cwd(),help='Base for relative paths recorded in generated provenance.')
     p.add_argument('--comparison',choices=list(COMPARISONS),action='append',help='Build only named comparison(s); default all four.')
@@ -77,8 +84,8 @@ def main(argv=None):
     args=parser().parse_args(argv)
     repository=args.repository_root.resolve();output=args.output_dir.resolve()
     # Output-only locations protect all supplied inputs from accidental overwrite.
-    input_roots=[p.resolve() for p in [args.test_reporting_dir,args.analysis_dir,args.r4_no_matrix_reporting_dir,args.r4_no_matrix_analysis_dir,
-                 *[getattr(args,k) for k in ('r0','r1','r2','r3','r4','r4_no_matrix')]] if p is not None]
+    input_roots=[p.resolve() for p in [args.test_reporting_dir,args.analysis_dir,
+                 *[getattr(args,k) for k in ('r0','r1','r2','r3','r4')]] if p is not None]
     if any(output==p or output.is_relative_to(p) or p.is_relative_to(output) for p in input_roots):
         raise ValueError('Output directory must be separate from all input directories')
     selected=args.comparison or list(COMPARISONS)
@@ -86,16 +93,15 @@ def main(argv=None):
     evidence={}
     for key in sorted(keys):
         path=getattr(args,key.lower().replace('-','_'))
-        report=args.r4_no_matrix_reporting_dir if key=='R4-no-matrix' else args.test_reporting_dir
-        diagnostics=args.r4_no_matrix_analysis_dir or args.analysis_dir if key=='R4-no-matrix' else args.analysis_dir
-        # Missing alternate R4 reporting is not silently replaced with the with-matrix tables.
-        evidence[key]=load_evidence(key,path,report or output/'unavailable_no_matrix_reporting',diagnostics,repository)
+        evidence[key]=load_evidence(key,path,args.test_reporting_dir,args.analysis_dir,repository)
     output.mkdir(parents=True,exist_ok=True)
     tidy=[];all_mechanisms=[];index={}
     timestamp=datetime.now(timezone.utc).isoformat()
     code_files=[*Path(__file__).parent.glob('*.py'),Path(__file__).parents[2]/'analyze_repair_strategies.py',
                 Path(__file__).parents[1]/'build_test_result_tables.py',repository/'chinatravel/evaluation/repair_metrics.py',
-                repository/'scripts/repair_analysis_r4.py']
+                repository/'scripts/repair_analysis_r4.py',
+                *[repository/'chinatravel/agent/nesy_verifier/repair_strategies'/name for name in ('r0.py','r3.py','r4.py','base.py')],
+                repository/'chinatravel/agent/nesy_verifier/shared_repair_loop.py',repository/'r4/select_outcomes.py']
     code={str(p.resolve()):digest(p) for p in code_files if p.is_file()}
     for identifier in selected:
         definition=COMPARISONS[identifier];left,right=[evidence[k] for k in definition[1:3]]
@@ -105,7 +111,7 @@ def main(argv=None):
         write_json(folder/'validity.json',validity)
         metadata={'schema_version':1,'comparison_id':identifier,'title':definition[0],'question':definition[4],
                   'comparison_type':definition[3],'delta_convention':'Right - Left',
-                  'interpretation':'Strategy comparison — not a matrix ablation' if identifier=='r3_vs_r4' else definition[3],
+                  'interpretation':interpretation(identifier,validity),
                   'causal_language_allowed':validity['classification']=='Controlled ablation','generated_at':timestamp,
                   'command':['python','-m','scripts.result_analysis.ablation_comparisons.build_ablation_comparisons',*(argv if argv is not None else sys.argv[1:])],
                   'source_checksums':{p:h for e in (left,right) if e for p,h in e.inputs.items()},
@@ -125,6 +131,10 @@ def main(argv=None):
         '\n\nDelta = Right - Left. A positive delta is not automatically better.\n'+
         'Only Controlled ablation licenses a causal interpretation. Other comparisons are descriptive.\n'+
         'Each folder contains summary.csv, mechanism.csv, validity.json, metadata.json.\n',encoding='utf-8')
+    # Retire only the known obsolete generated comparison; never touch run inputs.
+    retired=output/'r4_matrix_ablation'
+    if retired.is_dir() and not retired.is_symlink():
+        shutil.rmtree(retired)
     return 0
 
 

@@ -14,6 +14,8 @@ def render(ctx):
     st.title('Ablations & Comparisons')
     st.caption('TEST pairwise experimental questions. Delta = Right - Left. Positive deltas are not automatically better.')
     identifiers = list(COMPARISONS)
+    if 'ablation_comparison' in st.session_state and st.session_state['ablation_comparison'] not in identifiers:
+        st.session_state['ablation_comparison'] = 'r0_vs_r4_matrix'
     selected = st.selectbox('Comparison', identifiers, format_func=lambda key: COMPARISONS[key][0], key='ablation_comparison')
     definition = COMPARISONS[selected]
     st.write(definition[4])
@@ -28,9 +30,15 @@ def render(ctx):
     if validity['classification'] != 'Controlled ablation':
         st.warning('This comparison does not establish a causal treatment effect.')
     st.write(validity['reason'])
+    if selected == 'r0_vs_r4_matrix':
+        st.markdown('**Intended design question:** Does adding matrix-guided repair improve outcomes relative to R0?')
+        st.markdown('**Empirical validity:** Are R0 and R4 sufficiently controlled to isolate matrix guidance?')
     st.caption(f"{validity['cohort_label']} · original left N={validity['n_left']}, right N={validity['n_right']}, matched N={validity['n_matched']}")
     with st.expander('Compatibility checklist'):
         table(pd.DataFrame(validity['checks']), 'Comparison compatibility checklist')
+        if validity.get('implementation_audit'):
+            st.caption(validity.get('implementation_audit_basis',''))
+            table(pd.DataFrame(validity['implementation_audit']), 'R0 R4 implementation audit')
         if validity['excluded_left'] or validity['excluded_right']:
             st.write({'Excluded left UIDs': validity['excluded_left'], 'Excluded right UIDs': validity['excluded_right']})
         if validity.get('errors'):
@@ -45,14 +53,18 @@ def render(ctx):
             summary = summary[summary.difficulty == difficulty].copy()
             left, right = definition[1:3]
             shown = summary[['metric_group','metric','left_value','right_value','delta','unit','direction']].rename(
-                columns={'metric_group':'Group','metric':'Metric','left_value':left,'right_value':right,'delta':'Delta (Right - Left)', 'unit':'Unit','direction':'Better'})
+                columns={'metric_group':'Group','metric':'Metric','left_value':left,'right_value':right,'delta':'Delta (R4 - R0)' if selected=='r0_vs_r4_matrix' else 'Delta (Right - Left)', 'unit':'Unit','direction':'Better'})
             table(shown, 'Pairwise common results')
             st.caption('Higher/lower/descriptive comes from the metric catalog. Loop candidate metrics include rejected proposals; accepted metrics are separate. Table 4 CS micro retains the raw evaluator-exception caveat.')
             st.subheader('Mechanism-specific evidence')
             st.caption('R3 uses scheduled widening. R4 selected outcomes are post-hoc diagnostics, separate from the benchmark final accepted trajectory.')
             mechanism = bundle['mechanism']
             mechanism = mechanism[mechanism.difficulty == difficulty]
-            table(mechanism[['side','run','metric','value','evidence_n','unit','source','denominator']], 'Pairwise mechanism evidence')
+            displayed_mechanism = mechanism[['side','run','metric','value','evidence_n','unit','source','denominator']].copy()
+            if displayed_mechanism.unit.eq('Not applicable').any():
+                displayed_mechanism['value'] = displayed_mechanism.value.map(lambda v: 'Unavailable' if pd.isna(v) else str(v))
+                displayed_mechanism.loc[displayed_mechanism.unit.eq('Not applicable'),'value'] = 'Not applicable'
+            table(displayed_mechanism, 'Pairwise mechanism evidence')
             metric = st.selectbox('Supplementary metric comparison', summary.metric.tolist(), key='ablation_metric')
             row = summary[summary.metric == metric].iloc[0]
             chart = pd.DataFrame({'Run':[left,right],'Value':[row.left_value,row.right_value]})
