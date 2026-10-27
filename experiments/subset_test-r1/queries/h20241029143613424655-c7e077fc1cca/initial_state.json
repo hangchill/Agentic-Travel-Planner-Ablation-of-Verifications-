@@ -1,0 +1,1469 @@
+{
+  "run_id": "subset_test-r1",
+  "query_uid": "h20241029143613424655",
+  "state": {
+    "query_uid": "h20241029143613424655",
+    "problem": {
+      "uid": "h20241029143613424655",
+      "tag": "human",
+      "start_city": "Beijing",
+      "target_city": "Shenzhen",
+      "days": 3,
+      "people_number": 4,
+      "limit_rooms": false,
+      "limits_room_type": false,
+      "hard_logic_py": [
+        "intercity_transport_set=set()\nfor activity in allactivities(plan):\n  if activity_type(activity) in ['train', 'airplane']: intercity_transport_set.add(intercity_transport_type(activity))\nresult=({'airplane'}==intercity_transport_set)",
+        "attraction_type_set=set()\nfor activity in allactivities(plan):\n  if activity_type(activity)=='attraction': attraction_type_set.add(attraction_type(activity, target_city(plan)))\nresult=({'大学校园'}<=attraction_type_set)",
+        "total_cost=0 \nfor activity in allactivities(plan):\n    total_cost+=activity_cost(activity)\n    total_cost += innercity_transport_cost(activity_transports(activity))\nresult=(total_cost<=10000)",
+        "result=(day_count(plan)==3)",
+        "result=(people_count(plan)==4)",
+        "result=True\nfor activity in allactivities(plan):\n  if innercity_transport_type(activity_transports(activity))=='taxi'and taxi_cars(activity_transports(activity))!=1: result=False"
+      ],
+      "nature_language": "[Current location: Beijing, Destination: Shenzhen, Number of travelers: 4, Number of travel days: 3] Four of us want to fly from Beijing to Shenzhen for three days, visit a university campus, avoid crowds where possible, and keep the total budget within 10,000 RMB.",
+      "nature_language_en": "[Current location: Beijing, Destination: Shenzhen, Number of travelers: 4, Number of travel days: 3] Four of us want to fly from Beijing to Shenzhen for three days, visit a university campus, avoid crowds where possible, and keep the total budget within 10,000 RMB."
+    },
+    "raw_initial_plan": [
+      {
+        "day": 1,
+        "activities": [
+          {
+            "start_time": "12:07",
+            "end_time": "14:32",
+            "start": "Beijing Capital International Airport",
+            "end": "Shenzhen Bao'an International Airport",
+            "price": 949.32,
+            "cost": 3797.28,
+            "FlightID": "FL096",
+            "type": "airplane",
+            "tickets": 4,
+            "transports": "empty"
+          },
+          {
+            "position": "Shenzhen University Town",
+            "type": "attraction",
+            "transports": {
+              "from": "Shenzhen Bao'an International Airport",
+              "to": "Shenzhen University Town",
+              "mode": "metro",
+              "start_time": "14:32",
+              "end_time": "15:32",
+              "cost": 20
+            },
+            "price": 0.0,
+            "cost": 0.0,
+            "tickets": 4,
+            "start_time": "15:40",
+            "end_time": "17:40"
+          },
+          {
+            "position": "Jiangnan Chef (China Resources Mixc Store)",
+            "type": "dinner",
+            "transports": {
+              "from": "Shenzhen University Town",
+              "to": "Jiangnan Chef (China Resources Mixc Store)",
+              "mode": "metro",
+              "start_time": "17:40",
+              "end_time": "18:28",
+              "cost": 16
+            },
+            "price": 165,
+            "cost": 660,
+            "start_time": "18:30",
+            "end_time": "19:30"
+          },
+          {
+            "position": "Shenzhen Century Garden Hotel (Nanshan Science and Technology Park)",
+            "type": "accommodation",
+            "transports": {
+              "from": "Jiangnan Chef (China Resources Mixc Store)",
+              "to": "Shenzhen Century Garden Hotel (Nanshan Science and Technology Park)",
+              "mode": "metro",
+              "start_time": "19:30",
+              "end_time": "20:10",
+              "cost": 20
+            },
+            "room_type": 2,
+            "price": 325,
+            "cost": 1300,
+            "start_time": "20:15",
+            "end_time": "24:00",
+            "rooms": 2
+          }
+        ]
+      },
+      {
+        "day": 2,
+        "activities": [
+          {
+            "position": "Shenzhen Bay Park",
+            "type": "attraction",
+            "transports": {
+              "from": "Shenzhen Century Garden Hotel (Nanshan Science and Technology Park)",
+              "to": "Shenzhen Bay Park",
+              "mode": "metro",
+              "start_time": "08:00",
+              "end_time": "08:11",
+              "cost": 8
+            },
+            "price": 0.0,
+            "cost": 0.0,
+            "tickets": 4,
+            "start_time": "08:20",
+            "end_time": "10:20"
+          },
+          {
+            "position": "Shenzhen Museum of Contemporary Art and Urban Planning",
+            "type": "attraction",
+            "transports": {
+              "from": "Shenzhen Bay Park",
+              "to": "Shenzhen Museum of Contemporary Art and Urban Planning",
+              "mode": "metro",
+              "start_time": "10:20",
+              "end_time": "10:45",
+              "cost": 16
+            },
+            "price": 0.0,
+            "cost": 0.0,
+            "tickets": 4,
+            "start_time": "10:50",
+            "end_time": "12:50"
+          },
+          {
+            "position": "Libaoge (Kerry Store)",
+            "type": "lunch",
+            "transports": {
+              "from": "Shenzhen Museum of Contemporary Art and Urban Planning",
+              "to": "Libaoge (Kerry Store)",
+              "mode": "metro",
+              "start_time": "12:50",
+              "end_time": "12:59",
+              "cost": 8
+            },
+            "price": 156,
+            "cost": 624,
+            "start_time": "13:00",
+            "end_time": "14:00"
+          },
+          {
+            "position": "Dameisha Seaside Park",
+            "type": "attraction",
+            "transports": {
+              "from": "Libaoge (Kerry Store)",
+              "to": "Dameisha Seaside Park",
+              "mode": "metro",
+              "start_time": "14:00",
+              "end_time": "15:24",
+              "cost": 24
+            },
+            "price": 0.0,
+            "cost": 0.0,
+            "tickets": 4,
+            "start_time": "15:30",
+            "end_time": "17:30"
+          },
+          {
+            "position": "Shenzhen Century Garden Hotel (Nanshan Science and Technology Park)",
+            "type": "accommodation",
+            "transports": {
+              "from": "Dameisha Seaside Park",
+              "to": "Shenzhen Century Garden Hotel (Nanshan Science and Technology Park)",
+              "mode": "metro",
+              "start_time": "17:30",
+              "end_time": "18:57",
+              "cost": 28
+            },
+            "room_type": 2,
+            "price": 325,
+            "cost": 1300,
+            "start_time": "19:00",
+            "end_time": "24:00",
+            "rooms": 2
+          }
+        ]
+      },
+      {
+        "day": 3,
+        "activities": [
+          {
+            "position": "Shenzhen Art Museum (New Venue)",
+            "type": "attraction",
+            "transports": {
+              "from": "Shenzhen Century Garden Hotel (Nanshan Science and Technology Park)",
+              "to": "Shenzhen Art Museum (New Venue)",
+              "mode": "metro",
+              "start_time": "08:00",
+              "end_time": "08:42",
+              "cost": 16
+            },
+            "price": 0.0,
+            "cost": 0.0,
+            "tickets": 4,
+            "start_time": "08:50",
+            "end_time": "10:50"
+          },
+          {
+            "position": "Diandude (Huaqiang South Branch)",
+            "type": "lunch",
+            "transports": {
+              "from": "Shenzhen Art Museum (New Venue)",
+              "to": "Diandude (Huaqiang South Branch)",
+              "mode": "metro",
+              "start_time": "10:50",
+              "end_time": "11:27",
+              "cost": 16
+            },
+            "price": 89,
+            "cost": 356,
+            "start_time": "11:30",
+            "end_time": "12:30"
+          },
+          {
+            "position": "Shenzhen Bao'an International Airport",
+            "type": "airplane",
+            "transports": {
+              "from": "Diandude (Huaqiang South Branch)",
+              "to": "Shenzhen Bao'an International Airport",
+              "mode": "metro",
+              "start_time": "12:30",
+              "end_time": "13:35",
+              "cost": 28
+            },
+            "start_time": "16:34",
+            "end_time": "18:59",
+            "start": "Shenzhen Bao'an International Airport",
+            "end": "Beijing Capital International Airport",
+            "price": 927.7,
+            "cost": 3710.8,
+            "FlightID": "FL175",
+            "tickets": 4
+          }
+        ]
+      }
+    ],
+    "repair_context": {
+      "go_train_info": "None",
+      "go_flight_info": "FlightID\tFrom\tTo\tBeginTime\tEndTime\tDuration\tprice\r\nFL095\tBeijing Capital International Airport\tShenzhen Bao'an International Airport\t01:11\t03:36\t2.43\t923.58\r\nFL096\tBeijing Capital International Airport\tShenzhen Bao'an International Airport\t12:07\t14:32\t2.43\t949.32\r\nFL092\tBeijing Capital International Airport\tShenzhen Bao'an International Airport\t12:45\t15:10\t2.43\t931.04\r\nFL097\tBeijing Daxing International Airport\tShenzhen Bao'an International Airport\t13:19\t15:44\t2.43\t923.62\r\nFL091\tBeijing Capital International Airport\tShenzhen Bao'an International Airport\t13:35\t16:00\t2.43\t947.46\r\n",
+      "back_train_info": "TrainID\tTrainType\tFrom\tTo\tBeginTime\tEndTime\tDuration\tprice\r\nD928\tEMU (Electric Multiple Unit)\tShenzhen North Railway Station\tBeijing West Railway Station\t19:55\t07:10\t11.25\t1165.89\r\nD910\tEMU (Electric Multiple Unit)\tShenzhen North Railway Station\tBeijing West Railway Station\t19:50\t07:00\t11.17\t1165.89\r\n",
+      "back_flight_info": "FlightID\tFrom\tTo\tBeginTime\tEndTime\tDuration\tprice\r\nFL177\tShenzhen Bao'an International Airport\tBeijing Daxing International Airport\t18:52\t21:17\t2.43\t935.69\r\nFL175\tShenzhen Bao'an International Airport\tBeijing Capital International Airport\t16:34\t18:59\t2.43\t927.7\r\nFL179\tShenzhen Bao'an International Airport\tBeijing Daxing International Airport\t17:56\t20:21\t2.43\t1008.34\r\n",
+      "attraction_info": "name\ttype\tlat\tlon\topentime\tendtime\tprice\trecommendmintime\trecommendmaxtime\r\nShenzhen University Town\tUniversity campus\t22.590581\t113.982769\t07:30\t21:30\t0.0\t1.5\t2.0\r\nDafen Oil Painting Village\tCultural Landscape\t22.615801\t114.142665\t09:30\t17:30\t0.0\t2.5\t4.0\r\nShenzhen Bay Park\tpark\t22.524806\t113.969405\t06:00\t23:00\t0.0\t3.0\t4.0\r\nGankeng Ancient Town\tCultural Tourism Area\t22.663821\t114.10953\t00:00\t24:00\t26.0\t3.0\t4.0\r\nDameisha Seaside Park\tpark\t22.598129\t114.313955\t07:00\t22:00\t0.0\t2.0\t2.5\r\nShenzhen Museum\tMuseum/Memorial Hall\t22.549321\t114.068288\t10:00\t18:00\t0.0\t2.0\t2.5\r\nOverseas Chinese Town Creative Culture Park\tCultural Tourism Area\t22.543649\t113.99986\t00:00\t24:00\t0.0\t2.5\t3.0\r\nXichong\tnatural scenery\t22.487953\t114.557066\t00:00\t24:00\t0.0\t2.5\t3.0\r\nDapeng Peninsula\tnatural scenery\t22.534605\t114.537454\t00:00\t24:00\t0.0\t2.0\t2.5\r\nShenzhen Art Museum (New Venue)\tArt museum\t22.630989\t114.0303\t10:00\t18:00\t0.0\t1.5\t2.0\r\nShenzhen Library\tCultural Landscape\t22.551343\t114.063825\t09:00\t21:00\t0.0\t1.5\t2.0\r\nShenzhen Concert Hall\tCultural Landscape\t22.553073\t114.063674\t09:00\t18:30\t0.0\t1.5\t3.0\r\nLotus Hill Park\tpark\t22.559257\t114.065193\t06:30\t23:00\t0.0\t1.0\t2.0\r\nShenzhen Bay Sports Center\tAmusement Park/Sports Entertainment\t22.52418\t113.956211\t09:30\t22:30\t0.0\t1.5\t2.0\r\nShenzhen Museum of Contemporary Art and Urban Planning\tMuseum/Memorial Hall\t22.551648\t114.067947\t10:00\t18:00\t0.0\t3.0\t4.0\r\n",
+      "restaurant_info": "name\tlat\tlon\tprice\tcuisine\topentime\tendtime\trecommendedfood\r\nLibaoge (Kerry Store)\t22.5353225\t114.0568892\t156.0\tCantonese cuisine\t10:30\t21:30\tEight-Flavor Tofu, Stir-Fried Glutinous Rice, Wood-Fired Roasted Suckling Pig, Dabao Roast Duck, Durian Filo Pastry, Crispy Shrimp Dumpling, Dabao Wood-Fired Roast Duck, Crispy Beef Brisket, XO Sauce Stir-Fried Rice Noodles with Beef, Satay Beef Tripe\r\nJiangnan Chef (China Resources Mixc Store)\t22.5400948\t114.1111926\t165.0\tJiangsu-Zhejiang cuisine\t11:00\t21:00\tSweet and Sour Pine Nut Fish, Hand-Peeled Longjing River Shrimp, Zhiwei Pork Ribs, Large Dongpo Pork Belly, Hangzhou Shepherd's Purse, Osmanthus Sticky Rice Lotus Root\r\nYat Bun Sin Tea House (Mixc World Store)\t22.5416495\t113.9562296\t175.0\tCantonese cuisine\t10:00\t21:30\tSpring Breeze Pork Intestine, Eight Immortals Shrimp Dumplings, Golden Conpoy Chicken Feet, Shark Fin Soup Dumplings, Eight Immortals Squab, Bird's Nest Egg Tarts\r\nDiandude (Huaqiang South Branch)\t22.5358125\t114.0873323\t89.0\tCantonese cuisine\t08:30\t21:00\tRed Rice Roll with Shrimp and Salted Egg Yolk, Steamed Chicken Feet with Lily Sauce, Lychee Bay Boat Congee, Steamed Beef Tripe with Satay Sauce, Mango-filled Coconut Milk Cake\r\nFanlou (Bao'an South Road Branch)\t22.5502555\t114.1096191\t89.0\tCantonese cuisine\t08:30\t21:00\tGuangzhou Liwan Boat Congee, Fan Lou Bamboo Shoot and Supreme Shrimp Dumplings, Crispy Prawn Red Rice Rolls, Tender Satay Beef Tripe, Crab Roe and Fresh Shrimp Steamed Siu Mai, Traditional Handmade Fried Dough Sticks\r\n",
+      "accommodation_info": "name\tfeaturehoteltype\tlat\tlon\tprice\tnumbed\r\nShenzhen Century Garden Hotel (Nanshan Science and Technology Park)\tFitness Room\t22.534199\t113.964544\t325\t1\r\nShenzhen Futian Bamboo Forest Expo Park Qiuguo Hotel\tFree parking\t22.53385\t114.005939\t369\t1\r\nAtour Hotel (Shenzhen Luohu Diwang)\tButler Service\t22.544854\t114.11107\t517\t1\r\n",
+      "innercity_transport_info": "from Lotus Hill Park to Lotus Hill Park:  metro: empty.  taxi: empty.  walk: empty. \nfrom Lotus Hill Park to Diandude (Huaqiang South Branch): metro: duration 10, cost 8. taxi: duration 5, cost 16.79. walk: duration 41, cost 0.0. \nfrom Lotus Hill Park to Shenzhen Bay Sports Center: metro: duration 41, cost 16. taxi: duration 17, cost 48.09. walk: duration 142, cost 0.0. \nfrom Lotus Hill Park to Gankeng Ancient Town: metro: duration 46, cost 16. taxi: duration 18, cost 50.7. walk: duration 149, cost 0.0. \nfrom Lotus Hill Park to Xichong: metro: duration 379, cost 24. taxi: duration 76, cost 225.17. walk: duration 614, cost 0.0. \nfrom Lotus Hill Park to Shenzhen University Town: metro: duration 38, cost 12. taxi: duration 13, cost 36.76. walk: duration 109, cost 0.0. \nfrom Lotus Hill Park to Atour Hotel (Shenzhen Luohu Diwang): metro: duration 17, cost 12. taxi: duration 7, cost 22.13. walk: duration 59, cost 0.0. \nfrom Lotus Hill Park to Shenzhen Bay Park: metro: duration 25, cost 16. taxi: duration 15, cost 42.25. walk: duration 126, cost 0.0. \nfrom Lotus Hill Park to Libaoge (Kerry Store): metro: duration 11, cost 8. taxi: duration 4, cost 14.45. walk: duration 33, cost 0.0. \nfrom Lotus Hill Park to Shenzhen Concert Hall: metro: duration 13, cost 8. taxi: duration 1, cost 11.0. walk: duration 8, cost 0.0. \nfrom Lotus Hill Park to Dameisha Seaside Park: metro: duration 61, cost 24. taxi: duration 38, cost 111.44. walk: duration 311, cost 0.0. \nfrom Lotus Hill Park to Shenzhen Futian Bamboo Forest Expo Park Qiuguo Hotel: metro: duration 24, cost 12. taxi: duration 10, cost 28.2. walk: duration 80, cost 0.0. \nfrom Lotus Hill Park to Shenzhen Museum of Contemporary Art and Urban Planning: metro: duration 8, cost 8. taxi: duration 1, cost 11.0. walk: duration 10, cost 0.0. \nfrom Lotus Hill Park to Shenzhen Museum: metro: duration 6, cost 8. taxi: duration 1, cost 11.0. walk: duration 13, cost 0.0. \nfrom Lotus Hill Park to Dafen Oil Painting Village: metro: duration 26, cost 16. taxi: duration 15, cost 40.3. walk: duration 121, cost 0.0. \nfrom Lotus Hill Park to Fanlou (Bao'an South Road Branch): metro: duration 17, cost 12. taxi: duration 7, cost 21.07. walk: duration 56, cost 0.0. \nfrom Lotus Hill Park to Jiangnan Chef (China Resources Mixc Store): metro: duration 16, cost 12. taxi: duration 7, cost 22.85. walk: duration 62, cost 0.0. \nfrom Lotus Hill Park to Yat Bun Sin Tea House (Mixc World Store): metro: duration 29, cost 16. taxi: duration 17, cost 45.89. walk: duration 136, cost 0.0. \nfrom Lotus Hill Park to Shenzhen Art Museum (New Venue): metro: duration 33, cost 12. taxi: duration 13, cost 35.21. walk: duration 104, cost 0.0. \nfrom Lotus Hill Park to Shenzhen Library: metro: duration 11, cost 8. taxi: duration 1, cost 11.0. walk: duration 10, cost 0.0. \nfrom Lotus Hill Park to Shenzhen Bao'an International Airport: metro: duration 61, cost 24. taxi: duration 40, cost 115.38. walk: duration 321, cost 0.0. \nfrom Lotus Hill Park to Dapeng Peninsula: metro: duration 340, cost 32. taxi: duration 72, cost 213.64. walk: duration 583, cost 0.0. \nfrom Lotus Hill Park to Shenzhen North Railway Station: metro: duration 17, cost 12. taxi: duration 10, cost 28.18. walk: duration 80, cost 0.0. \nfrom Lotus Hill Park to Overseas Chinese Town Creative Culture Park: metro: duration 20, cost 12. taxi: duration 10, cost 28.99. walk: duration 83, cost 0.0. \nfrom Lotus Hill Park to Shenzhen Century Garden Hotel (Nanshan Science and Technology Park): metro: duration 31, cost 16. taxi: duration 16, cost 42.93. walk: duration 128, cost 0.0. \nfrom Diandude (Huaqiang South Branch) to Lotus Hill Park: metro: duration 10, cost 8. taxi: duration 5, cost 16.79. walk: duration 41, cost 0.0. \nfrom Diandude (Huaqiang South Branch) to Diandude (Huaqiang South Branch):  metro: empty.  taxi: empty.  walk: empty. \nfrom Diandude (Huaqiang South Branch) to Shenzhen Bay Sports Center: metro: duration 42, cost 20. taxi: duration 20, cost 55.68. walk: duration 162, cost 0.0. \nfrom Diandude (Huaqiang South Branch) to Gankeng Ancient Town: metro: duration 48, cost 20. taxi: duration 21, cost 59.31. walk: duration 172, cost 0.0. \nfrom Diandude (Huaqiang South Branch) to Xichong: metro: duration 374, cost 24. taxi: duration 72, cost 213.49. walk: duration 583, cost 0.0. \nfrom Diandude (Huaqiang South Branch) to Shenzhen University Town: metro: duration 42, cost 16. taxi: duration 18, cost 50.26. walk: duration 148, cost 0.0. \nfrom Diandude (Huaqiang South Branch) to Atour Hotel (Shenzhen Luohu Diwang): metro: duration 10, cost 8. taxi: duration 3, cost 13.94. walk: duration 31, cost 0.0. \nfrom Diandude (Huaqiang South Branch) to Shenzhen Bay Park: metro: duration 26, cost 16. taxi: duration 18, cost 49.57. walk: duration 146, cost 0.0. \nfrom Diandude (Huaqiang South Branch) to Libaoge (Kerry Store): metro: duration 9, cost 8. taxi: duration 4, cost 15.66. walk: duration 37, cost 0.0. \nfrom Diandude (Huaqiang South Branch) to Shenzhen Concert Hall: metro: duration 14, cost 8. taxi: duration 4, cost 15.53. walk: duration 37, cost 0.0. \nfrom Diandude (Huaqiang South Branch) to Dameisha Seaside Park: metro: duration 57, cost 24. taxi: duration 36, cost 104.08. walk: duration 291, cost 0.0. \nfrom Diandude (Huaqiang South Branch) to Shenzhen Futian Bamboo Forest Expo Park Qiuguo Hotel: metro: duration 25, cost 12. taxi: duration 12, cost 34.02. walk: duration 100, cost 0.0. \nfrom Diandude (Huaqiang South Branch) to Shenzhen Museum of Contemporary Art and Urban Planning: metro: duration 8, cost 8. taxi: duration 3, cost 13.99. walk: duration 31, cost 0.0. \nfrom Diandude (Huaqiang South Branch) to Shenzhen Museum: metro: duration 6, cost 8. taxi: duration 3, cost 13.33. walk: duration 29, cost 0.0. \nfrom Diandude (Huaqiang South Branch) to Dafen Oil Painting Village: metro: duration 26, cost 16. taxi: duration 15, cost 42.08. walk: duration 126, cost 0.0. \nfrom Diandude (Huaqiang South Branch) to Fanlou (Bao'an South Road Branch): metro: duration 11, cost 8. taxi: duration 4, cost 14.48. walk: duration 33, cost 0.0. \nfrom Diandude (Huaqiang South Branch) to Jiangnan Chef (China Resources Mixc Store): metro: duration 9, cost 8. taxi: duration 3, cost 13.45. walk: duration 29, cost 0.0. \nfrom Diandude (Huaqiang South Branch) to Yat Bun Sin Tea House (Mixc World Store): metro: duration 31, cost 16. taxi: duration 20, cost 55.46. walk: duration 162, cost 0.0. \nfrom Diandude (Huaqiang South Branch) to Shenzhen Art Museum (New Venue): metro: duration 37, cost 16. taxi: duration 18, cost 48.98. walk: duration 144, cost 0.0. \nfrom Diandude (Huaqiang South Branch) to Shenzhen Library: metro: duration 12, cost 8. taxi: duration 4, cost 15.09. walk: duration 35, cost 0.0. \nfrom Diandude (Huaqiang South Branch) to Shenzhen Bao'an International Airport: metro: duration 65, cost 28. taxi: duration 44, cost 129.26. walk: duration 358, cost 0.0. \nfrom Diandude (Huaqiang South Branch) to Dapeng Peninsula: metro: duration 336, cost 32. taxi: duration 69, cost 203.07. walk: duration 555, cost 0.0. \nfrom Diandude (Huaqiang South Branch) to Shenzhen North Railway Station: metro: duration 21, cost 16. taxi: duration 15, cost 40.33. walk: duration 121, cost 0.0. \nfrom Diandude (Huaqiang South Branch) to Overseas Chinese Town Creative Culture Park: metro: duration 22, cost 16. taxi: duration 13, cost 36.34. walk: duration 108, cost 0.0. \nfrom Diandude (Huaqiang South Branch) to Shenzhen Century Garden Hotel (Nanshan Science and Technology Park): metro: duration 32, cost 16. taxi: duration 18, cost 51.55. walk: duration 151, cost 0.0. \nfrom Shenzhen Bay Sports Center to Lotus Hill Park: metro: duration 41, cost 16. taxi: duration 17, cost 48.09. walk: duration 142, cost 0.0. \nfrom Shenzhen Bay Sports Center to Diandude (Huaqiang South Branch): metro: duration 42, cost 20. taxi: duration 20, cost 55.68. walk: duration 162, cost 0.0. \nfrom Shenzhen Bay Sports Center to Shenzhen Bay Sports Center:  metro: empty.  taxi: empty.  walk: empty. \nfrom Shenzhen Bay Sports Center to Gankeng Ancient Town: metro: duration 77, cost 24. taxi: duration 33, cost 94.07. walk: duration 264, cost 0.0. \nfrom Shenzhen Bay Sports Center to Xichong: metro: duration 413, cost 32. taxi: duration 92, cost 273.49. walk: duration 743, cost 0.0. \nfrom Shenzhen Bay Sports Center to Shenzhen University Town: metro: duration 49, cost 12. taxi: duration 11, cost 32.15. walk: duration 94, cost 0.0. \nfrom Shenzhen Bay Sports Center to Atour Hotel (Shenzhen Luohu Diwang): metro: duration 50, cost 20. taxi: duration 24, cost 67.12. walk: duration 193, cost 0.0. \nfrom Shenzhen Bay Sports Center to Shenzhen Bay Park: metro: duration 17, cost 8. taxi: duration 2, cost 11.0. walk: duration 16, cost 0.0. \nfrom Shenzhen Bay Sports Center to Libaoge (Kerry Store): metro: duration 36, cost 16. taxi: duration 15, cost 41.64. walk: duration 125, cost 0.0. \nfrom Shenzhen Bay Sports Center to Shenzhen Concert Hall: metro: duration 42, cost 16. taxi: duration 17, cost 46.49. walk: duration 138, cost 0.0. \nfrom Shenzhen Bay Sports Center to Dameisha Seaside Park: metro: duration 96, cost 32. taxi: duration 56, cost 164.33. walk: duration 452, cost 0.0. \nfrom Shenzhen Bay Sports Center to Shenzhen Futian Bamboo Forest Expo Park Qiuguo Hotel: metro: duration 35, cost 12. taxi: duration 7, cost 22.99. walk: duration 62, cost 0.0. \nfrom Shenzhen Bay Sports Center to Shenzhen Museum of Contemporary Art and Urban Planning: metro: duration 40, cost 16. taxi: duration 17, cost 48.2. walk: duration 142, cost 0.0. \nfrom Shenzhen Bay Sports Center to Shenzhen Museum: metro: duration 38, cost 16. taxi: duration 17, cost 48.07. walk: duration 142, cost 0.0. \nfrom Shenzhen Bay Sports Center to Dafen Oil Painting Village: metro: duration 60, cost 24. taxi: duration 32, cost 92.33. walk: duration 260, cost 0.0. \nfrom Shenzhen Bay Sports Center to Fanlou (Bao'an South Road Branch): metro: duration 50, cost 20. taxi: duration 24, cost 66.89. walk: duration 192, cost 0.0. \nfrom Shenzhen Bay Sports Center to Jiangnan Chef (China Resources Mixc Store): metro: duration 49, cost 20. taxi: duration 24, cost 66.88. walk: duration 192, cost 0.0. \nfrom Shenzhen Bay Sports Center to Yat Bun Sin Tea House (Mixc World Store): metro: duration 18, cost 8. taxi: duration 2, cost 11.47. walk: duration 23, cost 0.0. \nfrom Shenzhen Bay Sports Center to Shenzhen Art Museum (New Venue): metro: duration 52, cost 16. taxi: duration 21, cost 58.01. walk: duration 168, cost 0.0. \nfrom Shenzhen Bay Sports Center to Shenzhen Library: metro: duration 40, cost 16. taxi: duration 17, cost 46.32. walk: duration 137, cost 0.0. \nfrom Shenzhen Bay Sports Center to Shenzhen Bao'an International Airport: metro: duration 53, cost 20. taxi: duration 28, cost 81.11. walk: duration 230, cost 0.0. \nfrom Shenzhen Bay Sports Center to Dapeng Peninsula: metro: duration 375, cost 36. taxi: duration 89, cost 263.83. walk: duration 717, cost 0.0. \nfrom Shenzhen Bay Sports Center to Shenzhen North Railway Station: metro: duration 38, cost 16. taxi: duration 18, cost 49.06. walk: duration 144, cost 0.0. \nfrom Shenzhen Bay Sports Center to Overseas Chinese Town Creative Culture Park: metro: duration 26, cost 12. taxi: duration 7, cost 22.13. walk: duration 59, cost 0.0. \nfrom Shenzhen Bay Sports Center to Shenzhen Century Garden Hotel (Nanshan Science and Technology Park): metro: duration 24, cost 8. taxi: duration 2, cost 11.0. walk: duration 16, cost 0.0. \nfrom Gankeng Ancient Town to Lotus Hill Park: metro: duration 46, cost 16. taxi: duration 18, cost 50.7. walk: duration 149, cost 0.0. \nfrom Gankeng Ancient Town to Diandude (Huaqiang South Branch): metro: duration 48, cost 20. taxi: duration 21, cost 59.31. walk: duration 172, cost 0.0. \nfrom Gankeng Ancient Town to Shenzhen Bay Sports Center: metro: duration 77, cost 24. taxi: duration 33, cost 94.07. walk: duration 264, cost 0.0. \nfrom Gankeng Ancient Town to Gankeng Ancient Town:  metro: empty.  taxi: empty.  walk: empty. \nfrom Gankeng Ancient Town to Xichong: metro: duration 383, cost 24. taxi: duration 74, cost 219.59. walk: duration 599, cost 0.0. \nfrom Gankeng Ancient Town to Shenzhen University Town: metro: duration 67, cost 20. taxi: duration 23, cost 63.77. walk: duration 184, cost 0.0. \nfrom Gankeng Ancient Town to Atour Hotel (Shenzhen Luohu Diwang): metro: duration 50, cost 20. taxi: duration 19, cost 53.99. walk: duration 158, cost 0.0. \nfrom Gankeng Ancient Town to Shenzhen Bay Park: metro: duration 62, cost 24. taxi: duration 31, cost 89.58. walk: duration 253, cost 0.0. \nfrom Gankeng Ancient Town to Libaoge (Kerry Store): metro: duration 51, cost 20. taxi: duration 22, cost 63.21. walk: duration 182, cost 0.0. \nfrom Gankeng Ancient Town to Shenzhen Concert Hall: metro: duration 53, cost 20. taxi: duration 19, cost 53.83. walk: duration 157, cost 0.0. \nfrom Gankeng Ancient Town to Dameisha Seaside Park: metro: duration 67, cost 20. taxi: duration 33, cost 94.77. walk: duration 266, cost 0.0. \nfrom Gankeng Ancient Town to Shenzhen Futian Bamboo Forest Expo Park Qiuguo Hotel: metro: duration 63, cost 20. taxi: duration 26, cost 75.27. walk: duration 214, cost 0.0. \nfrom Gankeng Ancient Town to Shenzhen Museum of Contemporary Art and Urban Planning: metro: duration 48, cost 20. taxi: duration 19, cost 53.82. walk: duration 157, cost 0.0. \nfrom Gankeng Ancient Town to Shenzhen Museum: metro: duration 46, cost 20. taxi: duration 20, cost 54.86. walk: duration 160, cost 0.0. \nfrom Gankeng Ancient Town to Dafen Oil Painting Village: metro: duration 34, cost 12. taxi: duration 9, cost 26.8. walk: duration 75, cost 0.0. \nfrom Gankeng Ancient Town to Fanlou (Bao'an South Road Branch): metro: duration 50, cost 16. taxi: duration 18, cost 51.29. walk: duration 150, cost 0.0. \nfrom Gankeng Ancient Town to Jiangnan Chef (China Resources Mixc Store): metro: duration 49, cost 20. taxi: duration 20, cost 56.36. walk: duration 164, cost 0.0. \nfrom Gankeng Ancient Town to Yat Bun Sin Tea House (Mixc World Store): metro: duration 64, cost 24. taxi: duration 31, cost 88.18. walk: duration 249, cost 0.0. \nfrom Gankeng Ancient Town to Shenzhen Art Museum (New Venue): metro: duration 53, cost 16. taxi: duration 13, cost 35.91. walk: duration 107, cost 0.0. \nfrom Gankeng Ancient Town to Shenzhen Library: metro: duration 51, cost 20. taxi: duration 19, cost 54.61. walk: duration 159, cost 0.0. \nfrom Gankeng Ancient Town to Shenzhen Bao'an International Airport: metro: duration 83, cost 28. taxi: duration 44, cost 128.7. walk: duration 357, cost 0.0. \nfrom Gankeng Ancient Town to Dapeng Peninsula: metro: duration 337, cost 28. taxi: duration 69, cost 202.91. walk: duration 555, cost 0.0. \nfrom Gankeng Ancient Town to Shenzhen North Railway Station: metro: duration 41, cost 16. taxi: duration 15, cost 40.64. walk: duration 122, cost 0.0. \nfrom Gankeng Ancient Town to Overseas Chinese Town Creative Culture Park: metro: duration 57, cost 20. taxi: duration 26, cost 73.19. walk: duration 209, cost 0.0. \nfrom Gankeng Ancient Town to Shenzhen Century Garden Hotel (Nanshan Science and Technology Park): metro: duration 66, cost 24. taxi: duration 31, cost 87.83. walk: duration 248, cost 0.0. \nfrom Xichong to Lotus Hill Park: metro: duration 379, cost 24. taxi: duration 76, cost 225.17. walk: duration 614, cost 0.0. \nfrom Xichong to Diandude (Huaqiang South Branch): metro: duration 374, cost 24. taxi: duration 72, cost 213.49. walk: duration 583, cost 0.0. \nfrom Xichong to Shenzhen Bay Sports Center: metro: duration 413, cost 32. taxi: duration 92, cost 273.49. walk: duration 743, cost 0.0. \nfrom Xichong to Gankeng Ancient Town: metro: duration 383, cost 24. taxi: duration 74, cost 219.59. walk: duration 599, cost 0.0. \nfrom Xichong to Xichong:  metro: empty.  taxi: empty.  walk: empty. \nfrom Xichong to Shenzhen University Town: metro: duration 409, cost 28. taxi: duration 90, cost 265.42. walk: duration 721, cost 0.0. \nfrom Xichong to Atour Hotel (Shenzhen Luohu Diwang): metro: duration 373, cost 24. taxi: duration 69, cost 203.12. walk: duration 555, cost 0.0. \nfrom Xichong to Shenzhen Bay Park: metro: duration 398, cost 32. taxi: duration 90, cost 267.41. walk: duration 727, cost 0.0. \nfrom Xichong to Libaoge (Kerry Store): metro: duration 381, cost 28. taxi: duration 77, cost 227.48. walk: duration 620, cost 0.0. \nfrom Xichong to Shenzhen Concert Hall: metro: duration 385, cost 28. taxi: duration 76, cost 225.42. walk: duration 615, cost 0.0. \nfrom Xichong to Dameisha Seaside Park: metro: duration 335, cost 8. taxi: duration 41, cost 119.91. walk: duration 333, cost 0.0. \nfrom Xichong to Shenzhen Futian Bamboo Forest Expo Park Qiuguo Hotel: metro: duration 397, cost 28. taxi: duration 85, cost 250.89. walk: duration 683, cost 0.0. \nfrom Xichong to Shenzhen Museum of Contemporary Art and Urban Planning: metro: duration 379, cost 24. taxi: duration 76, cost 223.36. walk: duration 609, cost 0.0. \nfrom Xichong to Shenzhen Museum: metro: duration 377, cost 24. taxi: duration 76, cost 223.05. walk: duration 608, cost 0.0. \nfrom Xichong to Dafen Oil Painting Village: metro: duration 365, cost 20. taxi: duration 67, cost 196.81. walk: duration 538, cost 0.0. \nfrom Xichong to Fanlou (Bao'an South Road Branch): metro: duration 375, cost 24. taxi: duration 69, cost 204.17. walk: duration 558, cost 0.0. \nfrom Xichong to Jiangnan Chef (China Resources Mixc Store): metro: duration 372, cost 24. taxi: duration 69, cost 202.76. walk: duration 554, cost 0.0. \nfrom Xichong to Yat Bun Sin Tea House (Mixc World Store): metro: duration 402, cost 32. taxi: duration 93, cost 274.16. walk: duration 745, cost 0.0. \nfrom Xichong to Shenzhen Art Museum (New Venue): metro: duration 398, cost 28. taxi: duration 84, cost 248.71. walk: duration 677, cost 0.0. \nfrom Xichong to Shenzhen Library: metro: duration 383, cost 28. taxi: duration 76, cost 225.23. walk: duration 614, cost 0.0. \nfrom Xichong to Shenzhen Bao'an International Airport: metro: duration 431, cost 36. taxi: duration 116, cost 344.22. walk: duration 932, cost 0.0. \nfrom Xichong to Dapeng Peninsula: metro: duration 609, cost 16. taxi: duration 8, cost 24.11. walk: duration 66, cost 0.0. \nfrom Xichong to Shenzhen North Railway Station: metro: duration 383, cost 28. taxi: duration 83, cost 246.49. walk: duration 671, cost 0.0. \nfrom Xichong to Overseas Chinese Town Creative Culture Park: metro: duration 393, cost 28. taxi: duration 86, cost 254.16. walk: duration 691, cost 0.0. \nfrom Xichong to Shenzhen Century Garden Hotel (Nanshan Science and Technology Park): metro: duration 404, cost 32. taxi: duration 91, cost 270.0. walk: duration 734, cost 0.0. \nfrom Shenzhen University Town to Lotus Hill Park: metro: duration 38, cost 12. taxi: duration 13, cost 36.76. walk: duration 109, cost 0.0. \nfrom Shenzhen University Town to Diandude (Huaqiang South Branch): metro: duration 42, cost 16. taxi: duration 18, cost 50.26. walk: duration 148, cost 0.0. \nfrom Shenzhen University Town to Shenzhen Bay Sports Center: metro: duration 49, cost 12. taxi: duration 11, cost 32.15. walk: duration 94, cost 0.0. \nfrom Shenzhen University Town to Gankeng Ancient Town: metro: duration 67, cost 20. taxi: duration 23, cost 63.77. walk: duration 184, cost 0.0. \nfrom Shenzhen University Town to Xichong: metro: duration 409, cost 28. taxi: duration 90, cost 265.42. walk: duration 721, cost 0.0. \nfrom Shenzhen University Town to Shenzhen University Town:  metro: empty.  taxi: empty.  walk: empty. \nfrom Shenzhen University Town to Atour Hotel (Shenzhen Luohu Diwang): metro: duration 49, cost 16. taxi: duration 21, cost 58.3. walk: duration 169, cost 0.0. \nfrom Shenzhen University Town to Shenzhen Bay Park: metro: duration 36, cost 12. taxi: duration 11, cost 30.64. walk: duration 88, cost 0.0. \nfrom Shenzhen University Town to Libaoge (Kerry Store): metro: duration 38, cost 12. taxi: duration 14, cost 38.91. walk: duration 117, cost 0.0. \nfrom Shenzhen University Town to Shenzhen Concert Hall: metro: duration 42, cost 12. taxi: duration 13, cost 37.25. walk: duration 111, cost 0.0. \nfrom Shenzhen University Town to Dameisha Seaside Park: metro: duration 92, cost 28. taxi: duration 51, cost 147.99. walk: duration 408, cost 0.0. \nfrom Shenzhen University Town to Shenzhen Futian Bamboo Forest Expo Park Qiuguo Hotel: metro: duration 41, cost 12. taxi: duration 10, cost 28.22. walk: duration 80, cost 0.0. \nfrom Shenzhen University Town to Shenzhen Museum of Contemporary Art and Urban Planning: metro: duration 39, cost 12. taxi: duration 14, cost 38.87. walk: duration 117, cost 0.0. \nfrom Shenzhen University Town to Shenzhen Museum: metro: duration 37, cost 12. taxi: duration 14, cost 39.39. walk: duration 118, cost 0.0. \nfrom Shenzhen University Town to Dafen Oil Painting Village: metro: duration 54, cost 20. taxi: duration 25, cost 69.74. walk: duration 200, cost 0.0. \nfrom Shenzhen University Town to Fanlou (Bao'an South Road Branch): metro: duration 49, cost 16. taxi: duration 20, cost 56.75. walk: duration 165, cost 0.0. \nfrom Shenzhen University Town to Jiangnan Chef (China Resources Mixc Store): metro: duration 48, cost 16. taxi: duration 21, cost 59.24. walk: duration 172, cost 0.0. \nfrom Shenzhen University Town to Yat Bun Sin Tea House (Mixc World Store): metro: duration 37, cost 12. taxi: duration 9, cost 25.94. walk: duration 72, cost 0.0. \nfrom Shenzhen University Town to Shenzhen Art Museum (New Venue): metro: duration 42, cost 12. taxi: duration 9, cost 27.89. walk: duration 79, cost 0.0. \nfrom Shenzhen University Town to Shenzhen Library: metro: duration 40, cost 12. taxi: duration 14, cost 37.6. walk: duration 112, cost 0.0. \nfrom Shenzhen University Town to Shenzhen Bao'an International Airport: metro: duration 63, cost 20. taxi: duration 26, cost 74.2. walk: duration 211, cost 0.0. \nfrom Shenzhen University Town to Dapeng Peninsula: metro: duration 368, cost 32. taxi: duration 86, cost 252.93. walk: duration 688, cost 0.0. \nfrom Shenzhen University Town to Shenzhen North Railway Station: metro: duration 28, cost 8. taxi: duration 7, cost 22.95. walk: duration 62, cost 0.0. \nfrom Shenzhen University Town to Overseas Chinese Town Creative Culture Park: metro: duration 32, cost 12. taxi: duration 8, cost 23.9. walk: duration 65, cost 0.0. \nfrom Shenzhen University Town to Shenzhen Century Garden Hotel (Nanshan Science and Technology Park): metro: duration 40, cost 12. taxi: duration 9, cost 27.52. walk: duration 78, cost 0.0. \nfrom Atour Hotel (Shenzhen Luohu Diwang) to Lotus Hill Park: metro: duration 17, cost 12. taxi: duration 7, cost 22.13. walk: duration 59, cost 0.0. \nfrom Atour Hotel (Shenzhen Luohu Diwang) to Diandude (Huaqiang South Branch): metro: duration 10, cost 8. taxi: duration 3, cost 13.94. walk: duration 31, cost 0.0. \nfrom Atour Hotel (Shenzhen Luohu Diwang) to Shenzhen Bay Sports Center: metro: duration 50, cost 20. taxi: duration 24, cost 67.12. walk: duration 193, cost 0.0. \nfrom Atour Hotel (Shenzhen Luohu Diwang) to Gankeng Ancient Town: metro: duration 50, cost 20. taxi: duration 19, cost 53.99. walk: duration 158, cost 0.0. \nfrom Atour Hotel (Shenzhen Luohu Diwang) to Xichong: metro: duration 373, cost 24. taxi: duration 69, cost 203.12. walk: duration 555, cost 0.0. \nfrom Atour Hotel (Shenzhen Luohu Diwang) to Shenzhen University Town: metro: duration 49, cost 16. taxi: duration 21, cost 58.3. walk: duration 169, cost 0.0. \nfrom Atour Hotel (Shenzhen Luohu Diwang) to Atour Hotel (Shenzhen Luohu Diwang):  metro: empty.  taxi: empty.  walk: empty. \nfrom Atour Hotel (Shenzhen Luohu Diwang) to Shenzhen Bay Park: metro: duration 34, cost 20. taxi: duration 22, cost 61.04. walk: duration 176, cost 0.0. \nfrom Atour Hotel (Shenzhen Luohu Diwang) to Libaoge (Kerry Store): metro: duration 18, cost 12. taxi: duration 8, cost 24.55. walk: duration 68, cost 0.0. \nfrom Atour Hotel (Shenzhen Luohu Diwang) to Shenzhen Concert Hall: metro: duration 21, cost 12. taxi: duration 7, cost 22.06. walk: duration 59, cost 0.0. \nfrom Atour Hotel (Shenzhen Luohu Diwang) to Dameisha Seaside Park: metro: duration 56, cost 24. taxi: duration 32, cost 92.28. walk: duration 260, cost 0.0. \nfrom Atour Hotel (Shenzhen Luohu Diwang) to Shenzhen Futian Bamboo Forest Expo Park Qiuguo Hotel: metro: duration 33, cost 16. taxi: duration 16, cost 43.67. walk: duration 130, cost 0.0. \nfrom Atour Hotel (Shenzhen Luohu Diwang) to Shenzhen Museum of Contemporary Art and Urban Planning: metro: duration 16, cost 12. taxi: duration 6, cost 20.45. walk: duration 53, cost 0.0. \nfrom Atour Hotel (Shenzhen Luohu Diwang) to Shenzhen Museum: metro: duration 14, cost 12. taxi: duration 6, cost 20.2. walk: duration 53, cost 0.0. \nfrom Atour Hotel (Shenzhen Luohu Diwang) to Dafen Oil Painting Village: metro: duration 27, cost 12. taxi: duration 12, cost 34.46. walk: duration 102, cost 0.0. \nfrom Atour Hotel (Shenzhen Luohu Diwang) to Fanlou (Bao'an South Road Branch): metro: duration 12, cost 8. taxi: duration 0, cost 11.0. walk: duration 7, cost 0.0. \nfrom Atour Hotel (Shenzhen Luohu Diwang) to Jiangnan Chef (China Resources Mixc Store): taxi: duration 0, cost 11.0. walk: duration 6, cost 0.0. \nfrom Atour Hotel (Shenzhen Luohu Diwang) to Yat Bun Sin Tea House (Mixc World Store): metro: duration 39, cost 20. taxi: duration 23, cost 66.39. walk: duration 191, cost 0.0. \nfrom Atour Hotel (Shenzhen Luohu Diwang) to Shenzhen Art Museum (New Venue): metro: duration 43, cost 16. taxi: duration 18, cost 51.61. walk: duration 151, cost 0.0. \nfrom Atour Hotel (Shenzhen Luohu Diwang) to Shenzhen Library: metro: duration 19, cost 12. taxi: duration 7, cost 21.89. walk: duration 58, cost 0.0. \nfrom Atour Hotel (Shenzhen Luohu Diwang) to Shenzhen Bao'an International Airport: metro: duration 73, cost 28. taxi: duration 47, cost 137.78. walk: duration 381, cost 0.0. \nfrom Atour Hotel (Shenzhen Luohu Diwang) to Dapeng Peninsula: metro: duration 336, cost 28. taxi: duration 65, cost 192.14. walk: duration 526, cost 0.0. \nfrom Atour Hotel (Shenzhen Luohu Diwang) to Shenzhen North Railway Station: metro: duration 28, cost 16. taxi: duration 16, cost 44.53. walk: duration 132, cost 0.0. \nfrom Atour Hotel (Shenzhen Luohu Diwang) to Overseas Chinese Town Creative Culture Park: metro: duration 30, cost 16. taxi: duration 17, cost 46.18. walk: duration 137, cost 0.0. \nfrom Atour Hotel (Shenzhen Luohu Diwang) to Shenzhen Century Garden Hotel (Nanshan Science and Technology Park): metro: duration 40, cost 20. taxi: duration 22, cost 62.73. walk: duration 181, cost 0.0. \nfrom Shenzhen Bay Park to Lotus Hill Park: metro: duration 25, cost 16. taxi: duration 15, cost 42.25. walk: duration 126, cost 0.0. \nfrom Shenzhen Bay Park to Diandude (Huaqiang South Branch): metro: duration 26, cost 16. taxi: duration 18, cost 49.57. walk: duration 146, cost 0.0. \nfrom Shenzhen Bay Park to Shenzhen Bay Sports Center: metro: duration 17, cost 8. taxi: duration 2, cost 11.0. walk: duration 16, cost 0.0. \nfrom Shenzhen Bay Park to Gankeng Ancient Town: metro: duration 62, cost 24. taxi: duration 31, cost 89.58. walk: duration 253, cost 0.0. \nfrom Shenzhen Bay Park to Xichong: metro: duration 398, cost 32. taxi: duration 90, cost 267.41. walk: duration 727, cost 0.0. \nfrom Shenzhen Bay Park to Shenzhen University Town: metro: duration 36, cost 12. taxi: duration 11, cost 30.64. walk: duration 88, cost 0.0. \nfrom Shenzhen Bay Park to Atour Hotel (Shenzhen Luohu Diwang): metro: duration 34, cost 20. taxi: duration 22, cost 61.04. walk: duration 176, cost 0.0. \nfrom Shenzhen Bay Park to Shenzhen Bay Park:  metro: empty.  taxi: empty.  walk: empty. \nfrom Shenzhen Bay Park to Libaoge (Kerry Store): metro: duration 20, cost 12. taxi: duration 13, cost 36.46. walk: duration 108, cost 0.0. \nfrom Shenzhen Bay Park to Shenzhen Concert Hall: metro: duration 27, cost 16. taxi: duration 15, cost 40.55. walk: duration 122, cost 0.0. \nfrom Shenzhen Bay Park to Dameisha Seaside Park: metro: duration 81, cost 28. taxi: duration 54, cost 158.3. walk: duration 436, cost 0.0. \nfrom Shenzhen Bay Park to Shenzhen Futian Bamboo Forest Expo Park Qiuguo Hotel: metro: duration 19, cost 12. taxi: duration 5, cost 18.31. walk: duration 46, cost 0.0. \nfrom Shenzhen Bay Park to Shenzhen Museum of Contemporary Art and Urban Planning: metro: duration 25, cost 16. taxi: duration 15, cost 42.24. walk: duration 126, cost 0.0. \nfrom Shenzhen Bay Park to Shenzhen Museum: metro: duration 23, cost 16. taxi: duration 15, cost 42.08. walk: duration 126, cost 0.0. \nfrom Shenzhen Bay Park to Dafen Oil Painting Village: metro: duration 46, cost 20. taxi: duration 30, cost 86.82. walk: duration 245, cost 0.0. \nfrom Shenzhen Bay Park to Fanlou (Bao'an South Road Branch): metro: duration 35, cost 20. taxi: duration 22, cost 60.83. walk: duration 176, cost 0.0. \nfrom Shenzhen Bay Park to Jiangnan Chef (China Resources Mixc Store): metro: duration 33, cost 20. taxi: duration 22, cost 60.78. walk: duration 176, cost 0.0. \nfrom Shenzhen Bay Park to Yat Bun Sin Tea House (Mixc World Store): metro: duration 8, cost 8. taxi: duration 3, cost 12.77. walk: duration 27, cost 0.0. \nfrom Shenzhen Bay Park to Shenzhen Art Museum (New Venue): metro: duration 39, cost 16. taxi: duration 19, cost 54.65. walk: duration 159, cost 0.0. \nfrom Shenzhen Bay Park to Shenzhen Library: metro: duration 25, cost 16. taxi: duration 15, cost 40.36. walk: duration 121, cost 0.0. \nfrom Shenzhen Bay Park to Shenzhen Bao'an International Airport: metro: duration 46, cost 20. taxi: duration 30, cost 85.44. walk: duration 241, cost 0.0. \nfrom Shenzhen Bay Park to Dapeng Peninsula: metro: duration 359, cost 36. taxi: duration 87, cost 257.71. walk: duration 701, cost 0.0. \nfrom Shenzhen Bay Park to Shenzhen North Railway Station: metro: duration 24, cost 16. taxi: duration 16, cost 45.24. walk: duration 134, cost 0.0. \nfrom Shenzhen Bay Park to Overseas Chinese Town Creative Culture Park: metro: duration 11, cost 8. taxi: duration 5, cost 17.87. walk: duration 45, cost 0.0. \nfrom Shenzhen Bay Park to Shenzhen Century Garden Hotel (Nanshan Science and Technology Park): metro: duration 11, cost 8. taxi: duration 1, cost 11.0. walk: duration 13, cost 0.0. \nfrom Libaoge (Kerry Store) to Lotus Hill Park: metro: duration 11, cost 8. taxi: duration 4, cost 14.45. walk: duration 33, cost 0.0. \nfrom Libaoge (Kerry Store) to Diandude (Huaqiang South Branch): metro: duration 9, cost 8. taxi: duration 4, cost 15.66. walk: duration 37, cost 0.0. \nfrom Libaoge (Kerry Store) to Shenzhen Bay Sports Center: metro: duration 36, cost 16. taxi: duration 15, cost 41.64. walk: duration 125, cost 0.0. \nfrom Libaoge (Kerry Store) to Gankeng Ancient Town: metro: duration 51, cost 20. taxi: duration 22, cost 63.21. walk: duration 182, cost 0.0. \nfrom Libaoge (Kerry Store) to Xichong: metro: duration 381, cost 28. taxi: duration 77, cost 227.48. walk: duration 620, cost 0.0. \nfrom Libaoge (Kerry Store) to Shenzhen University Town: metro: duration 38, cost 12. taxi: duration 14, cost 38.91. walk: duration 117, cost 0.0. \nfrom Libaoge (Kerry Store) to Atour Hotel (Shenzhen Luohu Diwang): metro: duration 18, cost 12. taxi: duration 8, cost 24.55. walk: duration 68, cost 0.0. \nfrom Libaoge (Kerry Store) to Shenzhen Bay Park: metro: duration 20, cost 12. taxi: duration 13, cost 36.46. walk: duration 108, cost 0.0. \nfrom Libaoge (Kerry Store) to Libaoge (Kerry Store):  metro: empty.  taxi: empty.  walk: empty. \nfrom Libaoge (Kerry Store) to Shenzhen Concert Hall: metro: duration 12, cost 8. taxi: duration 3, cost 12.0. walk: duration 25, cost 0.0. \nfrom Libaoge (Kerry Store) to Dameisha Seaside Park: metro: duration 64, cost 24. taxi: duration 41, cost 117.72. walk: duration 328, cost 0.0. \nfrom Libaoge (Kerry Store) to Shenzhen Futian Bamboo Forest Expo Park Qiuguo Hotel: metro: duration 19, cost 12. taxi: duration 7, cost 23.05. walk: duration 62, cost 0.0. \nfrom Libaoge (Kerry Store) to Shenzhen Museum of Contemporary Art and Urban Planning: metro: duration 9, cost 8. taxi: duration 3, cost 12.18. walk: duration 25, cost 0.0. \nfrom Libaoge (Kerry Store) to Shenzhen Museum: metro: duration 7, cost 8. taxi: duration 2, cost 11.5. walk: duration 23, cost 0.0. \nfrom Libaoge (Kerry Store) to Dafen Oil Painting Village: metro: duration 31, cost 16. taxi: duration 18, cost 51.13. walk: duration 150, cost 0.0. \nfrom Libaoge (Kerry Store) to Fanlou (Bao'an South Road Branch): metro: duration 18, cost 12. taxi: duration 8, cost 24.55. walk: duration 68, cost 0.0. \nfrom Libaoge (Kerry Store) to Jiangnan Chef (China Resources Mixc Store): metro: duration 17, cost 12. taxi: duration 8, cost 24.34. walk: duration 67, cost 0.0. \nfrom Libaoge (Kerry Store) to Yat Bun Sin Tea House (Mixc World Store): metro: duration 25, cost 16. taxi: duration 15, cost 41.4. walk: duration 124, cost 0.0. \nfrom Libaoge (Kerry Store) to Shenzhen Art Museum (New Venue): metro: duration 36, cost 16. taxi: duration 16, cost 43.93. walk: duration 131, cost 0.0. \nfrom Libaoge (Kerry Store) to Shenzhen Library: metro: duration 10, cost 8. taxi: duration 2, cost 11.39. walk: duration 22, cost 0.0. \nfrom Libaoge (Kerry Store) to Shenzhen Bao'an International Airport: metro: duration 60, cost 24. taxi: duration 40, cost 116.57. walk: duration 324, cost 0.0. \nfrom Libaoge (Kerry Store) to Dapeng Peninsula: metro: duration 343, cost 32. taxi: duration 74, cost 217.16. walk: duration 593, cost 0.0. \nfrom Libaoge (Kerry Store) to Shenzhen North Railway Station: metro: duration 20, cost 12. taxi: duration 13, cost 35.22. walk: duration 104, cost 0.0. \nfrom Libaoge (Kerry Store) to Overseas Chinese Town Creative Culture Park: metro: duration 16, cost 12. taxi: duration 8, cost 25.48. walk: duration 71, cost 0.0. \nfrom Libaoge (Kerry Store) to Shenzhen Century Garden Hotel (Nanshan Science and Technology Park): metro: duration 27, cost 16. taxi: duration 14, cost 37.95. walk: duration 114, cost 0.0. \nfrom Shenzhen Concert Hall to Lotus Hill Park: metro: duration 13, cost 8. taxi: duration 1, cost 11.0. walk: duration 8, cost 0.0. \nfrom Shenzhen Concert Hall to Diandude (Huaqiang South Branch): metro: duration 14, cost 8. taxi: duration 4, cost 15.53. walk: duration 37, cost 0.0. \nfrom Shenzhen Concert Hall to Shenzhen Bay Sports Center: metro: duration 42, cost 16. taxi: duration 17, cost 46.49. walk: duration 138, cost 0.0. \nfrom Shenzhen Concert Hall to Gankeng Ancient Town: metro: duration 53, cost 20. taxi: duration 19, cost 53.83. walk: duration 157, cost 0.0. \nfrom Shenzhen Concert Hall to Xichong: metro: duration 385, cost 28. taxi: duration 76, cost 225.42. walk: duration 615, cost 0.0. \nfrom Shenzhen Concert Hall to Shenzhen University Town: metro: duration 42, cost 12. taxi: duration 13, cost 37.25. walk: duration 111, cost 0.0. \nfrom Shenzhen Concert Hall to Atour Hotel (Shenzhen Luohu Diwang): metro: duration 21, cost 12. taxi: duration 7, cost 22.06. walk: duration 59, cost 0.0. \nfrom Shenzhen Concert Hall to Shenzhen Bay Park: metro: duration 27, cost 16. taxi: duration 15, cost 40.55. walk: duration 122, cost 0.0. \nfrom Shenzhen Concert Hall to Libaoge (Kerry Store): metro: duration 12, cost 8. taxi: duration 3, cost 12.0. walk: duration 25, cost 0.0. \nfrom Shenzhen Concert Hall to Shenzhen Concert Hall:  metro: empty.  taxi: empty.  walk: empty. \nfrom Shenzhen Concert Hall to Dameisha Seaside Park: metro: duration 67, cost 24. taxi: duration 39, cost 112.68. walk: duration 314, cost 0.0. \nfrom Shenzhen Concert Hall to Shenzhen Futian Bamboo Forest Expo Park Qiuguo Hotel: metro: duration 26, cost 12. taxi: duration 9, cost 26.78. walk: duration 75, cost 0.0. \nfrom Shenzhen Concert Hall to Shenzhen Museum of Contemporary Art and Urban Planning: metro: duration 11, cost 8. taxi: duration 0, cost 11.0. walk: duration 5, cost 0.0. \nfrom Shenzhen Concert Hall to Shenzhen Museum: metro: duration 9, cost 8. taxi: duration 0, cost 11.0. walk: duration 7, cost 0.0. \nfrom Shenzhen Concert Hall to Dafen Oil Painting Village: metro: duration 33, cost 16. taxi: duration 16, cost 42.8. walk: duration 128, cost 0.0. \nfrom Shenzhen Concert Hall to Fanlou (Bao'an South Road Branch): metro: duration 22, cost 12. taxi: duration 7, cost 21.28. walk: duration 56, cost 0.0. \nfrom Shenzhen Concert Hall to Jiangnan Chef (China Resources Mixc Store): metro: duration 20, cost 12. taxi: duration 7, cost 22.53. walk: duration 61, cost 0.0. \nfrom Shenzhen Concert Hall to Yat Bun Sin Tea House (Mixc World Store): metro: duration 31, cost 16. taxi: duration 16, cost 44.76. walk: duration 133, cost 0.0. \nfrom Shenzhen Concert Hall to Shenzhen Art Museum (New Venue): metro: duration 38, cost 12. taxi: duration 13, cost 37.2. walk: duration 111, cost 0.0. \nfrom Shenzhen Concert Hall to Shenzhen Library: taxi: duration 0, cost 11.0. walk: duration 2, cost 0.0. \nfrom Shenzhen Concert Hall to Shenzhen Bao'an International Airport: metro: duration 65, cost 24. taxi: duration 40, cost 115.83. walk: duration 323, cost 0.0. \nfrom Shenzhen Concert Hall to Dapeng Peninsula: metro: duration 346, cost 32. taxi: duration 73, cost 214.2. walk: duration 585, cost 0.0. \nfrom Shenzhen Concert Hall to Shenzhen North Railway Station: metro: duration 23, cost 12. taxi: duration 10, cost 29.93. walk: duration 86, cost 0.0. \nfrom Shenzhen Concert Hall to Overseas Chinese Town Creative Culture Park: metro: duration 22, cost 12. taxi: duration 9, cost 27.96. walk: duration 79, cost 0.0. \nfrom Shenzhen Concert Hall to Shenzhen Century Garden Hotel (Nanshan Science and Technology Park): metro: duration 33, cost 16. taxi: duration 15, cost 41.54. walk: duration 124, cost 0.0. \nfrom Dameisha Seaside Park to Lotus Hill Park: metro: duration 61, cost 24. taxi: duration 38, cost 111.44. walk: duration 311, cost 0.0. \nfrom Dameisha Seaside Park to Diandude (Huaqiang South Branch): metro: duration 57, cost 24. taxi: duration 36, cost 104.08. walk: duration 291, cost 0.0. \nfrom Dameisha Seaside Park to Shenzhen Bay Sports Center: metro: duration 96, cost 32. taxi: duration 56, cost 164.33. walk: duration 452, cost 0.0. \nfrom Dameisha Seaside Park to Gankeng Ancient Town: metro: duration 67, cost 20. taxi: duration 33, cost 94.77. walk: duration 266, cost 0.0. \nfrom Dameisha Seaside Park to Xichong: metro: duration 335, cost 8. taxi: duration 41, cost 119.91. walk: duration 333, cost 0.0. \nfrom Dameisha Seaside Park to Shenzhen University Town: metro: duration 92, cost 28. taxi: duration 51, cost 147.99. walk: duration 408, cost 0.0. \nfrom Dameisha Seaside Park to Atour Hotel (Shenzhen Luohu Diwang): metro: duration 56, cost 24. taxi: duration 32, cost 92.28. walk: duration 260, cost 0.0. \nfrom Dameisha Seaside Park to Shenzhen Bay Park: metro: duration 81, cost 28. taxi: duration 54, cost 158.3. walk: duration 436, cost 0.0. \nfrom Dameisha Seaside Park to Libaoge (Kerry Store): metro: duration 64, cost 24. taxi: duration 41, cost 117.72. walk: duration 328, cost 0.0. \nfrom Dameisha Seaside Park to Shenzhen Concert Hall: metro: duration 67, cost 24. taxi: duration 39, cost 112.68. walk: duration 314, cost 0.0. \nfrom Dameisha Seaside Park to Dameisha Seaside Park:  metro: empty.  taxi: empty.  walk: empty. \nfrom Dameisha Seaside Park to Shenzhen Futian Bamboo Forest Expo Park Qiuguo Hotel: metro: duration 79, cost 28. taxi: duration 48, cost 140.81. walk: duration 389, cost 0.0. \nfrom Dameisha Seaside Park to Shenzhen Museum of Contemporary Art and Urban Planning: metro: duration 62, cost 24. taxi: duration 38, cost 110.88. walk: duration 309, cost 0.0. \nfrom Dameisha Seaside Park to Shenzhen Museum: metro: duration 60, cost 24. taxi: duration 38, cost 110.96. walk: duration 310, cost 0.0. \nfrom Dameisha Seaside Park to Dafen Oil Painting Village: metro: duration 49, cost 20. taxi: duration 26, cost 74.44. walk: duration 212, cost 0.0. \nfrom Dameisha Seaside Park to Fanlou (Bao'an South Road Branch): metro: duration 58, cost 24. taxi: duration 32, cost 92.23. walk: duration 260, cost 0.0. \nfrom Dameisha Seaside Park to Jiangnan Chef (China Resources Mixc Store): metro: duration 55, cost 24. taxi: duration 32, cost 92.89. walk: duration 261, cost 0.0. \nfrom Dameisha Seaside Park to Yat Bun Sin Tea House (Mixc World Store): metro: duration 85, cost 28. taxi: duration 55, cost 162.63. walk: duration 447, cost 0.0. \nfrom Dameisha Seaside Park to Shenzhen Art Museum (New Venue): metro: duration 81, cost 28. taxi: duration 44, cost 126.95. walk: duration 352, cost 0.0. \nfrom Dameisha Seaside Park to Shenzhen Library: metro: duration 65, cost 24. taxi: duration 39, cost 112.78. walk: duration 314, cost 0.0. \nfrom Dameisha Seaside Park to Shenzhen Bao'an International Airport: metro: duration 114, cost 36. taxi: duration 76, cost 224.04. walk: duration 611, cost 0.0. \nfrom Dameisha Seaside Park to Dapeng Peninsula: metro: duration 300, cost 20. taxi: duration 36, cost 102.87. walk: duration 288, cost 0.0. \nfrom Dameisha Seaside Park to Shenzhen North Railway Station: metro: duration 67, cost 28. taxi: duration 43, cost 126.62. walk: duration 351, cost 0.0. \nfrom Dameisha Seaside Park to Overseas Chinese Town Creative Culture Park: metro: duration 76, cost 28. taxi: duration 49, cost 142.58. walk: duration 394, cost 0.0. \nfrom Dameisha Seaside Park to Shenzhen Century Garden Hotel (Nanshan Science and Technology Park): metro: duration 87, cost 28. taxi: duration 54, cost 159.52. walk: duration 439, cost 0.0. \nfrom Shenzhen Futian Bamboo Forest Expo Park Qiuguo Hotel to Lotus Hill Park: metro: duration 24, cost 12. taxi: duration 10, cost 28.2. walk: duration 80, cost 0.0. \nfrom Shenzhen Futian Bamboo Forest Expo Park Qiuguo Hotel to Diandude (Huaqiang South Branch): metro: duration 25, cost 12. taxi: duration 12, cost 34.02. walk: duration 100, cost 0.0. \nfrom Shenzhen Futian Bamboo Forest Expo Park Qiuguo Hotel to Shenzhen Bay Sports Center: metro: duration 35, cost 12. taxi: duration 7, cost 22.99. walk: duration 62, cost 0.0. \nfrom Shenzhen Futian Bamboo Forest Expo Park Qiuguo Hotel to Gankeng Ancient Town: metro: duration 63, cost 20. taxi: duration 26, cost 75.27. walk: duration 214, cost 0.0. \nfrom Shenzhen Futian Bamboo Forest Expo Park Qiuguo Hotel to Xichong: metro: duration 397, cost 28. taxi: duration 85, cost 250.89. walk: duration 683, cost 0.0. \nfrom Shenzhen Futian Bamboo Forest Expo Park Qiuguo Hotel to Shenzhen University Town: metro: duration 41, cost 12. taxi: duration 10, cost 28.22. walk: duration 80, cost 0.0. \nfrom Shenzhen Futian Bamboo Forest Expo Park Qiuguo Hotel to Atour Hotel (Shenzhen Luohu Diwang): metro: duration 33, cost 16. taxi: duration 16, cost 43.67. walk: duration 130, cost 0.0. \nfrom Shenzhen Futian Bamboo Forest Expo Park Qiuguo Hotel to Shenzhen Bay Park: metro: duration 19, cost 12. taxi: duration 5, cost 18.31. walk: duration 46, cost 0.0. \nfrom Shenzhen Futian Bamboo Forest Expo Park Qiuguo Hotel to Libaoge (Kerry Store): metro: duration 19, cost 12. taxi: duration 7, cost 23.05. walk: duration 62, cost 0.0. \nfrom Shenzhen Futian Bamboo Forest Expo Park Qiuguo Hotel to Shenzhen Concert Hall: metro: duration 26, cost 12. taxi: duration 9, cost 26.78. walk: duration 75, cost 0.0. \nfrom Shenzhen Futian Bamboo Forest Expo Park Qiuguo Hotel to Dameisha Seaside Park: metro: duration 79, cost 28. taxi: duration 48, cost 140.81. walk: duration 389, cost 0.0. \nfrom Shenzhen Futian Bamboo Forest Expo Park Qiuguo Hotel to Shenzhen Futian Bamboo Forest Expo Park Qiuguo Hotel:  metro: empty.  taxi: empty.  walk: empty. \nfrom Shenzhen Futian Bamboo Forest Expo Park Qiuguo Hotel to Shenzhen Museum of Contemporary Art and Urban Planning: metro: duration 23, cost 12. taxi: duration 10, cost 28.07. walk: duration 80, cost 0.0. \nfrom Shenzhen Futian Bamboo Forest Expo Park Qiuguo Hotel to Shenzhen Museum: metro: duration 21, cost 12. taxi: duration 9, cost 27.93. walk: duration 79, cost 0.0. \nfrom Shenzhen Futian Bamboo Forest Expo Park Qiuguo Hotel to Dafen Oil Painting Village: metro: duration 45, cost 20. taxi: duration 25, cost 70.01. walk: duration 200, cost 0.0. \nfrom Shenzhen Futian Bamboo Forest Expo Park Qiuguo Hotel to Fanlou (Bao'an South Road Branch): metro: duration 33, cost 16. taxi: duration 16, cost 43.38. walk: duration 129, cost 0.0. \nfrom Shenzhen Futian Bamboo Forest Expo Park Qiuguo Hotel to Jiangnan Chef (China Resources Mixc Store): metro: duration 32, cost 16. taxi: duration 16, cost 43.52. walk: duration 130, cost 0.0. \nfrom Shenzhen Futian Bamboo Forest Expo Park Qiuguo Hotel to Yat Bun Sin Tea House (Mixc World Store): metro: duration 24, cost 12. taxi: duration 7, cost 22.85. walk: duration 62, cost 0.0. \nfrom Shenzhen Futian Bamboo Forest Expo Park Qiuguo Hotel to Shenzhen Art Museum (New Venue): metro: duration 42, cost 16. taxi: duration 16, cost 44.4. walk: duration 132, cost 0.0. \nfrom Shenzhen Futian Bamboo Forest Expo Park Qiuguo Hotel to Shenzhen Library: metro: duration 24, cost 12. taxi: duration 9, cost 26.62. walk: duration 75, cost 0.0. \nfrom Shenzhen Futian Bamboo Forest Expo Park Qiuguo Hotel to Shenzhen Bao'an International Airport: metro: duration 60, cost 24. taxi: duration 33, cost 96.36. walk: duration 271, cost 0.0. \nfrom Shenzhen Futian Bamboo Forest Expo Park Qiuguo Hotel to Dapeng Peninsula: metro: duration 358, cost 32. taxi: duration 82, cost 240.75. walk: duration 656, cost 0.0. \nfrom Shenzhen Futian Bamboo Forest Expo Park Qiuguo Hotel to Shenzhen North Railway Station: metro: duration 27, cost 12. taxi: duration 13, cost 35.27. walk: duration 104, cost 0.0. \nfrom Shenzhen Futian Bamboo Forest Expo Park Qiuguo Hotel to Overseas Chinese Town Creative Culture Park: metro: duration 16, cost 8. taxi: duration 1, cost 11.0. walk: duration 15, cost 0.0. \nfrom Shenzhen Futian Bamboo Forest Expo Park Qiuguo Hotel to Shenzhen Century Garden Hotel (Nanshan Science and Technology Park): metro: duration 25, cost 12. taxi: duration 6, cost 19.6. walk: duration 51, cost 0.0. \nfrom Shenzhen Museum of Contemporary Art and Urban Planning to Lotus Hill Park: metro: duration 8, cost 8. taxi: duration 1, cost 11.0. walk: duration 10, cost 0.0. \nfrom Shenzhen Museum of Contemporary Art and Urban Planning to Diandude (Huaqiang South Branch): metro: duration 8, cost 8. taxi: duration 3, cost 13.99. walk: duration 31, cost 0.0. \nfrom Shenzhen Museum of Contemporary Art and Urban Planning to Shenzhen Bay Sports Center: metro: duration 40, cost 16. taxi: duration 17, cost 48.2. walk: duration 142, cost 0.0. \nfrom Shenzhen Museum of Contemporary Art and Urban Planning to Gankeng Ancient Town: metro: duration 48, cost 20. taxi: duration 19, cost 53.82. walk: duration 157, cost 0.0. \nfrom Shenzhen Museum of Contemporary Art and Urban Planning to Xichong: metro: duration 379, cost 24. taxi: duration 76, cost 223.36. walk: duration 609, cost 0.0. \nfrom Shenzhen Museum of Contemporary Art and Urban Planning to Shenzhen University Town: metro: duration 39, cost 12. taxi: duration 14, cost 38.87. walk: duration 117, cost 0.0. \nfrom Shenzhen Museum of Contemporary Art and Urban Planning to Atour Hotel (Shenzhen Luohu Diwang): metro: duration 16, cost 12. taxi: duration 6, cost 20.45. walk: duration 53, cost 0.0. \nfrom Shenzhen Museum of Contemporary Art and Urban Planning to Shenzhen Bay Park: metro: duration 25, cost 16. taxi: duration 15, cost 42.24. walk: duration 126, cost 0.0. \nfrom Shenzhen Museum of Contemporary Art and Urban Planning to Libaoge (Kerry Store): metro: duration 9, cost 8. taxi: duration 3, cost 12.18. walk: duration 25, cost 0.0. \nfrom Shenzhen Museum of Contemporary Art and Urban Planning to Shenzhen Concert Hall: metro: duration 11, cost 8. taxi: duration 0, cost 11.0. walk: duration 5, cost 0.0. \nfrom Shenzhen Museum of Contemporary Art and Urban Planning to Dameisha Seaside Park: metro: duration 62, cost 24. taxi: duration 38, cost 110.88. walk: duration 309, cost 0.0. \nfrom Shenzhen Museum of Contemporary Art and Urban Planning to Shenzhen Futian Bamboo Forest Expo Park Qiuguo Hotel: metro: duration 23, cost 12. taxi: duration 10, cost 28.07. walk: duration 80, cost 0.0. \nfrom Shenzhen Museum of Contemporary Art and Urban Planning to Shenzhen Museum of Contemporary Art and Urban Planning:  metro: empty.  taxi: empty.  walk: empty. \nfrom Shenzhen Museum of Contemporary Art and Urban Planning to Shenzhen Museum: taxi: duration 0, cost 11.0. walk: duration 3, cost 0.0. \nfrom Shenzhen Museum of Contemporary Art and Urban Planning to Dafen Oil Painting Village: metro: duration 28, cost 16. taxi: duration 15, cost 41.79. walk: duration 125, cost 0.0. \nfrom Shenzhen Museum of Contemporary Art and Urban Planning to Fanlou (Bao'an South Road Branch): metro: duration 16, cost 8. taxi: duration 6, cost 19.71. walk: duration 51, cost 0.0. \nfrom Shenzhen Museum of Contemporary Art and Urban Planning to Jiangnan Chef (China Resources Mixc Store): metro: duration 15, cost 12. taxi: duration 6, cost 20.9. walk: duration 55, cost 0.0. \nfrom Shenzhen Museum of Contemporary Art and Urban Planning to Yat Bun Sin Tea House (Mixc World Store): metro: duration 29, cost 16. taxi: duration 17, cost 46.65. walk: duration 138, cost 0.0. \nfrom Shenzhen Museum of Contemporary Art and Urban Planning to Shenzhen Art Museum (New Venue): metro: duration 35, cost 16. taxi: duration 14, cost 38.3. walk: duration 115, cost 0.0. \nfrom Shenzhen Museum of Contemporary Art and Urban Planning to Shenzhen Library: metro: duration 9, cost 8. taxi: duration 0, cost 11.0. walk: duration 5, cost 0.0. \nfrom Shenzhen Museum of Contemporary Art and Urban Planning to Shenzhen Bao'an International Airport: metro: duration 62, cost 24. taxi: duration 41, cost 117.93. walk: duration 328, cost 0.0. \nfrom Shenzhen Museum of Contemporary Art and Urban Planning to Dapeng Peninsula: metro: duration 341, cost 32. taxi: duration 72, cost 212.2. walk: duration 579, cost 0.0. \nfrom Shenzhen Museum of Contemporary Art and Urban Planning to Shenzhen North Railway Station: metro: duration 19, cost 12. taxi: duration 11, cost 31.19. walk: duration 90, cost 0.0. \nfrom Shenzhen Museum of Contemporary Art and Urban Planning to Overseas Chinese Town Creative Culture Park: metro: duration 20, cost 12. taxi: duration 10, cost 29.41. walk: duration 84, cost 0.0. \nfrom Shenzhen Museum of Contemporary Art and Urban Planning to Shenzhen Century Garden Hotel (Nanshan Science and Technology Park): metro: duration 30, cost 16. taxi: duration 16, cost 43.35. walk: duration 129, cost 0.0. \nfrom Shenzhen Museum to Lotus Hill Park: metro: duration 6, cost 8. taxi: duration 1, cost 11.0. walk: duration 13, cost 0.0. \nfrom Shenzhen Museum to Diandude (Huaqiang South Branch): metro: duration 6, cost 8. taxi: duration 3, cost 13.33. walk: duration 29, cost 0.0. \nfrom Shenzhen Museum to Shenzhen Bay Sports Center: metro: duration 38, cost 16. taxi: duration 17, cost 48.07. walk: duration 142, cost 0.0. \nfrom Shenzhen Museum to Gankeng Ancient Town: metro: duration 46, cost 20. taxi: duration 20, cost 54.86. walk: duration 160, cost 0.0. \nfrom Shenzhen Museum to Xichong: metro: duration 377, cost 24. taxi: duration 76, cost 223.05. walk: duration 608, cost 0.0. \nfrom Shenzhen Museum to Shenzhen University Town: metro: duration 37, cost 12. taxi: duration 14, cost 39.39. walk: duration 118, cost 0.0. \nfrom Shenzhen Museum to Atour Hotel (Shenzhen Luohu Diwang): metro: duration 14, cost 12. taxi: duration 6, cost 20.2. walk: duration 53, cost 0.0. \nfrom Shenzhen Museum to Shenzhen Bay Park: metro: duration 23, cost 16. taxi: duration 15, cost 42.08. walk: duration 126, cost 0.0. \nfrom Shenzhen Museum to Libaoge (Kerry Store): metro: duration 7, cost 8. taxi: duration 2, cost 11.5. walk: duration 23, cost 0.0. \nfrom Shenzhen Museum to Shenzhen Concert Hall: metro: duration 9, cost 8. taxi: duration 0, cost 11.0. walk: duration 7, cost 0.0. \nfrom Shenzhen Museum to Dameisha Seaside Park: metro: duration 60, cost 24. taxi: duration 38, cost 110.96. walk: duration 310, cost 0.0. \nfrom Shenzhen Museum to Shenzhen Futian Bamboo Forest Expo Park Qiuguo Hotel: metro: duration 21, cost 12. taxi: duration 9, cost 27.93. walk: duration 79, cost 0.0. \nfrom Shenzhen Museum to Shenzhen Museum of Contemporary Art and Urban Planning: taxi: duration 0, cost 11.0. walk: duration 3, cost 0.0. \nfrom Shenzhen Museum to Shenzhen Museum:  metro: empty.  taxi: empty.  walk: empty. \nfrom Shenzhen Museum to Dafen Oil Painting Village: metro: duration 26, cost 16. taxi: duration 15, cost 42.47. walk: duration 127, cost 0.0. \nfrom Shenzhen Museum to Fanlou (Bao'an South Road Branch): metro: duration 14, cost 8. taxi: duration 6, cost 19.58. walk: duration 51, cost 0.0. \nfrom Shenzhen Museum to Jiangnan Chef (China Resources Mixc Store): metro: duration 13, cost 12. taxi: duration 6, cost 20.56. walk: duration 54, cost 0.0. \nfrom Shenzhen Museum to Yat Bun Sin Tea House (Mixc World Store): metro: duration 27, cost 16. taxi: duration 17, cost 46.71. walk: duration 138, cost 0.0. \nfrom Shenzhen Museum to Shenzhen Art Museum (New Venue): metro: duration 33, cost 16. taxi: duration 14, cost 39.18. walk: duration 118, cost 0.0. \nfrom Shenzhen Museum to Shenzhen Library: metro: duration 7, cost 8. taxi: duration 0, cost 11.0. walk: duration 6, cost 0.0. \nfrom Shenzhen Museum to Shenzhen Bao'an International Airport: metro: duration 60, cost 24. taxi: duration 41, cost 118.51. walk: duration 330, cost 0.0. \nfrom Shenzhen Museum to Dapeng Peninsula: metro: duration 339, cost 32. taxi: duration 72, cost 212.0. walk: duration 579, cost 0.0. \nfrom Shenzhen Museum to Shenzhen North Railway Station: metro: duration 17, cost 12. taxi: duration 11, cost 32.03. walk: duration 93, cost 0.0. \nfrom Shenzhen Museum to Overseas Chinese Town Creative Culture Park: metro: duration 18, cost 12. taxi: duration 10, cost 29.43. walk: duration 84, cost 0.0. \nfrom Shenzhen Museum to Shenzhen Century Garden Hotel (Nanshan Science and Technology Park): metro: duration 28, cost 16. taxi: duration 16, cost 43.31. walk: duration 129, cost 0.0. \nfrom Dafen Oil Painting Village to Lotus Hill Park: metro: duration 26, cost 16. taxi: duration 15, cost 40.3. walk: duration 121, cost 0.0. \nfrom Dafen Oil Painting Village to Diandude (Huaqiang South Branch): metro: duration 26, cost 16. taxi: duration 15, cost 42.08. walk: duration 126, cost 0.0. \nfrom Dafen Oil Painting Village to Shenzhen Bay Sports Center: metro: duration 60, cost 24. taxi: duration 32, cost 92.33. walk: duration 260, cost 0.0. \nfrom Dafen Oil Painting Village to Gankeng Ancient Town: metro: duration 34, cost 12. taxi: duration 9, cost 26.8. walk: duration 75, cost 0.0. \nfrom Dafen Oil Painting Village to Xichong: metro: duration 365, cost 20. taxi: duration 67, cost 196.81. walk: duration 538, cost 0.0. \nfrom Dafen Oil Painting Village to Shenzhen University Town: metro: duration 54, cost 20. taxi: duration 25, cost 69.74. walk: duration 200, cost 0.0. \nfrom Dafen Oil Painting Village to Atour Hotel (Shenzhen Luohu Diwang): metro: duration 27, cost 12. taxi: duration 12, cost 34.46. walk: duration 102, cost 0.0. \nfrom Dafen Oil Painting Village to Shenzhen Bay Park: metro: duration 46, cost 20. taxi: duration 30, cost 86.82. walk: duration 245, cost 0.0. \nfrom Dafen Oil Painting Village to Libaoge (Kerry Store): metro: duration 31, cost 16. taxi: duration 18, cost 51.13. walk: duration 150, cost 0.0. \nfrom Dafen Oil Painting Village to Shenzhen Concert Hall: metro: duration 33, cost 16. taxi: duration 16, cost 42.8. walk: duration 128, cost 0.0. \nfrom Dafen Oil Painting Village to Dameisha Seaside Park: metro: duration 49, cost 20. taxi: duration 26, cost 74.44. walk: duration 212, cost 0.0. \nfrom Dafen Oil Painting Village to Shenzhen Futian Bamboo Forest Expo Park Qiuguo Hotel: metro: duration 45, cost 20. taxi: duration 25, cost 70.01. walk: duration 200, cost 0.0. \nfrom Dafen Oil Painting Village to Shenzhen Museum of Contemporary Art and Urban Planning: metro: duration 28, cost 16. taxi: duration 15, cost 41.79. walk: duration 125, cost 0.0. \nfrom Dafen Oil Painting Village to Shenzhen Museum: metro: duration 26, cost 16. taxi: duration 15, cost 42.47. walk: duration 127, cost 0.0. \nfrom Dafen Oil Painting Village to Dafen Oil Painting Village:  metro: empty.  taxi: empty.  walk: empty. \nfrom Dafen Oil Painting Village to Fanlou (Bao'an South Road Branch): metro: duration 27, cost 12. taxi: duration 12, cost 32.75. walk: duration 96, cost 0.0. \nfrom Dafen Oil Painting Village to Jiangnan Chef (China Resources Mixc Store): metro: duration 26, cost 12. taxi: duration 13, cost 36.15. walk: duration 107, cost 0.0. \nfrom Dafen Oil Painting Village to Yat Bun Sin Tea House (Mixc World Store): metro: duration 49, cost 20. taxi: duration 31, cost 88.56. walk: duration 250, cost 0.0. \nfrom Dafen Oil Painting Village to Shenzhen Art Museum (New Venue): metro: duration 42, cost 16. taxi: duration 17, cost 47.23. walk: duration 140, cost 0.0. \nfrom Dafen Oil Painting Village to Shenzhen Library: metro: duration 31, cost 16. taxi: duration 16, cost 43.31. walk: duration 129, cost 0.0. \nfrom Dafen Oil Painting Village to Shenzhen Bao'an International Airport: metro: duration 75, cost 28. taxi: duration 49, cost 144.3. walk: duration 398, cost 0.0. \nfrom Dafen Oil Painting Village to Dapeng Peninsula: metro: duration 324, cost 28. taxi: duration 62, cost 181.83. walk: duration 499, cost 0.0. \nfrom Dafen Oil Painting Village to Shenzhen North Railway Station: metro: duration 28, cost 16. taxi: duration 17, cost 47.32. walk: duration 140, cost 0.0. \nfrom Dafen Oil Painting Village to Overseas Chinese Town Creative Culture Park: metro: duration 40, cost 20. taxi: duration 25, cost 69.93. walk: duration 200, cost 0.0. \nfrom Dafen Oil Painting Village to Shenzhen Century Garden Hotel (Nanshan Science and Technology Park): metro: duration 50, cost 20. taxi: duration 30, cost 86.62. walk: duration 245, cost 0.0. \nfrom Fanlou (Bao'an South Road Branch) to Lotus Hill Park: metro: duration 17, cost 12. taxi: duration 7, cost 21.07. walk: duration 56, cost 0.0. \nfrom Fanlou (Bao'an South Road Branch) to Diandude (Huaqiang South Branch): metro: duration 11, cost 8. taxi: duration 4, cost 14.48. walk: duration 33, cost 0.0. \nfrom Fanlou (Bao'an South Road Branch) to Shenzhen Bay Sports Center: metro: duration 50, cost 20. taxi: duration 24, cost 66.89. walk: duration 192, cost 0.0. \nfrom Fanlou (Bao'an South Road Branch) to Gankeng Ancient Town: metro: duration 50, cost 16. taxi: duration 18, cost 51.29. walk: duration 150, cost 0.0. \nfrom Fanlou (Bao'an South Road Branch) to Xichong: metro: duration 375, cost 24. taxi: duration 69, cost 204.17. walk: duration 558, cost 0.0. \nfrom Fanlou (Bao'an South Road Branch) to Shenzhen University Town: metro: duration 49, cost 16. taxi: duration 20, cost 56.75. walk: duration 165, cost 0.0. \nfrom Fanlou (Bao'an South Road Branch) to Atour Hotel (Shenzhen Luohu Diwang): metro: duration 12, cost 8. taxi: duration 0, cost 11.0. walk: duration 7, cost 0.0. \nfrom Fanlou (Bao'an South Road Branch) to Shenzhen Bay Park: metro: duration 35, cost 20. taxi: duration 22, cost 60.83. walk: duration 176, cost 0.0. \nfrom Fanlou (Bao'an South Road Branch) to Libaoge (Kerry Store): metro: duration 18, cost 12. taxi: duration 8, cost 24.55. walk: duration 68, cost 0.0. \nfrom Fanlou (Bao'an South Road Branch) to Shenzhen Concert Hall: metro: duration 22, cost 12. taxi: duration 7, cost 21.28. walk: duration 56, cost 0.0. \nfrom Fanlou (Bao'an South Road Branch) to Dameisha Seaside Park: metro: duration 58, cost 24. taxi: duration 32, cost 92.23. walk: duration 260, cost 0.0. \nfrom Fanlou (Bao'an South Road Branch) to Shenzhen Futian Bamboo Forest Expo Park Qiuguo Hotel: metro: duration 33, cost 16. taxi: duration 16, cost 43.38. walk: duration 129, cost 0.0. \nfrom Fanlou (Bao'an South Road Branch) to Shenzhen Museum of Contemporary Art and Urban Planning: metro: duration 16, cost 8. taxi: duration 6, cost 19.71. walk: duration 51, cost 0.0. \nfrom Fanlou (Bao'an South Road Branch) to Shenzhen Museum: metro: duration 14, cost 8. taxi: duration 6, cost 19.58. walk: duration 51, cost 0.0. \nfrom Fanlou (Bao'an South Road Branch) to Dafen Oil Painting Village: metro: duration 27, cost 12. taxi: duration 12, cost 32.75. walk: duration 96, cost 0.0. \nfrom Fanlou (Bao'an South Road Branch) to Fanlou (Bao'an South Road Branch):  metro: empty.  taxi: empty.  walk: empty. \nfrom Fanlou (Bao'an South Road Branch) to Jiangnan Chef (China Resources Mixc Store): metro: duration 11, cost 8. taxi: duration 1, cost 11.0. walk: duration 13, cost 0.0. \nfrom Fanlou (Bao'an South Road Branch) to Yat Bun Sin Tea House (Mixc World Store): metro: duration 40, cost 20. taxi: duration 23, cost 65.83. walk: duration 189, cost 0.0. \nfrom Fanlou (Bao'an South Road Branch) to Shenzhen Art Museum (New Venue): metro: duration 43, cost 16. taxi: duration 18, cost 49.16. walk: duration 145, cost 0.0. \nfrom Fanlou (Bao'an South Road Branch) to Shenzhen Library: metro: duration 20, cost 12. taxi: duration 7, cost 21.19. walk: duration 56, cost 0.0. \nfrom Fanlou (Bao'an South Road Branch) to Shenzhen Bao'an International Airport: metro: duration 72, cost 28. taxi: duration 47, cost 136.25. walk: duration 377, cost 0.0. \nfrom Fanlou (Bao'an South Road Branch) to Dapeng Peninsula: metro: duration 337, cost 28. taxi: duration 66, cost 192.89. walk: duration 528, cost 0.0. \nfrom Fanlou (Bao'an South Road Branch) to Shenzhen North Railway Station: metro: duration 27, cost 16. taxi: duration 15, cost 42.3. walk: duration 126, cost 0.0. \nfrom Fanlou (Bao'an South Road Branch) to Overseas Chinese Town Creative Culture Park: metro: duration 30, cost 16. taxi: duration 16, cost 45.61. walk: duration 135, cost 0.0. \nfrom Fanlou (Bao'an South Road Branch) to Shenzhen Century Garden Hotel (Nanshan Science and Technology Park): metro: duration 41, cost 20. taxi: duration 22, cost 62.33. walk: duration 180, cost 0.0. \nfrom Jiangnan Chef (China Resources Mixc Store) to Lotus Hill Park: metro: duration 16, cost 12. taxi: duration 7, cost 22.85. walk: duration 62, cost 0.0. \nfrom Jiangnan Chef (China Resources Mixc Store) to Diandude (Huaqiang South Branch): metro: duration 9, cost 8. taxi: duration 3, cost 13.45. walk: duration 29, cost 0.0. \nfrom Jiangnan Chef (China Resources Mixc Store) to Shenzhen Bay Sports Center: metro: duration 49, cost 20. taxi: duration 24, cost 66.88. walk: duration 192, cost 0.0. \nfrom Jiangnan Chef (China Resources Mixc Store) to Gankeng Ancient Town: metro: duration 49, cost 20. taxi: duration 20, cost 56.36. walk: duration 164, cost 0.0. \nfrom Jiangnan Chef (China Resources Mixc Store) to Xichong: metro: duration 372, cost 24. taxi: duration 69, cost 202.76. walk: duration 554, cost 0.0. \nfrom Jiangnan Chef (China Resources Mixc Store) to Shenzhen University Town: metro: duration 48, cost 16. taxi: duration 21, cost 59.24. walk: duration 172, cost 0.0. \nfrom Jiangnan Chef (China Resources Mixc Store) to Atour Hotel (Shenzhen Luohu Diwang): taxi: duration 0, cost 11.0. walk: duration 6, cost 0.0. \nfrom Jiangnan Chef (China Resources Mixc Store) to Shenzhen Bay Park: metro: duration 33, cost 20. taxi: duration 22, cost 60.78. walk: duration 176, cost 0.0. \nfrom Jiangnan Chef (China Resources Mixc Store) to Libaoge (Kerry Store): metro: duration 17, cost 12. taxi: duration 8, cost 24.34. walk: duration 67, cost 0.0. \nfrom Jiangnan Chef (China Resources Mixc Store) to Shenzhen Concert Hall: metro: duration 20, cost 12. taxi: duration 7, cost 22.53. walk: duration 61, cost 0.0. \nfrom Jiangnan Chef (China Resources Mixc Store) to Dameisha Seaside Park: metro: duration 55, cost 24. taxi: duration 32, cost 92.89. walk: duration 261, cost 0.0. \nfrom Jiangnan Chef (China Resources Mixc Store) to Shenzhen Futian Bamboo Forest Expo Park Qiuguo Hotel: metro: duration 32, cost 16. taxi: duration 16, cost 43.52. walk: duration 130, cost 0.0. \nfrom Jiangnan Chef (China Resources Mixc Store) to Shenzhen Museum of Contemporary Art and Urban Planning: metro: duration 15, cost 12. taxi: duration 6, cost 20.9. walk: duration 55, cost 0.0. \nfrom Jiangnan Chef (China Resources Mixc Store) to Shenzhen Museum: metro: duration 13, cost 12. taxi: duration 6, cost 20.56. walk: duration 54, cost 0.0. \nfrom Jiangnan Chef (China Resources Mixc Store) to Dafen Oil Painting Village: metro: duration 26, cost 12. taxi: duration 13, cost 36.15. walk: duration 107, cost 0.0. \nfrom Jiangnan Chef (China Resources Mixc Store) to Fanlou (Bao'an South Road Branch): metro: duration 11, cost 8. taxi: duration 1, cost 11.0. walk: duration 13, cost 0.0. \nfrom Jiangnan Chef (China Resources Mixc Store) to Jiangnan Chef (China Resources Mixc Store):  metro: empty.  taxi: empty.  walk: empty. \nfrom Jiangnan Chef (China Resources Mixc Store) to Yat Bun Sin Tea House (Mixc World Store): metro: duration 38, cost 20. taxi: duration 23, cost 66.44. walk: duration 191, cost 0.0. \nfrom Jiangnan Chef (China Resources Mixc Store) to Shenzhen Art Museum (New Venue): metro: duration 42, cost 16. taxi: duration 19, cost 53.46. walk: duration 156, cost 0.0. \nfrom Jiangnan Chef (China Resources Mixc Store) to Shenzhen Library: metro: duration 18, cost 12. taxi: duration 7, cost 22.3. walk: duration 60, cost 0.0. \nfrom Jiangnan Chef (China Resources Mixc Store) to Shenzhen Bao'an International Airport: metro: duration 72, cost 28. taxi: duration 47, cost 138.67. walk: duration 383, cost 0.0. \nfrom Jiangnan Chef (China Resources Mixc Store) to Dapeng Peninsula: metro: duration 335, cost 28. taxi: duration 65, cost 192.04. walk: duration 526, cost 0.0. \nfrom Jiangnan Chef (China Resources Mixc Store) to Shenzhen North Railway Station: metro: duration 27, cost 16. taxi: duration 17, cost 46.15. walk: duration 137, cost 0.0. \nfrom Jiangnan Chef (China Resources Mixc Store) to Overseas Chinese Town Creative Culture Park: metro: duration 29, cost 16. taxi: duration 17, cost 46.27. walk: duration 137, cost 0.0. \nfrom Jiangnan Chef (China Resources Mixc Store) to Shenzhen Century Garden Hotel (Nanshan Science and Technology Park): metro: duration 39, cost 20. taxi: duration 22, cost 62.65. walk: duration 181, cost 0.0. \nfrom Yat Bun Sin Tea House (Mixc World Store) to Lotus Hill Park: metro: duration 29, cost 16. taxi: duration 17, cost 45.89. walk: duration 136, cost 0.0. \nfrom Yat Bun Sin Tea House (Mixc World Store) to Diandude (Huaqiang South Branch): metro: duration 31, cost 16. taxi: duration 20, cost 55.46. walk: duration 162, cost 0.0. \nfrom Yat Bun Sin Tea House (Mixc World Store) to Shenzhen Bay Sports Center: metro: duration 18, cost 8. taxi: duration 2, cost 11.47. walk: duration 23, cost 0.0. \nfrom Yat Bun Sin Tea House (Mixc World Store) to Gankeng Ancient Town: metro: duration 64, cost 24. taxi: duration 31, cost 88.18. walk: duration 249, cost 0.0. \nfrom Yat Bun Sin Tea House (Mixc World Store) to Xichong: metro: duration 402, cost 32. taxi: duration 93, cost 274.16. walk: duration 745, cost 0.0. \nfrom Yat Bun Sin Tea House (Mixc World Store) to Shenzhen University Town: metro: duration 37, cost 12. taxi: duration 9, cost 25.94. walk: duration 72, cost 0.0. \nfrom Yat Bun Sin Tea House (Mixc World Store) to Atour Hotel (Shenzhen Luohu Diwang): metro: duration 39, cost 20. taxi: duration 23, cost 66.39. walk: duration 191, cost 0.0. \nfrom Yat Bun Sin Tea House (Mixc World Store) to Shenzhen Bay Park: metro: duration 8, cost 8. taxi: duration 3, cost 12.77. walk: duration 27, cost 0.0. \nfrom Yat Bun Sin Tea House (Mixc World Store) to Libaoge (Kerry Store): metro: duration 25, cost 16. taxi: duration 15, cost 41.4. walk: duration 124, cost 0.0. \nfrom Yat Bun Sin Tea House (Mixc World Store) to Shenzhen Concert Hall: metro: duration 31, cost 16. taxi: duration 16, cost 44.76. walk: duration 133, cost 0.0. \nfrom Yat Bun Sin Tea House (Mixc World Store) to Dameisha Seaside Park: metro: duration 85, cost 28. taxi: duration 55, cost 162.63. walk: duration 447, cost 0.0. \nfrom Yat Bun Sin Tea House (Mixc World Store) to Shenzhen Futian Bamboo Forest Expo Park Qiuguo Hotel: metro: duration 24, cost 12. taxi: duration 7, cost 22.85. walk: duration 62, cost 0.0. \nfrom Yat Bun Sin Tea House (Mixc World Store) to Shenzhen Museum of Contemporary Art and Urban Planning: metro: duration 29, cost 16. taxi: duration 17, cost 46.65. walk: duration 138, cost 0.0. \nfrom Yat Bun Sin Tea House (Mixc World Store) to Shenzhen Museum: metro: duration 27, cost 16. taxi: duration 17, cost 46.71. walk: duration 138, cost 0.0. \nfrom Yat Bun Sin Tea House (Mixc World Store) to Dafen Oil Painting Village: metro: duration 49, cost 20. taxi: duration 31, cost 88.56. walk: duration 250, cost 0.0. \nfrom Yat Bun Sin Tea House (Mixc World Store) to Fanlou (Bao'an South Road Branch): metro: duration 40, cost 20. taxi: duration 23, cost 65.83. walk: duration 189, cost 0.0. \nfrom Yat Bun Sin Tea House (Mixc World Store) to Jiangnan Chef (China Resources Mixc Store): metro: duration 38, cost 20. taxi: duration 23, cost 66.44. walk: duration 191, cost 0.0. \nfrom Yat Bun Sin Tea House (Mixc World Store) to Yat Bun Sin Tea House (Mixc World Store):  metro: empty.  taxi: empty.  walk: empty. \nfrom Yat Bun Sin Tea House (Mixc World Store) to Shenzhen Art Museum (New Venue): metro: duration 40, cost 16. taxi: duration 18, cost 50.89. walk: duration 149, cost 0.0. \nfrom Yat Bun Sin Tea House (Mixc World Store) to Shenzhen Library: metro: duration 29, cost 16. taxi: duration 16, cost 44.74. walk: duration 133, cost 0.0. \nfrom Yat Bun Sin Tea House (Mixc World Store) to Shenzhen Bao'an International Airport: metro: duration 43, cost 20. taxi: duration 26, cost 75.38. walk: duration 215, cost 0.0. \nfrom Yat Bun Sin Tea House (Mixc World Store) to Dapeng Peninsula: metro: duration 363, cost 36. taxi: duration 89, cost 263.78. walk: duration 717, cost 0.0. \nfrom Yat Bun Sin Tea House (Mixc World Store) to Shenzhen North Railway Station: metro: duration 26, cost 16. taxi: duration 15, cost 42.54. walk: duration 127, cost 0.0. \nfrom Yat Bun Sin Tea House (Mixc World Store) to Overseas Chinese Town Creative Culture Park: metro: duration 15, cost 12. taxi: duration 6, cost 20.43. walk: duration 53, cost 0.0. \nfrom Yat Bun Sin Tea House (Mixc World Store) to Shenzhen Century Garden Hotel (Nanshan Science and Technology Park): metro: duration 12, cost 8. taxi: duration 1, cost 11.0. walk: duration 14, cost 0.0. \nfrom Shenzhen Art Museum (New Venue) to Lotus Hill Park: metro: duration 33, cost 12. taxi: duration 13, cost 35.21. walk: duration 104, cost 0.0. \nfrom Shenzhen Art Museum (New Venue) to Diandude (Huaqiang South Branch): metro: duration 37, cost 16. taxi: duration 18, cost 48.98. walk: duration 144, cost 0.0. \nfrom Shenzhen Art Museum (New Venue) to Shenzhen Bay Sports Center: metro: duration 52, cost 16. taxi: duration 21, cost 58.01. walk: duration 168, cost 0.0. \nfrom Shenzhen Art Museum (New Venue) to Gankeng Ancient Town: metro: duration 53, cost 16. taxi: duration 13, cost 35.91. walk: duration 107, cost 0.0. \nfrom Shenzhen Art Museum (New Venue) to Xichong: metro: duration 398, cost 28. taxi: duration 84, cost 248.71. walk: duration 677, cost 0.0. \nfrom Shenzhen Art Museum (New Venue) to Shenzhen University Town: metro: duration 42, cost 12. taxi: duration 9, cost 27.89. walk: duration 79, cost 0.0. \nfrom Shenzhen Art Museum (New Venue) to Atour Hotel (Shenzhen Luohu Diwang): metro: duration 43, cost 16. taxi: duration 18, cost 51.61. walk: duration 151, cost 0.0. \nfrom Shenzhen Art Museum (New Venue) to Shenzhen Bay Park: metro: duration 39, cost 16. taxi: duration 19, cost 54.65. walk: duration 159, cost 0.0. \nfrom Shenzhen Art Museum (New Venue) to Libaoge (Kerry Store): metro: duration 36, cost 16. taxi: duration 16, cost 43.93. walk: duration 131, cost 0.0. \nfrom Shenzhen Art Museum (New Venue) to Shenzhen Concert Hall: metro: duration 38, cost 12. taxi: duration 13, cost 37.2. walk: duration 111, cost 0.0. \nfrom Shenzhen Art Museum (New Venue) to Dameisha Seaside Park: metro: duration 81, cost 28. taxi: duration 44, cost 126.95. walk: duration 352, cost 0.0. \nfrom Shenzhen Art Museum (New Venue) to Shenzhen Futian Bamboo Forest Expo Park Qiuguo Hotel: metro: duration 42, cost 16. taxi: duration 16, cost 44.4. walk: duration 132, cost 0.0. \nfrom Shenzhen Art Museum (New Venue) to Shenzhen Museum of Contemporary Art and Urban Planning: metro: duration 35, cost 16. taxi: duration 14, cost 38.3. walk: duration 115, cost 0.0. \nfrom Shenzhen Art Museum (New Venue) to Shenzhen Museum: metro: duration 33, cost 16. taxi: duration 14, cost 39.18. walk: duration 118, cost 0.0. \nfrom Shenzhen Art Museum (New Venue) to Dafen Oil Painting Village: metro: duration 42, cost 16. taxi: duration 17, cost 47.23. walk: duration 140, cost 0.0. \nfrom Shenzhen Art Museum (New Venue) to Fanlou (Bao'an South Road Branch): metro: duration 43, cost 16. taxi: duration 18, cost 49.16. walk: duration 145, cost 0.0. \nfrom Shenzhen Art Museum (New Venue) to Jiangnan Chef (China Resources Mixc Store): metro: duration 42, cost 16. taxi: duration 19, cost 53.46. walk: duration 156, cost 0.0. \nfrom Shenzhen Art Museum (New Venue) to Yat Bun Sin Tea House (Mixc World Store): metro: duration 40, cost 16. taxi: duration 18, cost 50.89. walk: duration 149, cost 0.0. \nfrom Shenzhen Art Museum (New Venue) to Shenzhen Art Museum (New Venue):  metro: empty.  taxi: empty.  walk: empty. \nfrom Shenzhen Art Museum (New Venue) to Shenzhen Library: metro: duration 36, cost 12. taxi: duration 14, cost 37.84. walk: duration 113, cost 0.0. \nfrom Shenzhen Art Museum (New Venue) to Shenzhen Bao'an International Airport: metro: duration 60, cost 20. taxi: duration 32, cost 91.88. walk: duration 259, cost 0.0. \nfrom Shenzhen Art Museum (New Venue) to Dapeng Peninsula: metro: duration 355, cost 32. taxi: duration 79, cost 234.25. walk: duration 638, cost 0.0. \nfrom Shenzhen Art Museum (New Venue) to Shenzhen North Railway Station: metro: duration 17, cost 8. taxi: duration 3, cost 12.95. walk: duration 28, cost 0.0. \nfrom Shenzhen Art Museum (New Venue) to Overseas Chinese Town Creative Culture Park: metro: duration 34, cost 12. taxi: duration 15, cost 40.45. walk: duration 121, cost 0.0. \nfrom Shenzhen Art Museum (New Venue) to Shenzhen Century Garden Hotel (Nanshan Science and Technology Park): metro: duration 42, cost 16. taxi: duration 19, cost 51.73. walk: duration 152, cost 0.0. \nfrom Shenzhen Library to Lotus Hill Park: metro: duration 11, cost 8. taxi: duration 1, cost 11.0. walk: duration 10, cost 0.0. \nfrom Shenzhen Library to Diandude (Huaqiang South Branch): metro: duration 12, cost 8. taxi: duration 4, cost 15.09. walk: duration 35, cost 0.0. \nfrom Shenzhen Library to Shenzhen Bay Sports Center: metro: duration 40, cost 16. taxi: duration 17, cost 46.32. walk: duration 137, cost 0.0. \nfrom Shenzhen Library to Gankeng Ancient Town: metro: duration 51, cost 20. taxi: duration 19, cost 54.61. walk: duration 159, cost 0.0. \nfrom Shenzhen Library to Xichong: metro: duration 383, cost 28. taxi: duration 76, cost 225.23. walk: duration 614, cost 0.0. \nfrom Shenzhen Library to Shenzhen University Town: metro: duration 40, cost 12. taxi: duration 14, cost 37.6. walk: duration 112, cost 0.0. \nfrom Shenzhen Library to Atour Hotel (Shenzhen Luohu Diwang): metro: duration 19, cost 12. taxi: duration 7, cost 21.89. walk: duration 58, cost 0.0. \nfrom Shenzhen Library to Shenzhen Bay Park: metro: duration 25, cost 16. taxi: duration 15, cost 40.36. walk: duration 121, cost 0.0. \nfrom Shenzhen Library to Libaoge (Kerry Store): metro: duration 10, cost 8. taxi: duration 2, cost 11.39. walk: duration 22, cost 0.0. \nfrom Shenzhen Library to Shenzhen Concert Hall: taxi: duration 0, cost 11.0. walk: duration 2, cost 0.0. \nfrom Shenzhen Library to Dameisha Seaside Park: metro: duration 65, cost 24. taxi: duration 39, cost 112.78. walk: duration 314, cost 0.0. \nfrom Shenzhen Library to Shenzhen Futian Bamboo Forest Expo Park Qiuguo Hotel: metro: duration 24, cost 12. taxi: duration 9, cost 26.62. walk: duration 75, cost 0.0. \nfrom Shenzhen Library to Shenzhen Museum of Contemporary Art and Urban Planning: metro: duration 9, cost 8. taxi: duration 0, cost 11.0. walk: duration 5, cost 0.0. \nfrom Shenzhen Library to Shenzhen Museum: metro: duration 7, cost 8. taxi: duration 0, cost 11.0. walk: duration 6, cost 0.0. \nfrom Shenzhen Library to Dafen Oil Painting Village: metro: duration 31, cost 16. taxi: duration 16, cost 43.31. walk: duration 129, cost 0.0. \nfrom Shenzhen Library to Fanlou (Bao'an South Road Branch): metro: duration 20, cost 12. taxi: duration 7, cost 21.19. walk: duration 56, cost 0.0. \nfrom Shenzhen Library to Jiangnan Chef (China Resources Mixc Store): metro: duration 18, cost 12. taxi: duration 7, cost 22.3. walk: duration 60, cost 0.0. \nfrom Shenzhen Library to Yat Bun Sin Tea House (Mixc World Store): metro: duration 29, cost 16. taxi: duration 16, cost 44.74. walk: duration 133, cost 0.0. \nfrom Shenzhen Library to Shenzhen Art Museum (New Venue): metro: duration 36, cost 12. taxi: duration 14, cost 37.84. walk: duration 113, cost 0.0. \nfrom Shenzhen Library to Shenzhen Library:  metro: empty.  taxi: empty.  walk: empty. \nfrom Shenzhen Library to Shenzhen Bao'an International Airport: metro: duration 63, cost 24. taxi: duration 40, cost 116.22. walk: duration 324, cost 0.0. \nfrom Shenzhen Library to Dapeng Peninsula: metro: duration 344, cost 32. taxi: duration 73, cost 214.1. walk: duration 585, cost 0.0. \nfrom Shenzhen Library to Shenzhen North Railway Station: metro: duration 21, cost 12. taxi: duration 11, cost 30.55. walk: duration 88, cost 0.0. \nfrom Shenzhen Library to Overseas Chinese Town Creative Culture Park: metro: duration 20, cost 12. taxi: duration 9, cost 27.92. walk: duration 79, cost 0.0. \nfrom Shenzhen Library to Shenzhen Century Garden Hotel (Nanshan Science and Technology Park): metro: duration 31, cost 16. taxi: duration 15, cost 41.44. walk: duration 124, cost 0.0. \nfrom Shenzhen Bao'an International Airport to Lotus Hill Park: metro: duration 61, cost 24. taxi: duration 40, cost 115.38. walk: duration 321, cost 0.0. \nfrom Shenzhen Bao'an International Airport to Diandude (Huaqiang South Branch): metro: duration 65, cost 28. taxi: duration 44, cost 129.26. walk: duration 358, cost 0.0. \nfrom Shenzhen Bao'an International Airport to Shenzhen Bay Sports Center: metro: duration 53, cost 20. taxi: duration 28, cost 81.11. walk: duration 230, cost 0.0. \nfrom Shenzhen Bao'an International Airport to Gankeng Ancient Town: metro: duration 83, cost 28. taxi: duration 44, cost 128.7. walk: duration 357, cost 0.0. \nfrom Shenzhen Bao'an International Airport to Xichong: metro: duration 431, cost 36. taxi: duration 116, cost 344.22. walk: duration 932, cost 0.0. \nfrom Shenzhen Bao'an International Airport to Shenzhen University Town: metro: duration 63, cost 20. taxi: duration 26, cost 74.2. walk: duration 211, cost 0.0. \nfrom Shenzhen Bao'an International Airport to Atour Hotel (Shenzhen Luohu Diwang): metro: duration 73, cost 28. taxi: duration 47, cost 137.78. walk: duration 381, cost 0.0. \nfrom Shenzhen Bao'an International Airport to Shenzhen Bay Park: metro: duration 46, cost 20. taxi: duration 30, cost 85.44. walk: duration 241, cost 0.0. \nfrom Shenzhen Bao'an International Airport to Libaoge (Kerry Store): metro: duration 60, cost 24. taxi: duration 40, cost 116.57. walk: duration 324, cost 0.0. \nfrom Shenzhen Bao'an International Airport to Shenzhen Concert Hall: metro: duration 65, cost 24. taxi: duration 40, cost 115.83. walk: duration 323, cost 0.0. \nfrom Shenzhen Bao'an International Airport to Dameisha Seaside Park: metro: duration 114, cost 36. taxi: duration 76, cost 224.04. walk: duration 611, cost 0.0. \nfrom Shenzhen Bao'an International Airport to Shenzhen Futian Bamboo Forest Expo Park Qiuguo Hotel: metro: duration 60, cost 24. taxi: duration 33, cost 96.36. walk: duration 271, cost 0.0. \nfrom Shenzhen Bao'an International Airport to Shenzhen Museum of Contemporary Art and Urban Planning: metro: duration 62, cost 24. taxi: duration 41, cost 117.93. walk: duration 328, cost 0.0. \nfrom Shenzhen Bao'an International Airport to Shenzhen Museum: metro: duration 60, cost 24. taxi: duration 41, cost 118.51. walk: duration 330, cost 0.0. \nfrom Shenzhen Bao'an International Airport to Dafen Oil Painting Village: metro: duration 75, cost 28. taxi: duration 49, cost 144.3. walk: duration 398, cost 0.0. \nfrom Shenzhen Bao'an International Airport to Fanlou (Bao'an South Road Branch): metro: duration 72, cost 28. taxi: duration 47, cost 136.25. walk: duration 377, cost 0.0. \nfrom Shenzhen Bao'an International Airport to Jiangnan Chef (China Resources Mixc Store): metro: duration 72, cost 28. taxi: duration 47, cost 138.67. walk: duration 383, cost 0.0. \nfrom Shenzhen Bao'an International Airport to Yat Bun Sin Tea House (Mixc World Store): metro: duration 43, cost 20. taxi: duration 26, cost 75.38. walk: duration 215, cost 0.0. \nfrom Shenzhen Bao'an International Airport to Shenzhen Art Museum (New Venue): metro: duration 60, cost 20. taxi: duration 32, cost 91.88. walk: duration 259, cost 0.0. \nfrom Shenzhen Bao'an International Airport to Shenzhen Library: metro: duration 63, cost 24. taxi: duration 40, cost 116.22. walk: duration 324, cost 0.0. \nfrom Shenzhen Bao'an International Airport to Shenzhen Bao'an International Airport:  metro: empty.  taxi: empty.  walk: empty. \nfrom Shenzhen Bao'an International Airport to Dapeng Peninsula: metro: duration 387, cost 36.0. taxi: duration 112, cost 330.8. walk: duration 896, cost 0.0. \nfrom Shenzhen Bao'an International Airport to Shenzhen North Railway Station: metro: duration 49, cost 24. taxi: duration 32, cost 92.59. walk: duration 261, cost 0.0. \nfrom Shenzhen Bao'an International Airport to Overseas Chinese Town Creative Culture Park: metro: duration 50, cost 24. taxi: duration 32, cost 91.39. walk: duration 257, cost 0.0. \nfrom Shenzhen Bao'an International Airport to Shenzhen Century Garden Hotel (Nanshan Science and Technology Park): metro: duration 50, cost 20. taxi: duration 28, cost 80.71. walk: duration 229, cost 0.0. \nfrom Dapeng Peninsula to Lotus Hill Park: metro: duration 340, cost 32. taxi: duration 72, cost 213.64. walk: duration 583, cost 0.0. \nfrom Dapeng Peninsula to Diandude (Huaqiang South Branch): metro: duration 336, cost 32. taxi: duration 69, cost 203.07. walk: duration 555, cost 0.0. \nfrom Dapeng Peninsula to Shenzhen Bay Sports Center: metro: duration 375, cost 36. taxi: duration 89, cost 263.83. walk: duration 717, cost 0.0. \nfrom Dapeng Peninsula to Gankeng Ancient Town: metro: duration 337, cost 28. taxi: duration 69, cost 202.91. walk: duration 555, cost 0.0. \nfrom Dapeng Peninsula to Xichong: metro: duration 609, cost 16. taxi: duration 8, cost 24.11. walk: duration 66, cost 0.0. \nfrom Dapeng Peninsula to Shenzhen University Town: metro: duration 368, cost 32. taxi: duration 86, cost 252.93. walk: duration 688, cost 0.0. \nfrom Dapeng Peninsula to Atour Hotel (Shenzhen Luohu Diwang): metro: duration 336, cost 28. taxi: duration 65, cost 192.14. walk: duration 526, cost 0.0. \nfrom Dapeng Peninsula to Shenzhen Bay Park: metro: duration 359, cost 36. taxi: duration 87, cost 257.71. walk: duration 701, cost 0.0. \nfrom Dapeng Peninsula to Libaoge (Kerry Store): metro: duration 343, cost 32. taxi: duration 74, cost 217.16. walk: duration 593, cost 0.0. \nfrom Dapeng Peninsula to Shenzhen Concert Hall: metro: duration 346, cost 32. taxi: duration 73, cost 214.2. walk: duration 585, cost 0.0. \nfrom Dapeng Peninsula to Dameisha Seaside Park: metro: duration 300, cost 20. taxi: duration 36, cost 102.87. walk: duration 288, cost 0.0. \nfrom Dapeng Peninsula to Shenzhen Futian Bamboo Forest Expo Park Qiuguo Hotel: metro: duration 358, cost 32. taxi: duration 82, cost 240.75. walk: duration 656, cost 0.0. \nfrom Dapeng Peninsula to Shenzhen Museum of Contemporary Art and Urban Planning: metro: duration 341, cost 32. taxi: duration 72, cost 212.2. walk: duration 579, cost 0.0. \nfrom Dapeng Peninsula to Shenzhen Museum: metro: duration 339, cost 32. taxi: duration 72, cost 212.0. walk: duration 579, cost 0.0. \nfrom Dapeng Peninsula to Dafen Oil Painting Village: metro: duration 324, cost 28. taxi: duration 62, cost 181.83. walk: duration 499, cost 0.0. \nfrom Dapeng Peninsula to Fanlou (Bao'an South Road Branch): metro: duration 337, cost 28. taxi: duration 66, cost 192.89. walk: duration 528, cost 0.0. \nfrom Dapeng Peninsula to Jiangnan Chef (China Resources Mixc Store): metro: duration 335, cost 28. taxi: duration 65, cost 192.04. walk: duration 526, cost 0.0. \nfrom Dapeng Peninsula to Yat Bun Sin Tea House (Mixc World Store): metro: duration 363, cost 36. taxi: duration 89, cost 263.78. walk: duration 717, cost 0.0. \nfrom Dapeng Peninsula to Shenzhen Art Museum (New Venue): metro: duration 355, cost 32. taxi: duration 79, cost 234.25. walk: duration 638, cost 0.0. \nfrom Dapeng Peninsula to Shenzhen Library: metro: duration 344, cost 32. taxi: duration 73, cost 214.1. walk: duration 585, cost 0.0. \nfrom Dapeng Peninsula to Shenzhen Bao'an International Airport: metro: duration 387, cost 36.0. taxi: duration 112, cost 330.8. walk: duration 896, cost 0.0. \nfrom Dapeng Peninsula to Dapeng Peninsula:  metro: empty.  taxi: empty.  walk: empty. \nfrom Dapeng Peninsula to Shenzhen North Railway Station: metro: duration 342, cost 32. taxi: duration 79, cost 232.92. walk: duration 635, cost 0.0. \nfrom Dapeng Peninsula to Overseas Chinese Town Creative Culture Park: metro: duration 354, cost 32. taxi: duration 82, cost 243.59. walk: duration 663, cost 0.0. \nfrom Dapeng Peninsula to Shenzhen Century Garden Hotel (Nanshan Science and Technology Park): metro: duration 365, cost 36. taxi: duration 88, cost 259.91. walk: duration 707, cost 0.0. \nfrom Shenzhen North Railway Station to Lotus Hill Park: metro: duration 17, cost 12. taxi: duration 10, cost 28.18. walk: duration 80, cost 0.0. \nfrom Shenzhen North Railway Station to Diandude (Huaqiang South Branch): metro: duration 21, cost 16. taxi: duration 15, cost 40.33. walk: duration 121, cost 0.0. \nfrom Shenzhen North Railway Station to Shenzhen Bay Sports Center: metro: duration 38, cost 16. taxi: duration 18, cost 49.06. walk: duration 144, cost 0.0. \nfrom Shenzhen North Railway Station to Gankeng Ancient Town: metro: duration 41, cost 16. taxi: duration 15, cost 40.64. walk: duration 122, cost 0.0. \nfrom Shenzhen North Railway Station to Xichong: metro: duration 383, cost 28. taxi: duration 83, cost 246.49. walk: duration 671, cost 0.0. \nfrom Shenzhen North Railway Station to Shenzhen University Town: metro: duration 28, cost 8. taxi: duration 7, cost 22.95. walk: duration 62, cost 0.0. \nfrom Shenzhen North Railway Station to Atour Hotel (Shenzhen Luohu Diwang): metro: duration 28, cost 16. taxi: duration 16, cost 44.53. walk: duration 132, cost 0.0. \nfrom Shenzhen North Railway Station to Shenzhen Bay Park: metro: duration 24, cost 16. taxi: duration 16, cost 45.24. walk: duration 134, cost 0.0. \nfrom Shenzhen North Railway Station to Libaoge (Kerry Store): metro: duration 20, cost 12. taxi: duration 13, cost 35.22. walk: duration 104, cost 0.0. \nfrom Shenzhen North Railway Station to Shenzhen Concert Hall: metro: duration 23, cost 12. taxi: duration 10, cost 29.93. walk: duration 86, cost 0.0. \nfrom Shenzhen North Railway Station to Dameisha Seaside Park: metro: duration 67, cost 28. taxi: duration 43, cost 126.62. walk: duration 351, cost 0.0. \nfrom Shenzhen North Railway Station to Shenzhen Futian Bamboo Forest Expo Park Qiuguo Hotel: metro: duration 27, cost 12. taxi: duration 13, cost 35.27. walk: duration 104, cost 0.0. \nfrom Shenzhen North Railway Station to Shenzhen Museum of Contemporary Art and Urban Planning: metro: duration 19, cost 12. taxi: duration 11, cost 31.19. walk: duration 90, cost 0.0. \nfrom Shenzhen North Railway Station to Shenzhen Museum: metro: duration 17, cost 12. taxi: duration 11, cost 32.03. walk: duration 93, cost 0.0. \nfrom Shenzhen North Railway Station to Dafen Oil Painting Village: metro: duration 28, cost 16. taxi: duration 17, cost 47.32. walk: duration 140, cost 0.0. \nfrom Shenzhen North Railway Station to Fanlou (Bao'an South Road Branch): metro: duration 27, cost 16. taxi: duration 15, cost 42.3. walk: duration 126, cost 0.0. \nfrom Shenzhen North Railway Station to Jiangnan Chef (China Resources Mixc Store): metro: duration 27, cost 16. taxi: duration 17, cost 46.15. walk: duration 137, cost 0.0. \nfrom Shenzhen North Railway Station to Yat Bun Sin Tea House (Mixc World Store): metro: duration 26, cost 16. taxi: duration 15, cost 42.54. walk: duration 127, cost 0.0. \nfrom Shenzhen North Railway Station to Shenzhen Art Museum (New Venue): metro: duration 17, cost 8. taxi: duration 3, cost 12.95. walk: duration 28, cost 0.0. \nfrom Shenzhen North Railway Station to Shenzhen Library: metro: duration 21, cost 12. taxi: duration 11, cost 30.55. walk: duration 88, cost 0.0. \nfrom Shenzhen North Railway Station to Shenzhen Bao'an International Airport: metro: duration 49, cost 24. taxi: duration 32, cost 92.59. walk: duration 261, cost 0.0. \nfrom Shenzhen North Railway Station to Dapeng Peninsula: metro: duration 342, cost 32. taxi: duration 79, cost 232.92. walk: duration 635, cost 0.0. \nfrom Shenzhen North Railway Station to Shenzhen North Railway Station:  metro: empty.  taxi: empty.  walk: empty. \nfrom Shenzhen North Railway Station to Overseas Chinese Town Creative Culture Park: metro: duration 19, cost 12. taxi: duration 11, cost 32.39. walk: duration 94, cost 0.0. \nfrom Shenzhen North Railway Station to Shenzhen Century Garden Hotel (Nanshan Science and Technology Park): metro: duration 28, cost 16. taxi: duration 16, cost 42.75. walk: duration 128, cost 0.0. \nfrom Overseas Chinese Town Creative Culture Park to Lotus Hill Park: metro: duration 20, cost 12. taxi: duration 10, cost 28.99. walk: duration 83, cost 0.0. \nfrom Overseas Chinese Town Creative Culture Park to Diandude (Huaqiang South Branch): metro: duration 22, cost 16. taxi: duration 13, cost 36.34. walk: duration 108, cost 0.0. \nfrom Overseas Chinese Town Creative Culture Park to Shenzhen Bay Sports Center: metro: duration 26, cost 12. taxi: duration 7, cost 22.13. walk: duration 59, cost 0.0. \nfrom Overseas Chinese Town Creative Culture Park to Gankeng Ancient Town: metro: duration 57, cost 20. taxi: duration 26, cost 73.19. walk: duration 209, cost 0.0. \nfrom Overseas Chinese Town Creative Culture Park to Xichong: metro: duration 393, cost 28. taxi: duration 86, cost 254.16. walk: duration 691, cost 0.0. \nfrom Overseas Chinese Town Creative Culture Park to Shenzhen University Town: metro: duration 32, cost 12. taxi: duration 8, cost 23.9. walk: duration 65, cost 0.0. \nfrom Overseas Chinese Town Creative Culture Park to Atour Hotel (Shenzhen Luohu Diwang): metro: duration 30, cost 16. taxi: duration 17, cost 46.18. walk: duration 137, cost 0.0. \nfrom Overseas Chinese Town Creative Culture Park to Shenzhen Bay Park: metro: duration 11, cost 8. taxi: duration 5, cost 17.87. walk: duration 45, cost 0.0. \nfrom Overseas Chinese Town Creative Culture Park to Libaoge (Kerry Store): metro: duration 16, cost 12. taxi: duration 8, cost 25.48. walk: duration 71, cost 0.0. \nfrom Overseas Chinese Town Creative Culture Park to Shenzhen Concert Hall: metro: duration 22, cost 12. taxi: duration 9, cost 27.96. walk: duration 79, cost 0.0. \nfrom Overseas Chinese Town Creative Culture Park to Dameisha Seaside Park: metro: duration 76, cost 28. taxi: duration 49, cost 142.58. walk: duration 394, cost 0.0. \nfrom Overseas Chinese Town Creative Culture Park to Shenzhen Futian Bamboo Forest Expo Park Qiuguo Hotel: metro: duration 16, cost 8. taxi: duration 1, cost 11.0. walk: duration 15, cost 0.0. \nfrom Overseas Chinese Town Creative Culture Park to Shenzhen Museum of Contemporary Art and Urban Planning: metro: duration 20, cost 12. taxi: duration 10, cost 29.41. walk: duration 84, cost 0.0. \nfrom Overseas Chinese Town Creative Culture Park to Shenzhen Museum: metro: duration 18, cost 12. taxi: duration 10, cost 29.43. walk: duration 84, cost 0.0. \nfrom Overseas Chinese Town Creative Culture Park to Dafen Oil Painting Village: metro: duration 40, cost 20. taxi: duration 25, cost 69.93. walk: duration 200, cost 0.0. \nfrom Overseas Chinese Town Creative Culture Park to Fanlou (Bao'an South Road Branch): metro: duration 30, cost 16. taxi: duration 16, cost 45.61. walk: duration 135, cost 0.0. \nfrom Overseas Chinese Town Creative Culture Park to Jiangnan Chef (China Resources Mixc Store): metro: duration 29, cost 16. taxi: duration 17, cost 46.27. walk: duration 137, cost 0.0. \nfrom Overseas Chinese Town Creative Culture Park to Yat Bun Sin Tea House (Mixc World Store): metro: duration 15, cost 12. taxi: duration 6, cost 20.43. walk: duration 53, cost 0.0. \nfrom Overseas Chinese Town Creative Culture Park to Shenzhen Art Museum (New Venue): metro: duration 34, cost 12. taxi: duration 15, cost 40.45. walk: duration 121, cost 0.0. \nfrom Overseas Chinese Town Creative Culture Park to Shenzhen Library: metro: duration 20, cost 12. taxi: duration 9, cost 27.92. walk: duration 79, cost 0.0. \nfrom Overseas Chinese Town Creative Culture Park to Shenzhen Bao'an International Airport: metro: duration 50, cost 24. taxi: duration 32, cost 91.39. walk: duration 257, cost 0.0. \nfrom Overseas Chinese Town Creative Culture Park to Dapeng Peninsula: metro: duration 354, cost 32. taxi: duration 82, cost 243.59. walk: duration 663, cost 0.0. \nfrom Overseas Chinese Town Creative Culture Park to Shenzhen North Railway Station: metro: duration 19, cost 12. taxi: duration 11, cost 32.39. walk: duration 94, cost 0.0. \nfrom Overseas Chinese Town Creative Culture Park to Overseas Chinese Town Creative Culture Park:  metro: empty.  taxi: empty.  walk: empty. \nfrom Overseas Chinese Town Creative Culture Park to Shenzhen Century Garden Hotel (Nanshan Science and Technology Park): metro: duration 16, cost 8. taxi: duration 5, cost 17.93. walk: duration 45, cost 0.0. \nfrom Shenzhen Century Garden Hotel (Nanshan Science and Technology Park) to Lotus Hill Park: metro: duration 31, cost 16. taxi: duration 16, cost 42.93. walk: duration 128, cost 0.0. \nfrom Shenzhen Century Garden Hotel (Nanshan Science and Technology Park) to Diandude (Huaqiang South Branch): metro: duration 32, cost 16. taxi: duration 18, cost 51.55. walk: duration 151, cost 0.0. \nfrom Shenzhen Century Garden Hotel (Nanshan Science and Technology Park) to Shenzhen Bay Sports Center: metro: duration 24, cost 8. taxi: duration 2, cost 11.0. walk: duration 16, cost 0.0. \nfrom Shenzhen Century Garden Hotel (Nanshan Science and Technology Park) to Gankeng Ancient Town: metro: duration 66, cost 24. taxi: duration 31, cost 87.83. walk: duration 248, cost 0.0. \nfrom Shenzhen Century Garden Hotel (Nanshan Science and Technology Park) to Xichong: metro: duration 404, cost 32. taxi: duration 91, cost 270.0. walk: duration 734, cost 0.0. \nfrom Shenzhen Century Garden Hotel (Nanshan Science and Technology Park) to Shenzhen University Town: metro: duration 40, cost 12. taxi: duration 9, cost 27.52. walk: duration 78, cost 0.0. \nfrom Shenzhen Century Garden Hotel (Nanshan Science and Technology Park) to Atour Hotel (Shenzhen Luohu Diwang): metro: duration 40, cost 20. taxi: duration 22, cost 62.73. walk: duration 181, cost 0.0. \nfrom Shenzhen Century Garden Hotel (Nanshan Science and Technology Park) to Shenzhen Bay Park: metro: duration 11, cost 8. taxi: duration 1, cost 11.0. walk: duration 13, cost 0.0. \nfrom Shenzhen Century Garden Hotel (Nanshan Science and Technology Park) to Libaoge (Kerry Store): metro: duration 27, cost 16. taxi: duration 14, cost 37.95. walk: duration 114, cost 0.0. \nfrom Shenzhen Century Garden Hotel (Nanshan Science and Technology Park) to Shenzhen Concert Hall: metro: duration 33, cost 16. taxi: duration 15, cost 41.54. walk: duration 124, cost 0.0. \nfrom Shenzhen Century Garden Hotel (Nanshan Science and Technology Park) to Dameisha Seaside Park: metro: duration 87, cost 28. taxi: duration 54, cost 159.52. walk: duration 439, cost 0.0. \nfrom Shenzhen Century Garden Hotel (Nanshan Science and Technology Park) to Shenzhen Futian Bamboo Forest Expo Park Qiuguo Hotel: metro: duration 25, cost 12. taxi: duration 6, cost 19.6. walk: duration 51, cost 0.0. \nfrom Shenzhen Century Garden Hotel (Nanshan Science and Technology Park) to Shenzhen Museum of Contemporary Art and Urban Planning: metro: duration 30, cost 16. taxi: duration 16, cost 43.35. walk: duration 129, cost 0.0. \nfrom Shenzhen Century Garden Hotel (Nanshan Science and Technology Park) to Shenzhen Museum: metro: duration 28, cost 16. taxi: duration 16, cost 43.31. walk: duration 129, cost 0.0. \nfrom Shenzhen Century Garden Hotel (Nanshan Science and Technology Park) to Dafen Oil Painting Village: metro: duration 50, cost 20. taxi: duration 30, cost 86.62. walk: duration 245, cost 0.0. \nfrom Shenzhen Century Garden Hotel (Nanshan Science and Technology Park) to Fanlou (Bao'an South Road Branch): metro: duration 41, cost 20. taxi: duration 22, cost 62.33. walk: duration 180, cost 0.0. \nfrom Shenzhen Century Garden Hotel (Nanshan Science and Technology Park) to Jiangnan Chef (China Resources Mixc Store): metro: duration 39, cost 20. taxi: duration 22, cost 62.65. walk: duration 181, cost 0.0. \nfrom Shenzhen Century Garden Hotel (Nanshan Science and Technology Park) to Yat Bun Sin Tea House (Mixc World Store): metro: duration 12, cost 8. taxi: duration 1, cost 11.0. walk: duration 14, cost 0.0. \nfrom Shenzhen Century Garden Hotel (Nanshan Science and Technology Park) to Shenzhen Art Museum (New Venue): metro: duration 42, cost 16. taxi: duration 19, cost 51.73. walk: duration 152, cost 0.0. \nfrom Shenzhen Century Garden Hotel (Nanshan Science and Technology Park) to Shenzhen Library: metro: duration 31, cost 16. taxi: duration 15, cost 41.44. walk: duration 124, cost 0.0. \nfrom Shenzhen Century Garden Hotel (Nanshan Science and Technology Park) to Shenzhen Bao'an International Airport: metro: duration 50, cost 20. taxi: duration 28, cost 80.71. walk: duration 229, cost 0.0. \nfrom Shenzhen Century Garden Hotel (Nanshan Science and Technology Park) to Dapeng Peninsula: metro: duration 365, cost 36. taxi: duration 88, cost 259.91. walk: duration 707, cost 0.0. \nfrom Shenzhen Century Garden Hotel (Nanshan Science and Technology Park) to Shenzhen North Railway Station: metro: duration 28, cost 16. taxi: duration 16, cost 42.75. walk: duration 128, cost 0.0. \nfrom Shenzhen Century Garden Hotel (Nanshan Science and Technology Park) to Overseas Chinese Town Creative Culture Park: metro: duration 16, cost 8. taxi: duration 5, cost 17.93. walk: duration 45, cost 0.0. \nfrom Shenzhen Century Garden Hotel (Nanshan Science and Technology Park) to Shenzhen Century Garden Hotel (Nanshan Science and Technology Park):  metro: empty.  taxi: empty.  walk: empty. \n"
+    },
+    "initial_verification": {
+      "commonsense_errors": [
+        "The attraction, Shenzhen Art Museum (New Venue) in day 3, is closed when you visiting. Its open time is [10:00 -- 18:00]",
+        "Incorrect room_type infomation of accommodation activity, Shenzhen Century Garden Hotel (Nanshan Science and Technology Park) in day 1. The room type should be an integer, equaling to the num_bed information of the selected accommodation.",
+        "Incorrect cost information of accommodation. [cost = price * rooms]",
+        "Incorrect room_type infomation of accommodation activity, Shenzhen Century Garden Hotel (Nanshan Science and Technology Park) in day 2. The room type should be an integer, equaling to the num_bed information of the selected accommodation.",
+        "Incorrect cost information of accommodation. [cost = price * rooms]"
+      ],
+      "personal_constraints": [
+        true,
+        true,
+        false,
+        true,
+        true,
+        true
+      ],
+      "category_normalization": [
+        {
+          "constraint_index": 1,
+          "category_domain": "activity",
+          "expression": "activity_type(activity)",
+          "raw_label": "airplane",
+          "normalized_label": "airplane"
+        },
+        {
+          "constraint_index": 1,
+          "category_domain": "activity",
+          "expression": "['train', 'airplane']",
+          "raw_label": "train",
+          "normalized_label": "train"
+        },
+        {
+          "constraint_index": 1,
+          "category_domain": "activity",
+          "expression": "['train', 'airplane']",
+          "raw_label": "airplane",
+          "normalized_label": "airplane"
+        },
+        {
+          "constraint_index": 1,
+          "category_domain": "activity",
+          "expression": "activity_type(activity)",
+          "raw_label": "attraction",
+          "normalized_label": "attraction"
+        },
+        {
+          "constraint_index": 1,
+          "category_domain": "activity",
+          "expression": "['train', 'airplane']",
+          "raw_label": "train",
+          "normalized_label": "train"
+        },
+        {
+          "constraint_index": 1,
+          "category_domain": "activity",
+          "expression": "['train', 'airplane']",
+          "raw_label": "airplane",
+          "normalized_label": "airplane"
+        },
+        {
+          "constraint_index": 1,
+          "category_domain": "activity",
+          "expression": "activity_type(activity)",
+          "raw_label": "dinner",
+          "normalized_label": "dinner"
+        },
+        {
+          "constraint_index": 1,
+          "category_domain": "activity",
+          "expression": "['train', 'airplane']",
+          "raw_label": "train",
+          "normalized_label": "train"
+        },
+        {
+          "constraint_index": 1,
+          "category_domain": "activity",
+          "expression": "['train', 'airplane']",
+          "raw_label": "airplane",
+          "normalized_label": "airplane"
+        },
+        {
+          "constraint_index": 1,
+          "category_domain": "activity",
+          "expression": "activity_type(activity)",
+          "raw_label": "accommodation",
+          "normalized_label": "accommodation"
+        },
+        {
+          "constraint_index": 1,
+          "category_domain": "activity",
+          "expression": "['train', 'airplane']",
+          "raw_label": "train",
+          "normalized_label": "train"
+        },
+        {
+          "constraint_index": 1,
+          "category_domain": "activity",
+          "expression": "['train', 'airplane']",
+          "raw_label": "airplane",
+          "normalized_label": "airplane"
+        },
+        {
+          "constraint_index": 1,
+          "category_domain": "activity",
+          "expression": "activity_type(activity)",
+          "raw_label": "attraction",
+          "normalized_label": "attraction"
+        },
+        {
+          "constraint_index": 1,
+          "category_domain": "activity",
+          "expression": "['train', 'airplane']",
+          "raw_label": "train",
+          "normalized_label": "train"
+        },
+        {
+          "constraint_index": 1,
+          "category_domain": "activity",
+          "expression": "['train', 'airplane']",
+          "raw_label": "airplane",
+          "normalized_label": "airplane"
+        },
+        {
+          "constraint_index": 1,
+          "category_domain": "activity",
+          "expression": "activity_type(activity)",
+          "raw_label": "attraction",
+          "normalized_label": "attraction"
+        },
+        {
+          "constraint_index": 1,
+          "category_domain": "activity",
+          "expression": "['train', 'airplane']",
+          "raw_label": "train",
+          "normalized_label": "train"
+        },
+        {
+          "constraint_index": 1,
+          "category_domain": "activity",
+          "expression": "['train', 'airplane']",
+          "raw_label": "airplane",
+          "normalized_label": "airplane"
+        },
+        {
+          "constraint_index": 1,
+          "category_domain": "activity",
+          "expression": "activity_type(activity)",
+          "raw_label": "lunch",
+          "normalized_label": "lunch"
+        },
+        {
+          "constraint_index": 1,
+          "category_domain": "activity",
+          "expression": "['train', 'airplane']",
+          "raw_label": "train",
+          "normalized_label": "train"
+        },
+        {
+          "constraint_index": 1,
+          "category_domain": "activity",
+          "expression": "['train', 'airplane']",
+          "raw_label": "airplane",
+          "normalized_label": "airplane"
+        },
+        {
+          "constraint_index": 1,
+          "category_domain": "activity",
+          "expression": "activity_type(activity)",
+          "raw_label": "attraction",
+          "normalized_label": "attraction"
+        },
+        {
+          "constraint_index": 1,
+          "category_domain": "activity",
+          "expression": "['train', 'airplane']",
+          "raw_label": "train",
+          "normalized_label": "train"
+        },
+        {
+          "constraint_index": 1,
+          "category_domain": "activity",
+          "expression": "['train', 'airplane']",
+          "raw_label": "airplane",
+          "normalized_label": "airplane"
+        },
+        {
+          "constraint_index": 1,
+          "category_domain": "activity",
+          "expression": "activity_type(activity)",
+          "raw_label": "accommodation",
+          "normalized_label": "accommodation"
+        },
+        {
+          "constraint_index": 1,
+          "category_domain": "activity",
+          "expression": "['train', 'airplane']",
+          "raw_label": "train",
+          "normalized_label": "train"
+        },
+        {
+          "constraint_index": 1,
+          "category_domain": "activity",
+          "expression": "['train', 'airplane']",
+          "raw_label": "airplane",
+          "normalized_label": "airplane"
+        },
+        {
+          "constraint_index": 1,
+          "category_domain": "activity",
+          "expression": "activity_type(activity)",
+          "raw_label": "attraction",
+          "normalized_label": "attraction"
+        },
+        {
+          "constraint_index": 1,
+          "category_domain": "activity",
+          "expression": "['train', 'airplane']",
+          "raw_label": "train",
+          "normalized_label": "train"
+        },
+        {
+          "constraint_index": 1,
+          "category_domain": "activity",
+          "expression": "['train', 'airplane']",
+          "raw_label": "airplane",
+          "normalized_label": "airplane"
+        },
+        {
+          "constraint_index": 1,
+          "category_domain": "activity",
+          "expression": "activity_type(activity)",
+          "raw_label": "lunch",
+          "normalized_label": "lunch"
+        },
+        {
+          "constraint_index": 1,
+          "category_domain": "activity",
+          "expression": "['train', 'airplane']",
+          "raw_label": "train",
+          "normalized_label": "train"
+        },
+        {
+          "constraint_index": 1,
+          "category_domain": "activity",
+          "expression": "['train', 'airplane']",
+          "raw_label": "airplane",
+          "normalized_label": "airplane"
+        },
+        {
+          "constraint_index": 1,
+          "category_domain": "activity",
+          "expression": "activity_type(activity)",
+          "raw_label": "airplane",
+          "normalized_label": "airplane"
+        },
+        {
+          "constraint_index": 1,
+          "category_domain": "activity",
+          "expression": "['train', 'airplane']",
+          "raw_label": "train",
+          "normalized_label": "train"
+        },
+        {
+          "constraint_index": 1,
+          "category_domain": "activity",
+          "expression": "['train', 'airplane']",
+          "raw_label": "airplane",
+          "normalized_label": "airplane"
+        },
+        {
+          "constraint_index": 1,
+          "category_domain": "transport",
+          "expression": "{'airplane'}",
+          "raw_label": "airplane",
+          "normalized_label": "airplane"
+        },
+        {
+          "constraint_index": 1,
+          "category_domain": "transport",
+          "expression": "intercity_transport_set",
+          "raw_label": "airplane",
+          "normalized_label": "airplane"
+        },
+        {
+          "constraint_index": 2,
+          "category_domain": "activity",
+          "expression": "activity_type(activity)",
+          "raw_label": "airplane",
+          "normalized_label": "airplane"
+        },
+        {
+          "constraint_index": 2,
+          "category_domain": "activity",
+          "expression": "'attraction'",
+          "raw_label": "attraction",
+          "normalized_label": "attraction"
+        },
+        {
+          "constraint_index": 2,
+          "category_domain": "activity",
+          "expression": "activity_type(activity)",
+          "raw_label": "attraction",
+          "normalized_label": "attraction"
+        },
+        {
+          "constraint_index": 2,
+          "category_domain": "activity",
+          "expression": "'attraction'",
+          "raw_label": "attraction",
+          "normalized_label": "attraction"
+        },
+        {
+          "constraint_index": 2,
+          "category_domain": "activity",
+          "expression": "activity_type(activity)",
+          "raw_label": "dinner",
+          "normalized_label": "dinner"
+        },
+        {
+          "constraint_index": 2,
+          "category_domain": "activity",
+          "expression": "'attraction'",
+          "raw_label": "attraction",
+          "normalized_label": "attraction"
+        },
+        {
+          "constraint_index": 2,
+          "category_domain": "activity",
+          "expression": "activity_type(activity)",
+          "raw_label": "accommodation",
+          "normalized_label": "accommodation"
+        },
+        {
+          "constraint_index": 2,
+          "category_domain": "activity",
+          "expression": "'attraction'",
+          "raw_label": "attraction",
+          "normalized_label": "attraction"
+        },
+        {
+          "constraint_index": 2,
+          "category_domain": "activity",
+          "expression": "activity_type(activity)",
+          "raw_label": "attraction",
+          "normalized_label": "attraction"
+        },
+        {
+          "constraint_index": 2,
+          "category_domain": "activity",
+          "expression": "'attraction'",
+          "raw_label": "attraction",
+          "normalized_label": "attraction"
+        },
+        {
+          "constraint_index": 2,
+          "category_domain": "activity",
+          "expression": "activity_type(activity)",
+          "raw_label": "attraction",
+          "normalized_label": "attraction"
+        },
+        {
+          "constraint_index": 2,
+          "category_domain": "activity",
+          "expression": "'attraction'",
+          "raw_label": "attraction",
+          "normalized_label": "attraction"
+        },
+        {
+          "constraint_index": 2,
+          "category_domain": "activity",
+          "expression": "activity_type(activity)",
+          "raw_label": "lunch",
+          "normalized_label": "lunch"
+        },
+        {
+          "constraint_index": 2,
+          "category_domain": "activity",
+          "expression": "'attraction'",
+          "raw_label": "attraction",
+          "normalized_label": "attraction"
+        },
+        {
+          "constraint_index": 2,
+          "category_domain": "activity",
+          "expression": "activity_type(activity)",
+          "raw_label": "attraction",
+          "normalized_label": "attraction"
+        },
+        {
+          "constraint_index": 2,
+          "category_domain": "activity",
+          "expression": "'attraction'",
+          "raw_label": "attraction",
+          "normalized_label": "attraction"
+        },
+        {
+          "constraint_index": 2,
+          "category_domain": "activity",
+          "expression": "activity_type(activity)",
+          "raw_label": "accommodation",
+          "normalized_label": "accommodation"
+        },
+        {
+          "constraint_index": 2,
+          "category_domain": "activity",
+          "expression": "'attraction'",
+          "raw_label": "attraction",
+          "normalized_label": "attraction"
+        },
+        {
+          "constraint_index": 2,
+          "category_domain": "activity",
+          "expression": "activity_type(activity)",
+          "raw_label": "attraction",
+          "normalized_label": "attraction"
+        },
+        {
+          "constraint_index": 2,
+          "category_domain": "activity",
+          "expression": "'attraction'",
+          "raw_label": "attraction",
+          "normalized_label": "attraction"
+        },
+        {
+          "constraint_index": 2,
+          "category_domain": "activity",
+          "expression": "activity_type(activity)",
+          "raw_label": "lunch",
+          "normalized_label": "lunch"
+        },
+        {
+          "constraint_index": 2,
+          "category_domain": "activity",
+          "expression": "'attraction'",
+          "raw_label": "attraction",
+          "normalized_label": "attraction"
+        },
+        {
+          "constraint_index": 2,
+          "category_domain": "activity",
+          "expression": "activity_type(activity)",
+          "raw_label": "airplane",
+          "normalized_label": "airplane"
+        },
+        {
+          "constraint_index": 2,
+          "category_domain": "activity",
+          "expression": "'attraction'",
+          "raw_label": "attraction",
+          "normalized_label": "attraction"
+        },
+        {
+          "constraint_index": 2,
+          "category_domain": "attraction",
+          "expression": "{'大学校园'}",
+          "raw_label": "大学校园",
+          "normalized_label": "University campus"
+        },
+        {
+          "constraint_index": 2,
+          "category_domain": "attraction",
+          "expression": "attraction_type_set",
+          "raw_label": "Museum/Memorial Hall",
+          "normalized_label": "Museum/Memorial Hall"
+        },
+        {
+          "constraint_index": 2,
+          "category_domain": "attraction",
+          "expression": "attraction_type_set",
+          "raw_label": "University campus",
+          "normalized_label": "University campus"
+        },
+        {
+          "constraint_index": 2,
+          "category_domain": "attraction",
+          "expression": "attraction_type_set",
+          "raw_label": "Art museum",
+          "normalized_label": "Art museum"
+        },
+        {
+          "constraint_index": 2,
+          "category_domain": "attraction",
+          "expression": "attraction_type_set",
+          "raw_label": "park",
+          "normalized_label": "park"
+        },
+        {
+          "constraint_index": 6,
+          "category_domain": "transport",
+          "expression": "innercity_transport_type(activity_transports(activity))",
+          "raw_label": "empty",
+          "normalized_label": "empty"
+        },
+        {
+          "constraint_index": 6,
+          "category_domain": "transport",
+          "expression": "'taxi'",
+          "raw_label": "taxi",
+          "normalized_label": "taxi"
+        },
+        {
+          "constraint_index": 6,
+          "category_domain": "transport",
+          "expression": "innercity_transport_type(activity_transports(activity))",
+          "raw_label": "metro",
+          "normalized_label": "metro"
+        },
+        {
+          "constraint_index": 6,
+          "category_domain": "transport",
+          "expression": "'taxi'",
+          "raw_label": "taxi",
+          "normalized_label": "taxi"
+        },
+        {
+          "constraint_index": 6,
+          "category_domain": "transport",
+          "expression": "innercity_transport_type(activity_transports(activity))",
+          "raw_label": "metro",
+          "normalized_label": "metro"
+        },
+        {
+          "constraint_index": 6,
+          "category_domain": "transport",
+          "expression": "'taxi'",
+          "raw_label": "taxi",
+          "normalized_label": "taxi"
+        },
+        {
+          "constraint_index": 6,
+          "category_domain": "transport",
+          "expression": "innercity_transport_type(activity_transports(activity))",
+          "raw_label": "metro",
+          "normalized_label": "metro"
+        },
+        {
+          "constraint_index": 6,
+          "category_domain": "transport",
+          "expression": "'taxi'",
+          "raw_label": "taxi",
+          "normalized_label": "taxi"
+        },
+        {
+          "constraint_index": 6,
+          "category_domain": "transport",
+          "expression": "innercity_transport_type(activity_transports(activity))",
+          "raw_label": "metro",
+          "normalized_label": "metro"
+        },
+        {
+          "constraint_index": 6,
+          "category_domain": "transport",
+          "expression": "'taxi'",
+          "raw_label": "taxi",
+          "normalized_label": "taxi"
+        },
+        {
+          "constraint_index": 6,
+          "category_domain": "transport",
+          "expression": "innercity_transport_type(activity_transports(activity))",
+          "raw_label": "metro",
+          "normalized_label": "metro"
+        },
+        {
+          "constraint_index": 6,
+          "category_domain": "transport",
+          "expression": "'taxi'",
+          "raw_label": "taxi",
+          "normalized_label": "taxi"
+        },
+        {
+          "constraint_index": 6,
+          "category_domain": "transport",
+          "expression": "innercity_transport_type(activity_transports(activity))",
+          "raw_label": "metro",
+          "normalized_label": "metro"
+        },
+        {
+          "constraint_index": 6,
+          "category_domain": "transport",
+          "expression": "'taxi'",
+          "raw_label": "taxi",
+          "normalized_label": "taxi"
+        },
+        {
+          "constraint_index": 6,
+          "category_domain": "transport",
+          "expression": "innercity_transport_type(activity_transports(activity))",
+          "raw_label": "metro",
+          "normalized_label": "metro"
+        },
+        {
+          "constraint_index": 6,
+          "category_domain": "transport",
+          "expression": "'taxi'",
+          "raw_label": "taxi",
+          "normalized_label": "taxi"
+        },
+        {
+          "constraint_index": 6,
+          "category_domain": "transport",
+          "expression": "innercity_transport_type(activity_transports(activity))",
+          "raw_label": "metro",
+          "normalized_label": "metro"
+        },
+        {
+          "constraint_index": 6,
+          "category_domain": "transport",
+          "expression": "'taxi'",
+          "raw_label": "taxi",
+          "normalized_label": "taxi"
+        },
+        {
+          "constraint_index": 6,
+          "category_domain": "transport",
+          "expression": "innercity_transport_type(activity_transports(activity))",
+          "raw_label": "metro",
+          "normalized_label": "metro"
+        },
+        {
+          "constraint_index": 6,
+          "category_domain": "transport",
+          "expression": "'taxi'",
+          "raw_label": "taxi",
+          "normalized_label": "taxi"
+        },
+        {
+          "constraint_index": 6,
+          "category_domain": "transport",
+          "expression": "innercity_transport_type(activity_transports(activity))",
+          "raw_label": "metro",
+          "normalized_label": "metro"
+        },
+        {
+          "constraint_index": 6,
+          "category_domain": "transport",
+          "expression": "'taxi'",
+          "raw_label": "taxi",
+          "normalized_label": "taxi"
+        },
+        {
+          "constraint_index": 6,
+          "category_domain": "transport",
+          "expression": "innercity_transport_type(activity_transports(activity))",
+          "raw_label": "metro",
+          "normalized_label": "metro"
+        },
+        {
+          "constraint_index": 6,
+          "category_domain": "transport",
+          "expression": "'taxi'",
+          "raw_label": "taxi",
+          "normalized_label": "taxi"
+        }
+      ],
+      "personal_errors": [
+        "Personal constraint 3 failed: total_cost=0 \nfor activity in allactivities(plan):\n    total_cost+=activity_cost(activity)\n    total_cost += innercity_transport_cost(activity_transports(activity))\nresult=(total_cost<=10000)"
+      ],
+      "evaluation_errors": [],
+      "translation_errors": [],
+      "error_info": [
+        "The attraction, Shenzhen Art Museum (New Venue) in day 3, is closed when you visiting. Its open time is [10:00 -- 18:00]",
+        "Incorrect room_type infomation of accommodation activity, Shenzhen Century Garden Hotel (Nanshan Science and Technology Park) in day 1. The room type should be an integer, equaling to the num_bed information of the selected accommodation.",
+        "Incorrect cost information of accommodation. [cost = price * rooms]",
+        "Incorrect room_type infomation of accommodation activity, Shenzhen Century Garden Hotel (Nanshan Science and Technology Park) in day 2. The room type should be an integer, equaling to the num_bed information of the selected accommodation.",
+        "Incorrect cost information of accommodation. [cost = price * rooms]",
+        "Personal constraint 3 failed: total_cost=0 \nfor activity in allactivities(plan):\n    total_cost+=activity_cost(activity)\n    total_cost += innercity_transport_cost(activity_transports(activity))\nresult=(total_cost<=10000)"
+      ],
+      "passed": false,
+      "translated_plan": {
+        "people_number": 4,
+        "start_city": "Beijing",
+        "target_city": "Shenzhen",
+        "itinerary": [
+          {
+            "day": 1,
+            "activities": [
+              {
+                "start_time": "12:07",
+                "end_time": "14:32",
+                "start": "Beijing Capital International Airport",
+                "end": "Shenzhen Bao'an International Airport",
+                "price": 949.32,
+                "cost": 3797.28,
+                "FlightID": "FL096",
+                "type": "airplane",
+                "tickets": 4,
+                "transports": []
+              },
+              {
+                "position": "Shenzhen University Town",
+                "type": "attraction",
+                "transports": [
+                  {
+                    "start": "Shenzhen Bao'an International Airport",
+                    "end": "Airport East-Metro Station",
+                    "mode": "walk",
+                    "start_time": "14:32",
+                    "end_time": "14:37",
+                    "cost": 0,
+                    "distance": 0.45,
+                    "price": 0
+                  },
+                  {
+                    "start": "Airport East-Metro Station",
+                    "end": "Tanglang-Metro Station",
+                    "mode": "metro",
+                    "start_time": "14:37",
+                    "end_time": "15:15",
+                    "cost": 20,
+                    "distance": 19.26,
+                    "price": 5,
+                    "tickets": 4
+                  },
+                  {
+                    "start": "Tanglang-Metro Station",
+                    "end": "Shenzhen University Town",
+                    "mode": "walk",
+                    "start_time": "15:15",
+                    "end_time": "15:35",
+                    "cost": 0,
+                    "distance": 1.74,
+                    "price": 0
+                  }
+                ],
+                "price": 0.0,
+                "cost": 0.0,
+                "tickets": 4,
+                "start_time": "15:40",
+                "end_time": "17:40"
+              },
+              {
+                "position": "Jiangnan Chef (China Resources Mixc Store)",
+                "type": "dinner",
+                "transports": [
+                  {
+                    "start": "Shenzhen University Town",
+                    "end": "Tanglang-Metro Station",
+                    "mode": "walk",
+                    "start_time": "17:40",
+                    "end_time": "18:00",
+                    "cost": 0,
+                    "distance": 1.74,
+                    "price": 0
+                  },
+                  {
+                    "start": "Tanglang-Metro Station",
+                    "end": "Grand Theater-Metro Station",
+                    "mode": "metro",
+                    "start_time": "18:00",
+                    "end_time": "18:24",
+                    "cost": 16,
+                    "distance": 12.34,
+                    "price": 4,
+                    "tickets": 4
+                  },
+                  {
+                    "start": "Grand Theater-Metro Station",
+                    "end": "Jiangnan Chef (China Resources Mixc Store)",
+                    "mode": "walk",
+                    "start_time": "18:24",
+                    "end_time": "18:28",
+                    "cost": 0,
+                    "distance": 0.4,
+                    "price": 0
+                  }
+                ],
+                "price": 165,
+                "cost": 660,
+                "start_time": "18:30",
+                "end_time": "19:30"
+              },
+              {
+                "position": "Shenzhen Century Garden Hotel (Nanshan Science and Technology Park)",
+                "type": "accommodation",
+                "transports": [
+                  {
+                    "start": "Jiangnan Chef (China Resources Mixc Store)",
+                    "end": "Grand Theater-Metro Station",
+                    "mode": "walk",
+                    "start_time": "19:30",
+                    "end_time": "19:34",
+                    "cost": 0,
+                    "distance": 0.4,
+                    "price": 0
+                  },
+                  {
+                    "start": "Grand Theater-Metro Station",
+                    "end": "Baishizhou-Metro Station",
+                    "mode": "metro",
+                    "start_time": "19:34",
+                    "end_time": "20:02",
+                    "cost": 20,
+                    "distance": 14.48,
+                    "price": 5,
+                    "tickets": 4
+                  },
+                  {
+                    "start": "Baishizhou-Metro Station",
+                    "end": "Shenzhen Century Garden Hotel (Nanshan Science and Technology Park)",
+                    "mode": "walk",
+                    "start_time": "20:02",
+                    "end_time": "20:09",
+                    "cost": 0,
+                    "distance": 0.65,
+                    "price": 0
+                  }
+                ],
+                "room_type": 2,
+                "price": 325,
+                "cost": 1300,
+                "start_time": "20:15",
+                "end_time": "24:00",
+                "rooms": 2
+              }
+            ]
+          },
+          {
+            "day": 2,
+            "activities": [
+              {
+                "position": "Shenzhen Bay Park",
+                "type": "attraction",
+                "transports": [
+                  {
+                    "start": "Shenzhen Century Garden Hotel (Nanshan Science and Technology Park)",
+                    "end": "Baishizhou-Metro Station",
+                    "mode": "walk",
+                    "start_time": "08:00",
+                    "end_time": "08:07",
+                    "cost": 0,
+                    "distance": 0.65,
+                    "price": 0
+                  },
+                  {
+                    "start": "Baishizhou-Metro Station",
+                    "end": "Hongshu Bay-Metro Station",
+                    "mode": "metro",
+                    "start_time": "08:07",
+                    "end_time": "08:10",
+                    "cost": 8,
+                    "distance": 1.61,
+                    "price": 2,
+                    "tickets": 4
+                  },
+                  {
+                    "start": "Hongshu Bay-Metro Station",
+                    "end": "Shenzhen Bay Park",
+                    "mode": "walk",
+                    "start_time": "08:10",
+                    "end_time": "08:11",
+                    "cost": 0,
+                    "distance": 0.11,
+                    "price": 0
+                  }
+                ],
+                "price": 0.0,
+                "cost": 0.0,
+                "tickets": 4,
+                "start_time": "08:20",
+                "end_time": "10:20"
+              },
+              {
+                "position": "Shenzhen Museum of Contemporary Art and Urban Planning",
+                "type": "attraction",
+                "transports": [
+                  {
+                    "start": "Shenzhen Bay Park",
+                    "end": "Hongshu Bay-Metro Station",
+                    "mode": "walk",
+                    "start_time": "10:20",
+                    "end_time": "10:21",
+                    "cost": 0,
+                    "distance": 0.11,
+                    "price": 0
+                  },
+                  {
+                    "start": "Hongshu Bay-Metro Station",
+                    "end": "Lianhua Village-Metro Station",
+                    "mode": "metro",
+                    "start_time": "10:21",
+                    "end_time": "10:42",
+                    "cost": 16,
+                    "distance": 10.55,
+                    "price": 4,
+                    "tickets": 4
+                  },
+                  {
+                    "start": "Lianhua Village-Metro Station",
+                    "end": "Shenzhen Museum of Contemporary Art and Urban Planning",
+                    "mode": "walk",
+                    "start_time": "10:42",
+                    "end_time": "10:45",
+                    "cost": 0,
+                    "distance": 0.33,
+                    "price": 0
+                  }
+                ],
+                "price": 0.0,
+                "cost": 0.0,
+                "tickets": 4,
+                "start_time": "10:50",
+                "end_time": "12:50"
+              },
+              {
+                "position": "Libaoge (Kerry Store)",
+                "type": "lunch",
+                "transports": [
+                  {
+                    "start": "Shenzhen Museum of Contemporary Art and Urban Planning",
+                    "end": "Lianhua Village-Metro Station",
+                    "mode": "walk",
+                    "start_time": "12:50",
+                    "end_time": "12:53",
+                    "cost": 0,
+                    "distance": 0.33,
+                    "price": 0
+                  },
+                  {
+                    "start": "Lianhua Village-Metro Station",
+                    "end": "Shopping Park-Metro Station",
+                    "mode": "metro",
+                    "start_time": "12:53",
+                    "end_time": "12:57",
+                    "cost": 8,
+                    "distance": 2.06,
+                    "price": 2,
+                    "tickets": 4
+                  },
+                  {
+                    "start": "Shopping Park-Metro Station",
+                    "end": "Libaoge (Kerry Store)",
+                    "mode": "walk",
+                    "start_time": "12:57",
+                    "end_time": "12:59",
+                    "cost": 0,
+                    "distance": 0.25,
+                    "price": 0
+                  }
+                ],
+                "price": 156,
+                "cost": 624,
+                "start_time": "13:00",
+                "end_time": "14:00"
+              },
+              {
+                "position": "Dameisha Seaside Park",
+                "type": "attraction",
+                "transports": [
+                  {
+                    "start": "Libaoge (Kerry Store)",
+                    "end": "Shopping Park-Metro Station",
+                    "mode": "walk",
+                    "start_time": "14:00",
+                    "end_time": "14:02",
+                    "cost": 0,
+                    "distance": 0.25,
+                    "price": 0
+                  },
+                  {
+                    "start": "Shopping Park-Metro Station",
+                    "end": "Dameisha-Metro Station",
+                    "mode": "metro",
+                    "start_time": "14:02",
+                    "end_time": "14:55",
+                    "cost": 24,
+                    "distance": 26.86,
+                    "price": 6,
+                    "tickets": 4
+                  },
+                  {
+                    "start": "Dameisha-Metro Station",
+                    "end": "Dameisha Seaside Park",
+                    "mode": "walk",
+                    "start_time": "14:55",
+                    "end_time": "15:04",
+                    "cost": 0,
+                    "distance": 0.77,
+                    "price": 0
+                  }
+                ],
+                "price": 0.0,
+                "cost": 0.0,
+                "tickets": 4,
+                "start_time": "15:30",
+                "end_time": "17:30"
+              },
+              {
+                "position": "Shenzhen Century Garden Hotel (Nanshan Science and Technology Park)",
+                "type": "accommodation",
+                "transports": [
+                  {
+                    "start": "Dameisha Seaside Park",
+                    "end": "Dameisha-Metro Station",
+                    "mode": "walk",
+                    "start_time": "17:30",
+                    "end_time": "17:39",
+                    "cost": 0,
+                    "distance": 0.77,
+                    "price": 0
+                  },
+                  {
+                    "start": "Dameisha-Metro Station",
+                    "end": "Baishizhou-Metro Station",
+                    "mode": "metro",
+                    "start_time": "17:39",
+                    "end_time": "18:50",
+                    "cost": 28,
+                    "distance": 35.56,
+                    "price": 7,
+                    "tickets": 4
+                  },
+                  {
+                    "start": "Baishizhou-Metro Station",
+                    "end": "Shenzhen Century Garden Hotel (Nanshan Science and Technology Park)",
+                    "mode": "walk",
+                    "start_time": "18:50",
+                    "end_time": "18:57",
+                    "cost": 0,
+                    "distance": 0.65,
+                    "price": 0
+                  }
+                ],
+                "room_type": 2,
+                "price": 325,
+                "cost": 1300,
+                "start_time": "19:00",
+                "end_time": "24:00",
+                "rooms": 2
+              }
+            ]
+          },
+          {
+            "day": 3,
+            "activities": [
+              {
+                "position": "Shenzhen Art Museum (New Venue)",
+                "type": "attraction",
+                "transports": [
+                  {
+                    "start": "Shenzhen Century Garden Hotel (Nanshan Science and Technology Park)",
+                    "end": "Baishizhou-Metro Station",
+                    "mode": "walk",
+                    "start_time": "08:00",
+                    "end_time": "08:07",
+                    "cost": 0,
+                    "distance": 0.65,
+                    "price": 0
+                  },
+                  {
+                    "start": "Baishizhou-Metro Station",
+                    "end": "Hongshan-Metro Station",
+                    "mode": "metro",
+                    "start_time": "08:07",
+                    "end_time": "08:28",
+                    "cost": 16,
+                    "distance": 10.8,
+                    "price": 4,
+                    "tickets": 4
+                  },
+                  {
+                    "start": "Hongshan-Metro Station",
+                    "end": "Shenzhen Art Museum (New Venue)",
+                    "mode": "walk",
+                    "start_time": "08:28",
+                    "end_time": "08:42",
+                    "cost": 0,
+                    "distance": 1.23,
+                    "price": 0
+                  }
+                ],
+                "price": 0.0,
+                "cost": 0.0,
+                "tickets": 4,
+                "start_time": "08:50",
+                "end_time": "10:50"
+              },
+              {
+                "position": "Diandude (Huaqiang South Branch)",
+                "type": "lunch",
+                "transports": [
+                  {
+                    "start": "Shenzhen Art Museum (New Venue)",
+                    "end": "Hongshan-Metro Station",
+                    "mode": "walk",
+                    "start_time": "10:50",
+                    "end_time": "11:04",
+                    "cost": 0,
+                    "distance": 1.23,
+                    "price": 0
+                  },
+                  {
+                    "start": "Hongshan-Metro Station",
+                    "end": "Huaqiang South-Metro Station",
+                    "mode": "metro",
+                    "start_time": "11:04",
+                    "end_time": "11:26",
+                    "cost": 16,
+                    "distance": 11.42,
+                    "price": 4,
+                    "tickets": 4
+                  },
+                  {
+                    "start": "Huaqiang South-Metro Station",
+                    "end": "Diandude (Huaqiang South Branch)",
+                    "mode": "walk",
+                    "start_time": "11:26",
+                    "end_time": "11:27",
+                    "cost": 0,
+                    "distance": 0.16,
+                    "price": 0
+                  }
+                ],
+                "price": 89,
+                "cost": 356,
+                "start_time": "11:30",
+                "end_time": "12:30"
+              },
+              {
+                "position": "Shenzhen Bao'an International Airport",
+                "type": "airplane",
+                "transports": [
+                  {
+                    "start": "Diandude (Huaqiang South Branch)",
+                    "end": "Huaqiang South-Metro Station",
+                    "mode": "walk",
+                    "start_time": "12:30",
+                    "end_time": "12:31",
+                    "cost": 0,
+                    "distance": 0.16,
+                    "price": 0
+                  },
+                  {
+                    "start": "Huaqiang South-Metro Station",
+                    "end": "Airport East-Metro Station",
+                    "mode": "metro",
+                    "start_time": "12:31",
+                    "end_time": "13:30",
+                    "cost": 28,
+                    "distance": 29.76,
+                    "price": 7,
+                    "tickets": 4
+                  },
+                  {
+                    "start": "Airport East-Metro Station",
+                    "end": "Shenzhen Bao'an International Airport",
+                    "mode": "walk",
+                    "start_time": "13:30",
+                    "end_time": "13:35",
+                    "cost": 0,
+                    "distance": 0.45,
+                    "price": 0
+                  }
+                ],
+                "start_time": "16:34",
+                "end_time": "18:59",
+                "start": "Shenzhen Bao'an International Airport",
+                "end": "Beijing Capital International Airport",
+                "price": 927.7,
+                "cost": 3710.8,
+                "FlightID": "FL175",
+                "tickets": 4
+              }
+            ]
+          }
+        ]
+      },
+      "verifier_errors": [],
+      "schema_errors": [],
+      "translation_failures": []
+    },
+    "environment_context": {
+      "lang": "en"
+    },
+    "generation_metadata": {
+      "raw_response": "[{\"day\": 1,```json\n{\n    \"day\": 1,\n    \"activities\": [\n        {\n            \"start_time\": \"12:07\",\n            \"end_time\": \"14:32\",\n            \"start\": \"Beijing Capital International Airport\",\n            \"end\": \"Shenzhen Bao'an International Airport\",\n            \"price\": 949.32,\n            \"cost\": 3797.28,\n            \"FlightID\": \"FL096\",\n            \"type\": \"airplane\",\n            \"tickets\": 4,\n            \"transports\": \"empty\"\n        },\n        {\n            \"position\": \"Shenzhen University Town\",\n            \"type\": \"attraction\",\n            \"transports\": {\"from\": \"Shenzhen Bao'an International Airport\", \"to\": \"Shenzhen University Town\", \"mode\": \"metro\", \"start_time\": \"14:32\", \"end_time\": \"15:32\", \"cost\": 20},\n            \"price\": 0.0,\n            \"cost\": 0.0,\n            \"tickets\": 4,\n            \"start_time\": \"15:40\",\n            \"end_time\": \"17:40\"\n        },\n        {\n            \"position\": \"Jiangnan Chef (China Resources Mixc Store)\",\n            \"type\": \"dinner\",\n            \"transports\": {\"from\": \"Shenzhen University Town\", \"to\": \"Jiangnan Chef (China Resources Mixc Store)\", \"mode\": \"metro\", \"start_time\": \"17:40\", \"end_time\": \"18:28\", \"cost\": 16},\n            \"price\": 165,\n            \"cost\": 660,\n            \"start_time\": \"18:30\",\n            \"end_time\": \"19:30\"\n        },\n        {\n            \"position\": \"Shenzhen Century Garden Hotel (Nanshan Science and Technology Park)\",\n            \"type\": \"accommodation\",\n            \"transports\": {\"from\": \"Jiangnan Chef (China Resources Mixc Store)\", \"to\": \"Shenzhen Century Garden Hotel (Nanshan Science and Technology Park)\", \"mode\": \"metro\", \"start_time\": \"19:30\", \"end_time\": \"20:10\", \"cost\": 20},\n            \"room_type\": 2,\n            \"price\": 325,\n            \"cost\": 1300,\n            \"start_time\": \"20:15\",\n            \"end_time\": \"24:00\",\n            \"rooms\": 2\n        }\n    ]\n},\n{\n    \"day\": 2,\n    \"activities\": [\n        {\n            \"position\": \"Shenzhen Bay Park\",\n            \"type\": \"attraction\",\n            \"transports\": {\"from\": \"Shenzhen Century Garden Hotel (Nanshan Science and Technology Park)\", \"to\": \"Shenzhen Bay Park\", \"mode\": \"metro\", \"start_time\": \"08:00\", \"end_time\": \"08:11\", \"cost\": 8},\n            \"price\": 0.0,\n            \"cost\": 0.0,\n            \"tickets\": 4,\n            \"start_time\": \"08:20\",\n            \"end_time\": \"10:20\"\n        },\n        {\n            \"position\": \"Shenzhen Museum of Contemporary Art and Urban Planning\",\n            \"type\": \"attraction\",\n            \"transports\": {\"from\": \"Shenzhen Bay Park\", \"to\": \"Shenzhen Museum of Contemporary Art and Urban Planning\", \"mode\": \"metro\", \"start_time\": \"10:20\", \"end_time\": \"10:45\", \"cost\": 16},\n            \"price\": 0.0,\n            \"cost\": 0.0,\n            \"tickets\": 4,\n            \"start_time\": \"10:50\",\n            \"end_time\": \"12:50\"\n        },\n        {\n            \"position\": \"Libaoge (Kerry Store)\",\n            \"type\": \"lunch\",\n            \"transports\": {\"from\": \"Shenzhen Museum of Contemporary Art and Urban Planning\", \"to\": \"Libaoge (Kerry Store)\", \"mode\": \"metro\", \"start_time\": \"12:50\", \"end_time\": \"12:59\", \"cost\": 8},\n            \"price\": 156,\n            \"cost\": 624,\n            \"start_time\": \"13:00\",\n            \"end_time\": \"14:00\"\n        },\n        {\n            \"position\": \"Dameisha Seaside Park\",\n            \"type\": \"attraction\",\n            \"transports\": {\"from\": \"Libaoge (Kerry Store)\", \"to\": \"Dameisha Seaside Park\", \"mode\": \"metro\", \"start_time\": \"14:00\", \"end_time\": \"15:24\", \"cost\": 24},\n            \"price\": 0.0,\n            \"cost\": 0.0,\n            \"tickets\": 4,\n            \"start_time\": \"15:30\",\n            \"end_time\": \"17:30\"\n        },\n        {\n            \"position\": \"Shenzhen Century Garden Hotel (Nanshan Science and Technology Park)\",\n            \"type\": \"accommodation\",\n            \"transports\": {\"from\": \"Dameisha Seaside Park\", \"to\": \"Shenzhen Century Garden Hotel (Nanshan Science and Technology Park)\", \"mode\": \"metro\", \"start_time\": \"17:30\", \"end_time\": \"18:57\", \"cost\": 28},\n            \"room_type\": 2,\n            \"price\": 325,\n            \"cost\": 1300,\n            \"start_time\": \"19:00\",\n            \"end_time\": \"24:00\",\n            \"rooms\": 2\n        }\n    ]\n},\n{\n    \"day\": 3,\n    \"activities\": [\n        {\n            \"position\": \"Shenzhen Art Museum (New Venue)\",\n            \"type\": \"attraction\",\n            \"transports\": {\"from\": \"Shenzhen Century Garden Hotel (Nanshan Science and Technology Park)\", \"to\": \"Shenzhen Art Museum (New Venue)\", \"mode\": \"metro\", \"start_time\": \"08:00\", \"end_time\": \"08:42\", \"cost\": 16},\n            \"price\": 0.0,\n            \"cost\": 0.0,\n            \"tickets\": 4,\n            \"start_time\": \"08:50\",\n            \"end_time\": \"10:50\"\n        },\n        {\n            \"position\": \"Diandude (Huaqiang South Branch)\",\n            \"type\": \"lunch\",\n            \"transports\": {\"from\": \"Shenzhen Art Museum (New Venue)\", \"to\": \"Diandude (Huaqiang South Branch)\", \"mode\": \"metro\", \"start_time\": \"10:50\", \"end_time\": \"11:27\", \"cost\": 16},\n            \"price\": 89,\n            \"cost\": 356,\n            \"start_time\": \"11:30\",\n            \"end_time\": \"12:30\"\n        },\n        {\n            \"position\": \"Shenzhen Bao'an International Airport\",\n            \"type\": \"airplane\",\n            \"transports\": {\"from\": \"Diandude (Huaqiang South Branch)\", \"to\": \"Shenzhen Bao'an International Airport\", \"mode\": \"metro\", \"start_time\": \"12:30\", \"end_time\": \"13:35\", \"cost\": 28},\n            \"start_time\": \"16:34\",\n            \"end_time\": \"18:59\",\n            \"start\": \"Shenzhen Bao'an International Airport\",\n            \"end\": \"Beijing Capital International Airport\",\n            \"price\": 927.7,\n            \"cost\": 3710.8,\n            \"FlightID\": \"FL175\",\n            \"tickets\": 4\n        }\n    ]\n}\n]\n```",
+      "input_tokens": 103328,
+      "output_tokens": 1913,
+      "total_tokens": 105241,
+      "model_calls": 6,
+      "failed_model_calls": 0,
+      "elapsed_time_seconds": 53.05301880836487,
+      "llm_inference_time_seconds": 38.736202239990234,
+      "information_collection_time_seconds": 14.314815998077393,
+      "initial_generation_time_s": 53.07489429999987,
+      "initial_generation_tool_calls": 5541,
+      "initial_generation_tool_call_counts_by_type": {
+        "accommodations_select": 1,
+        "attractions_select": 1,
+        "goto": 1800,
+        "intercity_transport_select": 4,
+        "next_page": 134,
+        "poi_lat_lon_search": 3600,
+        "restaurants_select": 1
+      },
+      "shared_initialization_time_s": 53.501229300003615,
+      "shared_initialization_system_metrics": {
+        "tool_call_count": 5624,
+        "successful_tool_call_count": 5624,
+        "failed_tool_call_count": 0,
+        "verification_count": 1,
+        "tool_call_counts_by_type": {
+          "accommodations_select": 3,
+          "attractions_select": 11,
+          "goto": 1822,
+          "intercity_transport_select": 6,
+          "next_page": 134,
+          "poi_lat_lon_search": 3644,
+          "restaurants_select": 4
+        }
+      }
+    }
+  },
+  "initial_plan_hash": "6883ef8057f67a55348a910c0b249d471dde965d605c7b93b0c8d2d932fb600b",
+  "initial_state_hash": "a8c82e3b435b9cc207b95c43c471ce791e1f6b91952a3c7452a2ecbbbea3987c"
+}

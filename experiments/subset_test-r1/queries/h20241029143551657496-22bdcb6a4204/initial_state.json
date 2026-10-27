@@ -1,0 +1,767 @@
+{
+  "run_id": "subset_test-r1",
+  "query_uid": "h20241029143551657496",
+  "state": {
+    "query_uid": "h20241029143551657496",
+    "problem": {
+      "uid": "h20241029143551657496",
+      "tag": "human",
+      "start_city": "Nanjing",
+      "target_city": "Shanghai",
+      "days": 1,
+      "people_number": 1,
+      "limit_rooms": false,
+      "limits_room_type": false,
+      "hard_logic_py": [
+        "return_start_time = 0\nfor activity in allactivities(plan):\n  if activity_type(activity) in ['train','airplane'] and intercity_transport_origin(activity) == target_city(plan): return_start_time = activity_start_time(activity)\nresult=(return_start_time<='19:00')",
+        "intercity_transport_set=set()\nfor activity in allactivities(plan):\n  if activity_type(activity) in ['train', 'airplane']: intercity_transport_set.add(intercity_transport_type(activity))\nresult=({'train'}==intercity_transport_set)",
+        "attraction_type_set=set()\nfor activity in allactivities(plan):\n  if activity_type(activity)=='attraction': attraction_type_set.add(attraction_type(activity, target_city(plan)))\nresult=({'大学校园'}<=attraction_type_set)",
+        "result=(day_count(plan)==1)",
+        "result=(people_count(plan)==1)",
+        "result=True\nfor activity in allactivities(plan):\n  if innercity_transport_type(activity_transports(activity))=='taxi'and taxi_cars(activity_transports(activity))!=1: result=False"
+      ],
+      "nature_language": "[Current location: Nanjing, Destination: Shanghai, Number of travelers: 1, Travel days: 1] I am traveling alone from Nanjing to Shanghai in the morning for a day trip. I plan to visit a university campus and return in the evening, making sure to catch the train back before 7 PM.",
+      "nature_language_en": "[Current location: Nanjing, Destination: Shanghai, Number of travelers: 1, Travel days: 1] I am traveling alone from Nanjing to Shanghai in the morning for a day trip. I plan to visit a university campus and return in the evening, making sure to catch the train back before 7 PM."
+    },
+    "raw_initial_plan": [
+      {
+        "day": 1,
+        "activities": [
+          {
+            "start_time": "07:00",
+            "end_time": "08:39",
+            "start": "Nanjing Station",
+            "end": "Shanghai Station",
+            "price": 175.28,
+            "cost": 175.28,
+            "TrainID": "G7001",
+            "type": "train",
+            "tickets": 1,
+            "transports": "empty"
+          },
+          {
+            "position": "Fudan University",
+            "type": "attraction",
+            "transports": {
+              "from": "Shanghai Station",
+              "to": "Fudan University",
+              "mode": "metro",
+              "start_time": "08:39",
+              "end_time": "09:15",
+              "cost": 3
+            },
+            "price": 0.0,
+            "cost": 0.0,
+            "tickets": 1,
+            "start_time": "09:30",
+            "end_time": "11:30"
+          },
+          {
+            "position": "Shanghai Old Restaurant (Yuyuan Branch)",
+            "type": "lunch",
+            "transports": {
+              "from": "Fudan University",
+              "to": "Shanghai Old Restaurant (Yuyuan Branch)",
+              "mode": "metro",
+              "start_time": "11:30",
+              "end_time": "12:00",
+              "cost": 3
+            },
+            "price": 234.0,
+            "cost": 234.0,
+            "start_time": "12:00",
+            "end_time": "13:00"
+          },
+          {
+            "position": "Shanghai Museum",
+            "type": "attraction",
+            "transports": {
+              "from": "Shanghai Old Restaurant (Yuyuan Branch)",
+              "to": "Shanghai Museum",
+              "mode": "metro",
+              "start_time": "13:00",
+              "end_time": "13:10",
+              "cost": 2
+            },
+            "price": 0.0,
+            "cost": 0.0,
+            "tickets": 1,
+            "start_time": "13:15",
+            "end_time": "14:15"
+          },
+          {
+            "start": "Shanghai Station",
+            "end": "Nanjing South Railway Station",
+            "start_time": "17:55",
+            "end_time": "19:06",
+            "TrainID": "G26",
+            "type": "train",
+            "transports": {
+              "from": "Shanghai Museum",
+              "to": "Shanghai Station",
+              "mode": "metro",
+              "start_time": "14:15",
+              "end_time": "14:30",
+              "cost": 2
+            },
+            "price": 175.28,
+            "cost": 175.28,
+            "tickets": 1
+          }
+        ]
+      }
+    ],
+    "repair_context": {
+      "go_train_info": "TrainID\tTrainType\tFrom\tTo\tBeginTime\tEndTime\tDuration\tprice\r\nG7001\tHigh-speed rail\tNanjing Station\tShanghai Station\t07:00\t08:39\t1.65\t175.28\r\nG7029\tHigh-speed rail\tNanjing Station\tShanghai Station\t05:36\t07:30\t1.9\t175.28\r\nG7031\tHigh-speed rail\tNanjing Station\tShanghai West Railway Station\t06:00\t07:50\t1.83\t175.28\r\nG7101\tHigh-speed rail\tNanjing Station\tShanghai Hongqiao Station\t06:09\t08:19\t2.17\t175.28\r\nG7179\tHigh-speed rail\tNanjing South Railway Station\tShanghai Hongqiao Station\t06:20\t07:58\t1.63\t175.28\r\n",
+      "go_flight_info": "None",
+      "back_train_info": "TrainID\tTrainType\tFrom\tTo\tBeginTime\tEndTime\tDuration\tprice\r\nG2\tHigh-speed rail\tShanghai Station\tNanjing South Railway Station\t07:00\t08:11\t1.18\t175.28\r\nG8\tHigh-speed rail\tShanghai Hongqiao Station\tNanjing South Railway Station\t09:00\t09:59\t0.98\t175.28\r\nG18\tHigh-speed rail\tShanghai Hongqiao Station\tNanjing South Railway Station\t14:00\t15:00\t1.0\t175.28\r\nG26\tHigh-speed rail\tShanghai Station\tNanjing South Railway Station\t17:55\t19:06\t1.18\t175.28\r\nD6\tEMU (Electric Multiple Unit)\tShanghai Station\tNanjing Station\t21:15\t23:50\t2.58\t161.8\r\n",
+      "back_flight_info": "None",
+      "attraction_info": "name\ttype\tlat\tlon\topentime\tendtime\tprice\trecommendmintime\trecommendmaxtime\r\nFudan University\tUniversity campus\t31.302386\t121.506024\t09:00\t11:30\t0.0\t0.5\t2.0\r\nTongji University (Siping Road Campus)\tUniversity campus\t31.289067\t121.510461\t07:30\t22:30\t0.0\t2.5\t4.0\r\nShanghai Jiao Tong University\tUniversity campus\t31.205239\t121.442301\t00:00\t17:00\t0.0\t3.0\t3.5\r\nShanghai Library\tMuseum/Memorial Hall\t31.213841\t121.451117\t13:30\t20:30\t0.0\t2.0\t3.5\r\nShanghai Library East Branch\tMuseum/Memorial Hall\t31.226151\t121.553598\t13:30\t20:30\t0.0\t0.5\t1.5\r\nShanghai Textile Museum\tMuseum/Memorial Hall\t31.253092\t121.452367\t09:30\t16:00\t0.0\t2.0\t3.0\r\nShanghai Museum\tMuseum/Memorial Hall\t31.234149\t121.482358\t09:00\t17:00\t0.0\t0.5\t1.0\r\nShanghai Natural History Museum\tMuseum/Memorial Hall\t31.241221\t121.469143\t09:00\t17:00\t0.0\t0.5\t1.0\r\nShanghai Urban Planning Exhibition Center\tMuseum/Memorial Hall\t31.237364\t121.482137\t09:00\t17:00\t0.0\t1.0\t2.0\r\nShanghai Film Museum\tMuseum/Memorial Hall\t31.192501\t121.444536\t09:30\t16:30\t60.0\t2.5\t3.0\r\nShanghai Public Security Museum\tMuseum/Memorial Hall\t31.204437\t121.474777\t09:00\t16:30\t0.0\t0.5\t1.5\r\nShanghai Jewish Refugees Museum\tMuseum/Memorial Hall\t31.259707\t121.515776\t09:00\t17:00\t20.0\t0.5\t2.0\r\nShanghai Tunnel Science and Technology Museum\tMuseum/Memorial Hall\t31.22704\t121.506146\t13:00\t16:30\t0.0\t3.0\t3.5\r\nShanghai Railway Museum\tMuseum/Memorial Hall\t31.255904\t121.482822\t09:00\t11:00\t0.0\t1.5\t2.0\r\nShanghai Fire Museum\tMuseum/Memorial Hall\t31.224259\t121.417761\t09:30\t11:30\t0.0\t1.0\t2.0\r\n",
+      "restaurant_info": "name\tlat\tlon\tprice\tcuisine\topentime\tendtime\trecommendedfood\r\nShanghai Old Restaurant (Yuyuan Branch)\t31.2276406\t121.4906449\t234.0\tShanghai cuisine\t11:00\t20:30\tOsmanthus Rice Cake, Eight-Treasure Duck, Sea Cucumber with Shrimp Roe, XO Eight-Treasure Spicy Sauce, Sautéed Crystal Shrimp, Old Shanghai-Style Quick-Fried Shrimp, Pork Intestines with Clover\r\nDahuchun (Sichuan Middle Road Branch)\t31.2347489\t121.4893005\t29.0\tSnacks\t07:00\t19:30\tFresh Pork Pan-Fried Buns, Shrimp Pan-Fried Buns, Curry Beef Soup, Crab Shell Pastries, Fresh Shrimp Wontons, Tofu Skin Rolls with Vermicelli Soup\r\nNanxiang Steamed Bun Restaurant (Yuyuan Branch)\t31.2266265\t121.4914483\t103.0\tSnacks\t09:00\t20:00\tTraditional Pork Soup Dumplings, Crab Roe Soup Dumplings, Spicy Crab Meat Soup Dumplings, Shrimp and Pork Soup Dumplings, Sweet and Sour Pork Ribs, Nanxiang Drunken Chicken\r\nMei Xin Dim Sum Shop (North Shaanxi Road Branch)\t31.2255457\t121.4562769\t28.0\tSnacks\t08:00\t18:30\tEight Treasure Rice, Mushroom Noodles, Fresh Meat Glutinous Rice Balls, Sesame Glutinous Rice Balls, Spring Rolls, Fried Pork Chop, Chilled Pork and Vegetable Wontons, Chilled Spicy Noodles, Pork and Vegetable Wontons\r\nFeng's Dad Noodle House (Shaanxi South Road Branch)\t31.2213511\t121.4573054\t41.0\tSnacks\t11:00\t21:00\tShredded Pork with Snow Cabbage and Winter Bamboo Shoots, Pork Kidney Noodles, Stir-fried Eel Shreds Noodles\r\n",
+      "accommodation_info": "name\tfeaturehoteltype\tlat\tlon\tprice\tnumbed\r\nShanghai Best Boutique Hotel\tFree parking\t31.096668\t121.709423\t382\t2\r\nYun He Ye Bo Hotel (Shanghai Pudong International Airport)\tFree parking\t31.097905\t121.765119\t397\t1\r\nShanghai Zhuyi Light Luxury Homestay\thomestay\t31.103644\t121.669692\t408\t1\r\n",
+      "innercity_transport_info": "from Feng's Dad Noodle House (Shaanxi South Road Branch) to Feng's Dad Noodle House (Shaanxi South Road Branch):  metro: empty.  taxi: empty.  walk: empty. \nfrom Feng's Dad Noodle House (Shaanxi South Road Branch) to Shanghai Tunnel Science and Technology Museum: metro: duration 30, cost 3. taxi: duration 7, cost 21.14. walk: duration 56, cost 0.0. \nfrom Feng's Dad Noodle House (Shaanxi South Road Branch) to Shanghai Library: metro: duration 13, cost 2. taxi: duration 1, cost 11.0. walk: duration 12, cost 0.0. \nfrom Feng's Dad Noodle House (Shaanxi South Road Branch) to Shanghai Film Museum: metro: duration 25, cost 3. taxi: duration 5, cost 16.68. walk: duration 41, cost 0.0. \nfrom Feng's Dad Noodle House (Shaanxi South Road Branch) to Shanghai Museum: metro: duration 18, cost 2. taxi: duration 4, cost 14.42. walk: duration 33, cost 0.0. \nfrom Feng's Dad Noodle House (Shaanxi South Road Branch) to Shanghai Old Restaurant (Yuyuan Branch): metro: duration 15, cost 2. taxi: duration 4, cost 16.08. walk: duration 39, cost 0.0. \nfrom Feng's Dad Noodle House (Shaanxi South Road Branch) to Shanghai Jiao Tong University: metro: duration 16, cost 2. taxi: duration 3, cost 12.71. walk: duration 27, cost 0.0. \nfrom Feng's Dad Noodle House (Shaanxi South Road Branch) to Shanghai Jewish Refugees Museum: metro: duration 23, cost 3. taxi: duration 10, cost 29.23. walk: duration 84, cost 0.0. \nfrom Feng's Dad Noodle House (Shaanxi South Road Branch) to Shanghai Public Security Museum: metro: duration 19, cost 2. taxi: duration 3, cost 13.48. walk: duration 30, cost 0.0. \nfrom Feng's Dad Noodle House (Shaanxi South Road Branch) to Shanghai Hongqiao Station: metro: duration 37, cost 5. taxi: duration 20, cost 55.06. walk: duration 160, cost 0.0. \nfrom Feng's Dad Noodle House (Shaanxi South Road Branch) to Shanghai Station: metro: duration 16, cost 2. taxi: duration 4, cost 15.66. walk: duration 37, cost 0.0. \nfrom Feng's Dad Noodle House (Shaanxi South Road Branch) to Fudan University: metro: duration 36, cost 4. taxi: duration 15, cost 40.2. walk: duration 121, cost 0.0. \nfrom Feng's Dad Noodle House (Shaanxi South Road Branch) to Shanghai West Railway Station: metro: duration 25, cost 3. taxi: duration 10, cost 29.06. walk: duration 83, cost 0.0. \nfrom Feng's Dad Noodle House (Shaanxi South Road Branch) to Shanghai Library East Branch: metro: duration 29, cost 3. taxi: duration 13, cost 36.87. walk: duration 110, cost 0.0. \nfrom Feng's Dad Noodle House (Shaanxi South Road Branch) to Tongji University (Siping Road Campus): metro: duration 25, cost 3. taxi: duration 13, cost 36.39. walk: duration 108, cost 0.0. \nfrom Feng's Dad Noodle House (Shaanxi South Road Branch) to Shanghai Fire Museum: metro: duration 25, cost 3. taxi: duration 5, cost 17.94. walk: duration 45, cost 0.0. \nfrom Feng's Dad Noodle House (Shaanxi South Road Branch) to Shanghai Natural History Museum: metro: duration 16, cost 2. taxi: duration 3, cost 13.36. walk: duration 29, cost 0.0. \nfrom Feng's Dad Noodle House (Shaanxi South Road Branch) to Shanghai Urban Planning Exhibition Center: metro: duration 16, cost 2. taxi: duration 4, cost 15.05. walk: duration 35, cost 0.0. \nfrom Feng's Dad Noodle House (Shaanxi South Road Branch) to Yun He Ye Bo Hotel (Shanghai Pudong International Airport): metro: duration 133, cost 7. taxi: duration 48, cost 140.42. walk: duration 388, cost 0.0. \nfrom Feng's Dad Noodle House (Shaanxi South Road Branch) to Mei Xin Dim Sum Shop (North Shaanxi Road Branch): metro: duration 17, cost 2. taxi: duration 0, cost 11.0. walk: duration 5, cost 0.0. \nfrom Feng's Dad Noodle House (Shaanxi South Road Branch) to Nanxiang Steamed Bun Restaurant (Yuyuan Branch): metro: duration 16, cost 2. taxi: duration 4, cost 16.27. walk: duration 39, cost 0.0. \nfrom Feng's Dad Noodle House (Shaanxi South Road Branch) to Shanghai Zhuyi Light Luxury Homestay: metro: duration 100, cost 6. taxi: duration 36, cost 103.11. walk: duration 289, cost 0.0. \nfrom Feng's Dad Noodle House (Shaanxi South Road Branch) to Shanghai Best Boutique Hotel: metro: duration 128, cost 7. taxi: duration 41, cost 119.48. walk: duration 332, cost 0.0. \nfrom Feng's Dad Noodle House (Shaanxi South Road Branch) to Shanghai Railway Museum: metro: duration 21, cost 3. taxi: duration 6, cost 20.58. walk: duration 54, cost 0.0. \nfrom Feng's Dad Noodle House (Shaanxi South Road Branch) to Shanghai Textile Museum: metro: duration 18, cost 2. taxi: duration 4, cost 14.29. walk: duration 32, cost 0.0. \nfrom Feng's Dad Noodle House (Shaanxi South Road Branch) to Dahuchun (Sichuan Middle Road Branch): metro: duration 19, cost 2. taxi: duration 5, cost 16.57. walk: duration 40, cost 0.0. \nfrom Shanghai Tunnel Science and Technology Museum to Feng's Dad Noodle House (Shaanxi South Road Branch): metro: duration 30, cost 3. taxi: duration 7, cost 21.14. walk: duration 56, cost 0.0. \nfrom Shanghai Tunnel Science and Technology Museum to Shanghai Tunnel Science and Technology Museum:  metro: empty.  taxi: empty.  walk: empty. \nfrom Shanghai Tunnel Science and Technology Museum to Shanghai Library: metro: duration 27, cost 3. taxi: duration 8, cost 23.75. walk: duration 65, cost 0.0. \nfrom Shanghai Tunnel Science and Technology Museum to Shanghai Film Museum: metro: duration 38, cost 3. taxi: duration 10, cost 29.23. walk: duration 84, cost 0.0. \nfrom Shanghai Tunnel Science and Technology Museum to Shanghai Museum: metro: duration 23, cost 2. taxi: duration 3, cost 13.1. walk: duration 28, cost 0.0. \nfrom Shanghai Tunnel Science and Technology Museum to Shanghai Old Restaurant (Yuyuan Branch): metro: duration 20, cost 2. taxi: duration 2, cost 11.0. walk: duration 17, cost 0.0. \nfrom Shanghai Tunnel Science and Technology Museum to Shanghai Jiao Tong University: metro: duration 30, cost 3. taxi: duration 9, cost 27.61. walk: duration 78, cost 0.0. \nfrom Shanghai Tunnel Science and Technology Museum to Shanghai Jewish Refugees Museum: metro: duration 21, cost 2. taxi: duration 5, cost 17.78. walk: duration 44, cost 0.0. \nfrom Shanghai Tunnel Science and Technology Museum to Shanghai Public Security Museum: metro: duration 28, cost 3. taxi: duration 5, cost 18.35. walk: duration 46, cost 0.0. \nfrom Shanghai Tunnel Science and Technology Museum to Shanghai Hongqiao Station: metro: duration 51, cost 5. taxi: duration 27, cost 76.13. walk: duration 217, cost 0.0. \nfrom Shanghai Tunnel Science and Technology Museum to Shanghai Station: metro: duration 25, cost 3. taxi: duration 8, cost 23.64. walk: duration 64, cost 0.0. \nfrom Shanghai Tunnel Science and Technology Museum to Fudan University: metro: duration 36, cost 3. taxi: duration 12, cost 33.94. walk: duration 100, cost 0.0. \nfrom Shanghai Tunnel Science and Technology Museum to Shanghai West Railway Station: metro: duration 37, cost 4. taxi: duration 15, cost 42.54. walk: duration 127, cost 0.0. \nfrom Shanghai Tunnel Science and Technology Museum to Shanghai Library East Branch: metro: duration 23, cost 2. taxi: duration 6, cost 20.53. walk: duration 54, cost 0.0. \nfrom Shanghai Tunnel Science and Technology Museum to Tongji University (Siping Road Campus): metro: duration 25, cost 3. taxi: duration 10, cost 28.81. walk: duration 82, cost 0.0. \nfrom Shanghai Tunnel Science and Technology Museum to Shanghai Fire Museum: metro: duration 39, cost 4. taxi: duration 12, cost 34.19. walk: duration 101, cost 0.0. \nfrom Shanghai Tunnel Science and Technology Museum to Shanghai Natural History Museum: metro: duration 23, cost 3. taxi: duration 5, cost 18.21. walk: duration 46, cost 0.0. \nfrom Shanghai Tunnel Science and Technology Museum to Shanghai Urban Planning Exhibition Center: metro: duration 21, cost 2. taxi: duration 3, cost 13.65. walk: duration 30, cost 0.0. \nfrom Shanghai Tunnel Science and Technology Museum to Yun He Ye Bo Hotel (Shanghai Pudong International Airport): metro: duration 131, cost 7. taxi: duration 42, cost 123.14. walk: duration 342, cost 0.0. \nfrom Shanghai Tunnel Science and Technology Museum to Mei Xin Dim Sum Shop (North Shaanxi Road Branch): metro: duration 29, cost 3. taxi: duration 7, cost 21.34. walk: duration 57, cost 0.0. \nfrom Shanghai Tunnel Science and Technology Museum to Nanxiang Steamed Bun Restaurant (Yuyuan Branch): metro: duration 21, cost 2. taxi: duration 2, cost 11.0. walk: duration 16, cost 0.0. \nfrom Shanghai Tunnel Science and Technology Museum to Shanghai Zhuyi Light Luxury Homestay: metro: duration 97, cost 5. taxi: duration 31, cost 88.05. walk: duration 248, cost 0.0. \nfrom Shanghai Tunnel Science and Technology Museum to Shanghai Best Boutique Hotel: metro: duration 127, cost 6. taxi: duration 36, cost 103.5. walk: duration 290, cost 0.0. \nfrom Shanghai Tunnel Science and Technology Museum to Shanghai Railway Museum: metro: duration 24, cost 2. taxi: duration 5, cost 18.34. walk: duration 46, cost 0.0. \nfrom Shanghai Tunnel Science and Technology Museum to Shanghai Textile Museum: metro: duration 23, cost 2. taxi: duration 3, cost 13.91. walk: duration 31, cost 0.0. \nfrom Shanghai Tunnel Science and Technology Museum to Dahuchun (Sichuan Middle Road Branch): metro: duration 24, cost 2. taxi: duration 2, cost 11.06. walk: duration 21, cost 0.0. \nfrom Shanghai Library to Feng's Dad Noodle House (Shaanxi South Road Branch): metro: duration 13, cost 2. taxi: duration 1, cost 11.0. walk: duration 12, cost 0.0. \nfrom Shanghai Library to Shanghai Tunnel Science and Technology Museum: metro: duration 27, cost 3. taxi: duration 8, cost 23.75. walk: duration 65, cost 0.0. \nfrom Shanghai Library to Shanghai Library:  metro: empty.  taxi: empty.  walk: empty. \nfrom Shanghai Library to Shanghai Film Museum: metro: duration 17, cost 2. taxi: duration 3, cost 13.27. walk: duration 29, cost 0.0. \nfrom Shanghai Library to Shanghai Museum: metro: duration 15, cost 3. taxi: duration 5, cost 17.76. walk: duration 44, cost 0.0. \nfrom Shanghai Library to Shanghai Old Restaurant (Yuyuan Branch): metro: duration 12, cost 2. taxi: duration 6, cost 18.93. walk: duration 48, cost 0.0. \nfrom Shanghai Library to Shanghai Jiao Tong University: metro: duration 7, cost 2. taxi: duration 1, cost 11.0. walk: duration 15, cost 0.0. \nfrom Shanghai Library to Shanghai Jewish Refugees Museum: metro: duration 20, cost 3. taxi: duration 11, cost 32.66. walk: duration 95, cost 0.0. \nfrom Shanghai Library to Shanghai Public Security Museum: metro: duration 13, cost 2. taxi: duration 3, cost 13.39. walk: duration 29, cost 0.0. \nfrom Shanghai Library to Shanghai Hongqiao Station: metro: duration 28, cost 4. taxi: duration 19, cost 51.71. walk: duration 152, cost 0.0. \nfrom Shanghai Library to Shanghai Station: metro: duration 12, cost 3. taxi: duration 5, cost 18.65. walk: duration 47, cost 0.0. \nfrom Shanghai Library to Fudan University: metro: duration 33, cost 4. taxi: duration 16, cost 44.76. walk: duration 133, cost 0.0. \nfrom Shanghai Library to Shanghai West Railway Station: metro: duration 18, cost 3. taxi: duration 10, cost 29.71. walk: duration 85, cost 0.0. \nfrom Shanghai Library to Shanghai Library East Branch: metro: duration 26, cost 4. taxi: duration 14, cost 39.21. walk: duration 118, cost 0.0. \nfrom Shanghai Library to Tongji University (Siping Road Campus): metro: duration 22, cost 4. taxi: duration 15, cost 40.04. walk: duration 120, cost 0.0. \nfrom Shanghai Library to Shanghai Fire Museum: metro: duration 16, cost 2. taxi: duration 5, cost 16.54. walk: duration 40, cost 0.0. \nfrom Shanghai Library to Shanghai Natural History Museum: metro: duration 12, cost 2. taxi: duration 5, cost 16.91. walk: duration 41, cost 0.0. \nfrom Shanghai Library to Shanghai Urban Planning Exhibition Center: metro: duration 13, cost 3. taxi: duration 5, cost 18.5. walk: duration 47, cost 0.0. \nfrom Shanghai Library to Yun He Ye Bo Hotel (Shanghai Pudong International Airport): metro: duration 129, cost 7. taxi: duration 48, cost 141.32. walk: duration 390, cost 0.0. \nfrom Shanghai Library to Mei Xin Dim Sum Shop (North Shaanxi Road Branch): metro: duration 13, cost 2. taxi: duration 2, cost 11.0. walk: duration 16, cost 0.0. \nfrom Shanghai Library to Nanxiang Steamed Bun Restaurant (Yuyuan Branch): metro: duration 13, cost 2. taxi: duration 6, cost 19.04. walk: duration 49, cost 0.0. \nfrom Shanghai Library to Shanghai Zhuyi Light Luxury Homestay: metro: duration 96, cost 6. taxi: duration 36, cost 103.41. walk: duration 289, cost 0.0. \nfrom Shanghai Library to Shanghai Best Boutique Hotel: metro: duration 123, cost 7. taxi: duration 41, cost 120.0. walk: duration 334, cost 0.0. \nfrom Shanghai Library to Shanghai Railway Museum: metro: duration 17, cost 3. taxi: duration 8, cost 24.15. walk: duration 66, cost 0.0. \nfrom Shanghai Library to Shanghai Textile Museum: metro: duration 15, cost 3. taxi: duration 5, cost 17.73. walk: duration 44, cost 0.0. \nfrom Shanghai Library to Dahuchun (Sichuan Middle Road Branch): metro: duration 16, cost 3. taxi: duration 6, cost 19.8. walk: duration 51, cost 0.0. \nfrom Shanghai Film Museum to Feng's Dad Noodle House (Shaanxi South Road Branch): metro: duration 25, cost 3. taxi: duration 5, cost 16.68. walk: duration 41, cost 0.0. \nfrom Shanghai Film Museum to Shanghai Tunnel Science and Technology Museum: metro: duration 38, cost 3. taxi: duration 10, cost 29.23. walk: duration 84, cost 0.0. \nfrom Shanghai Film Museum to Shanghai Library: metro: duration 17, cost 2. taxi: duration 3, cost 13.27. walk: duration 29, cost 0.0. \nfrom Shanghai Film Museum to Shanghai Film Museum:  metro: empty.  taxi: empty.  walk: empty. \nfrom Shanghai Film Museum to Shanghai Museum: metro: duration 28, cost 3. taxi: duration 8, cost 25.2. walk: duration 70, cost 0.0. \nfrom Shanghai Film Museum to Shanghai Old Restaurant (Yuyuan Branch): metro: duration 24, cost 3. taxi: duration 8, cost 25.25. walk: duration 70, cost 0.0. \nfrom Shanghai Film Museum to Shanghai Jiao Tong University: metro: duration 17, cost 2. taxi: duration 2, cost 11.0. walk: duration 17, cost 0.0. \nfrom Shanghai Film Museum to Shanghai Jewish Refugees Museum: metro: duration 32, cost 4. taxi: duration 15, cost 40.06. walk: duration 120, cost 0.0. \nfrom Shanghai Film Museum to Shanghai Public Security Museum: metro: duration 21, cost 2. taxi: duration 4, cost 15.8. walk: duration 38, cost 0.0. \nfrom Shanghai Film Museum to Shanghai Hongqiao Station: metro: duration 33, cost 4. taxi: duration 17, cost 48.03. walk: duration 142, cost 0.0. \nfrom Shanghai Film Museum to Shanghai Station: metro: duration 25, cost 3. taxi: duration 9, cost 27.16. walk: duration 77, cost 0.0. \nfrom Shanghai Film Museum to Fudan University: metro: duration 46, cost 5. taxi: duration 20, cost 55.53. walk: duration 162, cost 0.0. \nfrom Shanghai Film Museum to Shanghai West Railway Station: metro: duration 29, cost 4. taxi: duration 13, cost 35.44. walk: duration 105, cost 0.0. \nfrom Shanghai Film Museum to Shanghai Library East Branch: metro: duration 36, cost 4. taxi: duration 16, cost 44.39. walk: duration 132, cost 0.0. \nfrom Shanghai Film Museum to Tongji University (Siping Road Campus): metro: duration 35, cost 4. taxi: duration 18, cost 50.56. walk: duration 148, cost 0.0. \nfrom Shanghai Film Museum to Shanghai Fire Museum: metro: duration 25, cost 3. taxi: duration 6, cost 19.92. walk: duration 52, cost 0.0. \nfrom Shanghai Film Museum to Shanghai Natural History Museum: metro: duration 25, cost 3. taxi: duration 8, cost 25.31. walk: duration 70, cost 0.0. \nfrom Shanghai Film Museum to Shanghai Urban Planning Exhibition Center: metro: duration 26, cost 3. taxi: duration 9, cost 26.16. walk: duration 73, cost 0.0. \nfrom Shanghai Film Museum to Yun He Ye Bo Hotel (Shanghai Pudong International Airport): metro: duration 134, cost 7. taxi: duration 48, cost 140.14. walk: duration 387, cost 0.0. \nfrom Shanghai Film Museum to Mei Xin Dim Sum Shop (North Shaanxi Road Branch): metro: duration 26, cost 3. taxi: duration 5, cost 18.11. walk: duration 45, cost 0.0. \nfrom Shanghai Film Museum to Nanxiang Steamed Bun Restaurant (Yuyuan Branch): metro: duration 25, cost 3. taxi: duration 8, cost 25.2. walk: duration 70, cost 0.0. \nfrom Shanghai Film Museum to Shanghai Zhuyi Light Luxury Homestay: metro: duration 102, cost 6. taxi: duration 35, cost 101.0. walk: duration 283, cost 0.0. \nfrom Shanghai Film Museum to Shanghai Best Boutique Hotel: metro: duration 128, cost 7. taxi: duration 41, cost 118.01. walk: duration 328, cost 0.0. \nfrom Shanghai Film Museum to Shanghai Railway Museum: metro: duration 30, cost 3. taxi: duration 11, cost 32.42. walk: duration 95, cost 0.0. \nfrom Shanghai Film Museum to Shanghai Textile Museum: metro: duration 28, cost 3. taxi: duration 8, cost 25.39. walk: duration 70, cost 0.0. \nfrom Shanghai Film Museum to Dahuchun (Sichuan Middle Road Branch): metro: duration 29, cost 3. taxi: duration 9, cost 26.87. walk: duration 76, cost 0.0. \nfrom Shanghai Museum to Feng's Dad Noodle House (Shaanxi South Road Branch): metro: duration 18, cost 2. taxi: duration 4, cost 14.42. walk: duration 33, cost 0.0. \nfrom Shanghai Museum to Shanghai Tunnel Science and Technology Museum: metro: duration 23, cost 2. taxi: duration 3, cost 13.1. walk: duration 28, cost 0.0. \nfrom Shanghai Museum to Shanghai Library: metro: duration 15, cost 3. taxi: duration 5, cost 17.76. walk: duration 44, cost 0.0. \nfrom Shanghai Museum to Shanghai Film Museum: metro: duration 28, cost 3. taxi: duration 8, cost 25.2. walk: duration 70, cost 0.0. \nfrom Shanghai Museum to Shanghai Museum:  metro: empty.  taxi: empty.  walk: empty. \nfrom Shanghai Museum to Shanghai Old Restaurant (Yuyuan Branch): metro: duration 10, cost 2. taxi: duration 1, cost 11.0. walk: duration 12, cost 0.0. \nfrom Shanghai Museum to Shanghai Jiao Tong University: metro: duration 19, cost 3. taxi: duration 7, cost 22.14. walk: duration 59, cost 0.0. \nfrom Shanghai Museum to Shanghai Jewish Refugees Museum: metro: duration 14, cost 2. taxi: duration 6, cost 19.62. walk: duration 51, cost 0.0. \nfrom Shanghai Museum to Shanghai Public Security Museum: metro: duration 19, cost 3. taxi: duration 5, cost 16.5. walk: duration 40, cost 0.0. \nfrom Shanghai Museum to Shanghai Hongqiao Station: metro: duration 39, cost 5. taxi: duration 24, cost 67.07. walk: duration 192, cost 0.0. \nfrom Shanghai Museum to Shanghai Station: metro: duration 12, cost 2. taxi: duration 4, cost 15.4. walk: duration 36, cost 0.0. \nfrom Shanghai Museum to Fudan University: metro: duration 28, cost 3. taxi: duration 11, cost 32.33. walk: duration 94, cost 0.0. \nfrom Shanghai Museum to Shanghai West Railway Station: metro: duration 23, cost 3. taxi: duration 12, cost 33.52. walk: duration 98, cost 0.0. \nfrom Shanghai Museum to Shanghai Library East Branch: metro: duration 22, cost 3. taxi: duration 10, cost 28.66. walk: duration 82, cost 0.0. \nfrom Shanghai Museum to Tongji University (Siping Road Campus): metro: duration 17, cost 3. taxi: duration 9, cost 27.98. walk: duration 79, cost 0.0. \nfrom Shanghai Museum to Shanghai Fire Museum: metro: duration 26, cost 3. taxi: duration 9, cost 26.58. walk: duration 75, cost 0.0. \nfrom Shanghai Museum to Shanghai Natural History Museum: metro: duration 10, cost 2. taxi: duration 2, cost 11.0. walk: duration 17, cost 0.0. \nfrom Shanghai Museum to Shanghai Urban Planning Exhibition Center: taxi: duration 0, cost 11.0. walk: duration 4, cost 0.0. \nfrom Shanghai Museum to Yun He Ye Bo Hotel (Shanghai Pudong International Airport): metro: duration 129, cost 7. taxi: duration 46, cost 133.76. walk: duration 370, cost 0.0. \nfrom Shanghai Museum to Mei Xin Dim Sum Shop (North Shaanxi Road Branch): metro: duration 17, cost 2. taxi: duration 3, cost 14.02. walk: duration 31, cost 0.0. \nfrom Shanghai Museum to Nanxiang Steamed Bun Restaurant (Yuyuan Branch): metro: duration 11, cost 2. taxi: duration 1, cost 11.0. walk: duration 14, cost 0.0. \nfrom Shanghai Museum to Shanghai Zhuyi Light Luxury Homestay: metro: duration 96, cost 5. taxi: duration 34, cost 98.13. walk: duration 275, cost 0.0. \nfrom Shanghai Museum to Shanghai Best Boutique Hotel: metro: duration 125, cost 7. taxi: duration 39, cost 113.84. walk: duration 317, cost 0.0. \nfrom Shanghai Museum to Shanghai Railway Museum: metro: duration 13, cost 2. taxi: duration 3, cost 13.14. walk: duration 28, cost 0.0. \nfrom Shanghai Museum to Shanghai Textile Museum: taxi: duration 0, cost 11.0. walk: duration 3, cost 0.0. \nfrom Shanghai Museum to Dahuchun (Sichuan Middle Road Branch): taxi: duration 0, cost 11.0. walk: duration 7, cost 0.0. \nfrom Shanghai Old Restaurant (Yuyuan Branch) to Feng's Dad Noodle House (Shaanxi South Road Branch): metro: duration 15, cost 2. taxi: duration 4, cost 16.08. walk: duration 39, cost 0.0. \nfrom Shanghai Old Restaurant (Yuyuan Branch) to Shanghai Tunnel Science and Technology Museum: metro: duration 20, cost 2. taxi: duration 2, cost 11.0. walk: duration 17, cost 0.0. \nfrom Shanghai Old Restaurant (Yuyuan Branch) to Shanghai Library: metro: duration 12, cost 2. taxi: duration 6, cost 18.93. walk: duration 48, cost 0.0. \nfrom Shanghai Old Restaurant (Yuyuan Branch) to Shanghai Film Museum: metro: duration 24, cost 3. taxi: duration 8, cost 25.25. walk: duration 70, cost 0.0. \nfrom Shanghai Old Restaurant (Yuyuan Branch) to Shanghai Museum: metro: duration 10, cost 2. taxi: duration 1, cost 11.0. walk: duration 12, cost 0.0. \nfrom Shanghai Old Restaurant (Yuyuan Branch) to Shanghai Old Restaurant (Yuyuan Branch):  metro: empty.  taxi: empty.  walk: empty. \nfrom Shanghai Old Restaurant (Yuyuan Branch) to Shanghai Jiao Tong University: metro: duration 16, cost 3. taxi: duration 7, cost 23.02. walk: duration 62, cost 0.0. \nfrom Shanghai Old Restaurant (Yuyuan Branch) to Shanghai Jewish Refugees Museum: metro: duration 14, cost 3. taxi: duration 6, cost 19.7. walk: duration 51, cost 0.0. \nfrom Shanghai Old Restaurant (Yuyuan Branch) to Shanghai Public Security Museum: metro: duration 15, cost 2. taxi: duration 4, cost 15.14. walk: duration 35, cost 0.0. \nfrom Shanghai Old Restaurant (Yuyuan Branch) to Shanghai Hongqiao Station: metro: duration 36, cost 5. taxi: duration 24, cost 69.7. walk: duration 199, cost 0.0. \nfrom Shanghai Old Restaurant (Yuyuan Branch) to Shanghai Station: metro: duration 12, cost 2. taxi: duration 6, cost 19.12. walk: duration 49, cost 0.0. \nfrom Shanghai Old Restaurant (Yuyuan Branch) to Fudan University: metro: duration 28, cost 3. taxi: duration 12, cost 34.16. walk: duration 100, cost 0.0. \nfrom Shanghai Old Restaurant (Yuyuan Branch) to Shanghai West Railway Station: metro: duration 23, cost 4. taxi: duration 13, cost 37.08. walk: duration 111, cost 0.0. \nfrom Shanghai Old Restaurant (Yuyuan Branch) to Shanghai Library East Branch: metro: duration 19, cost 3. taxi: duration 9, cost 25.7. walk: duration 72, cost 0.0. \nfrom Shanghai Old Restaurant (Yuyuan Branch) to Tongji University (Siping Road Campus): metro: duration 17, cost 3. taxi: duration 10, cost 29.44. walk: duration 84, cost 0.0. \nfrom Shanghai Old Restaurant (Yuyuan Branch) to Shanghai Fire Museum: metro: duration 24, cost 3. taxi: duration 10, cost 29.04. walk: duration 83, cost 0.0. \nfrom Shanghai Old Restaurant (Yuyuan Branch) to Shanghai Natural History Museum: metro: duration 10, cost 2. taxi: duration 3, cost 13.6. walk: duration 30, cost 0.0. \nfrom Shanghai Old Restaurant (Yuyuan Branch) to Shanghai Urban Planning Exhibition Center: metro: duration 8, cost 2. taxi: duration 2, cost 11.0. walk: duration 16, cost 0.0. \nfrom Shanghai Old Restaurant (Yuyuan Branch) to Yun He Ye Bo Hotel (Shanghai Pudong International Airport): metro: duration 126, cost 7. taxi: duration 44, cost 129.08. walk: duration 358, cost 0.0. \nfrom Shanghai Old Restaurant (Yuyuan Branch) to Mei Xin Dim Sum Shop (North Shaanxi Road Branch): metro: duration 15, cost 2. taxi: duration 4, cost 16.19. walk: duration 39, cost 0.0. \nfrom Shanghai Old Restaurant (Yuyuan Branch) to Nanxiang Steamed Bun Restaurant (Yuyuan Branch): taxi: duration 0, cost 11.0. walk: duration 1, cost 0.0. \nfrom Shanghai Old Restaurant (Yuyuan Branch) to Shanghai Zhuyi Light Luxury Homestay: metro: duration 92, cost 5. taxi: duration 32, cost 93.33. walk: duration 263, cost 0.0. \nfrom Shanghai Old Restaurant (Yuyuan Branch) to Shanghai Best Boutique Hotel: metro: duration 121, cost 7. taxi: duration 38, cost 109.07. walk: duration 304, cost 0.0. \nfrom Shanghai Old Restaurant (Yuyuan Branch) to Shanghai Railway Museum: metro: duration 13, cost 2. taxi: duration 4, cost 15.97. walk: duration 38, cost 0.0. \nfrom Shanghai Old Restaurant (Yuyuan Branch) to Shanghai Textile Museum: metro: duration 10, cost 2. taxi: duration 1, cost 11.0. walk: duration 15, cost 0.0. \nfrom Shanghai Old Restaurant (Yuyuan Branch) to Dahuchun (Sichuan Middle Road Branch): metro: duration 11, cost 2. taxi: duration 1, cost 11.0. walk: duration 9, cost 0.0. \nfrom Shanghai Jiao Tong University to Feng's Dad Noodle House (Shaanxi South Road Branch): metro: duration 16, cost 2. taxi: duration 3, cost 12.71. walk: duration 27, cost 0.0. \nfrom Shanghai Jiao Tong University to Shanghai Tunnel Science and Technology Museum: metro: duration 30, cost 3. taxi: duration 9, cost 27.61. walk: duration 78, cost 0.0. \nfrom Shanghai Jiao Tong University to Shanghai Library: metro: duration 7, cost 2. taxi: duration 1, cost 11.0. walk: duration 15, cost 0.0. \nfrom Shanghai Jiao Tong University to Shanghai Film Museum: metro: duration 17, cost 2. taxi: duration 2, cost 11.0. walk: duration 17, cost 0.0. \nfrom Shanghai Jiao Tong University to Shanghai Museum: metro: duration 19, cost 3. taxi: duration 7, cost 22.14. walk: duration 59, cost 0.0. \nfrom Shanghai Jiao Tong University to Shanghai Old Restaurant (Yuyuan Branch): metro: duration 16, cost 3. taxi: duration 7, cost 23.02. walk: duration 62, cost 0.0. \nfrom Shanghai Jiao Tong University to Shanghai Jiao Tong University:  metro: empty.  taxi: empty.  walk: empty. \nfrom Shanghai Jiao Tong University to Shanghai Jewish Refugees Museum: metro: duration 24, cost 3. taxi: duration 13, cost 37.06. walk: duration 110, cost 0.0. \nfrom Shanghai Jiao Tong University to Shanghai Public Security Museum: metro: duration 16, cost 2. taxi: duration 4, cost 15.54. walk: duration 37, cost 0.0. \nfrom Shanghai Jiao Tong University to Shanghai Hongqiao Station: metro: duration 29, cost 4. taxi: duration 17, cost 47.37. walk: duration 140, cost 0.0. \nfrom Shanghai Jiao Tong University to Shanghai Station: metro: duration 15, cost 3. taxi: duration 7, cost 22.48. walk: duration 60, cost 0.0. \nfrom Shanghai Jiao Tong University to Fudan University: metro: duration 37, cost 4. taxi: duration 18, cost 50.34. walk: duration 148, cost 0.0. \nfrom Shanghai Jiao Tong University to Shanghai West Railway Station: metro: duration 20, cost 3. taxi: duration 11, cost 30.74. walk: duration 89, cost 0.0. \nfrom Shanghai Jiao Tong University to Shanghai Library East Branch: metro: duration 29, cost 4. taxi: duration 16, cost 43.55. walk: duration 130, cost 0.0. \nfrom Shanghai Jiao Tong University to Tongji University (Siping Road Campus): metro: duration 25, cost 4. taxi: duration 17, cost 45.72. walk: duration 136, cost 0.0. \nfrom Shanghai Jiao Tong University to Shanghai Fire Museum: metro: duration 17, cost 2. taxi: duration 4, cost 15.72. walk: duration 37, cost 0.0. \nfrom Shanghai Jiao Tong University to Shanghai Natural History Museum: metro: duration 16, cost 3. taxi: duration 7, cost 21.29. walk: duration 56, cost 0.0. \nfrom Shanghai Jiao Tong University to Shanghai Urban Planning Exhibition Center: metro: duration 17, cost 3. taxi: duration 7, cost 22.92. walk: duration 62, cost 0.0. \nfrom Shanghai Jiao Tong University to Yun He Ye Bo Hotel (Shanghai Pudong International Airport): metro: duration 131, cost 7. taxi: duration 49, cost 143.21. walk: duration 396, cost 0.0. \nfrom Shanghai Jiao Tong University to Mei Xin Dim Sum Shop (North Shaanxi Road Branch): metro: duration 16, cost 2. taxi: duration 3, cost 13.86. walk: duration 31, cost 0.0. \nfrom Shanghai Jiao Tong University to Nanxiang Steamed Bun Restaurant (Yuyuan Branch): metro: duration 17, cost 3. taxi: duration 7, cost 23.07. walk: duration 62, cost 0.0. \nfrom Shanghai Jiao Tong University to Shanghai Zhuyi Light Luxury Homestay: metro: duration 99, cost 6. taxi: duration 36, cost 104.65. walk: duration 293, cost 0.0. \nfrom Shanghai Jiao Tong University to Shanghai Best Boutique Hotel: metro: duration 125, cost 7. taxi: duration 42, cost 121.47. walk: duration 338, cost 0.0. \nfrom Shanghai Jiao Tong University to Shanghai Railway Museum: metro: duration 21, cost 3. taxi: duration 10, cost 28.56. walk: duration 81, cost 0.0. \nfrom Shanghai Jiao Tong University to Shanghai Textile Museum: metro: duration 19, cost 3. taxi: duration 7, cost 22.15. walk: duration 59, cost 0.0. \nfrom Shanghai Jiao Tong University to Dahuchun (Sichuan Middle Road Branch): metro: duration 20, cost 3. taxi: duration 8, cost 24.11. walk: duration 66, cost 0.0. \nfrom Shanghai Jewish Refugees Museum to Feng's Dad Noodle House (Shaanxi South Road Branch): metro: duration 23, cost 3. taxi: duration 10, cost 29.23. walk: duration 84, cost 0.0. \nfrom Shanghai Jewish Refugees Museum to Shanghai Tunnel Science and Technology Museum: metro: duration 21, cost 2. taxi: duration 5, cost 17.78. walk: duration 44, cost 0.0. \nfrom Shanghai Jewish Refugees Museum to Shanghai Library: metro: duration 20, cost 3. taxi: duration 11, cost 32.66. walk: duration 95, cost 0.0. \nfrom Shanghai Jewish Refugees Museum to Shanghai Film Museum: metro: duration 32, cost 4. taxi: duration 15, cost 40.06. walk: duration 120, cost 0.0. \nfrom Shanghai Jewish Refugees Museum to Shanghai Museum: metro: duration 14, cost 2. taxi: duration 6, cost 19.62. walk: duration 51, cost 0.0. \nfrom Shanghai Jewish Refugees Museum to Shanghai Old Restaurant (Yuyuan Branch): metro: duration 14, cost 3. taxi: duration 6, cost 19.7. walk: duration 51, cost 0.0. \nfrom Shanghai Jewish Refugees Museum to Shanghai Jiao Tong University: metro: duration 24, cost 3. taxi: duration 13, cost 37.06. walk: duration 110, cost 0.0. \nfrom Shanghai Jewish Refugees Museum to Shanghai Jewish Refugees Museum:  metro: empty.  taxi: empty.  walk: empty. \nfrom Shanghai Jewish Refugees Museum to Shanghai Public Security Museum: metro: duration 23, cost 3. taxi: duration 10, cost 30.13. walk: duration 87, cost 0.0. \nfrom Shanghai Jewish Refugees Museum to Shanghai Hongqiao Station: metro: duration 43, cost 5. taxi: duration 30, cost 84.74. walk: duration 240, cost 0.0. \nfrom Shanghai Jewish Refugees Museum to Shanghai Station: metro: duration 15, cost 3. taxi: duration 8, cost 25.09. walk: duration 69, cost 0.0. \nfrom Shanghai Jewish Refugees Museum to Fudan University: metro: duration 21, cost 3. taxi: duration 7, cost 21.58. walk: duration 57, cost 0.0. \nfrom Shanghai Jewish Refugees Museum to Shanghai West Railway Station: metro: duration 26, cost 4. taxi: duration 16, cost 43.17. walk: duration 129, cost 0.0. \nfrom Shanghai Jewish Refugees Museum to Shanghai Library East Branch: metro: duration 17, cost 3. taxi: duration 7, cost 22.83. walk: duration 62, cost 0.0. \nfrom Shanghai Jewish Refugees Museum to Tongji University (Siping Road Campus): metro: duration 9, cost 2. taxi: duration 4, cost 16.23. walk: duration 39, cost 0.0. \nfrom Shanghai Jewish Refugees Museum to Shanghai Fire Museum: metro: duration 31, cost 4. taxi: duration 15, cost 40.29. walk: duration 121, cost 0.0. \nfrom Shanghai Jewish Refugees Museum to Shanghai Natural History Museum: metro: duration 14, cost 3. taxi: duration 7, cost 21.82. walk: duration 58, cost 0.0. \nfrom Shanghai Jewish Refugees Museum to Shanghai Urban Planning Exhibition Center: metro: duration 12, cost 2. taxi: duration 6, cost 18.88. walk: duration 48, cost 0.0. \nfrom Shanghai Jewish Refugees Museum to Yun He Ye Bo Hotel (Shanghai Pudong International Airport): metro: duration 126, cost 7. taxi: duration 44, cost 128.7. walk: duration 357, cost 0.0. \nfrom Shanghai Jewish Refugees Museum to Mei Xin Dim Sum Shop (North Shaanxi Road Branch): metro: duration 21, cost 3. taxi: duration 10, cost 28.56. walk: duration 81, cost 0.0. \nfrom Shanghai Jewish Refugees Museum to Nanxiang Steamed Bun Restaurant (Yuyuan Branch): metro: duration 15, cost 3. taxi: duration 6, cost 19.88. walk: duration 52, cost 0.0. \nfrom Shanghai Jewish Refugees Museum to Shanghai Zhuyi Light Luxury Homestay: metro: duration 92, cost 5. taxi: duration 34, cost 96.79. walk: duration 272, cost 0.0. \nfrom Shanghai Jewish Refugees Museum to Shanghai Best Boutique Hotel: metro: duration 123, cost 7. taxi: duration 38, cost 110.96. walk: duration 310, cost 0.0. \nfrom Shanghai Jewish Refugees Museum to Shanghai Railway Museum: metro: duration 13, cost 2. taxi: duration 4, cost 15.78. walk: duration 38, cost 0.0. \nfrom Shanghai Jewish Refugees Museum to Shanghai Textile Museum: metro: duration 14, cost 2. taxi: duration 6, cost 19.64. walk: duration 51, cost 0.0. \nfrom Shanghai Jewish Refugees Museum to Dahuchun (Sichuan Middle Road Branch): metro: duration 15, cost 2. taxi: duration 5, cost 17.8. walk: duration 44, cost 0.0. \nfrom Shanghai Public Security Museum to Feng's Dad Noodle House (Shaanxi South Road Branch): metro: duration 19, cost 2. taxi: duration 3, cost 13.48. walk: duration 30, cost 0.0. \nfrom Shanghai Public Security Museum to Shanghai Tunnel Science and Technology Museum: metro: duration 28, cost 3. taxi: duration 5, cost 18.35. walk: duration 46, cost 0.0. \nfrom Shanghai Public Security Museum to Shanghai Library: metro: duration 13, cost 2. taxi: duration 3, cost 13.39. walk: duration 29, cost 0.0. \nfrom Shanghai Public Security Museum to Shanghai Film Museum: metro: duration 21, cost 2. taxi: duration 4, cost 15.8. walk: duration 38, cost 0.0. \nfrom Shanghai Public Security Museum to Shanghai Museum: metro: duration 19, cost 3. taxi: duration 5, cost 16.5. walk: duration 40, cost 0.0. \nfrom Shanghai Public Security Museum to Shanghai Old Restaurant (Yuyuan Branch): metro: duration 15, cost 2. taxi: duration 4, cost 15.14. walk: duration 35, cost 0.0. \nfrom Shanghai Public Security Museum to Shanghai Jiao Tong University: metro: duration 16, cost 2. taxi: duration 4, cost 15.54. walk: duration 37, cost 0.0. \nfrom Shanghai Public Security Museum to Shanghai Jewish Refugees Museum: metro: duration 23, cost 3. taxi: duration 10, cost 30.13. walk: duration 87, cost 0.0. \nfrom Shanghai Public Security Museum to Shanghai Public Security Museum:  metro: empty.  taxi: empty.  walk: empty. \nfrom Shanghai Public Security Museum to Shanghai Hongqiao Station: metro: duration 36, cost 5. taxi: duration 22, cost 61.2. walk: duration 177, cost 0.0. \nfrom Shanghai Public Security Museum to Shanghai Station: metro: duration 19, cost 3. taxi: duration 7, cost 23.33. walk: duration 63, cost 0.0. \nfrom Shanghai Public Security Museum to Fudan University: metro: duration 38, cost 4. taxi: duration 16, cost 45.37. walk: duration 135, cost 0.0. \nfrom Shanghai Public Security Museum to Shanghai West Railway Station: metro: duration 27, cost 4. taxi: duration 14, cost 37.79. walk: duration 113, cost 0.0. \nfrom Shanghai Public Security Museum to Shanghai Library East Branch: metro: duration 26, cost 3. taxi: duration 11, cost 32.31. walk: duration 94, cost 0.0. \nfrom Shanghai Public Security Museum to Tongji University (Siping Road Campus): metro: duration 27, cost 4. taxi: duration 14, cost 39.63. walk: duration 119, cost 0.0. \nfrom Shanghai Public Security Museum to Shanghai Fire Museum: metro: duration 26, cost 3. taxi: duration 8, cost 25.21. walk: duration 70, cost 0.0. \nfrom Shanghai Public Security Museum to Shanghai Natural History Museum: metro: duration 18, cost 3. taxi: duration 6, cost 19.1. walk: duration 49, cost 0.0. \nfrom Shanghai Public Security Museum to Shanghai Urban Planning Exhibition Center: metro: duration 17, cost 3. taxi: duration 5, cost 17.71. walk: duration 44, cost 0.0. \nfrom Shanghai Public Security Museum to Yun He Ye Bo Hotel (Shanghai Pudong International Airport): metro: duration 127, cost 7. taxi: duration 45, cost 130.15. walk: duration 361, cost 0.0. \nfrom Shanghai Public Security Museum to Mei Xin Dim Sum Shop (North Shaanxi Road Branch): metro: duration 20, cost 2. taxi: duration 4, cost 14.96. walk: duration 35, cost 0.0. \nfrom Shanghai Public Security Museum to Nanxiang Steamed Bun Restaurant (Yuyuan Branch): metro: duration 16, cost 2. taxi: duration 4, cost 14.95. walk: duration 35, cost 0.0. \nfrom Shanghai Public Security Museum to Shanghai Zhuyi Light Luxury Homestay: metro: duration 94, cost 5. taxi: duration 32, cost 92.29. walk: duration 260, cost 0.0. \nfrom Shanghai Public Security Museum to Shanghai Best Boutique Hotel: metro: duration 122, cost 6. taxi: duration 38, cost 108.84. walk: duration 304, cost 0.0. \nfrom Shanghai Public Security Museum to Shanghai Railway Museum: metro: duration 22, cost 3. taxi: duration 8, cost 24.85. walk: duration 69, cost 0.0. \nfrom Shanghai Public Security Museum to Shanghai Textile Museum: metro: duration 19, cost 3. taxi: duration 5, cost 17.07. walk: duration 42, cost 0.0. \nfrom Shanghai Public Security Museum to Dahuchun (Sichuan Middle Road Branch): metro: duration 20, cost 3. taxi: duration 5, cost 17.42. walk: duration 43, cost 0.0. \nfrom Shanghai Hongqiao Station to Feng's Dad Noodle House (Shaanxi South Road Branch): metro: duration 37, cost 5. taxi: duration 20, cost 55.06. walk: duration 160, cost 0.0. \nfrom Shanghai Hongqiao Station to Shanghai Tunnel Science and Technology Museum: metro: duration 51, cost 5. taxi: duration 27, cost 76.13. walk: duration 217, cost 0.0. \nfrom Shanghai Hongqiao Station to Shanghai Library: metro: duration 28, cost 4. taxi: duration 19, cost 51.71. walk: duration 152, cost 0.0. \nfrom Shanghai Hongqiao Station to Shanghai Film Museum: metro: duration 33, cost 4. taxi: duration 17, cost 48.03. walk: duration 142, cost 0.0. \nfrom Shanghai Hongqiao Station to Shanghai Museum: metro: duration 39, cost 5. taxi: duration 24, cost 67.07. walk: duration 192, cost 0.0. \nfrom Shanghai Hongqiao Station to Shanghai Old Restaurant (Yuyuan Branch): metro: duration 36, cost 5. taxi: duration 24, cost 69.7. walk: duration 199, cost 0.0. \nfrom Shanghai Hongqiao Station to Shanghai Jiao Tong University: metro: duration 29, cost 4. taxi: duration 17, cost 47.37. walk: duration 140, cost 0.0. \nfrom Shanghai Hongqiao Station to Shanghai Jewish Refugees Museum: metro: duration 43, cost 5. taxi: duration 30, cost 84.74. walk: duration 240, cost 0.0. \nfrom Shanghai Hongqiao Station to Shanghai Public Security Museum: metro: duration 36, cost 5. taxi: duration 22, cost 61.2. walk: duration 177, cost 0.0. \nfrom Shanghai Hongqiao Station to Shanghai Hongqiao Station:  metro: empty.  taxi: empty.  walk: empty. \nfrom Shanghai Hongqiao Station to Shanghai Station: metro: duration 32, cost 5. taxi: duration 21, cost 59.11. walk: duration 171, cost 0.0. \nfrom Shanghai Hongqiao Station to Fudan University: metro: duration 53, cost 6. taxi: duration 32, cost 90.99. walk: duration 256, cost 0.0. \nfrom Shanghai Hongqiao Station to Shanghai West Railway Station: metro: duration 24, cost 4. taxi: duration 16, cost 44.13. walk: duration 131, cost 0.0. \nfrom Shanghai Hongqiao Station to Shanghai Library East Branch: metro: duration 50, cost 6. taxi: duration 33, cost 96.07. walk: duration 270, cost 0.0. \nfrom Shanghai Hongqiao Station to Tongji University (Siping Road Campus): metro: duration 43, cost 6. taxi: duration 31, cost 89.07. walk: duration 251, cost 0.0. \nfrom Shanghai Hongqiao Station to Shanghai Fire Museum: metro: duration 28, cost 4. taxi: duration 14, cost 39.3. walk: duration 118, cost 0.0. \nfrom Shanghai Hongqiao Station to Shanghai Natural History Museum: metro: duration 34, cost 5. taxi: duration 22, cost 62.78. walk: duration 181, cost 0.0. \nfrom Shanghai Hongqiao Station to Shanghai Urban Planning Exhibition Center: metro: duration 37, cost 5. taxi: duration 24, cost 67.44. walk: duration 193, cost 0.0. \nfrom Shanghai Hongqiao Station to Yun He Ye Bo Hotel (Shanghai Pudong International Airport): metro: duration 148, cost 8. taxi: duration 65, cost 191.54. walk: duration 524, cost 0.0. \nfrom Shanghai Hongqiao Station to Mei Xin Dim Sum Shop (North Shaanxi Road Branch): metro: duration 36, cost 5. taxi: duration 20, cost 55.14. walk: duration 161, cost 0.0. \nfrom Shanghai Hongqiao Station to Nanxiang Steamed Bun Restaurant (Yuyuan Branch): metro: duration 37, cost 5. taxi: duration 25, cost 69.92. walk: duration 200, cost 0.0. \nfrom Shanghai Hongqiao Station to Shanghai Zhuyi Light Luxury Homestay: metro: duration 118, cost 7. taxi: duration 52, cost 151.28. walk: duration 417, cost 0.0. \nfrom Shanghai Hongqiao Station to Shanghai Best Boutique Hotel: metro: duration 142, cost 8. taxi: duration 57, cost 168.63. walk: duration 463, cost 0.0. \nfrom Shanghai Hongqiao Station to Shanghai Railway Museum: metro: duration 40, cost 5. taxi: duration 25, cost 70.97. walk: duration 203, cost 0.0. \nfrom Shanghai Hongqiao Station to Shanghai Textile Museum: metro: duration 39, cost 5. taxi: duration 23, cost 66.57. walk: duration 191, cost 0.0. \nfrom Shanghai Hongqiao Station to Dahuchun (Sichuan Middle Road Branch): metro: duration 40, cost 5. taxi: duration 25, cost 70.01. walk: duration 200, cost 0.0. \nfrom Shanghai Station to Feng's Dad Noodle House (Shaanxi South Road Branch): metro: duration 16, cost 2. taxi: duration 4, cost 15.66. walk: duration 37, cost 0.0. \nfrom Shanghai Station to Shanghai Tunnel Science and Technology Museum: metro: duration 25, cost 3. taxi: duration 8, cost 23.64. walk: duration 64, cost 0.0. \nfrom Shanghai Station to Shanghai Library: metro: duration 12, cost 3. taxi: duration 5, cost 18.65. walk: duration 47, cost 0.0. \nfrom Shanghai Station to Shanghai Film Museum: metro: duration 25, cost 3. taxi: duration 9, cost 27.16. walk: duration 77, cost 0.0. \nfrom Shanghai Station to Shanghai Museum: metro: duration 12, cost 2. taxi: duration 4, cost 15.4. walk: duration 36, cost 0.0. \nfrom Shanghai Station to Shanghai Old Restaurant (Yuyuan Branch): metro: duration 12, cost 2. taxi: duration 6, cost 19.12. walk: duration 49, cost 0.0. \nfrom Shanghai Station to Shanghai Jiao Tong University: metro: duration 15, cost 3. taxi: duration 7, cost 22.48. walk: duration 60, cost 0.0. \nfrom Shanghai Station to Shanghai Jewish Refugees Museum: metro: duration 15, cost 3. taxi: duration 8, cost 25.09. walk: duration 69, cost 0.0. \nfrom Shanghai Station to Shanghai Public Security Museum: metro: duration 19, cost 3. taxi: duration 7, cost 23.33. walk: duration 63, cost 0.0. \nfrom Shanghai Station to Shanghai Hongqiao Station: metro: duration 32, cost 5. taxi: duration 21, cost 59.11. walk: duration 171, cost 0.0. \nfrom Shanghai Station to Shanghai Station:  metro: empty.  taxi: empty.  walk: empty. \nfrom Shanghai Station to Fudan University: metro: duration 26, cost 3. taxi: duration 11, cost 31.17. walk: duration 90, cost 0.0. \nfrom Shanghai Station to Shanghai West Railway Station: metro: duration 15, cost 3. taxi: duration 7, cost 23.13. walk: duration 63, cost 0.0. \nfrom Shanghai Station to Shanghai Library East Branch: metro: duration 24, cost 3. taxi: duration 14, cost 38.57. walk: duration 116, cost 0.0. \nfrom Shanghai Station to Tongji University (Siping Road Campus): metro: duration 15, cost 3. taxi: duration 10, cost 28.52. walk: duration 81, cost 0.0. \nfrom Shanghai Station to Shanghai Fire Museum: metro: duration 20, cost 3. taxi: duration 6, cost 20.73. walk: duration 54, cost 0.0. \nfrom Shanghai Station to Shanghai Natural History Museum: metro: duration 8, cost 2. taxi: duration 2, cost 11.0. walk: duration 18, cost 0.0. \nfrom Shanghai Station to Shanghai Urban Planning Exhibition Center: metro: duration 10, cost 2. taxi: duration 4, cost 14.69. walk: duration 34, cost 0.0. \nfrom Shanghai Station to Yun He Ye Bo Hotel (Shanghai Pudong International Airport): metro: duration 132, cost 7. taxi: duration 50, cost 147.47. walk: duration 407, cost 0.0. \nfrom Shanghai Station to Mei Xin Dim Sum Shop (North Shaanxi Road Branch): metro: duration 13, cost 2. taxi: duration 3, cost 14.02. walk: duration 31, cost 0.0. \nfrom Shanghai Station to Nanxiang Steamed Bun Restaurant (Yuyuan Branch): metro: duration 13, cost 2. taxi: duration 6, cost 19.56. walk: duration 50, cost 0.0. \nfrom Shanghai Station to Shanghai Zhuyi Light Luxury Homestay: metro: duration 98, cost 6. taxi: duration 39, cost 111.85. walk: duration 312, cost 0.0. \nfrom Shanghai Station to Shanghai Best Boutique Hotel: metro: duration 127, cost 7. taxi: duration 44, cost 127.6. walk: duration 354, cost 0.0. \nfrom Shanghai Station to Shanghai Railway Museum: metro: duration 12, cost 2. taxi: duration 4, cost 14.05. walk: duration 32, cost 0.0. \nfrom Shanghai Station to Shanghai Textile Museum: metro: duration 12, cost 2. taxi: duration 4, cost 14.52. walk: duration 33, cost 0.0. \nfrom Shanghai Station to Dahuchun (Sichuan Middle Road Branch): metro: duration 13, cost 2. taxi: duration 5, cost 17.28. walk: duration 43, cost 0.0. \nfrom Fudan University to Feng's Dad Noodle House (Shaanxi South Road Branch): metro: duration 36, cost 4. taxi: duration 15, cost 40.2. walk: duration 121, cost 0.0. \nfrom Fudan University to Shanghai Tunnel Science and Technology Museum: metro: duration 36, cost 3. taxi: duration 12, cost 33.94. walk: duration 100, cost 0.0. \nfrom Fudan University to Shanghai Library: metro: duration 33, cost 4. taxi: duration 16, cost 44.76. walk: duration 133, cost 0.0. \nfrom Fudan University to Shanghai Film Museum: metro: duration 46, cost 5. taxi: duration 20, cost 55.53. walk: duration 162, cost 0.0. \nfrom Fudan University to Shanghai Museum: metro: duration 28, cost 3. taxi: duration 11, cost 32.33. walk: duration 94, cost 0.0. \nfrom Fudan University to Shanghai Old Restaurant (Yuyuan Branch): metro: duration 28, cost 3. taxi: duration 12, cost 34.16. walk: duration 100, cost 0.0. \nfrom Fudan University to Shanghai Jiao Tong University: metro: duration 37, cost 4. taxi: duration 18, cost 50.34. walk: duration 148, cost 0.0. \nfrom Fudan University to Shanghai Jewish Refugees Museum: metro: duration 21, cost 3. taxi: duration 7, cost 21.58. walk: duration 57, cost 0.0. \nfrom Fudan University to Shanghai Public Security Museum: metro: duration 38, cost 4. taxi: duration 16, cost 45.37. walk: duration 135, cost 0.0. \nfrom Fudan University to Shanghai Hongqiao Station: metro: duration 53, cost 6. taxi: duration 32, cost 90.99. walk: duration 256, cost 0.0. \nfrom Fudan University to Shanghai Station: metro: duration 26, cost 3. taxi: duration 11, cost 31.17. walk: duration 90, cost 0.0. \nfrom Fudan University to Fudan University:  metro: empty.  taxi: empty.  walk: empty. \nfrom Fudan University to Shanghai West Railway Station: metro: duration 33, cost 4. taxi: duration 16, cost 43.1. walk: duration 129, cost 0.0. \nfrom Fudan University to Shanghai Library East Branch: metro: duration 31, cost 4. taxi: duration 14, cost 38.27. walk: duration 115, cost 0.0. \nfrom Fudan University to Tongji University (Siping Road Campus): metro: duration 11, cost 2. taxi: duration 2, cost 11.0. walk: duration 18, cost 0.0. \nfrom Fudan University to Shanghai Fire Museum: metro: duration 42, cost 4. taxi: duration 18, cost 49.02. walk: duration 144, cost 0.0. \nfrom Fudan University to Shanghai Natural History Museum: metro: duration 26, cost 3. taxi: duration 11, cost 31.43. walk: duration 91, cost 0.0. \nfrom Fudan University to Shanghai Urban Planning Exhibition Center: metro: duration 26, cost 3. taxi: duration 11, cost 31.16. walk: duration 90, cost 0.0. \nfrom Fudan University to Yun He Ye Bo Hotel (Shanghai Pudong International Airport): metro: duration 138, cost 7. taxi: duration 50, cost 145.55. walk: duration 402, cost 0.0. \nfrom Fudan University to Mei Xin Dim Sum Shop (North Shaanxi Road Branch): metro: duration 34, cost 4. taxi: duration 14, cost 38.82. walk: duration 116, cost 0.0. \nfrom Fudan University to Nanxiang Steamed Bun Restaurant (Yuyuan Branch): metro: duration 29, cost 3. taxi: duration 12, cost 34.5. walk: duration 102, cost 0.0. \nfrom Fudan University to Shanghai Zhuyi Light Luxury Homestay: metro: duration 104, cost 6. taxi: duration 40, cost 116.19. walk: duration 323, cost 0.0. \nfrom Fudan University to Shanghai Best Boutique Hotel: metro: duration 136, cost 7. taxi: duration 44, cost 129.4. walk: duration 359, cost 0.0. \nfrom Fudan University to Shanghai Railway Museum: metro: duration 25, cost 3. taxi: duration 8, cost 24.33. walk: duration 67, cost 0.0. \nfrom Fudan University to Shanghai Textile Museum: metro: duration 28, cost 3. taxi: duration 11, cost 31.85. walk: duration 93, cost 0.0. \nfrom Fudan University to Dahuchun (Sichuan Middle Road Branch): metro: duration 29, cost 3. taxi: duration 11, cost 31.53. walk: duration 91, cost 0.0. \nfrom Shanghai West Railway Station to Feng's Dad Noodle House (Shaanxi South Road Branch): metro: duration 25, cost 3. taxi: duration 10, cost 29.06. walk: duration 83, cost 0.0. \nfrom Shanghai West Railway Station to Shanghai Tunnel Science and Technology Museum: metro: duration 37, cost 4. taxi: duration 15, cost 42.54. walk: duration 127, cost 0.0. \nfrom Shanghai West Railway Station to Shanghai Library: metro: duration 18, cost 3. taxi: duration 10, cost 29.71. walk: duration 85, cost 0.0. \nfrom Shanghai West Railway Station to Shanghai Film Museum: metro: duration 29, cost 4. taxi: duration 13, cost 35.44. walk: duration 105, cost 0.0. \nfrom Shanghai West Railway Station to Shanghai Museum: metro: duration 23, cost 3. taxi: duration 12, cost 33.52. walk: duration 98, cost 0.0. \nfrom Shanghai West Railway Station to Shanghai Old Restaurant (Yuyuan Branch): metro: duration 23, cost 4. taxi: duration 13, cost 37.08. walk: duration 111, cost 0.0. \nfrom Shanghai West Railway Station to Shanghai Jiao Tong University: metro: duration 20, cost 3. taxi: duration 11, cost 30.74. walk: duration 89, cost 0.0. \nfrom Shanghai West Railway Station to Shanghai Jewish Refugees Museum: metro: duration 26, cost 4. taxi: duration 16, cost 43.17. walk: duration 129, cost 0.0. \nfrom Shanghai West Railway Station to Shanghai Public Security Museum: metro: duration 27, cost 4. taxi: duration 14, cost 37.79. walk: duration 113, cost 0.0. \nfrom Shanghai West Railway Station to Shanghai Hongqiao Station: metro: duration 24, cost 4. taxi: duration 16, cost 44.13. walk: duration 131, cost 0.0. \nfrom Shanghai West Railway Station to Shanghai Station: metro: duration 15, cost 3. taxi: duration 7, cost 23.13. walk: duration 63, cost 0.0. \nfrom Shanghai West Railway Station to Fudan University: metro: duration 33, cost 4. taxi: duration 16, cost 43.1. walk: duration 129, cost 0.0. \nfrom Shanghai West Railway Station to Shanghai West Railway Station:  metro: empty.  taxi: empty.  walk: empty. \nfrom Shanghai West Railway Station to Shanghai Library East Branch: metro: duration 36, cost 5. taxi: duration 22, cost 61.94. walk: duration 179, cost 0.0. \nfrom Shanghai West Railway Station to Tongji University (Siping Road Campus): metro: duration 23, cost 4. taxi: duration 15, cost 42.64. walk: duration 127, cost 0.0. \nfrom Shanghai West Railway Station to Shanghai Fire Museum: metro: duration 20, cost 3. taxi: duration 6, cost 20.59. walk: duration 54, cost 0.0. \nfrom Shanghai West Railway Station to Shanghai Natural History Museum: metro: duration 19, cost 3. taxi: duration 10, cost 28.41. walk: duration 81, cost 0.0. \nfrom Shanghai West Railway Station to Shanghai Urban Planning Exhibition Center: metro: duration 21, cost 3. taxi: duration 12, cost 32.99. walk: duration 96, cost 0.0. \nfrom Shanghai West Railway Station to Yun He Ye Bo Hotel (Shanghai Pudong International Airport): metro: duration 142, cost 8. taxi: duration 58, cost 170.64. walk: duration 469, cost 0.0. \nfrom Shanghai West Railway Station to Mei Xin Dim Sum Shop (North Shaanxi Road Branch): metro: duration 22, cost 3. taxi: duration 9, cost 27.74. walk: duration 79, cost 0.0. \nfrom Shanghai West Railway Station to Nanxiang Steamed Bun Restaurant (Yuyuan Branch): metro: duration 24, cost 4. taxi: duration 14, cost 37.49. walk: duration 112, cost 0.0. \nfrom Shanghai West Railway Station to Shanghai Zhuyi Light Luxury Homestay: metro: duration 109, cost 7. taxi: duration 46, cost 134.13. walk: duration 371, cost 0.0. \nfrom Shanghai West Railway Station to Shanghai Best Boutique Hotel: metro: duration 137, cost 7. taxi: duration 51, cost 150.27. walk: duration 414, cost 0.0. \nfrom Shanghai West Railway Station to Shanghai Railway Museum: metro: duration 23, cost 3. taxi: duration 11, cost 31.54. walk: duration 92, cost 0.0. \nfrom Shanghai West Railway Station to Shanghai Textile Museum: metro: duration 23, cost 3. taxi: duration 11, cost 32.7. walk: duration 95, cost 0.0. \nfrom Shanghai West Railway Station to Dahuchun (Sichuan Middle Road Branch): metro: duration 24, cost 3. taxi: duration 13, cost 35.58. walk: duration 105, cost 0.0. \nfrom Shanghai Library East Branch to Feng's Dad Noodle House (Shaanxi South Road Branch): metro: duration 29, cost 3. taxi: duration 13, cost 36.87. walk: duration 110, cost 0.0. \nfrom Shanghai Library East Branch to Shanghai Tunnel Science and Technology Museum: metro: duration 23, cost 2. taxi: duration 6, cost 20.53. walk: duration 54, cost 0.0. \nfrom Shanghai Library East Branch to Shanghai Library: metro: duration 26, cost 4. taxi: duration 14, cost 39.21. walk: duration 118, cost 0.0. \nfrom Shanghai Library East Branch to Shanghai Film Museum: metro: duration 36, cost 4. taxi: duration 16, cost 44.39. walk: duration 132, cost 0.0. \nfrom Shanghai Library East Branch to Shanghai Museum: metro: duration 22, cost 3. taxi: duration 10, cost 28.66. walk: duration 82, cost 0.0. \nfrom Shanghai Library East Branch to Shanghai Old Restaurant (Yuyuan Branch): metro: duration 19, cost 3. taxi: duration 9, cost 25.7. walk: duration 72, cost 0.0. \nfrom Shanghai Library East Branch to Shanghai Jiao Tong University: metro: duration 29, cost 4. taxi: duration 16, cost 43.55. walk: duration 130, cost 0.0. \nfrom Shanghai Library East Branch to Shanghai Jewish Refugees Museum: metro: duration 17, cost 3. taxi: duration 7, cost 22.83. walk: duration 62, cost 0.0. \nfrom Shanghai Library East Branch to Shanghai Public Security Museum: metro: duration 26, cost 3. taxi: duration 11, cost 32.31. walk: duration 94, cost 0.0. \nfrom Shanghai Library East Branch to Shanghai Hongqiao Station: metro: duration 50, cost 6. taxi: duration 33, cost 96.07. walk: duration 270, cost 0.0. \nfrom Shanghai Library East Branch to Shanghai Station: metro: duration 24, cost 3. taxi: duration 14, cost 38.57. walk: duration 116, cost 0.0. \nfrom Shanghai Library East Branch to Fudan University: metro: duration 31, cost 4. taxi: duration 14, cost 38.27. walk: duration 115, cost 0.0. \nfrom Shanghai Library East Branch to Shanghai West Railway Station: metro: duration 36, cost 5. taxi: duration 22, cost 61.94. walk: duration 179, cost 0.0. \nfrom Shanghai Library East Branch to Shanghai Library East Branch:  metro: empty.  taxi: empty.  walk: empty. \nfrom Shanghai Library East Branch to Tongji University (Siping Road Campus): metro: duration 20, cost 3. taxi: duration 12, cost 33.04. walk: duration 97, cost 0.0. \nfrom Shanghai Library East Branch to Shanghai Fire Museum: metro: duration 38, cost 4. taxi: duration 19, cost 52.95. walk: duration 155, cost 0.0. \nfrom Shanghai Library East Branch to Shanghai Natural History Museum: metro: duration 23, cost 3. taxi: duration 12, cost 33.46. walk: duration 98, cost 0.0. \nfrom Shanghai Library East Branch to Shanghai Urban Planning Exhibition Center: metro: duration 20, cost 3. taxi: duration 10, cost 28.92. walk: duration 83, cost 0.0. \nfrom Shanghai Library East Branch to Yun He Ye Bo Hotel (Shanghai Pudong International Airport): metro: duration 118, cost 6. taxi: duration 37, cost 105.74. walk: duration 296, cost 0.0. \nfrom Shanghai Library East Branch to Mei Xin Dim Sum Shop (North Shaanxi Road Branch): metro: duration 28, cost 3. taxi: duration 13, cost 37.15. walk: duration 111, cost 0.0. \nfrom Shanghai Library East Branch to Nanxiang Steamed Bun Restaurant (Yuyuan Branch): metro: duration 20, cost 3. taxi: duration 8, cost 25.43. walk: duration 71, cost 0.0. \nfrom Shanghai Library East Branch to Shanghai Zhuyi Light Luxury Homestay: metro: duration 84, cost 5. taxi: duration 26, cost 73.55. walk: duration 210, cost 0.0. \nfrom Shanghai Library East Branch to Shanghai Best Boutique Hotel: metro: duration 115, cost 6. taxi: duration 30, cost 87.67. walk: duration 247, cost 0.0. \nfrom Shanghai Library East Branch to Shanghai Railway Museum: metro: duration 23, cost 3. taxi: duration 11, cost 30.97. walk: duration 90, cost 0.0. \nfrom Shanghai Library East Branch to Shanghai Textile Museum: metro: duration 22, cost 3. taxi: duration 10, cost 29.36. walk: duration 84, cost 0.0. \nfrom Shanghai Library East Branch to Dahuchun (Sichuan Middle Road Branch): metro: duration 23, cost 3. taxi: duration 9, cost 26.4. walk: duration 74, cost 0.0. \nfrom Tongji University (Siping Road Campus) to Feng's Dad Noodle House (Shaanxi South Road Branch): metro: duration 25, cost 3. taxi: duration 13, cost 36.39. walk: duration 108, cost 0.0. \nfrom Tongji University (Siping Road Campus) to Shanghai Tunnel Science and Technology Museum: metro: duration 25, cost 3. taxi: duration 10, cost 28.81. walk: duration 82, cost 0.0. \nfrom Tongji University (Siping Road Campus) to Shanghai Library: metro: duration 22, cost 4. taxi: duration 15, cost 40.04. walk: duration 120, cost 0.0. \nfrom Tongji University (Siping Road Campus) to Shanghai Film Museum: metro: duration 35, cost 4. taxi: duration 18, cost 50.56. walk: duration 148, cost 0.0. \nfrom Tongji University (Siping Road Campus) to Shanghai Museum: metro: duration 17, cost 3. taxi: duration 9, cost 27.98. walk: duration 79, cost 0.0. \nfrom Tongji University (Siping Road Campus) to Shanghai Old Restaurant (Yuyuan Branch): metro: duration 17, cost 3. taxi: duration 10, cost 29.44. walk: duration 84, cost 0.0. \nfrom Tongji University (Siping Road Campus) to Shanghai Jiao Tong University: metro: duration 25, cost 4. taxi: duration 17, cost 45.72. walk: duration 136, cost 0.0. \nfrom Tongji University (Siping Road Campus) to Shanghai Jewish Refugees Museum: metro: duration 9, cost 2. taxi: duration 4, cost 16.23. walk: duration 39, cost 0.0. \nfrom Tongji University (Siping Road Campus) to Shanghai Public Security Museum: metro: duration 27, cost 4. taxi: duration 14, cost 39.63. walk: duration 119, cost 0.0. \nfrom Tongji University (Siping Road Campus) to Shanghai Hongqiao Station: metro: duration 43, cost 6. taxi: duration 31, cost 89.07. walk: duration 251, cost 0.0. \nfrom Tongji University (Siping Road Campus) to Shanghai Station: metro: duration 15, cost 3. taxi: duration 10, cost 28.52. walk: duration 81, cost 0.0. \nfrom Tongji University (Siping Road Campus) to Fudan University: metro: duration 11, cost 2. taxi: duration 2, cost 11.0. walk: duration 18, cost 0.0. \nfrom Tongji University (Siping Road Campus) to Shanghai West Railway Station: metro: duration 23, cost 4. taxi: duration 15, cost 42.64. walk: duration 127, cost 0.0. \nfrom Tongji University (Siping Road Campus) to Shanghai Library East Branch: metro: duration 20, cost 3. taxi: duration 12, cost 33.04. walk: duration 97, cost 0.0. \nfrom Tongji University (Siping Road Campus) to Tongji University (Siping Road Campus):  metro: empty.  taxi: empty.  walk: empty. \nfrom Tongji University (Siping Road Campus) to Shanghai Fire Museum: metro: duration 31, cost 4. taxi: duration 17, cost 45.93. walk: duration 136, cost 0.0. \nfrom Tongji University (Siping Road Campus) to Shanghai Natural History Museum: metro: duration 15, cost 3. taxi: duration 9, cost 27.82. walk: duration 79, cost 0.0. \nfrom Tongji University (Siping Road Campus) to Shanghai Urban Planning Exhibition Center: metro: duration 15, cost 3. taxi: duration 9, cost 26.87. walk: duration 76, cost 0.0. \nfrom Tongji University (Siping Road Campus) to Yun He Ye Bo Hotel (Shanghai Pudong International Airport): metro: duration 128, cost 7. taxi: duration 48, cost 139.7. walk: duration 386, cost 0.0. \nfrom Tongji University (Siping Road Campus) to Mei Xin Dim Sum Shop (North Shaanxi Road Branch): metro: duration 23, cost 3. taxi: duration 13, cost 35.26. walk: duration 104, cost 0.0. \nfrom Tongji University (Siping Road Campus) to Nanxiang Steamed Bun Restaurant (Yuyuan Branch): metro: duration 18, cost 3. taxi: duration 10, cost 29.75. walk: duration 85, cost 0.0. \nfrom Tongji University (Siping Road Campus) to Shanghai Zhuyi Light Luxury Homestay: metro: duration 94, cost 6. taxi: duration 38, cost 109.69. walk: duration 306, cost 0.0. \nfrom Tongji University (Siping Road Campus) to Shanghai Best Boutique Hotel: metro: duration 126, cost 7. taxi: duration 42, cost 123.14. walk: duration 342, cost 0.0. \nfrom Tongji University (Siping Road Campus) to Shanghai Railway Museum: metro: duration 14, cost 3. taxi: duration 6, cost 20.53. walk: duration 54, cost 0.0. \nfrom Tongji University (Siping Road Campus) to Shanghai Textile Museum: metro: duration 17, cost 3. taxi: duration 9, cost 27.61. walk: duration 78, cost 0.0. \nfrom Tongji University (Siping Road Campus) to Dahuchun (Sichuan Middle Road Branch): metro: duration 18, cost 3. taxi: duration 9, cost 26.93. walk: duration 76, cost 0.0. \nfrom Shanghai Fire Museum to Feng's Dad Noodle House (Shaanxi South Road Branch): metro: duration 25, cost 3. taxi: duration 5, cost 17.94. walk: duration 45, cost 0.0. \nfrom Shanghai Fire Museum to Shanghai Tunnel Science and Technology Museum: metro: duration 39, cost 4. taxi: duration 12, cost 34.19. walk: duration 101, cost 0.0. \nfrom Shanghai Fire Museum to Shanghai Library: metro: duration 16, cost 2. taxi: duration 5, cost 16.54. walk: duration 40, cost 0.0. \nfrom Shanghai Fire Museum to Shanghai Film Museum: metro: duration 25, cost 3. taxi: duration 6, cost 19.92. walk: duration 52, cost 0.0. \nfrom Shanghai Fire Museum to Shanghai Museum: metro: duration 26, cost 3. taxi: duration 9, cost 26.58. walk: duration 75, cost 0.0. \nfrom Shanghai Fire Museum to Shanghai Old Restaurant (Yuyuan Branch): metro: duration 24, cost 3. taxi: duration 10, cost 29.04. walk: duration 83, cost 0.0. \nfrom Shanghai Fire Museum to Shanghai Jiao Tong University: metro: duration 17, cost 2. taxi: duration 4, cost 15.72. walk: duration 37, cost 0.0. \nfrom Shanghai Fire Museum to Shanghai Jewish Refugees Museum: metro: duration 31, cost 4. taxi: duration 15, cost 40.29. walk: duration 121, cost 0.0. \nfrom Shanghai Fire Museum to Shanghai Public Security Museum: metro: duration 26, cost 3. taxi: duration 8, cost 25.21. walk: duration 70, cost 0.0. \nfrom Shanghai Fire Museum to Shanghai Hongqiao Station: metro: duration 28, cost 4. taxi: duration 14, cost 39.3. walk: duration 118, cost 0.0. \nfrom Shanghai Fire Museum to Shanghai Station: metro: duration 20, cost 3. taxi: duration 6, cost 20.73. walk: duration 54, cost 0.0. \nfrom Shanghai Fire Museum to Fudan University: metro: duration 42, cost 4. taxi: duration 18, cost 49.02. walk: duration 144, cost 0.0. \nfrom Shanghai Fire Museum to Shanghai West Railway Station: metro: duration 20, cost 3. taxi: duration 6, cost 20.59. walk: duration 54, cost 0.0. \nfrom Shanghai Fire Museum to Shanghai Library East Branch: metro: duration 38, cost 4. taxi: duration 19, cost 52.95. walk: duration 155, cost 0.0. \nfrom Shanghai Fire Museum to Tongji University (Siping Road Campus): metro: duration 31, cost 4. taxi: duration 17, cost 45.93. walk: duration 136, cost 0.0. \nfrom Shanghai Fire Museum to Shanghai Fire Museum:  metro: empty.  taxi: empty.  walk: empty. \nfrom Shanghai Fire Museum to Shanghai Natural History Museum: metro: duration 22, cost 3. taxi: duration 7, cost 23.05. walk: duration 62, cost 0.0. \nfrom Shanghai Fire Museum to Shanghai Urban Planning Exhibition Center: metro: duration 24, cost 3. taxi: duration 9, cost 26.76. walk: duration 75, cost 0.0. \nfrom Shanghai Fire Museum to Yun He Ye Bo Hotel (Shanghai Pudong International Airport): metro: duration 141, cost 8. taxi: duration 53, cost 156.52. walk: duration 431, cost 0.0. \nfrom Shanghai Fire Museum to Mei Xin Dim Sum Shop (North Shaanxi Road Branch): metro: duration 23, cost 3. taxi: duration 5, cost 17.55. walk: duration 44, cost 0.0. \nfrom Shanghai Fire Museum to Nanxiang Steamed Bun Restaurant (Yuyuan Branch): metro: duration 25, cost 3. taxi: duration 10, cost 29.29. walk: duration 84, cost 0.0. \nfrom Shanghai Fire Museum to Shanghai Zhuyi Light Luxury Homestay: metro: duration 108, cost 6. taxi: duration 41, cost 118.41. walk: duration 329, cost 0.0. \nfrom Shanghai Fire Museum to Shanghai Best Boutique Hotel: metro: duration 135, cost 7. taxi: duration 46, cost 135.1. walk: duration 374, cost 0.0. \nfrom Shanghai Fire Museum to Shanghai Railway Museum: metro: duration 28, cost 3. taxi: duration 10, cost 29.63. walk: duration 85, cost 0.0. \nfrom Shanghai Fire Museum to Shanghai Textile Museum: metro: duration 26, cost 3. taxi: duration 9, cost 26.12. walk: duration 73, cost 0.0. \nfrom Shanghai Fire Museum to Dahuchun (Sichuan Middle Road Branch): metro: duration 27, cost 3. taxi: duration 10, cost 28.9. walk: duration 82, cost 0.0. \nfrom Shanghai Natural History Museum to Feng's Dad Noodle House (Shaanxi South Road Branch): metro: duration 16, cost 2. taxi: duration 3, cost 13.36. walk: duration 29, cost 0.0. \nfrom Shanghai Natural History Museum to Shanghai Tunnel Science and Technology Museum: metro: duration 23, cost 3. taxi: duration 5, cost 18.21. walk: duration 46, cost 0.0. \nfrom Shanghai Natural History Museum to Shanghai Library: metro: duration 12, cost 2. taxi: duration 5, cost 16.91. walk: duration 41, cost 0.0. \nfrom Shanghai Natural History Museum to Shanghai Film Museum: metro: duration 25, cost 3. taxi: duration 8, cost 25.31. walk: duration 70, cost 0.0. \nfrom Shanghai Natural History Museum to Shanghai Museum: metro: duration 10, cost 2. taxi: duration 2, cost 11.0. walk: duration 17, cost 0.0. \nfrom Shanghai Natural History Museum to Shanghai Old Restaurant (Yuyuan Branch): metro: duration 10, cost 2. taxi: duration 3, cost 13.6. walk: duration 30, cost 0.0. \nfrom Shanghai Natural History Museum to Shanghai Jiao Tong University: metro: duration 16, cost 3. taxi: duration 7, cost 21.29. walk: duration 56, cost 0.0. \nfrom Shanghai Natural History Museum to Shanghai Jewish Refugees Museum: metro: duration 14, cost 3. taxi: duration 7, cost 21.82. walk: duration 58, cost 0.0. \nfrom Shanghai Natural History Museum to Shanghai Public Security Museum: metro: duration 18, cost 3. taxi: duration 6, cost 19.1. walk: duration 49, cost 0.0. \nfrom Shanghai Natural History Museum to Shanghai Hongqiao Station: metro: duration 34, cost 5. taxi: duration 22, cost 62.78. walk: duration 181, cost 0.0. \nfrom Shanghai Natural History Museum to Shanghai Station: metro: duration 8, cost 2. taxi: duration 2, cost 11.0. walk: duration 18, cost 0.0. \nfrom Shanghai Natural History Museum to Fudan University: metro: duration 26, cost 3. taxi: duration 11, cost 31.43. walk: duration 91, cost 0.0. \nfrom Shanghai Natural History Museum to Shanghai West Railway Station: metro: duration 19, cost 3. taxi: duration 10, cost 28.41. walk: duration 81, cost 0.0. \nfrom Shanghai Natural History Museum to Shanghai Library East Branch: metro: duration 23, cost 3. taxi: duration 12, cost 33.46. walk: duration 98, cost 0.0. \nfrom Shanghai Natural History Museum to Tongji University (Siping Road Campus): metro: duration 15, cost 3. taxi: duration 9, cost 27.82. walk: duration 79, cost 0.0. \nfrom Shanghai Natural History Museum to Shanghai Fire Museum: metro: duration 22, cost 3. taxi: duration 7, cost 23.05. walk: duration 62, cost 0.0. \nfrom Shanghai Natural History Museum to Shanghai Natural History Museum:  metro: empty.  taxi: empty.  walk: empty. \nfrom Shanghai Natural History Museum to Shanghai Urban Planning Exhibition Center: metro: duration 8, cost 2. taxi: duration 1, cost 11.0. walk: duration 15, cost 0.0. \nfrom Shanghai Natural History Museum to Yun He Ye Bo Hotel (Shanghai Pudong International Airport): metro: duration 130, cost 7. taxi: duration 48, cost 140.42. walk: duration 388, cost 0.0. \nfrom Shanghai Natural History Museum to Mei Xin Dim Sum Shop (North Shaanxi Road Branch): metro: duration 13, cost 2. taxi: duration 3, cost 12.14. walk: duration 25, cost 0.0. \nfrom Shanghai Natural History Museum to Nanxiang Steamed Bun Restaurant (Yuyuan Branch): metro: duration 11, cost 2. taxi: duration 4, cost 14.05. walk: duration 32, cost 0.0. \nfrom Shanghai Natural History Museum to Shanghai Zhuyi Light Luxury Homestay: metro: duration 96, cost 6. taxi: duration 36, cost 104.76. walk: duration 293, cost 0.0. \nfrom Shanghai Natural History Museum to Shanghai Best Boutique Hotel: metro: duration 125, cost 7. taxi: duration 41, cost 120.51. walk: duration 335, cost 0.0. \nfrom Shanghai Natural History Museum to Shanghai Railway Museum: metro: duration 11, cost 2. taxi: duration 3, cost 12.0. walk: duration 25, cost 0.0. \nfrom Shanghai Natural History Museum to Shanghai Textile Museum: metro: duration 10, cost 2. taxi: duration 1, cost 11.0. walk: duration 14, cost 0.0. \nfrom Shanghai Natural History Museum to Dahuchun (Sichuan Middle Road Branch): metro: duration 11, cost 2. taxi: duration 3, cost 11.88. walk: duration 24, cost 0.0. \nfrom Shanghai Urban Planning Exhibition Center to Feng's Dad Noodle House (Shaanxi South Road Branch): metro: duration 16, cost 2. taxi: duration 4, cost 15.05. walk: duration 35, cost 0.0. \nfrom Shanghai Urban Planning Exhibition Center to Shanghai Tunnel Science and Technology Museum: metro: duration 21, cost 2. taxi: duration 3, cost 13.65. walk: duration 30, cost 0.0. \nfrom Shanghai Urban Planning Exhibition Center to Shanghai Library: metro: duration 13, cost 3. taxi: duration 5, cost 18.5. walk: duration 47, cost 0.0. \nfrom Shanghai Urban Planning Exhibition Center to Shanghai Film Museum: metro: duration 26, cost 3. taxi: duration 9, cost 26.16. walk: duration 73, cost 0.0. \nfrom Shanghai Urban Planning Exhibition Center to Shanghai Museum: taxi: duration 0, cost 11.0. walk: duration 4, cost 0.0. \nfrom Shanghai Urban Planning Exhibition Center to Shanghai Old Restaurant (Yuyuan Branch): metro: duration 8, cost 2. taxi: duration 2, cost 11.0. walk: duration 16, cost 0.0. \nfrom Shanghai Urban Planning Exhibition Center to Shanghai Jiao Tong University: metro: duration 17, cost 3. taxi: duration 7, cost 22.92. walk: duration 62, cost 0.0. \nfrom Shanghai Urban Planning Exhibition Center to Shanghai Jewish Refugees Museum: metro: duration 12, cost 2. taxi: duration 6, cost 18.88. walk: duration 48, cost 0.0. \nfrom Shanghai Urban Planning Exhibition Center to Shanghai Public Security Museum: metro: duration 17, cost 3. taxi: duration 5, cost 17.71. walk: duration 44, cost 0.0. \nfrom Shanghai Urban Planning Exhibition Center to Shanghai Hongqiao Station: metro: duration 37, cost 5. taxi: duration 24, cost 67.44. walk: duration 193, cost 0.0. \nfrom Shanghai Urban Planning Exhibition Center to Shanghai Station: metro: duration 10, cost 2. taxi: duration 4, cost 14.69. walk: duration 34, cost 0.0. \nfrom Shanghai Urban Planning Exhibition Center to Fudan University: metro: duration 26, cost 3. taxi: duration 11, cost 31.16. walk: duration 90, cost 0.0. \nfrom Shanghai Urban Planning Exhibition Center to Shanghai West Railway Station: metro: duration 21, cost 3. taxi: duration 12, cost 32.99. walk: duration 96, cost 0.0. \nfrom Shanghai Urban Planning Exhibition Center to Shanghai Library East Branch: metro: duration 20, cost 3. taxi: duration 10, cost 28.92. walk: duration 83, cost 0.0. \nfrom Shanghai Urban Planning Exhibition Center to Tongji University (Siping Road Campus): metro: duration 15, cost 3. taxi: duration 9, cost 26.87. walk: duration 76, cost 0.0. \nfrom Shanghai Urban Planning Exhibition Center to Shanghai Fire Museum: metro: duration 24, cost 3. taxi: duration 9, cost 26.76. walk: duration 75, cost 0.0. \nfrom Shanghai Urban Planning Exhibition Center to Shanghai Natural History Museum: metro: duration 8, cost 2. taxi: duration 1, cost 11.0. walk: duration 15, cost 0.0. \nfrom Shanghai Urban Planning Exhibition Center to Shanghai Urban Planning Exhibition Center:  metro: empty.  taxi: empty.  walk: empty. \nfrom Shanghai Urban Planning Exhibition Center to Yun He Ye Bo Hotel (Shanghai Pudong International Airport): metro: duration 127, cost 7. taxi: duration 46, cost 134.63. walk: duration 373, cost 0.0. \nfrom Shanghai Urban Planning Exhibition Center to Mei Xin Dim Sum Shop (North Shaanxi Road Branch): metro: duration 15, cost 2. taxi: duration 4, cost 14.47. walk: duration 33, cost 0.0. \nfrom Shanghai Urban Planning Exhibition Center to Nanxiang Steamed Bun Restaurant (Yuyuan Branch): metro: duration 9, cost 2. taxi: duration 2, cost 11.0. walk: duration 17, cost 0.0. \nfrom Shanghai Urban Planning Exhibition Center to Shanghai Zhuyi Light Luxury Homestay: metro: duration 94, cost 5. taxi: duration 34, cost 99.22. walk: duration 278, cost 0.0. \nfrom Shanghai Urban Planning Exhibition Center to Shanghai Best Boutique Hotel: metro: duration 123, cost 7. taxi: duration 40, cost 114.85. walk: duration 320, cost 0.0. \nfrom Shanghai Urban Planning Exhibition Center to Shanghai Railway Museum: metro: duration 11, cost 2. taxi: duration 3, cost 11.9. walk: duration 24, cost 0.0. \nfrom Shanghai Urban Planning Exhibition Center to Shanghai Textile Museum: taxi: duration 0, cost 11.0. walk: duration 2, cost 0.0. \nfrom Shanghai Urban Planning Exhibition Center to Dahuchun (Sichuan Middle Road Branch): taxi: duration 1, cost 11.0. walk: duration 8, cost 0.0. \nfrom Yun He Ye Bo Hotel (Shanghai Pudong International Airport) to Feng's Dad Noodle House (Shaanxi South Road Branch): metro: duration 133, cost 7. taxi: duration 48, cost 140.42. walk: duration 388, cost 0.0. \nfrom Yun He Ye Bo Hotel (Shanghai Pudong International Airport) to Shanghai Tunnel Science and Technology Museum: metro: duration 131, cost 7. taxi: duration 42, cost 123.14. walk: duration 342, cost 0.0. \nfrom Yun He Ye Bo Hotel (Shanghai Pudong International Airport) to Shanghai Library: metro: duration 129, cost 7. taxi: duration 48, cost 141.32. walk: duration 390, cost 0.0. \nfrom Yun He Ye Bo Hotel (Shanghai Pudong International Airport) to Shanghai Film Museum: metro: duration 134, cost 7. taxi: duration 48, cost 140.14. walk: duration 387, cost 0.0. \nfrom Yun He Ye Bo Hotel (Shanghai Pudong International Airport) to Shanghai Museum: metro: duration 129, cost 7. taxi: duration 46, cost 133.76. walk: duration 370, cost 0.0. \nfrom Yun He Ye Bo Hotel (Shanghai Pudong International Airport) to Shanghai Old Restaurant (Yuyuan Branch): metro: duration 126, cost 7. taxi: duration 44, cost 129.08. walk: duration 358, cost 0.0. \nfrom Yun He Ye Bo Hotel (Shanghai Pudong International Airport) to Shanghai Jiao Tong University: metro: duration 131, cost 7. taxi: duration 49, cost 143.21. walk: duration 396, cost 0.0. \nfrom Yun He Ye Bo Hotel (Shanghai Pudong International Airport) to Shanghai Jewish Refugees Museum: metro: duration 126, cost 7. taxi: duration 44, cost 128.7. walk: duration 357, cost 0.0. \nfrom Yun He Ye Bo Hotel (Shanghai Pudong International Airport) to Shanghai Public Security Museum: metro: duration 127, cost 7. taxi: duration 45, cost 130.15. walk: duration 361, cost 0.0. \nfrom Yun He Ye Bo Hotel (Shanghai Pudong International Airport) to Shanghai Hongqiao Station: metro: duration 148, cost 8. taxi: duration 65, cost 191.54. walk: duration 524, cost 0.0. \nfrom Yun He Ye Bo Hotel (Shanghai Pudong International Airport) to Shanghai Station: metro: duration 132, cost 7. taxi: duration 50, cost 147.47. walk: duration 407, cost 0.0. \nfrom Yun He Ye Bo Hotel (Shanghai Pudong International Airport) to Fudan University: metro: duration 138, cost 7. taxi: duration 50, cost 145.55. walk: duration 402, cost 0.0. \nfrom Yun He Ye Bo Hotel (Shanghai Pudong International Airport) to Shanghai West Railway Station: metro: duration 142, cost 8. taxi: duration 58, cost 170.64. walk: duration 469, cost 0.0. \nfrom Yun He Ye Bo Hotel (Shanghai Pudong International Airport) to Shanghai Library East Branch: metro: duration 118, cost 6. taxi: duration 37, cost 105.74. walk: duration 296, cost 0.0. \nfrom Yun He Ye Bo Hotel (Shanghai Pudong International Airport) to Tongji University (Siping Road Campus): metro: duration 128, cost 7. taxi: duration 48, cost 139.7. walk: duration 386, cost 0.0. \nfrom Yun He Ye Bo Hotel (Shanghai Pudong International Airport) to Shanghai Fire Museum: metro: duration 141, cost 8. taxi: duration 53, cost 156.52. walk: duration 431, cost 0.0. \nfrom Yun He Ye Bo Hotel (Shanghai Pudong International Airport) to Shanghai Natural History Museum: metro: duration 130, cost 7. taxi: duration 48, cost 140.42. walk: duration 388, cost 0.0. \nfrom Yun He Ye Bo Hotel (Shanghai Pudong International Airport) to Shanghai Urban Planning Exhibition Center: metro: duration 127, cost 7. taxi: duration 46, cost 134.63. walk: duration 373, cost 0.0. \nfrom Yun He Ye Bo Hotel (Shanghai Pudong International Airport) to Yun He Ye Bo Hotel (Shanghai Pudong International Airport):  metro: empty.  taxi: empty.  walk: empty. \nfrom Yun He Ye Bo Hotel (Shanghai Pudong International Airport) to Mei Xin Dim Sum Shop (North Shaanxi Road Branch): metro: duration 134, cost 7. taxi: duration 49, cost 141.72. walk: duration 392, cost 0.0. \nfrom Yun He Ye Bo Hotel (Shanghai Pudong International Airport) to Nanxiang Steamed Bun Restaurant (Yuyuan Branch): metro: duration 127, cost 7. taxi: duration 44, cost 128.53. walk: duration 356, cost 0.0. \nfrom Yun He Ye Bo Hotel (Shanghai Pudong International Airport) to Shanghai Zhuyi Light Luxury Homestay: metro: duration 134, cost 4. taxi: duration 13, cost 36.64. walk: duration 109, cost 0.0. \nfrom Yun He Ye Bo Hotel (Shanghai Pudong International Airport) to Shanghai Best Boutique Hotel: metro: duration 131, cost 3. taxi: duration 7, cost 23.3. walk: duration 63, cost 0.0. \nfrom Yun He Ye Bo Hotel (Shanghai Pudong International Airport) to Shanghai Railway Museum: metro: duration 131, cost 7. taxi: duration 48, cost 139.2. walk: duration 385, cost 0.0. \nfrom Yun He Ye Bo Hotel (Shanghai Pudong International Airport) to Shanghai Textile Museum: metro: duration 129, cost 7. taxi: duration 46, cost 134.87. walk: duration 373, cost 0.0. \nfrom Yun He Ye Bo Hotel (Shanghai Pudong International Airport) to Dahuchun (Sichuan Middle Road Branch): metro: duration 130, cost 7. taxi: duration 45, cost 131.32. walk: duration 364, cost 0.0. \nfrom Mei Xin Dim Sum Shop (North Shaanxi Road Branch) to Feng's Dad Noodle House (Shaanxi South Road Branch): metro: duration 17, cost 2. taxi: duration 0, cost 11.0. walk: duration 5, cost 0.0. \nfrom Mei Xin Dim Sum Shop (North Shaanxi Road Branch) to Shanghai Tunnel Science and Technology Museum: metro: duration 29, cost 3. taxi: duration 7, cost 21.34. walk: duration 57, cost 0.0. \nfrom Mei Xin Dim Sum Shop (North Shaanxi Road Branch) to Shanghai Library: metro: duration 13, cost 2. taxi: duration 2, cost 11.0. walk: duration 16, cost 0.0. \nfrom Mei Xin Dim Sum Shop (North Shaanxi Road Branch) to Shanghai Film Museum: metro: duration 26, cost 3. taxi: duration 5, cost 18.11. walk: duration 45, cost 0.0. \nfrom Mei Xin Dim Sum Shop (North Shaanxi Road Branch) to Shanghai Museum: metro: duration 17, cost 2. taxi: duration 3, cost 14.02. walk: duration 31, cost 0.0. \nfrom Mei Xin Dim Sum Shop (North Shaanxi Road Branch) to Shanghai Old Restaurant (Yuyuan Branch): metro: duration 15, cost 2. taxi: duration 4, cost 16.19. walk: duration 39, cost 0.0. \nfrom Mei Xin Dim Sum Shop (North Shaanxi Road Branch) to Shanghai Jiao Tong University: metro: duration 16, cost 2. taxi: duration 3, cost 13.86. walk: duration 31, cost 0.0. \nfrom Mei Xin Dim Sum Shop (North Shaanxi Road Branch) to Shanghai Jewish Refugees Museum: metro: duration 21, cost 3. taxi: duration 10, cost 28.56. walk: duration 81, cost 0.0. \nfrom Mei Xin Dim Sum Shop (North Shaanxi Road Branch) to Shanghai Public Security Museum: metro: duration 20, cost 2. taxi: duration 4, cost 14.96. walk: duration 35, cost 0.0. \nfrom Mei Xin Dim Sum Shop (North Shaanxi Road Branch) to Shanghai Hongqiao Station: metro: duration 36, cost 5. taxi: duration 20, cost 55.14. walk: duration 161, cost 0.0. \nfrom Mei Xin Dim Sum Shop (North Shaanxi Road Branch) to Shanghai Station: metro: duration 13, cost 2. taxi: duration 3, cost 14.02. walk: duration 31, cost 0.0. \nfrom Mei Xin Dim Sum Shop (North Shaanxi Road Branch) to Fudan University: metro: duration 34, cost 4. taxi: duration 14, cost 38.82. walk: duration 116, cost 0.0. \nfrom Mei Xin Dim Sum Shop (North Shaanxi Road Branch) to Shanghai West Railway Station: metro: duration 22, cost 3. taxi: duration 9, cost 27.74. walk: duration 79, cost 0.0. \nfrom Mei Xin Dim Sum Shop (North Shaanxi Road Branch) to Shanghai Library East Branch: metro: duration 28, cost 3. taxi: duration 13, cost 37.15. walk: duration 111, cost 0.0. \nfrom Mei Xin Dim Sum Shop (North Shaanxi Road Branch) to Tongji University (Siping Road Campus): metro: duration 23, cost 3. taxi: duration 13, cost 35.26. walk: duration 104, cost 0.0. \nfrom Mei Xin Dim Sum Shop (North Shaanxi Road Branch) to Shanghai Fire Museum: metro: duration 23, cost 3. taxi: duration 5, cost 17.55. walk: duration 44, cost 0.0. \nfrom Mei Xin Dim Sum Shop (North Shaanxi Road Branch) to Shanghai Natural History Museum: metro: duration 13, cost 2. taxi: duration 3, cost 12.14. walk: duration 25, cost 0.0. \nfrom Mei Xin Dim Sum Shop (North Shaanxi Road Branch) to Shanghai Urban Planning Exhibition Center: metro: duration 15, cost 2. taxi: duration 4, cost 14.47. walk: duration 33, cost 0.0. \nfrom Mei Xin Dim Sum Shop (North Shaanxi Road Branch) to Yun He Ye Bo Hotel (Shanghai Pudong International Airport): metro: duration 134, cost 7. taxi: duration 49, cost 141.72. walk: duration 392, cost 0.0. \nfrom Mei Xin Dim Sum Shop (North Shaanxi Road Branch) to Mei Xin Dim Sum Shop (North Shaanxi Road Branch):  metro: empty.  taxi: empty.  walk: empty. \nfrom Mei Xin Dim Sum Shop (North Shaanxi Road Branch) to Nanxiang Steamed Bun Restaurant (Yuyuan Branch): metro: duration 16, cost 2. taxi: duration 5, cost 16.44. walk: duration 40, cost 0.0. \nfrom Mei Xin Dim Sum Shop (North Shaanxi Road Branch) to Shanghai Zhuyi Light Luxury Homestay: metro: duration 101, cost 6. taxi: duration 36, cost 104.62. walk: duration 293, cost 0.0. \nfrom Mei Xin Dim Sum Shop (North Shaanxi Road Branch) to Shanghai Best Boutique Hotel: metro: duration 129, cost 7. taxi: duration 42, cost 120.92. walk: duration 336, cost 0.0. \nfrom Mei Xin Dim Sum Shop (North Shaanxi Road Branch) to Shanghai Railway Museum: metro: duration 18, cost 2. taxi: duration 6, cost 19.44. walk: duration 50, cost 0.0. \nfrom Mei Xin Dim Sum Shop (North Shaanxi Road Branch) to Shanghai Textile Museum: metro: duration 17, cost 2. taxi: duration 3, cost 13.74. walk: duration 30, cost 0.0. \nfrom Mei Xin Dim Sum Shop (North Shaanxi Road Branch) to Dahuchun (Sichuan Middle Road Branch): metro: duration 18, cost 2. taxi: duration 4, cost 16.28. walk: duration 39, cost 0.0. \nfrom Nanxiang Steamed Bun Restaurant (Yuyuan Branch) to Feng's Dad Noodle House (Shaanxi South Road Branch): metro: duration 16, cost 2. taxi: duration 4, cost 16.27. walk: duration 39, cost 0.0. \nfrom Nanxiang Steamed Bun Restaurant (Yuyuan Branch) to Shanghai Tunnel Science and Technology Museum: metro: duration 21, cost 2. taxi: duration 2, cost 11.0. walk: duration 16, cost 0.0. \nfrom Nanxiang Steamed Bun Restaurant (Yuyuan Branch) to Shanghai Library: metro: duration 13, cost 2. taxi: duration 6, cost 19.04. walk: duration 49, cost 0.0. \nfrom Nanxiang Steamed Bun Restaurant (Yuyuan Branch) to Shanghai Film Museum: metro: duration 25, cost 3. taxi: duration 8, cost 25.2. walk: duration 70, cost 0.0. \nfrom Nanxiang Steamed Bun Restaurant (Yuyuan Branch) to Shanghai Museum: metro: duration 11, cost 2. taxi: duration 1, cost 11.0. walk: duration 14, cost 0.0. \nfrom Nanxiang Steamed Bun Restaurant (Yuyuan Branch) to Shanghai Old Restaurant (Yuyuan Branch): taxi: duration 0, cost 11.0. walk: duration 1, cost 0.0. \nfrom Nanxiang Steamed Bun Restaurant (Yuyuan Branch) to Shanghai Jiao Tong University: metro: duration 17, cost 3. taxi: duration 7, cost 23.07. walk: duration 62, cost 0.0. \nfrom Nanxiang Steamed Bun Restaurant (Yuyuan Branch) to Shanghai Jewish Refugees Museum: metro: duration 15, cost 3. taxi: duration 6, cost 19.88. walk: duration 52, cost 0.0. \nfrom Nanxiang Steamed Bun Restaurant (Yuyuan Branch) to Shanghai Public Security Museum: metro: duration 16, cost 2. taxi: duration 4, cost 14.95. walk: duration 35, cost 0.0. \nfrom Nanxiang Steamed Bun Restaurant (Yuyuan Branch) to Shanghai Hongqiao Station: metro: duration 37, cost 5. taxi: duration 25, cost 69.92. walk: duration 200, cost 0.0. \nfrom Nanxiang Steamed Bun Restaurant (Yuyuan Branch) to Shanghai Station: metro: duration 13, cost 2. taxi: duration 6, cost 19.56. walk: duration 50, cost 0.0. \nfrom Nanxiang Steamed Bun Restaurant (Yuyuan Branch) to Fudan University: metro: duration 29, cost 3. taxi: duration 12, cost 34.5. walk: duration 102, cost 0.0. \nfrom Nanxiang Steamed Bun Restaurant (Yuyuan Branch) to Shanghai West Railway Station: metro: duration 24, cost 4. taxi: duration 14, cost 37.49. walk: duration 112, cost 0.0. \nfrom Nanxiang Steamed Bun Restaurant (Yuyuan Branch) to Shanghai Library East Branch: metro: duration 20, cost 3. taxi: duration 8, cost 25.43. walk: duration 71, cost 0.0. \nfrom Nanxiang Steamed Bun Restaurant (Yuyuan Branch) to Tongji University (Siping Road Campus): metro: duration 18, cost 3. taxi: duration 10, cost 29.75. walk: duration 85, cost 0.0. \nfrom Nanxiang Steamed Bun Restaurant (Yuyuan Branch) to Shanghai Fire Museum: metro: duration 25, cost 3. taxi: duration 10, cost 29.29. walk: duration 84, cost 0.0. \nfrom Nanxiang Steamed Bun Restaurant (Yuyuan Branch) to Shanghai Natural History Museum: metro: duration 11, cost 2. taxi: duration 4, cost 14.05. walk: duration 32, cost 0.0. \nfrom Nanxiang Steamed Bun Restaurant (Yuyuan Branch) to Shanghai Urban Planning Exhibition Center: metro: duration 9, cost 2. taxi: duration 2, cost 11.0. walk: duration 17, cost 0.0. \nfrom Nanxiang Steamed Bun Restaurant (Yuyuan Branch) to Yun He Ye Bo Hotel (Shanghai Pudong International Airport): metro: duration 127, cost 7. taxi: duration 44, cost 128.53. walk: duration 356, cost 0.0. \nfrom Nanxiang Steamed Bun Restaurant (Yuyuan Branch) to Mei Xin Dim Sum Shop (North Shaanxi Road Branch): metro: duration 16, cost 2. taxi: duration 5, cost 16.44. walk: duration 40, cost 0.0. \nfrom Nanxiang Steamed Bun Restaurant (Yuyuan Branch) to Nanxiang Steamed Bun Restaurant (Yuyuan Branch):  metro: empty.  taxi: empty.  walk: empty. \nfrom Nanxiang Steamed Bun Restaurant (Yuyuan Branch) to Shanghai Zhuyi Light Luxury Homestay: metro: duration 93, cost 5. taxi: duration 32, cost 92.74. walk: duration 261, cost 0.0. \nfrom Nanxiang Steamed Bun Restaurant (Yuyuan Branch) to Shanghai Best Boutique Hotel: metro: duration 122, cost 7. taxi: duration 37, cost 108.5. walk: duration 303, cost 0.0. \nfrom Nanxiang Steamed Bun Restaurant (Yuyuan Branch) to Shanghai Railway Museum: metro: duration 14, cost 2. taxi: duration 5, cost 16.42. walk: duration 40, cost 0.0. \nfrom Nanxiang Steamed Bun Restaurant (Yuyuan Branch) to Shanghai Textile Museum: metro: duration 11, cost 2. taxi: duration 2, cost 11.0. walk: duration 17, cost 0.0. \nfrom Nanxiang Steamed Bun Restaurant (Yuyuan Branch) to Dahuchun (Sichuan Middle Road Branch): metro: duration 12, cost 2. taxi: duration 1, cost 11.0. walk: duration 11, cost 0.0. \nfrom Shanghai Zhuyi Light Luxury Homestay to Feng's Dad Noodle House (Shaanxi South Road Branch): metro: duration 100, cost 6. taxi: duration 36, cost 103.11. walk: duration 289, cost 0.0. \nfrom Shanghai Zhuyi Light Luxury Homestay to Shanghai Tunnel Science and Technology Museum: metro: duration 97, cost 5. taxi: duration 31, cost 88.05. walk: duration 248, cost 0.0. \nfrom Shanghai Zhuyi Light Luxury Homestay to Shanghai Library: metro: duration 96, cost 6. taxi: duration 36, cost 103.41. walk: duration 289, cost 0.0. \nfrom Shanghai Zhuyi Light Luxury Homestay to Shanghai Film Museum: metro: duration 102, cost 6. taxi: duration 35, cost 101.0. walk: duration 283, cost 0.0. \nfrom Shanghai Zhuyi Light Luxury Homestay to Shanghai Museum: metro: duration 96, cost 5. taxi: duration 34, cost 98.13. walk: duration 275, cost 0.0. \nfrom Shanghai Zhuyi Light Luxury Homestay to Shanghai Old Restaurant (Yuyuan Branch): metro: duration 92, cost 5. taxi: duration 32, cost 93.33. walk: duration 263, cost 0.0. \nfrom Shanghai Zhuyi Light Luxury Homestay to Shanghai Jiao Tong University: metro: duration 99, cost 6. taxi: duration 36, cost 104.65. walk: duration 293, cost 0.0. \nfrom Shanghai Zhuyi Light Luxury Homestay to Shanghai Jewish Refugees Museum: metro: duration 92, cost 5. taxi: duration 34, cost 96.79. walk: duration 272, cost 0.0. \nfrom Shanghai Zhuyi Light Luxury Homestay to Shanghai Public Security Museum: metro: duration 94, cost 5. taxi: duration 32, cost 92.29. walk: duration 260, cost 0.0. \nfrom Shanghai Zhuyi Light Luxury Homestay to Shanghai Hongqiao Station: metro: duration 118, cost 7. taxi: duration 52, cost 151.28. walk: duration 417, cost 0.0. \nfrom Shanghai Zhuyi Light Luxury Homestay to Shanghai Station: metro: duration 98, cost 6. taxi: duration 39, cost 111.85. walk: duration 312, cost 0.0. \nfrom Shanghai Zhuyi Light Luxury Homestay to Fudan University: metro: duration 104, cost 6. taxi: duration 40, cost 116.19. walk: duration 323, cost 0.0. \nfrom Shanghai Zhuyi Light Luxury Homestay to Shanghai West Railway Station: metro: duration 109, cost 7. taxi: duration 46, cost 134.13. walk: duration 371, cost 0.0. \nfrom Shanghai Zhuyi Light Luxury Homestay to Shanghai Library East Branch: metro: duration 84, cost 5. taxi: duration 26, cost 73.55. walk: duration 210, cost 0.0. \nfrom Shanghai Zhuyi Light Luxury Homestay to Tongji University (Siping Road Campus): metro: duration 94, cost 6. taxi: duration 38, cost 109.69. walk: duration 306, cost 0.0. \nfrom Shanghai Zhuyi Light Luxury Homestay to Shanghai Fire Museum: metro: duration 108, cost 6. taxi: duration 41, cost 118.41. walk: duration 329, cost 0.0. \nfrom Shanghai Zhuyi Light Luxury Homestay to Shanghai Natural History Museum: metro: duration 96, cost 6. taxi: duration 36, cost 104.76. walk: duration 293, cost 0.0. \nfrom Shanghai Zhuyi Light Luxury Homestay to Shanghai Urban Planning Exhibition Center: metro: duration 94, cost 5. taxi: duration 34, cost 99.22. walk: duration 278, cost 0.0. \nfrom Shanghai Zhuyi Light Luxury Homestay to Yun He Ye Bo Hotel (Shanghai Pudong International Airport): metro: duration 134, cost 4. taxi: duration 13, cost 36.64. walk: duration 109, cost 0.0. \nfrom Shanghai Zhuyi Light Luxury Homestay to Mei Xin Dim Sum Shop (North Shaanxi Road Branch): metro: duration 101, cost 6. taxi: duration 36, cost 104.62. walk: duration 293, cost 0.0. \nfrom Shanghai Zhuyi Light Luxury Homestay to Nanxiang Steamed Bun Restaurant (Yuyuan Branch): metro: duration 93, cost 5. taxi: duration 32, cost 92.74. walk: duration 261, cost 0.0. \nfrom Shanghai Zhuyi Light Luxury Homestay to Shanghai Zhuyi Light Luxury Homestay:  metro: empty.  taxi: empty.  walk: empty. \nfrom Shanghai Zhuyi Light Luxury Homestay to Shanghai Best Boutique Hotel: metro: duration 133, cost 4. taxi: duration 5, cost 18.24. walk: duration 46, cost 0.0. \nfrom Shanghai Zhuyi Light Luxury Homestay to Shanghai Railway Museum: metro: duration 97, cost 6. taxi: duration 36, cost 105.14. walk: duration 294, cost 0.0. \nfrom Shanghai Zhuyi Light Luxury Homestay to Shanghai Textile Museum: metro: duration 96, cost 5. taxi: duration 34, cost 99.3. walk: duration 278, cost 0.0. \nfrom Shanghai Zhuyi Light Luxury Homestay to Dahuchun (Sichuan Middle Road Branch): metro: duration 97, cost 5. taxi: duration 33, cost 96.03. walk: duration 270, cost 0.0. \nfrom Shanghai Best Boutique Hotel to Feng's Dad Noodle House (Shaanxi South Road Branch): metro: duration 128, cost 7. taxi: duration 41, cost 119.48. walk: duration 332, cost 0.0. \nfrom Shanghai Best Boutique Hotel to Shanghai Tunnel Science and Technology Museum: metro: duration 127, cost 6. taxi: duration 36, cost 103.5. walk: duration 290, cost 0.0. \nfrom Shanghai Best Boutique Hotel to Shanghai Library: metro: duration 123, cost 7. taxi: duration 41, cost 120.0. walk: duration 334, cost 0.0. \nfrom Shanghai Best Boutique Hotel to Shanghai Film Museum: metro: duration 128, cost 7. taxi: duration 41, cost 118.01. walk: duration 328, cost 0.0. \nfrom Shanghai Best Boutique Hotel to Shanghai Museum: metro: duration 125, cost 7. taxi: duration 39, cost 113.84. walk: duration 317, cost 0.0. \nfrom Shanghai Best Boutique Hotel to Shanghai Old Restaurant (Yuyuan Branch): metro: duration 121, cost 7. taxi: duration 38, cost 109.07. walk: duration 304, cost 0.0. \nfrom Shanghai Best Boutique Hotel to Shanghai Jiao Tong University: metro: duration 125, cost 7. taxi: duration 42, cost 121.47. walk: duration 338, cost 0.0. \nfrom Shanghai Best Boutique Hotel to Shanghai Jewish Refugees Museum: metro: duration 123, cost 7. taxi: duration 38, cost 110.96. walk: duration 310, cost 0.0. \nfrom Shanghai Best Boutique Hotel to Shanghai Public Security Museum: metro: duration 122, cost 6. taxi: duration 38, cost 108.84. walk: duration 304, cost 0.0. \nfrom Shanghai Best Boutique Hotel to Shanghai Hongqiao Station: metro: duration 142, cost 8. taxi: duration 57, cost 168.63. walk: duration 463, cost 0.0. \nfrom Shanghai Best Boutique Hotel to Shanghai Station: metro: duration 127, cost 7. taxi: duration 44, cost 127.6. walk: duration 354, cost 0.0. \nfrom Shanghai Best Boutique Hotel to Fudan University: metro: duration 136, cost 7. taxi: duration 44, cost 129.4. walk: duration 359, cost 0.0. \nfrom Shanghai Best Boutique Hotel to Shanghai West Railway Station: metro: duration 137, cost 7. taxi: duration 51, cost 150.27. walk: duration 414, cost 0.0. \nfrom Shanghai Best Boutique Hotel to Shanghai Library East Branch: metro: duration 115, cost 6. taxi: duration 30, cost 87.67. walk: duration 247, cost 0.0. \nfrom Shanghai Best Boutique Hotel to Tongji University (Siping Road Campus): metro: duration 126, cost 7. taxi: duration 42, cost 123.14. walk: duration 342, cost 0.0. \nfrom Shanghai Best Boutique Hotel to Shanghai Fire Museum: metro: duration 135, cost 7. taxi: duration 46, cost 135.1. walk: duration 374, cost 0.0. \nfrom Shanghai Best Boutique Hotel to Shanghai Natural History Museum: metro: duration 125, cost 7. taxi: duration 41, cost 120.51. walk: duration 335, cost 0.0. \nfrom Shanghai Best Boutique Hotel to Shanghai Urban Planning Exhibition Center: metro: duration 123, cost 7. taxi: duration 40, cost 114.85. walk: duration 320, cost 0.0. \nfrom Shanghai Best Boutique Hotel to Yun He Ye Bo Hotel (Shanghai Pudong International Airport): metro: duration 131, cost 3. taxi: duration 7, cost 23.3. walk: duration 63, cost 0.0. \nfrom Shanghai Best Boutique Hotel to Mei Xin Dim Sum Shop (North Shaanxi Road Branch): metro: duration 129, cost 7. taxi: duration 42, cost 120.92. walk: duration 336, cost 0.0. \nfrom Shanghai Best Boutique Hotel to Nanxiang Steamed Bun Restaurant (Yuyuan Branch): metro: duration 122, cost 7. taxi: duration 37, cost 108.5. walk: duration 303, cost 0.0. \nfrom Shanghai Best Boutique Hotel to Shanghai Zhuyi Light Luxury Homestay: metro: duration 133, cost 4. taxi: duration 5, cost 18.24. walk: duration 46, cost 0.0. \nfrom Shanghai Best Boutique Hotel to Shanghai Best Boutique Hotel:  metro: empty.  taxi: empty.  walk: empty. \nfrom Shanghai Best Boutique Hotel to Shanghai Railway Museum: metro: duration 127, cost 7. taxi: duration 41, cost 120.24. walk: duration 334, cost 0.0. \nfrom Shanghai Best Boutique Hotel to Shanghai Textile Museum: metro: duration 125, cost 7. taxi: duration 40, cost 114.99. walk: duration 320, cost 0.0. \nfrom Shanghai Best Boutique Hotel to Dahuchun (Sichuan Middle Road Branch): metro: duration 126, cost 7. taxi: duration 38, cost 111.6. walk: duration 311, cost 0.0. \nfrom Shanghai Railway Museum to Feng's Dad Noodle House (Shaanxi South Road Branch): metro: duration 21, cost 3. taxi: duration 6, cost 20.58. walk: duration 54, cost 0.0. \nfrom Shanghai Railway Museum to Shanghai Tunnel Science and Technology Museum: metro: duration 24, cost 2. taxi: duration 5, cost 18.34. walk: duration 46, cost 0.0. \nfrom Shanghai Railway Museum to Shanghai Library: metro: duration 17, cost 3. taxi: duration 8, cost 24.15. walk: duration 66, cost 0.0. \nfrom Shanghai Railway Museum to Shanghai Film Museum: metro: duration 30, cost 3. taxi: duration 11, cost 32.42. walk: duration 95, cost 0.0. \nfrom Shanghai Railway Museum to Shanghai Museum: metro: duration 13, cost 2. taxi: duration 3, cost 13.14. walk: duration 28, cost 0.0. \nfrom Shanghai Railway Museum to Shanghai Old Restaurant (Yuyuan Branch): metro: duration 13, cost 2. taxi: duration 4, cost 15.97. walk: duration 38, cost 0.0. \nfrom Shanghai Railway Museum to Shanghai Jiao Tong University: metro: duration 21, cost 3. taxi: duration 10, cost 28.56. walk: duration 81, cost 0.0. \nfrom Shanghai Railway Museum to Shanghai Jewish Refugees Museum: metro: duration 13, cost 2. taxi: duration 4, cost 15.78. walk: duration 38, cost 0.0. \nfrom Shanghai Railway Museum to Shanghai Public Security Museum: metro: duration 22, cost 3. taxi: duration 8, cost 24.85. walk: duration 69, cost 0.0. \nfrom Shanghai Railway Museum to Shanghai Hongqiao Station: metro: duration 40, cost 5. taxi: duration 25, cost 70.97. walk: duration 203, cost 0.0. \nfrom Shanghai Railway Museum to Shanghai Station: metro: duration 12, cost 2. taxi: duration 4, cost 14.05. walk: duration 32, cost 0.0. \nfrom Shanghai Railway Museum to Fudan University: metro: duration 25, cost 3. taxi: duration 8, cost 24.33. walk: duration 67, cost 0.0. \nfrom Shanghai Railway Museum to Shanghai West Railway Station: metro: duration 23, cost 3. taxi: duration 11, cost 31.54. walk: duration 92, cost 0.0. \nfrom Shanghai Railway Museum to Shanghai Library East Branch: metro: duration 23, cost 3. taxi: duration 11, cost 30.97. walk: duration 90, cost 0.0. \nfrom Shanghai Railway Museum to Tongji University (Siping Road Campus): metro: duration 14, cost 3. taxi: duration 6, cost 20.53. walk: duration 54, cost 0.0. \nfrom Shanghai Railway Museum to Shanghai Fire Museum: metro: duration 28, cost 3. taxi: duration 10, cost 29.63. walk: duration 85, cost 0.0. \nfrom Shanghai Railway Museum to Shanghai Natural History Museum: metro: duration 11, cost 2. taxi: duration 3, cost 12.0. walk: duration 25, cost 0.0. \nfrom Shanghai Railway Museum to Shanghai Urban Planning Exhibition Center: metro: duration 11, cost 2. taxi: duration 3, cost 11.9. walk: duration 24, cost 0.0. \nfrom Shanghai Railway Museum to Yun He Ye Bo Hotel (Shanghai Pudong International Airport): metro: duration 131, cost 7. taxi: duration 48, cost 139.2. walk: duration 385, cost 0.0. \nfrom Shanghai Railway Museum to Mei Xin Dim Sum Shop (North Shaanxi Road Branch): metro: duration 18, cost 2. taxi: duration 6, cost 19.44. walk: duration 50, cost 0.0. \nfrom Shanghai Railway Museum to Nanxiang Steamed Bun Restaurant (Yuyuan Branch): metro: duration 14, cost 2. taxi: duration 5, cost 16.42. walk: duration 40, cost 0.0. \nfrom Shanghai Railway Museum to Shanghai Zhuyi Light Luxury Homestay: metro: duration 97, cost 6. taxi: duration 36, cost 105.14. walk: duration 294, cost 0.0. \nfrom Shanghai Railway Museum to Shanghai Best Boutique Hotel: metro: duration 127, cost 7. taxi: duration 41, cost 120.24. walk: duration 334, cost 0.0. \nfrom Shanghai Railway Museum to Shanghai Railway Museum:  metro: empty.  taxi: empty.  walk: empty. \nfrom Shanghai Railway Museum to Shanghai Textile Museum: metro: duration 13, cost 2. taxi: duration 3, cost 12.49. walk: duration 26, cost 0.0. \nfrom Shanghai Railway Museum to Dahuchun (Sichuan Middle Road Branch): metro: duration 14, cost 2. taxi: duration 3, cost 13.19. walk: duration 29, cost 0.0. \nfrom Shanghai Textile Museum to Feng's Dad Noodle House (Shaanxi South Road Branch): metro: duration 18, cost 2. taxi: duration 4, cost 14.29. walk: duration 32, cost 0.0. \nfrom Shanghai Textile Museum to Shanghai Tunnel Science and Technology Museum: metro: duration 23, cost 2. taxi: duration 3, cost 13.91. walk: duration 31, cost 0.0. \nfrom Shanghai Textile Museum to Shanghai Library: metro: duration 15, cost 3. taxi: duration 5, cost 17.73. walk: duration 44, cost 0.0. \nfrom Shanghai Textile Museum to Shanghai Film Museum: metro: duration 28, cost 3. taxi: duration 8, cost 25.39. walk: duration 70, cost 0.0. \nfrom Shanghai Textile Museum to Shanghai Museum: taxi: duration 0, cost 11.0. walk: duration 3, cost 0.0. \nfrom Shanghai Textile Museum to Shanghai Old Restaurant (Yuyuan Branch): metro: duration 10, cost 2. taxi: duration 1, cost 11.0. walk: duration 15, cost 0.0. \nfrom Shanghai Textile Museum to Shanghai Jiao Tong University: metro: duration 19, cost 3. taxi: duration 7, cost 22.15. walk: duration 59, cost 0.0. \nfrom Shanghai Textile Museum to Shanghai Jewish Refugees Museum: metro: duration 14, cost 2. taxi: duration 6, cost 19.64. walk: duration 51, cost 0.0. \nfrom Shanghai Textile Museum to Shanghai Public Security Museum: metro: duration 19, cost 3. taxi: duration 5, cost 17.07. walk: duration 42, cost 0.0. \nfrom Shanghai Textile Museum to Shanghai Hongqiao Station: metro: duration 39, cost 5. taxi: duration 23, cost 66.57. walk: duration 191, cost 0.0. \nfrom Shanghai Textile Museum to Shanghai Station: metro: duration 12, cost 2. taxi: duration 4, cost 14.52. walk: duration 33, cost 0.0. \nfrom Shanghai Textile Museum to Fudan University: metro: duration 28, cost 3. taxi: duration 11, cost 31.85. walk: duration 93, cost 0.0. \nfrom Shanghai Textile Museum to Shanghai West Railway Station: metro: duration 23, cost 3. taxi: duration 11, cost 32.7. walk: duration 95, cost 0.0. \nfrom Shanghai Textile Museum to Shanghai Library East Branch: metro: duration 22, cost 3. taxi: duration 10, cost 29.36. walk: duration 84, cost 0.0. \nfrom Shanghai Textile Museum to Tongji University (Siping Road Campus): metro: duration 17, cost 3. taxi: duration 9, cost 27.61. walk: duration 78, cost 0.0. \nfrom Shanghai Textile Museum to Shanghai Fire Museum: metro: duration 26, cost 3. taxi: duration 9, cost 26.12. walk: duration 73, cost 0.0. \nfrom Shanghai Textile Museum to Shanghai Natural History Museum: metro: duration 10, cost 2. taxi: duration 1, cost 11.0. walk: duration 14, cost 0.0. \nfrom Shanghai Textile Museum to Shanghai Urban Planning Exhibition Center: taxi: duration 0, cost 11.0. walk: duration 2, cost 0.0. \nfrom Shanghai Textile Museum to Yun He Ye Bo Hotel (Shanghai Pudong International Airport): metro: duration 129, cost 7. taxi: duration 46, cost 134.87. walk: duration 373, cost 0.0. \nfrom Shanghai Textile Museum to Mei Xin Dim Sum Shop (North Shaanxi Road Branch): metro: duration 17, cost 2. taxi: duration 3, cost 13.74. walk: duration 30, cost 0.0. \nfrom Shanghai Textile Museum to Nanxiang Steamed Bun Restaurant (Yuyuan Branch): metro: duration 11, cost 2. taxi: duration 2, cost 11.0. walk: duration 17, cost 0.0. \nfrom Shanghai Textile Museum to Shanghai Zhuyi Light Luxury Homestay: metro: duration 96, cost 5. taxi: duration 34, cost 99.3. walk: duration 278, cost 0.0. \nfrom Shanghai Textile Museum to Shanghai Best Boutique Hotel: metro: duration 125, cost 7. taxi: duration 40, cost 114.99. walk: duration 320, cost 0.0. \nfrom Shanghai Textile Museum to Shanghai Railway Museum: metro: duration 13, cost 2. taxi: duration 3, cost 12.49. walk: duration 26, cost 0.0. \nfrom Shanghai Textile Museum to Shanghai Textile Museum:  metro: empty.  taxi: empty.  walk: empty. \nfrom Shanghai Textile Museum to Dahuchun (Sichuan Middle Road Branch): taxi: duration 1, cost 11.0. walk: duration 10, cost 0.0. \nfrom Dahuchun (Sichuan Middle Road Branch) to Feng's Dad Noodle House (Shaanxi South Road Branch): metro: duration 19, cost 2. taxi: duration 5, cost 16.57. walk: duration 40, cost 0.0. \nfrom Dahuchun (Sichuan Middle Road Branch) to Shanghai Tunnel Science and Technology Museum: metro: duration 24, cost 2. taxi: duration 2, cost 11.06. walk: duration 21, cost 0.0. \nfrom Dahuchun (Sichuan Middle Road Branch) to Shanghai Library: metro: duration 16, cost 3. taxi: duration 6, cost 19.8. walk: duration 51, cost 0.0. \nfrom Dahuchun (Sichuan Middle Road Branch) to Shanghai Film Museum: metro: duration 29, cost 3. taxi: duration 9, cost 26.87. walk: duration 76, cost 0.0. \nfrom Dahuchun (Sichuan Middle Road Branch) to Shanghai Museum: taxi: duration 0, cost 11.0. walk: duration 7, cost 0.0. \nfrom Dahuchun (Sichuan Middle Road Branch) to Shanghai Old Restaurant (Yuyuan Branch): metro: duration 11, cost 2. taxi: duration 1, cost 11.0. walk: duration 9, cost 0.0. \nfrom Dahuchun (Sichuan Middle Road Branch) to Shanghai Jiao Tong University: metro: duration 20, cost 3. taxi: duration 8, cost 24.11. walk: duration 66, cost 0.0. \nfrom Dahuchun (Sichuan Middle Road Branch) to Shanghai Jewish Refugees Museum: metro: duration 15, cost 2. taxi: duration 5, cost 17.8. walk: duration 44, cost 0.0. \nfrom Dahuchun (Sichuan Middle Road Branch) to Shanghai Public Security Museum: metro: duration 20, cost 3. taxi: duration 5, cost 17.42. walk: duration 43, cost 0.0. \nfrom Dahuchun (Sichuan Middle Road Branch) to Shanghai Hongqiao Station: metro: duration 40, cost 5. taxi: duration 25, cost 70.01. walk: duration 200, cost 0.0. \nfrom Dahuchun (Sichuan Middle Road Branch) to Shanghai Station: metro: duration 13, cost 2. taxi: duration 5, cost 17.28. walk: duration 43, cost 0.0. \nfrom Dahuchun (Sichuan Middle Road Branch) to Fudan University: metro: duration 29, cost 3. taxi: duration 11, cost 31.53. walk: duration 91, cost 0.0. \nfrom Dahuchun (Sichuan Middle Road Branch) to Shanghai West Railway Station: metro: duration 24, cost 3. taxi: duration 13, cost 35.58. walk: duration 105, cost 0.0. \nfrom Dahuchun (Sichuan Middle Road Branch) to Shanghai Library East Branch: metro: duration 23, cost 3. taxi: duration 9, cost 26.4. walk: duration 74, cost 0.0. \nfrom Dahuchun (Sichuan Middle Road Branch) to Tongji University (Siping Road Campus): metro: duration 18, cost 3. taxi: duration 9, cost 26.93. walk: duration 76, cost 0.0. \nfrom Dahuchun (Sichuan Middle Road Branch) to Shanghai Fire Museum: metro: duration 27, cost 3. taxi: duration 10, cost 28.9. walk: duration 82, cost 0.0. \nfrom Dahuchun (Sichuan Middle Road Branch) to Shanghai Natural History Museum: metro: duration 11, cost 2. taxi: duration 3, cost 11.88. walk: duration 24, cost 0.0. \nfrom Dahuchun (Sichuan Middle Road Branch) to Shanghai Urban Planning Exhibition Center: taxi: duration 1, cost 11.0. walk: duration 8, cost 0.0. \nfrom Dahuchun (Sichuan Middle Road Branch) to Yun He Ye Bo Hotel (Shanghai Pudong International Airport): metro: duration 130, cost 7. taxi: duration 45, cost 131.32. walk: duration 364, cost 0.0. \nfrom Dahuchun (Sichuan Middle Road Branch) to Mei Xin Dim Sum Shop (North Shaanxi Road Branch): metro: duration 18, cost 2. taxi: duration 4, cost 16.28. walk: duration 39, cost 0.0. \nfrom Dahuchun (Sichuan Middle Road Branch) to Nanxiang Steamed Bun Restaurant (Yuyuan Branch): metro: duration 12, cost 2. taxi: duration 1, cost 11.0. walk: duration 11, cost 0.0. \nfrom Dahuchun (Sichuan Middle Road Branch) to Shanghai Zhuyi Light Luxury Homestay: metro: duration 97, cost 5. taxi: duration 33, cost 96.03. walk: duration 270, cost 0.0. \nfrom Dahuchun (Sichuan Middle Road Branch) to Shanghai Best Boutique Hotel: metro: duration 126, cost 7. taxi: duration 38, cost 111.6. walk: duration 311, cost 0.0. \nfrom Dahuchun (Sichuan Middle Road Branch) to Shanghai Railway Museum: metro: duration 14, cost 2. taxi: duration 3, cost 13.19. walk: duration 29, cost 0.0. \nfrom Dahuchun (Sichuan Middle Road Branch) to Shanghai Textile Museum: taxi: duration 1, cost 11.0. walk: duration 10, cost 0.0. \nfrom Dahuchun (Sichuan Middle Road Branch) to Dahuchun (Sichuan Middle Road Branch):  metro: empty.  taxi: empty.  walk: empty. \n"
+    },
+    "initial_verification": {
+      "commonsense_errors": [],
+      "personal_constraints": [
+        true,
+        true,
+        true,
+        true,
+        true,
+        true
+      ],
+      "category_normalization": [
+        {
+          "constraint_index": 1,
+          "category_domain": "activity",
+          "expression": "activity_type(activity)",
+          "raw_label": "train",
+          "normalized_label": "train"
+        },
+        {
+          "constraint_index": 1,
+          "category_domain": "activity",
+          "expression": "['train', 'airplane']",
+          "raw_label": "train",
+          "normalized_label": "train"
+        },
+        {
+          "constraint_index": 1,
+          "category_domain": "activity",
+          "expression": "['train', 'airplane']",
+          "raw_label": "airplane",
+          "normalized_label": "airplane"
+        },
+        {
+          "constraint_index": 1,
+          "category_domain": "activity",
+          "expression": "activity_type(activity)",
+          "raw_label": "attraction",
+          "normalized_label": "attraction"
+        },
+        {
+          "constraint_index": 1,
+          "category_domain": "activity",
+          "expression": "['train', 'airplane']",
+          "raw_label": "train",
+          "normalized_label": "train"
+        },
+        {
+          "constraint_index": 1,
+          "category_domain": "activity",
+          "expression": "['train', 'airplane']",
+          "raw_label": "airplane",
+          "normalized_label": "airplane"
+        },
+        {
+          "constraint_index": 1,
+          "category_domain": "activity",
+          "expression": "activity_type(activity)",
+          "raw_label": "lunch",
+          "normalized_label": "lunch"
+        },
+        {
+          "constraint_index": 1,
+          "category_domain": "activity",
+          "expression": "['train', 'airplane']",
+          "raw_label": "train",
+          "normalized_label": "train"
+        },
+        {
+          "constraint_index": 1,
+          "category_domain": "activity",
+          "expression": "['train', 'airplane']",
+          "raw_label": "airplane",
+          "normalized_label": "airplane"
+        },
+        {
+          "constraint_index": 1,
+          "category_domain": "activity",
+          "expression": "activity_type(activity)",
+          "raw_label": "attraction",
+          "normalized_label": "attraction"
+        },
+        {
+          "constraint_index": 1,
+          "category_domain": "activity",
+          "expression": "['train', 'airplane']",
+          "raw_label": "train",
+          "normalized_label": "train"
+        },
+        {
+          "constraint_index": 1,
+          "category_domain": "activity",
+          "expression": "['train', 'airplane']",
+          "raw_label": "airplane",
+          "normalized_label": "airplane"
+        },
+        {
+          "constraint_index": 1,
+          "category_domain": "activity",
+          "expression": "activity_type(activity)",
+          "raw_label": "train",
+          "normalized_label": "train"
+        },
+        {
+          "constraint_index": 1,
+          "category_domain": "activity",
+          "expression": "['train', 'airplane']",
+          "raw_label": "train",
+          "normalized_label": "train"
+        },
+        {
+          "constraint_index": 1,
+          "category_domain": "activity",
+          "expression": "['train', 'airplane']",
+          "raw_label": "airplane",
+          "normalized_label": "airplane"
+        },
+        {
+          "constraint_index": 2,
+          "category_domain": "activity",
+          "expression": "activity_type(activity)",
+          "raw_label": "train",
+          "normalized_label": "train"
+        },
+        {
+          "constraint_index": 2,
+          "category_domain": "activity",
+          "expression": "['train', 'airplane']",
+          "raw_label": "train",
+          "normalized_label": "train"
+        },
+        {
+          "constraint_index": 2,
+          "category_domain": "activity",
+          "expression": "['train', 'airplane']",
+          "raw_label": "airplane",
+          "normalized_label": "airplane"
+        },
+        {
+          "constraint_index": 2,
+          "category_domain": "activity",
+          "expression": "activity_type(activity)",
+          "raw_label": "attraction",
+          "normalized_label": "attraction"
+        },
+        {
+          "constraint_index": 2,
+          "category_domain": "activity",
+          "expression": "['train', 'airplane']",
+          "raw_label": "train",
+          "normalized_label": "train"
+        },
+        {
+          "constraint_index": 2,
+          "category_domain": "activity",
+          "expression": "['train', 'airplane']",
+          "raw_label": "airplane",
+          "normalized_label": "airplane"
+        },
+        {
+          "constraint_index": 2,
+          "category_domain": "activity",
+          "expression": "activity_type(activity)",
+          "raw_label": "lunch",
+          "normalized_label": "lunch"
+        },
+        {
+          "constraint_index": 2,
+          "category_domain": "activity",
+          "expression": "['train', 'airplane']",
+          "raw_label": "train",
+          "normalized_label": "train"
+        },
+        {
+          "constraint_index": 2,
+          "category_domain": "activity",
+          "expression": "['train', 'airplane']",
+          "raw_label": "airplane",
+          "normalized_label": "airplane"
+        },
+        {
+          "constraint_index": 2,
+          "category_domain": "activity",
+          "expression": "activity_type(activity)",
+          "raw_label": "attraction",
+          "normalized_label": "attraction"
+        },
+        {
+          "constraint_index": 2,
+          "category_domain": "activity",
+          "expression": "['train', 'airplane']",
+          "raw_label": "train",
+          "normalized_label": "train"
+        },
+        {
+          "constraint_index": 2,
+          "category_domain": "activity",
+          "expression": "['train', 'airplane']",
+          "raw_label": "airplane",
+          "normalized_label": "airplane"
+        },
+        {
+          "constraint_index": 2,
+          "category_domain": "activity",
+          "expression": "activity_type(activity)",
+          "raw_label": "train",
+          "normalized_label": "train"
+        },
+        {
+          "constraint_index": 2,
+          "category_domain": "activity",
+          "expression": "['train', 'airplane']",
+          "raw_label": "train",
+          "normalized_label": "train"
+        },
+        {
+          "constraint_index": 2,
+          "category_domain": "activity",
+          "expression": "['train', 'airplane']",
+          "raw_label": "airplane",
+          "normalized_label": "airplane"
+        },
+        {
+          "constraint_index": 2,
+          "category_domain": "transport",
+          "expression": "{'train'}",
+          "raw_label": "train",
+          "normalized_label": "train"
+        },
+        {
+          "constraint_index": 2,
+          "category_domain": "transport",
+          "expression": "intercity_transport_set",
+          "raw_label": "train",
+          "normalized_label": "train"
+        },
+        {
+          "constraint_index": 3,
+          "category_domain": "activity",
+          "expression": "activity_type(activity)",
+          "raw_label": "train",
+          "normalized_label": "train"
+        },
+        {
+          "constraint_index": 3,
+          "category_domain": "activity",
+          "expression": "'attraction'",
+          "raw_label": "attraction",
+          "normalized_label": "attraction"
+        },
+        {
+          "constraint_index": 3,
+          "category_domain": "activity",
+          "expression": "activity_type(activity)",
+          "raw_label": "attraction",
+          "normalized_label": "attraction"
+        },
+        {
+          "constraint_index": 3,
+          "category_domain": "activity",
+          "expression": "'attraction'",
+          "raw_label": "attraction",
+          "normalized_label": "attraction"
+        },
+        {
+          "constraint_index": 3,
+          "category_domain": "activity",
+          "expression": "activity_type(activity)",
+          "raw_label": "lunch",
+          "normalized_label": "lunch"
+        },
+        {
+          "constraint_index": 3,
+          "category_domain": "activity",
+          "expression": "'attraction'",
+          "raw_label": "attraction",
+          "normalized_label": "attraction"
+        },
+        {
+          "constraint_index": 3,
+          "category_domain": "activity",
+          "expression": "activity_type(activity)",
+          "raw_label": "attraction",
+          "normalized_label": "attraction"
+        },
+        {
+          "constraint_index": 3,
+          "category_domain": "activity",
+          "expression": "'attraction'",
+          "raw_label": "attraction",
+          "normalized_label": "attraction"
+        },
+        {
+          "constraint_index": 3,
+          "category_domain": "activity",
+          "expression": "activity_type(activity)",
+          "raw_label": "train",
+          "normalized_label": "train"
+        },
+        {
+          "constraint_index": 3,
+          "category_domain": "activity",
+          "expression": "'attraction'",
+          "raw_label": "attraction",
+          "normalized_label": "attraction"
+        },
+        {
+          "constraint_index": 3,
+          "category_domain": "attraction",
+          "expression": "{'大学校园'}",
+          "raw_label": "大学校园",
+          "normalized_label": "University campus"
+        },
+        {
+          "constraint_index": 3,
+          "category_domain": "attraction",
+          "expression": "attraction_type_set",
+          "raw_label": "Museum/Memorial Hall",
+          "normalized_label": "Museum/Memorial Hall"
+        },
+        {
+          "constraint_index": 3,
+          "category_domain": "attraction",
+          "expression": "attraction_type_set",
+          "raw_label": "University campus",
+          "normalized_label": "University campus"
+        },
+        {
+          "constraint_index": 6,
+          "category_domain": "transport",
+          "expression": "innercity_transport_type(activity_transports(activity))",
+          "raw_label": "empty",
+          "normalized_label": "empty"
+        },
+        {
+          "constraint_index": 6,
+          "category_domain": "transport",
+          "expression": "'taxi'",
+          "raw_label": "taxi",
+          "normalized_label": "taxi"
+        },
+        {
+          "constraint_index": 6,
+          "category_domain": "transport",
+          "expression": "innercity_transport_type(activity_transports(activity))",
+          "raw_label": "metro",
+          "normalized_label": "metro"
+        },
+        {
+          "constraint_index": 6,
+          "category_domain": "transport",
+          "expression": "'taxi'",
+          "raw_label": "taxi",
+          "normalized_label": "taxi"
+        },
+        {
+          "constraint_index": 6,
+          "category_domain": "transport",
+          "expression": "innercity_transport_type(activity_transports(activity))",
+          "raw_label": "metro",
+          "normalized_label": "metro"
+        },
+        {
+          "constraint_index": 6,
+          "category_domain": "transport",
+          "expression": "'taxi'",
+          "raw_label": "taxi",
+          "normalized_label": "taxi"
+        },
+        {
+          "constraint_index": 6,
+          "category_domain": "transport",
+          "expression": "innercity_transport_type(activity_transports(activity))",
+          "raw_label": "metro",
+          "normalized_label": "metro"
+        },
+        {
+          "constraint_index": 6,
+          "category_domain": "transport",
+          "expression": "'taxi'",
+          "raw_label": "taxi",
+          "normalized_label": "taxi"
+        },
+        {
+          "constraint_index": 6,
+          "category_domain": "transport",
+          "expression": "innercity_transport_type(activity_transports(activity))",
+          "raw_label": "metro",
+          "normalized_label": "metro"
+        },
+        {
+          "constraint_index": 6,
+          "category_domain": "transport",
+          "expression": "'taxi'",
+          "raw_label": "taxi",
+          "normalized_label": "taxi"
+        }
+      ],
+      "personal_errors": [],
+      "evaluation_errors": [],
+      "translation_errors": [],
+      "error_info": [],
+      "passed": true,
+      "translated_plan": {
+        "people_number": 1,
+        "start_city": "Nanjing",
+        "target_city": "Shanghai",
+        "itinerary": [
+          {
+            "day": 1,
+            "activities": [
+              {
+                "start_time": "07:00",
+                "end_time": "08:39",
+                "start": "Nanjing Station",
+                "end": "Shanghai Station",
+                "price": 175.28,
+                "cost": 175.28,
+                "TrainID": "G7001",
+                "type": "train",
+                "tickets": 1,
+                "transports": []
+              },
+              {
+                "position": "Fudan University",
+                "type": "attraction",
+                "transports": [
+                  {
+                    "start": "Shanghai Station",
+                    "end": "Shanghai Railway Station-Metro Station",
+                    "mode": "walk",
+                    "start_time": "08:39",
+                    "end_time": "08:41",
+                    "cost": 0,
+                    "distance": 0.21,
+                    "price": 0
+                  },
+                  {
+                    "start": "Shanghai Railway Station-Metro Station",
+                    "end": "Jiangwan Stadium-Metro Station",
+                    "mode": "metro",
+                    "start_time": "08:41",
+                    "end_time": "08:57",
+                    "cost": 3,
+                    "distance": 8.03,
+                    "price": 3,
+                    "tickets": 1
+                  },
+                  {
+                    "start": "Jiangwan Stadium-Metro Station",
+                    "end": "Fudan University",
+                    "mode": "walk",
+                    "start_time": "08:57",
+                    "end_time": "09:05",
+                    "cost": 0,
+                    "distance": 0.73,
+                    "price": 0
+                  }
+                ],
+                "price": 0.0,
+                "cost": 0.0,
+                "tickets": 1,
+                "start_time": "09:30",
+                "end_time": "11:30"
+              },
+              {
+                "position": "Shanghai Old Restaurant (Yuyuan Branch)",
+                "type": "lunch",
+                "transports": [
+                  {
+                    "start": "Fudan University",
+                    "end": "Jiangwan Stadium-Metro Station",
+                    "mode": "walk",
+                    "start_time": "11:30",
+                    "end_time": "11:38",
+                    "cost": 0,
+                    "distance": 0.73,
+                    "price": 0
+                  },
+                  {
+                    "start": "Jiangwan Stadium-Metro Station",
+                    "end": "Yu Garden-Metro Station",
+                    "mode": "metro",
+                    "start_time": "11:38",
+                    "end_time": "11:55",
+                    "cost": 3,
+                    "distance": 8.81,
+                    "price": 3,
+                    "tickets": 1
+                  },
+                  {
+                    "start": "Yu Garden-Metro Station",
+                    "end": "Shanghai Old Restaurant (Yuyuan Branch)",
+                    "mode": "walk",
+                    "start_time": "11:55",
+                    "end_time": "11:58",
+                    "cost": 0,
+                    "distance": 0.31,
+                    "price": 0
+                  }
+                ],
+                "price": 234.0,
+                "cost": 234.0,
+                "start_time": "12:00",
+                "end_time": "13:00"
+              },
+              {
+                "position": "Shanghai Museum",
+                "type": "attraction",
+                "transports": [
+                  {
+                    "start": "Shanghai Old Restaurant (Yuyuan Branch)",
+                    "end": "Yu Garden-Metro Station",
+                    "mode": "walk",
+                    "start_time": "13:00",
+                    "end_time": "13:03",
+                    "cost": 0,
+                    "distance": 0.31,
+                    "price": 0
+                  },
+                  {
+                    "start": "Yu Garden-Metro Station",
+                    "end": "East Nanjing Road-Metro Station",
+                    "mode": "metro",
+                    "start_time": "13:03",
+                    "end_time": "13:05",
+                    "cost": 2,
+                    "distance": 1.15,
+                    "price": 2,
+                    "tickets": 1
+                  },
+                  {
+                    "start": "East Nanjing Road-Metro Station",
+                    "end": "Shanghai Museum",
+                    "mode": "walk",
+                    "start_time": "13:05",
+                    "end_time": "13:10",
+                    "cost": 0,
+                    "distance": 0.49,
+                    "price": 0
+                  }
+                ],
+                "price": 0.0,
+                "cost": 0.0,
+                "tickets": 1,
+                "start_time": "13:15",
+                "end_time": "14:15"
+              },
+              {
+                "start": "Shanghai Station",
+                "end": "Nanjing South Railway Station",
+                "start_time": "17:55",
+                "end_time": "19:06",
+                "TrainID": "G26",
+                "type": "train",
+                "transports": [
+                  {
+                    "start": "Shanghai Museum",
+                    "end": "East Nanjing Road-Metro Station",
+                    "mode": "walk",
+                    "start_time": "14:15",
+                    "end_time": "14:20",
+                    "cost": 0,
+                    "distance": 0.49,
+                    "price": 0
+                  },
+                  {
+                    "start": "East Nanjing Road-Metro Station",
+                    "end": "Shanghai Railway Station-Metro Station",
+                    "mode": "metro",
+                    "start_time": "14:20",
+                    "end_time": "14:25",
+                    "cost": 2,
+                    "distance": 2.85,
+                    "price": 2,
+                    "tickets": 1
+                  },
+                  {
+                    "start": "Shanghai Railway Station-Metro Station",
+                    "end": "Shanghai Station",
+                    "mode": "walk",
+                    "start_time": "14:25",
+                    "end_time": "14:27",
+                    "cost": 0,
+                    "distance": 0.21,
+                    "price": 0
+                  }
+                ],
+                "price": 175.28,
+                "cost": 175.28,
+                "tickets": 1
+              }
+            ]
+          }
+        ]
+      },
+      "verifier_errors": [],
+      "schema_errors": [],
+      "translation_failures": []
+    },
+    "environment_context": {
+      "lang": "en"
+    },
+    "generation_metadata": {
+      "raw_response": "[{\"day\": 1,```json\n{\n    \"day\": 1,\n    \"activities\": [\n        {\n            \"start_time\": \"07:00\",\n            \"end_time\": \"08:39\",\n            \"start\": \"Nanjing Station\",\n            \"end\": \"Shanghai Station\",\n            \"price\": 175.28,\n            \"cost\": 175.28,\n            \"TrainID\": \"G7001\",\n            \"type\": \"train\",\n            \"tickets\": 1,\n            \"transports\": \"empty\"\n        },\n        {\n            \"position\": \"Fudan University\",\n            \"type\": \"attraction\",\n            \"transports\": {\"from\": \"Shanghai Station\", \"to\": \"Fudan University\", \"mode\": \"metro\", \"start_time\": \"08:39\", \"end_time\": \"09:15\", \"cost\": 3},\n            \"price\": 0.0,\n            \"cost\": 0.0,\n            \"tickets\": 1,\n            \"start_time\": \"09:30\",\n            \"end_time\": \"11:30\"\n        },\n        {\n            \"position\": \"Shanghai Old Restaurant (Yuyuan Branch)\",\n            \"type\": \"lunch\",\n            \"transports\": {\"from\": \"Fudan University\", \"to\": \"Shanghai Old Restaurant (Yuyuan Branch)\", \"mode\": \"metro\", \"start_time\": \"11:30\", \"end_time\": \"12:00\", \"cost\": 3},\n            \"price\": 234.0,\n            \"cost\": 234.0,\n            \"start_time\": \"12:00\",\n            \"end_time\": \"13:00\"\n        },\n        {\n            \"position\": \"Shanghai Museum\",\n            \"type\": \"attraction\",\n            \"transports\": {\"from\": \"Shanghai Old Restaurant (Yuyuan Branch)\", \"to\": \"Shanghai Museum\", \"mode\": \"metro\", \"start_time\": \"13:00\", \"end_time\": \"13:10\", \"cost\": 2},\n            \"price\": 0.0,\n            \"cost\": 0.0,\n            \"tickets\": 1,\n            \"start_time\": \"13:15\",\n            \"end_time\": \"14:15\"\n        },\n        {\n            \"start\": \"Shanghai Station\",\n            \"end\": \"Nanjing South Railway Station\",\n            \"start_time\": \"17:55\",\n            \"end_time\": \"19:06\",\n            \"TrainID\": \"G26\",\n            \"type\": \"train\",\n            \"transports\": {\"from\": \"Shanghai Museum\", \"to\": \"Shanghai Station\", \"mode\": \"metro\", \"start_time\": \"14:15\", \"end_time\": \"14:30\", \"cost\": 2},\n            \"price\": 175.28,\n            \"cost\": 175.28,\n            \"tickets\": 1\n        }\n    ]\n}\n```",
+      "input_tokens": 131169,
+      "output_tokens": 880,
+      "total_tokens": 132049,
+      "model_calls": 6,
+      "failed_model_calls": 0,
+      "elapsed_time_seconds": 32.388936281204224,
+      "llm_inference_time_seconds": 15.865138053894043,
+      "information_collection_time_seconds": 16.521795749664307,
+      "initial_generation_time_s": 32.38972869999998,
+      "initial_generation_tool_calls": 6064,
+      "initial_generation_tool_call_counts_by_type": {
+        "accommodations_select": 1,
+        "attractions_select": 1,
+        "goto": 1950,
+        "intercity_transport_select": 4,
+        "next_page": 207,
+        "poi_lat_lon_search": 3900,
+        "restaurants_select": 1
+      },
+      "shared_initialization_time_s": 32.85586550000153,
+      "shared_initialization_system_metrics": {
+        "tool_call_count": 6095,
+        "successful_tool_call_count": 6095,
+        "failed_tool_call_count": 0,
+        "verification_count": 1,
+        "tool_call_counts_by_type": {
+          "accommodations_select": 1,
+          "attractions_select": 5,
+          "goto": 1958,
+          "intercity_transport_select": 6,
+          "next_page": 207,
+          "poi_lat_lon_search": 3916,
+          "restaurants_select": 2
+        }
+      }
+    }
+  },
+  "initial_plan_hash": "e3c477db40176b94ca4cd0eac25f3f6310b94f2b6c27307202e61365b349d76b",
+  "initial_state_hash": "3b2d6b8d6d4e407f9f66d096eb98a1c47d9173396e2b2168de2bd8b72abfdbf3"
+}
