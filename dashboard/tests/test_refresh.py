@@ -68,11 +68,12 @@ class FutureRefreshTests(unittest.TestCase):
                 fixture.close()
 
     def test_round_and_support_controls_derive_from_data(self):
-        app = AppTest.from_file(str(APP)).run(timeout=60)
+        app = AppTest.from_string("from dashboard import data_loader as d\nfrom dashboard.pages.query_explorer import render\nrender({'runs': d.discover_runs()})").run(timeout=60)
         self.assertFalse(app.exception)
-        rounds = next(x for x in app.sidebar.selectbox if x.label == 'Round')
+        rounds = next(x for x in app.selectbox if x.label == 'Round')
         self.assertEqual(rounds.options, ['All', '2', '4', '9'])
-        support = next(x for x in app.sidebar.slider if x.label == 'Minimum matrix support')
+        app = AppTest.from_string("from dashboard import data_loader as d\nfrom dashboard.pages.train_interdependencies import render\nrender({'runs': d.discover_runs()})").run(timeout=60)
+        support = next(x for x in app.slider if x.label == 'Minimum matrix support')
         self.assertGreater(support.max, 500)
         support.set_value(int(support.max)).run(timeout=60)
         self.assertFalse(app.exception)
@@ -83,10 +84,11 @@ class FutureRefreshTests(unittest.TestCase):
         self.assertEqual(m.observed_rounds(pd.DataFrame()), [])
         self.assertEqual(m.matrix_support_limit([]), 0)
         with patch.object(d, 'attempts', return_value=[]), patch.object(d, 'checkpoints', return_value={}), patch.object(d, 'matrix_table', return_value=pd.DataFrame()):
-            app = AppTest.from_file(str(APP)).run(timeout=60)
+            app = AppTest.from_string("from dashboard import data_loader as d\nfrom dashboard.pages.query_explorer import render\nrender({'runs': d.discover_runs()})").run(timeout=60)
             self.assertFalse(app.exception)
-            self.assertEqual(next(x for x in app.sidebar.selectbox if x.label == 'Round').options, ['All'])
-            self.assertTrue(app.sidebar.slider[0].disabled)
+            self.assertEqual(next(x for x in app.selectbox if x.label == 'Round').options, ['All'])
+            train = AppTest.from_string("from dashboard import data_loader as d\nfrom dashboard.pages.train_interdependencies import render\nrender({'runs': d.discover_runs()})").run(timeout=60)
+            self.assertTrue(train.slider[0].disabled)
 
     def test_train_and_test_diagnostics_coexist(self):
         train, test = self.run_for('TRAIN'), self.run_for('TEST')

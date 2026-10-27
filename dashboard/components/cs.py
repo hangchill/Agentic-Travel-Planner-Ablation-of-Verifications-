@@ -27,7 +27,7 @@ def render(ctx):
         st.info('Select at least one strategy.')
         return
     shown = difficulties + ['All'] if difficulty == 'All difficulties' else [difficulty]
-    st.caption('Benchmark CS check categories from Table 2 and saved per-query counts. Med means Medium. Query-change rows are counts. Evaluator exceptions count as failing every standard check. This table is independent of the sidebar strategy/difficulty; sidebar proposal filters select cohorts, whose complete observed trajectories remain available below.')
+    st.caption('Benchmark CS check categories from Table 2 and saved per-query counts. Med means Medium. Query-change rows are counts. Evaluator exceptions count as failing every standard check. Page-local difficulty and strategy controls select reporting cohorts; complete observed trajectories remain available below.')
     if _population_guard(queries, selected, shown):
         table(metrics.cs_report_pivot(summaries, queries, selected, shown), 'CS comparison table')
     reporting.warnings([available[s] for s in selected])

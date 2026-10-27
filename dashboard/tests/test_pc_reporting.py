@@ -95,7 +95,7 @@ class PCReportingTests(unittest.TestCase):
         self.assertIn('All R2', app.dataframe[0].value)
         self.assertNotIn('All R0', app.dataframe[0].value)
 
-    def test_global_filters_select_per_strategy_cohorts(self):
+    def test_explicit_cohort_filters_select_per_strategy_cohorts(self):
         ctx = self.context(); ctx['filters']['uid'] = 'fixture-1'
         available = d.available_pc_runs(ctx['runs'])
         q, a, summaries = pc._cohorts(ctx, available)

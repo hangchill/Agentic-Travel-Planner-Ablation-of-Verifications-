@@ -29,7 +29,7 @@ def render(ctx):
         return
     shown_difficulties = difficulties + ['All'] if difficulty == 'All difficulties' else [difficulty]
     pivot = metrics.pc_report_pivot(summaries, queries, selected, shown_difficulties)
-    st.caption('Benchmark PC values from the team TEST reporting tables. Columns are difficulty × strategy; Med means Medium. Query-change rows are counts. Missing metrics display Unavailable. The PC controls compare reporting runs independently of the sidebar strategy/difficulty; sidebar UID/phase/round/family/outcome filters select a query cohort independently for each run. Round views retain that cohort’s complete observed trajectories.')
+    st.caption('Benchmark PC values from the team TEST reporting tables. Columns are difficulty × strategy; Med means Medium. Query-change rows are counts. Missing metrics display Unavailable. The controls compare TEST reporting runs using page-local difficulty and strategy selections. Round views retain that cohort’s complete observed trajectories.')
     table(pivot, 'PC comparison table')
     st.caption('“Queries: all PC pass at start” is Unavailable: the existing generated row counts only initially perfect queries whose PC result also stayed unchanged. It is not the broader requested metric.')
     _warnings([available[s] for s in selected])
