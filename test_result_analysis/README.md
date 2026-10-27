@@ -41,13 +41,15 @@ Unless a row says otherwise, a value is computed for each query first and then a
 
 ### R0
 - Source run: `experiments/subset_test-r0` (run_id `subset_test-r0`, split `subset_test`, model `deepseek/deepseek-chat`, 30 queries, max 6 rounds).
-- `e20241028161037866126` (medium): 1 of 6 rounds got the failed-call text instead of a plan (provider error); the final plan is that error placeholder, which replaced a working plan, so the query scores as a failure.
-- `e20241028161334777418` (medium): 1 of 6 rounds got the failed-call text instead of a plan (provider error); the final plan is that error placeholder, which replaced a working plan, so the query scores as a failure.
-- `m20241028164819146853` (easy): 6 of 6 rounds got the failed-call text instead of a plan (provider error); the final plan is that error placeholder, which replaced a working plan, so the query scores as a failure.
-- `m20241028164848577483` (easy): initial plan generation failed (error placeholder, no activities); the query scores as a failure.
-- `m20241028164848577483` (easy): 6 of 6 rounds got the failed-call text instead of a plan (provider error).
-- `t20241206171855902412` (easy): 1 of 6 rounds got the failed-call text instead of a plan (provider error).
-- Token data incomplete for 5 queries (8 rounds with no recorded token count): `e20241028161037866126`, `e20241028161334777418`, `m20241028164819146853`, `m20241028164848577483`, `t20241206171855902412`. Each of these rounds had at least one failed model request (the provider returned an error and no token usage; the model wrapper then returned the text '{"error": "Request failed, please try again."}' instead of a plan). These queries are left out of the complete-data token row; the lower-bound row counts every request that did report usage and counts failed requests as 0.
+- `e20241028161037866126` (medium): checkpoint replaced by a single-query rerun (`subset_test-r0-rerun`, commit `fbe3610`) because the original run had provider failures in its repair rounds. The rerun regenerated the initial plan, so it differs from the original run's (see `queries/e20241028161037866126-397d1ebe2cce/rerun_provenance.json`).
+- `e20241028161334777418` (medium): checkpoint replaced by a single-query rerun (`subset_test-r0-rerun`, commit `fbe3610`) because the original run had provider failures in its repair rounds. The rerun regenerated the initial plan, so it differs from the original run's (see `queries/e20241028161334777418-db40f6eed706/rerun_provenance.json`).
+- `m20241028164819146853` (easy): checkpoint replaced by a single-query rerun (`subset_test-r0-rerun`, commit `fbe3610`) because the original run had provider failures in its repair rounds. The rerun regenerated the initial plan, so it differs from the original run's (see `queries/m20241028164819146853-0ddf1baa039e/rerun_provenance.json`).
+- `m20241028164848577483` (easy): checkpoint replaced by a single-query rerun (`subset_test-r0-rerun`, commit `fbe3610`) because the original run had provider failures in its repair rounds. The rerun regenerated the initial plan, so it differs from the original run's (see `queries/m20241028164848577483-614dcc920352/rerun_provenance.json`).
+- `t20241206171855902412` (easy): checkpoint replaced by a single-query rerun (`subset_test-r0-rerun`, commit `fbe3610`) because the original run had provider failures in its repair rounds. The rerun regenerated the initial plan, so it differs from the original run's (see `queries/t20241206171855902412-3bda53fdd450/rerun_provenance.json`).
+
+### R1
+- Source run: `experiments/subset_test-r1` (run_id `subset_test-r1`, split `subset_test`, model `deepseek/deepseek-chat`, 30 queries, max 6 rounds).
+- `m20241028164916356794` (easy): checkpoint replaced by a single-query rerun (`subset_test-r1-rerun2-m20241028164916356794`, commit `a8aebdb`) because the original run had provider failures in its repair rounds. The rerun resumed from the original run's saved initial plan, so only the repair rounds differ (see `queries/m20241028164916356794-7d79b241a98f/rerun_provenance.json`).
 
 ### R2
 - Source run: `experiments/subset_test-r2` (run_id `subset_test-r2`, split `subset_test`, model `deepseek/deepseek-chat`, 30 queries, max 6 rounds).
@@ -56,7 +58,7 @@ Unless a row says otherwise, a value is computed for each query first and then a
 
 ### R3
 - Source run: `experiments/subset_test-r3` (run_id `subset_test-r3`, split `subset_test`, model `deepseek/deepseek-chat`, 30 queries, max 6 rounds).
-- `e20241028161340383778` (medium): checkpoint replaced by a single-query rerun (`subset_test-r3-rerun-e20241028161340383778`, commit `f855ec7`) because the original run's rounds got the failed-call text instead of a plan. The rerun regenerated the initial plan, so it differs from the original run's (see `queries/e20241028161340383778-eb116f6469fb/rerun_provenance.json`).
+- `e20241028161340383778` (medium): checkpoint replaced by a single-query rerun (`subset_test-r3-rerun-e20241028161340383778`, commit `f855ec7`) because the original run had provider failures in its repair rounds. The rerun regenerated the initial plan, so it differs from the original run's (see `queries/e20241028161340383778-eb116f6469fb/rerun_provenance.json`).
 
 ### R4
 - Source run: `experiments/subset_test-r4` (run_id `subset_test-r4`, split `subset_test`, model `deepseek/deepseek-chat`, 30 queries, max 6 rounds).

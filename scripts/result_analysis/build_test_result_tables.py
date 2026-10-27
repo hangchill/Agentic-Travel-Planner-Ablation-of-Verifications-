@@ -564,11 +564,15 @@ def run_notes(label, root, manifest, rows):
         provenance = load_json(path)
         uid = path.parent.name.rsplit("-", 1)[0]
         group = next((r["group"] for r in rows if r["query_uid"] == uid), "?")
+        same_initial = (provenance.get("original_initial_plan_hash_prefix")
+                        == provenance.get("rerun_initial_plan_hash_prefix"))
+        initial_note = ("The rerun resumed from the original run's saved initial plan, so only the repair rounds differ"
+                        if same_initial else
+                        "The rerun regenerated the initial plan, so it differs from the original run's")
         notes.append(f"- `{uid}` ({group}): checkpoint replaced by a single-query rerun "
                      f"(`{provenance['rerun_run_id']}`, commit `{(provenance.get('rerun_git_commit') or '?')[:7]}`) "
-                     "because the original run's rounds got the failed-call text instead of a plan. The rerun "
-                     "regenerated the initial plan, so it differs from the original run's "
-                     f"(see `{path.relative_to(root).as_posix()}`).")
+                     "because the original run had provider failures in its repair rounds. "
+                     f"{initial_note} (see `{path.relative_to(root).as_posix()}`).")
     missing = [r for r in rows if r["tokens_spent"] is None]
     if missing:
         notes.append(f"- Token data incomplete for {len(missing)} queries ({sum(r['rounds_missing_tokens'] for r in missing)} "
