@@ -11,8 +11,10 @@ from frontend.replay import (
 def test_bundled_evidence_matches_saved_experiment():
     demo = load_demo()
     source = Path(__file__).resolve().parents[1] / demo["source"]
-    original = json.loads(source.read_text(encoding="utf-8"))
-    assert hashlib.sha256(source.read_bytes()).hexdigest() == demo["source_sha256"]
+    source_text = source.read_text(encoding="utf-8")
+    original = json.loads(source_text)
+    # Git converts LF to CRLF on Windows; compare normalized evidence bytes.
+    assert hashlib.sha256(source_text.encode("utf-8")).hexdigest() == demo["source_lf_sha256"]
     assert len(demo["snapshots"]) == len(original["repair_history"]) == 7
     for snapshot, entry in zip(demo["snapshots"], original["repair_history"]):
         assert snapshot["plan"] == entry.get("candidate_plan", original["initial_raw_plan"])

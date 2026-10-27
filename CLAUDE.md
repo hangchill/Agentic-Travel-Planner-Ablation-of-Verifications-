@@ -140,10 +140,10 @@ S3 is the odd one out and should be treated carefully:
 | Metric | Meaning | Source in saved result |
 |---|---|---|
 | Final pass rate | Fraction of plans that satisfy all constraints at the end of repair | verifier `passed` / `error_info` |
-| Step-5 pass rate | The same, as of the end of step 5, i.e. before the last round; shows what step 6 gained or broke | per query in `phase_outcomes.csv` (`step5_*`, plus `cs_*` for what the commonsense rounds did together: `cs_attempts` rounds, first round's step/scope, errors before the first vs after the last); per strategy in `pass_rates.csv` (both written by `scripts/build_repair_summary.py`, which holds all of this code) |
+| Step-5 pass rate | The same, as of the end of step 5, i.e. before the last round; shows what step 6 gained or broke | per query in `phase_outcomes.csv` (`step5_*`, plus `cs_*` for what the commonsense rounds did together: `cs_attempts` rounds, first round's step/scope, errors before the first vs after the last); per strategy in `pass_rates.csv` (both written by `scripts/result_analysis/build_repair_summary.py`, which holds all of this code) |
 | Repair rounds to convergence | Steps until pass, or hitting `--refine_steps` | length of `history` in the repair-history log |
 | Token usage | LLM input/output tokens consumed | `input_token_count`, `output_token_count`, `input_token_maxx` |
-| Cache hits | Requests a strategy repeated exactly within a query, answered by the shared repeat-request cache instead of the model (a sign the strategy got stuck); tokens saved vs. tokens spent | per query in `llm_cache_hits.csv` (`llm_cache_hits`, `rounds_with_cache_hit`, `cache_hit_round_rate`, `first_cache_hit_step`, `tokens_spent`, `tokens_saved`, `tokens_without_cache`), written by `scripts/build_repair_summary.py`; per attempt in `repair_metadata.llm_cache_*` |
+| Cache hits | Requests a strategy repeated exactly within a query, answered by the shared repeat-request cache instead of the model (a sign the strategy got stuck); tokens saved vs. tokens spent | per query in `llm_cache_hits.csv` (`llm_cache_hits`, `rounds_with_cache_hit`, `cache_hit_round_rate`, `first_cache_hit_step`, `tokens_spent`, `tokens_saved`, `tokens_without_cache`), written by `scripts/result_analysis/build_repair_summary.py`; per attempt in `repair_metadata.llm_cache_*` |
 | Wall-clock / inference time | Total and LLM-only time | `elapsed_time(sec)`, `llm_inference_time(sec)` |
 
 (These fields are populated in `llm_modulo.py`; per-step transitions and metadata are in
@@ -181,7 +181,7 @@ pip install -r requirements.txt
 The benchmark needs the sandbox database, which is **not** in git. Download it with:
 
 ```bash
-python scripts/setup_project.py   # fetches + extracts into chinatravel/environment/database/
+python scripts/experiment_setup/setup_project.py   # fetches + extracts into chinatravel/environment/database/
 ```
 
 Configure the LLM endpoint by copying `.env.example` to `.env` and filling in the

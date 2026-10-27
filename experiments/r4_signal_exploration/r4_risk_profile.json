@@ -1,0 +1,283 @@
+{
+  "version": "prototype-0.1",
+  "source_runs": [
+    "subset_train-r0 (new loop)",
+    "subset_train-r3 (old loop)"
+  ],
+  "notes": "Train split only. Rates shrunk toward the column average with a prior worth 5 rounds.",
+  "fixability": {
+    "budget": {
+      "rounds": 135.0,
+      "p_unchanged": 0.687,
+      "p_fixed_when_changed": 0.233
+    },
+    "trip": {
+      "rounds": 31.67,
+      "p_unchanged": 0.538,
+      "p_fixed_when_changed": 0.27
+    },
+    "hotel": {
+      "rounds": 33.33,
+      "p_unchanged": 0.397,
+      "p_fixed_when_changed": 0.435
+    },
+    "attraction": {
+      "rounds": 44.5,
+      "p_unchanged": 0.924,
+      "p_fixed_when_changed": 0.207
+    },
+    "dining": {
+      "rounds": 21.33,
+      "p_unchanged": 0.559,
+      "p_fixed_when_changed": 0.098
+    },
+    "party": {
+      "rounds": 3.67,
+      "p_unchanged": 0.372,
+      "p_fixed_when_changed": 0.591
+    },
+    "transport": {
+      "rounds": 3.5,
+      "p_unchanged": 0.438,
+      "p_fixed_when_changed": 0.306
+    }
+  },
+  "commonsense_repair_breaks_personal": {
+    "trip": {
+      "chances": 120,
+      "breaks": 11,
+      "p": 0.092
+    },
+    "party": {
+      "chances": 126,
+      "breaks": 5,
+      "p": 0.042
+    },
+    "budget": {
+      "chances": 31,
+      "breaks": 7,
+      "p": 0.209
+    },
+    "hotel": {
+      "chances": 42,
+      "breaks": 16,
+      "p": 0.352
+    },
+    "dining": {
+      "chances": 28,
+      "breaks": 0,
+      "p": 0.016
+    },
+    "transport": {
+      "chances": 37,
+      "breaks": 2,
+      "p": 0.06
+    },
+    "attraction": {
+      "chances": 23,
+      "breaks": 2,
+      "p": 0.09
+    }
+  },
+  "edit_risk": {
+    "breaks hotel": {
+      "base_rate": 0.081,
+      "odds_ratio_by_edit": {
+        "hotel": 8.08,
+        "intercity": 1.26,
+        "restaurant": 0.81,
+        "attraction": 0.87,
+        "inner_transport": 0.59,
+        "times": 1.02,
+        "structure": 0.8
+      }
+    },
+    "breaks trip": {
+      "base_rate": 0.059,
+      "odds_ratio_by_edit": {
+        "hotel": 2.8,
+        "intercity": 2.61,
+        "restaurant": 2.13,
+        "attraction": 2.9,
+        "inner_transport": 1.36,
+        "times": 0.74,
+        "structure": 4.06
+      }
+    },
+    "breaks budget": {
+      "base_rate": 0.036,
+      "odds_ratio_by_edit": {
+        "hotel": 0.94,
+        "intercity": 1.14,
+        "restaurant": 1.82,
+        "attraction": 4.15,
+        "inner_transport": 1.38,
+        "times": 0.94,
+        "structure": 1.07
+      }
+    },
+    "new cs_intercity": {
+      "base_rate": 0.113,
+      "odds_ratio_by_edit": {
+        "hotel": 0.87,
+        "intercity": 18.52,
+        "restaurant": 0.87,
+        "attraction": 2.07,
+        "inner_transport": 1.02,
+        "times": 0.22,
+        "structure": 3.03
+      }
+    },
+    "new cs_inner_transport": {
+      "base_rate": 0.387,
+      "odds_ratio_by_edit": {
+        "hotel": 1.48,
+        "intercity": 0.56,
+        "restaurant": 3.06,
+        "attraction": 2.33,
+        "inner_transport": 8.68,
+        "times": 0.42,
+        "structure": 0.38
+      }
+    },
+    "new cs_dining": {
+      "base_rate": 0.23,
+      "odds_ratio_by_edit": {
+        "hotel": 0.46,
+        "intercity": 1.51,
+        "restaurant": 7.6,
+        "attraction": 0.67,
+        "inner_transport": 2.58,
+        "times": 1.82,
+        "structure": 0.17
+      }
+    },
+    "new cs_hotel": {
+      "base_rate": 0.099,
+      "odds_ratio_by_edit": {
+        "hotel": 6.37,
+        "intercity": 0.42,
+        "restaurant": 1.15,
+        "attraction": 0.97,
+        "inner_transport": 0.44,
+        "times": 0.53,
+        "structure": 1.13
+      }
+    }
+  },
+  "fix_levers": {
+    "budget": {
+      "edit_hotel": {
+        "with_edit": 0.25,
+        "without": 0.18181818181818182,
+        "n": 12
+      },
+      "edit_intercity": {
+        "with_edit": 0.2222222222222222,
+        "without": 0.16666666666666666,
+        "n": 27
+      },
+      "edit_restaurant": {
+        "with_edit": 0.47058823529411764,
+        "without": 0.03571428571428571,
+        "n": 17
+      },
+      "edit_attraction": {
+        "with_edit": 0.42857142857142855,
+        "without": 0.15789473684210525,
+        "n": 7
+      },
+      "edit_times": {
+        "with_edit": 0.22857142857142856,
+        "without": 0.1,
+        "n": 35
+      },
+      "edit_structure": {
+        "with_edit": 0.6666666666666666,
+        "without": 0.16666666666666666,
+        "n": 3
+      }
+    },
+    "hotel": {
+      "edit_inner_transport": {
+        "with_edit": 0.26666666666666666,
+        "without": 1.0,
+        "n": 15
+      },
+      "edit_times": {
+        "with_edit": 0.0,
+        "without": 0.6470588235294118,
+        "n": 5
+      }
+    },
+    "trip": {
+      "edit_hotel": {
+        "with_edit": 0.3076923076923077,
+        "without": 0.0,
+        "n": 13
+      },
+      "edit_intercity": {
+        "with_edit": 1.0,
+        "without": 0.0,
+        "n": 4
+      },
+      "edit_restaurant": {
+        "with_edit": 0.4444444444444444,
+        "without": 0.0,
+        "n": 9
+      },
+      "edit_attraction": {
+        "with_edit": 0.6666666666666666,
+        "without": 0.0,
+        "n": 6
+      },
+      "edit_times": {
+        "with_edit": 0.4,
+        "without": 0.0,
+        "n": 10
+      },
+      "edit_structure": {
+        "with_edit": 0.8,
+        "without": 0.0,
+        "n": 5
+      }
+    },
+    "dining": {
+      "edit_restaurant": {
+        "with_edit": 0.0,
+        "without": 0.0,
+        "n": 8
+      }
+    }
+  },
+  "avoidable_damage": {
+    "break:hotel": {
+      "events": 18,
+      "unneeded": 2
+    },
+    "break:trip": {
+      "events": 13,
+      "unneeded": 11
+    },
+    "break:budget": {
+      "events": 8,
+      "unneeded": 2
+    },
+    "new_cs:cs_intercity": {
+      "events": 25,
+      "unneeded": 6
+    },
+    "new_cs:cs_inner_transport": {
+      "events": 86,
+      "unneeded": 33
+    },
+    "new_cs:cs_dining": {
+      "events": 51,
+      "unneeded": 4
+    },
+    "new_cs:cs_hotel": {
+      "events": 22,
+      "unneeded": 1
+    }
+  }
+}

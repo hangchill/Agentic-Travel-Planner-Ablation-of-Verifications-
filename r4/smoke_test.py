@@ -22,8 +22,8 @@ from chinatravel.agent.model_usage import ModelUsage
 from chinatravel.agent.nesy_verifier.initial_state import InitialRepairState
 from chinatravel.agent.nesy_verifier import shared_repair_loop as loop
 from chinatravel.evaluation.repair_attempt import RepairAttemptRecord
-from scripts.build_regression_matrix import main as build_regression_matrix
-from scripts.build_repair_summary import build_repair_summary
+from scripts.matrix_building.build_regression_matrix import main as build_regression_matrix
+from scripts.result_analysis.build_repair_summary import build_repair_summary
 
 
 class MockModel:

@@ -1,0 +1,1382 @@
+{
+  "run_id": "subset_test-r0",
+  "query_uid": "e20241028160937967706",
+  "state": {
+    "query_uid": "e20241028160937967706",
+    "problem": {
+      "uid": "e20241028160937967706",
+      "tag": "medium",
+      "start_city": "Suzhou",
+      "target_city": "Shenzhen",
+      "days": 2,
+      "people_number": 1,
+      "limit_rooms": true,
+      "limits_room_type": true,
+      "hard_logic_py": [
+        "result=(day_count(plan)==2)",
+        "result=(people_count(plan)==1)",
+        "total_cost=0 \nfor activity in allactivities(plan):\n    total_cost+=activity_cost(activity)\n    total_cost += innercity_transport_cost(activity_transports(activity))\nresult=(total_cost<=2800)",
+        "attraction_type_set=set()\nfor activity in allactivities(plan):\n  if activity_type(activity)=='attraction': attraction_type_set.add(attraction_type(activity, target_city(plan)))\nresult=({'商业街区'}<=attraction_type_set)",
+        "result=True\nfor activity in allactivities(plan):\n  if activity_type(activity) in ['attraction', 'airplane', 'train'] and activity_tickets(activity)!=1: result=False\n  if innercity_transport_type(activity_transports(activity))=='metro'and metro_tickets(activity_transports(activity))!=1: result=False",
+        "result=True\nfor activity in allactivities(plan):\n  if activity_type(activity)=='accommodation' and room_count(activity)!=1: result=False",
+        "result=True\nfor activity in allactivities(plan):\n  if activity_type(activity)=='accommodation' and room_type(activity)!=1: result=False",
+        "result=True\nfor activity in allactivities(plan):\n  if innercity_transport_type(activity_transports(activity))=='taxi'and taxi_cars(activity_transports(activity))!=1: result=False"
+      ],
+      "nature_language": "Current location: Suzhou. I plan to visit Shenzhen for 2 days with a budget of 2800 RMB. I would like to visit commercial districts and book a single room. Please provide me with a travel plan.",
+      "nature_language_en": "Current location: Suzhou. I plan to visit Shenzhen for 2 days with a budget of 2800 RMB. I would like to visit commercial districts and book a single room. Please provide me with a travel plan."
+    },
+    "raw_initial_plan": [
+      {
+        "day": 1,
+        "activities": [
+          {
+            "start_time": "07:34",
+            "end_time": "17:00",
+            "start": "Suzhou Station",
+            "end": "Shenzhen North Railway Station",
+            "price": 759.35,
+            "cost": 759.35,
+            "TrainID": "G2784",
+            "type": "train",
+            "tickets": 1,
+            "transports": "empty"
+          },
+          {
+            "position": "East Gate Old Street",
+            "type": "attraction",
+            "transports": {
+              "from": "Shenzhen North Railway Station",
+              "to": "East Gate Old Street",
+              "mode": "metro",
+              "start_time": "17:00",
+              "end_time": "17:25",
+              "cost": 4
+            },
+            "price": 0.0,
+            "cost": 0.0,
+            "tickets": 1,
+            "start_time": "17:30",
+            "end_time": "19:30"
+          },
+          {
+            "position": "Jiangnan Chef (China Resources Mixc Store)",
+            "type": "dinner",
+            "transports": {
+              "from": "East Gate Old Street",
+              "to": "Jiangnan Chef (China Resources Mixc Store)",
+              "mode": "metro",
+              "start_time": "19:30",
+              "end_time": "19:38",
+              "cost": 2
+            },
+            "price": 165.0,
+            "cost": 165.0,
+            "start_time": "19:45",
+            "end_time": "20:45"
+          },
+          {
+            "position": "Dalden Meijin Hotel",
+            "type": "accommodation",
+            "transports": {
+              "from": "Jiangnan Chef (China Resources Mixc Store)",
+              "to": "Dalden Meijin Hotel",
+              "mode": "metro",
+              "start_time": "20:45",
+              "end_time": "20:58",
+              "cost": 3
+            },
+            "room_type": 1,
+            "price": 331,
+            "cost": 331,
+            "start_time": "21:00",
+            "end_time": "24:00",
+            "rooms": 1
+          }
+        ]
+      },
+      {
+        "day": 2,
+        "activities": [
+          {
+            "position": "Shuiwei 1368 Cultural Block",
+            "type": "attraction",
+            "transports": {
+              "from": "Dalden Meijin Hotel",
+              "to": "Shuiwei 1368 Cultural Block",
+              "mode": "metro",
+              "start_time": "08:00",
+              "end_time": "08:29",
+              "cost": 4
+            },
+            "price": 0.0,
+            "cost": 0.0,
+            "tickets": 1,
+            "start_time": "08:30",
+            "end_time": "11:30"
+          },
+          {
+            "position": "Libaoge (Kerry Store)",
+            "type": "lunch",
+            "transports": {
+              "from": "Shuiwei 1368 Cultural Block",
+              "to": "Libaoge (Kerry Store)",
+              "mode": "metro",
+              "start_time": "11:30",
+              "end_time": "11:38",
+              "cost": 2
+            },
+            "price": 156.0,
+            "cost": 156.0,
+            "start_time": "11:45",
+            "end_time": "12:45"
+          },
+          {
+            "position": "Huaqiangbei Museum",
+            "type": "attraction",
+            "transports": {
+              "from": "Libaoge (Kerry Store)",
+              "to": "Huaqiangbei Museum",
+              "mode": "metro",
+              "start_time": "12:45",
+              "end_time": "12:59",
+              "cost": 3
+            },
+            "price": 0.0,
+            "cost": 0.0,
+            "tickets": 1,
+            "start_time": "13:00",
+            "end_time": "15:00"
+          },
+          {
+            "position": "Shenzhen North Railway Station",
+            "type": "train",
+            "transports": {
+              "from": "Huaqiangbei Museum",
+              "to": "Shenzhen North Railway Station",
+              "mode": "metro",
+              "start_time": "15:00",
+              "end_time": "15:23",
+              "cost": 4
+            },
+            "start_time": "16:02",
+            "end_time": "22:30",
+            "TrainID": "G2783",
+            "price": 759.35,
+            "cost": 759.35,
+            "tickets": 1
+          }
+        ]
+      }
+    ],
+    "repair_context": {
+      "go_train_info": "TrainID\tTrainType\tFrom\tTo\tBeginTime\tEndTime\tDuration\tprice\nG2784\tHigh-speed rail\tSuzhou Station\tShenzhen North Railway Station\t07:34\t17:00\t9.47\t759.35\nG2785\tHigh-speed rail\tSuzhou Station\tShenzhen North Railway Station\t07:34\t17:00\t9.47\t759.35\nD2281\tEMU (Electric Multiple Unit)\tSuzhou Station\tShenzhen Pingshan Station\t08:02\t19:48\t11.8\t700.94\nG2788\tHigh-speed rail\tSuzhou Station\tShenzhen Station\t13:18\t22:33\t9.28\t759.35\nG2789\tHigh-speed rail\tSuzhou Station\tShenzhen Station\t13:18\t22:33\t9.28\t759.35\n",
+      "go_flight_info": "None",
+      "back_train_info": "TrainID\tTrainType\tFrom\tTo\tBeginTime\tEndTime\tDuration\tprice\nG2783\tHigh-speed rail\tShenzhen North Railway Station\tSuzhou Station\t13:02\t22:30\t9.47\t759.35\nG2786\tHigh-speed rail\tShenzhen North Railway Station\tSuzhou Station\t13:02\t22:30\t9.47\t759.35\nD2282\tEMU (Electric Multiple Unit)\tShenzhen North Railway Station\tSuzhou Station\t09:39\t21:53\t12.23\t700.94\nK34\tExpress\tShenzhen Station\tSuzhou Station\t12:16\t12:53\t24.62\t467.29\nK35\tExpress\tShenzhen Station\tSuzhou Station\t12:16\t12:53\t24.62\t467.29\n",
+      "back_flight_info": "None",
+      "attraction_info": "name\ttype\tlat\tlon\topentime\tendtime\tprice\trecommendmintime\trecommendmaxtime\nEast Gate Old Street\tcommercial district\t22.550461\t114.122671\t00:00\t24:00\t0.0\t2.0\t3.0\nShuiwei 1368 Cultural Block\tcommercial district\t22.525026\t114.068378\t00:00\t24:00\t0.0\t3.0\t4.0\nHuaqiangbei Museum\tMuseum/Memorial Hall\t22.550102\t114.093668\t10:00\t18:00\t0.0\t2.0\t3.0\nShenzhen Book City (Central City Branch)\tcommercial district\t22.552693\t114.066282\t10:00\t22:00\t0.0\t0.5\t1.0\nShenzhen Convention and Exhibition Center (Futian Hall)\tcommercial district\t22.536478\t114.066315\t09:00\t17:00\t0.0\t2.5\t4.0\nXixiang Night Market Street\tcommercial district\t22.58798\t113.866194\t16:00\t01:00\t0.0\t2.0\t3.0\nShatoujiao\tcommercial district\t22.555547\t114.234118\t09:00\t12:00\t0.0\t3.0\t4.0\nBauhinia Lane Hong Kong International Style Street\tcommercial district\t22.515623\t114.067433\t00:00\t24:00\t0.0\t2.5\t4.0\nLuoruihe Taiwanese Food Street\tcommercial district\t22.731611\t114.275127\t17:00\t24:00\t0.0\t2.0\t3.0\nNanhai Creative Hub\tcommercial district\t22.492585\t113.924141\t08:30\t12:00\t0.0\t2.5\t4.0\nKexing Science and Technology Park\tcommercial district\t22.553843\t113.950104\t00:00\t24:00\t0.0\t2.0\t3.5\nShekou Value Factory\tCultural Landscape\t22.473784\t113.901987\t09:00\t18:00\t0.0\t1.0\t1.5\nChung Ying Street\tcommercial district\t22.551336\t114.238571\t09:00\t22:00\t0.0\t2.0\t2.5\nShekou Industrial Zone\tcommercial district\t22.489321\t113.922707\t06:15\t22:00\t0.0\t2.0\t3.0\nShenzhen Bay Sports Center\tAmusement Park/Sports Entertainment\t22.52418\t113.956211\t09:30\t22:30\t0.0\t1.5\t2.0\n",
+      "restaurant_info": "name\tlat\tlon\tprice\tcuisine\topentime\tendtime\trecommendedfood\nLibaoge (Kerry Store)\t22.5353225\t114.0568892\t156.0\tCantonese cuisine\t10:30\t21:30\tEight-Flavor Tofu, Stir-Fried Glutinous Rice, Wood-Fired Roasted Suckling Pig, Dabao Roast Duck, Durian Filo Pastry, Crispy Shrimp Dumpling, Dabao Wood-Fired Roast Duck, Crispy Beef Brisket, XO Sauce Stir-Fried Rice Noodles with Beef, Satay Beef Tripe\nJiangnan Chef (China Resources Mixc Store)\t22.5400948\t114.1111926\t165.0\tJiangsu-Zhejiang cuisine\t11:00\t21:00\tSweet and Sour Pine Nut Fish, Hand-Peeled Longjing River Shrimp, Zhiwei Pork Ribs, Large Dongpo Pork Belly, Hangzhou Shepherd's Purse, Osmanthus Sticky Rice Lotus Root\nLittle Bingsheng (Joyce Center Branch)\t22.5360824\t114.0651296\t166.0\tCantonese cuisine\t11:00\t22:00\tCrispy Eggplant, Salmon Salad with Black Truffle, Secret Recipe Black Pork Char Siu, Whole Wenchang Chicken with Black Truffle and Crispy Skin, Farm Lettuce with Macau Shrimp Paste, Snow Mountain Milk Bun\nYat Bun Sin Tea House (Mixc World Store)\t22.5416495\t113.9562296\t175.0\tCantonese cuisine\t10:00\t21:30\tSpring Breeze Pork Intestine, Eight Immortals Shrimp Dumplings, Golden Conpoy Chicken Feet, Shark Fin Soup Dumplings, Eight Immortals Squab, Bird's Nest Egg Tarts\nChaoshan Joy Goose Restaurant (Mixc Mall Branch)\t22.592724\t114.1313765\t80.0\tCantonese cuisine\t10:00\t22:00\tgoose meat, oyster omelette, Puning fried tofu, Thai coconut steamed black chicken soup, 8-second goose intestine, delicacy foie gras\n",
+      "accommodation_info": "name\tfeaturehoteltype\tlat\tlon\tprice\tnumbed\nDalden Meijin Hotel\tParking lot\t22.581022\t113.953854\t331\t1\nShenzhen Century Garden Hotel (Nanshan Science and Technology Park)\tFitness Room\t22.534199\t113.964544\t325\t1\nQiuguo Hotel, Gangxia Subway Station, Shenzhen Convention and Exhibition Center\tButler Service\t22.537511\t114.068481\t489\t1\n",
+      "innercity_transport_info": "from Xixiang Night Market Street to Xixiang Night Market Street:  metro: empty.  taxi: empty.  walk: empty. \nfrom Xixiang Night Market Street to Shekou Industrial Zone: metro: duration 44, cost 4. taxi: duration 18, cost 50.39. walk: duration 148, cost 0.0. \nfrom Xixiang Night Market Street to Huaqiangbei Museum: metro: duration 65, cost 6. taxi: duration 35, cost 101.65. walk: duration 285, cost 0.0. \nfrom Xixiang Night Market Street to Luoruihe Taiwanese Food Street: metro: duration 108, cost 8. taxi: duration 67, cost 196.92. walk: duration 539, cost 0.0. \nfrom Xixiang Night Market Street to Bauhinia Lane Hong Kong International Style Street: metro: duration 60, cost 6. taxi: duration 33, cost 94.58. walk: duration 266, cost 0.0. \nfrom Xixiang Night Market Street to Shenzhen Bay Sports Center: metro: duration 49, cost 4. taxi: duration 17, cost 47.11. walk: duration 139, cost 0.0. \nfrom Xixiang Night Market Street to Chaoshan Joy Goose Restaurant (Mixc Mall Branch): metro: duration 71, cost 6. taxi: duration 40, cost 117.43. walk: duration 327, cost 0.0. \nfrom Xixiang Night Market Street to Dalden Meijin Hotel: metro: duration 32, cost 3. taxi: duration 13, cost 36.37. walk: duration 108, cost 0.0. \nfrom Xixiang Night Market Street to Shenzhen Century Garden Hotel (Nanshan Science and Technology Park): metro: duration 45, cost 4. taxi: duration 17, cost 47.52. walk: duration 140, cost 0.0. \nfrom Xixiang Night Market Street to Shenzhen North Railway Station: metro: duration 49, cost 5. taxi: duration 25, cost 70.86. walk: duration 203, cost 0.0. \nfrom Xixiang Night Market Street to Shatoujiao: metro: duration 95, cost 8. taxi: duration 57, cost 165.74. walk: duration 456, cost 0.0. \nfrom Xixiang Night Market Street to Shekou Value Factory: metro: duration 51, cost 4. taxi: duration 19, cost 53.97. walk: duration 158, cost 0.0. \nfrom Xixiang Night Market Street to East Gate Old Street: metro: duration 69, cost 6. taxi: duration 40, cost 114.86. walk: duration 320, cost 0.0. \nfrom Xixiang Night Market Street to Chung Ying Street: metro: duration 96, cost 8. taxi: duration 57, cost 168.0. walk: duration 462, cost 0.0. \nfrom Xixiang Night Market Street to Qiuguo Hotel, Gangxia Subway Station, Shenzhen Convention and Exhibition Center: metro: duration 58, cost 5. taxi: duration 32, cost 91.64. walk: duration 258, cost 0.0. \nfrom Xixiang Night Market Street to Little Bingsheng (Joyce Center Branch): metro: duration 62, cost 5. taxi: duration 31, cost 90.34. walk: duration 255, cost 0.0. \nfrom Xixiang Night Market Street to Yat Bun Sin Tea House (Mixc World Store): metro: duration 39, cost 4. taxi: duration 15, cost 42.34. walk: duration 127, cost 0.0. \nfrom Xixiang Night Market Street to Shuiwei 1368 Cultural Block: metro: duration 61, cost 5. taxi: duration 32, cost 93.4. walk: duration 263, cost 0.0. \nfrom Xixiang Night Market Street to Kexing Science and Technology Park: metro: duration 54, cost 4. taxi: duration 14, cost 37.67. walk: duration 113, cost 0.0. \nfrom Xixiang Night Market Street to Shenzhen Pingshan Station: metro: duration 118, cost 8. taxi: duration 74, cost 217.68. walk: duration 594, cost 0.0. \nfrom Xixiang Night Market Street to Shenzhen Book City (Central City Branch): metro: duration 62, cost 5. taxi: duration 31, cost 88.96. walk: duration 251, cost 0.0. \nfrom Xixiang Night Market Street to Shenzhen Convention and Exhibition Center (Futian Hall): metro: duration 61, cost 5. taxi: duration 32, cost 90.81. walk: duration 256, cost 0.0. \nfrom Xixiang Night Market Street to Libaoge (Kerry Store): metro: duration 57, cost 5. taxi: duration 30, cost 86.78. walk: duration 245, cost 0.0. \nfrom Xixiang Night Market Street to Shenzhen Station: metro: duration 70, cost 6. taxi: duration 39, cost 114.09. walk: duration 318, cost 0.0. \nfrom Xixiang Night Market Street to Nanhai Creative Hub: metro: duration 46, cost 4. taxi: duration 18, cost 49.28. walk: duration 145, cost 0.0. \nfrom Xixiang Night Market Street to Jiangnan Chef (China Resources Mixc Store): metro: duration 69, cost 6. taxi: duration 38, cost 110.57. walk: duration 308, cost 0.0. \nfrom Shekou Industrial Zone to Xixiang Night Market Street: metro: duration 44, cost 4. taxi: duration 18, cost 50.39. walk: duration 148, cost 0.0. \nfrom Shekou Industrial Zone to Shekou Industrial Zone:  metro: empty.  taxi: empty.  walk: empty. \nfrom Shekou Industrial Zone to Huaqiangbei Museum: metro: duration 44, cost 5. taxi: duration 28, cost 79.45. walk: duration 225, cost 0.0. \nfrom Shekou Industrial Zone to Luoruihe Taiwanese Food Street: metro: duration 97, cost 8. taxi: duration 67, cost 197.59. walk: duration 541, cost 0.0. \nfrom Shekou Industrial Zone to Bauhinia Lane Hong Kong International Style Street: metro: duration 35, cost 5. taxi: duration 22, cost 62.98. walk: duration 182, cost 0.0. \nfrom Shekou Industrial Zone to Shenzhen Bay Sports Center: metro: duration 25, cost 3. taxi: duration 7, cost 22.81. walk: duration 62, cost 0.0. \nfrom Shekou Industrial Zone to Chaoshan Joy Goose Restaurant (Mixc Mall Branch): metro: duration 55, cost 6. taxi: duration 36, cost 104.18. walk: duration 291, cost 0.0. \nfrom Shekou Industrial Zone to Dalden Meijin Hotel: metro: duration 24, cost 4. taxi: duration 15, cost 42.62. walk: duration 127, cost 0.0. \nfrom Shekou Industrial Zone to Shenzhen Century Garden Hotel (Nanshan Science and Technology Park): metro: duration 24, cost 3. taxi: duration 9, cost 27.71. walk: duration 78, cost 0.0. \nfrom Shekou Industrial Zone to Shenzhen North Railway Station: metro: duration 39, cost 5. taxi: duration 25, cost 72.32. walk: duration 206, cost 0.0. \nfrom Shekou Industrial Zone to Shatoujiao: metro: duration 74, cost 7. taxi: duration 49, cost 142.6. walk: duration 394, cost 0.0. \nfrom Shekou Industrial Zone to Shekou Value Factory: metro: duration 16, cost 2. taxi: duration 4, cost 14.29. walk: duration 32, cost 0.0. \nfrom Shekou Industrial Zone to East Gate Old Street: metro: duration 47, cost 6. taxi: duration 32, cost 92.16. walk: duration 259, cost 0.0. \nfrom Shekou Industrial Zone to Chung Ying Street: metro: duration 75, cost 7. taxi: duration 49, cost 144.16. walk: duration 398, cost 0.0. \nfrom Shekou Industrial Zone to Qiuguo Hotel, Gangxia Subway Station, Shenzhen Convention and Exhibition Center: metro: duration 36, cost 5. taxi: duration 23, cost 66.34. walk: duration 191, cost 0.0. \nfrom Shekou Industrial Zone to Little Bingsheng (Joyce Center Branch): metro: duration 39, cost 5. taxi: duration 23, cost 64.64. walk: duration 186, cost 0.0. \nfrom Shekou Industrial Zone to Yat Bun Sin Tea House (Mixc World Store): metro: duration 19, cost 3. taxi: duration 10, cost 28.3. walk: duration 80, cost 0.0. \nfrom Shekou Industrial Zone to Shuiwei 1368 Cultural Block: metro: duration 37, cost 5. taxi: duration 23, cost 64.45. walk: duration 186, cost 0.0. \nfrom Shekou Industrial Zone to Kexing Science and Technology Park: metro: duration 34, cost 3. taxi: duration 11, cost 31.58. walk: duration 92, cost 0.0. \nfrom Shekou Industrial Zone to Shenzhen Pingshan Station: metro: duration 105, cost 9. taxi: duration 72, cost 212.89. walk: duration 581, cost 0.0. \nfrom Shekou Industrial Zone to Shenzhen Book City (Central City Branch): metro: duration 41, cost 5. taxi: duration 24, cost 68.29. walk: duration 196, cost 0.0. \nfrom Shekou Industrial Zone to Shenzhen Convention and Exhibition Center (Futian Hall): metro: duration 38, cost 5. taxi: duration 23, cost 65.22. walk: duration 188, cost 0.0. \nfrom Shekou Industrial Zone to Libaoge (Kerry Store): metro: duration 34, cost 5. taxi: duration 22, cost 60.92. walk: duration 176, cost 0.0. \nfrom Shekou Industrial Zone to Shenzhen Station: metro: duration 47, cost 6. taxi: duration 30, cost 87.12. walk: duration 246, cost 0.0. \nfrom Shekou Industrial Zone to Nanhai Creative Hub: metro: duration 10, cost 2. taxi: duration 0, cost 11.0. walk: duration 4, cost 0.0. \nfrom Shekou Industrial Zone to Jiangnan Chef (China Resources Mixc Store): metro: duration 47, cost 5. taxi: duration 30, cost 85.56. walk: duration 242, cost 0.0. \nfrom Huaqiangbei Museum to Xixiang Night Market Street: metro: duration 65, cost 6. taxi: duration 35, cost 101.65. walk: duration 285, cost 0.0. \nfrom Huaqiangbei Museum to Shekou Industrial Zone: metro: duration 44, cost 5. taxi: duration 28, cost 79.45. walk: duration 225, cost 0.0. \nfrom Huaqiangbei Museum to Huaqiangbei Museum:  metro: empty.  taxi: empty.  walk: empty. \nfrom Huaqiangbei Museum to Luoruihe Taiwanese Food Street: metro: duration 61, cost 6. taxi: duration 41, cost 118.1. walk: duration 329, cost 0.0. \nfrom Huaqiangbei Museum to Bauhinia Lane Hong Kong International Style Street: metro: duration 13, cost 3. taxi: duration 7, cost 21.06. walk: duration 56, cost 0.0. \nfrom Huaqiangbei Museum to Shenzhen Bay Sports Center: metro: duration 46, cost 5. taxi: duration 21, cost 59.63. walk: duration 173, cost 0.0. \nfrom Huaqiangbei Museum to Chaoshan Joy Goose Restaurant (Mixc Mall Branch): metro: duration 18, cost 3. taxi: duration 9, cost 26.08. walk: duration 73, cost 0.0. \nfrom Huaqiangbei Museum to Dalden Meijin Hotel: metro: duration 33, cost 5. taxi: duration 22, cost 61.22. walk: duration 177, cost 0.0. \nfrom Huaqiangbei Museum to Shenzhen Century Garden Hotel (Nanshan Science and Technology Park): metro: duration 36, cost 4. taxi: duration 20, cost 54.99. walk: duration 160, cost 0.0. \nfrom Huaqiangbei Museum to Shenzhen North Railway Station: metro: duration 23, cost 4. taxi: duration 14, cost 37.47. walk: duration 112, cost 0.0. \nfrom Huaqiangbei Museum to Shatoujiao: metro: duration 36, cost 5. taxi: duration 21, cost 59.76. walk: duration 173, cost 0.0. \nfrom Huaqiangbei Museum to Shekou Value Factory: metro: duration 54, cost 6. taxi: duration 32, cost 91.25. walk: duration 257, cost 0.0. \nfrom Huaqiangbei Museum to East Gate Old Street: metro: duration 9, cost 2. taxi: duration 4, cost 15.14. walk: duration 35, cost 0.0. \nfrom Huaqiangbei Museum to Chung Ying Street: metro: duration 37, cost 5. taxi: duration 22, cost 61.77. walk: duration 178, cost 0.0. \nfrom Huaqiangbei Museum to Qiuguo Hotel, Gangxia Subway Station, Shenzhen Convention and Exhibition Center: metro: duration 10, cost 2. taxi: duration 4, cost 15.0. walk: duration 35, cost 0.0. \nfrom Huaqiangbei Museum to Little Bingsheng (Joyce Center Branch): metro: duration 13, cost 2. taxi: duration 4, cost 16.32. walk: duration 39, cost 0.0. \nfrom Huaqiangbei Museum to Yat Bun Sin Tea House (Mixc World Store): metro: duration 35, cost 5. taxi: duration 21, cost 58.46. walk: duration 170, cost 0.0. \nfrom Huaqiangbei Museum to Shuiwei 1368 Cultural Block: metro: duration 14, cost 3. taxi: duration 5, cost 18.02. walk: duration 45, cost 0.0. \nfrom Huaqiangbei Museum to Kexing Science and Technology Park: metro: duration 50, cost 5. taxi: duration 22, cost 61.18. walk: duration 177, cost 0.0. \nfrom Huaqiangbei Museum to Shenzhen Pingshan Station: metro: duration 67, cost 7. taxi: duration 45, cost 129.98. walk: duration 360, cost 0.0. \nfrom Huaqiangbei Museum to Shenzhen Book City (Central City Branch): metro: duration 13, cost 2. taxi: duration 4, cost 14.61. walk: duration 33, cost 0.0. \nfrom Huaqiangbei Museum to Shenzhen Convention and Exhibition Center (Futian Hall): metro: duration 12, cost 2. taxi: duration 4, cost 15.87. walk: duration 38, cost 0.0. \nfrom Huaqiangbei Museum to Libaoge (Kerry Store): metro: duration 14, cost 3. taxi: duration 6, cost 19.13. walk: duration 49, cost 0.0. \nfrom Huaqiangbei Museum to Shenzhen Station: metro: duration 10, cost 2. taxi: duration 4, cost 15.66. walk: duration 37, cost 0.0. \nfrom Huaqiangbei Museum to Nanhai Creative Hub: metro: duration 47, cost 5. taxi: duration 27, cost 78.25. walk: duration 222, cost 0.0. \nfrom Huaqiangbei Museum to Jiangnan Chef (China Resources Mixc Store): metro: duration 9, cost 2. taxi: duration 3, cost 12.11. walk: duration 25, cost 0.0. \nfrom Luoruihe Taiwanese Food Street to Xixiang Night Market Street: metro: duration 108, cost 8. taxi: duration 67, cost 196.92. walk: duration 539, cost 0.0. \nfrom Luoruihe Taiwanese Food Street to Shekou Industrial Zone: metro: duration 97, cost 8. taxi: duration 67, cost 197.59. walk: duration 541, cost 0.0. \nfrom Luoruihe Taiwanese Food Street to Huaqiangbei Museum: metro: duration 61, cost 6. taxi: duration 41, cost 118.1. walk: duration 329, cost 0.0. \nfrom Luoruihe Taiwanese Food Street to Luoruihe Taiwanese Food Street:  metro: empty.  taxi: empty.  walk: empty. \nfrom Luoruihe Taiwanese Food Street to Bauhinia Lane Hong Kong International Style Street: metro: duration 68, cost 7. taxi: duration 48, cost 138.98. walk: duration 384, cost 0.0. \nfrom Luoruihe Taiwanese Food Street to Shenzhen Bay Sports Center: metro: duration 97, cost 8. taxi: duration 60, cost 174.84. walk: duration 480, cost 0.0. \nfrom Luoruihe Taiwanese Food Street to Chaoshan Joy Goose Restaurant (Mixc Mall Branch): metro: duration 49, cost 6. taxi: duration 31, cost 90.67. walk: duration 255, cost 0.0. \nfrom Luoruihe Taiwanese Food Street to Dalden Meijin Hotel: metro: duration 78, cost 8. taxi: duration 55, cost 161.17. walk: duration 443, cost 0.0. \nfrom Luoruihe Taiwanese Food Street to Shenzhen Century Garden Hotel (Nanshan Science and Technology Park): metro: duration 87, cost 8. taxi: duration 58, cost 168.82. walk: duration 464, cost 0.0. \nfrom Luoruihe Taiwanese Food Street to Shenzhen North Railway Station: metro: duration 62, cost 7. taxi: duration 42, cost 123.67. walk: duration 343, cost 0.0. \nfrom Luoruihe Taiwanese Food Street to Shatoujiao: metro: duration 47, cost 5. taxi: duration 29, cost 84.46. walk: duration 239, cost 0.0. \nfrom Luoruihe Taiwanese Food Street to Shekou Value Factory: metro: duration 107, cost 9. taxi: duration 71, cost 209.91. walk: duration 573, cost 0.0. \nfrom Luoruihe Taiwanese Food Street to East Gate Old Street: metro: duration 55, cost 6. taxi: duration 38, cost 109.25. walk: duration 305, cost 0.0. \nfrom Luoruihe Taiwanese Food Street to Chung Ying Street: metro: duration 48, cost 5. taxi: duration 30, cost 86.11. walk: duration 243, cost 0.0. \nfrom Luoruihe Taiwanese Food Street to Qiuguo Hotel, Gangxia Subway Station, Shenzhen Convention and Exhibition Center: metro: duration 65, cost 7. taxi: duration 45, cost 130.69. walk: duration 362, cost 0.0. \nfrom Luoruihe Taiwanese Food Street to Little Bingsheng (Joyce Center Branch): metro: duration 68, cost 7. taxi: duration 45, cost 132.29. walk: duration 366, cost 0.0. \nfrom Luoruihe Taiwanese Food Street to Yat Bun Sin Tea House (Mixc World Store): metro: duration 85, cost 8. taxi: duration 58, cost 169.98. walk: duration 467, cost 0.0. \nfrom Luoruihe Taiwanese Food Street to Shuiwei 1368 Cultural Block: metro: duration 69, cost 7. taxi: duration 46, cost 135.22. walk: duration 374, cost 0.0. \nfrom Luoruihe Taiwanese Food Street to Kexing Science and Technology Park: metro: duration 100, cost 8. taxi: duration 58, cost 169.2. walk: duration 465, cost 0.0. \nfrom Luoruihe Taiwanese Food Street to Shenzhen Pingshan Station: metro: duration 21, cost 3. taxi: duration 9, cost 26.13. walk: duration 73, cost 0.0. \nfrom Luoruihe Taiwanese Food Street to Shenzhen Book City (Central City Branch): metro: duration 67, cost 7. taxi: duration 43, cost 126.16. walk: duration 350, cost 0.0. \nfrom Luoruihe Taiwanese Food Street to Shenzhen Convention and Exhibition Center (Futian Hall): metro: duration 67, cost 7. taxi: duration 45, cost 131.76. walk: duration 365, cost 0.0. \nfrom Luoruihe Taiwanese Food Street to Libaoge (Kerry Store): metro: duration 68, cost 7. taxi: duration 46, cost 135.27. walk: duration 374, cost 0.0. \nfrom Luoruihe Taiwanese Food Street to Shenzhen Station: metro: duration 60, cost 6. taxi: duration 41, cost 118.21. walk: duration 329, cost 0.0. \nfrom Luoruihe Taiwanese Food Street to Nanhai Creative Hub: metro: duration 100, cost 8. taxi: duration 67, cost 196.09. walk: duration 537, cost 0.0. \nfrom Luoruihe Taiwanese Food Street to Jiangnan Chef (China Resources Mixc Store): metro: duration 62, cost 6. taxi: duration 40, cost 116.6. walk: duration 325, cost 0.0. \nfrom Bauhinia Lane Hong Kong International Style Street to Xixiang Night Market Street: metro: duration 60, cost 6. taxi: duration 33, cost 94.58. walk: duration 266, cost 0.0. \nfrom Bauhinia Lane Hong Kong International Style Street to Shekou Industrial Zone: metro: duration 35, cost 5. taxi: duration 22, cost 62.98. walk: duration 182, cost 0.0. \nfrom Bauhinia Lane Hong Kong International Style Street to Huaqiangbei Museum: metro: duration 13, cost 3. taxi: duration 7, cost 21.06. walk: duration 56, cost 0.0. \nfrom Bauhinia Lane Hong Kong International Style Street to Luoruihe Taiwanese Food Street: metro: duration 68, cost 7. taxi: duration 48, cost 138.98. walk: duration 384, cost 0.0. \nfrom Bauhinia Lane Hong Kong International Style Street to Bauhinia Lane Hong Kong International Style Street:  metro: empty.  taxi: empty.  walk: empty. \nfrom Bauhinia Lane Hong Kong International Style Street to Shenzhen Bay Sports Center: metro: duration 38, cost 4. taxi: duration 17, cost 46.37. walk: duration 137, cost 0.0. \nfrom Bauhinia Lane Hong Kong International Style Street to Chaoshan Joy Goose Restaurant (Mixc Mall Branch): metro: duration 25, cost 4. taxi: duration 16, cost 43.2. walk: duration 129, cost 0.0. \nfrom Bauhinia Lane Hong Kong International Style Street to Dalden Meijin Hotel: metro: duration 28, cost 4. taxi: duration 20, cost 56.55. walk: duration 164, cost 0.0. \nfrom Bauhinia Lane Hong Kong International Style Street to Shenzhen Century Garden Hotel (Nanshan Science and Technology Park): metro: duration 29, cost 4. taxi: duration 16, cost 43.22. walk: duration 129, cost 0.0. \nfrom Bauhinia Lane Hong Kong International Style Street to Shenzhen North Railway Station: metro: duration 24, cost 4. taxi: duration 16, cost 44.83. walk: duration 133, cost 0.0. \nfrom Bauhinia Lane Hong Kong International Style Street to Shatoujiao: metro: duration 41, cost 5. taxi: duration 26, cost 74.38. walk: duration 212, cost 0.0. \nfrom Bauhinia Lane Hong Kong International Style Street to Shekou Value Factory: metro: duration 44, cost 5. taxi: duration 26, cost 74.1. walk: duration 211, cost 0.0. \nfrom Bauhinia Lane Hong Kong International Style Street to East Gate Old Street: metro: duration 15, cost 3. taxi: duration 10, cost 28.74. walk: duration 82, cost 0.0. \nfrom Bauhinia Lane Hong Kong International Style Street to Chung Ying Street: metro: duration 42, cost 5. taxi: duration 27, cost 75.9. walk: duration 216, cost 0.0. \nfrom Bauhinia Lane Hong Kong International Style Street to Qiuguo Hotel, Gangxia Subway Station, Shenzhen Convention and Exhibition Center: metro: duration 6, cost 2. taxi: duration 3, cost 13.19. walk: duration 29, cost 0.0. \nfrom Bauhinia Lane Hong Kong International Style Street to Little Bingsheng (Joyce Center Branch): metro: duration 8, cost 2. taxi: duration 3, cost 12.67. walk: duration 27, cost 0.0. \nfrom Bauhinia Lane Hong Kong International Style Street to Yat Bun Sin Tea House (Mixc World Store): metro: duration 27, cost 4. taxi: duration 17, cost 47.79. walk: duration 141, cost 0.0. \nfrom Bauhinia Lane Hong Kong International Style Street to Shuiwei 1368 Cultural Block: metro: duration 5, cost 2. taxi: duration 1, cost 11.0. walk: duration 12, cost 0.0. \nfrom Bauhinia Lane Hong Kong International Style Street to Kexing Science and Technology Park: metro: duration 42, cost 4. taxi: duration 19, cost 52.26. walk: duration 153, cost 0.0. \nfrom Bauhinia Lane Hong Kong International Style Street to Shenzhen Pingshan Station: metro: duration 74, cost 7. taxi: duration 51, cost 150.07. walk: duration 414, cost 0.0. \nfrom Bauhinia Lane Hong Kong International Style Street to Shenzhen Book City (Central City Branch): metro: duration 13, cost 2. taxi: duration 6, cost 19.07. walk: duration 49, cost 0.0. \nfrom Bauhinia Lane Hong Kong International Style Street to Shenzhen Convention and Exhibition Center (Futian Hall): metro: duration 7, cost 2. taxi: duration 3, cost 12.79. walk: duration 27, cost 0.0. \nfrom Bauhinia Lane Hong Kong International Style Street to Libaoge (Kerry Store): metro: duration 7, cost 2. taxi: duration 3, cost 13.23. walk: duration 29, cost 0.0. \nfrom Bauhinia Lane Hong Kong International Style Street to Shenzhen Station: metro: duration 14, cost 3. taxi: duration 8, cost 23.63. walk: duration 64, cost 0.0. \nfrom Bauhinia Lane Hong Kong International Style Street to Nanhai Creative Hub: metro: duration 37, cost 5. taxi: duration 22, cost 62.03. walk: duration 179, cost 0.0. \nfrom Bauhinia Lane Hong Kong International Style Street to Jiangnan Chef (China Resources Mixc Store): metro: duration 14, cost 3. taxi: duration 7, cost 23.09. walk: duration 63, cost 0.0. \nfrom Shenzhen Bay Sports Center to Xixiang Night Market Street: metro: duration 49, cost 4. taxi: duration 17, cost 47.11. walk: duration 139, cost 0.0. \nfrom Shenzhen Bay Sports Center to Shekou Industrial Zone: metro: duration 25, cost 3. taxi: duration 7, cost 22.81. walk: duration 62, cost 0.0. \nfrom Shenzhen Bay Sports Center to Huaqiangbei Museum: metro: duration 46, cost 5. taxi: duration 21, cost 59.63. walk: duration 173, cost 0.0. \nfrom Shenzhen Bay Sports Center to Luoruihe Taiwanese Food Street: metro: duration 97, cost 8. taxi: duration 60, cost 174.84. walk: duration 480, cost 0.0. \nfrom Shenzhen Bay Sports Center to Bauhinia Lane Hong Kong International Style Street: metro: duration 38, cost 4. taxi: duration 17, cost 46.37. walk: duration 137, cost 0.0. \nfrom Shenzhen Bay Sports Center to Shenzhen Bay Sports Center:  metro: empty.  taxi: empty.  walk: empty. \nfrom Shenzhen Bay Sports Center to Chaoshan Joy Goose Restaurant (Mixc Mall Branch): metro: duration 55, cost 5. taxi: duration 29, cost 82.67. walk: duration 234, cost 0.0. \nfrom Shenzhen Bay Sports Center to Dalden Meijin Hotel: metro: duration 24, cost 3. taxi: duration 9, cost 26.75. walk: duration 75, cost 0.0. \nfrom Shenzhen Bay Sports Center to Shenzhen Century Garden Hotel (Nanshan Science and Technology Park): metro: duration 24, cost 2. taxi: duration 2, cost 11.0. walk: duration 16, cost 0.0. \nfrom Shenzhen Bay Sports Center to Shenzhen North Railway Station: metro: duration 38, cost 4. taxi: duration 18, cost 49.06. walk: duration 144, cost 0.0. \nfrom Shenzhen Bay Sports Center to Shatoujiao: metro: duration 76, cost 7. taxi: duration 43, cost 124.29. walk: duration 345, cost 0.0. \nfrom Shenzhen Bay Sports Center to Shekou Value Factory: metro: duration 35, cost 3. taxi: duration 11, cost 32.32. walk: duration 94, cost 0.0. \nfrom Shenzhen Bay Sports Center to East Gate Old Street: metro: duration 49, cost 5. taxi: duration 26, cost 72.86. walk: duration 208, cost 0.0. \nfrom Shenzhen Bay Sports Center to Chung Ying Street: metro: duration 77, cost 7. taxi: duration 43, cost 126.11. walk: duration 350, cost 0.0. \nfrom Shenzhen Bay Sports Center to Qiuguo Hotel, Gangxia Subway Station, Shenzhen Convention and Exhibition Center: metro: duration 38, cost 4. taxi: duration 17, cost 47.1. walk: duration 139, cost 0.0. \nfrom Shenzhen Bay Sports Center to Little Bingsheng (Joyce Center Branch): metro: duration 41, cost 4. taxi: duration 16, cost 45.47. walk: duration 135, cost 0.0. \nfrom Shenzhen Bay Sports Center to Yat Bun Sin Tea House (Mixc World Store): metro: duration 18, cost 2. taxi: duration 2, cost 11.47. walk: duration 23, cost 0.0. \nfrom Shenzhen Bay Sports Center to Shuiwei 1368 Cultural Block: metro: duration 39, cost 4. taxi: duration 17, cost 46.63. walk: duration 138, cost 0.0. \nfrom Shenzhen Bay Sports Center to Kexing Science and Technology Park: metro: duration 33, cost 2. taxi: duration 5, cost 16.41. walk: duration 40, cost 0.0. \nfrom Shenzhen Bay Sports Center to Shenzhen Pingshan Station: metro: duration 105, cost 8. taxi: duration 65, cost 190.86. walk: duration 523, cost 0.0. \nfrom Shenzhen Bay Sports Center to Shenzhen Book City (Central City Branch): metro: duration 42, cost 4. taxi: duration 17, cost 47.6. walk: duration 141, cost 0.0. \nfrom Shenzhen Bay Sports Center to Shenzhen Convention and Exhibition Center (Futian Hall): metro: duration 40, cost 4. taxi: duration 17, cost 46.04. walk: duration 136, cost 0.0. \nfrom Shenzhen Bay Sports Center to Libaoge (Kerry Store): metro: duration 36, cost 4. taxi: duration 15, cost 41.64. walk: duration 125, cost 0.0. \nfrom Shenzhen Bay Sports Center to Shenzhen Station: metro: duration 49, cost 5. taxi: duration 24, cost 69.23. walk: duration 198, cost 0.0. \nfrom Shenzhen Bay Sports Center to Nanhai Creative Hub: metro: duration 27, cost 3. taxi: duration 7, cost 21.53. walk: duration 57, cost 0.0. \nfrom Shenzhen Bay Sports Center to Jiangnan Chef (China Resources Mixc Store): metro: duration 49, cost 5. taxi: duration 24, cost 66.88. walk: duration 192, cost 0.0. \nfrom Chaoshan Joy Goose Restaurant (Mixc Mall Branch) to Xixiang Night Market Street: metro: duration 71, cost 6. taxi: duration 40, cost 117.43. walk: duration 327, cost 0.0. \nfrom Chaoshan Joy Goose Restaurant (Mixc Mall Branch) to Shekou Industrial Zone: metro: duration 55, cost 6. taxi: duration 36, cost 104.18. walk: duration 291, cost 0.0. \nfrom Chaoshan Joy Goose Restaurant (Mixc Mall Branch) to Huaqiangbei Museum: metro: duration 18, cost 3. taxi: duration 9, cost 26.08. walk: duration 73, cost 0.0. \nfrom Chaoshan Joy Goose Restaurant (Mixc Mall Branch) to Luoruihe Taiwanese Food Street: metro: duration 49, cost 6. taxi: duration 31, cost 90.67. walk: duration 255, cost 0.0. \nfrom Chaoshan Joy Goose Restaurant (Mixc Mall Branch) to Bauhinia Lane Hong Kong International Style Street: metro: duration 25, cost 4. taxi: duration 16, cost 43.2. walk: duration 129, cost 0.0. \nfrom Chaoshan Joy Goose Restaurant (Mixc Mall Branch) to Shenzhen Bay Sports Center: metro: duration 55, cost 5. taxi: duration 29, cost 82.67. walk: duration 234, cost 0.0. \nfrom Chaoshan Joy Goose Restaurant (Mixc Mall Branch) to Chaoshan Joy Goose Restaurant (Mixc Mall Branch):  metro: empty.  taxi: empty.  walk: empty. \nfrom Chaoshan Joy Goose Restaurant (Mixc Mall Branch) to Dalden Meijin Hotel: metro: duration 39, cost 5. taxi: duration 27, cost 77.05. walk: duration 219, cost 0.0. \nfrom Chaoshan Joy Goose Restaurant (Mixc Mall Branch) to Shenzhen Century Garden Hotel (Nanshan Science and Technology Park): metro: duration 45, cost 5. taxi: duration 27, cost 77.24. walk: duration 220, cost 0.0. \nfrom Chaoshan Joy Goose Restaurant (Mixc Mall Branch) to Shenzhen North Railway Station: metro: duration 24, cost 4. taxi: duration 16, cost 42.77. walk: duration 128, cost 0.0. \nfrom Chaoshan Joy Goose Restaurant (Mixc Mall Branch) to Shatoujiao: metro: duration 30, cost 4. taxi: duration 17, cost 45.73. walk: duration 136, cost 0.0. \nfrom Chaoshan Joy Goose Restaurant (Mixc Mall Branch) to Shekou Value Factory: metro: duration 65, cost 6. taxi: duration 40, cost 116.31. walk: duration 324, cost 0.0. \nfrom Chaoshan Joy Goose Restaurant (Mixc Mall Branch) to East Gate Old Street: metro: duration 14, cost 3. taxi: duration 7, cost 21.38. walk: duration 57, cost 0.0. \nfrom Chaoshan Joy Goose Restaurant (Mixc Mall Branch) to Chung Ying Street: metro: duration 31, cost 4. taxi: duration 17, cost 48.43. walk: duration 143, cost 0.0. \nfrom Chaoshan Joy Goose Restaurant (Mixc Mall Branch) to Qiuguo Hotel, Gangxia Subway Station, Shenzhen Convention and Exhibition Center: metro: duration 22, cost 4. taxi: duration 13, cost 35.85. walk: duration 106, cost 0.0. \nfrom Chaoshan Joy Goose Restaurant (Mixc Mall Branch) to Little Bingsheng (Joyce Center Branch): metro: duration 25, cost 4. taxi: duration 13, cost 37.11. walk: duration 111, cost 0.0. \nfrom Chaoshan Joy Goose Restaurant (Mixc Mall Branch) to Yat Bun Sin Tea House (Mixc World Store): metro: duration 44, cost 5. taxi: duration 28, cost 79.66. walk: duration 226, cost 0.0. \nfrom Chaoshan Joy Goose Restaurant (Mixc Mall Branch) to Shuiwei 1368 Cultural Block: metro: duration 26, cost 4. taxi: duration 14, cost 39.38. walk: duration 118, cost 0.0. \nfrom Chaoshan Joy Goose Restaurant (Mixc Mall Branch) to Kexing Science and Technology Park: metro: duration 59, cost 5. taxi: duration 28, cost 80.8. walk: duration 229, cost 0.0. \nfrom Chaoshan Joy Goose Restaurant (Mixc Mall Branch) to Shenzhen Pingshan Station: metro: duration 56, cost 6. taxi: duration 36, cost 103.58. walk: duration 290, cost 0.0. \nfrom Chaoshan Joy Goose Restaurant (Mixc Mall Branch) to Shenzhen Book City (Central City Branch): metro: duration 24, cost 3. taxi: duration 12, cost 32.8. walk: duration 96, cost 0.0. \nfrom Chaoshan Joy Goose Restaurant (Mixc Mall Branch) to Shenzhen Convention and Exhibition Center (Futian Hall): metro: duration 24, cost 4. taxi: duration 13, cost 36.7. walk: duration 109, cost 0.0. \nfrom Chaoshan Joy Goose Restaurant (Mixc Mall Branch) to Libaoge (Kerry Store): metro: duration 25, cost 4. taxi: duration 14, cost 39.54. walk: duration 119, cost 0.0. \nfrom Chaoshan Joy Goose Restaurant (Mixc Mall Branch) to Shenzhen Station: metro: duration 19, cost 3. taxi: duration 10, cost 28.83. walk: duration 82, cost 0.0. \nfrom Chaoshan Joy Goose Restaurant (Mixc Mall Branch) to Nanhai Creative Hub: metro: duration 57, cost 6. taxi: duration 36, cost 102.83. walk: duration 288, cost 0.0. \nfrom Chaoshan Joy Goose Restaurant (Mixc Mall Branch) to Jiangnan Chef (China Resources Mixc Store): metro: duration 19, cost 3. taxi: duration 9, cost 26.35. walk: duration 74, cost 0.0. \nfrom Dalden Meijin Hotel to Xixiang Night Market Street: metro: duration 32, cost 3. taxi: duration 13, cost 36.37. walk: duration 108, cost 0.0. \nfrom Dalden Meijin Hotel to Shekou Industrial Zone: metro: duration 24, cost 4. taxi: duration 15, cost 42.62. walk: duration 127, cost 0.0. \nfrom Dalden Meijin Hotel to Huaqiangbei Museum: metro: duration 33, cost 5. taxi: duration 22, cost 61.22. walk: duration 177, cost 0.0. \nfrom Dalden Meijin Hotel to Luoruihe Taiwanese Food Street: metro: duration 78, cost 8. taxi: duration 55, cost 161.17. walk: duration 443, cost 0.0. \nfrom Dalden Meijin Hotel to Bauhinia Lane Hong Kong International Style Street: metro: duration 28, cost 4. taxi: duration 20, cost 56.55. walk: duration 164, cost 0.0. \nfrom Dalden Meijin Hotel to Shenzhen Bay Sports Center: metro: duration 24, cost 3. taxi: duration 9, cost 26.75. walk: duration 75, cost 0.0. \nfrom Dalden Meijin Hotel to Chaoshan Joy Goose Restaurant (Mixc Mall Branch): metro: duration 39, cost 5. taxi: duration 27, cost 77.05. walk: duration 219, cost 0.0. \nfrom Dalden Meijin Hotel to Dalden Meijin Hotel:  metro: empty.  taxi: empty.  walk: empty. \nfrom Dalden Meijin Hotel to Shenzhen Century Garden Hotel (Nanshan Science and Technology Park): metro: duration 16, cost 3. taxi: duration 7, cost 23.25. walk: duration 63, cost 0.0. \nfrom Dalden Meijin Hotel to Shenzhen North Railway Station: metro: duration 17, cost 3. taxi: duration 12, cost 33.98. walk: duration 100, cost 0.0. \nfrom Dalden Meijin Hotel to Shatoujiao: metro: duration 62, cost 7. taxi: duration 43, cost 125.03. walk: duration 347, cost 0.0. \nfrom Dalden Meijin Hotel to Shekou Value Factory: metro: duration 34, cost 4. taxi: duration 19, cost 53.29. walk: duration 156, cost 0.0. \nfrom Dalden Meijin Hotel to East Gate Old Street: metro: duration 36, cost 5. taxi: duration 26, cost 74.3. walk: duration 212, cost 0.0. \nfrom Dalden Meijin Hotel to Chung Ying Street: metro: duration 63, cost 7. taxi: duration 44, cost 127.3. walk: duration 353, cost 0.0. \nfrom Dalden Meijin Hotel to Qiuguo Hotel, Gangxia Subway Station, Shenzhen Convention and Exhibition Center: metro: duration 26, cost 4. taxi: duration 19, cost 52.01. walk: duration 152, cost 0.0. \nfrom Dalden Meijin Hotel to Little Bingsheng (Joyce Center Branch): metro: duration 29, cost 4. taxi: duration 18, cost 50.86. walk: duration 149, cost 0.0. \nfrom Dalden Meijin Hotel to Yat Bun Sin Tea House (Mixc World Store): metro: duration 11, cost 3. taxi: duration 6, cost 19.98. walk: duration 52, cost 0.0. \nfrom Dalden Meijin Hotel to Shuiwei 1368 Cultural Block: metro: duration 29, cost 4. taxi: duration 19, cost 54.6. walk: duration 159, cost 0.0. \nfrom Dalden Meijin Hotel to Kexing Science and Technology Park: metro: duration 26, cost 3. taxi: duration 4, cost 15.32. walk: duration 36, cost 0.0. \nfrom Dalden Meijin Hotel to Shenzhen Pingshan Station: metro: duration 87, cost 8. taxi: duration 61, cost 180.18. walk: duration 494, cost 0.0. \nfrom Dalden Meijin Hotel to Shenzhen Book City (Central City Branch): metro: duration 29, cost 4. taxi: duration 17, cost 48.61. walk: duration 143, cost 0.0. \nfrom Dalden Meijin Hotel to Shenzhen Convention and Exhibition Center (Futian Hall): metro: duration 28, cost 4. taxi: duration 18, cost 51.29. walk: duration 150, cost 0.0. \nfrom Dalden Meijin Hotel to Libaoge (Kerry Store): metro: duration 24, cost 4. taxi: duration 17, cost 47.55. walk: duration 140, cost 0.0. \nfrom Dalden Meijin Hotel to Shenzhen Station: metro: duration 37, cost 5. taxi: duration 26, cost 74.07. walk: duration 211, cost 0.0. \nfrom Dalden Meijin Hotel to Nanhai Creative Hub: metro: duration 26, cost 4. taxi: duration 15, cost 40.87. walk: duration 123, cost 0.0. \nfrom Dalden Meijin Hotel to Jiangnan Chef (China Resources Mixc Store): metro: duration 36, cost 5. taxi: duration 25, cost 70.32. walk: duration 201, cost 0.0. \nfrom Shenzhen Century Garden Hotel (Nanshan Science and Technology Park) to Xixiang Night Market Street: metro: duration 45, cost 4. taxi: duration 17, cost 47.52. walk: duration 140, cost 0.0. \nfrom Shenzhen Century Garden Hotel (Nanshan Science and Technology Park) to Shekou Industrial Zone: metro: duration 24, cost 3. taxi: duration 9, cost 27.71. walk: duration 78, cost 0.0. \nfrom Shenzhen Century Garden Hotel (Nanshan Science and Technology Park) to Huaqiangbei Museum: metro: duration 36, cost 4. taxi: duration 20, cost 54.99. walk: duration 160, cost 0.0. \nfrom Shenzhen Century Garden Hotel (Nanshan Science and Technology Park) to Luoruihe Taiwanese Food Street: metro: duration 87, cost 8. taxi: duration 58, cost 168.82. walk: duration 464, cost 0.0. \nfrom Shenzhen Century Garden Hotel (Nanshan Science and Technology Park) to Bauhinia Lane Hong Kong International Style Street: metro: duration 29, cost 4. taxi: duration 16, cost 43.22. walk: duration 129, cost 0.0. \nfrom Shenzhen Century Garden Hotel (Nanshan Science and Technology Park) to Shenzhen Bay Sports Center: metro: duration 24, cost 2. taxi: duration 2, cost 11.0. walk: duration 16, cost 0.0. \nfrom Shenzhen Century Garden Hotel (Nanshan Science and Technology Park) to Chaoshan Joy Goose Restaurant (Mixc Mall Branch): metro: duration 45, cost 5. taxi: duration 27, cost 77.24. walk: duration 220, cost 0.0. \nfrom Shenzhen Century Garden Hotel (Nanshan Science and Technology Park) to Dalden Meijin Hotel: metro: duration 16, cost 3. taxi: duration 7, cost 23.25. walk: duration 63, cost 0.0. \nfrom Shenzhen Century Garden Hotel (Nanshan Science and Technology Park) to Shenzhen Century Garden Hotel (Nanshan Science and Technology Park):  metro: empty.  taxi: empty.  walk: empty. \nfrom Shenzhen Century Garden Hotel (Nanshan Science and Technology Park) to Shenzhen North Railway Station: metro: duration 28, cost 4. taxi: duration 16, cost 42.75. walk: duration 128, cost 0.0. \nfrom Shenzhen Century Garden Hotel (Nanshan Science and Technology Park) to Shatoujiao: metro: duration 66, cost 6. taxi: duration 41, cost 119.93. walk: duration 333, cost 0.0. \nfrom Shenzhen Century Garden Hotel (Nanshan Science and Technology Park) to Shekou Value Factory: metro: duration 35, cost 4. taxi: duration 13, cost 37.19. walk: duration 111, cost 0.0. \nfrom Shenzhen Century Garden Hotel (Nanshan Science and Technology Park) to East Gate Old Street: metro: duration 40, cost 5. taxi: duration 24, cost 68.34. walk: duration 196, cost 0.0. \nfrom Shenzhen Century Garden Hotel (Nanshan Science and Technology Park) to Chung Ying Street: metro: duration 67, cost 6. taxi: duration 42, cost 121.83. walk: duration 339, cost 0.0. \nfrom Shenzhen Century Garden Hotel (Nanshan Science and Technology Park) to Qiuguo Hotel, Gangxia Subway Station, Shenzhen Convention and Exhibition Center: metro: duration 28, cost 4. taxi: duration 16, cost 42.84. walk: duration 128, cost 0.0. \nfrom Shenzhen Century Garden Hotel (Nanshan Science and Technology Park) to Little Bingsheng (Joyce Center Branch): metro: duration 31, cost 4. taxi: duration 15, cost 41.27. walk: duration 124, cost 0.0. \nfrom Shenzhen Century Garden Hotel (Nanshan Science and Technology Park) to Yat Bun Sin Tea House (Mixc World Store): metro: duration 12, cost 2. taxi: duration 1, cost 11.0. walk: duration 14, cost 0.0. \nfrom Shenzhen Century Garden Hotel (Nanshan Science and Technology Park) to Shuiwei 1368 Cultural Block: metro: duration 30, cost 4. taxi: duration 16, cost 42.99. walk: duration 128, cost 0.0. \nfrom Shenzhen Century Garden Hotel (Nanshan Science and Technology Park) to Kexing Science and Technology Park: metro: duration 27, cost 2. taxi: duration 3, cost 13.92. walk: duration 31, cost 0.0. \nfrom Shenzhen Century Garden Hotel (Nanshan Science and Technology Park) to Shenzhen Pingshan Station: metro: duration 95, cost 8. taxi: duration 63, cost 185.12. walk: duration 507, cost 0.0. \nfrom Shenzhen Century Garden Hotel (Nanshan Science and Technology Park) to Shenzhen Book City (Central City Branch): metro: duration 32, cost 4. taxi: duration 15, cost 42.69. walk: duration 127, cost 0.0. \nfrom Shenzhen Century Garden Hotel (Nanshan Science and Technology Park) to Shenzhen Convention and Exhibition Center (Futian Hall): metro: duration 30, cost 4. taxi: duration 15, cost 41.83. walk: duration 125, cost 0.0. \nfrom Shenzhen Century Garden Hotel (Nanshan Science and Technology Park) to Libaoge (Kerry Store): metro: duration 27, cost 4. taxi: duration 14, cost 37.95. walk: duration 114, cost 0.0. \nfrom Shenzhen Century Garden Hotel (Nanshan Science and Technology Park) to Shenzhen Station: metro: duration 40, cost 5. taxi: duration 23, cost 65.28. walk: duration 188, cost 0.0. \nfrom Shenzhen Century Garden Hotel (Nanshan Science and Technology Park) to Nanhai Creative Hub: metro: duration 27, cost 3. taxi: duration 9, cost 26.42. walk: duration 74, cost 0.0. \nfrom Shenzhen Century Garden Hotel (Nanshan Science and Technology Park) to Jiangnan Chef (China Resources Mixc Store): metro: duration 39, cost 5. taxi: duration 22, cost 62.65. walk: duration 181, cost 0.0. \nfrom Shenzhen North Railway Station to Xixiang Night Market Street: metro: duration 49, cost 5. taxi: duration 25, cost 70.86. walk: duration 203, cost 0.0. \nfrom Shenzhen North Railway Station to Shekou Industrial Zone: metro: duration 39, cost 5. taxi: duration 25, cost 72.32. walk: duration 206, cost 0.0. \nfrom Shenzhen North Railway Station to Huaqiangbei Museum: metro: duration 23, cost 4. taxi: duration 14, cost 37.47. walk: duration 112, cost 0.0. \nfrom Shenzhen North Railway Station to Luoruihe Taiwanese Food Street: metro: duration 62, cost 7. taxi: duration 42, cost 123.67. walk: duration 343, cost 0.0. \nfrom Shenzhen North Railway Station to Bauhinia Lane Hong Kong International Style Street: metro: duration 24, cost 4. taxi: duration 16, cost 44.83. walk: duration 133, cost 0.0. \nfrom Shenzhen North Railway Station to Shenzhen Bay Sports Center: metro: duration 38, cost 4. taxi: duration 18, cost 49.06. walk: duration 144, cost 0.0. \nfrom Shenzhen North Railway Station to Chaoshan Joy Goose Restaurant (Mixc Mall Branch): metro: duration 24, cost 4. taxi: duration 16, cost 42.77. walk: duration 128, cost 0.0. \nfrom Shenzhen North Railway Station to Dalden Meijin Hotel: metro: duration 17, cost 3. taxi: duration 12, cost 33.98. walk: duration 100, cost 0.0. \nfrom Shenzhen North Railway Station to Shenzhen Century Garden Hotel (Nanshan Science and Technology Park): metro: duration 28, cost 4. taxi: duration 16, cost 42.75. walk: duration 128, cost 0.0. \nfrom Shenzhen North Railway Station to Shenzhen North Railway Station:  metro: empty.  taxi: empty.  walk: empty. \nfrom Shenzhen North Railway Station to Shatoujiao: metro: duration 49, cost 6. taxi: duration 32, cost 93.33. walk: duration 263, cost 0.0. \nfrom Shenzhen North Railway Station to Shekou Value Factory: metro: duration 49, cost 5. taxi: duration 29, cost 84.43. walk: duration 239, cost 0.0. \nfrom Shenzhen North Railway Station to East Gate Old Street: metro: duration 25, cost 4. taxi: duration 17, cost 47.11. walk: duration 139, cost 0.0. \nfrom Shenzhen North Railway Station to Chung Ying Street: metro: duration 50, cost 6. taxi: duration 33, cost 95.9. walk: duration 269, cost 0.0. \nfrom Shenzhen North Railway Station to Qiuguo Hotel, Gangxia Subway Station, Shenzhen Convention and Exhibition Center: metro: duration 19, cost 3. taxi: duration 13, cost 36.07. walk: duration 107, cost 0.0. \nfrom Shenzhen North Railway Station to Little Bingsheng (Joyce Center Branch): metro: duration 23, cost 4. taxi: duration 13, cost 36.05. walk: duration 107, cost 0.0. \nfrom Shenzhen North Railway Station to Yat Bun Sin Tea House (Mixc World Store): metro: duration 26, cost 4. taxi: duration 15, cost 42.54. walk: duration 127, cost 0.0. \nfrom Shenzhen North Railway Station to Shuiwei 1368 Cultural Block: metro: duration 24, cost 4. taxi: duration 15, cost 40.65. walk: duration 122, cost 0.0. \nfrom Shenzhen North Railway Station to Kexing Science and Technology Park: metro: duration 41, cost 4. taxi: duration 15, cost 40.66. walk: duration 122, cost 0.0. \nfrom Shenzhen North Railway Station to Shenzhen Pingshan Station: metro: duration 71, cost 7. taxi: duration 49, cost 142.56. walk: duration 394, cost 0.0. \nfrom Shenzhen North Railway Station to Shenzhen Book City (Central City Branch): metro: duration 21, cost 3. taxi: duration 11, cost 30.54. walk: duration 88, cost 0.0. \nfrom Shenzhen North Railway Station to Shenzhen Convention and Exhibition Center (Futian Hall): metro: duration 22, cost 4. taxi: duration 13, cost 36.09. walk: duration 107, cost 0.0. \nfrom Shenzhen North Railway Station to Libaoge (Kerry Store): metro: duration 20, cost 3. taxi: duration 13, cost 35.22. walk: duration 104, cost 0.0. \nfrom Shenzhen North Railway Station to Shenzhen Station: metro: duration 28, cost 4. taxi: duration 18, cost 50.88. walk: duration 149, cost 0.0. \nfrom Shenzhen North Railway Station to Nanhai Creative Hub: metro: duration 41, cost 5. taxi: duration 25, cost 70.65. walk: duration 202, cost 0.0. \nfrom Shenzhen North Railway Station to Jiangnan Chef (China Resources Mixc Store): metro: duration 27, cost 4. taxi: duration 17, cost 46.15. walk: duration 137, cost 0.0. \nfrom Shatoujiao to Xixiang Night Market Street: metro: duration 95, cost 8. taxi: duration 57, cost 165.74. walk: duration 456, cost 0.0. \nfrom Shatoujiao to Shekou Industrial Zone: metro: duration 74, cost 7. taxi: duration 49, cost 142.6. walk: duration 394, cost 0.0. \nfrom Shatoujiao to Huaqiangbei Museum: metro: duration 36, cost 5. taxi: duration 21, cost 59.76. walk: duration 173, cost 0.0. \nfrom Shatoujiao to Luoruihe Taiwanese Food Street: metro: duration 47, cost 5. taxi: duration 29, cost 84.46. walk: duration 239, cost 0.0. \nfrom Shatoujiao to Bauhinia Lane Hong Kong International Style Street: metro: duration 41, cost 5. taxi: duration 26, cost 74.38. walk: duration 212, cost 0.0. \nfrom Shatoujiao to Shenzhen Bay Sports Center: metro: duration 76, cost 7. taxi: duration 43, cost 124.29. walk: duration 345, cost 0.0. \nfrom Shatoujiao to Chaoshan Joy Goose Restaurant (Mixc Mall Branch): metro: duration 30, cost 4. taxi: duration 17, cost 45.73. walk: duration 136, cost 0.0. \nfrom Shatoujiao to Dalden Meijin Hotel: metro: duration 62, cost 7. taxi: duration 43, cost 125.03. walk: duration 347, cost 0.0. \nfrom Shatoujiao to Shenzhen Century Garden Hotel (Nanshan Science and Technology Park): metro: duration 66, cost 6. taxi: duration 41, cost 119.93. walk: duration 333, cost 0.0. \nfrom Shatoujiao to Shenzhen North Railway Station: metro: duration 49, cost 6. taxi: duration 32, cost 93.33. walk: duration 263, cost 0.0. \nfrom Shatoujiao to Shatoujiao:  metro: empty.  taxi: empty.  walk: empty. \nfrom Shatoujiao to Shekou Value Factory: metro: duration 83, cost 7. taxi: duration 53, cost 153.78. walk: duration 424, cost 0.0. \nfrom Shatoujiao to East Gate Old Street: metro: duration 28, cost 4. taxi: duration 17, cost 46.35. walk: duration 137, cost 0.0. \nfrom Shatoujiao to Chung Ying Street: taxi: duration 0, cost 11.0. walk: duration 7, cost 0.0. \nfrom Shatoujiao to Qiuguo Hotel, Gangxia Subway Station, Shenzhen Convention and Exhibition Center: metro: duration 40, cost 5. taxi: duration 25, cost 71.89. walk: duration 205, cost 0.0. \nfrom Shatoujiao to Little Bingsheng (Joyce Center Branch): metro: duration 43, cost 5. taxi: duration 26, cost 73.52. walk: duration 210, cost 0.0. \nfrom Shatoujiao to Yat Bun Sin Tea House (Mixc World Store): metro: duration 65, cost 7. taxi: duration 42, cost 123.51. walk: duration 343, cost 0.0. \nfrom Shatoujiao to Shuiwei 1368 Cultural Block: metro: duration 43, cost 5. taxi: duration 26, cost 72.91. walk: duration 208, cost 0.0. \nfrom Shatoujiao to Kexing Science and Technology Park: metro: duration 80, cost 7. taxi: duration 43, cost 126.16. walk: duration 350, cost 0.0. \nfrom Shatoujiao to Shenzhen Pingshan Station: metro: duration 48, cost 5. taxi: duration 29, cost 83.53. walk: duration 236, cost 0.0. \nfrom Shatoujiao to Shenzhen Book City (Central City Branch): metro: duration 43, cost 5. taxi: duration 25, cost 72.4. walk: duration 207, cost 0.0. \nfrom Shatoujiao to Shenzhen Convention and Exhibition Center (Futian Hall): metro: duration 42, cost 5. taxi: duration 26, cost 72.95. walk: duration 208, cost 0.0. \nfrom Shatoujiao to Libaoge (Kerry Store): metro: duration 43, cost 5. taxi: duration 27, cost 77.35. walk: duration 220, cost 0.0. \nfrom Shatoujiao to Shenzhen Station: metro: duration 31, cost 4. taxi: duration 18, cost 50.18. walk: duration 147, cost 0.0. \nfrom Shatoujiao to Nanhai Creative Hub: metro: duration 76, cost 7. taxi: duration 48, cost 141.59. walk: duration 391, cost 0.0. \nfrom Shatoujiao to Jiangnan Chef (China Resources Mixc Store): metro: duration 34, cost 4. taxi: duration 19, cost 52.12. walk: duration 153, cost 0.0. \nfrom Shekou Value Factory to Xixiang Night Market Street: metro: duration 51, cost 4. taxi: duration 19, cost 53.97. walk: duration 158, cost 0.0. \nfrom Shekou Value Factory to Shekou Industrial Zone: metro: duration 16, cost 2. taxi: duration 4, cost 14.29. walk: duration 32, cost 0.0. \nfrom Shekou Value Factory to Huaqiangbei Museum: metro: duration 54, cost 6. taxi: duration 32, cost 91.25. walk: duration 257, cost 0.0. \nfrom Shekou Value Factory to Luoruihe Taiwanese Food Street: metro: duration 107, cost 9. taxi: duration 71, cost 209.91. walk: duration 573, cost 0.0. \nfrom Shekou Value Factory to Bauhinia Lane Hong Kong International Style Street: metro: duration 44, cost 5. taxi: duration 26, cost 74.1. walk: duration 211, cost 0.0. \nfrom Shekou Value Factory to Shenzhen Bay Sports Center: metro: duration 35, cost 3. taxi: duration 11, cost 32.32. walk: duration 94, cost 0.0. \nfrom Shekou Value Factory to Chaoshan Joy Goose Restaurant (Mixc Mall Branch): metro: duration 65, cost 6. taxi: duration 40, cost 116.31. walk: duration 324, cost 0.0. \nfrom Shekou Value Factory to Dalden Meijin Hotel: metro: duration 34, cost 4. taxi: duration 19, cost 53.29. walk: duration 156, cost 0.0. \nfrom Shekou Value Factory to Shenzhen Century Garden Hotel (Nanshan Science and Technology Park): metro: duration 35, cost 4. taxi: duration 13, cost 37.19. walk: duration 111, cost 0.0. \nfrom Shekou Value Factory to Shenzhen North Railway Station: metro: duration 49, cost 5. taxi: duration 29, cost 84.43. walk: duration 239, cost 0.0. \nfrom Shekou Value Factory to Shatoujiao: metro: duration 83, cost 7. taxi: duration 53, cost 153.78. walk: duration 424, cost 0.0. \nfrom Shekou Value Factory to Shekou Value Factory:  metro: empty.  taxi: empty.  walk: empty. \nfrom Shekou Value Factory to East Gate Old Street: metro: duration 57, cost 6. taxi: duration 36, cost 103.79. walk: duration 290, cost 0.0. \nfrom Shekou Value Factory to Chung Ying Street: metro: duration 84, cost 7. taxi: duration 53, cost 155.26. walk: duration 428, cost 0.0. \nfrom Shekou Value Factory to Qiuguo Hotel, Gangxia Subway Station, Shenzhen Convention and Exhibition Center: metro: duration 46, cost 5. taxi: duration 27, cost 78.07. walk: duration 222, cost 0.0. \nfrom Shekou Value Factory to Little Bingsheng (Joyce Center Branch): metro: duration 48, cost 5. taxi: duration 27, cost 76.37. walk: duration 217, cost 0.0. \nfrom Shekou Value Factory to Yat Bun Sin Tea House (Mixc World Store): metro: duration 29, cost 4. taxi: duration 14, cost 37.46. walk: duration 112, cost 0.0. \nfrom Shekou Value Factory to Shuiwei 1368 Cultural Block: metro: duration 46, cost 5. taxi: duration 27, cost 75.87. walk: duration 216, cost 0.0. \nfrom Shekou Value Factory to Kexing Science and Technology Park: metro: duration 44, cost 4. taxi: duration 15, cost 40.39. walk: duration 121, cost 0.0. \nfrom Shekou Value Factory to Shenzhen Pingshan Station: metro: duration 115, cost 9. taxi: duration 76, cost 225.09. walk: duration 614, cost 0.0. \nfrom Shekou Value Factory to Shenzhen Book City (Central City Branch): metro: duration 51, cost 5. taxi: duration 28, cost 80.33. walk: duration 228, cost 0.0. \nfrom Shekou Value Factory to Shenzhen Convention and Exhibition Center (Futian Hall): metro: duration 47, cost 5. taxi: duration 27, cost 76.95. walk: duration 219, cost 0.0. \nfrom Shekou Value Factory to Libaoge (Kerry Store): metro: duration 44, cost 5. taxi: duration 26, cost 72.7. walk: duration 208, cost 0.0. \nfrom Shekou Value Factory to Shenzhen Station: metro: duration 56, cost 6. taxi: duration 34, cost 98.38. walk: duration 276, cost 0.0. \nfrom Shekou Value Factory to Nanhai Creative Hub: metro: duration 20, cost 2. taxi: duration 4, cost 15.51. walk: duration 37, cost 0.0. \nfrom Shekou Value Factory to Jiangnan Chef (China Resources Mixc Store): metro: duration 57, cost 6. taxi: duration 34, cost 97.05. walk: duration 272, cost 0.0. \nfrom East Gate Old Street to Xixiang Night Market Street: metro: duration 69, cost 6. taxi: duration 40, cost 114.86. walk: duration 320, cost 0.0. \nfrom East Gate Old Street to Shekou Industrial Zone: metro: duration 47, cost 6. taxi: duration 32, cost 92.16. walk: duration 259, cost 0.0. \nfrom East Gate Old Street to Huaqiangbei Museum: metro: duration 9, cost 2. taxi: duration 4, cost 15.14. walk: duration 35, cost 0.0. \nfrom East Gate Old Street to Luoruihe Taiwanese Food Street: metro: duration 55, cost 6. taxi: duration 38, cost 109.25. walk: duration 305, cost 0.0. \nfrom East Gate Old Street to Bauhinia Lane Hong Kong International Style Street: metro: duration 15, cost 3. taxi: duration 10, cost 28.74. walk: duration 82, cost 0.0. \nfrom East Gate Old Street to Shenzhen Bay Sports Center: metro: duration 49, cost 5. taxi: duration 26, cost 72.86. walk: duration 208, cost 0.0. \nfrom East Gate Old Street to Chaoshan Joy Goose Restaurant (Mixc Mall Branch): metro: duration 14, cost 3. taxi: duration 7, cost 21.38. walk: duration 57, cost 0.0. \nfrom East Gate Old Street to Dalden Meijin Hotel: metro: duration 36, cost 5. taxi: duration 26, cost 74.3. walk: duration 212, cost 0.0. \nfrom East Gate Old Street to Shenzhen Century Garden Hotel (Nanshan Science and Technology Park): metro: duration 40, cost 5. taxi: duration 24, cost 68.34. walk: duration 196, cost 0.0. \nfrom East Gate Old Street to Shenzhen North Railway Station: metro: duration 25, cost 4. taxi: duration 17, cost 47.11. walk: duration 139, cost 0.0. \nfrom East Gate Old Street to Shatoujiao: metro: duration 28, cost 4. taxi: duration 17, cost 46.35. walk: duration 137, cost 0.0. \nfrom East Gate Old Street to Shekou Value Factory: metro: duration 57, cost 6. taxi: duration 36, cost 103.79. walk: duration 290, cost 0.0. \nfrom East Gate Old Street to East Gate Old Street:  metro: empty.  taxi: empty.  walk: empty. \nfrom East Gate Old Street to Chung Ying Street: metro: duration 29, cost 4. taxi: duration 17, cost 48.35. walk: duration 143, cost 0.0. \nfrom East Gate Old Street to Qiuguo Hotel, Gangxia Subway Station, Shenzhen Convention and Exhibition Center: metro: duration 13, cost 3. taxi: duration 8, cost 24.84. walk: duration 69, cost 0.0. \nfrom East Gate Old Street to Little Bingsheng (Joyce Center Branch): metro: duration 16, cost 3. taxi: duration 9, cost 26.15. walk: duration 73, cost 0.0. \nfrom East Gate Old Street to Yat Bun Sin Tea House (Mixc World Store): metro: duration 38, cost 5. taxi: duration 25, cost 71.87. walk: duration 205, cost 0.0. \nfrom East Gate Old Street to Shuiwei 1368 Cultural Block: metro: duration 17, cost 3. taxi: duration 9, cost 26.59. walk: duration 75, cost 0.0. \nfrom East Gate Old Street to Kexing Science and Technology Park: metro: duration 53, cost 5. taxi: duration 26, cost 74.59. walk: duration 213, cost 0.0. \nfrom East Gate Old Street to Shenzhen Pingshan Station: metro: duration 61, cost 6. taxi: duration 41, cost 119.28. walk: duration 332, cost 0.0. \nfrom East Gate Old Street to Shenzhen Book City (Central City Branch): metro: duration 17, cost 3. taxi: duration 8, cost 25.02. walk: duration 69, cost 0.0. \nfrom East Gate Old Street to Shenzhen Convention and Exhibition Center (Futian Hall): metro: duration 15, cost 3. taxi: duration 9, cost 25.7. walk: duration 72, cost 0.0. \nfrom East Gate Old Street to Libaoge (Kerry Store): metro: duration 17, cost 3. taxi: duration 10, cost 29.1. walk: duration 83, cost 0.0. \nfrom East Gate Old Street to Shenzhen Station: metro: duration 6, cost 2. taxi: duration 3, cost 12.17. walk: duration 25, cost 0.0. \nfrom East Gate Old Street to Nanhai Creative Hub: metro: duration 50, cost 6. taxi: duration 32, cost 91.03. walk: duration 256, cost 0.0. \nfrom East Gate Old Street to Jiangnan Chef (China Resources Mixc Store): metro: duration 8, cost 2. taxi: duration 2, cost 11.0. walk: duration 19, cost 0.0. \nfrom Chung Ying Street to Xixiang Night Market Street: metro: duration 96, cost 8. taxi: duration 57, cost 168.0. walk: duration 462, cost 0.0. \nfrom Chung Ying Street to Shekou Industrial Zone: metro: duration 75, cost 7. taxi: duration 49, cost 144.16. walk: duration 398, cost 0.0. \nfrom Chung Ying Street to Huaqiangbei Museum: metro: duration 37, cost 5. taxi: duration 22, cost 61.77. walk: duration 178, cost 0.0. \nfrom Chung Ying Street to Luoruihe Taiwanese Food Street: metro: duration 48, cost 5. taxi: duration 30, cost 86.11. walk: duration 243, cost 0.0. \nfrom Chung Ying Street to Bauhinia Lane Hong Kong International Style Street: metro: duration 42, cost 5. taxi: duration 27, cost 75.9. walk: duration 216, cost 0.0. \nfrom Chung Ying Street to Shenzhen Bay Sports Center: metro: duration 77, cost 7. taxi: duration 43, cost 126.11. walk: duration 350, cost 0.0. \nfrom Chung Ying Street to Chaoshan Joy Goose Restaurant (Mixc Mall Branch): metro: duration 31, cost 4. taxi: duration 17, cost 48.43. walk: duration 143, cost 0.0. \nfrom Chung Ying Street to Dalden Meijin Hotel: metro: duration 63, cost 7. taxi: duration 44, cost 127.3. walk: duration 353, cost 0.0. \nfrom Chung Ying Street to Shenzhen Century Garden Hotel (Nanshan Science and Technology Park): metro: duration 67, cost 6. taxi: duration 42, cost 121.83. walk: duration 339, cost 0.0. \nfrom Chung Ying Street to Shenzhen North Railway Station: metro: duration 50, cost 6. taxi: duration 33, cost 95.9. walk: duration 269, cost 0.0. \nfrom Chung Ying Street to Shatoujiao: taxi: duration 0, cost 11.0. walk: duration 7, cost 0.0. \nfrom Chung Ying Street to Shekou Value Factory: metro: duration 84, cost 7. taxi: duration 53, cost 155.26. walk: duration 428, cost 0.0. \nfrom Chung Ying Street to East Gate Old Street: metro: duration 29, cost 4. taxi: duration 17, cost 48.35. walk: duration 143, cost 0.0. \nfrom Chung Ying Street to Chung Ying Street:  metro: empty.  taxi: empty.  walk: empty. \nfrom Chung Ying Street to Qiuguo Hotel, Gangxia Subway Station, Shenzhen Convention and Exhibition Center: metro: duration 41, cost 5. taxi: duration 26, cost 73.73. walk: duration 210, cost 0.0. \nfrom Chung Ying Street to Little Bingsheng (Joyce Center Branch): metro: duration 44, cost 5. taxi: duration 26, cost 75.34. walk: duration 215, cost 0.0. \nfrom Chung Ying Street to Yat Bun Sin Tea House (Mixc World Store): metro: duration 66, cost 7. taxi: duration 43, cost 125.48. walk: duration 348, cost 0.0. \nfrom Chung Ying Street to Shuiwei 1368 Cultural Block: metro: duration 44, cost 5. taxi: duration 26, cost 74.57. walk: duration 212, cost 0.0. \nfrom Chung Ying Street to Kexing Science and Technology Park: metro: duration 81, cost 7. taxi: duration 44, cost 128.23. walk: duration 356, cost 0.0. \nfrom Chung Ying Street to Shenzhen Pingshan Station: metro: duration 49, cost 5. taxi: duration 29, cost 84.37. walk: duration 239, cost 0.0. \nfrom Chung Ying Street to Shenzhen Book City (Central City Branch): metro: duration 44, cost 5. taxi: duration 26, cost 74.45. walk: duration 212, cost 0.0. \nfrom Chung Ying Street to Shenzhen Convention and Exhibition Center (Futian Hall): metro: duration 43, cost 5. taxi: duration 26, cost 74.78. walk: duration 213, cost 0.0. \nfrom Chung Ying Street to Libaoge (Kerry Store): metro: duration 44, cost 5. taxi: duration 28, cost 79.18. walk: duration 225, cost 0.0. \nfrom Chung Ying Street to Shenzhen Station: metro: duration 32, cost 4. taxi: duration 19, cost 51.81. walk: duration 152, cost 0.0. \nfrom Chung Ying Street to Nanhai Creative Hub: metro: duration 77, cost 7. taxi: duration 49, cost 143.18. walk: duration 395, cost 0.0. \nfrom Chung Ying Street to Jiangnan Chef (China Resources Mixc Store): metro: duration 35, cost 4. taxi: duration 19, cost 53.93. walk: duration 157, cost 0.0. \nfrom Qiuguo Hotel, Gangxia Subway Station, Shenzhen Convention and Exhibition Center to Xixiang Night Market Street: metro: duration 58, cost 5. taxi: duration 32, cost 91.64. walk: duration 258, cost 0.0. \nfrom Qiuguo Hotel, Gangxia Subway Station, Shenzhen Convention and Exhibition Center to Shekou Industrial Zone: metro: duration 36, cost 5. taxi: duration 23, cost 66.34. walk: duration 191, cost 0.0. \nfrom Qiuguo Hotel, Gangxia Subway Station, Shenzhen Convention and Exhibition Center to Huaqiangbei Museum: metro: duration 10, cost 2. taxi: duration 4, cost 15.0. walk: duration 35, cost 0.0. \nfrom Qiuguo Hotel, Gangxia Subway Station, Shenzhen Convention and Exhibition Center to Luoruihe Taiwanese Food Street: metro: duration 65, cost 7. taxi: duration 45, cost 130.69. walk: duration 362, cost 0.0. \nfrom Qiuguo Hotel, Gangxia Subway Station, Shenzhen Convention and Exhibition Center to Bauhinia Lane Hong Kong International Style Street: metro: duration 6, cost 2. taxi: duration 3, cost 13.19. walk: duration 29, cost 0.0. \nfrom Qiuguo Hotel, Gangxia Subway Station, Shenzhen Convention and Exhibition Center to Shenzhen Bay Sports Center: metro: duration 38, cost 4. taxi: duration 17, cost 47.1. walk: duration 139, cost 0.0. \nfrom Qiuguo Hotel, Gangxia Subway Station, Shenzhen Convention and Exhibition Center to Chaoshan Joy Goose Restaurant (Mixc Mall Branch): metro: duration 22, cost 4. taxi: duration 13, cost 35.85. walk: duration 106, cost 0.0. \nfrom Qiuguo Hotel, Gangxia Subway Station, Shenzhen Convention and Exhibition Center to Dalden Meijin Hotel: metro: duration 26, cost 4. taxi: duration 19, cost 52.01. walk: duration 152, cost 0.0. \nfrom Qiuguo Hotel, Gangxia Subway Station, Shenzhen Convention and Exhibition Center to Shenzhen Century Garden Hotel (Nanshan Science and Technology Park): metro: duration 28, cost 4. taxi: duration 16, cost 42.84. walk: duration 128, cost 0.0. \nfrom Qiuguo Hotel, Gangxia Subway Station, Shenzhen Convention and Exhibition Center to Shenzhen North Railway Station: metro: duration 19, cost 3. taxi: duration 13, cost 36.07. walk: duration 107, cost 0.0. \nfrom Qiuguo Hotel, Gangxia Subway Station, Shenzhen Convention and Exhibition Center to Shatoujiao: metro: duration 40, cost 5. taxi: duration 25, cost 71.89. walk: duration 205, cost 0.0. \nfrom Qiuguo Hotel, Gangxia Subway Station, Shenzhen Convention and Exhibition Center to Shekou Value Factory: metro: duration 46, cost 5. taxi: duration 27, cost 78.07. walk: duration 222, cost 0.0. \nfrom Qiuguo Hotel, Gangxia Subway Station, Shenzhen Convention and Exhibition Center to East Gate Old Street: metro: duration 13, cost 3. taxi: duration 8, cost 24.84. walk: duration 69, cost 0.0. \nfrom Qiuguo Hotel, Gangxia Subway Station, Shenzhen Convention and Exhibition Center to Chung Ying Street: metro: duration 41, cost 5. taxi: duration 26, cost 73.73. walk: duration 210, cost 0.0. \nfrom Qiuguo Hotel, Gangxia Subway Station, Shenzhen Convention and Exhibition Center to Qiuguo Hotel, Gangxia Subway Station, Shenzhen Convention and Exhibition Center:  metro: empty.  taxi: empty.  walk: empty. \nfrom Qiuguo Hotel, Gangxia Subway Station, Shenzhen Convention and Exhibition Center to Little Bingsheng (Joyce Center Branch): metro: duration 5, cost 2. taxi: duration 0, cost 11.0. walk: duration 4, cost 0.0. \nfrom Qiuguo Hotel, Gangxia Subway Station, Shenzhen Convention and Exhibition Center to Yat Bun Sin Tea House (Mixc World Store): metro: duration 27, cost 4. taxi: duration 17, cost 46.7. walk: duration 138, cost 0.0. \nfrom Qiuguo Hotel, Gangxia Subway Station, Shenzhen Convention and Exhibition Center to Shuiwei 1368 Cultural Block: metro: duration 7, cost 2. taxi: duration 2, cost 11.0. walk: duration 16, cost 0.0. \nfrom Qiuguo Hotel, Gangxia Subway Station, Shenzhen Convention and Exhibition Center to Kexing Science and Technology Park: metro: duration 42, cost 4. taxi: duration 18, cost 50.1. walk: duration 147, cost 0.0. \nfrom Qiuguo Hotel, Gangxia Subway Station, Shenzhen Convention and Exhibition Center to Shenzhen Pingshan Station: metro: duration 71, cost 7. taxi: duration 49, cost 143.11. walk: duration 395, cost 0.0. \nfrom Qiuguo Hotel, Gangxia Subway Station, Shenzhen Convention and Exhibition Center to Shenzhen Book City (Central City Branch): metro: duration 8, cost 2. taxi: duration 2, cost 11.0. walk: duration 20, cost 0.0. \nfrom Qiuguo Hotel, Gangxia Subway Station, Shenzhen Convention and Exhibition Center to Shenzhen Convention and Exhibition Center (Futian Hall): metro: duration 4, cost 2. taxi: duration 0, cost 11.0. walk: duration 3, cost 0.0. \nfrom Qiuguo Hotel, Gangxia Subway Station, Shenzhen Convention and Exhibition Center to Libaoge (Kerry Store): metro: duration 5, cost 2. taxi: duration 1, cost 11.0. walk: duration 14, cost 0.0. \nfrom Qiuguo Hotel, Gangxia Subway Station, Shenzhen Convention and Exhibition Center to Shenzhen Station: metro: duration 13, cost 3. taxi: duration 7, cost 22.3. walk: duration 60, cost 0.0. \nfrom Qiuguo Hotel, Gangxia Subway Station, Shenzhen Convention and Exhibition Center to Nanhai Creative Hub: metro: duration 39, cost 5. taxi: duration 23, cost 65.18. walk: duration 187, cost 0.0. \nfrom Qiuguo Hotel, Gangxia Subway Station, Shenzhen Convention and Exhibition Center to Jiangnan Chef (China Resources Mixc Store): metro: duration 13, cost 3. taxi: duration 6, cost 20.11. walk: duration 52, cost 0.0. \nfrom Little Bingsheng (Joyce Center Branch) to Xixiang Night Market Street: metro: duration 62, cost 5. taxi: duration 31, cost 90.34. walk: duration 255, cost 0.0. \nfrom Little Bingsheng (Joyce Center Branch) to Shekou Industrial Zone: metro: duration 39, cost 5. taxi: duration 23, cost 64.64. walk: duration 186, cost 0.0. \nfrom Little Bingsheng (Joyce Center Branch) to Huaqiangbei Museum: metro: duration 13, cost 2. taxi: duration 4, cost 16.32. walk: duration 39, cost 0.0. \nfrom Little Bingsheng (Joyce Center Branch) to Luoruihe Taiwanese Food Street: metro: duration 68, cost 7. taxi: duration 45, cost 132.29. walk: duration 366, cost 0.0. \nfrom Little Bingsheng (Joyce Center Branch) to Bauhinia Lane Hong Kong International Style Street: metro: duration 8, cost 2. taxi: duration 3, cost 12.67. walk: duration 27, cost 0.0. \nfrom Little Bingsheng (Joyce Center Branch) to Shenzhen Bay Sports Center: metro: duration 41, cost 4. taxi: duration 16, cost 45.47. walk: duration 135, cost 0.0. \nfrom Little Bingsheng (Joyce Center Branch) to Chaoshan Joy Goose Restaurant (Mixc Mall Branch): metro: duration 25, cost 4. taxi: duration 13, cost 37.11. walk: duration 111, cost 0.0. \nfrom Little Bingsheng (Joyce Center Branch) to Dalden Meijin Hotel: metro: duration 29, cost 4. taxi: duration 18, cost 50.86. walk: duration 149, cost 0.0. \nfrom Little Bingsheng (Joyce Center Branch) to Shenzhen Century Garden Hotel (Nanshan Science and Technology Park): metro: duration 31, cost 4. taxi: duration 15, cost 41.27. walk: duration 124, cost 0.0. \nfrom Little Bingsheng (Joyce Center Branch) to Shenzhen North Railway Station: metro: duration 23, cost 4. taxi: duration 13, cost 36.05. walk: duration 107, cost 0.0. \nfrom Little Bingsheng (Joyce Center Branch) to Shatoujiao: metro: duration 43, cost 5. taxi: duration 26, cost 73.52. walk: duration 210, cost 0.0. \nfrom Little Bingsheng (Joyce Center Branch) to Shekou Value Factory: metro: duration 48, cost 5. taxi: duration 27, cost 76.37. walk: duration 217, cost 0.0. \nfrom Little Bingsheng (Joyce Center Branch) to East Gate Old Street: metro: duration 16, cost 3. taxi: duration 9, cost 26.15. walk: duration 73, cost 0.0. \nfrom Little Bingsheng (Joyce Center Branch) to Chung Ying Street: metro: duration 44, cost 5. taxi: duration 26, cost 75.34. walk: duration 215, cost 0.0. \nfrom Little Bingsheng (Joyce Center Branch) to Qiuguo Hotel, Gangxia Subway Station, Shenzhen Convention and Exhibition Center: metro: duration 5, cost 2. taxi: duration 0, cost 11.0. walk: duration 4, cost 0.0. \nfrom Little Bingsheng (Joyce Center Branch) to Little Bingsheng (Joyce Center Branch):  metro: empty.  taxi: empty.  walk: empty. \nfrom Little Bingsheng (Joyce Center Branch) to Yat Bun Sin Tea House (Mixc World Store): metro: duration 30, cost 4. taxi: duration 16, cost 45.19. walk: duration 134, cost 0.0. \nfrom Little Bingsheng (Joyce Center Branch) to Shuiwei 1368 Cultural Block: metro: duration 9, cost 2. taxi: duration 1, cost 11.0. walk: duration 15, cost 0.0. \nfrom Little Bingsheng (Joyce Center Branch) to Kexing Science and Technology Park: metro: duration 45, cost 4. taxi: duration 17, cost 48.67. walk: duration 143, cost 0.0. \nfrom Little Bingsheng (Joyce Center Branch) to Shenzhen Pingshan Station: metro: duration 75, cost 7. taxi: duration 50, cost 144.79. walk: duration 400, cost 0.0. \nfrom Little Bingsheng (Joyce Center Branch) to Shenzhen Book City (Central City Branch): metro: duration 12, cost 2. taxi: duration 2, cost 11.15. walk: duration 22, cost 0.0. \nfrom Little Bingsheng (Joyce Center Branch) to Shenzhen Convention and Exhibition Center (Futian Hall): taxi: duration 0, cost 11.0. walk: duration 1, cost 0.0. \nfrom Little Bingsheng (Joyce Center Branch) to Libaoge (Kerry Store): metro: duration 8, cost 2. taxi: duration 1, cost 11.0. walk: duration 10, cost 0.0. \nfrom Little Bingsheng (Joyce Center Branch) to Shenzhen Station: metro: duration 16, cost 3. taxi: duration 8, cost 23.44. walk: duration 64, cost 0.0. \nfrom Little Bingsheng (Joyce Center Branch) to Nanhai Creative Hub: metro: duration 41, cost 5. taxi: duration 22, cost 63.48. walk: duration 183, cost 0.0. \nfrom Little Bingsheng (Joyce Center Branch) to Jiangnan Chef (China Resources Mixc Store): metro: duration 16, cost 3. taxi: duration 7, cost 21.36. walk: duration 57, cost 0.0. \nfrom Yat Bun Sin Tea House (Mixc World Store) to Xixiang Night Market Street: metro: duration 39, cost 4. taxi: duration 15, cost 42.34. walk: duration 127, cost 0.0. \nfrom Yat Bun Sin Tea House (Mixc World Store) to Shekou Industrial Zone: metro: duration 19, cost 3. taxi: duration 10, cost 28.3. walk: duration 80, cost 0.0. \nfrom Yat Bun Sin Tea House (Mixc World Store) to Huaqiangbei Museum: metro: duration 35, cost 5. taxi: duration 21, cost 58.46. walk: duration 170, cost 0.0. \nfrom Yat Bun Sin Tea House (Mixc World Store) to Luoruihe Taiwanese Food Street: metro: duration 85, cost 8. taxi: duration 58, cost 169.98. walk: duration 467, cost 0.0. \nfrom Yat Bun Sin Tea House (Mixc World Store) to Bauhinia Lane Hong Kong International Style Street: metro: duration 27, cost 4. taxi: duration 17, cost 47.79. walk: duration 141, cost 0.0. \nfrom Yat Bun Sin Tea House (Mixc World Store) to Shenzhen Bay Sports Center: metro: duration 18, cost 2. taxi: duration 2, cost 11.47. walk: duration 23, cost 0.0. \nfrom Yat Bun Sin Tea House (Mixc World Store) to Chaoshan Joy Goose Restaurant (Mixc Mall Branch): metro: duration 44, cost 5. taxi: duration 28, cost 79.66. walk: duration 226, cost 0.0. \nfrom Yat Bun Sin Tea House (Mixc World Store) to Dalden Meijin Hotel: metro: duration 11, cost 3. taxi: duration 6, cost 19.98. walk: duration 52, cost 0.0. \nfrom Yat Bun Sin Tea House (Mixc World Store) to Shenzhen Century Garden Hotel (Nanshan Science and Technology Park): metro: duration 12, cost 2. taxi: duration 1, cost 11.0. walk: duration 14, cost 0.0. \nfrom Yat Bun Sin Tea House (Mixc World Store) to Shenzhen North Railway Station: metro: duration 26, cost 4. taxi: duration 15, cost 42.54. walk: duration 127, cost 0.0. \nfrom Yat Bun Sin Tea House (Mixc World Store) to Shatoujiao: metro: duration 65, cost 7. taxi: duration 42, cost 123.51. walk: duration 343, cost 0.0. \nfrom Yat Bun Sin Tea House (Mixc World Store) to Shekou Value Factory: metro: duration 29, cost 4. taxi: duration 14, cost 37.46. walk: duration 112, cost 0.0. \nfrom Yat Bun Sin Tea House (Mixc World Store) to East Gate Old Street: metro: duration 38, cost 5. taxi: duration 25, cost 71.87. walk: duration 205, cost 0.0. \nfrom Yat Bun Sin Tea House (Mixc World Store) to Chung Ying Street: metro: duration 66, cost 7. taxi: duration 43, cost 125.48. walk: duration 348, cost 0.0. \nfrom Yat Bun Sin Tea House (Mixc World Store) to Qiuguo Hotel, Gangxia Subway Station, Shenzhen Convention and Exhibition Center: metro: duration 27, cost 4. taxi: duration 17, cost 46.7. walk: duration 138, cost 0.0. \nfrom Yat Bun Sin Tea House (Mixc World Store) to Little Bingsheng (Joyce Center Branch): metro: duration 30, cost 4. taxi: duration 16, cost 45.19. walk: duration 134, cost 0.0. \nfrom Yat Bun Sin Tea House (Mixc World Store) to Yat Bun Sin Tea House (Mixc World Store):  metro: empty.  taxi: empty.  walk: empty. \nfrom Yat Bun Sin Tea House (Mixc World Store) to Shuiwei 1368 Cultural Block: metro: duration 29, cost 4. taxi: duration 17, cost 47.27. walk: duration 140, cost 0.0. \nfrom Yat Bun Sin Tea House (Mixc World Store) to Kexing Science and Technology Park: taxi: duration 2, cost 11.0. walk: duration 17, cost 0.0. \nfrom Yat Bun Sin Tea House (Mixc World Store) to Shenzhen Pingshan Station: metro: duration 94, cost 8. taxi: duration 64, cost 186.89. walk: duration 512, cost 0.0. \nfrom Yat Bun Sin Tea House (Mixc World Store) to Shenzhen Book City (Central City Branch): metro: duration 31, cost 4. taxi: duration 17, cost 45.94. walk: duration 136, cost 0.0. \nfrom Yat Bun Sin Tea House (Mixc World Store) to Shenzhen Convention and Exhibition Center (Futian Hall): metro: duration 29, cost 4. taxi: duration 17, cost 45.72. walk: duration 136, cost 0.0. \nfrom Yat Bun Sin Tea House (Mixc World Store) to Libaoge (Kerry Store): metro: duration 25, cost 4. taxi: duration 15, cost 41.4. walk: duration 124, cost 0.0. \nfrom Yat Bun Sin Tea House (Mixc World Store) to Shenzhen Station: metro: duration 38, cost 5. taxi: duration 24, cost 69.27. walk: duration 198, cost 0.0. \nfrom Yat Bun Sin Tea House (Mixc World Store) to Nanhai Creative Hub: metro: duration 21, cost 3. taxi: duration 9, cost 26.95. walk: duration 76, cost 0.0. \nfrom Yat Bun Sin Tea House (Mixc World Store) to Jiangnan Chef (China Resources Mixc Store): metro: duration 38, cost 5. taxi: duration 23, cost 66.44. walk: duration 191, cost 0.0. \nfrom Shuiwei 1368 Cultural Block to Xixiang Night Market Street: metro: duration 61, cost 5. taxi: duration 32, cost 93.4. walk: duration 263, cost 0.0. \nfrom Shuiwei 1368 Cultural Block to Shekou Industrial Zone: metro: duration 37, cost 5. taxi: duration 23, cost 64.45. walk: duration 186, cost 0.0. \nfrom Shuiwei 1368 Cultural Block to Huaqiangbei Museum: metro: duration 14, cost 3. taxi: duration 5, cost 18.02. walk: duration 45, cost 0.0. \nfrom Shuiwei 1368 Cultural Block to Luoruihe Taiwanese Food Street: metro: duration 69, cost 7. taxi: duration 46, cost 135.22. walk: duration 374, cost 0.0. \nfrom Shuiwei 1368 Cultural Block to Bauhinia Lane Hong Kong International Style Street: metro: duration 5, cost 2. taxi: duration 1, cost 11.0. walk: duration 12, cost 0.0. \nfrom Shuiwei 1368 Cultural Block to Shenzhen Bay Sports Center: metro: duration 39, cost 4. taxi: duration 17, cost 46.63. walk: duration 138, cost 0.0. \nfrom Shuiwei 1368 Cultural Block to Chaoshan Joy Goose Restaurant (Mixc Mall Branch): metro: duration 26, cost 4. taxi: duration 14, cost 39.38. walk: duration 118, cost 0.0. \nfrom Shuiwei 1368 Cultural Block to Dalden Meijin Hotel: metro: duration 29, cost 4. taxi: duration 19, cost 54.6. walk: duration 159, cost 0.0. \nfrom Shuiwei 1368 Cultural Block to Shenzhen Century Garden Hotel (Nanshan Science and Technology Park): metro: duration 30, cost 4. taxi: duration 16, cost 42.99. walk: duration 128, cost 0.0. \nfrom Shuiwei 1368 Cultural Block to Shenzhen North Railway Station: metro: duration 24, cost 4. taxi: duration 15, cost 40.65. walk: duration 122, cost 0.0. \nfrom Shuiwei 1368 Cultural Block to Shatoujiao: metro: duration 43, cost 5. taxi: duration 26, cost 72.91. walk: duration 208, cost 0.0. \nfrom Shuiwei 1368 Cultural Block to Shekou Value Factory: metro: duration 46, cost 5. taxi: duration 27, cost 75.87. walk: duration 216, cost 0.0. \nfrom Shuiwei 1368 Cultural Block to East Gate Old Street: metro: duration 17, cost 3. taxi: duration 9, cost 26.59. walk: duration 75, cost 0.0. \nfrom Shuiwei 1368 Cultural Block to Chung Ying Street: metro: duration 44, cost 5. taxi: duration 26, cost 74.57. walk: duration 212, cost 0.0. \nfrom Shuiwei 1368 Cultural Block to Qiuguo Hotel, Gangxia Subway Station, Shenzhen Convention and Exhibition Center: metro: duration 7, cost 2. taxi: duration 2, cost 11.0. walk: duration 16, cost 0.0. \nfrom Shuiwei 1368 Cultural Block to Little Bingsheng (Joyce Center Branch): metro: duration 9, cost 2. taxi: duration 1, cost 11.0. walk: duration 15, cost 0.0. \nfrom Shuiwei 1368 Cultural Block to Yat Bun Sin Tea House (Mixc World Store): metro: duration 29, cost 4. taxi: duration 17, cost 47.27. walk: duration 140, cost 0.0. \nfrom Shuiwei 1368 Cultural Block to Shuiwei 1368 Cultural Block:  metro: empty.  taxi: empty.  walk: empty. \nfrom Shuiwei 1368 Cultural Block to Kexing Science and Technology Park: metro: duration 44, cost 4. taxi: duration 18, cost 51.3. walk: duration 150, cost 0.0. \nfrom Shuiwei 1368 Cultural Block to Shenzhen Pingshan Station: metro: duration 76, cost 7. taxi: duration 50, cost 146.84. walk: duration 405, cost 0.0. \nfrom Shuiwei 1368 Cultural Block to Shenzhen Book City (Central City Branch): metro: duration 13, cost 2. taxi: duration 4, cost 15.45. walk: duration 36, cost 0.0. \nfrom Shuiwei 1368 Cultural Block to Shenzhen Convention and Exhibition Center (Futian Hall): metro: duration 8, cost 2. taxi: duration 1, cost 11.0. walk: duration 15, cost 0.0. \nfrom Shuiwei 1368 Cultural Block to Libaoge (Kerry Store): metro: duration 8, cost 2. taxi: duration 2, cost 11.0. walk: duration 19, cost 0.0. \nfrom Shuiwei 1368 Cultural Block to Shenzhen Station: metro: duration 16, cost 3. taxi: duration 7, cost 22.4. walk: duration 60, cost 0.0. \nfrom Shuiwei 1368 Cultural Block to Nanhai Creative Hub: metro: duration 39, cost 5. taxi: duration 22, cost 63.41. walk: duration 183, cost 0.0. \nfrom Shuiwei 1368 Cultural Block to Jiangnan Chef (China Resources Mixc Store): metro: duration 16, cost 3. taxi: duration 7, cost 21.18. walk: duration 56, cost 0.0. \nfrom Kexing Science and Technology Park to Xixiang Night Market Street: metro: duration 54, cost 4. taxi: duration 14, cost 37.67. walk: duration 113, cost 0.0. \nfrom Kexing Science and Technology Park to Shekou Industrial Zone: metro: duration 34, cost 3. taxi: duration 11, cost 31.58. walk: duration 92, cost 0.0. \nfrom Kexing Science and Technology Park to Huaqiangbei Museum: metro: duration 50, cost 5. taxi: duration 22, cost 61.18. walk: duration 177, cost 0.0. \nfrom Kexing Science and Technology Park to Luoruihe Taiwanese Food Street: metro: duration 100, cost 8. taxi: duration 58, cost 169.2. walk: duration 465, cost 0.0. \nfrom Kexing Science and Technology Park to Bauhinia Lane Hong Kong International Style Street: metro: duration 42, cost 4. taxi: duration 19, cost 52.26. walk: duration 153, cost 0.0. \nfrom Kexing Science and Technology Park to Shenzhen Bay Sports Center: metro: duration 33, cost 2. taxi: duration 5, cost 16.41. walk: duration 40, cost 0.0. \nfrom Kexing Science and Technology Park to Chaoshan Joy Goose Restaurant (Mixc Mall Branch): metro: duration 59, cost 5. taxi: duration 28, cost 80.8. walk: duration 229, cost 0.0. \nfrom Kexing Science and Technology Park to Dalden Meijin Hotel: metro: duration 26, cost 3. taxi: duration 4, cost 15.32. walk: duration 36, cost 0.0. \nfrom Kexing Science and Technology Park to Shenzhen Century Garden Hotel (Nanshan Science and Technology Park): metro: duration 27, cost 2. taxi: duration 3, cost 13.92. walk: duration 31, cost 0.0. \nfrom Kexing Science and Technology Park to Shenzhen North Railway Station: metro: duration 41, cost 4. taxi: duration 15, cost 40.66. walk: duration 122, cost 0.0. \nfrom Kexing Science and Technology Park to Shatoujiao: metro: duration 80, cost 7. taxi: duration 43, cost 126.16. walk: duration 350, cost 0.0. \nfrom Kexing Science and Technology Park to Shekou Value Factory: metro: duration 44, cost 4. taxi: duration 15, cost 40.39. walk: duration 121, cost 0.0. \nfrom Kexing Science and Technology Park to East Gate Old Street: metro: duration 53, cost 5. taxi: duration 26, cost 74.59. walk: duration 213, cost 0.0. \nfrom Kexing Science and Technology Park to Chung Ying Street: metro: duration 81, cost 7. taxi: duration 44, cost 128.23. walk: duration 356, cost 0.0. \nfrom Kexing Science and Technology Park to Qiuguo Hotel, Gangxia Subway Station, Shenzhen Convention and Exhibition Center: metro: duration 42, cost 4. taxi: duration 18, cost 50.1. walk: duration 147, cost 0.0. \nfrom Kexing Science and Technology Park to Little Bingsheng (Joyce Center Branch): metro: duration 45, cost 4. taxi: duration 17, cost 48.67. walk: duration 143, cost 0.0. \nfrom Kexing Science and Technology Park to Yat Bun Sin Tea House (Mixc World Store): taxi: duration 2, cost 11.0. walk: duration 17, cost 0.0. \nfrom Kexing Science and Technology Park to Shuiwei 1368 Cultural Block: metro: duration 44, cost 4. taxi: duration 18, cost 51.3. walk: duration 150, cost 0.0. \nfrom Kexing Science and Technology Park to Kexing Science and Technology Park:  metro: empty.  taxi: empty.  walk: empty. \nfrom Kexing Science and Technology Park to Shenzhen Pingshan Station: metro: duration 109, cost 8. taxi: duration 64, cost 186.9. walk: duration 512, cost 0.0. \nfrom Kexing Science and Technology Park to Shenzhen Book City (Central City Branch): metro: duration 46, cost 4. taxi: duration 17, cost 48.48. walk: duration 143, cost 0.0. \nfrom Kexing Science and Technology Park to Shenzhen Convention and Exhibition Center (Futian Hall): metro: duration 44, cost 4. taxi: duration 18, cost 49.18. walk: duration 145, cost 0.0. \nfrom Kexing Science and Technology Park to Libaoge (Kerry Store): metro: duration 40, cost 4. taxi: duration 16, cost 44.98. walk: duration 134, cost 0.0. \nfrom Kexing Science and Technology Park to Shenzhen Station: metro: duration 53, cost 5. taxi: duration 26, cost 72.71. walk: duration 208, cost 0.0. \nfrom Kexing Science and Technology Park to Nanhai Creative Hub: metro: duration 36, cost 3. taxi: duration 10, cost 30.22. walk: duration 87, cost 0.0. \nfrom Kexing Science and Technology Park to Jiangnan Chef (China Resources Mixc Store): metro: duration 53, cost 5. taxi: duration 24, cost 69.58. walk: duration 199, cost 0.0. \nfrom Shenzhen Pingshan Station to Xixiang Night Market Street: metro: duration 118, cost 8. taxi: duration 74, cost 217.68. walk: duration 594, cost 0.0. \nfrom Shenzhen Pingshan Station to Shekou Industrial Zone: metro: duration 105, cost 9. taxi: duration 72, cost 212.89. walk: duration 581, cost 0.0. \nfrom Shenzhen Pingshan Station to Huaqiangbei Museum: metro: duration 67, cost 7. taxi: duration 45, cost 129.98. walk: duration 360, cost 0.0. \nfrom Shenzhen Pingshan Station to Luoruihe Taiwanese Food Street: metro: duration 21, cost 3. taxi: duration 9, cost 26.13. walk: duration 73, cost 0.0. \nfrom Shenzhen Pingshan Station to Bauhinia Lane Hong Kong International Style Street: metro: duration 74, cost 7. taxi: duration 51, cost 150.07. walk: duration 414, cost 0.0. \nfrom Shenzhen Pingshan Station to Shenzhen Bay Sports Center: metro: duration 105, cost 8. taxi: duration 65, cost 190.86. walk: duration 523, cost 0.0. \nfrom Shenzhen Pingshan Station to Chaoshan Joy Goose Restaurant (Mixc Mall Branch): metro: duration 56, cost 6. taxi: duration 36, cost 103.58. walk: duration 290, cost 0.0. \nfrom Shenzhen Pingshan Station to Dalden Meijin Hotel: metro: duration 87, cost 8. taxi: duration 61, cost 180.18. walk: duration 494, cost 0.0. \nfrom Shenzhen Pingshan Station to Shenzhen Century Garden Hotel (Nanshan Science and Technology Park): metro: duration 95, cost 8. taxi: duration 63, cost 185.12. walk: duration 507, cost 0.0. \nfrom Shenzhen Pingshan Station to Shenzhen North Railway Station: metro: duration 71, cost 7. taxi: duration 49, cost 142.56. walk: duration 394, cost 0.0. \nfrom Shenzhen Pingshan Station to Shatoujiao: metro: duration 48, cost 5. taxi: duration 29, cost 83.53. walk: duration 236, cost 0.0. \nfrom Shenzhen Pingshan Station to Shekou Value Factory: metro: duration 115, cost 9. taxi: duration 76, cost 225.09. walk: duration 614, cost 0.0. \nfrom Shenzhen Pingshan Station to East Gate Old Street: metro: duration 61, cost 6. taxi: duration 41, cost 119.28. walk: duration 332, cost 0.0. \nfrom Shenzhen Pingshan Station to Chung Ying Street: metro: duration 49, cost 5. taxi: duration 29, cost 84.37. walk: duration 239, cost 0.0. \nfrom Shenzhen Pingshan Station to Qiuguo Hotel, Gangxia Subway Station, Shenzhen Convention and Exhibition Center: metro: duration 71, cost 7. taxi: duration 49, cost 143.11. walk: duration 395, cost 0.0. \nfrom Shenzhen Pingshan Station to Little Bingsheng (Joyce Center Branch): metro: duration 75, cost 7. taxi: duration 50, cost 144.79. walk: duration 400, cost 0.0. \nfrom Shenzhen Pingshan Station to Yat Bun Sin Tea House (Mixc World Store): metro: duration 94, cost 8. taxi: duration 64, cost 186.89. walk: duration 512, cost 0.0. \nfrom Shenzhen Pingshan Station to Shuiwei 1368 Cultural Block: metro: duration 76, cost 7. taxi: duration 50, cost 146.84. walk: duration 405, cost 0.0. \nfrom Shenzhen Pingshan Station to Kexing Science and Technology Park: metro: duration 109, cost 8. taxi: duration 64, cost 186.9. walk: duration 512, cost 0.0. \nfrom Shenzhen Pingshan Station to Shenzhen Pingshan Station:  metro: empty.  taxi: empty.  walk: empty. \nfrom Shenzhen Pingshan Station to Shenzhen Book City (Central City Branch): metro: duration 74, cost 7. taxi: duration 48, cost 139.71. walk: duration 386, cost 0.0. \nfrom Shenzhen Pingshan Station to Shenzhen Convention and Exhibition Center (Futian Hall): metro: duration 74, cost 7. taxi: duration 49, cost 144.23. walk: duration 398, cost 0.0. \nfrom Shenzhen Pingshan Station to Libaoge (Kerry Store): metro: duration 75, cost 7. taxi: duration 51, cost 148.13. walk: duration 409, cost 0.0. \nfrom Shenzhen Pingshan Station to Shenzhen Station: metro: duration 65, cost 7. taxi: duration 44, cost 127.31. walk: duration 353, cost 0.0. \nfrom Shenzhen Pingshan Station to Nanhai Creative Hub: metro: duration 108, cost 9. taxi: duration 72, cost 211.5. walk: duration 578, cost 0.0. \nfrom Shenzhen Pingshan Station to Jiangnan Chef (China Resources Mixc Store): metro: duration 67, cost 7. taxi: duration 43, cost 126.67. walk: duration 351, cost 0.0. \nfrom Shenzhen Book City (Central City Branch) to Xixiang Night Market Street: metro: duration 62, cost 5. taxi: duration 31, cost 88.96. walk: duration 251, cost 0.0. \nfrom Shenzhen Book City (Central City Branch) to Shekou Industrial Zone: metro: duration 41, cost 5. taxi: duration 24, cost 68.29. walk: duration 196, cost 0.0. \nfrom Shenzhen Book City (Central City Branch) to Huaqiangbei Museum: metro: duration 13, cost 2. taxi: duration 4, cost 14.61. walk: duration 33, cost 0.0. \nfrom Shenzhen Book City (Central City Branch) to Luoruihe Taiwanese Food Street: metro: duration 67, cost 7. taxi: duration 43, cost 126.16. walk: duration 350, cost 0.0. \nfrom Shenzhen Book City (Central City Branch) to Bauhinia Lane Hong Kong International Style Street: metro: duration 13, cost 2. taxi: duration 6, cost 19.07. walk: duration 49, cost 0.0. \nfrom Shenzhen Book City (Central City Branch) to Shenzhen Bay Sports Center: metro: duration 42, cost 4. taxi: duration 17, cost 47.6. walk: duration 141, cost 0.0. \nfrom Shenzhen Book City (Central City Branch) to Chaoshan Joy Goose Restaurant (Mixc Mall Branch): metro: duration 24, cost 3. taxi: duration 12, cost 32.8. walk: duration 96, cost 0.0. \nfrom Shenzhen Book City (Central City Branch) to Dalden Meijin Hotel: metro: duration 29, cost 4. taxi: duration 17, cost 48.61. walk: duration 143, cost 0.0. \nfrom Shenzhen Book City (Central City Branch) to Shenzhen Century Garden Hotel (Nanshan Science and Technology Park): metro: duration 32, cost 4. taxi: duration 15, cost 42.69. walk: duration 127, cost 0.0. \nfrom Shenzhen Book City (Central City Branch) to Shenzhen North Railway Station: metro: duration 21, cost 3. taxi: duration 11, cost 30.54. walk: duration 88, cost 0.0. \nfrom Shenzhen Book City (Central City Branch) to Shatoujiao: metro: duration 43, cost 5. taxi: duration 25, cost 72.4. walk: duration 207, cost 0.0. \nfrom Shenzhen Book City (Central City Branch) to Shekou Value Factory: metro: duration 51, cost 5. taxi: duration 28, cost 80.33. walk: duration 228, cost 0.0. \nfrom Shenzhen Book City (Central City Branch) to East Gate Old Street: metro: duration 17, cost 3. taxi: duration 8, cost 25.02. walk: duration 69, cost 0.0. \nfrom Shenzhen Book City (Central City Branch) to Chung Ying Street: metro: duration 44, cost 5. taxi: duration 26, cost 74.45. walk: duration 212, cost 0.0. \nfrom Shenzhen Book City (Central City Branch) to Qiuguo Hotel, Gangxia Subway Station, Shenzhen Convention and Exhibition Center: metro: duration 8, cost 2. taxi: duration 2, cost 11.0. walk: duration 20, cost 0.0. \nfrom Shenzhen Book City (Central City Branch) to Little Bingsheng (Joyce Center Branch): metro: duration 12, cost 2. taxi: duration 2, cost 11.15. walk: duration 22, cost 0.0. \nfrom Shenzhen Book City (Central City Branch) to Yat Bun Sin Tea House (Mixc World Store): metro: duration 31, cost 4. taxi: duration 17, cost 45.94. walk: duration 136, cost 0.0. \nfrom Shenzhen Book City (Central City Branch) to Shuiwei 1368 Cultural Block: metro: duration 13, cost 2. taxi: duration 4, cost 15.45. walk: duration 36, cost 0.0. \nfrom Shenzhen Book City (Central City Branch) to Kexing Science and Technology Park: metro: duration 46, cost 4. taxi: duration 17, cost 48.48. walk: duration 143, cost 0.0. \nfrom Shenzhen Book City (Central City Branch) to Shenzhen Pingshan Station: metro: duration 74, cost 7. taxi: duration 48, cost 139.71. walk: duration 386, cost 0.0. \nfrom Shenzhen Book City (Central City Branch) to Shenzhen Book City (Central City Branch):  metro: empty.  taxi: empty.  walk: empty. \nfrom Shenzhen Book City (Central City Branch) to Shenzhen Convention and Exhibition Center (Futian Hall): metro: duration 11, cost 2. taxi: duration 2, cost 11.0. walk: duration 21, cost 0.0. \nfrom Shenzhen Book City (Central City Branch) to Libaoge (Kerry Store): metro: duration 11, cost 2. taxi: duration 3, cost 12.23. walk: duration 25, cost 0.0. \nfrom Shenzhen Book City (Central City Branch) to Shenzhen Station: metro: duration 18, cost 3. taxi: duration 8, cost 24.65. walk: duration 68, cost 0.0. \nfrom Shenzhen Book City (Central City Branch) to Nanhai Creative Hub: metro: duration 43, cost 5. taxi: duration 24, cost 67.0. walk: duration 192, cost 0.0. \nfrom Shenzhen Book City (Central City Branch) to Jiangnan Chef (China Resources Mixc Store): metro: duration 17, cost 3. taxi: duration 7, cost 21.59. walk: duration 57, cost 0.0. \nfrom Shenzhen Convention and Exhibition Center (Futian Hall) to Xixiang Night Market Street: metro: duration 61, cost 5. taxi: duration 32, cost 90.81. walk: duration 256, cost 0.0. \nfrom Shenzhen Convention and Exhibition Center (Futian Hall) to Shekou Industrial Zone: metro: duration 38, cost 5. taxi: duration 23, cost 65.22. walk: duration 188, cost 0.0. \nfrom Shenzhen Convention and Exhibition Center (Futian Hall) to Huaqiangbei Museum: metro: duration 12, cost 2. taxi: duration 4, cost 15.87. walk: duration 38, cost 0.0. \nfrom Shenzhen Convention and Exhibition Center (Futian Hall) to Luoruihe Taiwanese Food Street: metro: duration 67, cost 7. taxi: duration 45, cost 131.76. walk: duration 365, cost 0.0. \nfrom Shenzhen Convention and Exhibition Center (Futian Hall) to Bauhinia Lane Hong Kong International Style Street: metro: duration 7, cost 2. taxi: duration 3, cost 12.79. walk: duration 27, cost 0.0. \nfrom Shenzhen Convention and Exhibition Center (Futian Hall) to Shenzhen Bay Sports Center: metro: duration 40, cost 4. taxi: duration 17, cost 46.04. walk: duration 136, cost 0.0. \nfrom Shenzhen Convention and Exhibition Center (Futian Hall) to Chaoshan Joy Goose Restaurant (Mixc Mall Branch): metro: duration 24, cost 4. taxi: duration 13, cost 36.7. walk: duration 109, cost 0.0. \nfrom Shenzhen Convention and Exhibition Center (Futian Hall) to Dalden Meijin Hotel: metro: duration 28, cost 4. taxi: duration 18, cost 51.29. walk: duration 150, cost 0.0. \nfrom Shenzhen Convention and Exhibition Center (Futian Hall) to Shenzhen Century Garden Hotel (Nanshan Science and Technology Park): metro: duration 30, cost 4. taxi: duration 15, cost 41.83. walk: duration 125, cost 0.0. \nfrom Shenzhen Convention and Exhibition Center (Futian Hall) to Shenzhen North Railway Station: metro: duration 22, cost 4. taxi: duration 13, cost 36.09. walk: duration 107, cost 0.0. \nfrom Shenzhen Convention and Exhibition Center (Futian Hall) to Shatoujiao: metro: duration 42, cost 5. taxi: duration 26, cost 72.95. walk: duration 208, cost 0.0. \nfrom Shenzhen Convention and Exhibition Center (Futian Hall) to Shekou Value Factory: metro: duration 47, cost 5. taxi: duration 27, cost 76.95. walk: duration 219, cost 0.0. \nfrom Shenzhen Convention and Exhibition Center (Futian Hall) to East Gate Old Street: metro: duration 15, cost 3. taxi: duration 9, cost 25.7. walk: duration 72, cost 0.0. \nfrom Shenzhen Convention and Exhibition Center (Futian Hall) to Chung Ying Street: metro: duration 43, cost 5. taxi: duration 26, cost 74.78. walk: duration 213, cost 0.0. \nfrom Shenzhen Convention and Exhibition Center (Futian Hall) to Qiuguo Hotel, Gangxia Subway Station, Shenzhen Convention and Exhibition Center: metro: duration 4, cost 2. taxi: duration 0, cost 11.0. walk: duration 3, cost 0.0. \nfrom Shenzhen Convention and Exhibition Center (Futian Hall) to Little Bingsheng (Joyce Center Branch): taxi: duration 0, cost 11.0. walk: duration 1, cost 0.0. \nfrom Shenzhen Convention and Exhibition Center (Futian Hall) to Yat Bun Sin Tea House (Mixc World Store): metro: duration 29, cost 4. taxi: duration 17, cost 45.72. walk: duration 136, cost 0.0. \nfrom Shenzhen Convention and Exhibition Center (Futian Hall) to Shuiwei 1368 Cultural Block: metro: duration 8, cost 2. taxi: duration 1, cost 11.0. walk: duration 15, cost 0.0. \nfrom Shenzhen Convention and Exhibition Center (Futian Hall) to Kexing Science and Technology Park: metro: duration 44, cost 4. taxi: duration 18, cost 49.18. walk: duration 145, cost 0.0. \nfrom Shenzhen Convention and Exhibition Center (Futian Hall) to Shenzhen Pingshan Station: metro: duration 74, cost 7. taxi: duration 49, cost 144.23. walk: duration 398, cost 0.0. \nfrom Shenzhen Convention and Exhibition Center (Futian Hall) to Shenzhen Book City (Central City Branch): metro: duration 11, cost 2. taxi: duration 2, cost 11.0. walk: duration 21, cost 0.0. \nfrom Shenzhen Convention and Exhibition Center (Futian Hall) to Shenzhen Convention and Exhibition Center (Futian Hall):  metro: empty.  taxi: empty.  walk: empty. \nfrom Shenzhen Convention and Exhibition Center (Futian Hall) to Libaoge (Kerry Store): metro: duration 7, cost 2. taxi: duration 1, cost 11.0. walk: duration 11, cost 0.0. \nfrom Shenzhen Convention and Exhibition Center (Futian Hall) to Shenzhen Station: metro: duration 15, cost 3. taxi: duration 7, cost 23.03. walk: duration 62, cost 0.0. \nfrom Shenzhen Convention and Exhibition Center (Futian Hall) to Nanhai Creative Hub: metro: duration 40, cost 5. taxi: duration 23, cost 64.06. walk: duration 184, cost 0.0. \nfrom Shenzhen Convention and Exhibition Center (Futian Hall) to Jiangnan Chef (China Resources Mixc Store): metro: duration 15, cost 3. taxi: duration 6, cost 20.92. walk: duration 55, cost 0.0. \nfrom Libaoge (Kerry Store) to Xixiang Night Market Street: metro: duration 57, cost 5. taxi: duration 30, cost 86.78. walk: duration 245, cost 0.0. \nfrom Libaoge (Kerry Store) to Shekou Industrial Zone: metro: duration 34, cost 5. taxi: duration 22, cost 60.92. walk: duration 176, cost 0.0. \nfrom Libaoge (Kerry Store) to Huaqiangbei Museum: metro: duration 14, cost 3. taxi: duration 6, cost 19.13. walk: duration 49, cost 0.0. \nfrom Libaoge (Kerry Store) to Luoruihe Taiwanese Food Street: metro: duration 68, cost 7. taxi: duration 46, cost 135.27. walk: duration 374, cost 0.0. \nfrom Libaoge (Kerry Store) to Bauhinia Lane Hong Kong International Style Street: metro: duration 7, cost 2. taxi: duration 3, cost 13.23. walk: duration 29, cost 0.0. \nfrom Libaoge (Kerry Store) to Shenzhen Bay Sports Center: metro: duration 36, cost 4. taxi: duration 15, cost 41.64. walk: duration 125, cost 0.0. \nfrom Libaoge (Kerry Store) to Chaoshan Joy Goose Restaurant (Mixc Mall Branch): metro: duration 25, cost 4. taxi: duration 14, cost 39.54. walk: duration 119, cost 0.0. \nfrom Libaoge (Kerry Store) to Dalden Meijin Hotel: metro: duration 24, cost 4. taxi: duration 17, cost 47.55. walk: duration 140, cost 0.0. \nfrom Libaoge (Kerry Store) to Shenzhen Century Garden Hotel (Nanshan Science and Technology Park): metro: duration 27, cost 4. taxi: duration 14, cost 37.95. walk: duration 114, cost 0.0. \nfrom Libaoge (Kerry Store) to Shenzhen North Railway Station: metro: duration 20, cost 3. taxi: duration 13, cost 35.22. walk: duration 104, cost 0.0. \nfrom Libaoge (Kerry Store) to Shatoujiao: metro: duration 43, cost 5. taxi: duration 27, cost 77.35. walk: duration 220, cost 0.0. \nfrom Libaoge (Kerry Store) to Shekou Value Factory: metro: duration 44, cost 5. taxi: duration 26, cost 72.7. walk: duration 208, cost 0.0. \nfrom Libaoge (Kerry Store) to East Gate Old Street: metro: duration 17, cost 3. taxi: duration 10, cost 29.1. walk: duration 83, cost 0.0. \nfrom Libaoge (Kerry Store) to Chung Ying Street: metro: duration 44, cost 5. taxi: duration 28, cost 79.18. walk: duration 225, cost 0.0. \nfrom Libaoge (Kerry Store) to Qiuguo Hotel, Gangxia Subway Station, Shenzhen Convention and Exhibition Center: metro: duration 5, cost 2. taxi: duration 1, cost 11.0. walk: duration 14, cost 0.0. \nfrom Libaoge (Kerry Store) to Little Bingsheng (Joyce Center Branch): metro: duration 8, cost 2. taxi: duration 1, cost 11.0. walk: duration 10, cost 0.0. \nfrom Libaoge (Kerry Store) to Yat Bun Sin Tea House (Mixc World Store): metro: duration 25, cost 4. taxi: duration 15, cost 41.4. walk: duration 124, cost 0.0. \nfrom Libaoge (Kerry Store) to Shuiwei 1368 Cultural Block: metro: duration 8, cost 2. taxi: duration 2, cost 11.0. walk: duration 19, cost 0.0. \nfrom Libaoge (Kerry Store) to Kexing Science and Technology Park: metro: duration 40, cost 4. taxi: duration 16, cost 44.98. walk: duration 134, cost 0.0. \nfrom Libaoge (Kerry Store) to Shenzhen Pingshan Station: metro: duration 75, cost 7. taxi: duration 51, cost 148.13. walk: duration 409, cost 0.0. \nfrom Libaoge (Kerry Store) to Shenzhen Book City (Central City Branch): metro: duration 11, cost 2. taxi: duration 3, cost 12.23. walk: duration 25, cost 0.0. \nfrom Libaoge (Kerry Store) to Shenzhen Convention and Exhibition Center (Futian Hall): metro: duration 7, cost 2. taxi: duration 1, cost 11.0. walk: duration 11, cost 0.0. \nfrom Libaoge (Kerry Store) to Libaoge (Kerry Store):  metro: empty.  taxi: empty.  walk: empty. \nfrom Libaoge (Kerry Store) to Shenzhen Station: metro: duration 17, cost 3. taxi: duration 9, cost 26.38. walk: duration 74, cost 0.0. \nfrom Libaoge (Kerry Store) to Nanhai Creative Hub: metro: duration 37, cost 5. taxi: duration 21, cost 59.75. walk: duration 173, cost 0.0. \nfrom Libaoge (Kerry Store) to Jiangnan Chef (China Resources Mixc Store): metro: duration 17, cost 3. taxi: duration 8, cost 24.34. walk: duration 67, cost 0.0. \nfrom Shenzhen Station to Xixiang Night Market Street: metro: duration 70, cost 6. taxi: duration 39, cost 114.09. walk: duration 318, cost 0.0. \nfrom Shenzhen Station to Shekou Industrial Zone: metro: duration 47, cost 6. taxi: duration 30, cost 87.12. walk: duration 246, cost 0.0. \nfrom Shenzhen Station to Huaqiangbei Museum: metro: duration 10, cost 2. taxi: duration 4, cost 15.66. walk: duration 37, cost 0.0. \nfrom Shenzhen Station to Luoruihe Taiwanese Food Street: metro: duration 60, cost 6. taxi: duration 41, cost 118.21. walk: duration 329, cost 0.0. \nfrom Shenzhen Station to Bauhinia Lane Hong Kong International Style Street: metro: duration 14, cost 3. taxi: duration 8, cost 23.63. walk: duration 64, cost 0.0. \nfrom Shenzhen Station to Shenzhen Bay Sports Center: metro: duration 49, cost 5. taxi: duration 24, cost 69.23. walk: duration 198, cost 0.0. \nfrom Shenzhen Station to Chaoshan Joy Goose Restaurant (Mixc Mall Branch): metro: duration 19, cost 3. taxi: duration 10, cost 28.83. walk: duration 82, cost 0.0. \nfrom Shenzhen Station to Dalden Meijin Hotel: metro: duration 37, cost 5. taxi: duration 26, cost 74.07. walk: duration 211, cost 0.0. \nfrom Shenzhen Station to Shenzhen Century Garden Hotel (Nanshan Science and Technology Park): metro: duration 40, cost 5. taxi: duration 23, cost 65.28. walk: duration 188, cost 0.0. \nfrom Shenzhen Station to Shenzhen North Railway Station: metro: duration 28, cost 4. taxi: duration 18, cost 50.88. walk: duration 149, cost 0.0. \nfrom Shenzhen Station to Shatoujiao: metro: duration 31, cost 4. taxi: duration 18, cost 50.18. walk: duration 147, cost 0.0. \nfrom Shenzhen Station to Shekou Value Factory: metro: duration 56, cost 6. taxi: duration 34, cost 98.38. walk: duration 276, cost 0.0. \nfrom Shenzhen Station to East Gate Old Street: metro: duration 6, cost 2. taxi: duration 3, cost 12.17. walk: duration 25, cost 0.0. \nfrom Shenzhen Station to Chung Ying Street: metro: duration 32, cost 4. taxi: duration 19, cost 51.81. walk: duration 152, cost 0.0. \nfrom Shenzhen Station to Qiuguo Hotel, Gangxia Subway Station, Shenzhen Convention and Exhibition Center: metro: duration 13, cost 3. taxi: duration 7, cost 22.3. walk: duration 60, cost 0.0. \nfrom Shenzhen Station to Little Bingsheng (Joyce Center Branch): metro: duration 16, cost 3. taxi: duration 8, cost 23.44. walk: duration 64, cost 0.0. \nfrom Shenzhen Station to Yat Bun Sin Tea House (Mixc World Store): metro: duration 38, cost 5. taxi: duration 24, cost 69.27. walk: duration 198, cost 0.0. \nfrom Shenzhen Station to Shuiwei 1368 Cultural Block: metro: duration 16, cost 3. taxi: duration 7, cost 22.4. walk: duration 60, cost 0.0. \nfrom Shenzhen Station to Kexing Science and Technology Park: metro: duration 53, cost 5. taxi: duration 26, cost 72.71. walk: duration 208, cost 0.0. \nfrom Shenzhen Station to Shenzhen Pingshan Station: metro: duration 65, cost 7. taxi: duration 44, cost 127.31. walk: duration 353, cost 0.0. \nfrom Shenzhen Station to Shenzhen Book City (Central City Branch): metro: duration 18, cost 3. taxi: duration 8, cost 24.65. walk: duration 68, cost 0.0. \nfrom Shenzhen Station to Shenzhen Convention and Exhibition Center (Futian Hall): metro: duration 15, cost 3. taxi: duration 7, cost 23.03. walk: duration 62, cost 0.0. \nfrom Shenzhen Station to Libaoge (Kerry Store): metro: duration 17, cost 3. taxi: duration 9, cost 26.38. walk: duration 74, cost 0.0. \nfrom Shenzhen Station to Shenzhen Station:  metro: empty.  taxi: empty.  walk: empty. \nfrom Shenzhen Station to Nanhai Creative Hub: metro: duration 49, cost 5. taxi: duration 30, cost 86.11. walk: duration 243, cost 0.0. \nfrom Shenzhen Station to Jiangnan Chef (China Resources Mixc Store): metro: duration 9, cost 2. taxi: duration 1, cost 11.0. walk: duration 12, cost 0.0. \nfrom Nanhai Creative Hub to Xixiang Night Market Street: metro: duration 46, cost 4. taxi: duration 18, cost 49.28. walk: duration 145, cost 0.0. \nfrom Nanhai Creative Hub to Shekou Industrial Zone: metro: duration 10, cost 2. taxi: duration 0, cost 11.0. walk: duration 4, cost 0.0. \nfrom Nanhai Creative Hub to Huaqiangbei Museum: metro: duration 47, cost 5. taxi: duration 27, cost 78.25. walk: duration 222, cost 0.0. \nfrom Nanhai Creative Hub to Luoruihe Taiwanese Food Street: metro: duration 100, cost 8. taxi: duration 67, cost 196.09. walk: duration 537, cost 0.0. \nfrom Nanhai Creative Hub to Bauhinia Lane Hong Kong International Style Street: metro: duration 37, cost 5. taxi: duration 22, cost 62.03. walk: duration 179, cost 0.0. \nfrom Nanhai Creative Hub to Shenzhen Bay Sports Center: metro: duration 27, cost 3. taxi: duration 7, cost 21.53. walk: duration 57, cost 0.0. \nfrom Nanhai Creative Hub to Chaoshan Joy Goose Restaurant (Mixc Mall Branch): metro: duration 57, cost 6. taxi: duration 36, cost 102.83. walk: duration 288, cost 0.0. \nfrom Nanhai Creative Hub to Dalden Meijin Hotel: metro: duration 26, cost 4. taxi: duration 15, cost 40.87. walk: duration 123, cost 0.0. \nfrom Nanhai Creative Hub to Shenzhen Century Garden Hotel (Nanshan Science and Technology Park): metro: duration 27, cost 3. taxi: duration 9, cost 26.42. walk: duration 74, cost 0.0. \nfrom Nanhai Creative Hub to Shenzhen North Railway Station: metro: duration 41, cost 5. taxi: duration 25, cost 70.65. walk: duration 202, cost 0.0. \nfrom Nanhai Creative Hub to Shatoujiao: metro: duration 76, cost 7. taxi: duration 48, cost 141.59. walk: duration 391, cost 0.0. \nfrom Nanhai Creative Hub to Shekou Value Factory: metro: duration 20, cost 2. taxi: duration 4, cost 15.51. walk: duration 37, cost 0.0. \nfrom Nanhai Creative Hub to East Gate Old Street: metro: duration 50, cost 6. taxi: duration 32, cost 91.03. walk: duration 256, cost 0.0. \nfrom Nanhai Creative Hub to Chung Ying Street: metro: duration 77, cost 7. taxi: duration 49, cost 143.18. walk: duration 395, cost 0.0. \nfrom Nanhai Creative Hub to Qiuguo Hotel, Gangxia Subway Station, Shenzhen Convention and Exhibition Center: metro: duration 39, cost 5. taxi: duration 23, cost 65.18. walk: duration 187, cost 0.0. \nfrom Nanhai Creative Hub to Little Bingsheng (Joyce Center Branch): metro: duration 41, cost 5. taxi: duration 22, cost 63.48. walk: duration 183, cost 0.0. \nfrom Nanhai Creative Hub to Yat Bun Sin Tea House (Mixc World Store): metro: duration 21, cost 3. taxi: duration 9, cost 26.95. walk: duration 76, cost 0.0. \nfrom Nanhai Creative Hub to Shuiwei 1368 Cultural Block: metro: duration 39, cost 5. taxi: duration 22, cost 63.41. walk: duration 183, cost 0.0. \nfrom Nanhai Creative Hub to Kexing Science and Technology Park: metro: duration 36, cost 3. taxi: duration 10, cost 30.22. walk: duration 87, cost 0.0. \nfrom Nanhai Creative Hub to Shenzhen Pingshan Station: metro: duration 108, cost 9. taxi: duration 72, cost 211.5. walk: duration 578, cost 0.0. \nfrom Nanhai Creative Hub to Shenzhen Book City (Central City Branch): metro: duration 43, cost 5. taxi: duration 24, cost 67.0. walk: duration 192, cost 0.0. \nfrom Nanhai Creative Hub to Shenzhen Convention and Exhibition Center (Futian Hall): metro: duration 40, cost 5. taxi: duration 23, cost 64.06. walk: duration 184, cost 0.0. \nfrom Nanhai Creative Hub to Libaoge (Kerry Store): metro: duration 37, cost 5. taxi: duration 21, cost 59.75. walk: duration 173, cost 0.0. \nfrom Nanhai Creative Hub to Shenzhen Station: metro: duration 49, cost 5. taxi: duration 30, cost 86.11. walk: duration 243, cost 0.0. \nfrom Nanhai Creative Hub to Nanhai Creative Hub:  metro: empty.  taxi: empty.  walk: empty. \nfrom Nanhai Creative Hub to Jiangnan Chef (China Resources Mixc Store): metro: duration 50, cost 5. taxi: duration 29, cost 84.48. walk: duration 239, cost 0.0. \nfrom Jiangnan Chef (China Resources Mixc Store) to Xixiang Night Market Street: metro: duration 69, cost 6. taxi: duration 38, cost 110.57. walk: duration 308, cost 0.0. \nfrom Jiangnan Chef (China Resources Mixc Store) to Shekou Industrial Zone: metro: duration 47, cost 5. taxi: duration 30, cost 85.56. walk: duration 242, cost 0.0. \nfrom Jiangnan Chef (China Resources Mixc Store) to Huaqiangbei Museum: metro: duration 9, cost 2. taxi: duration 3, cost 12.11. walk: duration 25, cost 0.0. \nfrom Jiangnan Chef (China Resources Mixc Store) to Luoruihe Taiwanese Food Street: metro: duration 62, cost 6. taxi: duration 40, cost 116.6. walk: duration 325, cost 0.0. \nfrom Jiangnan Chef (China Resources Mixc Store) to Bauhinia Lane Hong Kong International Style Street: metro: duration 14, cost 3. taxi: duration 7, cost 23.09. walk: duration 63, cost 0.0. \nfrom Jiangnan Chef (China Resources Mixc Store) to Shenzhen Bay Sports Center: metro: duration 49, cost 5. taxi: duration 24, cost 66.88. walk: duration 192, cost 0.0. \nfrom Jiangnan Chef (China Resources Mixc Store) to Chaoshan Joy Goose Restaurant (Mixc Mall Branch): metro: duration 19, cost 3. taxi: duration 9, cost 26.35. walk: duration 74, cost 0.0. \nfrom Jiangnan Chef (China Resources Mixc Store) to Dalden Meijin Hotel: metro: duration 36, cost 5. taxi: duration 25, cost 70.32. walk: duration 201, cost 0.0. \nfrom Jiangnan Chef (China Resources Mixc Store) to Shenzhen Century Garden Hotel (Nanshan Science and Technology Park): metro: duration 39, cost 5. taxi: duration 22, cost 62.65. walk: duration 181, cost 0.0. \nfrom Jiangnan Chef (China Resources Mixc Store) to Shenzhen North Railway Station: metro: duration 27, cost 4. taxi: duration 17, cost 46.15. walk: duration 137, cost 0.0. \nfrom Jiangnan Chef (China Resources Mixc Store) to Shatoujiao: metro: duration 34, cost 4. taxi: duration 19, cost 52.12. walk: duration 153, cost 0.0. \nfrom Jiangnan Chef (China Resources Mixc Store) to Shekou Value Factory: metro: duration 57, cost 6. taxi: duration 34, cost 97.05. walk: duration 272, cost 0.0. \nfrom Jiangnan Chef (China Resources Mixc Store) to East Gate Old Street: metro: duration 8, cost 2. taxi: duration 2, cost 11.0. walk: duration 19, cost 0.0. \nfrom Jiangnan Chef (China Resources Mixc Store) to Chung Ying Street: metro: duration 35, cost 4. taxi: duration 19, cost 53.93. walk: duration 157, cost 0.0. \nfrom Jiangnan Chef (China Resources Mixc Store) to Qiuguo Hotel, Gangxia Subway Station, Shenzhen Convention and Exhibition Center: metro: duration 13, cost 3. taxi: duration 6, cost 20.11. walk: duration 52, cost 0.0. \nfrom Jiangnan Chef (China Resources Mixc Store) to Little Bingsheng (Joyce Center Branch): metro: duration 16, cost 3. taxi: duration 7, cost 21.36. walk: duration 57, cost 0.0. \nfrom Jiangnan Chef (China Resources Mixc Store) to Yat Bun Sin Tea House (Mixc World Store): metro: duration 38, cost 5. taxi: duration 23, cost 66.44. walk: duration 191, cost 0.0. \nfrom Jiangnan Chef (China Resources Mixc Store) to Shuiwei 1368 Cultural Block: metro: duration 16, cost 3. taxi: duration 7, cost 21.18. walk: duration 56, cost 0.0. \nfrom Jiangnan Chef (China Resources Mixc Store) to Kexing Science and Technology Park: metro: duration 53, cost 5. taxi: duration 24, cost 69.58. walk: duration 199, cost 0.0. \nfrom Jiangnan Chef (China Resources Mixc Store) to Shenzhen Pingshan Station: metro: duration 67, cost 7. taxi: duration 43, cost 126.67. walk: duration 351, cost 0.0. \nfrom Jiangnan Chef (China Resources Mixc Store) to Shenzhen Book City (Central City Branch): metro: duration 17, cost 3. taxi: duration 7, cost 21.59. walk: duration 57, cost 0.0. \nfrom Jiangnan Chef (China Resources Mixc Store) to Shenzhen Convention and Exhibition Center (Futian Hall): metro: duration 15, cost 3. taxi: duration 6, cost 20.92. walk: duration 55, cost 0.0. \nfrom Jiangnan Chef (China Resources Mixc Store) to Libaoge (Kerry Store): metro: duration 17, cost 3. taxi: duration 8, cost 24.34. walk: duration 67, cost 0.0. \nfrom Jiangnan Chef (China Resources Mixc Store) to Shenzhen Station: metro: duration 9, cost 2. taxi: duration 1, cost 11.0. walk: duration 12, cost 0.0. \nfrom Jiangnan Chef (China Resources Mixc Store) to Nanhai Creative Hub: metro: duration 50, cost 5. taxi: duration 29, cost 84.48. walk: duration 239, cost 0.0. \nfrom Jiangnan Chef (China Resources Mixc Store) to Jiangnan Chef (China Resources Mixc Store):  metro: empty.  taxi: empty.  walk: empty. \n"
+    },
+    "initial_verification": {
+      "commonsense_errors": [
+        "Intercity-transport from destination to origin should provide start and end position.",
+        "Incorrect cost infomation of innercity transport in day 1, from Jiangnan Chef (China Resources Mixc Store) to Dalden Meijin Hotel, metro. [cost = price * people_number]"
+      ],
+      "personal_constraints": [
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true
+      ],
+      "category_normalization": [
+        {
+          "constraint_index": 4,
+          "category_domain": "activity",
+          "expression": "activity_type(activity)",
+          "raw_label": "train",
+          "normalized_label": "train"
+        },
+        {
+          "constraint_index": 4,
+          "category_domain": "activity",
+          "expression": "'attraction'",
+          "raw_label": "attraction",
+          "normalized_label": "attraction"
+        },
+        {
+          "constraint_index": 4,
+          "category_domain": "activity",
+          "expression": "activity_type(activity)",
+          "raw_label": "attraction",
+          "normalized_label": "attraction"
+        },
+        {
+          "constraint_index": 4,
+          "category_domain": "activity",
+          "expression": "'attraction'",
+          "raw_label": "attraction",
+          "normalized_label": "attraction"
+        },
+        {
+          "constraint_index": 4,
+          "category_domain": "activity",
+          "expression": "activity_type(activity)",
+          "raw_label": "dinner",
+          "normalized_label": "dinner"
+        },
+        {
+          "constraint_index": 4,
+          "category_domain": "activity",
+          "expression": "'attraction'",
+          "raw_label": "attraction",
+          "normalized_label": "attraction"
+        },
+        {
+          "constraint_index": 4,
+          "category_domain": "activity",
+          "expression": "activity_type(activity)",
+          "raw_label": "accommodation",
+          "normalized_label": "accommodation"
+        },
+        {
+          "constraint_index": 4,
+          "category_domain": "activity",
+          "expression": "'attraction'",
+          "raw_label": "attraction",
+          "normalized_label": "attraction"
+        },
+        {
+          "constraint_index": 4,
+          "category_domain": "activity",
+          "expression": "activity_type(activity)",
+          "raw_label": "attraction",
+          "normalized_label": "attraction"
+        },
+        {
+          "constraint_index": 4,
+          "category_domain": "activity",
+          "expression": "'attraction'",
+          "raw_label": "attraction",
+          "normalized_label": "attraction"
+        },
+        {
+          "constraint_index": 4,
+          "category_domain": "activity",
+          "expression": "activity_type(activity)",
+          "raw_label": "lunch",
+          "normalized_label": "lunch"
+        },
+        {
+          "constraint_index": 4,
+          "category_domain": "activity",
+          "expression": "'attraction'",
+          "raw_label": "attraction",
+          "normalized_label": "attraction"
+        },
+        {
+          "constraint_index": 4,
+          "category_domain": "activity",
+          "expression": "activity_type(activity)",
+          "raw_label": "attraction",
+          "normalized_label": "attraction"
+        },
+        {
+          "constraint_index": 4,
+          "category_domain": "activity",
+          "expression": "'attraction'",
+          "raw_label": "attraction",
+          "normalized_label": "attraction"
+        },
+        {
+          "constraint_index": 4,
+          "category_domain": "activity",
+          "expression": "activity_type(activity)",
+          "raw_label": "train",
+          "normalized_label": "train"
+        },
+        {
+          "constraint_index": 4,
+          "category_domain": "activity",
+          "expression": "'attraction'",
+          "raw_label": "attraction",
+          "normalized_label": "attraction"
+        },
+        {
+          "constraint_index": 4,
+          "category_domain": "attraction",
+          "expression": "{'商业街区'}",
+          "raw_label": "商业街区",
+          "normalized_label": "commercial district"
+        },
+        {
+          "constraint_index": 4,
+          "category_domain": "attraction",
+          "expression": "attraction_type_set",
+          "raw_label": "Museum/Memorial Hall",
+          "normalized_label": "Museum/Memorial Hall"
+        },
+        {
+          "constraint_index": 4,
+          "category_domain": "attraction",
+          "expression": "attraction_type_set",
+          "raw_label": "commercial district",
+          "normalized_label": "commercial district"
+        },
+        {
+          "constraint_index": 5,
+          "category_domain": "activity",
+          "expression": "activity_type(activity)",
+          "raw_label": "train",
+          "normalized_label": "train"
+        },
+        {
+          "constraint_index": 5,
+          "category_domain": "activity",
+          "expression": "['attraction', 'airplane', 'train']",
+          "raw_label": "attraction",
+          "normalized_label": "attraction"
+        },
+        {
+          "constraint_index": 5,
+          "category_domain": "activity",
+          "expression": "['attraction', 'airplane', 'train']",
+          "raw_label": "airplane",
+          "normalized_label": "airplane"
+        },
+        {
+          "constraint_index": 5,
+          "category_domain": "activity",
+          "expression": "['attraction', 'airplane', 'train']",
+          "raw_label": "train",
+          "normalized_label": "train"
+        },
+        {
+          "constraint_index": 5,
+          "category_domain": "transport",
+          "expression": "innercity_transport_type(activity_transports(activity))",
+          "raw_label": "empty",
+          "normalized_label": "empty"
+        },
+        {
+          "constraint_index": 5,
+          "category_domain": "transport",
+          "expression": "'metro'",
+          "raw_label": "metro",
+          "normalized_label": "metro"
+        },
+        {
+          "constraint_index": 5,
+          "category_domain": "activity",
+          "expression": "activity_type(activity)",
+          "raw_label": "attraction",
+          "normalized_label": "attraction"
+        },
+        {
+          "constraint_index": 5,
+          "category_domain": "activity",
+          "expression": "['attraction', 'airplane', 'train']",
+          "raw_label": "attraction",
+          "normalized_label": "attraction"
+        },
+        {
+          "constraint_index": 5,
+          "category_domain": "activity",
+          "expression": "['attraction', 'airplane', 'train']",
+          "raw_label": "airplane",
+          "normalized_label": "airplane"
+        },
+        {
+          "constraint_index": 5,
+          "category_domain": "activity",
+          "expression": "['attraction', 'airplane', 'train']",
+          "raw_label": "train",
+          "normalized_label": "train"
+        },
+        {
+          "constraint_index": 5,
+          "category_domain": "transport",
+          "expression": "innercity_transport_type(activity_transports(activity))",
+          "raw_label": "metro",
+          "normalized_label": "metro"
+        },
+        {
+          "constraint_index": 5,
+          "category_domain": "transport",
+          "expression": "'metro'",
+          "raw_label": "metro",
+          "normalized_label": "metro"
+        },
+        {
+          "constraint_index": 5,
+          "category_domain": "activity",
+          "expression": "activity_type(activity)",
+          "raw_label": "dinner",
+          "normalized_label": "dinner"
+        },
+        {
+          "constraint_index": 5,
+          "category_domain": "activity",
+          "expression": "['attraction', 'airplane', 'train']",
+          "raw_label": "attraction",
+          "normalized_label": "attraction"
+        },
+        {
+          "constraint_index": 5,
+          "category_domain": "activity",
+          "expression": "['attraction', 'airplane', 'train']",
+          "raw_label": "airplane",
+          "normalized_label": "airplane"
+        },
+        {
+          "constraint_index": 5,
+          "category_domain": "activity",
+          "expression": "['attraction', 'airplane', 'train']",
+          "raw_label": "train",
+          "normalized_label": "train"
+        },
+        {
+          "constraint_index": 5,
+          "category_domain": "transport",
+          "expression": "innercity_transport_type(activity_transports(activity))",
+          "raw_label": "metro",
+          "normalized_label": "metro"
+        },
+        {
+          "constraint_index": 5,
+          "category_domain": "transport",
+          "expression": "'metro'",
+          "raw_label": "metro",
+          "normalized_label": "metro"
+        },
+        {
+          "constraint_index": 5,
+          "category_domain": "activity",
+          "expression": "activity_type(activity)",
+          "raw_label": "accommodation",
+          "normalized_label": "accommodation"
+        },
+        {
+          "constraint_index": 5,
+          "category_domain": "activity",
+          "expression": "['attraction', 'airplane', 'train']",
+          "raw_label": "attraction",
+          "normalized_label": "attraction"
+        },
+        {
+          "constraint_index": 5,
+          "category_domain": "activity",
+          "expression": "['attraction', 'airplane', 'train']",
+          "raw_label": "airplane",
+          "normalized_label": "airplane"
+        },
+        {
+          "constraint_index": 5,
+          "category_domain": "activity",
+          "expression": "['attraction', 'airplane', 'train']",
+          "raw_label": "train",
+          "normalized_label": "train"
+        },
+        {
+          "constraint_index": 5,
+          "category_domain": "transport",
+          "expression": "innercity_transport_type(activity_transports(activity))",
+          "raw_label": "metro",
+          "normalized_label": "metro"
+        },
+        {
+          "constraint_index": 5,
+          "category_domain": "transport",
+          "expression": "'metro'",
+          "raw_label": "metro",
+          "normalized_label": "metro"
+        },
+        {
+          "constraint_index": 5,
+          "category_domain": "activity",
+          "expression": "activity_type(activity)",
+          "raw_label": "attraction",
+          "normalized_label": "attraction"
+        },
+        {
+          "constraint_index": 5,
+          "category_domain": "activity",
+          "expression": "['attraction', 'airplane', 'train']",
+          "raw_label": "attraction",
+          "normalized_label": "attraction"
+        },
+        {
+          "constraint_index": 5,
+          "category_domain": "activity",
+          "expression": "['attraction', 'airplane', 'train']",
+          "raw_label": "airplane",
+          "normalized_label": "airplane"
+        },
+        {
+          "constraint_index": 5,
+          "category_domain": "activity",
+          "expression": "['attraction', 'airplane', 'train']",
+          "raw_label": "train",
+          "normalized_label": "train"
+        },
+        {
+          "constraint_index": 5,
+          "category_domain": "transport",
+          "expression": "innercity_transport_type(activity_transports(activity))",
+          "raw_label": "metro",
+          "normalized_label": "metro"
+        },
+        {
+          "constraint_index": 5,
+          "category_domain": "transport",
+          "expression": "'metro'",
+          "raw_label": "metro",
+          "normalized_label": "metro"
+        },
+        {
+          "constraint_index": 5,
+          "category_domain": "activity",
+          "expression": "activity_type(activity)",
+          "raw_label": "lunch",
+          "normalized_label": "lunch"
+        },
+        {
+          "constraint_index": 5,
+          "category_domain": "activity",
+          "expression": "['attraction', 'airplane', 'train']",
+          "raw_label": "attraction",
+          "normalized_label": "attraction"
+        },
+        {
+          "constraint_index": 5,
+          "category_domain": "activity",
+          "expression": "['attraction', 'airplane', 'train']",
+          "raw_label": "airplane",
+          "normalized_label": "airplane"
+        },
+        {
+          "constraint_index": 5,
+          "category_domain": "activity",
+          "expression": "['attraction', 'airplane', 'train']",
+          "raw_label": "train",
+          "normalized_label": "train"
+        },
+        {
+          "constraint_index": 5,
+          "category_domain": "transport",
+          "expression": "innercity_transport_type(activity_transports(activity))",
+          "raw_label": "metro",
+          "normalized_label": "metro"
+        },
+        {
+          "constraint_index": 5,
+          "category_domain": "transport",
+          "expression": "'metro'",
+          "raw_label": "metro",
+          "normalized_label": "metro"
+        },
+        {
+          "constraint_index": 5,
+          "category_domain": "activity",
+          "expression": "activity_type(activity)",
+          "raw_label": "attraction",
+          "normalized_label": "attraction"
+        },
+        {
+          "constraint_index": 5,
+          "category_domain": "activity",
+          "expression": "['attraction', 'airplane', 'train']",
+          "raw_label": "attraction",
+          "normalized_label": "attraction"
+        },
+        {
+          "constraint_index": 5,
+          "category_domain": "activity",
+          "expression": "['attraction', 'airplane', 'train']",
+          "raw_label": "airplane",
+          "normalized_label": "airplane"
+        },
+        {
+          "constraint_index": 5,
+          "category_domain": "activity",
+          "expression": "['attraction', 'airplane', 'train']",
+          "raw_label": "train",
+          "normalized_label": "train"
+        },
+        {
+          "constraint_index": 5,
+          "category_domain": "transport",
+          "expression": "innercity_transport_type(activity_transports(activity))",
+          "raw_label": "metro",
+          "normalized_label": "metro"
+        },
+        {
+          "constraint_index": 5,
+          "category_domain": "transport",
+          "expression": "'metro'",
+          "raw_label": "metro",
+          "normalized_label": "metro"
+        },
+        {
+          "constraint_index": 5,
+          "category_domain": "activity",
+          "expression": "activity_type(activity)",
+          "raw_label": "train",
+          "normalized_label": "train"
+        },
+        {
+          "constraint_index": 5,
+          "category_domain": "activity",
+          "expression": "['attraction', 'airplane', 'train']",
+          "raw_label": "attraction",
+          "normalized_label": "attraction"
+        },
+        {
+          "constraint_index": 5,
+          "category_domain": "activity",
+          "expression": "['attraction', 'airplane', 'train']",
+          "raw_label": "airplane",
+          "normalized_label": "airplane"
+        },
+        {
+          "constraint_index": 5,
+          "category_domain": "activity",
+          "expression": "['attraction', 'airplane', 'train']",
+          "raw_label": "train",
+          "normalized_label": "train"
+        },
+        {
+          "constraint_index": 5,
+          "category_domain": "transport",
+          "expression": "innercity_transport_type(activity_transports(activity))",
+          "raw_label": "metro",
+          "normalized_label": "metro"
+        },
+        {
+          "constraint_index": 5,
+          "category_domain": "transport",
+          "expression": "'metro'",
+          "raw_label": "metro",
+          "normalized_label": "metro"
+        },
+        {
+          "constraint_index": 6,
+          "category_domain": "activity",
+          "expression": "activity_type(activity)",
+          "raw_label": "train",
+          "normalized_label": "train"
+        },
+        {
+          "constraint_index": 6,
+          "category_domain": "activity",
+          "expression": "'accommodation'",
+          "raw_label": "accommodation",
+          "normalized_label": "accommodation"
+        },
+        {
+          "constraint_index": 6,
+          "category_domain": "activity",
+          "expression": "activity_type(activity)",
+          "raw_label": "attraction",
+          "normalized_label": "attraction"
+        },
+        {
+          "constraint_index": 6,
+          "category_domain": "activity",
+          "expression": "'accommodation'",
+          "raw_label": "accommodation",
+          "normalized_label": "accommodation"
+        },
+        {
+          "constraint_index": 6,
+          "category_domain": "activity",
+          "expression": "activity_type(activity)",
+          "raw_label": "dinner",
+          "normalized_label": "dinner"
+        },
+        {
+          "constraint_index": 6,
+          "category_domain": "activity",
+          "expression": "'accommodation'",
+          "raw_label": "accommodation",
+          "normalized_label": "accommodation"
+        },
+        {
+          "constraint_index": 6,
+          "category_domain": "activity",
+          "expression": "activity_type(activity)",
+          "raw_label": "accommodation",
+          "normalized_label": "accommodation"
+        },
+        {
+          "constraint_index": 6,
+          "category_domain": "activity",
+          "expression": "'accommodation'",
+          "raw_label": "accommodation",
+          "normalized_label": "accommodation"
+        },
+        {
+          "constraint_index": 6,
+          "category_domain": "activity",
+          "expression": "activity_type(activity)",
+          "raw_label": "attraction",
+          "normalized_label": "attraction"
+        },
+        {
+          "constraint_index": 6,
+          "category_domain": "activity",
+          "expression": "'accommodation'",
+          "raw_label": "accommodation",
+          "normalized_label": "accommodation"
+        },
+        {
+          "constraint_index": 6,
+          "category_domain": "activity",
+          "expression": "activity_type(activity)",
+          "raw_label": "lunch",
+          "normalized_label": "lunch"
+        },
+        {
+          "constraint_index": 6,
+          "category_domain": "activity",
+          "expression": "'accommodation'",
+          "raw_label": "accommodation",
+          "normalized_label": "accommodation"
+        },
+        {
+          "constraint_index": 6,
+          "category_domain": "activity",
+          "expression": "activity_type(activity)",
+          "raw_label": "attraction",
+          "normalized_label": "attraction"
+        },
+        {
+          "constraint_index": 6,
+          "category_domain": "activity",
+          "expression": "'accommodation'",
+          "raw_label": "accommodation",
+          "normalized_label": "accommodation"
+        },
+        {
+          "constraint_index": 6,
+          "category_domain": "activity",
+          "expression": "activity_type(activity)",
+          "raw_label": "train",
+          "normalized_label": "train"
+        },
+        {
+          "constraint_index": 6,
+          "category_domain": "activity",
+          "expression": "'accommodation'",
+          "raw_label": "accommodation",
+          "normalized_label": "accommodation"
+        },
+        {
+          "constraint_index": 7,
+          "category_domain": "activity",
+          "expression": "activity_type(activity)",
+          "raw_label": "train",
+          "normalized_label": "train"
+        },
+        {
+          "constraint_index": 7,
+          "category_domain": "activity",
+          "expression": "'accommodation'",
+          "raw_label": "accommodation",
+          "normalized_label": "accommodation"
+        },
+        {
+          "constraint_index": 7,
+          "category_domain": "activity",
+          "expression": "activity_type(activity)",
+          "raw_label": "attraction",
+          "normalized_label": "attraction"
+        },
+        {
+          "constraint_index": 7,
+          "category_domain": "activity",
+          "expression": "'accommodation'",
+          "raw_label": "accommodation",
+          "normalized_label": "accommodation"
+        },
+        {
+          "constraint_index": 7,
+          "category_domain": "activity",
+          "expression": "activity_type(activity)",
+          "raw_label": "dinner",
+          "normalized_label": "dinner"
+        },
+        {
+          "constraint_index": 7,
+          "category_domain": "activity",
+          "expression": "'accommodation'",
+          "raw_label": "accommodation",
+          "normalized_label": "accommodation"
+        },
+        {
+          "constraint_index": 7,
+          "category_domain": "activity",
+          "expression": "activity_type(activity)",
+          "raw_label": "accommodation",
+          "normalized_label": "accommodation"
+        },
+        {
+          "constraint_index": 7,
+          "category_domain": "activity",
+          "expression": "'accommodation'",
+          "raw_label": "accommodation",
+          "normalized_label": "accommodation"
+        },
+        {
+          "constraint_index": 7,
+          "category_domain": "activity",
+          "expression": "activity_type(activity)",
+          "raw_label": "attraction",
+          "normalized_label": "attraction"
+        },
+        {
+          "constraint_index": 7,
+          "category_domain": "activity",
+          "expression": "'accommodation'",
+          "raw_label": "accommodation",
+          "normalized_label": "accommodation"
+        },
+        {
+          "constraint_index": 7,
+          "category_domain": "activity",
+          "expression": "activity_type(activity)",
+          "raw_label": "lunch",
+          "normalized_label": "lunch"
+        },
+        {
+          "constraint_index": 7,
+          "category_domain": "activity",
+          "expression": "'accommodation'",
+          "raw_label": "accommodation",
+          "normalized_label": "accommodation"
+        },
+        {
+          "constraint_index": 7,
+          "category_domain": "activity",
+          "expression": "activity_type(activity)",
+          "raw_label": "attraction",
+          "normalized_label": "attraction"
+        },
+        {
+          "constraint_index": 7,
+          "category_domain": "activity",
+          "expression": "'accommodation'",
+          "raw_label": "accommodation",
+          "normalized_label": "accommodation"
+        },
+        {
+          "constraint_index": 7,
+          "category_domain": "activity",
+          "expression": "activity_type(activity)",
+          "raw_label": "train",
+          "normalized_label": "train"
+        },
+        {
+          "constraint_index": 7,
+          "category_domain": "activity",
+          "expression": "'accommodation'",
+          "raw_label": "accommodation",
+          "normalized_label": "accommodation"
+        },
+        {
+          "constraint_index": 8,
+          "category_domain": "transport",
+          "expression": "innercity_transport_type(activity_transports(activity))",
+          "raw_label": "empty",
+          "normalized_label": "empty"
+        },
+        {
+          "constraint_index": 8,
+          "category_domain": "transport",
+          "expression": "'taxi'",
+          "raw_label": "taxi",
+          "normalized_label": "taxi"
+        },
+        {
+          "constraint_index": 8,
+          "category_domain": "transport",
+          "expression": "innercity_transport_type(activity_transports(activity))",
+          "raw_label": "metro",
+          "normalized_label": "metro"
+        },
+        {
+          "constraint_index": 8,
+          "category_domain": "transport",
+          "expression": "'taxi'",
+          "raw_label": "taxi",
+          "normalized_label": "taxi"
+        },
+        {
+          "constraint_index": 8,
+          "category_domain": "transport",
+          "expression": "innercity_transport_type(activity_transports(activity))",
+          "raw_label": "metro",
+          "normalized_label": "metro"
+        },
+        {
+          "constraint_index": 8,
+          "category_domain": "transport",
+          "expression": "'taxi'",
+          "raw_label": "taxi",
+          "normalized_label": "taxi"
+        },
+        {
+          "constraint_index": 8,
+          "category_domain": "transport",
+          "expression": "innercity_transport_type(activity_transports(activity))",
+          "raw_label": "metro",
+          "normalized_label": "metro"
+        },
+        {
+          "constraint_index": 8,
+          "category_domain": "transport",
+          "expression": "'taxi'",
+          "raw_label": "taxi",
+          "normalized_label": "taxi"
+        },
+        {
+          "constraint_index": 8,
+          "category_domain": "transport",
+          "expression": "innercity_transport_type(activity_transports(activity))",
+          "raw_label": "metro",
+          "normalized_label": "metro"
+        },
+        {
+          "constraint_index": 8,
+          "category_domain": "transport",
+          "expression": "'taxi'",
+          "raw_label": "taxi",
+          "normalized_label": "taxi"
+        },
+        {
+          "constraint_index": 8,
+          "category_domain": "transport",
+          "expression": "innercity_transport_type(activity_transports(activity))",
+          "raw_label": "metro",
+          "normalized_label": "metro"
+        },
+        {
+          "constraint_index": 8,
+          "category_domain": "transport",
+          "expression": "'taxi'",
+          "raw_label": "taxi",
+          "normalized_label": "taxi"
+        },
+        {
+          "constraint_index": 8,
+          "category_domain": "transport",
+          "expression": "innercity_transport_type(activity_transports(activity))",
+          "raw_label": "metro",
+          "normalized_label": "metro"
+        },
+        {
+          "constraint_index": 8,
+          "category_domain": "transport",
+          "expression": "'taxi'",
+          "raw_label": "taxi",
+          "normalized_label": "taxi"
+        },
+        {
+          "constraint_index": 8,
+          "category_domain": "transport",
+          "expression": "innercity_transport_type(activity_transports(activity))",
+          "raw_label": "metro",
+          "normalized_label": "metro"
+        },
+        {
+          "constraint_index": 8,
+          "category_domain": "transport",
+          "expression": "'taxi'",
+          "raw_label": "taxi",
+          "normalized_label": "taxi"
+        }
+      ],
+      "personal_errors": [],
+      "evaluation_errors": [],
+      "translation_errors": [],
+      "error_info": [
+        "Intercity-transport from destination to origin should provide start and end position.",
+        "Incorrect cost infomation of innercity transport in day 1, from Jiangnan Chef (China Resources Mixc Store) to Dalden Meijin Hotel, metro. [cost = price * people_number]"
+      ],
+      "passed": false,
+      "translated_plan": {
+        "people_number": 1,
+        "start_city": "Suzhou",
+        "target_city": "Shenzhen",
+        "itinerary": [
+          {
+            "day": 1,
+            "activities": [
+              {
+                "start_time": "07:34",
+                "end_time": "17:00",
+                "start": "Suzhou Station",
+                "end": "Shenzhen North Railway Station",
+                "price": 759.35,
+                "cost": 759.35,
+                "TrainID": "G2784",
+                "type": "train",
+                "tickets": 1,
+                "transports": []
+              },
+              {
+                "position": "East Gate Old Street",
+                "type": "attraction",
+                "transports": [
+                  {
+                    "start": "Shenzhen North Railway Station",
+                    "end": "Shenzhen North Railway Station-Metro Station",
+                    "mode": "walk",
+                    "start_time": "17:00",
+                    "end_time": "17:01",
+                    "cost": 0,
+                    "distance": 0.15,
+                    "price": 0
+                  },
+                  {
+                    "start": "Shenzhen North Railway Station-Metro Station",
+                    "end": "Shaibu-Metro Station",
+                    "mode": "metro",
+                    "start_time": "17:01",
+                    "end_time": "17:24",
+                    "cost": 4,
+                    "distance": 11.67,
+                    "price": 4,
+                    "tickets": 1
+                  },
+                  {
+                    "start": "Shaibu-Metro Station",
+                    "end": "East Gate Old Street",
+                    "mode": "walk",
+                    "start_time": "17:24",
+                    "end_time": "17:25",
+                    "cost": 0,
+                    "distance": 0.14,
+                    "price": 0
+                  }
+                ],
+                "price": 0.0,
+                "cost": 0.0,
+                "tickets": 1,
+                "start_time": "17:30",
+                "end_time": "19:30"
+              },
+              {
+                "position": "Jiangnan Chef (China Resources Mixc Store)",
+                "type": "dinner",
+                "transports": [
+                  {
+                    "start": "East Gate Old Street",
+                    "end": "Shaibu-Metro Station",
+                    "mode": "walk",
+                    "start_time": "19:30",
+                    "end_time": "19:31",
+                    "cost": 0,
+                    "distance": 0.14,
+                    "price": 0
+                  },
+                  {
+                    "start": "Shaibu-Metro Station",
+                    "end": "Grand Theater-Metro Station",
+                    "mode": "metro",
+                    "start_time": "19:31",
+                    "end_time": "19:34",
+                    "cost": 2,
+                    "distance": 1.74,
+                    "price": 2,
+                    "tickets": 1
+                  },
+                  {
+                    "start": "Grand Theater-Metro Station",
+                    "end": "Jiangnan Chef (China Resources Mixc Store)",
+                    "mode": "walk",
+                    "start_time": "19:34",
+                    "end_time": "19:38",
+                    "cost": 0,
+                    "distance": 0.4,
+                    "price": 0
+                  }
+                ],
+                "price": 165.0,
+                "cost": 165.0,
+                "start_time": "19:45",
+                "end_time": "20:45"
+              },
+              {
+                "position": "Dalden Meijin Hotel",
+                "type": "accommodation",
+                "transports": [
+                  {
+                    "start": "Jiangnan Chef (China Resources Mixc Store)",
+                    "end": "Grand Theater-Metro Station",
+                    "mode": "walk",
+                    "start_time": "20:45",
+                    "end_time": "20:49",
+                    "cost": 0,
+                    "distance": 0.4,
+                    "price": 0
+                  },
+                  {
+                    "start": "Grand Theater-Metro Station",
+                    "end": "Xili-Metro Station",
+                    "mode": "metro",
+                    "start_time": "20:49",
+                    "end_time": "21:21",
+                    "cost": 3,
+                    "distance": 16.36,
+                    "price": 5,
+                    "tickets": 1
+                  },
+                  {
+                    "start": "Xili-Metro Station",
+                    "end": "Dalden Meijin Hotel",
+                    "mode": "walk",
+                    "start_time": "21:21",
+                    "end_time": "21:21",
+                    "cost": 0,
+                    "distance": 0.07,
+                    "price": 0
+                  }
+                ],
+                "room_type": 1,
+                "price": 331,
+                "cost": 331,
+                "start_time": "21:00",
+                "end_time": "24:00",
+                "rooms": 1
+              }
+            ]
+          },
+          {
+            "day": 2,
+            "activities": [
+              {
+                "position": "Shuiwei 1368 Cultural Block",
+                "type": "attraction",
+                "transports": [
+                  {
+                    "start": "Dalden Meijin Hotel",
+                    "end": "Xili-Metro Station",
+                    "mode": "walk",
+                    "start_time": "08:00",
+                    "end_time": "08:00",
+                    "cost": 0,
+                    "distance": 0.07,
+                    "price": 0
+                  },
+                  {
+                    "start": "Xili-Metro Station",
+                    "end": "Fumin-Metro Station",
+                    "mode": "metro",
+                    "start_time": "08:00",
+                    "end_time": "08:26",
+                    "cost": 4,
+                    "distance": 13.12,
+                    "price": 4,
+                    "tickets": 1
+                  },
+                  {
+                    "start": "Fumin-Metro Station",
+                    "end": "Shuiwei 1368 Cultural Block",
+                    "mode": "walk",
+                    "start_time": "08:26",
+                    "end_time": "08:29",
+                    "cost": 0,
+                    "distance": 0.32,
+                    "price": 0
+                  }
+                ],
+                "price": 0.0,
+                "cost": 0.0,
+                "tickets": 1,
+                "start_time": "08:30",
+                "end_time": "11:30"
+              },
+              {
+                "position": "Libaoge (Kerry Store)",
+                "type": "lunch",
+                "transports": [
+                  {
+                    "start": "Shuiwei 1368 Cultural Block",
+                    "end": "Fumin-Metro Station",
+                    "mode": "walk",
+                    "start_time": "11:30",
+                    "end_time": "11:33",
+                    "cost": 0,
+                    "distance": 0.32,
+                    "price": 0
+                  },
+                  {
+                    "start": "Fumin-Metro Station",
+                    "end": "Shopping Park-Metro Station",
+                    "mode": "metro",
+                    "start_time": "11:33",
+                    "end_time": "11:36",
+                    "cost": 2,
+                    "distance": 1.72,
+                    "price": 2,
+                    "tickets": 1
+                  },
+                  {
+                    "start": "Shopping Park-Metro Station",
+                    "end": "Libaoge (Kerry Store)",
+                    "mode": "walk",
+                    "start_time": "11:36",
+                    "end_time": "11:38",
+                    "cost": 0,
+                    "distance": 0.25,
+                    "price": 0
+                  }
+                ],
+                "price": 156.0,
+                "cost": 156.0,
+                "start_time": "11:45",
+                "end_time": "12:45"
+              },
+              {
+                "position": "Huaqiangbei Museum",
+                "type": "attraction",
+                "transports": [
+                  {
+                    "start": "Libaoge (Kerry Store)",
+                    "end": "Shopping Park-Metro Station",
+                    "mode": "walk",
+                    "start_time": "12:45",
+                    "end_time": "12:47",
+                    "cost": 0,
+                    "distance": 0.25,
+                    "price": 0
+                  },
+                  {
+                    "start": "Shopping Park-Metro Station",
+                    "end": "Tongxinling-Metro Station",
+                    "mode": "metro",
+                    "start_time": "12:47",
+                    "end_time": "12:56",
+                    "cost": 3,
+                    "distance": 4.58,
+                    "price": 3,
+                    "tickets": 1
+                  },
+                  {
+                    "start": "Tongxinling-Metro Station",
+                    "end": "Huaqiangbei Museum",
+                    "mode": "walk",
+                    "start_time": "12:56",
+                    "end_time": "12:59",
+                    "cost": 0,
+                    "distance": 0.29,
+                    "price": 0
+                  }
+                ],
+                "price": 0.0,
+                "cost": 0.0,
+                "tickets": 1,
+                "start_time": "13:00",
+                "end_time": "15:00"
+              },
+              {
+                "position": "Shenzhen North Railway Station",
+                "type": "train",
+                "transports": [
+                  {
+                    "start": "Huaqiangbei Museum",
+                    "end": "Tongxinling-Metro Station",
+                    "mode": "walk",
+                    "start_time": "15:00",
+                    "end_time": "15:03",
+                    "cost": 0,
+                    "distance": 0.29,
+                    "price": 0
+                  },
+                  {
+                    "start": "Tongxinling-Metro Station",
+                    "end": "Shenzhen North Railway Station-Metro Station",
+                    "mode": "metro",
+                    "start_time": "15:03",
+                    "end_time": "15:22",
+                    "cost": 4,
+                    "distance": 9.6,
+                    "price": 4,
+                    "tickets": 1
+                  },
+                  {
+                    "start": "Shenzhen North Railway Station-Metro Station",
+                    "end": "Shenzhen North Railway Station",
+                    "mode": "walk",
+                    "start_time": "15:22",
+                    "end_time": "15:23",
+                    "cost": 0,
+                    "distance": 0.15,
+                    "price": 0
+                  }
+                ],
+                "start_time": "16:02",
+                "end_time": "22:30",
+                "TrainID": "G2783",
+                "price": 759.35,
+                "cost": 759.35,
+                "tickets": 1
+              }
+            ]
+          }
+        ]
+      },
+      "verifier_errors": [],
+      "schema_errors": [],
+      "translation_failures": []
+    },
+    "environment_context": {
+      "lang": "en"
+    },
+    "generation_metadata": {
+      "raw_response": "[{\"day\": 1,```json\n{\n    \"day\": 1,\n    \"activities\": [\n        {\n            \"start_time\": \"07:34\",\n            \"end_time\": \"17:00\",\n            \"start\": \"Suzhou Station\",\n            \"end\": \"Shenzhen North Railway Station\",\n            \"price\": 759.35,\n            \"cost\": 759.35,\n            \"TrainID\": \"G2784\",\n            \"type\": \"train\",\n            \"tickets\": 1,\n            \"transports\": \"empty\"\n        },\n        {\n            \"position\": \"East Gate Old Street\",\n            \"type\": \"attraction\",\n            \"transports\": {\"from\": \"Shenzhen North Railway Station\", \"to\": \"East Gate Old Street\", \"mode\": \"metro\", \"start_time\": \"17:00\", \"end_time\": \"17:25\", \"cost\": 4},\n            \"price\": 0.0,\n            \"cost\": 0.0,\n            \"tickets\": 1,\n            \"start_time\": \"17:30\",\n            \"end_time\": \"19:30\"\n        },\n        {\n            \"position\": \"Jiangnan Chef (China Resources Mixc Store)\",\n            \"type\": \"dinner\",\n            \"transports\": {\"from\": \"East Gate Old Street\", \"to\": \"Jiangnan Chef (China Resources Mixc Store)\", \"mode\": \"metro\", \"start_time\": \"19:30\", \"end_time\": \"19:38\", \"cost\": 2},\n            \"price\": 165.0,\n            \"cost\": 165.0,\n            \"start_time\": \"19:45\",\n            \"end_time\": \"20:45\"\n        },\n        {\n            \"position\": \"Dalden Meijin Hotel\",\n            \"type\": \"accommodation\",\n            \"transports\": {\"from\": \"Jiangnan Chef (China Resources Mixc Store)\", \"to\": \"Dalden Meijin Hotel\", \"mode\": \"metro\", \"start_time\": \"20:45\", \"end_time\": \"20:58\", \"cost\": 3},\n            \"room_type\": 1,\n            \"price\": 331,\n            \"cost\": 331,\n            \"start_time\": \"21:00\",\n            \"end_time\": \"24:00\",\n            \"rooms\": 1\n        }\n    ]\n},\n{\n    \"day\": 2,\n    \"activities\": [\n        {\n            \"position\": \"Shuiwei 1368 Cultural Block\",\n            \"type\": \"attraction\",\n            \"transports\": {\"from\": \"Dalden Meijin Hotel\", \"to\": \"Shuiwei 1368 Cultural Block\", \"mode\": \"metro\", \"start_time\": \"08:00\", \"end_time\": \"08:29\", \"cost\": 4},\n            \"price\": 0.0,\n            \"cost\": 0.0,\n            \"tickets\": 1,\n            \"start_time\": \"08:30\",\n            \"end_time\": \"11:30\"\n        },\n        {\n            \"position\": \"Libaoge (Kerry Store)\",\n            \"type\": \"lunch\",\n            \"transports\": {\"from\": \"Shuiwei 1368 Cultural Block\", \"to\": \"Libaoge (Kerry Store)\", \"mode\": \"metro\", \"start_time\": \"11:30\", \"end_time\": \"11:38\", \"cost\": 2},\n            \"price\": 156.0,\n            \"cost\": 156.0,\n            \"start_time\": \"11:45\",\n            \"end_time\": \"12:45\"\n        },\n        {\n            \"position\": \"Huaqiangbei Museum\",\n            \"type\": \"attraction\",\n            \"transports\": {\"from\": \"Libaoge (Kerry Store)\", \"to\": \"Huaqiangbei Museum\", \"mode\": \"metro\", \"start_time\": \"12:45\", \"end_time\": \"12:59\", \"cost\": 3},\n            \"price\": 0.0,\n            \"cost\": 0.0,\n            \"tickets\": 1,\n            \"start_time\": \"13:00\",\n            \"end_time\": \"15:00\"\n        },\n        {\n            \"position\": \"Shenzhen North Railway Station\",\n            \"type\": \"train\",\n            \"transports\": {\"from\": \"Huaqiangbei Museum\", \"to\": \"Shenzhen North Railway Station\", \"mode\": \"metro\", \"start_time\": \"15:00\", \"end_time\": \"15:23\", \"cost\": 4},\n            \"start_time\": \"16:02\",\n            \"end_time\": \"22:30\",\n            \"TrainID\": \"G2783\",\n            \"price\": 759.35,\n            \"cost\": 759.35,\n            \"tickets\": 1\n        }\n    ]\n}\n```",
+      "input_tokens": 104146,
+      "output_tokens": 1316,
+      "total_tokens": 105462,
+      "model_calls": 6,
+      "failed_model_calls": 0,
+      "elapsed_time_seconds": 57.79659104347229,
+      "llm_inference_time_seconds": 41.93570399284363,
+      "information_collection_time_seconds": 15.85763692855835,
+      "initial_generation_time_s": 57.79048579186201,
+      "initial_generation_tool_calls": 5990,
+      "initial_generation_tool_call_counts_by_type": {
+        "accommodations_select": 1,
+        "attractions_select": 1,
+        "goto": 1950,
+        "intercity_transport_select": 4,
+        "next_page": 133,
+        "poi_lat_lon_search": 3900,
+        "restaurants_select": 1
+      },
+      "shared_initialization_time_s": 58.32117020897567,
+      "shared_initialization_system_metrics": {
+        "tool_call_count": 6042,
+        "successful_tool_call_count": 6042,
+        "failed_tool_call_count": 0,
+        "verification_count": 1,
+        "tool_call_counts_by_type": {
+          "accommodations_select": 2,
+          "attractions_select": 7,
+          "goto": 1964,
+          "intercity_transport_select": 5,
+          "next_page": 133,
+          "poi_lat_lon_search": 3928,
+          "restaurants_select": 3
+        }
+      }
+    }
+  },
+  "initial_plan_hash": "4b25a920b13bc6918adfe2128064271d4f94db7ca329cdc84e7ec1dac90905f3",
+  "initial_state_hash": "da9fc4345464ba55af8a8d6ec8845eff6b5eba4d2e6565e2ba231d4bbb54f1c2"
+}

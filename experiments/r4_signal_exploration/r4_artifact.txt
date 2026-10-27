@@ -1,0 +1,26 @@
+## (1) Which edits go with fixing a failing constraint (pooled changed rounds where it was failing)
+
+| failing type | rounds | fixed | fix rate when edit present vs absent |
+|---|---|---|---|
+| budget | 45 | 9 | hotel 25% vs 18% (n=12); intercity 22% vs 17% (n=27); restaurant 47% vs 4% (n=17); attraction 43% vs 16% (n=7); times 23% vs 10% (n=35); structure 67% vs 17% (n=3) |
+| hotel | 22 | 11 | inner_transport 27% vs 100% (n=15); times 0% vs 65% (n=5) |
+| trip | 19 | 4 | hotel 31% vs 0% (n=13); intercity 100% vs 0% (n=4); restaurant 44% vs 0% (n=9); attraction 67% vs 0% (n=6); times 40% vs 0% (n=10); structure 80% vs 0% (n=5) |
+| dining | 12 | 0 | restaurant 0% vs 0% (n=8) |
+| attraction | 3 | 0 | too few rounds |
+
+## (2) Damage that came with an edit the round did not need
+
+| damage | events | of which the round made an unneeded risky edit |
+|---|---|---|
+| breaks hotel | 18 | 2 (11%) |
+| breaks trip | 13 | 11 (85%) |
+| breaks budget | 8 | 2 (25%) |
+| new error cs_intercity | 25 | 6 (24%) |
+| new error cs_inner_transport | 86 | 33 (38%) |
+| new error cs_dining | 51 | 4 (8%) |
+| new error cs_hotel | 22 | 1 (5%) |
+
+Overall: 59/223 damage events (26%) co-occurred with an unneeded risky edit — an upper bound on what an R4 'leave X alone' rule could prevent.
+Changed rounds that touched at least one major component they did not need: 40/222 (18%).
+
+Wrote r4_risk_profile.json: {'version': 'prototype-0.1', 'source_runs': ['subset_train-r0 (new loop)', 'subset_train-r3 (old loop)'], 'notes': 'Train split only. Rates shrunk toward the column average with a prior worth 5 rounds.', 'fixability': 7, 'commonsense_repair_breaks_personal': 7, 'edit_risk': 7, 'fix_levers': 4, 'avoidable_damage': 7}

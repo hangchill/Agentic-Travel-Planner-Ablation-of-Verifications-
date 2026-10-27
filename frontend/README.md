@@ -16,7 +16,7 @@ model credentials, or running backend is required.
 
 ## Walkthrough
 
-- Select **Initial plan**, any **Repair 1–6**, or use **Previous / Next**.
+- Select **Initial**, any **Repair 1–6**, or use **Previous / Next**.
 - Red labels locate saved violations. Blue outlines and before/after values show
   changed activities, including their inbound transfers. Green badges identify
   previously reported issues that are no longer reported.
@@ -37,7 +37,8 @@ Repairs 5 and 6 make no itinerary changes.
 
 `demo_data/nanjing_r2.json` is a compact, frozen copy of the original query, raw
 initial/candidate itineraries, saved verifier results, and acceptance decisions.
-It retains the original artifact path and SHA-256. It is independent of experiment
+It retains the original artifact path and SHA-256, plus an LF-normalized SHA-256
+for validating the evidence across Windows and Unix checkouts. It is independent of experiment
 files changing during other work. No synthetic itineraries or repairs are added.
 
 English check names, shortened display names, and issue-to-activity mappings are

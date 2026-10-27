@@ -1,7 +1,7 @@
 """phase_outcomes.csv commonsense columns cover every commonsense round of a query."""
 import unittest
 
-from scripts.build_repair_summary import commonsense_step_metrics, _commonsense_report
+from scripts.result_analysis.build_repair_summary import commonsense_step_metrics, _commonsense_report
 
 
 def entry(step, phase, accepted, personal, errors, newly=(), scope='slot', targets=None):

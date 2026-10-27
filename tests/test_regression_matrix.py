@@ -14,7 +14,7 @@ from chinatravel.evaluation.regression_matrix import (
     aggregate_contributions, build_contribution_table, build_regression_matrix,
     summarize_matrix_coverage, load_regression_matrix,
 )
-from scripts.build_regression_matrix import load_input
+from scripts.matrix_building.build_regression_matrix import load_input
 
 
 TRIP = "result=day_count(plan)==2"
@@ -378,7 +378,7 @@ class RegressionMatrixTests(unittest.TestCase):
 class MatrixCliTests(unittest.TestCase):
     def run_cli(self, *args):
         return subprocess.run(
-            [sys.executable, str(Path(__file__).resolve().parents[1] / "scripts/build_regression_matrix.py"), *args],
+            [sys.executable, str(Path(__file__).resolve().parents[1] / "scripts/matrix_building/build_regression_matrix.py"), *args],
             capture_output=True, text=True, check=False,
         )
 

@@ -88,7 +88,7 @@ class CacheHitMetricsTests(unittest.TestCase):
                                         max_steps=rounds, initial_verification=dict(failing))
 
     def test_loop_records_hits_and_summary_counts_them(self):
-        from scripts.build_repair_summary import cache_hit_metrics
+        from scripts.result_analysis.build_repair_summary import cache_hit_metrics
         llm = CountingLLM()
         out = self.run_loop(llm)
         self.assertEqual(len(llm.calls), 1)
@@ -104,7 +104,7 @@ class CacheHitMetricsTests(unittest.TestCase):
     def test_every_csv_column_has_a_meaning_written_next_to_it(self):
         import csv, tempfile
         from pathlib import Path
-        from scripts.build_repair_summary import CACHE_COLUMNS, CACHE_COLUMN_MEANINGS, _write_cache_hits
+        from scripts.result_analysis.build_repair_summary import CACHE_COLUMNS, CACHE_COLUMN_MEANINGS, _write_cache_hits
         self.assertTrue(all(CACHE_COLUMN_MEANINGS[c].strip() for c in CACHE_COLUMNS))
         with tempfile.TemporaryDirectory() as tmp:
             _write_cache_hits([], Path(tmp) / "llm_cache_hits.csv")
@@ -116,7 +116,7 @@ class CacheHitMetricsTests(unittest.TestCase):
         self.assertEqual({r["column"]: r["meaning"] for r in rows}, CACHE_COLUMN_MEANINGS)
 
     def test_old_runs_without_cache_data(self):
-        from scripts.build_repair_summary import cache_hit_metrics
+        from scripts.result_analysis.build_repair_summary import cache_hit_metrics
         history = [{}, {"repair_attempt": {"step": 1, "repair_metadata": {}, "total_tokens_delta": 50}}]
         m = cache_hit_metrics(history)
         self.assertFalse(m["cache_data_complete"])

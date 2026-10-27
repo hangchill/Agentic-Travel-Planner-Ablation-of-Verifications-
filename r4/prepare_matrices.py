@@ -14,7 +14,7 @@ for root in (WORKSPACE_ROOT, PROJECT_ROOT):
         sys.path.insert(0, str(root))
 
 from r4.safety import LABELS, PROJECT_ROOT, labeled_paths, sha256, train_uids
-from scripts.build_regression_matrix import load_input
+from scripts.matrix_building.build_regression_matrix import load_input
 
 
 def main(argv=None):
@@ -45,7 +45,7 @@ def main(argv=None):
         attempts_path = directory / "train_attempts.jsonl"
         attempts_path.write_text("".join(json.dumps(item, ensure_ascii=False) + "\n" for item in selected), encoding="utf-8")
         subprocess.run([
-            sys.executable, "-X", "utf8", str(PROJECT_ROOT / "scripts/build_regression_matrix.py"),
+            sys.executable, "-X", "utf8", str(PROJECT_ROOT / "scripts/matrix_building/build_regression_matrix.py"),
             "--input", str(attempts_path), "--repair-strategy", label,
             "--output-dir", str(directory),
         ], cwd=PROJECT_ROOT, check=True)

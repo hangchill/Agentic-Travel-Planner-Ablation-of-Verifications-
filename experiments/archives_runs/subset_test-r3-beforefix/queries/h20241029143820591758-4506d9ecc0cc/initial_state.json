@@ -1,0 +1,1994 @@
+{
+  "run_id": "subset_test-r3",
+  "query_uid": "h20241029143820591758",
+  "state": {
+    "query_uid": "h20241029143820591758",
+    "problem": {
+      "uid": "h20241029143820591758",
+      "tag": "human",
+      "start_city": "Shanghai",
+      "target_city": "Shenzhen",
+      "days": 4,
+      "people_number": 3,
+      "limit_rooms": false,
+      "limits_room_type": false,
+      "hard_logic_py": [
+        "intercity_transport_set=set()\nfor activity in allactivities(plan):\n  if activity_type(activity) in ['train', 'airplane']: intercity_transport_set.add(intercity_transport_type(activity))\nresult=({'airplane'}==intercity_transport_set)",
+        "total_cost=0 \nfor activity in allactivities(plan):\n    total_cost+=activity_cost(activity)\n    total_cost += innercity_transport_cost(activity_transports(activity))\nresult=(total_cost<=12000)",
+        "attraction_type_set=set()\nfor activity in allactivities(plan):\n  if activity_type(activity)=='attraction': attraction_type_set.add(attraction_type(activity, target_city(plan)))\nresult=({'公园'}<=attraction_type_set)",
+        "result=(day_count(plan)==4)",
+        "result=(people_count(plan)==3)",
+        "result=True\nfor activity in allactivities(plan):\n  if innercity_transport_type(activity_transports(activity))=='taxi'and taxi_cars(activity_transports(activity))!=1: result=False"
+      ],
+      "nature_language": "[Current location: Shanghai, Destination: Shenzhen, Number of travelers: 3, Number of travel days: 4] My grandparents and I are planning to fly from Shanghai to Shenzhen for a 4-day trip, with a budget of no more than 12,000 RMB. We hope to experience parks, so please help recommend an itinerary and accommodation.",
+      "nature_language_en": "[Current location: Shanghai, Destination: Shenzhen, Number of travelers: 3, Number of travel days: 4] My grandparents and I are planning to fly from Shanghai to Shenzhen for a 4-day trip, with a budget of no more than 12,000 RMB. We hope to experience parks, so please help recommend an itinerary and accommodation."
+    },
+    "raw_initial_plan": [
+      {
+        "day": 1,
+        "activities": [
+          {
+            "start_time": "08:34",
+            "end_time": "10:05",
+            "start": "Shanghai Pudong International Airport",
+            "end": "Shenzhen Bao'an International Airport",
+            "price": 590.54,
+            "cost": 1771.62,
+            "FlightID": "FL019",
+            "type": "airplane",
+            "tickets": 3,
+            "transports": "empty"
+          },
+          {
+            "position": "Shenzhen Safari Park",
+            "type": "attraction",
+            "transports": {
+              "from": "Shenzhen Bao'an International Airport",
+              "to": "Shenzhen Safari Park",
+              "mode": "metro",
+              "start_time": "10:05",
+              "end_time": "11:19",
+              "cost": 15
+            },
+            "price": 99.0,
+            "cost": 297.0,
+            "tickets": 3,
+            "start_time": "11:30",
+            "end_time": "13:30"
+          },
+          {
+            "position": "Libaoge (Kerry Store)",
+            "type": "lunch",
+            "transports": {
+              "from": "Shenzhen Safari Park",
+              "to": "Libaoge (Kerry Store)",
+              "mode": "metro",
+              "start_time": "13:30",
+              "end_time": "14:12",
+              "cost": 12
+            },
+            "price": 156.0,
+            "cost": 468.0,
+            "start_time": "14:30",
+            "end_time": "15:30"
+          },
+          {
+            "position": "Shenzhen Bay Park",
+            "type": "attraction",
+            "transports": {
+              "from": "Libaoge (Kerry Store)",
+              "to": "Shenzhen Bay Park",
+              "mode": "metro",
+              "start_time": "15:30",
+              "end_time": "16:10",
+              "cost": 9
+            },
+            "price": 0.0,
+            "cost": 0.0,
+            "tickets": 3,
+            "start_time": "16:20",
+            "end_time": "19:20"
+          },
+          {
+            "position": "Metropark Hotel Shenzhen",
+            "type": "accommodation",
+            "transports": {
+              "from": "Shenzhen Bay Park",
+              "to": "Metropark Hotel Shenzhen",
+              "mode": "metro",
+              "start_time": "19:20",
+              "end_time": "19:53",
+              "cost": 15
+            },
+            "room_type": 2,
+            "price": 387,
+            "cost": 774,
+            "start_time": "20:00",
+            "end_time": "24:00",
+            "rooms": 2
+          }
+        ]
+      },
+      {
+        "day": 2,
+        "activities": [
+          {
+            "position": "Lotus Hill Park",
+            "type": "attraction",
+            "transports": {
+              "from": "Metropark Hotel Shenzhen",
+              "to": "Lotus Hill Park",
+              "mode": "metro",
+              "start_time": "08:00",
+              "end_time": "08:14",
+              "cost": 9
+            },
+            "price": 0.0,
+            "cost": 0.0,
+            "tickets": 3,
+            "start_time": "08:30",
+            "end_time": "10:30"
+          },
+          {
+            "position": "Jiangnan Chef (China Resources Mixc Store)",
+            "type": "lunch",
+            "transports": {
+              "from": "Lotus Hill Park",
+              "to": "Jiangnan Chef (China Resources Mixc Store)",
+              "mode": "metro",
+              "start_time": "10:30",
+              "end_time": "10:46",
+              "cost": 9
+            },
+            "price": 165.0,
+            "cost": 495.0,
+            "start_time": "11:00",
+            "end_time": "12:00"
+          },
+          {
+            "position": "Shenzhen Central Park",
+            "type": "attraction",
+            "transports": {
+              "from": "Jiangnan Chef (China Resources Mixc Store)",
+              "to": "Shenzhen Central Park",
+              "mode": "metro",
+              "start_time": "12:00",
+              "end_time": "12:12",
+              "cost": 6
+            },
+            "price": 0.0,
+            "cost": 0.0,
+            "tickets": 3,
+            "start_time": "12:20",
+            "end_time": "15:20"
+          },
+          {
+            "position": "West Lake Spring (Baihui Branch)",
+            "type": "dinner",
+            "transports": {
+              "from": "Shenzhen Central Park",
+              "to": "West Lake Spring (Baihui Branch)",
+              "mode": "metro",
+              "start_time": "15:20",
+              "end_time": "15:32",
+              "cost": 6
+            },
+            "price": 156.0,
+            "cost": 468.0,
+            "start_time": "16:00",
+            "end_time": "17:00"
+          },
+          {
+            "position": "Metropark Hotel Shenzhen",
+            "type": "accommodation",
+            "transports": {
+              "from": "West Lake Spring (Baihui Branch)",
+              "to": "Metropark Hotel Shenzhen",
+              "mode": "metro",
+              "start_time": "17:00",
+              "end_time": "17:07",
+              "cost": 6
+            },
+            "room_type": 2,
+            "price": 387,
+            "cost": 774,
+            "start_time": "17:30",
+            "end_time": "24:00",
+            "rooms": 2
+          }
+        ]
+      },
+      {
+        "day": 3,
+        "activities": [
+          {
+            "position": "Fairy Lake Botanical Garden",
+            "type": "attraction",
+            "transports": {
+              "from": "Metropark Hotel Shenzhen",
+              "to": "Fairy Lake Botanical Garden",
+              "mode": "metro",
+              "start_time": "08:00",
+              "end_time": "08:38",
+              "cost": 9
+            },
+            "price": 0.0,
+            "cost": 0.0,
+            "tickets": 3,
+            "start_time": "09:00",
+            "end_time": "11:00"
+          },
+          {
+            "position": "Yat Bun Sin Tea House (Mixc World Store)",
+            "type": "lunch",
+            "transports": {
+              "from": "Fairy Lake Botanical Garden",
+              "to": "Yat Bun Sin Tea House (Mixc World Store)",
+              "mode": "metro",
+              "start_time": "11:00",
+              "end_time": "11:48",
+              "cost": 18
+            },
+            "price": 175.0,
+            "cost": 525.0,
+            "start_time": "12:00",
+            "end_time": "13:00"
+          },
+          {
+            "position": "Shenzhen Bay Park - Liuhua Hill",
+            "type": "attraction",
+            "transports": {
+              "from": "Yat Bun Sin Tea House (Mixc World Store)",
+              "to": "Shenzhen Bay Park - Liuhua Hill",
+              "mode": "metro",
+              "start_time": "13:00",
+              "end_time": "13:20",
+              "cost": 6
+            },
+            "price": 0.0,
+            "cost": 0.0,
+            "tickets": 3,
+            "start_time": "13:30",
+            "end_time": "15:30"
+          },
+          {
+            "position": "Metropark Hotel Shenzhen",
+            "type": "accommodation",
+            "transports": {
+              "from": "Shenzhen Bay Park - Liuhua Hill",
+              "to": "Metropark Hotel Shenzhen",
+              "mode": "metro",
+              "start_time": "15:30",
+              "end_time": "16:15",
+              "cost": 15
+            },
+            "room_type": 2,
+            "price": 387,
+            "cost": 774,
+            "start_time": "16:30",
+            "end_time": "24:00",
+            "rooms": 2
+          }
+        ]
+      },
+      {
+        "day": 4,
+        "activities": [
+          {
+            "position": "Guangdong Wutong Mountain National Forest Park",
+            "type": "attraction",
+            "transports": {
+              "from": "Metropark Hotel Shenzhen",
+              "to": "Guangdong Wutong Mountain National Forest Park",
+              "mode": "metro",
+              "start_time": "08:00",
+              "end_time": "08:54",
+              "cost": 12
+            },
+            "price": 0.0,
+            "cost": 0.0,
+            "tickets": 3,
+            "start_time": "09:00",
+            "end_time": "12:00"
+          },
+          {
+            "position": "Yude Longji Hakka Restaurant (Longhua Branch)",
+            "type": "lunch",
+            "transports": {
+              "from": "Guangdong Wutong Mountain National Forest Park",
+              "to": "Yude Longji Hakka Restaurant (Longhua Branch)",
+              "mode": "metro",
+              "start_time": "12:00",
+              "end_time": "12:30",
+              "cost": 6
+            },
+            "price": 158.0,
+            "cost": 474.0,
+            "start_time": "13:00",
+            "end_time": "14:00"
+          },
+          {
+            "start": "Shenzhen Bao'an International Airport",
+            "end": "Shanghai Hongqiao International Airport",
+            "start_time": "16:16",
+            "end_time": "17:47",
+            "FlightID": "FL162",
+            "type": "airplane",
+            "transports": {
+              "from": "Yude Longji Hakka Restaurant (Longhua Branch)",
+              "to": "Shenzhen Bao'an International Airport",
+              "mode": "metro",
+              "start_time": "14:00",
+              "end_time": "15:07",
+              "cost": 15
+            },
+            "price": 559.04,
+            "cost": 1677.12,
+            "tickets": 3
+          }
+        ]
+      }
+    ],
+    "repair_context": {
+      "go_train_info": "None",
+      "go_flight_info": "FlightID\tFrom\tTo\tBeginTime\tEndTime\tDuration\tprice\r\nFL020\tShanghai Pudong International Airport\tShenzhen Bao'an International Airport\t02:56\t04:27\t1.52\t565.32\r\nFL016\tShanghai Pudong International Airport\tShenzhen Bao'an International Airport\t16:36\t18:07\t1.52\t576.24\r\nFL018\tShanghai Pudong International Airport\tShenzhen Bao'an International Airport\t18:32\t20:03\t1.52\t582.65\r\nFL014\tShanghai Pudong International Airport\tShenzhen Bao'an International Airport\t23:48\t01:19\t1.52\t640.93\r\nFL019\tShanghai Pudong International Airport\tShenzhen Bao'an International Airport\t08:34\t10:05\t1.52\t590.54\r\n",
+      "back_train_info": "TrainID\tTrainType\tFrom\tTo\tBeginTime\tEndTime\tDuration\tprice\r\nG998\tHigh-speed rail\tShenzhen Station\tShanghai Hongqiao Station\t14:30\t21:25\t6.92\t788.63\r\nD908\tEMU (Electric Multiple Unit)\tShenzhen North Railway Station\tShanghai Hongqiao Station\t20:25\t06:45\t10.33\t727.96\r\n",
+      "back_flight_info": "FlightID\tFrom\tTo\tBeginTime\tEndTime\tDuration\tprice\r\nFL162\tShenzhen Bao'an International Airport\tShanghai Hongqiao International Airport\t16:16\t17:47\t1.52\t559.04\r\nFL167\tShenzhen Bao'an International Airport\tShanghai Hongqiao International Airport\t16:34\t18:05\t1.52\t566.8\r\nFL168\tShenzhen Bao'an International Airport\tShanghai Hongqiao International Airport\t19:08\t20:39\t1.52\t624.58\r\n",
+      "attraction_info": "name\ttype\tlat\tlon\topentime\tendtime\tprice\trecommendmintime\trecommendmaxtime\r\nShenzhen Safari Park\tAmusement Park/Sports Entertainment\t22.602723\t113.97699\t09:30\t18:00\t99.0\t1.5\t2.0\r\nShenzhen Bay Park\tpark\t22.524806\t113.969405\t06:00\t23:00\t0.0\t3.0\t4.0\r\nFairy Lake Botanical Garden\tpark\t22.583562\t114.181318\t00:00\t18:00\t0.0\t1.0\t2.0\r\nGuangdong Wutong Mountain National Forest Park\tpark\t22.5838\t114.221632\t06:00\t19:00\t0.0\t2.5\t3.0\r\nLotus Hill Park\tpark\t22.559257\t114.065193\t06:30\t23:00\t0.0\t1.0\t2.0\r\nDameisha Seaside Park\tpark\t22.598129\t114.313955\t07:00\t22:00\t0.0\t2.0\t2.5\r\nShenzhen International Garden and Flower Expo Park\tpark\t22.544055\t114.009914\t06:00\t23:00\t0.0\t1.0\t2.5\r\nShenzhen Central Park\tpark\t22.558082\t114.084904\t00:00\t24:00\t0.0\t3.0\t3.5\r\nLychee Park\tpark\t22.551843\t114.108658\t05:30\t23:00\t0.0\t2.0\t3.0\r\nPeople's Park\tpark\t22.55949\t114.12365\t00:00\t24:00\t0.0\t2.5\t4.0\r\nShenzhen Bay Park - Sports Park\tpark\t22.491742\t113.951518\t06:00\t23:00\t0.0\t1.0\t1.5\r\nShenzhen Bay Park - Sunrise Theater\tpark\t22.50479\t113.958869\t00:00\t24:00\t0.0\t2.0\t3.0\r\nShenzhen Bay Park - Liuhua Hill\tpark\t22.518145\t113.960529\t06:00\t23:00\t0.0\t2.0\t3.0\r\nShenzhen Children's Park\tpark\t22.559966\t114.130772\t10:00\t18:00\t0.0\t2.0\t3.0\r\nShenzhen Bay Bridge\tCultural Landscape\t22.493012\t113.957048\t00:00\t24:00\t0.0\t1.0\t2.5\r\n",
+      "restaurant_info": "name\tlat\tlon\tprice\tcuisine\topentime\tendtime\trecommendedfood\r\nLibaoge (Kerry Store)\t22.5353225\t114.0568892\t156.0\tCantonese cuisine\t10:30\t21:30\tEight-Flavor Tofu, Stir-Fried Glutinous Rice, Wood-Fired Roasted Suckling Pig, Dabao Roast Duck, Durian Filo Pastry, Crispy Shrimp Dumpling, Dabao Wood-Fired Roast Duck, Crispy Beef Brisket, XO Sauce Stir-Fried Rice Noodles with Beef, Satay Beef Tripe\r\nJiangnan Chef (China Resources Mixc Store)\t22.5400948\t114.1111926\t165.0\tJiangsu-Zhejiang cuisine\t11:00\t21:00\tSweet and Sour Pine Nut Fish, Hand-Peeled Longjing River Shrimp, Zhiwei Pork Ribs, Large Dongpo Pork Belly, Hangzhou Shepherd's Purse, Osmanthus Sticky Rice Lotus Root\r\nWest Lake Spring (Baihui Branch)\t22.5553381\t114.1071252\t156.0\tJiangsu-Zhejiang cuisine\t11:00\t22:00\tHand-peeled Longjing tea shrimp, large chunks of Dongpo pork, dried bamboo shoot and old duck soup, sweet and sour pine nut fish, osmanthus sticky rice lotus root\r\nYat Bun Sin Tea House (Mixc World Store)\t22.5416495\t113.9562296\t175.0\tCantonese cuisine\t10:00\t21:30\tSpring Breeze Pork Intestine, Eight Immortals Shrimp Dumplings, Golden Conpoy Chicken Feet, Shark Fin Soup Dumplings, Eight Immortals Squab, Bird's Nest Egg Tarts\r\nYude Longji Hakka Restaurant (Longhua Branch)\t22.6476687\t114.0392089\t158.0\tHakka cuisine\t10:00\t21:00\tLong Kee Crystal Chicken, Signature Hakka Stuffed Tofu, Clay Pot Homemade Pork Soup, Traditional Roasted Homemade Pork, Black Pepper Beef Short Ribs, Crispy Fried Oysters\r\n",
+      "accommodation_info": "name\tfeaturehoteltype\tlat\tlon\tprice\tnumbed\r\nHampton by Hilton Shenzhen Bantian\tFree parking\t22.64597\t114.065743\t545\t2\r\nMetropark Hotel Shenzhen\tFree parking\t22.549074\t114.123002\t387\t2\r\nVienna International Hotel (Shenzhen North Railway Station Yuanfen Subway Station)\tFree parking\t22.652186\t114.007395\t358\t1\r\n",
+      "innercity_transport_info": "from Lychee Park to Lychee Park:  metro: empty.  taxi: empty.  walk: empty. \nfrom Lychee Park to Dameisha Seaside Park: metro: duration 58, cost 18. taxi: duration 32, cost 92.47. walk: duration 260, cost 0.0. \nfrom Lychee Park to Lotus Hill Park: metro: duration 17, cost 9. taxi: duration 6, cost 20.61. walk: duration 54, cost 0.0. \nfrom Lychee Park to Guangdong Wutong Mountain National Forest Park: metro: duration 63, cost 15. taxi: duration 18, cost 49.36. walk: duration 145, cost 0.0. \nfrom Lychee Park to Yat Bun Sin Tea House (Mixc World Store): metro: duration 40, cost 15. taxi: duration 23, cost 65.44. walk: duration 188, cost 0.0. \nfrom Lychee Park to Jiangnan Chef (China Resources Mixc Store): metro: duration 11, cost 6. taxi: duration 1, cost 11.0. walk: duration 15, cost 0.0. \nfrom Lychee Park to Yude Longji Hakka Restaurant (Longhua Branch): metro: duration 55, cost 15. taxi: duration 19, cost 52.26. walk: duration 153, cost 0.0. \nfrom Lychee Park to Shenzhen Bay Park - Liuhua Hill: metro: duration 47, cost 15. taxi: duration 23, cost 65.3. walk: duration 188, cost 0.0. \nfrom Lychee Park to West Lake Spring (Baihui Branch): metro: duration 10, cost 6. taxi: duration 0, cost 11.0. walk: duration 5, cost 0.0. \nfrom Lychee Park to Vienna International Hotel (Shenzhen North Railway Station Yuanfen Subway Station): metro: duration 43, cost 15. taxi: duration 22, cost 63.22. walk: duration 182, cost 0.0. \nfrom Lychee Park to Shenzhen Bay Park - Sunrise Theater: metro: duration 67, cost 15. taxi: duration 24, cost 67.9. walk: duration 195, cost 0.0. \nfrom Lychee Park to Hampton by Hilton Shenzhen Bantian: metro: duration 33, cost 12. taxi: duration 16, cost 45.64. walk: duration 135, cost 0.0. \nfrom Lychee Park to Shenzhen Bay Park - Sports Park: metro: duration 58, cost 15. taxi: duration 26, cost 73.37. walk: duration 209, cost 0.0. \nfrom Lychee Park to Shenzhen Central Park: metro: duration 14, cost 6. taxi: duration 4, cost 15.66. walk: duration 37, cost 0.0. \nfrom Lychee Park to Shenzhen North Railway Station: metro: duration 27, cost 12. taxi: duration 15, cost 41.46. walk: duration 124, cost 0.0. \nfrom Lychee Park to Libaoge (Kerry Store): metro: duration 18, cost 9. taxi: duration 8, cost 24.41. walk: duration 67, cost 0.0. \nfrom Lychee Park to Shenzhen Children's Park: metro: duration 27, cost 12. taxi: duration 14, cost 37.7. walk: duration 113, cost 0.0. \nfrom Lychee Park to Shenzhen International Garden and Flower Expo Park: metro: duration 33, cost 12. taxi: duration 15, cost 40.57. walk: duration 122, cost 0.0. \nfrom Lychee Park to Metropark Hotel Shenzhen: metro: duration 9, cost 6. taxi: duration 2, cost 11.0. walk: duration 18, cost 0.0. \nfrom Lychee Park to Shenzhen Bay Bridge: metro: duration 64, cost 15. taxi: duration 25, cost 70.77. walk: duration 202, cost 0.0. \nfrom Lychee Park to People's Park: metro: duration 19, cost 6. taxi: duration 2, cost 11.0. walk: duration 21, cost 0.0. \nfrom Lychee Park to Fairy Lake Botanical Garden: metro: duration 47, cost 9. taxi: duration 12, cost 33.6. walk: duration 99, cost 0.0. \nfrom Lychee Park to Shenzhen Station: metro: duration 12, cost 6. taxi: duration 3, cost 12.98. walk: duration 28, cost 0.0. \nfrom Lychee Park to Shenzhen Bao'an International Airport: metro: duration 72, cost 21. taxi: duration 46, cost 135.57. walk: duration 375, cost 0.0. \nfrom Lychee Park to Shenzhen Safari Park: metro: duration 54, cost 15. taxi: duration 21, cost 60.7. walk: duration 175, cost 0.0. \nfrom Lychee Park to Shenzhen Bay Park: metro: duration 35, cost 15. taxi: duration 21, cost 60.55. walk: duration 175, cost 0.0. \nfrom Dameisha Seaside Park to Lychee Park: metro: duration 58, cost 18. taxi: duration 32, cost 92.47. walk: duration 260, cost 0.0. \nfrom Dameisha Seaside Park to Dameisha Seaside Park:  metro: empty.  taxi: empty.  walk: empty. \nfrom Dameisha Seaside Park to Lotus Hill Park: metro: duration 61, cost 18. taxi: duration 38, cost 111.44. walk: duration 311, cost 0.0. \nfrom Dameisha Seaside Park to Guangdong Wutong Mountain National Forest Park: metro: duration 50, cost 9. taxi: duration 14, cost 38.39. walk: duration 115, cost 0.0. \nfrom Dameisha Seaside Park to Yat Bun Sin Tea House (Mixc World Store): metro: duration 85, cost 21. taxi: duration 55, cost 162.63. walk: duration 447, cost 0.0. \nfrom Dameisha Seaside Park to Jiangnan Chef (China Resources Mixc Store): metro: duration 55, cost 18. taxi: duration 32, cost 92.89. walk: duration 261, cost 0.0. \nfrom Dameisha Seaside Park to Yude Longji Hakka Restaurant (Longhua Branch): metro: duration 90, cost 21. taxi: duration 43, cost 124.18. walk: duration 345, cost 0.0. \nfrom Dameisha Seaside Park to Shenzhen Bay Park - Liuhua Hill: metro: duration 93, cost 21. taxi: duration 56, cost 163.07. walk: duration 448, cost 0.0. \nfrom Dameisha Seaside Park to West Lake Spring (Baihui Branch): metro: duration 54, cost 18. taxi: duration 32, cost 92.76. walk: duration 261, cost 0.0. \nfrom Dameisha Seaside Park to Vienna International Hotel (Shenzhen North Railway Station Yuanfen Subway Station): metro: duration 78, cost 21. taxi: duration 48, cost 139.06. walk: duration 384, cost 0.0. \nfrom Dameisha Seaside Park to Shenzhen Bay Park - Sunrise Theater: metro: duration 113, cost 24. taxi: duration 56, cost 165.51. walk: duration 455, cost 0.0. \nfrom Dameisha Seaside Park to Hampton by Hilton Shenzhen Bantian: metro: duration 64, cost 18. taxi: duration 39, cost 111.98. walk: duration 312, cost 0.0. \nfrom Dameisha Seaside Park to Shenzhen Bay Park - Sports Park: metro: duration 104, cost 24. taxi: duration 58, cost 170.64. walk: duration 469, cost 0.0. \nfrom Dameisha Seaside Park to Shenzhen Central Park: metro: duration 60, cost 18. taxi: duration 37, cost 106.12. walk: duration 297, cost 0.0. \nfrom Dameisha Seaside Park to Shenzhen North Railway Station: metro: duration 67, cost 21. taxi: duration 43, cost 126.62. walk: duration 351, cost 0.0. \nfrom Dameisha Seaside Park to Libaoge (Kerry Store): metro: duration 64, cost 18. taxi: duration 41, cost 117.72. walk: duration 328, cost 0.0. \nfrom Dameisha Seaside Park to Shenzhen Children's Park: metro: duration 73, cost 21. taxi: duration 46, cost 134.22. walk: duration 372, cost 0.0. \nfrom Dameisha Seaside Park to Shenzhen International Garden and Flower Expo Park: metro: duration 78, cost 21. taxi: duration 47, cost 137.97. walk: duration 382, cost 0.0. \nfrom Dameisha Seaside Park to Metropark Hotel Shenzhen: metro: duration 48, cost 15. taxi: duration 30, cost 86.39. walk: duration 244, cost 0.0. \nfrom Dameisha Seaside Park to Shenzhen Bay Bridge: metro: duration 110, cost 24. taxi: duration 57, cost 168.01. walk: duration 462, cost 0.0. \nfrom Dameisha Seaside Park to People's Park: metro: duration 55, cost 15. taxi: duration 30, cost 84.85. walk: duration 240, cost 0.0. \nfrom Dameisha Seaside Park to Fairy Lake Botanical Garden: metro: duration 64, cost 15. taxi: duration 20, cost 56.5. walk: duration 164, cost 0.0. \nfrom Dameisha Seaside Park to Shenzhen Station: metro: duration 52, cost 15. taxi: duration 32, cost 91.65. walk: duration 258, cost 0.0. \nfrom Dameisha Seaside Park to Shenzhen Bao'an International Airport: metro: duration 114, cost 27. taxi: duration 76, cost 224.04. walk: duration 611, cost 0.0. \nfrom Dameisha Seaside Park to Shenzhen Safari Park: metro: duration 97, cost 21. taxi: duration 51, cost 150.63. walk: duration 415, cost 0.0. \nfrom Dameisha Seaside Park to Shenzhen Bay Park: metro: duration 81, cost 21. taxi: duration 54, cost 158.3. walk: duration 436, cost 0.0. \nfrom Lotus Hill Park to Lychee Park: metro: duration 17, cost 9. taxi: duration 6, cost 20.61. walk: duration 54, cost 0.0. \nfrom Lotus Hill Park to Dameisha Seaside Park: metro: duration 61, cost 18. taxi: duration 38, cost 111.44. walk: duration 311, cost 0.0. \nfrom Lotus Hill Park to Lotus Hill Park:  metro: empty.  taxi: empty.  walk: empty. \nfrom Lotus Hill Park to Guangdong Wutong Mountain National Forest Park: metro: duration 67, cost 15. taxi: duration 24, cost 68.12. walk: duration 195, cost 0.0. \nfrom Lotus Hill Park to Yat Bun Sin Tea House (Mixc World Store): metro: duration 29, cost 12. taxi: duration 17, cost 45.89. walk: duration 136, cost 0.0. \nfrom Lotus Hill Park to Jiangnan Chef (China Resources Mixc Store): metro: duration 16, cost 9. taxi: duration 7, cost 22.85. walk: duration 62, cost 0.0. \nfrom Lotus Hill Park to Yude Longji Hakka Restaurant (Longhua Branch): metro: duration 46, cost 12. taxi: duration 15, cost 40.37. walk: duration 121, cost 0.0. \nfrom Lotus Hill Park to Shenzhen Bay Park - Liuhua Hill: metro: duration 37, cost 12. taxi: duration 17, cost 47.3. walk: duration 140, cost 0.0. \nfrom Lotus Hill Park to West Lake Spring (Baihui Branch): metro: duration 13, cost 6. taxi: duration 6, cost 19.87. walk: duration 52, cost 0.0. \nfrom Lotus Hill Park to Vienna International Hotel (Shenzhen North Railway Station Yuanfen Subway Station): metro: duration 33, cost 12. taxi: duration 17, cost 48.18. walk: duration 142, cost 0.0. \nfrom Lotus Hill Park to Shenzhen Bay Park - Sunrise Theater: metro: duration 58, cost 15. taxi: duration 18, cost 50.91. walk: duration 149, cost 0.0. \nfrom Lotus Hill Park to Hampton by Hilton Shenzhen Bantian: metro: duration 26, cost 12. taxi: duration 14, cost 38.31. walk: duration 115, cost 0.0. \nfrom Lotus Hill Park to Shenzhen Bay Park - Sports Park: metro: duration 49, cost 15. taxi: duration 20, cost 57.16. walk: duration 166, cost 0.0. \nfrom Lotus Hill Park to Shenzhen Central Park: metro: duration 12, cost 6. taxi: duration 4, cost 14.89. walk: duration 34, cost 0.0. \nfrom Lotus Hill Park to Shenzhen North Railway Station: metro: duration 17, cost 9. taxi: duration 10, cost 28.18. walk: duration 80, cost 0.0. \nfrom Lotus Hill Park to Libaoge (Kerry Store): metro: duration 11, cost 6. taxi: duration 4, cost 14.45. walk: duration 33, cost 0.0. \nfrom Lotus Hill Park to Shenzhen Children's Park: metro: duration 17, cost 9. taxi: duration 7, cost 22.43. walk: duration 60, cost 0.0. \nfrom Lotus Hill Park to Shenzhen International Garden and Flower Expo Park: metro: duration 22, cost 9. taxi: duration 8, cost 25.45. walk: duration 71, cost 0.0. \nfrom Lotus Hill Park to Metropark Hotel Shenzhen: metro: duration 14, cost 9. taxi: duration 9, cost 25.88. walk: duration 72, cost 0.0. \nfrom Lotus Hill Park to Shenzhen Bay Bridge: metro: duration 55, cost 15. taxi: duration 19, cost 54.67. walk: duration 159, cost 0.0. \nfrom Lotus Hill Park to People's Park: metro: duration 22, cost 9. taxi: duration 9, cost 25.74. walk: duration 72, cost 0.0. \nfrom Lotus Hill Park to Fairy Lake Botanical Garden: metro: duration 51, cost 12. taxi: duration 18, cost 49.79. walk: duration 146, cost 0.0. \nfrom Lotus Hill Park to Shenzhen Station: metro: duration 17, cost 9. taxi: duration 9, cost 26.14. walk: duration 73, cost 0.0. \nfrom Lotus Hill Park to Shenzhen Bao'an International Airport: metro: duration 61, cost 18. taxi: duration 40, cost 115.38. walk: duration 321, cost 0.0. \nfrom Lotus Hill Park to Shenzhen Safari Park: metro: duration 43, cost 12. taxi: duration 15, cost 40.91. walk: duration 123, cost 0.0. \nfrom Lotus Hill Park to Shenzhen Bay Park: metro: duration 25, cost 12. taxi: duration 15, cost 42.25. walk: duration 126, cost 0.0. \nfrom Guangdong Wutong Mountain National Forest Park to Lychee Park: metro: duration 63, cost 15. taxi: duration 18, cost 49.36. walk: duration 145, cost 0.0. \nfrom Guangdong Wutong Mountain National Forest Park to Dameisha Seaside Park: metro: duration 50, cost 9. taxi: duration 14, cost 38.39. walk: duration 115, cost 0.0. \nfrom Guangdong Wutong Mountain National Forest Park to Lotus Hill Park: metro: duration 67, cost 15. taxi: duration 24, cost 68.12. walk: duration 195, cost 0.0. \nfrom Guangdong Wutong Mountain National Forest Park to Guangdong Wutong Mountain National Forest Park:  metro: empty.  taxi: empty.  walk: empty. \nfrom Guangdong Wutong Mountain National Forest Park to Yat Bun Sin Tea House (Mixc World Store): metro: duration 91, cost 21. taxi: duration 41, cost 119.32. walk: duration 332, cost 0.0. \nfrom Guangdong Wutong Mountain National Forest Park to Jiangnan Chef (China Resources Mixc Store): metro: duration 61, cost 15. taxi: duration 18, cost 50.26. walk: duration 148, cost 0.0. \nfrom Guangdong Wutong Mountain National Forest Park to Yude Longji Hakka Restaurant (Longhua Branch): metro: duration 97, cost 18. taxi: duration 30, cost 84.9. walk: duration 240, cost 0.0. \nfrom Guangdong Wutong Mountain National Forest Park to Shenzhen Bay Park - Liuhua Hill: metro: duration 99, cost 21. taxi: duration 41, cost 119.91. walk: duration 333, cost 0.0. \nfrom Guangdong Wutong Mountain National Forest Park to West Lake Spring (Baihui Branch): metro: duration 60, cost 15. taxi: duration 18, cost 49.56. walk: duration 146, cost 0.0. \nfrom Guangdong Wutong Mountain National Forest Park to Vienna International Hotel (Shenzhen North Railway Station Yuanfen Subway Station): metro: duration 85, cost 18. taxi: duration 34, cost 99.51. walk: duration 279, cost 0.0. \nfrom Guangdong Wutong Mountain National Forest Park to Shenzhen Bay Park - Sunrise Theater: metro: duration 119, cost 21. taxi: duration 42, cost 122.54. walk: duration 340, cost 0.0. \nfrom Guangdong Wutong Mountain National Forest Park to Hampton by Hilton Shenzhen Bantian: metro: duration 71, cost 15. taxi: duration 26, cost 73.19. walk: duration 209, cost 0.0. \nfrom Guangdong Wutong Mountain National Forest Park to Shenzhen Bay Park - Sports Park: metro: duration 110, cost 21. taxi: duration 44, cost 127.89. walk: duration 355, cost 0.0. \nfrom Guangdong Wutong Mountain National Forest Park to Shenzhen Central Park: metro: duration 66, cost 15. taxi: duration 22, cost 63.2. walk: duration 182, cost 0.0. \nfrom Guangdong Wutong Mountain National Forest Park to Shenzhen North Railway Station: metro: duration 73, cost 18. taxi: duration 30, cost 84.71. walk: duration 240, cost 0.0. \nfrom Guangdong Wutong Mountain National Forest Park to Libaoge (Kerry Store): metro: duration 70, cost 15. taxi: duration 26, cost 74.68. walk: duration 213, cost 0.0. \nfrom Guangdong Wutong Mountain National Forest Park to Shenzhen Children's Park: metro: duration 78, cost 18. taxi: duration 32, cost 90.91. walk: duration 256, cost 0.0. \nfrom Guangdong Wutong Mountain National Forest Park to Shenzhen International Garden and Flower Expo Park: metro: duration 84, cost 18. taxi: duration 33, cost 94.67. walk: duration 266, cost 0.0. \nfrom Guangdong Wutong Mountain National Forest Park to Metropark Hotel Shenzhen: metro: duration 54, cost 12. taxi: duration 16, cost 43.52. walk: duration 130, cost 0.0. \nfrom Guangdong Wutong Mountain National Forest Park to Shenzhen Bay Bridge: metro: duration 116, cost 21. taxi: duration 43, cost 125.27. walk: duration 348, cost 0.0. \nfrom Guangdong Wutong Mountain National Forest Park to People's Park: metro: duration 61, cost 12. taxi: duration 15, cost 41.64. walk: duration 125, cost 0.0. \nfrom Guangdong Wutong Mountain National Forest Park to Fairy Lake Botanical Garden: metro: duration 70, cost 9. taxi: duration 6, cost 19.21. walk: duration 49, cost 0.0. \nfrom Guangdong Wutong Mountain National Forest Park to Shenzhen Station: metro: duration 58, cost 15. taxi: duration 18, cost 49.6. walk: duration 146, cost 0.0. \nfrom Guangdong Wutong Mountain National Forest Park to Shenzhen Bao'an International Airport: metro: duration 120, cost 24. taxi: duration 62, cost 182.59. walk: duration 501, cost 0.0. \nfrom Guangdong Wutong Mountain National Forest Park to Shenzhen Safari Park: metro: duration 103, cost 21. taxi: duration 37, cost 108.29. walk: duration 302, cost 0.0. \nfrom Guangdong Wutong Mountain National Forest Park to Shenzhen Bay Park: metro: duration 87, cost 21. taxi: duration 40, cost 115.09. walk: duration 321, cost 0.0. \nfrom Yat Bun Sin Tea House (Mixc World Store) to Lychee Park: metro: duration 40, cost 15. taxi: duration 23, cost 65.44. walk: duration 188, cost 0.0. \nfrom Yat Bun Sin Tea House (Mixc World Store) to Dameisha Seaside Park: metro: duration 85, cost 21. taxi: duration 55, cost 162.63. walk: duration 447, cost 0.0. \nfrom Yat Bun Sin Tea House (Mixc World Store) to Lotus Hill Park: metro: duration 29, cost 12. taxi: duration 17, cost 45.89. walk: duration 136, cost 0.0. \nfrom Yat Bun Sin Tea House (Mixc World Store) to Guangdong Wutong Mountain National Forest Park: metro: duration 91, cost 21. taxi: duration 41, cost 119.32. walk: duration 332, cost 0.0. \nfrom Yat Bun Sin Tea House (Mixc World Store) to Yat Bun Sin Tea House (Mixc World Store):  metro: empty.  taxi: empty.  walk: empty. \nfrom Yat Bun Sin Tea House (Mixc World Store) to Jiangnan Chef (China Resources Mixc Store): metro: duration 38, cost 15. taxi: duration 23, cost 66.44. walk: duration 191, cost 0.0. \nfrom Yat Bun Sin Tea House (Mixc World Store) to Yude Longji Hakka Restaurant (Longhua Branch): metro: duration 52, cost 15. taxi: duration 21, cost 60.01. walk: duration 174, cost 0.0. \nfrom Yat Bun Sin Tea House (Mixc World Store) to Shenzhen Bay Park - Liuhua Hill: metro: duration 20, cost 6. taxi: duration 3, cost 13.94. walk: duration 31, cost 0.0. \nfrom Yat Bun Sin Tea House (Mixc World Store) to West Lake Spring (Baihui Branch): metro: duration 37, cost 15. taxi: duration 23, cost 64.88. walk: duration 187, cost 0.0. \nfrom Yat Bun Sin Tea House (Mixc World Store) to Vienna International Hotel (Shenzhen North Railway Station Yuanfen Subway Station): metro: duration 36, cost 12. taxi: duration 19, cost 54.66. walk: duration 159, cost 0.0. \nfrom Yat Bun Sin Tea House (Mixc World Store) to Shenzhen Bay Park - Sunrise Theater: metro: duration 38, cost 9. taxi: duration 6, cost 19.02. walk: duration 49, cost 0.0. \nfrom Yat Bun Sin Tea House (Mixc World Store) to Hampton by Hilton Shenzhen Bantian: metro: duration 40, cost 15. taxi: duration 24, cost 67.3. walk: duration 193, cost 0.0. \nfrom Yat Bun Sin Tea House (Mixc World Store) to Shenzhen Bay Park - Sports Park: metro: duration 29, cost 9. taxi: duration 8, cost 24.12. walk: duration 66, cost 0.0. \nfrom Yat Bun Sin Tea House (Mixc World Store) to Shenzhen Central Park: metro: duration 34, cost 12. taxi: duration 19, cost 52.96. walk: duration 155, cost 0.0. \nfrom Yat Bun Sin Tea House (Mixc World Store) to Shenzhen North Railway Station: metro: duration 26, cost 12. taxi: duration 15, cost 42.54. walk: duration 127, cost 0.0. \nfrom Yat Bun Sin Tea House (Mixc World Store) to Libaoge (Kerry Store): metro: duration 25, cost 12. taxi: duration 15, cost 41.4. walk: duration 124, cost 0.0. \nfrom Yat Bun Sin Tea House (Mixc World Store) to Shenzhen Children's Park: metro: duration 18, cost 9. taxi: duration 9, cost 26.81. walk: duration 75, cost 0.0. \nfrom Yat Bun Sin Tea House (Mixc World Store) to Shenzhen International Garden and Flower Expo Park: metro: duration 20, cost 9. taxi: duration 8, cost 24.05. walk: duration 66, cost 0.0. \nfrom Yat Bun Sin Tea House (Mixc World Store) to Metropark Hotel Shenzhen: metro: duration 37, cost 15. taxi: duration 25, cost 71.98. walk: duration 206, cost 0.0. \nfrom Yat Bun Sin Tea House (Mixc World Store) to Shenzhen Bay Bridge: metro: duration 35, cost 9. taxi: duration 8, cost 23.55. walk: duration 64, cost 0.0. \nfrom Yat Bun Sin Tea House (Mixc World Store) to People's Park: metro: duration 46, cost 15. taxi: duration 26, cost 72.7. walk: duration 208, cost 0.0. \nfrom Yat Bun Sin Tea House (Mixc World Store) to Fairy Lake Botanical Garden: metro: duration 75, cost 18. taxi: duration 35, cost 100.95. walk: duration 283, cost 0.0. \nfrom Yat Bun Sin Tea House (Mixc World Store) to Shenzhen Station: metro: duration 38, cost 15. taxi: duration 24, cost 69.27. walk: duration 198, cost 0.0. \nfrom Yat Bun Sin Tea House (Mixc World Store) to Shenzhen Bao'an International Airport: metro: duration 43, cost 15. taxi: duration 26, cost 75.38. walk: duration 215, cost 0.0. \nfrom Yat Bun Sin Tea House (Mixc World Store) to Shenzhen Safari Park: metro: duration 33, cost 9. taxi: duration 10, cost 29.52. walk: duration 85, cost 0.0. \nfrom Yat Bun Sin Tea House (Mixc World Store) to Shenzhen Bay Park: metro: duration 8, cost 6. taxi: duration 3, cost 12.77. walk: duration 27, cost 0.0. \nfrom Jiangnan Chef (China Resources Mixc Store) to Lychee Park: metro: duration 11, cost 6. taxi: duration 1, cost 11.0. walk: duration 15, cost 0.0. \nfrom Jiangnan Chef (China Resources Mixc Store) to Dameisha Seaside Park: metro: duration 55, cost 18. taxi: duration 32, cost 92.89. walk: duration 261, cost 0.0. \nfrom Jiangnan Chef (China Resources Mixc Store) to Lotus Hill Park: metro: duration 16, cost 9. taxi: duration 7, cost 22.85. walk: duration 62, cost 0.0. \nfrom Jiangnan Chef (China Resources Mixc Store) to Guangdong Wutong Mountain National Forest Park: metro: duration 61, cost 15. taxi: duration 18, cost 50.26. walk: duration 148, cost 0.0. \nfrom Jiangnan Chef (China Resources Mixc Store) to Yat Bun Sin Tea House (Mixc World Store): metro: duration 38, cost 15. taxi: duration 23, cost 66.44. walk: duration 191, cost 0.0. \nfrom Jiangnan Chef (China Resources Mixc Store) to Jiangnan Chef (China Resources Mixc Store):  metro: empty.  taxi: empty.  walk: empty. \nfrom Jiangnan Chef (China Resources Mixc Store) to Yude Longji Hakka Restaurant (Longhua Branch): metro: duration 55, cost 15. taxi: duration 21, cost 57.81. walk: duration 168, cost 0.0. \nfrom Jiangnan Chef (China Resources Mixc Store) to Shenzhen Bay Park - Liuhua Hill: metro: duration 45, cost 15. taxi: duration 23, cost 65.3. walk: duration 188, cost 0.0. \nfrom Jiangnan Chef (China Resources Mixc Store) to West Lake Spring (Baihui Branch): metro: duration 10, cost 6. taxi: duration 2, cost 11.0. walk: duration 20, cost 0.0. \nfrom Jiangnan Chef (China Resources Mixc Store) to Vienna International Hotel (Shenzhen North Railway Station Yuanfen Subway Station): metro: duration 43, cost 15. taxi: duration 24, cost 68.37. walk: duration 196, cost 0.0. \nfrom Jiangnan Chef (China Resources Mixc Store) to Shenzhen Bay Park - Sunrise Theater: metro: duration 66, cost 15. taxi: duration 24, cost 67.38. walk: duration 193, cost 0.0. \nfrom Jiangnan Chef (China Resources Mixc Store) to Hampton by Hilton Shenzhen Bantian: metro: duration 32, cost 12. taxi: duration 18, cost 51.5. walk: duration 151, cost 0.0. \nfrom Jiangnan Chef (China Resources Mixc Store) to Shenzhen Bay Park - Sports Park: metro: duration 56, cost 15. taxi: duration 25, cost 72.45. walk: duration 207, cost 0.0. \nfrom Jiangnan Chef (China Resources Mixc Store) to Shenzhen Central Park: metro: duration 12, cost 6. taxi: duration 4, cost 15.22. walk: duration 36, cost 0.0. \nfrom Jiangnan Chef (China Resources Mixc Store) to Shenzhen North Railway Station: metro: duration 27, cost 12. taxi: duration 17, cost 46.15. walk: duration 137, cost 0.0. \nfrom Jiangnan Chef (China Resources Mixc Store) to Libaoge (Kerry Store): metro: duration 17, cost 9. taxi: duration 8, cost 24.34. walk: duration 67, cost 0.0. \nfrom Jiangnan Chef (China Resources Mixc Store) to Shenzhen Children's Park: metro: duration 26, cost 12. taxi: duration 14, cost 38.8. walk: duration 116, cost 0.0. \nfrom Jiangnan Chef (China Resources Mixc Store) to Shenzhen International Garden and Flower Expo Park: metro: duration 31, cost 12. taxi: duration 15, cost 41.62. walk: duration 125, cost 0.0. \nfrom Jiangnan Chef (China Resources Mixc Store) to Metropark Hotel Shenzhen: metro: duration 7, cost 6. taxi: duration 2, cost 11.0. walk: duration 18, cost 0.0. \nfrom Jiangnan Chef (China Resources Mixc Store) to Shenzhen Bay Bridge: metro: duration 62, cost 15. taxi: duration 25, cost 69.82. walk: duration 200, cost 0.0. \nfrom Jiangnan Chef (China Resources Mixc Store) to People's Park: metro: duration 18, cost 6. taxi: duration 3, cost 13.45. walk: duration 30, cost 0.0. \nfrom Jiangnan Chef (China Resources Mixc Store) to Fairy Lake Botanical Garden: metro: duration 45, cost 9. taxi: duration 13, cost 35.05. walk: duration 104, cost 0.0. \nfrom Jiangnan Chef (China Resources Mixc Store) to Shenzhen Station: metro: duration 9, cost 6. taxi: duration 1, cost 11.0. walk: duration 12, cost 0.0. \nfrom Jiangnan Chef (China Resources Mixc Store) to Shenzhen Bao'an International Airport: metro: duration 72, cost 21. taxi: duration 47, cost 138.67. walk: duration 383, cost 0.0. \nfrom Jiangnan Chef (China Resources Mixc Store) to Shenzhen Safari Park: metro: duration 53, cost 15. taxi: duration 23, cost 64.21. walk: duration 185, cost 0.0. \nfrom Jiangnan Chef (China Resources Mixc Store) to Shenzhen Bay Park: metro: duration 33, cost 15. taxi: duration 22, cost 60.78. walk: duration 176, cost 0.0. \nfrom Yude Longji Hakka Restaurant (Longhua Branch) to Lychee Park: metro: duration 55, cost 15. taxi: duration 19, cost 52.26. walk: duration 153, cost 0.0. \nfrom Yude Longji Hakka Restaurant (Longhua Branch) to Dameisha Seaside Park: metro: duration 90, cost 21. taxi: duration 43, cost 124.18. walk: duration 345, cost 0.0. \nfrom Yude Longji Hakka Restaurant (Longhua Branch) to Lotus Hill Park: metro: duration 46, cost 12. taxi: duration 15, cost 40.37. walk: duration 121, cost 0.0. \nfrom Yude Longji Hakka Restaurant (Longhua Branch) to Guangdong Wutong Mountain National Forest Park: metro: duration 97, cost 18. taxi: duration 30, cost 84.9. walk: duration 240, cost 0.0. \nfrom Yude Longji Hakka Restaurant (Longhua Branch) to Yat Bun Sin Tea House (Mixc World Store): metro: duration 52, cost 15. taxi: duration 21, cost 60.01. walk: duration 174, cost 0.0. \nfrom Yude Longji Hakka Restaurant (Longhua Branch) to Jiangnan Chef (China Resources Mixc Store): metro: duration 55, cost 15. taxi: duration 21, cost 57.81. walk: duration 168, cost 0.0. \nfrom Yude Longji Hakka Restaurant (Longhua Branch) to Yude Longji Hakka Restaurant (Longhua Branch):  metro: empty.  taxi: empty.  walk: empty. \nfrom Yude Longji Hakka Restaurant (Longhua Branch) to Shenzhen Bay Park - Liuhua Hill: metro: duration 64, cost 15. taxi: duration 24, cost 68.81. walk: duration 197, cost 0.0. \nfrom Yude Longji Hakka Restaurant (Longhua Branch) to West Lake Spring (Baihui Branch): metro: duration 51, cost 12. taxi: duration 18, cost 50.42. walk: duration 148, cost 0.0. \nfrom Yude Longji Hakka Restaurant (Longhua Branch) to Vienna International Hotel (Shenzhen North Railway Station Yuanfen Subway Station): metro: duration 30, cost 6. taxi: duration 4, cost 16.28. walk: duration 39, cost 0.0. \nfrom Yude Longji Hakka Restaurant (Longhua Branch) to Shenzhen Bay Park - Sunrise Theater: metro: duration 84, cost 15. taxi: duration 26, cost 75.02. walk: duration 214, cost 0.0. \nfrom Yude Longji Hakka Restaurant (Longhua Branch) to Hampton by Hilton Shenzhen Bantian: metro: duration 35, cost 9. taxi: duration 4, cost 14.27. walk: duration 32, cost 0.0. \nfrom Yude Longji Hakka Restaurant (Longhua Branch) to Shenzhen Bay Park - Sports Park: metro: duration 76, cost 15. taxi: duration 29, cost 82.36. walk: duration 233, cost 0.0. \nfrom Yude Longji Hakka Restaurant (Longhua Branch) to Shenzhen Central Park: metro: duration 52, cost 12. taxi: duration 19, cost 52.77. walk: duration 154, cost 0.0. \nfrom Yude Longji Hakka Restaurant (Longhua Branch) to Shenzhen North Railway Station: metro: duration 31, cost 9. taxi: duration 6, cost 19.85. walk: duration 51, cost 0.0. \nfrom Yude Longji Hakka Restaurant (Longhua Branch) to Libaoge (Kerry Store): metro: duration 49, cost 12. taxi: duration 18, cost 51.28. walk: duration 150, cost 0.0. \nfrom Yude Longji Hakka Restaurant (Longhua Branch) to Shenzhen Children's Park: metro: duration 46, cost 12. taxi: duration 16, cost 44.61. walk: duration 133, cost 0.0. \nfrom Yude Longji Hakka Restaurant (Longhua Branch) to Shenzhen International Garden and Flower Expo Park: metro: duration 51, cost 12. taxi: duration 17, cost 48.08. walk: duration 142, cost 0.0. \nfrom Yude Longji Hakka Restaurant (Longhua Branch) to Metropark Hotel Shenzhen: metro: duration 51, cost 15. taxi: duration 20, cost 57.29. walk: duration 166, cost 0.0. \nfrom Yude Longji Hakka Restaurant (Longhua Branch) to Shenzhen Bay Bridge: metro: duration 82, cost 15. taxi: duration 28, cost 80.64. walk: duration 229, cost 0.0. \nfrom Yude Longji Hakka Restaurant (Longhua Branch) to People's Park: metro: duration 56, cost 12. taxi: duration 19, cost 53.5. walk: duration 156, cost 0.0. \nfrom Yude Longji Hakka Restaurant (Longhua Branch) to Fairy Lake Botanical Garden: metro: duration 84, cost 15. taxi: duration 24, cost 67.8. walk: duration 194, cost 0.0. \nfrom Yude Longji Hakka Restaurant (Longhua Branch) to Shenzhen Station: metro: duration 56, cost 15. taxi: duration 22, cost 62.68. walk: duration 181, cost 0.0. \nfrom Yude Longji Hakka Restaurant (Longhua Branch) to Shenzhen Bao'an International Airport: metro: duration 67, cost 15. taxi: duration 33, cost 95.82. walk: duration 269, cost 0.0. \nfrom Yude Longji Hakka Restaurant (Longhua Branch) to Shenzhen Safari Park: metro: duration 56, cost 9. taxi: duration 12, cost 33.07. walk: duration 97, cost 0.0. \nfrom Yude Longji Hakka Restaurant (Longhua Branch) to Shenzhen Bay Park: metro: duration 52, cost 15. taxi: duration 23, cost 63.92. walk: duration 184, cost 0.0. \nfrom Shenzhen Bay Park - Liuhua Hill to Lychee Park: metro: duration 47, cost 15. taxi: duration 23, cost 65.3. walk: duration 188, cost 0.0. \nfrom Shenzhen Bay Park - Liuhua Hill to Dameisha Seaside Park: metro: duration 93, cost 21. taxi: duration 56, cost 163.07. walk: duration 448, cost 0.0. \nfrom Shenzhen Bay Park - Liuhua Hill to Lotus Hill Park: metro: duration 37, cost 12. taxi: duration 17, cost 47.3. walk: duration 140, cost 0.0. \nfrom Shenzhen Bay Park - Liuhua Hill to Guangdong Wutong Mountain National Forest Park: metro: duration 99, cost 21. taxi: duration 41, cost 119.91. walk: duration 333, cost 0.0. \nfrom Shenzhen Bay Park - Liuhua Hill to Yat Bun Sin Tea House (Mixc World Store): metro: duration 20, cost 6. taxi: duration 3, cost 13.94. walk: duration 31, cost 0.0. \nfrom Shenzhen Bay Park - Liuhua Hill to Jiangnan Chef (China Resources Mixc Store): metro: duration 45, cost 15. taxi: duration 23, cost 65.3. walk: duration 188, cost 0.0. \nfrom Shenzhen Bay Park - Liuhua Hill to Yude Longji Hakka Restaurant (Longhua Branch): metro: duration 64, cost 15. taxi: duration 24, cost 68.81. walk: duration 197, cost 0.0. \nfrom Shenzhen Bay Park - Liuhua Hill to Shenzhen Bay Park - Liuhua Hill:  metro: empty.  taxi: empty.  walk: empty. \nfrom Shenzhen Bay Park - Liuhua Hill to West Lake Spring (Baihui Branch): metro: duration 44, cost 15. taxi: duration 23, cost 65.05. walk: duration 187, cost 0.0. \nfrom Shenzhen Bay Park - Liuhua Hill to Vienna International Hotel (Shenzhen North Railway Station Yuanfen Subway Station): metro: duration 49, cost 15. taxi: duration 23, cost 64.93. walk: duration 187, cost 0.0. \nfrom Shenzhen Bay Park - Liuhua Hill to Shenzhen Bay Park - Sunrise Theater: metro: duration 47, cost 9. taxi: duration 2, cost 11.0. walk: duration 17, cost 0.0. \nfrom Shenzhen Bay Park - Liuhua Hill to Hampton by Hilton Shenzhen Bantian: metro: duration 50, cost 15. taxi: duration 26, cost 74.88. walk: duration 213, cost 0.0. \nfrom Shenzhen Bay Park - Liuhua Hill to Shenzhen Bay Park - Sports Park: metro: duration 38, cost 9. taxi: duration 4, cost 15.44. walk: duration 36, cost 0.0. \nfrom Shenzhen Bay Park - Liuhua Hill to Shenzhen Central Park: metro: duration 41, cost 12. taxi: duration 19, cost 51.83. walk: duration 152, cost 0.0. \nfrom Shenzhen Bay Park - Liuhua Hill to Shenzhen North Railway Station: metro: duration 36, cost 12. taxi: duration 18, cost 50.29. walk: duration 148, cost 0.0. \nfrom Shenzhen Bay Park - Liuhua Hill to Libaoge (Kerry Store): metro: duration 32, cost 9. taxi: duration 15, cost 40.12. walk: duration 121, cost 0.0. \nfrom Shenzhen Bay Park - Liuhua Hill to Shenzhen Children's Park: metro: duration 26, cost 9. taxi: duration 10, cost 28.43. walk: duration 81, cost 0.0. \nfrom Shenzhen Bay Park - Liuhua Hill to Shenzhen International Garden and Flower Expo Park: metro: duration 29, cost 9. taxi: duration 8, cost 25.12. walk: duration 70, cost 0.0. \nfrom Shenzhen Bay Park - Liuhua Hill to Metropark Hotel Shenzhen: metro: duration 45, cost 15. taxi: duration 25, cost 71.48. walk: duration 204, cost 0.0. \nfrom Shenzhen Bay Park - Liuhua Hill to Shenzhen Bay Bridge: metro: duration 44, cost 9. taxi: duration 4, cost 14.52. walk: duration 33, cost 0.0. \nfrom Shenzhen Bay Park - Liuhua Hill to People's Park: metro: duration 53, cost 15. taxi: duration 26, cost 72.97. walk: duration 208, cost 0.0. \nfrom Shenzhen Bay Park - Liuhua Hill to Fairy Lake Botanical Garden: metro: duration 83, cost 18. taxi: duration 35, cost 101.97. walk: duration 286, cost 0.0. \nfrom Shenzhen Bay Park - Liuhua Hill to Shenzhen Station: metro: duration 45, cost 15. taxi: duration 24, cost 67.45. walk: duration 194, cost 0.0. \nfrom Shenzhen Bay Park - Liuhua Hill to Shenzhen Bao'an International Airport: metro: duration 58, cost 15. taxi: duration 29, cost 84.64. walk: duration 239, cost 0.0. \nfrom Shenzhen Bay Park - Liuhua Hill to Shenzhen Safari Park: metro: duration 46, cost 9. taxi: duration 14, cost 38.01. walk: duration 114, cost 0.0. \nfrom Shenzhen Bay Park - Liuhua Hill to Shenzhen Bay Park: taxi: duration 1, cost 11.0. walk: duration 14, cost 0.0. \nfrom West Lake Spring (Baihui Branch) to Lychee Park: metro: duration 10, cost 6. taxi: duration 0, cost 11.0. walk: duration 5, cost 0.0. \nfrom West Lake Spring (Baihui Branch) to Dameisha Seaside Park: metro: duration 54, cost 18. taxi: duration 32, cost 92.76. walk: duration 261, cost 0.0. \nfrom West Lake Spring (Baihui Branch) to Lotus Hill Park: metro: duration 13, cost 6. taxi: duration 6, cost 19.87. walk: duration 52, cost 0.0. \nfrom West Lake Spring (Baihui Branch) to Guangdong Wutong Mountain National Forest Park: metro: duration 60, cost 15. taxi: duration 18, cost 49.56. walk: duration 146, cost 0.0. \nfrom West Lake Spring (Baihui Branch) to Yat Bun Sin Tea House (Mixc World Store): metro: duration 37, cost 15. taxi: duration 23, cost 64.88. walk: duration 187, cost 0.0. \nfrom West Lake Spring (Baihui Branch) to Jiangnan Chef (China Resources Mixc Store): metro: duration 10, cost 6. taxi: duration 2, cost 11.0. walk: duration 20, cost 0.0. \nfrom West Lake Spring (Baihui Branch) to Yude Longji Hakka Restaurant (Longhua Branch): metro: duration 51, cost 12. taxi: duration 18, cost 50.42. walk: duration 148, cost 0.0. \nfrom West Lake Spring (Baihui Branch) to Shenzhen Bay Park - Liuhua Hill: metro: duration 44, cost 15. taxi: duration 23, cost 65.05. walk: duration 187, cost 0.0. \nfrom West Lake Spring (Baihui Branch) to West Lake Spring (Baihui Branch):  metro: empty.  taxi: empty.  walk: empty. \nfrom West Lake Spring (Baihui Branch) to Vienna International Hotel (Shenzhen North Railway Station Yuanfen Subway Station): metro: duration 39, cost 15. taxi: duration 22, cost 61.47. walk: duration 178, cost 0.0. \nfrom West Lake Spring (Baihui Branch) to Shenzhen Bay Park - Sunrise Theater: metro: duration 65, cost 15. taxi: duration 24, cost 67.81. walk: duration 194, cost 0.0. \nfrom West Lake Spring (Baihui Branch) to Hampton by Hilton Shenzhen Bantian: metro: duration 28, cost 12. taxi: duration 16, cost 43.76. walk: duration 130, cost 0.0. \nfrom West Lake Spring (Baihui Branch) to Shenzhen Bay Park - Sports Park: metro: duration 55, cost 15. taxi: duration 26, cost 73.4. walk: duration 209, cost 0.0. \nfrom West Lake Spring (Baihui Branch) to Shenzhen Central Park: metro: duration 12, cost 6. taxi: duration 4, cost 15.92. walk: duration 38, cost 0.0. \nfrom West Lake Spring (Baihui Branch) to Shenzhen North Railway Station: metro: duration 23, cost 12. taxi: duration 15, cost 39.84. walk: duration 120, cost 0.0. \nfrom West Lake Spring (Baihui Branch) to Libaoge (Kerry Store): metro: duration 16, cost 9. taxi: duration 8, cost 24.38. walk: duration 67, cost 0.0. \nfrom West Lake Spring (Baihui Branch) to Shenzhen Children's Park: metro: duration 24, cost 12. taxi: duration 13, cost 37.21. walk: duration 111, cost 0.0. \nfrom West Lake Spring (Baihui Branch) to Shenzhen International Garden and Flower Expo Park: metro: duration 30, cost 12. taxi: duration 15, cost 40.05. walk: duration 120, cost 0.0. \nfrom West Lake Spring (Baihui Branch) to Metropark Hotel Shenzhen: metro: duration 7, cost 6. taxi: duration 2, cost 11.0. walk: duration 21, cost 0.0. \nfrom West Lake Spring (Baihui Branch) to Shenzhen Bay Bridge: metro: duration 61, cost 15. taxi: duration 25, cost 70.8. walk: duration 202, cost 0.0. \nfrom West Lake Spring (Baihui Branch) to People's Park: metro: duration 15, cost 6. taxi: duration 2, cost 11.0. walk: duration 21, cost 0.0. \nfrom West Lake Spring (Baihui Branch) to Fairy Lake Botanical Garden: metro: duration 44, cost 9. taxi: duration 12, cost 33.56. walk: duration 98, cost 0.0. \nfrom West Lake Spring (Baihui Branch) to Shenzhen Station: metro: duration 11, cost 6. taxi: duration 4, cost 14.44. walk: duration 33, cost 0.0. \nfrom West Lake Spring (Baihui Branch) to Shenzhen Bao'an International Airport: metro: duration 69, cost 21. taxi: duration 46, cost 134.34. walk: duration 372, cost 0.0. \nfrom West Lake Spring (Baihui Branch) to Shenzhen Safari Park: metro: duration 50, cost 15. taxi: duration 21, cost 59.39. walk: duration 172, cost 0.0. \nfrom West Lake Spring (Baihui Branch) to Shenzhen Bay Park: metro: duration 32, cost 15. taxi: duration 21, cost 60.24. walk: duration 174, cost 0.0. \nfrom Vienna International Hotel (Shenzhen North Railway Station Yuanfen Subway Station) to Lychee Park: metro: duration 43, cost 15. taxi: duration 22, cost 63.22. walk: duration 182, cost 0.0. \nfrom Vienna International Hotel (Shenzhen North Railway Station Yuanfen Subway Station) to Dameisha Seaside Park: metro: duration 78, cost 21. taxi: duration 48, cost 139.06. walk: duration 384, cost 0.0. \nfrom Vienna International Hotel (Shenzhen North Railway Station Yuanfen Subway Station) to Lotus Hill Park: metro: duration 33, cost 12. taxi: duration 17, cost 48.18. walk: duration 142, cost 0.0. \nfrom Vienna International Hotel (Shenzhen North Railway Station Yuanfen Subway Station) to Guangdong Wutong Mountain National Forest Park: metro: duration 85, cost 18. taxi: duration 34, cost 99.51. walk: duration 279, cost 0.0. \nfrom Vienna International Hotel (Shenzhen North Railway Station Yuanfen Subway Station) to Yat Bun Sin Tea House (Mixc World Store): metro: duration 36, cost 12. taxi: duration 19, cost 54.66. walk: duration 159, cost 0.0. \nfrom Vienna International Hotel (Shenzhen North Railway Station Yuanfen Subway Station) to Jiangnan Chef (China Resources Mixc Store): metro: duration 43, cost 15. taxi: duration 24, cost 68.37. walk: duration 196, cost 0.0. \nfrom Vienna International Hotel (Shenzhen North Railway Station Yuanfen Subway Station) to Yude Longji Hakka Restaurant (Longhua Branch): metro: duration 30, cost 6. taxi: duration 4, cost 16.28. walk: duration 39, cost 0.0. \nfrom Vienna International Hotel (Shenzhen North Railway Station Yuanfen Subway Station) to Shenzhen Bay Park - Liuhua Hill: metro: duration 49, cost 15. taxi: duration 23, cost 64.93. walk: duration 187, cost 0.0. \nfrom Vienna International Hotel (Shenzhen North Railway Station Yuanfen Subway Station) to West Lake Spring (Baihui Branch): metro: duration 39, cost 15. taxi: duration 22, cost 61.47. walk: duration 178, cost 0.0. \nfrom Vienna International Hotel (Shenzhen North Railway Station Yuanfen Subway Station) to Vienna International Hotel (Shenzhen North Railway Station Yuanfen Subway Station):  metro: empty.  taxi: empty.  walk: empty. \nfrom Vienna International Hotel (Shenzhen North Railway Station Yuanfen Subway Station) to Shenzhen Bay Park - Sunrise Theater: metro: duration 69, cost 15. taxi: duration 25, cost 71.51. walk: duration 204, cost 0.0. \nfrom Vienna International Hotel (Shenzhen North Railway Station Yuanfen Subway Station) to Hampton by Hilton Shenzhen Bantian: metro: duration 23, cost 9. taxi: duration 9, cost 25.83. walk: duration 72, cost 0.0. \nfrom Vienna International Hotel (Shenzhen North Railway Station Yuanfen Subway Station) to Shenzhen Bay Park - Sports Park: metro: duration 60, cost 15. taxi: duration 28, cost 78.73. walk: duration 224, cost 0.0. \nfrom Vienna International Hotel (Shenzhen North Railway Station Yuanfen Subway Station) to Shenzhen Central Park: metro: duration 40, cost 15. taxi: duration 22, cost 61.2. walk: duration 177, cost 0.0. \nfrom Vienna International Hotel (Shenzhen North Railway Station Yuanfen Subway Station) to Shenzhen North Railway Station: metro: duration 18, cost 9. taxi: duration 7, cost 22.92. walk: duration 62, cost 0.0. \nfrom Vienna International Hotel (Shenzhen North Railway Station Yuanfen Subway Station) to Libaoge (Kerry Store): metro: duration 36, cost 15. taxi: duration 20, cost 57.28. walk: duration 166, cost 0.0. \nfrom Vienna International Hotel (Shenzhen North Railway Station Yuanfen Subway Station) to Shenzhen Children's Park: metro: duration 32, cost 12. taxi: duration 17, cost 45.99. walk: duration 136, cost 0.0. \nfrom Vienna International Hotel (Shenzhen North Railway Station Yuanfen Subway Station) to Shenzhen International Garden and Flower Expo Park: metro: duration 36, cost 12. taxi: duration 17, cost 48.6. walk: duration 143, cost 0.0. \nfrom Vienna International Hotel (Shenzhen North Railway Station Yuanfen Subway Station) to Metropark Hotel Shenzhen: metro: duration 39, cost 15. taxi: duration 24, cost 68.87. walk: duration 197, cost 0.0. \nfrom Vienna International Hotel (Shenzhen North Railway Station Yuanfen Subway Station) to Shenzhen Bay Bridge: metro: duration 66, cost 15. taxi: duration 27, cost 77.37. walk: duration 220, cost 0.0. \nfrom Vienna International Hotel (Shenzhen North Railway Station Yuanfen Subway Station) to People's Park: metro: duration 45, cost 15. taxi: duration 23, cost 65.6. walk: duration 189, cost 0.0. \nfrom Vienna International Hotel (Shenzhen North Railway Station Yuanfen Subway Station) to Fairy Lake Botanical Garden: metro: duration 73, cost 15. taxi: duration 29, cost 82.13. walk: duration 233, cost 0.0. \nfrom Vienna International Hotel (Shenzhen North Railway Station Yuanfen Subway Station) to Shenzhen Station: metro: duration 44, cost 15. taxi: duration 26, cost 73.2. walk: duration 209, cost 0.0. \nfrom Vienna International Hotel (Shenzhen North Railway Station Yuanfen Subway Station) to Shenzhen Bao'an International Airport: metro: duration 48, cost 15. taxi: duration 28, cost 81.19. walk: duration 230, cost 0.0. \nfrom Vienna International Hotel (Shenzhen North Railway Station Yuanfen Subway Station) to Shenzhen Safari Park: metro: duration 40, cost 9. taxi: duration 9, cost 26.77. walk: duration 75, cost 0.0. \nfrom Vienna International Hotel (Shenzhen North Railway Station Yuanfen Subway Station) to Shenzhen Bay Park: metro: duration 37, cost 15. taxi: duration 21, cost 60.57. walk: duration 175, cost 0.0. \nfrom Shenzhen Bay Park - Sunrise Theater to Lychee Park: metro: duration 67, cost 15. taxi: duration 24, cost 67.9. walk: duration 195, cost 0.0. \nfrom Shenzhen Bay Park - Sunrise Theater to Dameisha Seaside Park: metro: duration 113, cost 24. taxi: duration 56, cost 165.51. walk: duration 455, cost 0.0. \nfrom Shenzhen Bay Park - Sunrise Theater to Lotus Hill Park: metro: duration 58, cost 15. taxi: duration 18, cost 50.91. walk: duration 149, cost 0.0. \nfrom Shenzhen Bay Park - Sunrise Theater to Guangdong Wutong Mountain National Forest Park: metro: duration 119, cost 21. taxi: duration 42, cost 122.54. walk: duration 340, cost 0.0. \nfrom Shenzhen Bay Park - Sunrise Theater to Yat Bun Sin Tea House (Mixc World Store): metro: duration 38, cost 9. taxi: duration 6, cost 19.02. walk: duration 49, cost 0.0. \nfrom Shenzhen Bay Park - Sunrise Theater to Jiangnan Chef (China Resources Mixc Store): metro: duration 66, cost 15. taxi: duration 24, cost 67.38. walk: duration 193, cost 0.0. \nfrom Shenzhen Bay Park - Sunrise Theater to Yude Longji Hakka Restaurant (Longhua Branch): metro: duration 84, cost 15. taxi: duration 26, cost 75.02. walk: duration 214, cost 0.0. \nfrom Shenzhen Bay Park - Sunrise Theater to Shenzhen Bay Park - Liuhua Hill: metro: duration 47, cost 9. taxi: duration 2, cost 11.0. walk: duration 17, cost 0.0. \nfrom Shenzhen Bay Park - Sunrise Theater to West Lake Spring (Baihui Branch): metro: duration 65, cost 15. taxi: duration 24, cost 67.81. walk: duration 194, cost 0.0. \nfrom Shenzhen Bay Park - Sunrise Theater to Vienna International Hotel (Shenzhen North Railway Station Yuanfen Subway Station): metro: duration 69, cost 15. taxi: duration 25, cost 71.51. walk: duration 204, cost 0.0. \nfrom Shenzhen Bay Park - Sunrise Theater to Shenzhen Bay Park - Sunrise Theater:  metro: empty.  taxi: empty.  walk: empty. \nfrom Shenzhen Bay Park - Sunrise Theater to Hampton by Hilton Shenzhen Bantian: metro: duration 71, cost 15. taxi: duration 28, cost 80.7. walk: duration 229, cost 0.0. \nfrom Shenzhen Bay Park - Sunrise Theater to Shenzhen Bay Park - Sports Park: metro: duration 43, cost 6. taxi: duration 2, cost 11.0. walk: duration 19, cost 0.0. \nfrom Shenzhen Bay Park - Sunrise Theater to Shenzhen Central Park: metro: duration 61, cost 15. taxi: duration 19, cost 54.1. walk: duration 158, cost 0.0. \nfrom Shenzhen Bay Park - Sunrise Theater to Shenzhen North Railway Station: metro: duration 57, cost 15. taxi: duration 20, cost 56.27. walk: duration 164, cost 0.0. \nfrom Shenzhen Bay Park - Sunrise Theater to Libaoge (Kerry Store): metro: duration 53, cost 12. taxi: duration 15, cost 42.56. walk: duration 127, cost 0.0. \nfrom Shenzhen Bay Park - Sunrise Theater to Shenzhen Children's Park: metro: duration 48, cost 12. taxi: duration 11, cost 31.92. walk: duration 93, cost 0.0. \nfrom Shenzhen Bay Park - Sunrise Theater to Shenzhen International Garden and Flower Expo Park: metro: duration 50, cost 9. taxi: duration 10, cost 28.56. walk: duration 81, cost 0.0. \nfrom Shenzhen Bay Park - Sunrise Theater to Metropark Hotel Shenzhen: metro: duration 65, cost 15. taxi: duration 26, cost 73.82. walk: duration 210, cost 0.0. \nfrom Shenzhen Bay Park - Sunrise Theater to Shenzhen Bay Bridge: metro: duration 49, cost 6. taxi: duration 1, cost 11.0. walk: duration 15, cost 0.0. \nfrom Shenzhen Bay Park - Sunrise Theater to People's Park: metro: duration 74, cost 15. taxi: duration 27, cost 75.71. walk: duration 216, cost 0.0. \nfrom Shenzhen Bay Park - Sunrise Theater to Fairy Lake Botanical Garden: metro: duration 103, cost 18. taxi: duration 36, cost 104.9. walk: duration 293, cost 0.0. \nfrom Shenzhen Bay Park - Sunrise Theater to Shenzhen Station: metro: duration 65, cost 15. taxi: duration 24, cost 69.14. walk: duration 198, cost 0.0. \nfrom Shenzhen Bay Park - Sunrise Theater to Shenzhen Bao'an International Airport: metro: duration 71, cost 15. taxi: duration 31, cost 88.86. walk: duration 251, cost 0.0. \nfrom Shenzhen Bay Park - Sunrise Theater to Shenzhen Safari Park: metro: duration 65, cost 12. taxi: duration 16, cost 44.22. walk: duration 132, cost 0.0. \nfrom Shenzhen Bay Park - Sunrise Theater to Shenzhen Bay Park: metro: duration 35, cost 9. taxi: duration 3, cost 13.34. walk: duration 29, cost 0.0. \nfrom Hampton by Hilton Shenzhen Bantian to Lychee Park: metro: duration 33, cost 12. taxi: duration 16, cost 45.64. walk: duration 135, cost 0.0. \nfrom Hampton by Hilton Shenzhen Bantian to Dameisha Seaside Park: metro: duration 64, cost 18. taxi: duration 39, cost 111.98. walk: duration 312, cost 0.0. \nfrom Hampton by Hilton Shenzhen Bantian to Lotus Hill Park: metro: duration 26, cost 12. taxi: duration 14, cost 38.31. walk: duration 115, cost 0.0. \nfrom Hampton by Hilton Shenzhen Bantian to Guangdong Wutong Mountain National Forest Park: metro: duration 71, cost 15. taxi: duration 26, cost 73.19. walk: duration 209, cost 0.0. \nfrom Hampton by Hilton Shenzhen Bantian to Yat Bun Sin Tea House (Mixc World Store): metro: duration 40, cost 15. taxi: duration 24, cost 67.3. walk: duration 193, cost 0.0. \nfrom Hampton by Hilton Shenzhen Bantian to Jiangnan Chef (China Resources Mixc Store): metro: duration 32, cost 12. taxi: duration 18, cost 51.5. walk: duration 151, cost 0.0. \nfrom Hampton by Hilton Shenzhen Bantian to Yude Longji Hakka Restaurant (Longhua Branch): metro: duration 35, cost 9. taxi: duration 4, cost 14.27. walk: duration 32, cost 0.0. \nfrom Hampton by Hilton Shenzhen Bantian to Shenzhen Bay Park - Liuhua Hill: metro: duration 50, cost 15. taxi: duration 26, cost 74.88. walk: duration 213, cost 0.0. \nfrom Hampton by Hilton Shenzhen Bantian to West Lake Spring (Baihui Branch): metro: duration 28, cost 12. taxi: duration 16, cost 43.76. walk: duration 130, cost 0.0. \nfrom Hampton by Hilton Shenzhen Bantian to Vienna International Hotel (Shenzhen North Railway Station Yuanfen Subway Station): metro: duration 23, cost 9. taxi: duration 9, cost 25.83. walk: duration 72, cost 0.0. \nfrom Hampton by Hilton Shenzhen Bantian to Shenzhen Bay Park - Sunrise Theater: metro: duration 71, cost 15. taxi: duration 28, cost 80.7. walk: duration 229, cost 0.0. \nfrom Hampton by Hilton Shenzhen Bantian to Hampton by Hilton Shenzhen Bantian:  metro: empty.  taxi: empty.  walk: empty. \nfrom Hampton by Hilton Shenzhen Bantian to Shenzhen Bay Park - Sports Park: metro: duration 63, cost 18. taxi: duration 31, cost 87.98. walk: duration 248, cost 0.0. \nfrom Hampton by Hilton Shenzhen Bantian to Shenzhen Central Park: metro: duration 31, cost 12. taxi: duration 18, cost 48.96. walk: duration 144, cost 0.0. \nfrom Hampton by Hilton Shenzhen Bantian to Shenzhen North Railway Station: metro: duration 16, cost 9. taxi: duration 8, cost 23.96. walk: duration 66, cost 0.0. \nfrom Hampton by Hilton Shenzhen Bantian to Libaoge (Kerry Store): metro: duration 30, cost 12. taxi: duration 18, cost 49.99. walk: duration 147, cost 0.0. \nfrom Hampton by Hilton Shenzhen Bantian to Shenzhen Children's Park: metro: duration 30, cost 12. taxi: duration 17, cost 47.73. walk: duration 141, cost 0.0. \nfrom Hampton by Hilton Shenzhen Bantian to Shenzhen International Garden and Flower Expo Park: metro: duration 36, cost 12. taxi: duration 18, cost 51.68. walk: duration 151, cost 0.0. \nfrom Hampton by Hilton Shenzhen Bantian to Metropark Hotel Shenzhen: metro: duration 28, cost 12. taxi: duration 18, cost 49.78. walk: duration 146, cost 0.0. \nfrom Hampton by Hilton Shenzhen Bantian to Shenzhen Bay Bridge: metro: duration 69, cost 18. taxi: duration 30, cost 86.03. walk: duration 243, cost 0.0. \nfrom Hampton by Hilton Shenzhen Bantian to People's Park: metro: duration 33, cost 12. taxi: duration 16, cost 45.44. walk: duration 135, cost 0.0. \nfrom Hampton by Hilton Shenzhen Bantian to Fairy Lake Botanical Garden: metro: duration 60, cost 15. taxi: duration 20, cost 56.56. walk: duration 164, cost 0.0. \nfrom Hampton by Hilton Shenzhen Bantian to Shenzhen Station: metro: duration 33, cost 12. taxi: duration 20, cost 56.28. walk: duration 164, cost 0.0. \nfrom Hampton by Hilton Shenzhen Bantian to Shenzhen Bao'an International Airport: metro: duration 60, cost 18. taxi: duration 37, cost 108.08. walk: duration 302, cost 0.0. \nfrom Hampton by Hilton Shenzhen Bantian to Shenzhen Safari Park: metro: duration 46, cost 12. taxi: duration 15, cost 41.07. walk: duration 123, cost 0.0. \nfrom Hampton by Hilton Shenzhen Bantian to Shenzhen Bay Park: metro: duration 38, cost 15. taxi: duration 25, cost 69.75. walk: duration 200, cost 0.0. \nfrom Shenzhen Bay Park - Sports Park to Lychee Park: metro: duration 58, cost 15. taxi: duration 26, cost 73.37. walk: duration 209, cost 0.0. \nfrom Shenzhen Bay Park - Sports Park to Dameisha Seaside Park: metro: duration 104, cost 24. taxi: duration 58, cost 170.64. walk: duration 469, cost 0.0. \nfrom Shenzhen Bay Park - Sports Park to Lotus Hill Park: metro: duration 49, cost 15. taxi: duration 20, cost 57.16. walk: duration 166, cost 0.0. \nfrom Shenzhen Bay Park - Sports Park to Guangdong Wutong Mountain National Forest Park: metro: duration 110, cost 21. taxi: duration 44, cost 127.89. walk: duration 355, cost 0.0. \nfrom Shenzhen Bay Park - Sports Park to Yat Bun Sin Tea House (Mixc World Store): metro: duration 29, cost 9. taxi: duration 8, cost 24.12. walk: duration 66, cost 0.0. \nfrom Shenzhen Bay Park - Sports Park to Jiangnan Chef (China Resources Mixc Store): metro: duration 56, cost 15. taxi: duration 25, cost 72.45. walk: duration 207, cost 0.0. \nfrom Shenzhen Bay Park - Sports Park to Yude Longji Hakka Restaurant (Longhua Branch): metro: duration 76, cost 15. taxi: duration 29, cost 82.36. walk: duration 233, cost 0.0. \nfrom Shenzhen Bay Park - Sports Park to Shenzhen Bay Park - Liuhua Hill: metro: duration 38, cost 9. taxi: duration 4, cost 15.44. walk: duration 36, cost 0.0. \nfrom Shenzhen Bay Park - Sports Park to West Lake Spring (Baihui Branch): metro: duration 55, cost 15. taxi: duration 26, cost 73.4. walk: duration 209, cost 0.0. \nfrom Shenzhen Bay Park - Sports Park to Vienna International Hotel (Shenzhen North Railway Station Yuanfen Subway Station): metro: duration 60, cost 15. taxi: duration 28, cost 78.73. walk: duration 224, cost 0.0. \nfrom Shenzhen Bay Park - Sports Park to Shenzhen Bay Park - Sunrise Theater: metro: duration 43, cost 6. taxi: duration 2, cost 11.0. walk: duration 19, cost 0.0. \nfrom Shenzhen Bay Park - Sports Park to Hampton by Hilton Shenzhen Bantian: metro: duration 63, cost 18. taxi: duration 31, cost 87.98. walk: duration 248, cost 0.0. \nfrom Shenzhen Bay Park - Sports Park to Shenzhen Bay Park - Sports Park:  metro: empty.  taxi: empty.  walk: empty. \nfrom Shenzhen Bay Park - Sports Park to Shenzhen Central Park: metro: duration 51, cost 15. taxi: duration 21, cost 59.4. walk: duration 172, cost 0.0. \nfrom Shenzhen Bay Park - Sports Park to Shenzhen North Railway Station: metro: duration 49, cost 15. taxi: duration 22, cost 63.59. walk: duration 183, cost 0.0. \nfrom Shenzhen Bay Park - Sports Park to Libaoge (Kerry Store): metro: duration 43, cost 12. taxi: duration 17, cost 48.1. walk: duration 142, cost 0.0. \nfrom Shenzhen Bay Park - Sports Park to Shenzhen Children's Park: metro: duration 38, cost 12. taxi: duration 13, cost 37.26. walk: duration 111, cost 0.0. \nfrom Shenzhen Bay Park - Sports Park to Shenzhen International Garden and Flower Expo Park: metro: duration 41, cost 12. taxi: duration 12, cost 33.91. walk: duration 100, cost 0.0. \nfrom Shenzhen Bay Park - Sports Park to Metropark Hotel Shenzhen: metro: duration 55, cost 15. taxi: duration 28, cost 79.08. walk: duration 225, cost 0.0. \nfrom Shenzhen Bay Park - Sports Park to Shenzhen Bay Bridge: taxi: duration 0, cost 11.0. walk: duration 7, cost 0.0. \nfrom Shenzhen Bay Park - Sports Park to People's Park: metro: duration 65, cost 15. taxi: duration 28, cost 81.24. walk: duration 230, cost 0.0. \nfrom Shenzhen Bay Park - Sports Park to Fairy Lake Botanical Garden: metro: duration 93, cost 18. taxi: duration 38, cost 110.5. walk: duration 308, cost 0.0. \nfrom Shenzhen Bay Park - Sports Park to Shenzhen Station: metro: duration 56, cost 15. taxi: duration 26, cost 73.88. walk: duration 211, cost 0.0. \nfrom Shenzhen Bay Park - Sports Park to Shenzhen Bao'an International Airport: metro: duration 62, cost 15. taxi: duration 32, cost 91.56. walk: duration 258, cost 0.0. \nfrom Shenzhen Bay Park - Sports Park to Shenzhen Safari Park: metro: duration 56, cost 12. taxi: duration 18, cost 51.25. walk: duration 150, cost 0.0. \nfrom Shenzhen Bay Park - Sports Park to Shenzhen Bay Park: metro: duration 26, cost 9. taxi: duration 6, cost 19.04. walk: duration 49, cost 0.0. \nfrom Shenzhen Central Park to Lychee Park: metro: duration 14, cost 6. taxi: duration 4, cost 15.66. walk: duration 37, cost 0.0. \nfrom Shenzhen Central Park to Dameisha Seaside Park: metro: duration 60, cost 18. taxi: duration 37, cost 106.12. walk: duration 297, cost 0.0. \nfrom Shenzhen Central Park to Lotus Hill Park: metro: duration 12, cost 6. taxi: duration 4, cost 14.89. walk: duration 34, cost 0.0. \nfrom Shenzhen Central Park to Guangdong Wutong Mountain National Forest Park: metro: duration 66, cost 15. taxi: duration 22, cost 63.2. walk: duration 182, cost 0.0. \nfrom Shenzhen Central Park to Yat Bun Sin Tea House (Mixc World Store): metro: duration 34, cost 12. taxi: duration 19, cost 52.96. walk: duration 155, cost 0.0. \nfrom Shenzhen Central Park to Jiangnan Chef (China Resources Mixc Store): metro: duration 12, cost 6. taxi: duration 4, cost 15.22. walk: duration 36, cost 0.0. \nfrom Shenzhen Central Park to Yude Longji Hakka Restaurant (Longhua Branch): metro: duration 52, cost 12. taxi: duration 19, cost 52.77. walk: duration 154, cost 0.0. \nfrom Shenzhen Central Park to Shenzhen Bay Park - Liuhua Hill: metro: duration 41, cost 12. taxi: duration 19, cost 51.83. walk: duration 152, cost 0.0. \nfrom Shenzhen Central Park to West Lake Spring (Baihui Branch): metro: duration 12, cost 6. taxi: duration 4, cost 15.92. walk: duration 38, cost 0.0. \nfrom Shenzhen Central Park to Vienna International Hotel (Shenzhen North Railway Station Yuanfen Subway Station): metro: duration 40, cost 15. taxi: duration 22, cost 61.2. walk: duration 177, cost 0.0. \nfrom Shenzhen Central Park to Shenzhen Bay Park - Sunrise Theater: metro: duration 61, cost 15. taxi: duration 19, cost 54.1. walk: duration 158, cost 0.0. \nfrom Shenzhen Central Park to Hampton by Hilton Shenzhen Bantian: metro: duration 31, cost 12. taxi: duration 18, cost 48.96. walk: duration 144, cost 0.0. \nfrom Shenzhen Central Park to Shenzhen Bay Park - Sports Park: metro: duration 51, cost 15. taxi: duration 21, cost 59.4. walk: duration 172, cost 0.0. \nfrom Shenzhen Central Park to Shenzhen Central Park:  metro: empty.  taxi: empty.  walk: empty. \nfrom Shenzhen Central Park to Shenzhen North Railway Station: metro: duration 24, cost 12. taxi: duration 14, cost 38.35. walk: duration 115, cost 0.0. \nfrom Shenzhen Central Park to Libaoge (Kerry Store): metro: duration 12, cost 6. taxi: duration 3, cost 13.82. walk: duration 31, cost 0.0. \nfrom Shenzhen Central Park to Shenzhen Children's Park: metro: duration 21, cost 9. taxi: duration 10, cost 28.53. walk: duration 81, cost 0.0. \nfrom Shenzhen Central Park to Shenzhen International Garden and Flower Expo Park: metro: duration 27, cost 9. taxi: duration 11, cost 30.77. walk: duration 89, cost 0.0. \nfrom Shenzhen Central Park to Metropark Hotel Shenzhen: metro: duration 11, cost 6. taxi: duration 6, cost 20.04. walk: duration 52, cost 0.0. \nfrom Shenzhen Central Park to Shenzhen Bay Bridge: metro: duration 57, cost 15. taxi: duration 20, cost 56.79. walk: duration 165, cost 0.0. \nfrom Shenzhen Central Park to People's Park: metro: duration 21, cost 9. taxi: duration 7, cost 21.81. walk: duration 58, cost 0.0. \nfrom Shenzhen Central Park to Fairy Lake Botanical Garden: metro: duration 50, cost 12. taxi: duration 17, cost 45.92. walk: duration 136, cost 0.0. \nfrom Shenzhen Central Park to Shenzhen Station: metro: duration 13, cost 6. taxi: duration 5, cost 17.51. walk: duration 43, cost 0.0. \nfrom Shenzhen Central Park to Shenzhen Bao'an International Airport: metro: duration 67, cost 21. taxi: duration 43, cost 126.55. walk: duration 351, cost 0.0. \nfrom Shenzhen Central Park to Shenzhen Safari Park: metro: duration 49, cost 12. taxi: duration 19, cost 53.0. walk: duration 155, cost 0.0. \nfrom Shenzhen Central Park to Shenzhen Bay Park: metro: duration 29, cost 12. taxi: duration 17, cost 47.26. walk: duration 140, cost 0.0. \nfrom Shenzhen North Railway Station to Lychee Park: metro: duration 27, cost 12. taxi: duration 15, cost 41.46. walk: duration 124, cost 0.0. \nfrom Shenzhen North Railway Station to Dameisha Seaside Park: metro: duration 67, cost 21. taxi: duration 43, cost 126.62. walk: duration 351, cost 0.0. \nfrom Shenzhen North Railway Station to Lotus Hill Park: metro: duration 17, cost 9. taxi: duration 10, cost 28.18. walk: duration 80, cost 0.0. \nfrom Shenzhen North Railway Station to Guangdong Wutong Mountain National Forest Park: metro: duration 73, cost 18. taxi: duration 30, cost 84.71. walk: duration 240, cost 0.0. \nfrom Shenzhen North Railway Station to Yat Bun Sin Tea House (Mixc World Store): metro: duration 26, cost 12. taxi: duration 15, cost 42.54. walk: duration 127, cost 0.0. \nfrom Shenzhen North Railway Station to Jiangnan Chef (China Resources Mixc Store): metro: duration 27, cost 12. taxi: duration 17, cost 46.15. walk: duration 137, cost 0.0. \nfrom Shenzhen North Railway Station to Yude Longji Hakka Restaurant (Longhua Branch): metro: duration 31, cost 9. taxi: duration 6, cost 19.85. walk: duration 51, cost 0.0. \nfrom Shenzhen North Railway Station to Shenzhen Bay Park - Liuhua Hill: metro: duration 36, cost 12. taxi: duration 18, cost 50.29. walk: duration 148, cost 0.0. \nfrom Shenzhen North Railway Station to West Lake Spring (Baihui Branch): metro: duration 23, cost 12. taxi: duration 15, cost 39.84. walk: duration 120, cost 0.0. \nfrom Shenzhen North Railway Station to Vienna International Hotel (Shenzhen North Railway Station Yuanfen Subway Station): metro: duration 18, cost 9. taxi: duration 7, cost 22.92. walk: duration 62, cost 0.0. \nfrom Shenzhen North Railway Station to Shenzhen Bay Park - Sunrise Theater: metro: duration 57, cost 15. taxi: duration 20, cost 56.27. walk: duration 164, cost 0.0. \nfrom Shenzhen North Railway Station to Hampton by Hilton Shenzhen Bantian: metro: duration 16, cost 9. taxi: duration 8, cost 23.96. walk: duration 66, cost 0.0. \nfrom Shenzhen North Railway Station to Shenzhen Bay Park - Sports Park: metro: duration 49, cost 15. taxi: duration 22, cost 63.59. walk: duration 183, cost 0.0. \nfrom Shenzhen North Railway Station to Shenzhen Central Park: metro: duration 24, cost 12. taxi: duration 14, cost 38.35. walk: duration 115, cost 0.0. \nfrom Shenzhen North Railway Station to Shenzhen North Railway Station:  metro: empty.  taxi: empty.  walk: empty. \nfrom Shenzhen North Railway Station to Libaoge (Kerry Store): metro: duration 20, cost 9. taxi: duration 13, cost 35.22. walk: duration 104, cost 0.0. \nfrom Shenzhen North Railway Station to Shenzhen Children's Park: metro: duration 17, cost 9. taxi: duration 10, cost 28.38. walk: duration 81, cost 0.0. \nfrom Shenzhen North Railway Station to Shenzhen International Garden and Flower Expo Park: metro: duration 22, cost 9. taxi: duration 11, cost 31.07. walk: duration 90, cost 0.0. \nfrom Shenzhen North Railway Station to Metropark Hotel Shenzhen: metro: duration 24, cost 12. taxi: duration 17, cost 47.63. walk: duration 141, cost 0.0. \nfrom Shenzhen North Railway Station to Shenzhen Bay Bridge: metro: duration 55, cost 15. taxi: duration 22, cost 61.74. walk: duration 178, cost 0.0. \nfrom Shenzhen North Railway Station to People's Park: metro: duration 30, cost 12. taxi: duration 16, cost 45.1. walk: duration 134, cost 0.0. \nfrom Shenzhen North Railway Station to Fairy Lake Botanical Garden: metro: duration 59, cost 15. taxi: duration 23, cost 66.32. walk: duration 190, cost 0.0. \nfrom Shenzhen North Railway Station to Shenzhen Station: metro: duration 28, cost 12. taxi: duration 18, cost 50.88. walk: duration 149, cost 0.0. \nfrom Shenzhen North Railway Station to Shenzhen Bao'an International Airport: metro: duration 49, cost 18. taxi: duration 32, cost 92.59. walk: duration 261, cost 0.0. \nfrom Shenzhen North Railway Station to Shenzhen Safari Park: metro: duration 32, cost 9. taxi: duration 8, cost 23.65. walk: duration 64, cost 0.0. \nfrom Shenzhen North Railway Station to Shenzhen Bay Park: metro: duration 24, cost 12. taxi: duration 16, cost 45.24. walk: duration 134, cost 0.0. \nfrom Libaoge (Kerry Store) to Lychee Park: metro: duration 18, cost 9. taxi: duration 8, cost 24.41. walk: duration 67, cost 0.0. \nfrom Libaoge (Kerry Store) to Dameisha Seaside Park: metro: duration 64, cost 18. taxi: duration 41, cost 117.72. walk: duration 328, cost 0.0. \nfrom Libaoge (Kerry Store) to Lotus Hill Park: metro: duration 11, cost 6. taxi: duration 4, cost 14.45. walk: duration 33, cost 0.0. \nfrom Libaoge (Kerry Store) to Guangdong Wutong Mountain National Forest Park: metro: duration 70, cost 15. taxi: duration 26, cost 74.68. walk: duration 213, cost 0.0. \nfrom Libaoge (Kerry Store) to Yat Bun Sin Tea House (Mixc World Store): metro: duration 25, cost 12. taxi: duration 15, cost 41.4. walk: duration 124, cost 0.0. \nfrom Libaoge (Kerry Store) to Jiangnan Chef (China Resources Mixc Store): metro: duration 17, cost 9. taxi: duration 8, cost 24.34. walk: duration 67, cost 0.0. \nfrom Libaoge (Kerry Store) to Yude Longji Hakka Restaurant (Longhua Branch): metro: duration 49, cost 12. taxi: duration 18, cost 51.28. walk: duration 150, cost 0.0. \nfrom Libaoge (Kerry Store) to Shenzhen Bay Park - Liuhua Hill: metro: duration 32, cost 9. taxi: duration 15, cost 40.12. walk: duration 121, cost 0.0. \nfrom Libaoge (Kerry Store) to West Lake Spring (Baihui Branch): metro: duration 16, cost 9. taxi: duration 8, cost 24.38. walk: duration 67, cost 0.0. \nfrom Libaoge (Kerry Store) to Vienna International Hotel (Shenzhen North Railway Station Yuanfen Subway Station): metro: duration 36, cost 15. taxi: duration 20, cost 57.28. walk: duration 166, cost 0.0. \nfrom Libaoge (Kerry Store) to Shenzhen Bay Park - Sunrise Theater: metro: duration 53, cost 12. taxi: duration 15, cost 42.56. walk: duration 127, cost 0.0. \nfrom Libaoge (Kerry Store) to Hampton by Hilton Shenzhen Bantian: metro: duration 30, cost 12. taxi: duration 18, cost 49.99. walk: duration 147, cost 0.0. \nfrom Libaoge (Kerry Store) to Shenzhen Bay Park - Sports Park: metro: duration 43, cost 12. taxi: duration 17, cost 48.1. walk: duration 142, cost 0.0. \nfrom Libaoge (Kerry Store) to Shenzhen Central Park: metro: duration 12, cost 6. taxi: duration 3, cost 13.82. walk: duration 31, cost 0.0. \nfrom Libaoge (Kerry Store) to Shenzhen North Railway Station: metro: duration 20, cost 9. taxi: duration 13, cost 35.22. walk: duration 104, cost 0.0. \nfrom Libaoge (Kerry Store) to Libaoge (Kerry Store):  metro: empty.  taxi: empty.  walk: empty. \nfrom Libaoge (Kerry Store) to Shenzhen Children's Park: metro: duration 13, cost 9. taxi: duration 6, cost 20.09. walk: duration 52, cost 0.0. \nfrom Libaoge (Kerry Store) to Shenzhen International Garden and Flower Expo Park: metro: duration 19, cost 9. taxi: duration 7, cost 21.95. walk: duration 59, cost 0.0. \nfrom Libaoge (Kerry Store) to Metropark Hotel Shenzhen: metro: duration 16, cost 9. taxi: duration 10, cost 29.09. walk: duration 83, cost 0.0. \nfrom Libaoge (Kerry Store) to Shenzhen Bay Bridge: metro: duration 49, cost 12. taxi: duration 16, cost 45.51. walk: duration 135, cost 0.0. \nfrom Libaoge (Kerry Store) to People's Park: metro: duration 25, cost 9. taxi: duration 11, cost 30.5. walk: duration 88, cost 0.0. \nfrom Libaoge (Kerry Store) to Fairy Lake Botanical Garden: metro: duration 54, cost 12. taxi: duration 20, cost 57.11. walk: duration 166, cost 0.0. \nfrom Libaoge (Kerry Store) to Shenzhen Station: metro: duration 17, cost 9. taxi: duration 9, cost 26.38. walk: duration 74, cost 0.0. \nfrom Libaoge (Kerry Store) to Shenzhen Bao'an International Airport: metro: duration 60, cost 18. taxi: duration 40, cost 116.57. walk: duration 324, cost 0.0. \nfrom Libaoge (Kerry Store) to Shenzhen Safari Park: metro: duration 42, cost 12. taxi: duration 16, cost 44.65. walk: duration 133, cost 0.0. \nfrom Libaoge (Kerry Store) to Shenzhen Bay Park: metro: duration 20, cost 9. taxi: duration 13, cost 36.46. walk: duration 108, cost 0.0. \nfrom Shenzhen Children's Park to Lychee Park: metro: duration 27, cost 12. taxi: duration 14, cost 37.7. walk: duration 113, cost 0.0. \nfrom Shenzhen Children's Park to Dameisha Seaside Park: metro: duration 73, cost 21. taxi: duration 46, cost 134.22. walk: duration 372, cost 0.0. \nfrom Shenzhen Children's Park to Lotus Hill Park: metro: duration 17, cost 9. taxi: duration 7, cost 22.43. walk: duration 60, cost 0.0. \nfrom Shenzhen Children's Park to Guangdong Wutong Mountain National Forest Park: metro: duration 78, cost 18. taxi: duration 32, cost 90.91. walk: duration 256, cost 0.0. \nfrom Shenzhen Children's Park to Yat Bun Sin Tea House (Mixc World Store): metro: duration 18, cost 9. taxi: duration 9, cost 26.81. walk: duration 75, cost 0.0. \nfrom Shenzhen Children's Park to Jiangnan Chef (China Resources Mixc Store): metro: duration 26, cost 12. taxi: duration 14, cost 38.8. walk: duration 116, cost 0.0. \nfrom Shenzhen Children's Park to Yude Longji Hakka Restaurant (Longhua Branch): metro: duration 46, cost 12. taxi: duration 16, cost 44.61. walk: duration 133, cost 0.0. \nfrom Shenzhen Children's Park to Shenzhen Bay Park - Liuhua Hill: metro: duration 26, cost 9. taxi: duration 10, cost 28.43. walk: duration 81, cost 0.0. \nfrom Shenzhen Children's Park to West Lake Spring (Baihui Branch): metro: duration 24, cost 12. taxi: duration 13, cost 37.21. walk: duration 111, cost 0.0. \nfrom Shenzhen Children's Park to Vienna International Hotel (Shenzhen North Railway Station Yuanfen Subway Station): metro: duration 32, cost 12. taxi: duration 17, cost 45.99. walk: duration 136, cost 0.0. \nfrom Shenzhen Children's Park to Shenzhen Bay Park - Sunrise Theater: metro: duration 48, cost 12. taxi: duration 11, cost 31.92. walk: duration 93, cost 0.0. \nfrom Shenzhen Children's Park to Hampton by Hilton Shenzhen Bantian: metro: duration 30, cost 12. taxi: duration 17, cost 47.73. walk: duration 141, cost 0.0. \nfrom Shenzhen Children's Park to Shenzhen Bay Park - Sports Park: metro: duration 38, cost 12. taxi: duration 13, cost 37.26. walk: duration 111, cost 0.0. \nfrom Shenzhen Children's Park to Shenzhen Central Park: metro: duration 21, cost 9. taxi: duration 10, cost 28.53. walk: duration 81, cost 0.0. \nfrom Shenzhen Children's Park to Shenzhen North Railway Station: metro: duration 17, cost 9. taxi: duration 10, cost 28.38. walk: duration 81, cost 0.0. \nfrom Shenzhen Children's Park to Libaoge (Kerry Store): metro: duration 13, cost 9. taxi: duration 6, cost 20.09. walk: duration 52, cost 0.0. \nfrom Shenzhen Children's Park to Shenzhen Children's Park:  metro: empty.  taxi: empty.  walk: empty. \nfrom Shenzhen Children's Park to Shenzhen International Garden and Flower Expo Park: metro: duration 11, cost 6. taxi: duration 1, cost 11.0. walk: duration 11, cost 0.0. \nfrom Shenzhen Children's Park to Metropark Hotel Shenzhen: metro: duration 25, cost 12. taxi: duration 16, cost 43.75. walk: duration 130, cost 0.0. \nfrom Shenzhen Children's Park to Shenzhen Bay Bridge: metro: duration 44, cost 12. taxi: duration 13, cost 35.5. walk: duration 105, cost 0.0. \nfrom Shenzhen Children's Park to People's Park: metro: duration 33, cost 12. taxi: duration 16, cost 44.29. walk: duration 132, cost 0.0. \nfrom Shenzhen Children's Park to Fairy Lake Botanical Garden: metro: duration 63, cost 15. taxi: duration 25, cost 72.59. walk: duration 207, cost 0.0. \nfrom Shenzhen Children's Park to Shenzhen Station: metro: duration 26, cost 12. taxi: duration 15, cost 41.8. walk: duration 125, cost 0.0. \nfrom Shenzhen Children's Park to Shenzhen Bao'an International Airport: metro: duration 52, cost 18. taxi: duration 34, cost 96.88. walk: duration 272, cost 0.0. \nfrom Shenzhen Children's Park to Shenzhen Safari Park: metro: duration 34, cost 9. taxi: duration 10, cost 29.82. walk: duration 86, cost 0.0. \nfrom Shenzhen Children's Park to Shenzhen Bay Park: metro: duration 14, cost 9. taxi: duration 8, cost 24.37. walk: duration 67, cost 0.0. \nfrom Shenzhen International Garden and Flower Expo Park to Lychee Park: metro: duration 33, cost 12. taxi: duration 15, cost 40.57. walk: duration 122, cost 0.0. \nfrom Shenzhen International Garden and Flower Expo Park to Dameisha Seaside Park: metro: duration 78, cost 21. taxi: duration 47, cost 137.97. walk: duration 382, cost 0.0. \nfrom Shenzhen International Garden and Flower Expo Park to Lotus Hill Park: metro: duration 22, cost 9. taxi: duration 8, cost 25.45. walk: duration 71, cost 0.0. \nfrom Shenzhen International Garden and Flower Expo Park to Guangdong Wutong Mountain National Forest Park: metro: duration 84, cost 18. taxi: duration 33, cost 94.67. walk: duration 266, cost 0.0. \nfrom Shenzhen International Garden and Flower Expo Park to Yat Bun Sin Tea House (Mixc World Store): metro: duration 20, cost 9. taxi: duration 8, cost 24.05. walk: duration 66, cost 0.0. \nfrom Shenzhen International Garden and Flower Expo Park to Jiangnan Chef (China Resources Mixc Store): metro: duration 31, cost 12. taxi: duration 15, cost 41.62. walk: duration 125, cost 0.0. \nfrom Shenzhen International Garden and Flower Expo Park to Yude Longji Hakka Restaurant (Longhua Branch): metro: duration 51, cost 12. taxi: duration 17, cost 48.08. walk: duration 142, cost 0.0. \nfrom Shenzhen International Garden and Flower Expo Park to Shenzhen Bay Park - Liuhua Hill: metro: duration 29, cost 9. taxi: duration 8, cost 25.12. walk: duration 70, cost 0.0. \nfrom Shenzhen International Garden and Flower Expo Park to West Lake Spring (Baihui Branch): metro: duration 30, cost 12. taxi: duration 15, cost 40.05. walk: duration 120, cost 0.0. \nfrom Shenzhen International Garden and Flower Expo Park to Vienna International Hotel (Shenzhen North Railway Station Yuanfen Subway Station): metro: duration 36, cost 12. taxi: duration 17, cost 48.6. walk: duration 143, cost 0.0. \nfrom Shenzhen International Garden and Flower Expo Park to Shenzhen Bay Park - Sunrise Theater: metro: duration 50, cost 9. taxi: duration 10, cost 28.56. walk: duration 81, cost 0.0. \nfrom Shenzhen International Garden and Flower Expo Park to Hampton by Hilton Shenzhen Bantian: metro: duration 36, cost 12. taxi: duration 18, cost 51.68. walk: duration 151, cost 0.0. \nfrom Shenzhen International Garden and Flower Expo Park to Shenzhen Bay Park - Sports Park: metro: duration 41, cost 12. taxi: duration 12, cost 33.91. walk: duration 100, cost 0.0. \nfrom Shenzhen International Garden and Flower Expo Park to Shenzhen Central Park: metro: duration 27, cost 9. taxi: duration 11, cost 30.77. walk: duration 89, cost 0.0. \nfrom Shenzhen International Garden and Flower Expo Park to Shenzhen North Railway Station: metro: duration 22, cost 9. taxi: duration 11, cost 31.07. walk: duration 90, cost 0.0. \nfrom Shenzhen International Garden and Flower Expo Park to Libaoge (Kerry Store): metro: duration 19, cost 9. taxi: duration 7, cost 21.95. walk: duration 59, cost 0.0. \nfrom Shenzhen International Garden and Flower Expo Park to Shenzhen Children's Park: metro: duration 11, cost 6. taxi: duration 1, cost 11.0. walk: duration 11, cost 0.0. \nfrom Shenzhen International Garden and Flower Expo Park to Shenzhen International Garden and Flower Expo Park:  metro: empty.  taxi: empty.  walk: empty. \nfrom Shenzhen International Garden and Flower Expo Park to Metropark Hotel Shenzhen: metro: duration 30, cost 12. taxi: duration 17, cost 47.11. walk: duration 139, cost 0.0. \nfrom Shenzhen International Garden and Flower Expo Park to Shenzhen Bay Bridge: metro: duration 47, cost 12. taxi: duration 11, cost 32.15. walk: duration 94, cost 0.0. \nfrom Shenzhen International Garden and Flower Expo Park to People's Park: metro: duration 39, cost 12. taxi: duration 17, cost 47.9. walk: duration 141, cost 0.0. \nfrom Shenzhen International Garden and Flower Expo Park to Fairy Lake Botanical Garden: metro: duration 68, cost 15. taxi: duration 27, cost 76.44. walk: duration 217, cost 0.0. \nfrom Shenzhen International Garden and Flower Expo Park to Shenzhen Station: metro: duration 32, cost 12. taxi: duration 16, cost 44.63. walk: duration 133, cost 0.0. \nfrom Shenzhen International Garden and Flower Expo Park to Shenzhen Bao'an International Airport: metro: duration 55, cost 18. taxi: duration 33, cost 95.31. walk: duration 268, cost 0.0. \nfrom Shenzhen International Garden and Flower Expo Park to Shenzhen Safari Park: metro: duration 37, cost 9. taxi: duration 10, cost 30.34. walk: duration 87, cost 0.0. \nfrom Shenzhen International Garden and Flower Expo Park to Shenzhen Bay Park: metro: duration 17, cost 9. taxi: duration 7, cost 21.08. walk: duration 56, cost 0.0. \nfrom Metropark Hotel Shenzhen to Lychee Park: metro: duration 9, cost 6. taxi: duration 2, cost 11.0. walk: duration 18, cost 0.0. \nfrom Metropark Hotel Shenzhen to Dameisha Seaside Park: metro: duration 48, cost 15. taxi: duration 30, cost 86.39. walk: duration 244, cost 0.0. \nfrom Metropark Hotel Shenzhen to Lotus Hill Park: metro: duration 14, cost 9. taxi: duration 9, cost 25.88. walk: duration 72, cost 0.0. \nfrom Metropark Hotel Shenzhen to Guangdong Wutong Mountain National Forest Park: metro: duration 54, cost 12. taxi: duration 16, cost 43.52. walk: duration 130, cost 0.0. \nfrom Metropark Hotel Shenzhen to Yat Bun Sin Tea House (Mixc World Store): metro: duration 37, cost 15. taxi: duration 25, cost 71.98. walk: duration 206, cost 0.0. \nfrom Metropark Hotel Shenzhen to Jiangnan Chef (China Resources Mixc Store): metro: duration 7, cost 6. taxi: duration 2, cost 11.0. walk: duration 18, cost 0.0. \nfrom Metropark Hotel Shenzhen to Yude Longji Hakka Restaurant (Longhua Branch): metro: duration 51, cost 15. taxi: duration 20, cost 57.29. walk: duration 166, cost 0.0. \nfrom Metropark Hotel Shenzhen to Shenzhen Bay Park - Liuhua Hill: metro: duration 45, cost 15. taxi: duration 25, cost 71.48. walk: duration 204, cost 0.0. \nfrom Metropark Hotel Shenzhen to West Lake Spring (Baihui Branch): metro: duration 7, cost 6. taxi: duration 2, cost 11.0. walk: duration 21, cost 0.0. \nfrom Metropark Hotel Shenzhen to Vienna International Hotel (Shenzhen North Railway Station Yuanfen Subway Station): metro: duration 39, cost 15. taxi: duration 24, cost 68.87. walk: duration 197, cost 0.0. \nfrom Metropark Hotel Shenzhen to Shenzhen Bay Park - Sunrise Theater: metro: duration 65, cost 15. taxi: duration 26, cost 73.82. walk: duration 210, cost 0.0. \nfrom Metropark Hotel Shenzhen to Hampton by Hilton Shenzhen Bantian: metro: duration 28, cost 12. taxi: duration 18, cost 49.78. walk: duration 146, cost 0.0. \nfrom Metropark Hotel Shenzhen to Shenzhen Bay Park - Sports Park: metro: duration 55, cost 15. taxi: duration 28, cost 79.08. walk: duration 225, cost 0.0. \nfrom Metropark Hotel Shenzhen to Shenzhen Central Park: metro: duration 11, cost 6. taxi: duration 6, cost 20.04. walk: duration 52, cost 0.0. \nfrom Metropark Hotel Shenzhen to Shenzhen North Railway Station: metro: duration 24, cost 12. taxi: duration 17, cost 47.63. walk: duration 141, cost 0.0. \nfrom Metropark Hotel Shenzhen to Libaoge (Kerry Store): metro: duration 16, cost 9. taxi: duration 10, cost 29.09. walk: duration 83, cost 0.0. \nfrom Metropark Hotel Shenzhen to Shenzhen Children's Park: metro: duration 25, cost 12. taxi: duration 16, cost 43.75. walk: duration 130, cost 0.0. \nfrom Metropark Hotel Shenzhen to Shenzhen International Garden and Flower Expo Park: metro: duration 30, cost 12. taxi: duration 17, cost 47.11. walk: duration 139, cost 0.0. \nfrom Metropark Hotel Shenzhen to Metropark Hotel Shenzhen:  metro: empty.  taxi: empty.  walk: empty. \nfrom Metropark Hotel Shenzhen to Shenzhen Bay Bridge: metro: duration 61, cost 15. taxi: duration 27, cost 76.45. walk: duration 218, cost 0.0. \nfrom Metropark Hotel Shenzhen to People's Park: metro: duration 11, cost 6. taxi: duration 1, cost 11.0. walk: duration 13, cost 0.0. \nfrom Metropark Hotel Shenzhen to Fairy Lake Botanical Garden: metro: duration 38, cost 9. taxi: duration 10, cost 29.59. walk: duration 85, cost 0.0. \nfrom Metropark Hotel Shenzhen to Shenzhen Station: metro: duration 5, cost 6. taxi: duration 2, cost 11.69. walk: duration 23, cost 0.0. \nfrom Metropark Hotel Shenzhen to Shenzhen Bao'an International Airport: metro: duration 70, cost 21. taxi: duration 49, cost 142.3. walk: duration 393, cost 0.0. \nfrom Metropark Hotel Shenzhen to Shenzhen Safari Park: metro: duration 51, cost 15. taxi: duration 24, cost 67.37. walk: duration 193, cost 0.0. \nfrom Metropark Hotel Shenzhen to Shenzhen Bay Park: metro: duration 33, cost 15. taxi: duration 24, cost 66.82. walk: duration 192, cost 0.0. \nfrom Shenzhen Bay Bridge to Lychee Park: metro: duration 64, cost 15. taxi: duration 25, cost 70.77. walk: duration 202, cost 0.0. \nfrom Shenzhen Bay Bridge to Dameisha Seaside Park: metro: duration 110, cost 24. taxi: duration 57, cost 168.01. walk: duration 462, cost 0.0. \nfrom Shenzhen Bay Bridge to Lotus Hill Park: metro: duration 55, cost 15. taxi: duration 19, cost 54.67. walk: duration 159, cost 0.0. \nfrom Shenzhen Bay Bridge to Guangdong Wutong Mountain National Forest Park: metro: duration 116, cost 21. taxi: duration 43, cost 125.27. walk: duration 348, cost 0.0. \nfrom Shenzhen Bay Bridge to Yat Bun Sin Tea House (Mixc World Store): metro: duration 35, cost 9. taxi: duration 8, cost 23.55. walk: duration 64, cost 0.0. \nfrom Shenzhen Bay Bridge to Jiangnan Chef (China Resources Mixc Store): metro: duration 62, cost 15. taxi: duration 25, cost 69.82. walk: duration 200, cost 0.0. \nfrom Shenzhen Bay Bridge to Yude Longji Hakka Restaurant (Longhua Branch): metro: duration 82, cost 15. taxi: duration 28, cost 80.64. walk: duration 229, cost 0.0. \nfrom Shenzhen Bay Bridge to Shenzhen Bay Park - Liuhua Hill: metro: duration 44, cost 9. taxi: duration 4, cost 14.52. walk: duration 33, cost 0.0. \nfrom Shenzhen Bay Bridge to West Lake Spring (Baihui Branch): metro: duration 61, cost 15. taxi: duration 25, cost 70.8. walk: duration 202, cost 0.0. \nfrom Shenzhen Bay Bridge to Vienna International Hotel (Shenzhen North Railway Station Yuanfen Subway Station): metro: duration 66, cost 15. taxi: duration 27, cost 77.37. walk: duration 220, cost 0.0. \nfrom Shenzhen Bay Bridge to Shenzhen Bay Park - Sunrise Theater: metro: duration 49, cost 6. taxi: duration 1, cost 11.0. walk: duration 15, cost 0.0. \nfrom Shenzhen Bay Bridge to Hampton by Hilton Shenzhen Bantian: metro: duration 69, cost 18. taxi: duration 30, cost 86.03. walk: duration 243, cost 0.0. \nfrom Shenzhen Bay Bridge to Shenzhen Bay Park - Sports Park: taxi: duration 0, cost 11.0. walk: duration 7, cost 0.0. \nfrom Shenzhen Bay Bridge to Shenzhen Central Park: metro: duration 57, cost 15. taxi: duration 20, cost 56.79. walk: duration 165, cost 0.0. \nfrom Shenzhen Bay Bridge to Shenzhen North Railway Station: metro: duration 55, cost 15. taxi: duration 22, cost 61.74. walk: duration 178, cost 0.0. \nfrom Shenzhen Bay Bridge to Libaoge (Kerry Store): metro: duration 49, cost 12. taxi: duration 16, cost 45.51. walk: duration 135, cost 0.0. \nfrom Shenzhen Bay Bridge to Shenzhen Children's Park: metro: duration 44, cost 12. taxi: duration 13, cost 35.5. walk: duration 105, cost 0.0. \nfrom Shenzhen Bay Bridge to Shenzhen International Garden and Flower Expo Park: metro: duration 47, cost 12. taxi: duration 11, cost 32.15. walk: duration 94, cost 0.0. \nfrom Shenzhen Bay Bridge to Metropark Hotel Shenzhen: metro: duration 61, cost 15. taxi: duration 27, cost 76.45. walk: duration 218, cost 0.0. \nfrom Shenzhen Bay Bridge to Shenzhen Bay Bridge:  metro: empty.  taxi: empty.  walk: empty. \nfrom Shenzhen Bay Bridge to People's Park: metro: duration 71, cost 15. taxi: duration 27, cost 78.64. walk: duration 223, cost 0.0. \nfrom Shenzhen Bay Bridge to Fairy Lake Botanical Garden: metro: duration 99, cost 18. taxi: duration 37, cost 107.9. walk: duration 301, cost 0.0. \nfrom Shenzhen Bay Bridge to Shenzhen Station: metro: duration 62, cost 15. taxi: duration 25, cost 71.24. walk: duration 204, cost 0.0. \nfrom Shenzhen Bay Bridge to Shenzhen Bao'an International Airport: metro: duration 68, cost 15. taxi: duration 32, cost 92.7. walk: duration 261, cost 0.0. \nfrom Shenzhen Bay Bridge to Shenzhen Safari Park: metro: duration 62, cost 12. taxi: duration 18, cost 50.14. walk: duration 147, cost 0.0. \nfrom Shenzhen Bay Bridge to Shenzhen Bay Park: metro: duration 32, cost 9. taxi: duration 5, cost 17.8. walk: duration 44, cost 0.0. \nfrom People's Park to Lychee Park: metro: duration 19, cost 6. taxi: duration 2, cost 11.0. walk: duration 21, cost 0.0. \nfrom People's Park to Dameisha Seaside Park: metro: duration 55, cost 15. taxi: duration 30, cost 84.85. walk: duration 240, cost 0.0. \nfrom People's Park to Lotus Hill Park: metro: duration 22, cost 9. taxi: duration 9, cost 25.74. walk: duration 72, cost 0.0. \nfrom People's Park to Guangdong Wutong Mountain National Forest Park: metro: duration 61, cost 12. taxi: duration 15, cost 41.64. walk: duration 125, cost 0.0. \nfrom People's Park to Yat Bun Sin Tea House (Mixc World Store): metro: duration 46, cost 15. taxi: duration 26, cost 72.7. walk: duration 208, cost 0.0. \nfrom People's Park to Jiangnan Chef (China Resources Mixc Store): metro: duration 18, cost 6. taxi: duration 3, cost 13.45. walk: duration 30, cost 0.0. \nfrom People's Park to Yude Longji Hakka Restaurant (Longhua Branch): metro: duration 56, cost 12. taxi: duration 19, cost 53.5. walk: duration 156, cost 0.0. \nfrom People's Park to Shenzhen Bay Park - Liuhua Hill: metro: duration 53, cost 15. taxi: duration 26, cost 72.97. walk: duration 208, cost 0.0. \nfrom People's Park to West Lake Spring (Baihui Branch): metro: duration 15, cost 6. taxi: duration 2, cost 11.0. walk: duration 21, cost 0.0. \nfrom People's Park to Vienna International Hotel (Shenzhen North Railway Station Yuanfen Subway Station): metro: duration 45, cost 15. taxi: duration 23, cost 65.6. walk: duration 189, cost 0.0. \nfrom People's Park to Shenzhen Bay Park - Sunrise Theater: metro: duration 74, cost 15. taxi: duration 27, cost 75.71. walk: duration 216, cost 0.0. \nfrom People's Park to Hampton by Hilton Shenzhen Bantian: metro: duration 33, cost 12. taxi: duration 16, cost 45.44. walk: duration 135, cost 0.0. \nfrom People's Park to Shenzhen Bay Park - Sports Park: metro: duration 65, cost 15. taxi: duration 28, cost 81.24. walk: duration 230, cost 0.0. \nfrom People's Park to Shenzhen Central Park: metro: duration 21, cost 9. taxi: duration 7, cost 21.81. walk: duration 58, cost 0.0. \nfrom People's Park to Shenzhen North Railway Station: metro: duration 30, cost 12. taxi: duration 16, cost 45.1. walk: duration 134, cost 0.0. \nfrom People's Park to Libaoge (Kerry Store): metro: duration 25, cost 9. taxi: duration 11, cost 30.5. walk: duration 88, cost 0.0. \nfrom People's Park to Shenzhen Children's Park: metro: duration 33, cost 12. taxi: duration 16, cost 44.29. walk: duration 132, cost 0.0. \nfrom People's Park to Shenzhen International Garden and Flower Expo Park: metro: duration 39, cost 12. taxi: duration 17, cost 47.9. walk: duration 141, cost 0.0. \nfrom People's Park to Metropark Hotel Shenzhen: metro: duration 11, cost 6. taxi: duration 1, cost 11.0. walk: duration 13, cost 0.0. \nfrom People's Park to Shenzhen Bay Bridge: metro: duration 71, cost 15. taxi: duration 27, cost 78.64. walk: duration 223, cost 0.0. \nfrom People's Park to People's Park:  metro: empty.  taxi: empty.  walk: empty. \nfrom People's Park to Fairy Lake Botanical Garden: metro: duration 45, cost 9. taxi: duration 9, cost 27.46. walk: duration 78, cost 0.0. \nfrom People's Park to Shenzhen Station: metro: duration 17, cost 6. taxi: duration 4, cost 15.65. walk: duration 37, cost 0.0. \nfrom People's Park to Shenzhen Bao'an International Airport: metro: duration 77, cost 21. taxi: duration 48, cost 141.01. walk: duration 390, cost 0.0. \nfrom People's Park to Shenzhen Safari Park: metro: duration 58, cost 15. taxi: duration 23, cost 65.91. walk: duration 189, cost 0.0. \nfrom People's Park to Shenzhen Bay Park: metro: duration 41, cost 15. taxi: duration 24, cost 68.16. walk: duration 195, cost 0.0. \nfrom Fairy Lake Botanical Garden to Lychee Park: metro: duration 47, cost 9. taxi: duration 12, cost 33.6. walk: duration 99, cost 0.0. \nfrom Fairy Lake Botanical Garden to Dameisha Seaside Park: metro: duration 64, cost 15. taxi: duration 20, cost 56.5. walk: duration 164, cost 0.0. \nfrom Fairy Lake Botanical Garden to Lotus Hill Park: metro: duration 51, cost 12. taxi: duration 18, cost 49.79. walk: duration 146, cost 0.0. \nfrom Fairy Lake Botanical Garden to Guangdong Wutong Mountain National Forest Park: metro: duration 70, cost 9. taxi: duration 6, cost 19.21. walk: duration 49, cost 0.0. \nfrom Fairy Lake Botanical Garden to Yat Bun Sin Tea House (Mixc World Store): metro: duration 75, cost 18. taxi: duration 35, cost 100.95. walk: duration 283, cost 0.0. \nfrom Fairy Lake Botanical Garden to Jiangnan Chef (China Resources Mixc Store): metro: duration 45, cost 9. taxi: duration 13, cost 35.05. walk: duration 104, cost 0.0. \nfrom Fairy Lake Botanical Garden to Yude Longji Hakka Restaurant (Longhua Branch): metro: duration 84, cost 15. taxi: duration 24, cost 67.8. walk: duration 194, cost 0.0. \nfrom Fairy Lake Botanical Garden to Shenzhen Bay Park - Liuhua Hill: metro: duration 83, cost 18. taxi: duration 35, cost 101.97. walk: duration 286, cost 0.0. \nfrom Fairy Lake Botanical Garden to West Lake Spring (Baihui Branch): metro: duration 44, cost 9. taxi: duration 12, cost 33.56. walk: duration 98, cost 0.0. \nfrom Fairy Lake Botanical Garden to Vienna International Hotel (Shenzhen North Railway Station Yuanfen Subway Station): metro: duration 73, cost 15. taxi: duration 29, cost 82.13. walk: duration 233, cost 0.0. \nfrom Fairy Lake Botanical Garden to Shenzhen Bay Park - Sunrise Theater: metro: duration 103, cost 18. taxi: duration 36, cost 104.9. walk: duration 293, cost 0.0. \nfrom Fairy Lake Botanical Garden to Hampton by Hilton Shenzhen Bantian: metro: duration 60, cost 15. taxi: duration 20, cost 56.56. walk: duration 164, cost 0.0. \nfrom Fairy Lake Botanical Garden to Shenzhen Bay Park - Sports Park: metro: duration 93, cost 18. taxi: duration 38, cost 110.5. walk: duration 308, cost 0.0. \nfrom Fairy Lake Botanical Garden to Shenzhen Central Park: metro: duration 50, cost 12. taxi: duration 17, cost 45.92. walk: duration 136, cost 0.0. \nfrom Fairy Lake Botanical Garden to Shenzhen North Railway Station: metro: duration 59, cost 15. taxi: duration 23, cost 66.32. walk: duration 190, cost 0.0. \nfrom Fairy Lake Botanical Garden to Libaoge (Kerry Store): metro: duration 54, cost 12. taxi: duration 20, cost 57.11. walk: duration 166, cost 0.0. \nfrom Fairy Lake Botanical Garden to Shenzhen Children's Park: metro: duration 63, cost 15. taxi: duration 25, cost 72.59. walk: duration 207, cost 0.0. \nfrom Fairy Lake Botanical Garden to Shenzhen International Garden and Flower Expo Park: metro: duration 68, cost 15. taxi: duration 27, cost 76.44. walk: duration 217, cost 0.0. \nfrom Fairy Lake Botanical Garden to Metropark Hotel Shenzhen: metro: duration 38, cost 9. taxi: duration 10, cost 29.59. walk: duration 85, cost 0.0. \nfrom Fairy Lake Botanical Garden to Shenzhen Bay Bridge: metro: duration 99, cost 18. taxi: duration 37, cost 107.9. walk: duration 301, cost 0.0. \nfrom Fairy Lake Botanical Garden to People's Park: metro: duration 45, cost 9. taxi: duration 9, cost 27.46. walk: duration 78, cost 0.0. \nfrom Fairy Lake Botanical Garden to Fairy Lake Botanical Garden:  metro: empty.  taxi: empty.  walk: empty. \nfrom Fairy Lake Botanical Garden to Shenzhen Station: metro: duration 42, cost 9. taxi: duration 13, cost 35.31. walk: duration 104, cost 0.0. \nfrom Fairy Lake Botanical Garden to Shenzhen Bao'an International Airport: metro: duration 106, cost 24. taxi: duration 56, cost 164.22. walk: duration 452, cost 0.0. \nfrom Fairy Lake Botanical Garden to Shenzhen Safari Park: metro: duration 88, cost 18. taxi: duration 31, cost 89.73. walk: duration 253, cost 0.0. \nfrom Fairy Lake Botanical Garden to Shenzhen Bay Park: metro: duration 71, cost 18. taxi: duration 34, cost 97.06. walk: duration 272, cost 0.0. \nfrom Shenzhen Station to Lychee Park: metro: duration 12, cost 6. taxi: duration 3, cost 12.98. walk: duration 28, cost 0.0. \nfrom Shenzhen Station to Dameisha Seaside Park: metro: duration 52, cost 15. taxi: duration 32, cost 91.65. walk: duration 258, cost 0.0. \nfrom Shenzhen Station to Lotus Hill Park: metro: duration 17, cost 9. taxi: duration 9, cost 26.14. walk: duration 73, cost 0.0. \nfrom Shenzhen Station to Guangdong Wutong Mountain National Forest Park: metro: duration 58, cost 15. taxi: duration 18, cost 49.6. walk: duration 146, cost 0.0. \nfrom Shenzhen Station to Yat Bun Sin Tea House (Mixc World Store): metro: duration 38, cost 15. taxi: duration 24, cost 69.27. walk: duration 198, cost 0.0. \nfrom Shenzhen Station to Jiangnan Chef (China Resources Mixc Store): metro: duration 9, cost 6. taxi: duration 1, cost 11.0. walk: duration 12, cost 0.0. \nfrom Shenzhen Station to Yude Longji Hakka Restaurant (Longhua Branch): metro: duration 56, cost 15. taxi: duration 22, cost 62.68. walk: duration 181, cost 0.0. \nfrom Shenzhen Station to Shenzhen Bay Park - Liuhua Hill: metro: duration 45, cost 15. taxi: duration 24, cost 67.45. walk: duration 194, cost 0.0. \nfrom Shenzhen Station to West Lake Spring (Baihui Branch): metro: duration 11, cost 6. taxi: duration 4, cost 14.44. walk: duration 33, cost 0.0. \nfrom Shenzhen Station to Vienna International Hotel (Shenzhen North Railway Station Yuanfen Subway Station): metro: duration 44, cost 15. taxi: duration 26, cost 73.2. walk: duration 209, cost 0.0. \nfrom Shenzhen Station to Shenzhen Bay Park - Sunrise Theater: metro: duration 65, cost 15. taxi: duration 24, cost 69.14. walk: duration 198, cost 0.0. \nfrom Shenzhen Station to Hampton by Hilton Shenzhen Bantian: metro: duration 33, cost 12. taxi: duration 20, cost 56.28. walk: duration 164, cost 0.0. \nfrom Shenzhen Station to Shenzhen Bay Park - Sports Park: metro: duration 56, cost 15. taxi: duration 26, cost 73.88. walk: duration 211, cost 0.0. \nfrom Shenzhen Station to Shenzhen Central Park: metro: duration 13, cost 6. taxi: duration 5, cost 17.51. walk: duration 43, cost 0.0. \nfrom Shenzhen Station to Shenzhen North Railway Station: metro: duration 28, cost 12. taxi: duration 18, cost 50.88. walk: duration 149, cost 0.0. \nfrom Shenzhen Station to Libaoge (Kerry Store): metro: duration 17, cost 9. taxi: duration 9, cost 26.38. walk: duration 74, cost 0.0. \nfrom Shenzhen Station to Shenzhen Children's Park: metro: duration 26, cost 12. taxi: duration 15, cost 41.8. walk: duration 125, cost 0.0. \nfrom Shenzhen Station to Shenzhen International Garden and Flower Expo Park: metro: duration 32, cost 12. taxi: duration 16, cost 44.63. walk: duration 133, cost 0.0. \nfrom Shenzhen Station to Metropark Hotel Shenzhen: metro: duration 5, cost 6. taxi: duration 2, cost 11.69. walk: duration 23, cost 0.0. \nfrom Shenzhen Station to Shenzhen Bay Bridge: metro: duration 62, cost 15. taxi: duration 25, cost 71.24. walk: duration 204, cost 0.0. \nfrom Shenzhen Station to People's Park: metro: duration 17, cost 6. taxi: duration 4, cost 15.65. walk: duration 37, cost 0.0. \nfrom Shenzhen Station to Fairy Lake Botanical Garden: metro: duration 42, cost 9. taxi: duration 13, cost 35.31. walk: duration 104, cost 0.0. \nfrom Shenzhen Station to Shenzhen Station:  metro: empty.  taxi: empty.  walk: empty. \nfrom Shenzhen Station to Shenzhen Bao'an International Airport: metro: duration 72, cost 21. taxi: duration 49, cost 142.66. walk: duration 394, cost 0.0. \nfrom Shenzhen Station to Shenzhen Safari Park: metro: duration 54, cost 15. taxi: duration 24, cost 68.47. walk: duration 196, cost 0.0. \nfrom Shenzhen Station to Shenzhen Bay Park: metro: duration 33, cost 15. taxi: duration 22, cost 63.11. walk: duration 182, cost 0.0. \nfrom Shenzhen Bao'an International Airport to Lychee Park: metro: duration 72, cost 21. taxi: duration 46, cost 135.57. walk: duration 375, cost 0.0. \nfrom Shenzhen Bao'an International Airport to Dameisha Seaside Park: metro: duration 114, cost 27. taxi: duration 76, cost 224.04. walk: duration 611, cost 0.0. \nfrom Shenzhen Bao'an International Airport to Lotus Hill Park: metro: duration 61, cost 18. taxi: duration 40, cost 115.38. walk: duration 321, cost 0.0. \nfrom Shenzhen Bao'an International Airport to Guangdong Wutong Mountain National Forest Park: metro: duration 120, cost 24. taxi: duration 62, cost 182.59. walk: duration 501, cost 0.0. \nfrom Shenzhen Bao'an International Airport to Yat Bun Sin Tea House (Mixc World Store): metro: duration 43, cost 15. taxi: duration 26, cost 75.38. walk: duration 215, cost 0.0. \nfrom Shenzhen Bao'an International Airport to Jiangnan Chef (China Resources Mixc Store): metro: duration 72, cost 21. taxi: duration 47, cost 138.67. walk: duration 383, cost 0.0. \nfrom Shenzhen Bao'an International Airport to Yude Longji Hakka Restaurant (Longhua Branch): metro: duration 67, cost 15. taxi: duration 33, cost 95.82. walk: duration 269, cost 0.0. \nfrom Shenzhen Bao'an International Airport to Shenzhen Bay Park - Liuhua Hill: metro: duration 58, cost 15. taxi: duration 29, cost 84.64. walk: duration 239, cost 0.0. \nfrom Shenzhen Bao'an International Airport to West Lake Spring (Baihui Branch): metro: duration 69, cost 21. taxi: duration 46, cost 134.34. walk: duration 372, cost 0.0. \nfrom Shenzhen Bao'an International Airport to Vienna International Hotel (Shenzhen North Railway Station Yuanfen Subway Station): metro: duration 48, cost 15. taxi: duration 28, cost 81.19. walk: duration 230, cost 0.0. \nfrom Shenzhen Bao'an International Airport to Shenzhen Bay Park - Sunrise Theater: metro: duration 71, cost 15. taxi: duration 31, cost 88.86. walk: duration 251, cost 0.0. \nfrom Shenzhen Bao'an International Airport to Hampton by Hilton Shenzhen Bantian: metro: duration 60, cost 18. taxi: duration 37, cost 108.08. walk: duration 302, cost 0.0. \nfrom Shenzhen Bao'an International Airport to Shenzhen Bay Park - Sports Park: metro: duration 62, cost 15. taxi: duration 32, cost 91.56. walk: duration 258, cost 0.0. \nfrom Shenzhen Bao'an International Airport to Shenzhen Central Park: metro: duration 67, cost 21. taxi: duration 43, cost 126.55. walk: duration 351, cost 0.0. \nfrom Shenzhen Bao'an International Airport to Shenzhen North Railway Station: metro: duration 49, cost 18. taxi: duration 32, cost 92.59. walk: duration 261, cost 0.0. \nfrom Shenzhen Bao'an International Airport to Libaoge (Kerry Store): metro: duration 60, cost 18. taxi: duration 40, cost 116.57. walk: duration 324, cost 0.0. \nfrom Shenzhen Bao'an International Airport to Shenzhen Children's Park: metro: duration 52, cost 18. taxi: duration 34, cost 96.88. walk: duration 272, cost 0.0. \nfrom Shenzhen Bao'an International Airport to Shenzhen International Garden and Flower Expo Park: metro: duration 55, cost 18. taxi: duration 33, cost 95.31. walk: duration 268, cost 0.0. \nfrom Shenzhen Bao'an International Airport to Metropark Hotel Shenzhen: metro: duration 70, cost 21. taxi: duration 49, cost 142.3. walk: duration 393, cost 0.0. \nfrom Shenzhen Bao'an International Airport to Shenzhen Bay Bridge: metro: duration 68, cost 15. taxi: duration 32, cost 92.7. walk: duration 261, cost 0.0. \nfrom Shenzhen Bao'an International Airport to People's Park: metro: duration 77, cost 21. taxi: duration 48, cost 141.01. walk: duration 390, cost 0.0. \nfrom Shenzhen Bao'an International Airport to Fairy Lake Botanical Garden: metro: duration 106, cost 24. taxi: duration 56, cost 164.22. walk: duration 452, cost 0.0. \nfrom Shenzhen Bao'an International Airport to Shenzhen Station: metro: duration 72, cost 21. taxi: duration 49, cost 142.66. walk: duration 394, cost 0.0. \nfrom Shenzhen Bao'an International Airport to Shenzhen Bao'an International Airport:  metro: empty.  taxi: empty.  walk: empty. \nfrom Shenzhen Bao'an International Airport to Shenzhen Safari Park: metro: duration 54, cost 15. taxi: duration 25, cost 69.82. walk: duration 200, cost 0.0. \nfrom Shenzhen Bao'an International Airport to Shenzhen Bay Park: metro: duration 46, cost 15. taxi: duration 30, cost 85.44. walk: duration 241, cost 0.0. \nfrom Shenzhen Safari Park to Lychee Park: metro: duration 54, cost 15. taxi: duration 21, cost 60.7. walk: duration 175, cost 0.0. \nfrom Shenzhen Safari Park to Dameisha Seaside Park: metro: duration 97, cost 21. taxi: duration 51, cost 150.63. walk: duration 415, cost 0.0. \nfrom Shenzhen Safari Park to Lotus Hill Park: metro: duration 43, cost 12. taxi: duration 15, cost 40.91. walk: duration 123, cost 0.0. \nfrom Shenzhen Safari Park to Guangdong Wutong Mountain National Forest Park: metro: duration 103, cost 21. taxi: duration 37, cost 108.29. walk: duration 302, cost 0.0. \nfrom Shenzhen Safari Park to Yat Bun Sin Tea House (Mixc World Store): metro: duration 33, cost 9. taxi: duration 10, cost 29.52. walk: duration 85, cost 0.0. \nfrom Shenzhen Safari Park to Jiangnan Chef (China Resources Mixc Store): metro: duration 53, cost 15. taxi: duration 23, cost 64.21. walk: duration 185, cost 0.0. \nfrom Shenzhen Safari Park to Yude Longji Hakka Restaurant (Longhua Branch): metro: duration 56, cost 9. taxi: duration 12, cost 33.07. walk: duration 97, cost 0.0. \nfrom Shenzhen Safari Park to Shenzhen Bay Park - Liuhua Hill: metro: duration 46, cost 9. taxi: duration 14, cost 38.01. walk: duration 114, cost 0.0. \nfrom Shenzhen Safari Park to West Lake Spring (Baihui Branch): metro: duration 50, cost 15. taxi: duration 21, cost 59.39. walk: duration 172, cost 0.0. \nfrom Shenzhen Safari Park to Vienna International Hotel (Shenzhen North Railway Station Yuanfen Subway Station): metro: duration 40, cost 9. taxi: duration 9, cost 26.77. walk: duration 75, cost 0.0. \nfrom Shenzhen Safari Park to Shenzhen Bay Park - Sunrise Theater: metro: duration 65, cost 12. taxi: duration 16, cost 44.22. walk: duration 132, cost 0.0. \nfrom Shenzhen Safari Park to Hampton by Hilton Shenzhen Bantian: metro: duration 46, cost 12. taxi: duration 15, cost 41.07. walk: duration 123, cost 0.0. \nfrom Shenzhen Safari Park to Shenzhen Bay Park - Sports Park: metro: duration 56, cost 12. taxi: duration 18, cost 51.25. walk: duration 150, cost 0.0. \nfrom Shenzhen Safari Park to Shenzhen Central Park: metro: duration 49, cost 12. taxi: duration 19, cost 53.0. walk: duration 155, cost 0.0. \nfrom Shenzhen Safari Park to Shenzhen North Railway Station: metro: duration 32, cost 9. taxi: duration 8, cost 23.65. walk: duration 64, cost 0.0. \nfrom Shenzhen Safari Park to Libaoge (Kerry Store): metro: duration 42, cost 12. taxi: duration 16, cost 44.65. walk: duration 133, cost 0.0. \nfrom Shenzhen Safari Park to Shenzhen Children's Park: metro: duration 34, cost 9. taxi: duration 10, cost 29.82. walk: duration 86, cost 0.0. \nfrom Shenzhen Safari Park to Shenzhen International Garden and Flower Expo Park: metro: duration 37, cost 9. taxi: duration 10, cost 30.34. walk: duration 87, cost 0.0. \nfrom Shenzhen Safari Park to Metropark Hotel Shenzhen: metro: duration 51, cost 15. taxi: duration 24, cost 67.37. walk: duration 193, cost 0.0. \nfrom Shenzhen Safari Park to Shenzhen Bay Bridge: metro: duration 62, cost 12. taxi: duration 18, cost 50.14. walk: duration 147, cost 0.0. \nfrom Shenzhen Safari Park to People's Park: metro: duration 58, cost 15. taxi: duration 23, cost 65.91. walk: duration 189, cost 0.0. \nfrom Shenzhen Safari Park to Fairy Lake Botanical Garden: metro: duration 88, cost 18. taxi: duration 31, cost 89.73. walk: duration 253, cost 0.0. \nfrom Shenzhen Safari Park to Shenzhen Station: metro: duration 54, cost 15. taxi: duration 24, cost 68.47. walk: duration 196, cost 0.0. \nfrom Shenzhen Safari Park to Shenzhen Bao'an International Airport: metro: duration 54, cost 15. taxi: duration 25, cost 69.82. walk: duration 200, cost 0.0. \nfrom Shenzhen Safari Park to Shenzhen Safari Park:  metro: empty.  taxi: empty.  walk: empty. \nfrom Shenzhen Safari Park to Shenzhen Bay Park: metro: duration 34, cost 9. taxi: duration 12, cost 35.02. walk: duration 103, cost 0.0. \nfrom Shenzhen Bay Park to Lychee Park: metro: duration 35, cost 15. taxi: duration 21, cost 60.55. walk: duration 175, cost 0.0. \nfrom Shenzhen Bay Park to Dameisha Seaside Park: metro: duration 81, cost 21. taxi: duration 54, cost 158.3. walk: duration 436, cost 0.0. \nfrom Shenzhen Bay Park to Lotus Hill Park: metro: duration 25, cost 12. taxi: duration 15, cost 42.25. walk: duration 126, cost 0.0. \nfrom Shenzhen Bay Park to Guangdong Wutong Mountain National Forest Park: metro: duration 87, cost 21. taxi: duration 40, cost 115.09. walk: duration 321, cost 0.0. \nfrom Shenzhen Bay Park to Yat Bun Sin Tea House (Mixc World Store): metro: duration 8, cost 6. taxi: duration 3, cost 12.77. walk: duration 27, cost 0.0. \nfrom Shenzhen Bay Park to Jiangnan Chef (China Resources Mixc Store): metro: duration 33, cost 15. taxi: duration 22, cost 60.78. walk: duration 176, cost 0.0. \nfrom Shenzhen Bay Park to Yude Longji Hakka Restaurant (Longhua Branch): metro: duration 52, cost 15. taxi: duration 23, cost 63.92. walk: duration 184, cost 0.0. \nfrom Shenzhen Bay Park to Shenzhen Bay Park - Liuhua Hill: taxi: duration 1, cost 11.0. walk: duration 14, cost 0.0. \nfrom Shenzhen Bay Park to West Lake Spring (Baihui Branch): metro: duration 32, cost 15. taxi: duration 21, cost 60.24. walk: duration 174, cost 0.0. \nfrom Shenzhen Bay Park to Vienna International Hotel (Shenzhen North Railway Station Yuanfen Subway Station): metro: duration 37, cost 15. taxi: duration 21, cost 60.57. walk: duration 175, cost 0.0. \nfrom Shenzhen Bay Park to Shenzhen Bay Park - Sunrise Theater: metro: duration 35, cost 9. taxi: duration 3, cost 13.34. walk: duration 29, cost 0.0. \nfrom Shenzhen Bay Park to Hampton by Hilton Shenzhen Bantian: metro: duration 38, cost 15. taxi: duration 25, cost 69.75. walk: duration 200, cost 0.0. \nfrom Shenzhen Bay Park to Shenzhen Bay Park - Sports Park: metro: duration 26, cost 9. taxi: duration 6, cost 19.04. walk: duration 49, cost 0.0. \nfrom Shenzhen Bay Park to Shenzhen Central Park: metro: duration 29, cost 12. taxi: duration 17, cost 47.26. walk: duration 140, cost 0.0. \nfrom Shenzhen Bay Park to Shenzhen North Railway Station: metro: duration 24, cost 12. taxi: duration 16, cost 45.24. walk: duration 134, cost 0.0. \nfrom Shenzhen Bay Park to Libaoge (Kerry Store): metro: duration 20, cost 9. taxi: duration 13, cost 36.46. walk: duration 108, cost 0.0. \nfrom Shenzhen Bay Park to Shenzhen Children's Park: metro: duration 14, cost 9. taxi: duration 8, cost 24.37. walk: duration 67, cost 0.0. \nfrom Shenzhen Bay Park to Shenzhen International Garden and Flower Expo Park: metro: duration 17, cost 9. taxi: duration 7, cost 21.08. walk: duration 56, cost 0.0. \nfrom Shenzhen Bay Park to Metropark Hotel Shenzhen: metro: duration 33, cost 15. taxi: duration 24, cost 66.82. walk: duration 192, cost 0.0. \nfrom Shenzhen Bay Park to Shenzhen Bay Bridge: metro: duration 32, cost 9. taxi: duration 5, cost 17.8. walk: duration 44, cost 0.0. \nfrom Shenzhen Bay Park to People's Park: metro: duration 41, cost 15. taxi: duration 24, cost 68.16. walk: duration 195, cost 0.0. \nfrom Shenzhen Bay Park to Fairy Lake Botanical Garden: metro: duration 71, cost 18. taxi: duration 34, cost 97.06. walk: duration 272, cost 0.0. \nfrom Shenzhen Bay Park to Shenzhen Station: metro: duration 33, cost 15. taxi: duration 22, cost 63.11. walk: duration 182, cost 0.0. \nfrom Shenzhen Bay Park to Shenzhen Bao'an International Airport: metro: duration 46, cost 15. taxi: duration 30, cost 85.44. walk: duration 241, cost 0.0. \nfrom Shenzhen Bay Park to Shenzhen Safari Park: metro: duration 34, cost 9. taxi: duration 12, cost 35.02. walk: duration 103, cost 0.0. \nfrom Shenzhen Bay Park to Shenzhen Bay Park:  metro: empty.  taxi: empty.  walk: empty. \n"
+    },
+    "initial_verification": {
+      "commonsense_errors": [
+        "The start_time of lunch activity, Libaoge (Kerry Store) in day 1, cannot be later than 14:00.",
+        "The end_time of dinner activity, West Lake Spring (Baihui Branch) in day 2, cannot be earlier than 17:00.",
+        "Incorrect cost infomation of innercity transport in day 4, from Guangdong Wutong Mountain National Forest Park to Yude Longji Hakka Restaurant (Longhua Branch), metro. [cost = price * people_number]"
+      ],
+      "personal_constraints": [
+        true,
+        true,
+        true,
+        true,
+        true,
+        true
+      ],
+      "category_normalization": [
+        {
+          "constraint_index": 1,
+          "category_domain": "activity",
+          "expression": "activity_type(activity)",
+          "raw_label": "airplane",
+          "normalized_label": "airplane"
+        },
+        {
+          "constraint_index": 1,
+          "category_domain": "activity",
+          "expression": "['train', 'airplane']",
+          "raw_label": "train",
+          "normalized_label": "train"
+        },
+        {
+          "constraint_index": 1,
+          "category_domain": "activity",
+          "expression": "['train', 'airplane']",
+          "raw_label": "airplane",
+          "normalized_label": "airplane"
+        },
+        {
+          "constraint_index": 1,
+          "category_domain": "activity",
+          "expression": "activity_type(activity)",
+          "raw_label": "attraction",
+          "normalized_label": "attraction"
+        },
+        {
+          "constraint_index": 1,
+          "category_domain": "activity",
+          "expression": "['train', 'airplane']",
+          "raw_label": "train",
+          "normalized_label": "train"
+        },
+        {
+          "constraint_index": 1,
+          "category_domain": "activity",
+          "expression": "['train', 'airplane']",
+          "raw_label": "airplane",
+          "normalized_label": "airplane"
+        },
+        {
+          "constraint_index": 1,
+          "category_domain": "activity",
+          "expression": "activity_type(activity)",
+          "raw_label": "lunch",
+          "normalized_label": "lunch"
+        },
+        {
+          "constraint_index": 1,
+          "category_domain": "activity",
+          "expression": "['train', 'airplane']",
+          "raw_label": "train",
+          "normalized_label": "train"
+        },
+        {
+          "constraint_index": 1,
+          "category_domain": "activity",
+          "expression": "['train', 'airplane']",
+          "raw_label": "airplane",
+          "normalized_label": "airplane"
+        },
+        {
+          "constraint_index": 1,
+          "category_domain": "activity",
+          "expression": "activity_type(activity)",
+          "raw_label": "attraction",
+          "normalized_label": "attraction"
+        },
+        {
+          "constraint_index": 1,
+          "category_domain": "activity",
+          "expression": "['train', 'airplane']",
+          "raw_label": "train",
+          "normalized_label": "train"
+        },
+        {
+          "constraint_index": 1,
+          "category_domain": "activity",
+          "expression": "['train', 'airplane']",
+          "raw_label": "airplane",
+          "normalized_label": "airplane"
+        },
+        {
+          "constraint_index": 1,
+          "category_domain": "activity",
+          "expression": "activity_type(activity)",
+          "raw_label": "accommodation",
+          "normalized_label": "accommodation"
+        },
+        {
+          "constraint_index": 1,
+          "category_domain": "activity",
+          "expression": "['train', 'airplane']",
+          "raw_label": "train",
+          "normalized_label": "train"
+        },
+        {
+          "constraint_index": 1,
+          "category_domain": "activity",
+          "expression": "['train', 'airplane']",
+          "raw_label": "airplane",
+          "normalized_label": "airplane"
+        },
+        {
+          "constraint_index": 1,
+          "category_domain": "activity",
+          "expression": "activity_type(activity)",
+          "raw_label": "attraction",
+          "normalized_label": "attraction"
+        },
+        {
+          "constraint_index": 1,
+          "category_domain": "activity",
+          "expression": "['train', 'airplane']",
+          "raw_label": "train",
+          "normalized_label": "train"
+        },
+        {
+          "constraint_index": 1,
+          "category_domain": "activity",
+          "expression": "['train', 'airplane']",
+          "raw_label": "airplane",
+          "normalized_label": "airplane"
+        },
+        {
+          "constraint_index": 1,
+          "category_domain": "activity",
+          "expression": "activity_type(activity)",
+          "raw_label": "lunch",
+          "normalized_label": "lunch"
+        },
+        {
+          "constraint_index": 1,
+          "category_domain": "activity",
+          "expression": "['train', 'airplane']",
+          "raw_label": "train",
+          "normalized_label": "train"
+        },
+        {
+          "constraint_index": 1,
+          "category_domain": "activity",
+          "expression": "['train', 'airplane']",
+          "raw_label": "airplane",
+          "normalized_label": "airplane"
+        },
+        {
+          "constraint_index": 1,
+          "category_domain": "activity",
+          "expression": "activity_type(activity)",
+          "raw_label": "attraction",
+          "normalized_label": "attraction"
+        },
+        {
+          "constraint_index": 1,
+          "category_domain": "activity",
+          "expression": "['train', 'airplane']",
+          "raw_label": "train",
+          "normalized_label": "train"
+        },
+        {
+          "constraint_index": 1,
+          "category_domain": "activity",
+          "expression": "['train', 'airplane']",
+          "raw_label": "airplane",
+          "normalized_label": "airplane"
+        },
+        {
+          "constraint_index": 1,
+          "category_domain": "activity",
+          "expression": "activity_type(activity)",
+          "raw_label": "dinner",
+          "normalized_label": "dinner"
+        },
+        {
+          "constraint_index": 1,
+          "category_domain": "activity",
+          "expression": "['train', 'airplane']",
+          "raw_label": "train",
+          "normalized_label": "train"
+        },
+        {
+          "constraint_index": 1,
+          "category_domain": "activity",
+          "expression": "['train', 'airplane']",
+          "raw_label": "airplane",
+          "normalized_label": "airplane"
+        },
+        {
+          "constraint_index": 1,
+          "category_domain": "activity",
+          "expression": "activity_type(activity)",
+          "raw_label": "accommodation",
+          "normalized_label": "accommodation"
+        },
+        {
+          "constraint_index": 1,
+          "category_domain": "activity",
+          "expression": "['train', 'airplane']",
+          "raw_label": "train",
+          "normalized_label": "train"
+        },
+        {
+          "constraint_index": 1,
+          "category_domain": "activity",
+          "expression": "['train', 'airplane']",
+          "raw_label": "airplane",
+          "normalized_label": "airplane"
+        },
+        {
+          "constraint_index": 1,
+          "category_domain": "activity",
+          "expression": "activity_type(activity)",
+          "raw_label": "attraction",
+          "normalized_label": "attraction"
+        },
+        {
+          "constraint_index": 1,
+          "category_domain": "activity",
+          "expression": "['train', 'airplane']",
+          "raw_label": "train",
+          "normalized_label": "train"
+        },
+        {
+          "constraint_index": 1,
+          "category_domain": "activity",
+          "expression": "['train', 'airplane']",
+          "raw_label": "airplane",
+          "normalized_label": "airplane"
+        },
+        {
+          "constraint_index": 1,
+          "category_domain": "activity",
+          "expression": "activity_type(activity)",
+          "raw_label": "lunch",
+          "normalized_label": "lunch"
+        },
+        {
+          "constraint_index": 1,
+          "category_domain": "activity",
+          "expression": "['train', 'airplane']",
+          "raw_label": "train",
+          "normalized_label": "train"
+        },
+        {
+          "constraint_index": 1,
+          "category_domain": "activity",
+          "expression": "['train', 'airplane']",
+          "raw_label": "airplane",
+          "normalized_label": "airplane"
+        },
+        {
+          "constraint_index": 1,
+          "category_domain": "activity",
+          "expression": "activity_type(activity)",
+          "raw_label": "attraction",
+          "normalized_label": "attraction"
+        },
+        {
+          "constraint_index": 1,
+          "category_domain": "activity",
+          "expression": "['train', 'airplane']",
+          "raw_label": "train",
+          "normalized_label": "train"
+        },
+        {
+          "constraint_index": 1,
+          "category_domain": "activity",
+          "expression": "['train', 'airplane']",
+          "raw_label": "airplane",
+          "normalized_label": "airplane"
+        },
+        {
+          "constraint_index": 1,
+          "category_domain": "activity",
+          "expression": "activity_type(activity)",
+          "raw_label": "accommodation",
+          "normalized_label": "accommodation"
+        },
+        {
+          "constraint_index": 1,
+          "category_domain": "activity",
+          "expression": "['train', 'airplane']",
+          "raw_label": "train",
+          "normalized_label": "train"
+        },
+        {
+          "constraint_index": 1,
+          "category_domain": "activity",
+          "expression": "['train', 'airplane']",
+          "raw_label": "airplane",
+          "normalized_label": "airplane"
+        },
+        {
+          "constraint_index": 1,
+          "category_domain": "activity",
+          "expression": "activity_type(activity)",
+          "raw_label": "attraction",
+          "normalized_label": "attraction"
+        },
+        {
+          "constraint_index": 1,
+          "category_domain": "activity",
+          "expression": "['train', 'airplane']",
+          "raw_label": "train",
+          "normalized_label": "train"
+        },
+        {
+          "constraint_index": 1,
+          "category_domain": "activity",
+          "expression": "['train', 'airplane']",
+          "raw_label": "airplane",
+          "normalized_label": "airplane"
+        },
+        {
+          "constraint_index": 1,
+          "category_domain": "activity",
+          "expression": "activity_type(activity)",
+          "raw_label": "lunch",
+          "normalized_label": "lunch"
+        },
+        {
+          "constraint_index": 1,
+          "category_domain": "activity",
+          "expression": "['train', 'airplane']",
+          "raw_label": "train",
+          "normalized_label": "train"
+        },
+        {
+          "constraint_index": 1,
+          "category_domain": "activity",
+          "expression": "['train', 'airplane']",
+          "raw_label": "airplane",
+          "normalized_label": "airplane"
+        },
+        {
+          "constraint_index": 1,
+          "category_domain": "activity",
+          "expression": "activity_type(activity)",
+          "raw_label": "airplane",
+          "normalized_label": "airplane"
+        },
+        {
+          "constraint_index": 1,
+          "category_domain": "activity",
+          "expression": "['train', 'airplane']",
+          "raw_label": "train",
+          "normalized_label": "train"
+        },
+        {
+          "constraint_index": 1,
+          "category_domain": "activity",
+          "expression": "['train', 'airplane']",
+          "raw_label": "airplane",
+          "normalized_label": "airplane"
+        },
+        {
+          "constraint_index": 1,
+          "category_domain": "transport",
+          "expression": "{'airplane'}",
+          "raw_label": "airplane",
+          "normalized_label": "airplane"
+        },
+        {
+          "constraint_index": 1,
+          "category_domain": "transport",
+          "expression": "intercity_transport_set",
+          "raw_label": "airplane",
+          "normalized_label": "airplane"
+        },
+        {
+          "constraint_index": 3,
+          "category_domain": "activity",
+          "expression": "activity_type(activity)",
+          "raw_label": "airplane",
+          "normalized_label": "airplane"
+        },
+        {
+          "constraint_index": 3,
+          "category_domain": "activity",
+          "expression": "'attraction'",
+          "raw_label": "attraction",
+          "normalized_label": "attraction"
+        },
+        {
+          "constraint_index": 3,
+          "category_domain": "activity",
+          "expression": "activity_type(activity)",
+          "raw_label": "attraction",
+          "normalized_label": "attraction"
+        },
+        {
+          "constraint_index": 3,
+          "category_domain": "activity",
+          "expression": "'attraction'",
+          "raw_label": "attraction",
+          "normalized_label": "attraction"
+        },
+        {
+          "constraint_index": 3,
+          "category_domain": "activity",
+          "expression": "activity_type(activity)",
+          "raw_label": "lunch",
+          "normalized_label": "lunch"
+        },
+        {
+          "constraint_index": 3,
+          "category_domain": "activity",
+          "expression": "'attraction'",
+          "raw_label": "attraction",
+          "normalized_label": "attraction"
+        },
+        {
+          "constraint_index": 3,
+          "category_domain": "activity",
+          "expression": "activity_type(activity)",
+          "raw_label": "attraction",
+          "normalized_label": "attraction"
+        },
+        {
+          "constraint_index": 3,
+          "category_domain": "activity",
+          "expression": "'attraction'",
+          "raw_label": "attraction",
+          "normalized_label": "attraction"
+        },
+        {
+          "constraint_index": 3,
+          "category_domain": "activity",
+          "expression": "activity_type(activity)",
+          "raw_label": "accommodation",
+          "normalized_label": "accommodation"
+        },
+        {
+          "constraint_index": 3,
+          "category_domain": "activity",
+          "expression": "'attraction'",
+          "raw_label": "attraction",
+          "normalized_label": "attraction"
+        },
+        {
+          "constraint_index": 3,
+          "category_domain": "activity",
+          "expression": "activity_type(activity)",
+          "raw_label": "attraction",
+          "normalized_label": "attraction"
+        },
+        {
+          "constraint_index": 3,
+          "category_domain": "activity",
+          "expression": "'attraction'",
+          "raw_label": "attraction",
+          "normalized_label": "attraction"
+        },
+        {
+          "constraint_index": 3,
+          "category_domain": "activity",
+          "expression": "activity_type(activity)",
+          "raw_label": "lunch",
+          "normalized_label": "lunch"
+        },
+        {
+          "constraint_index": 3,
+          "category_domain": "activity",
+          "expression": "'attraction'",
+          "raw_label": "attraction",
+          "normalized_label": "attraction"
+        },
+        {
+          "constraint_index": 3,
+          "category_domain": "activity",
+          "expression": "activity_type(activity)",
+          "raw_label": "attraction",
+          "normalized_label": "attraction"
+        },
+        {
+          "constraint_index": 3,
+          "category_domain": "activity",
+          "expression": "'attraction'",
+          "raw_label": "attraction",
+          "normalized_label": "attraction"
+        },
+        {
+          "constraint_index": 3,
+          "category_domain": "activity",
+          "expression": "activity_type(activity)",
+          "raw_label": "dinner",
+          "normalized_label": "dinner"
+        },
+        {
+          "constraint_index": 3,
+          "category_domain": "activity",
+          "expression": "'attraction'",
+          "raw_label": "attraction",
+          "normalized_label": "attraction"
+        },
+        {
+          "constraint_index": 3,
+          "category_domain": "activity",
+          "expression": "activity_type(activity)",
+          "raw_label": "accommodation",
+          "normalized_label": "accommodation"
+        },
+        {
+          "constraint_index": 3,
+          "category_domain": "activity",
+          "expression": "'attraction'",
+          "raw_label": "attraction",
+          "normalized_label": "attraction"
+        },
+        {
+          "constraint_index": 3,
+          "category_domain": "activity",
+          "expression": "activity_type(activity)",
+          "raw_label": "attraction",
+          "normalized_label": "attraction"
+        },
+        {
+          "constraint_index": 3,
+          "category_domain": "activity",
+          "expression": "'attraction'",
+          "raw_label": "attraction",
+          "normalized_label": "attraction"
+        },
+        {
+          "constraint_index": 3,
+          "category_domain": "activity",
+          "expression": "activity_type(activity)",
+          "raw_label": "lunch",
+          "normalized_label": "lunch"
+        },
+        {
+          "constraint_index": 3,
+          "category_domain": "activity",
+          "expression": "'attraction'",
+          "raw_label": "attraction",
+          "normalized_label": "attraction"
+        },
+        {
+          "constraint_index": 3,
+          "category_domain": "activity",
+          "expression": "activity_type(activity)",
+          "raw_label": "attraction",
+          "normalized_label": "attraction"
+        },
+        {
+          "constraint_index": 3,
+          "category_domain": "activity",
+          "expression": "'attraction'",
+          "raw_label": "attraction",
+          "normalized_label": "attraction"
+        },
+        {
+          "constraint_index": 3,
+          "category_domain": "activity",
+          "expression": "activity_type(activity)",
+          "raw_label": "accommodation",
+          "normalized_label": "accommodation"
+        },
+        {
+          "constraint_index": 3,
+          "category_domain": "activity",
+          "expression": "'attraction'",
+          "raw_label": "attraction",
+          "normalized_label": "attraction"
+        },
+        {
+          "constraint_index": 3,
+          "category_domain": "activity",
+          "expression": "activity_type(activity)",
+          "raw_label": "attraction",
+          "normalized_label": "attraction"
+        },
+        {
+          "constraint_index": 3,
+          "category_domain": "activity",
+          "expression": "'attraction'",
+          "raw_label": "attraction",
+          "normalized_label": "attraction"
+        },
+        {
+          "constraint_index": 3,
+          "category_domain": "activity",
+          "expression": "activity_type(activity)",
+          "raw_label": "lunch",
+          "normalized_label": "lunch"
+        },
+        {
+          "constraint_index": 3,
+          "category_domain": "activity",
+          "expression": "'attraction'",
+          "raw_label": "attraction",
+          "normalized_label": "attraction"
+        },
+        {
+          "constraint_index": 3,
+          "category_domain": "activity",
+          "expression": "activity_type(activity)",
+          "raw_label": "airplane",
+          "normalized_label": "airplane"
+        },
+        {
+          "constraint_index": 3,
+          "category_domain": "activity",
+          "expression": "'attraction'",
+          "raw_label": "attraction",
+          "normalized_label": "attraction"
+        },
+        {
+          "constraint_index": 3,
+          "category_domain": "attraction",
+          "expression": "{'公园'}",
+          "raw_label": "公园",
+          "normalized_label": "park"
+        },
+        {
+          "constraint_index": 3,
+          "category_domain": "attraction",
+          "expression": "attraction_type_set",
+          "raw_label": "park",
+          "normalized_label": "park"
+        },
+        {
+          "constraint_index": 3,
+          "category_domain": "attraction",
+          "expression": "attraction_type_set",
+          "raw_label": "Amusement Park/Sports Entertainment",
+          "normalized_label": "Amusement Park/Sports Entertainment"
+        },
+        {
+          "constraint_index": 6,
+          "category_domain": "transport",
+          "expression": "innercity_transport_type(activity_transports(activity))",
+          "raw_label": "empty",
+          "normalized_label": "empty"
+        },
+        {
+          "constraint_index": 6,
+          "category_domain": "transport",
+          "expression": "'taxi'",
+          "raw_label": "taxi",
+          "normalized_label": "taxi"
+        },
+        {
+          "constraint_index": 6,
+          "category_domain": "transport",
+          "expression": "innercity_transport_type(activity_transports(activity))",
+          "raw_label": "metro",
+          "normalized_label": "metro"
+        },
+        {
+          "constraint_index": 6,
+          "category_domain": "transport",
+          "expression": "'taxi'",
+          "raw_label": "taxi",
+          "normalized_label": "taxi"
+        },
+        {
+          "constraint_index": 6,
+          "category_domain": "transport",
+          "expression": "innercity_transport_type(activity_transports(activity))",
+          "raw_label": "metro",
+          "normalized_label": "metro"
+        },
+        {
+          "constraint_index": 6,
+          "category_domain": "transport",
+          "expression": "'taxi'",
+          "raw_label": "taxi",
+          "normalized_label": "taxi"
+        },
+        {
+          "constraint_index": 6,
+          "category_domain": "transport",
+          "expression": "innercity_transport_type(activity_transports(activity))",
+          "raw_label": "metro",
+          "normalized_label": "metro"
+        },
+        {
+          "constraint_index": 6,
+          "category_domain": "transport",
+          "expression": "'taxi'",
+          "raw_label": "taxi",
+          "normalized_label": "taxi"
+        },
+        {
+          "constraint_index": 6,
+          "category_domain": "transport",
+          "expression": "innercity_transport_type(activity_transports(activity))",
+          "raw_label": "metro",
+          "normalized_label": "metro"
+        },
+        {
+          "constraint_index": 6,
+          "category_domain": "transport",
+          "expression": "'taxi'",
+          "raw_label": "taxi",
+          "normalized_label": "taxi"
+        },
+        {
+          "constraint_index": 6,
+          "category_domain": "transport",
+          "expression": "innercity_transport_type(activity_transports(activity))",
+          "raw_label": "metro",
+          "normalized_label": "metro"
+        },
+        {
+          "constraint_index": 6,
+          "category_domain": "transport",
+          "expression": "'taxi'",
+          "raw_label": "taxi",
+          "normalized_label": "taxi"
+        },
+        {
+          "constraint_index": 6,
+          "category_domain": "transport",
+          "expression": "innercity_transport_type(activity_transports(activity))",
+          "raw_label": "metro",
+          "normalized_label": "metro"
+        },
+        {
+          "constraint_index": 6,
+          "category_domain": "transport",
+          "expression": "'taxi'",
+          "raw_label": "taxi",
+          "normalized_label": "taxi"
+        },
+        {
+          "constraint_index": 6,
+          "category_domain": "transport",
+          "expression": "innercity_transport_type(activity_transports(activity))",
+          "raw_label": "metro",
+          "normalized_label": "metro"
+        },
+        {
+          "constraint_index": 6,
+          "category_domain": "transport",
+          "expression": "'taxi'",
+          "raw_label": "taxi",
+          "normalized_label": "taxi"
+        },
+        {
+          "constraint_index": 6,
+          "category_domain": "transport",
+          "expression": "innercity_transport_type(activity_transports(activity))",
+          "raw_label": "metro",
+          "normalized_label": "metro"
+        },
+        {
+          "constraint_index": 6,
+          "category_domain": "transport",
+          "expression": "'taxi'",
+          "raw_label": "taxi",
+          "normalized_label": "taxi"
+        },
+        {
+          "constraint_index": 6,
+          "category_domain": "transport",
+          "expression": "innercity_transport_type(activity_transports(activity))",
+          "raw_label": "metro",
+          "normalized_label": "metro"
+        },
+        {
+          "constraint_index": 6,
+          "category_domain": "transport",
+          "expression": "'taxi'",
+          "raw_label": "taxi",
+          "normalized_label": "taxi"
+        },
+        {
+          "constraint_index": 6,
+          "category_domain": "transport",
+          "expression": "innercity_transport_type(activity_transports(activity))",
+          "raw_label": "metro",
+          "normalized_label": "metro"
+        },
+        {
+          "constraint_index": 6,
+          "category_domain": "transport",
+          "expression": "'taxi'",
+          "raw_label": "taxi",
+          "normalized_label": "taxi"
+        },
+        {
+          "constraint_index": 6,
+          "category_domain": "transport",
+          "expression": "innercity_transport_type(activity_transports(activity))",
+          "raw_label": "metro",
+          "normalized_label": "metro"
+        },
+        {
+          "constraint_index": 6,
+          "category_domain": "transport",
+          "expression": "'taxi'",
+          "raw_label": "taxi",
+          "normalized_label": "taxi"
+        },
+        {
+          "constraint_index": 6,
+          "category_domain": "transport",
+          "expression": "innercity_transport_type(activity_transports(activity))",
+          "raw_label": "metro",
+          "normalized_label": "metro"
+        },
+        {
+          "constraint_index": 6,
+          "category_domain": "transport",
+          "expression": "'taxi'",
+          "raw_label": "taxi",
+          "normalized_label": "taxi"
+        },
+        {
+          "constraint_index": 6,
+          "category_domain": "transport",
+          "expression": "innercity_transport_type(activity_transports(activity))",
+          "raw_label": "metro",
+          "normalized_label": "metro"
+        },
+        {
+          "constraint_index": 6,
+          "category_domain": "transport",
+          "expression": "'taxi'",
+          "raw_label": "taxi",
+          "normalized_label": "taxi"
+        },
+        {
+          "constraint_index": 6,
+          "category_domain": "transport",
+          "expression": "innercity_transport_type(activity_transports(activity))",
+          "raw_label": "metro",
+          "normalized_label": "metro"
+        },
+        {
+          "constraint_index": 6,
+          "category_domain": "transport",
+          "expression": "'taxi'",
+          "raw_label": "taxi",
+          "normalized_label": "taxi"
+        },
+        {
+          "constraint_index": 6,
+          "category_domain": "transport",
+          "expression": "innercity_transport_type(activity_transports(activity))",
+          "raw_label": "metro",
+          "normalized_label": "metro"
+        },
+        {
+          "constraint_index": 6,
+          "category_domain": "transport",
+          "expression": "'taxi'",
+          "raw_label": "taxi",
+          "normalized_label": "taxi"
+        },
+        {
+          "constraint_index": 6,
+          "category_domain": "transport",
+          "expression": "innercity_transport_type(activity_transports(activity))",
+          "raw_label": "metro",
+          "normalized_label": "metro"
+        },
+        {
+          "constraint_index": 6,
+          "category_domain": "transport",
+          "expression": "'taxi'",
+          "raw_label": "taxi",
+          "normalized_label": "taxi"
+        }
+      ],
+      "personal_errors": [],
+      "evaluation_errors": [],
+      "translation_errors": [],
+      "error_info": [
+        "The start_time of lunch activity, Libaoge (Kerry Store) in day 1, cannot be later than 14:00.",
+        "The end_time of dinner activity, West Lake Spring (Baihui Branch) in day 2, cannot be earlier than 17:00.",
+        "Incorrect cost infomation of innercity transport in day 4, from Guangdong Wutong Mountain National Forest Park to Yude Longji Hakka Restaurant (Longhua Branch), metro. [cost = price * people_number]"
+      ],
+      "passed": false,
+      "translated_plan": {
+        "people_number": 3,
+        "start_city": "Shanghai",
+        "target_city": "Shenzhen",
+        "itinerary": [
+          {
+            "day": 1,
+            "activities": [
+              {
+                "start_time": "08:34",
+                "end_time": "10:05",
+                "start": "Shanghai Pudong International Airport",
+                "end": "Shenzhen Bao'an International Airport",
+                "price": 590.54,
+                "cost": 1771.62,
+                "FlightID": "FL019",
+                "type": "airplane",
+                "tickets": 3,
+                "transports": []
+              },
+              {
+                "position": "Shenzhen Safari Park",
+                "type": "attraction",
+                "transports": [
+                  {
+                    "start": "Shenzhen Bao'an International Airport",
+                    "end": "Airport East-Metro Station",
+                    "mode": "walk",
+                    "start_time": "10:05",
+                    "end_time": "10:10",
+                    "cost": 0,
+                    "distance": 0.45,
+                    "price": 0
+                  },
+                  {
+                    "start": "Airport East-Metro Station",
+                    "end": "Xili Lake-Metro Station",
+                    "mode": "metro",
+                    "start_time": "10:10",
+                    "end_time": "10:41",
+                    "cost": 15,
+                    "distance": 15.85,
+                    "price": 5,
+                    "tickets": 3
+                  },
+                  {
+                    "start": "Xili Lake-Metro Station",
+                    "end": "Shenzhen Safari Park",
+                    "mode": "walk",
+                    "start_time": "10:41",
+                    "end_time": "10:59",
+                    "cost": 0,
+                    "distance": 1.55,
+                    "price": 0
+                  }
+                ],
+                "price": 99.0,
+                "cost": 297.0,
+                "tickets": 3,
+                "start_time": "11:30",
+                "end_time": "13:30"
+              },
+              {
+                "position": "Libaoge (Kerry Store)",
+                "type": "lunch",
+                "transports": [
+                  {
+                    "start": "Shenzhen Safari Park",
+                    "end": "Xili Lake-Metro Station",
+                    "mode": "walk",
+                    "start_time": "13:30",
+                    "end_time": "13:48",
+                    "cost": 0,
+                    "distance": 1.55,
+                    "price": 0
+                  },
+                  {
+                    "start": "Xili Lake-Metro Station",
+                    "end": "Shopping Park-Metro Station",
+                    "mode": "metro",
+                    "start_time": "13:48",
+                    "end_time": "14:10",
+                    "cost": 12,
+                    "distance": 11.23,
+                    "price": 4,
+                    "tickets": 3
+                  },
+                  {
+                    "start": "Shopping Park-Metro Station",
+                    "end": "Libaoge (Kerry Store)",
+                    "mode": "walk",
+                    "start_time": "14:10",
+                    "end_time": "14:12",
+                    "cost": 0,
+                    "distance": 0.25,
+                    "price": 0
+                  }
+                ],
+                "price": 156.0,
+                "cost": 468.0,
+                "start_time": "14:30",
+                "end_time": "15:30"
+              },
+              {
+                "position": "Shenzhen Bay Park",
+                "type": "attraction",
+                "transports": [
+                  {
+                    "start": "Libaoge (Kerry Store)",
+                    "end": "Shopping Park-Metro Station",
+                    "mode": "walk",
+                    "start_time": "15:30",
+                    "end_time": "15:32",
+                    "cost": 0,
+                    "distance": 0.25,
+                    "price": 0
+                  },
+                  {
+                    "start": "Shopping Park-Metro Station",
+                    "end": "Hongshu Bay-Metro Station",
+                    "mode": "metro",
+                    "start_time": "15:32",
+                    "end_time": "15:49",
+                    "cost": 9,
+                    "distance": 8.92,
+                    "price": 3,
+                    "tickets": 3
+                  },
+                  {
+                    "start": "Hongshu Bay-Metro Station",
+                    "end": "Shenzhen Bay Park",
+                    "mode": "walk",
+                    "start_time": "15:49",
+                    "end_time": "15:50",
+                    "cost": 0,
+                    "distance": 0.11,
+                    "price": 0
+                  }
+                ],
+                "price": 0.0,
+                "cost": 0.0,
+                "tickets": 3,
+                "start_time": "16:20",
+                "end_time": "19:20"
+              },
+              {
+                "position": "Metropark Hotel Shenzhen",
+                "type": "accommodation",
+                "transports": [
+                  {
+                    "start": "Shenzhen Bay Park",
+                    "end": "Hongshu Bay-Metro Station",
+                    "mode": "walk",
+                    "start_time": "19:20",
+                    "end_time": "19:21",
+                    "cost": 0,
+                    "distance": 0.11,
+                    "price": 0
+                  },
+                  {
+                    "start": "Hongshu Bay-Metro Station",
+                    "end": "Shaibu-Metro Station",
+                    "mode": "metro",
+                    "start_time": "19:21",
+                    "end_time": "19:53",
+                    "cost": 15,
+                    "distance": 16.09,
+                    "price": 5,
+                    "tickets": 3
+                  },
+                  {
+                    "start": "Shaibu-Metro Station",
+                    "end": "Metropark Hotel Shenzhen",
+                    "mode": "walk",
+                    "start_time": "19:53",
+                    "end_time": "19:53",
+                    "cost": 0,
+                    "distance": 0.04,
+                    "price": 0
+                  }
+                ],
+                "room_type": 2,
+                "price": 387,
+                "cost": 774,
+                "start_time": "20:00",
+                "end_time": "24:00",
+                "rooms": 2
+              }
+            ]
+          },
+          {
+            "day": 2,
+            "activities": [
+              {
+                "position": "Lotus Hill Park",
+                "type": "attraction",
+                "transports": [
+                  {
+                    "start": "Metropark Hotel Shenzhen",
+                    "end": "Shaibu-Metro Station",
+                    "mode": "walk",
+                    "start_time": "08:00",
+                    "end_time": "08:00",
+                    "cost": 0,
+                    "distance": 0.04,
+                    "price": 0
+                  },
+                  {
+                    "start": "Shaibu-Metro Station",
+                    "end": "Donggualing-Metro Station",
+                    "mode": "metro",
+                    "start_time": "08:00",
+                    "end_time": "08:11",
+                    "cost": 9,
+                    "distance": 5.8,
+                    "price": 3,
+                    "tickets": 3
+                  },
+                  {
+                    "start": "Donggualing-Metro Station",
+                    "end": "Lotus Hill Park",
+                    "mode": "walk",
+                    "start_time": "08:11",
+                    "end_time": "08:14",
+                    "cost": 0,
+                    "distance": 0.28,
+                    "price": 0
+                  }
+                ],
+                "price": 0.0,
+                "cost": 0.0,
+                "tickets": 3,
+                "start_time": "08:30",
+                "end_time": "10:30"
+              },
+              {
+                "position": "Jiangnan Chef (China Resources Mixc Store)",
+                "type": "lunch",
+                "transports": [
+                  {
+                    "start": "Lotus Hill Park",
+                    "end": "Donggualing-Metro Station",
+                    "mode": "walk",
+                    "start_time": "10:30",
+                    "end_time": "10:33",
+                    "cost": 0,
+                    "distance": 0.28,
+                    "price": 0
+                  },
+                  {
+                    "start": "Donggualing-Metro Station",
+                    "end": "Grand Theater-Metro Station",
+                    "mode": "metro",
+                    "start_time": "10:33",
+                    "end_time": "10:42",
+                    "cost": 9,
+                    "distance": 4.62,
+                    "price": 3,
+                    "tickets": 3
+                  },
+                  {
+                    "start": "Grand Theater-Metro Station",
+                    "end": "Jiangnan Chef (China Resources Mixc Store)",
+                    "mode": "walk",
+                    "start_time": "10:42",
+                    "end_time": "10:46",
+                    "cost": 0,
+                    "distance": 0.4,
+                    "price": 0
+                  }
+                ],
+                "price": 165.0,
+                "cost": 495.0,
+                "start_time": "11:00",
+                "end_time": "12:00"
+              },
+              {
+                "position": "Shenzhen Central Park",
+                "type": "attraction",
+                "transports": [
+                  {
+                    "start": "Jiangnan Chef (China Resources Mixc Store)",
+                    "end": "Grand Theater-Metro Station",
+                    "mode": "walk",
+                    "start_time": "12:00",
+                    "end_time": "12:04",
+                    "cost": 0,
+                    "distance": 0.4,
+                    "price": 0
+                  },
+                  {
+                    "start": "Grand Theater-Metro Station",
+                    "end": "Huaqiang Road-Metro Station",
+                    "mode": "metro",
+                    "start_time": "12:04",
+                    "end_time": "12:08",
+                    "cost": 6,
+                    "distance": 2.34,
+                    "price": 2,
+                    "tickets": 3
+                  },
+                  {
+                    "start": "Huaqiang Road-Metro Station",
+                    "end": "Shenzhen Central Park",
+                    "mode": "walk",
+                    "start_time": "12:08",
+                    "end_time": "12:12",
+                    "cost": 0,
+                    "distance": 0.41,
+                    "price": 0
+                  }
+                ],
+                "price": 0.0,
+                "cost": 0.0,
+                "tickets": 3,
+                "start_time": "12:20",
+                "end_time": "15:20"
+              },
+              {
+                "position": "West Lake Spring (Baihui Branch)",
+                "type": "dinner",
+                "transports": [
+                  {
+                    "start": "Shenzhen Central Park",
+                    "end": "Huaqiang Road-Metro Station",
+                    "mode": "walk",
+                    "start_time": "15:20",
+                    "end_time": "15:24",
+                    "cost": 0,
+                    "distance": 0.41,
+                    "price": 0
+                  },
+                  {
+                    "start": "Huaqiang Road-Metro Station",
+                    "end": "Yuanling-Metro Station",
+                    "mode": "metro",
+                    "start_time": "15:24",
+                    "end_time": "15:29",
+                    "cost": 6,
+                    "distance": 2.65,
+                    "price": 2,
+                    "tickets": 3
+                  },
+                  {
+                    "start": "Yuanling-Metro Station",
+                    "end": "West Lake Spring (Baihui Branch)",
+                    "mode": "walk",
+                    "start_time": "15:29",
+                    "end_time": "15:32",
+                    "cost": 0,
+                    "distance": 0.29,
+                    "price": 0
+                  }
+                ],
+                "price": 156.0,
+                "cost": 468.0,
+                "start_time": "16:00",
+                "end_time": "17:00"
+              },
+              {
+                "position": "Metropark Hotel Shenzhen",
+                "type": "accommodation",
+                "transports": [
+                  {
+                    "start": "West Lake Spring (Baihui Branch)",
+                    "end": "Yuanling-Metro Station",
+                    "mode": "walk",
+                    "start_time": "17:00",
+                    "end_time": "17:03",
+                    "cost": 0,
+                    "distance": 0.29,
+                    "price": 0
+                  },
+                  {
+                    "start": "Yuanling-Metro Station",
+                    "end": "Shaibu-Metro Station",
+                    "mode": "metro",
+                    "start_time": "17:03",
+                    "end_time": "17:07",
+                    "cost": 6,
+                    "distance": 2.03,
+                    "price": 2,
+                    "tickets": 3
+                  },
+                  {
+                    "start": "Shaibu-Metro Station",
+                    "end": "Metropark Hotel Shenzhen",
+                    "mode": "walk",
+                    "start_time": "17:07",
+                    "end_time": "17:07",
+                    "cost": 0,
+                    "distance": 0.04,
+                    "price": 0
+                  }
+                ],
+                "room_type": 2,
+                "price": 387,
+                "cost": 774,
+                "start_time": "17:30",
+                "end_time": "24:00",
+                "rooms": 2
+              }
+            ]
+          },
+          {
+            "day": 3,
+            "activities": [
+              {
+                "position": "Fairy Lake Botanical Garden",
+                "type": "attraction",
+                "transports": [
+                  {
+                    "start": "Metropark Hotel Shenzhen",
+                    "end": "Shaibu-Metro Station",
+                    "mode": "walk",
+                    "start_time": "08:00",
+                    "end_time": "08:00",
+                    "cost": 0,
+                    "distance": 0.04,
+                    "price": 0
+                  },
+                  {
+                    "start": "Shaibu-Metro Station",
+                    "end": "Liantang-Metro Station",
+                    "mode": "metro",
+                    "start_time": "08:00",
+                    "end_time": "08:11",
+                    "cost": 9,
+                    "distance": 5.56,
+                    "price": 3,
+                    "tickets": 3
+                  },
+                  {
+                    "start": "Liantang-Metro Station",
+                    "end": "Fairy Lake Botanical Garden",
+                    "mode": "walk",
+                    "start_time": "08:11",
+                    "end_time": "08:38",
+                    "cost": 0,
+                    "distance": 2.27,
+                    "price": 0
+                  }
+                ],
+                "price": 0.0,
+                "cost": 0.0,
+                "tickets": 3,
+                "start_time": "09:00",
+                "end_time": "11:00"
+              },
+              {
+                "position": "Yat Bun Sin Tea House (Mixc World Store)",
+                "type": "lunch",
+                "transports": [
+                  {
+                    "start": "Fairy Lake Botanical Garden",
+                    "end": "Liantang-Metro Station",
+                    "mode": "walk",
+                    "start_time": "11:00",
+                    "end_time": "11:27",
+                    "cost": 0,
+                    "distance": 2.27,
+                    "price": 0
+                  },
+                  {
+                    "start": "Liantang-Metro Station",
+                    "end": "Gaoxinyuan-Metro Station",
+                    "mode": "metro",
+                    "start_time": "11:27",
+                    "end_time": "12:12",
+                    "cost": 18,
+                    "distance": 22.83,
+                    "price": 6,
+                    "tickets": 3
+                  },
+                  {
+                    "start": "Gaoxinyuan-Metro Station",
+                    "end": "Yat Bun Sin Tea House (Mixc World Store)",
+                    "mode": "walk",
+                    "start_time": "12:12",
+                    "end_time": "12:15",
+                    "cost": 0,
+                    "distance": 0.29,
+                    "price": 0
+                  }
+                ],
+                "price": 175.0,
+                "cost": 525.0,
+                "start_time": "12:00",
+                "end_time": "13:00"
+              },
+              {
+                "position": "Shenzhen Bay Park - Liuhua Hill",
+                "type": "attraction",
+                "transports": [
+                  {
+                    "start": "Yat Bun Sin Tea House (Mixc World Store)",
+                    "end": "Gaoxinyuan-Metro Station",
+                    "mode": "walk",
+                    "start_time": "13:00",
+                    "end_time": "13:03",
+                    "cost": 0,
+                    "distance": 0.29,
+                    "price": 0
+                  },
+                  {
+                    "start": "Gaoxinyuan-Metro Station",
+                    "end": "Hongshu Bay-Metro Station",
+                    "mode": "metro",
+                    "start_time": "13:03",
+                    "end_time": "13:07",
+                    "cost": 6,
+                    "distance": 2.25,
+                    "price": 2,
+                    "tickets": 3
+                  },
+                  {
+                    "start": "Hongshu Bay-Metro Station",
+                    "end": "Shenzhen Bay Park - Liuhua Hill",
+                    "mode": "walk",
+                    "start_time": "13:07",
+                    "end_time": "13:20",
+                    "cost": 0,
+                    "distance": 1.12,
+                    "price": 0
+                  }
+                ],
+                "price": 0.0,
+                "cost": 0.0,
+                "tickets": 3,
+                "start_time": "13:30",
+                "end_time": "15:30"
+              },
+              {
+                "position": "Metropark Hotel Shenzhen",
+                "type": "accommodation",
+                "transports": [
+                  {
+                    "start": "Shenzhen Bay Park - Liuhua Hill",
+                    "end": "Hongshu Bay-Metro Station",
+                    "mode": "walk",
+                    "start_time": "15:30",
+                    "end_time": "15:43",
+                    "cost": 0,
+                    "distance": 1.12,
+                    "price": 0
+                  },
+                  {
+                    "start": "Hongshu Bay-Metro Station",
+                    "end": "Shaibu-Metro Station",
+                    "mode": "metro",
+                    "start_time": "15:43",
+                    "end_time": "16:15",
+                    "cost": 15,
+                    "distance": 16.09,
+                    "price": 5,
+                    "tickets": 3
+                  },
+                  {
+                    "start": "Shaibu-Metro Station",
+                    "end": "Metropark Hotel Shenzhen",
+                    "mode": "walk",
+                    "start_time": "16:15",
+                    "end_time": "16:15",
+                    "cost": 0,
+                    "distance": 0.04,
+                    "price": 0
+                  }
+                ],
+                "room_type": 2,
+                "price": 387,
+                "cost": 774,
+                "start_time": "16:30",
+                "end_time": "24:00",
+                "rooms": 2
+              }
+            ]
+          },
+          {
+            "day": 4,
+            "activities": [
+              {
+                "position": "Guangdong Wutong Mountain National Forest Park",
+                "type": "attraction",
+                "transports": [
+                  {
+                    "start": "Metropark Hotel Shenzhen",
+                    "end": "Shaibu-Metro Station",
+                    "mode": "walk",
+                    "start_time": "08:00",
+                    "end_time": "08:00",
+                    "cost": 0,
+                    "distance": 0.04,
+                    "price": 0
+                  },
+                  {
+                    "start": "Shaibu-Metro Station",
+                    "end": "Shenwai High School-Metro Station",
+                    "mode": "metro",
+                    "start_time": "08:00",
+                    "end_time": "08:26",
+                    "cost": 12,
+                    "distance": 13.12,
+                    "price": 4,
+                    "tickets": 3
+                  },
+                  {
+                    "start": "Shenwai High School-Metro Station",
+                    "end": "Guangdong Wutong Mountain National Forest Park",
+                    "mode": "walk",
+                    "start_time": "08:26",
+                    "end_time": "08:54",
+                    "cost": 0,
+                    "distance": 2.36,
+                    "price": 0
+                  }
+                ],
+                "price": 0.0,
+                "cost": 0.0,
+                "tickets": 3,
+                "start_time": "09:00",
+                "end_time": "12:00"
+              },
+              {
+                "position": "Yude Longji Hakka Restaurant (Longhua Branch)",
+                "type": "lunch",
+                "transports": [
+                  {
+                    "start": "Guangdong Wutong Mountain National Forest Park",
+                    "end": "Shenwai High School-Metro Station",
+                    "mode": "walk",
+                    "start_time": "12:00",
+                    "end_time": "12:28",
+                    "cost": 0,
+                    "distance": 2.36,
+                    "price": 0
+                  },
+                  {
+                    "start": "Shenwai High School-Metro Station",
+                    "end": "Longhua-Metro Station",
+                    "mode": "metro",
+                    "start_time": "12:28",
+                    "end_time": "13:16",
+                    "cost": 6,
+                    "distance": 24.03,
+                    "price": 6,
+                    "tickets": 3
+                  },
+                  {
+                    "start": "Longhua-Metro Station",
+                    "end": "Yude Longji Hakka Restaurant (Longhua Branch)",
+                    "mode": "walk",
+                    "start_time": "13:16",
+                    "end_time": "13:37",
+                    "cost": 0,
+                    "distance": 1.78,
+                    "price": 0
+                  }
+                ],
+                "price": 158.0,
+                "cost": 474.0,
+                "start_time": "13:00",
+                "end_time": "14:00"
+              },
+              {
+                "start": "Shenzhen Bao'an International Airport",
+                "end": "Shanghai Hongqiao International Airport",
+                "start_time": "16:16",
+                "end_time": "17:47",
+                "FlightID": "FL162",
+                "type": "airplane",
+                "transports": [
+                  {
+                    "start": "Yude Longji Hakka Restaurant (Longhua Branch)",
+                    "end": "Longhua-Metro Station",
+                    "mode": "walk",
+                    "start_time": "14:00",
+                    "end_time": "14:21",
+                    "cost": 0,
+                    "distance": 1.78,
+                    "price": 0
+                  },
+                  {
+                    "start": "Longhua-Metro Station",
+                    "end": "Airport East-Metro Station",
+                    "mode": "metro",
+                    "start_time": "14:21",
+                    "end_time": "15:02",
+                    "cost": 15,
+                    "distance": 20.54,
+                    "price": 5,
+                    "tickets": 3
+                  },
+                  {
+                    "start": "Airport East-Metro Station",
+                    "end": "Shenzhen Bao'an International Airport",
+                    "mode": "walk",
+                    "start_time": "15:02",
+                    "end_time": "15:07",
+                    "cost": 0,
+                    "distance": 0.45,
+                    "price": 0
+                  }
+                ],
+                "price": 559.04,
+                "cost": 1677.12,
+                "tickets": 3
+              }
+            ]
+          }
+        ]
+      },
+      "verifier_errors": [],
+      "schema_errors": [],
+      "translation_failures": []
+    },
+    "environment_context": {
+      "lang": "en"
+    },
+    "generation_metadata": {
+      "raw_response": "[{\"day\": 1,```json\n{\n    \"day\": 1,\n    \"activities\": [\n        {\n            \"start_time\": \"08:34\",\n            \"end_time\": \"10:05\",\n            \"start\": \"Shanghai Pudong International Airport\",\n            \"end\": \"Shenzhen Bao'an International Airport\",\n            \"price\": 590.54,\n            \"cost\": 1771.62,\n            \"FlightID\": \"FL019\",\n            \"type\": \"airplane\",\n            \"tickets\": 3,\n            \"transports\": \"empty\"\n        },\n        {\n            \"position\": \"Shenzhen Safari Park\",\n            \"type\": \"attraction\",\n            \"transports\": {\"from\": \"Shenzhen Bao'an International Airport\", \"to\": \"Shenzhen Safari Park\", \"mode\": \"metro\", \"start_time\": \"10:05\", \"end_time\": \"11:19\", \"cost\": 15},\n            \"price\": 99.0,\n            \"cost\": 297.0,\n            \"tickets\": 3,\n            \"start_time\": \"11:30\",\n            \"end_time\": \"13:30\"\n        },\n        {\n            \"position\": \"Libaoge (Kerry Store)\",\n            \"type\": \"lunch\",\n            \"transports\": {\"from\": \"Shenzhen Safari Park\", \"to\": \"Libaoge (Kerry Store)\", \"mode\": \"metro\", \"start_time\": \"13:30\", \"end_time\": \"14:12\", \"cost\": 12},\n            \"price\": 156.0,\n            \"cost\": 468.0,\n            \"start_time\": \"14:30\",\n            \"end_time\": \"15:30\"\n        },\n        {\n            \"position\": \"Shenzhen Bay Park\",\n            \"type\": \"attraction\",\n            \"transports\": {\"from\": \"Libaoge (Kerry Store)\", \"to\": \"Shenzhen Bay Park\", \"mode\": \"metro\", \"start_time\": \"15:30\", \"end_time\": \"16:10\", \"cost\": 9},\n            \"price\": 0.0,\n            \"cost\": 0.0,\n            \"tickets\": 3,\n            \"start_time\": \"16:20\",\n            \"end_time\": \"19:20\"\n        },\n        {\n            \"position\": \"Metropark Hotel Shenzhen\",\n            \"type\": \"accommodation\",\n            \"transports\": {\"from\": \"Shenzhen Bay Park\", \"to\": \"Metropark Hotel Shenzhen\", \"mode\": \"metro\", \"start_time\": \"19:20\", \"end_time\": \"19:53\", \"cost\": 15},\n            \"room_type\": 2,\n            \"price\": 387,\n            \"cost\": 774,\n            \"start_time\": \"20:00\",\n            \"end_time\": \"24:00\",\n            \"rooms\": 2\n        }\n    ]\n},\n{\n    \"day\": 2,\n    \"activities\": [\n        {\n            \"position\": \"Lotus Hill Park\",\n            \"type\": \"attraction\",\n            \"transports\": {\"from\": \"Metropark Hotel Shenzhen\", \"to\": \"Lotus Hill Park\", \"mode\": \"metro\", \"start_time\": \"08:00\", \"end_time\": \"08:14\", \"cost\": 9},\n            \"price\": 0.0,\n            \"cost\": 0.0,\n            \"tickets\": 3,\n            \"start_time\": \"08:30\",\n            \"end_time\": \"10:30\"\n        },\n        {\n            \"position\": \"Jiangnan Chef (China Resources Mixc Store)\",\n            \"type\": \"lunch\",\n            \"transports\": {\"from\": \"Lotus Hill Park\", \"to\": \"Jiangnan Chef (China Resources Mixc Store)\", \"mode\": \"metro\", \"start_time\": \"10:30\", \"end_time\": \"10:46\", \"cost\": 9},\n            \"price\": 165.0,\n            \"cost\": 495.0,\n            \"start_time\": \"11:00\",\n            \"end_time\": \"12:00\"\n        },\n        {\n            \"position\": \"Shenzhen Central Park\",\n            \"type\": \"attraction\",\n            \"transports\": {\"from\": \"Jiangnan Chef (China Resources Mixc Store)\", \"to\": \"Shenzhen Central Park\", \"mode\": \"metro\", \"start_time\": \"12:00\", \"end_time\": \"12:12\", \"cost\": 6},\n            \"price\": 0.0,\n            \"cost\": 0.0,\n            \"tickets\": 3,\n            \"start_time\": \"12:20\",\n            \"end_time\": \"15:20\"\n        },\n        {\n            \"position\": \"West Lake Spring (Baihui Branch)\",\n            \"type\": \"dinner\",\n            \"transports\": {\"from\": \"Shenzhen Central Park\", \"to\": \"West Lake Spring (Baihui Branch)\", \"mode\": \"metro\", \"start_time\": \"15:20\", \"end_time\": \"15:32\", \"cost\": 6},\n            \"price\": 156.0,\n            \"cost\": 468.0,\n            \"start_time\": \"16:00\",\n            \"end_time\": \"17:00\"\n        },\n        {\n            \"position\": \"Metropark Hotel Shenzhen\",\n            \"type\": \"accommodation\",\n            \"transports\": {\"from\": \"West Lake Spring (Baihui Branch)\", \"to\": \"Metropark Hotel Shenzhen\", \"mode\": \"metro\", \"start_time\": \"17:00\", \"end_time\": \"17:07\", \"cost\": 6},\n            \"room_type\": 2,\n            \"price\": 387,\n            \"cost\": 774,\n            \"start_time\": \"17:30\",\n            \"end_time\": \"24:00\",\n            \"rooms\": 2\n        }\n    ]\n},\n{\n    \"day\": 3,\n    \"activities\": [\n        {\n            \"position\": \"Fairy Lake Botanical Garden\",\n            \"type\": \"attraction\",\n            \"transports\": {\"from\": \"Metropark Hotel Shenzhen\", \"to\": \"Fairy Lake Botanical Garden\", \"mode\": \"metro\", \"start_time\": \"08:00\", \"end_time\": \"08:38\", \"cost\": 9},\n            \"price\": 0.0,\n            \"cost\": 0.0,\n            \"tickets\": 3,\n            \"start_time\": \"09:00\",\n            \"end_time\": \"11:00\"\n        },\n        {\n            \"position\": \"Yat Bun Sin Tea House (Mixc World Store)\",\n            \"type\": \"lunch\",\n            \"transports\": {\"from\": \"Fairy Lake Botanical Garden\", \"to\": \"Yat Bun Sin Tea House (Mixc World Store)\", \"mode\": \"metro\", \"start_time\": \"11:00\", \"end_time\": \"11:48\", \"cost\": 18},\n            \"price\": 175.0,\n            \"cost\": 525.0,\n            \"start_time\": \"12:00\",\n            \"end_time\": \"13:00\"\n        },\n        {\n            \"position\": \"Shenzhen Bay Park - Liuhua Hill\",\n            \"type\": \"attraction\",\n            \"transports\": {\"from\": \"Yat Bun Sin Tea House (Mixc World Store)\", \"to\": \"Shenzhen Bay Park - Liuhua Hill\", \"mode\": \"metro\", \"start_time\": \"13:00\", \"end_time\": \"13:20\", \"cost\": 6},\n            \"price\": 0.0,\n            \"cost\": 0.0,\n            \"tickets\": 3,\n            \"start_time\": \"13:30\",\n            \"end_time\": \"15:30\"\n        },\n        {\n            \"position\": \"Metropark Hotel Shenzhen\",\n            \"type\": \"accommodation\",\n            \"transports\": {\"from\": \"Shenzhen Bay Park - Liuhua Hill\", \"to\": \"Metropark Hotel Shenzhen\", \"mode\": \"metro\", \"start_time\": \"15:30\", \"end_time\": \"16:15\", \"cost\": 15},\n            \"room_type\": 2,\n            \"price\": 387,\n            \"cost\": 774,\n            \"start_time\": \"16:30\",\n            \"end_time\": \"24:00\",\n            \"rooms\": 2\n        }\n    ]\n},\n{\n    \"day\": 4,\n    \"activities\": [\n        {\n            \"position\": \"Guangdong Wutong Mountain National Forest Park\",\n            \"type\": \"attraction\",\n            \"transports\": {\"from\": \"Metropark Hotel Shenzhen\", \"to\": \"Guangdong Wutong Mountain National Forest Park\", \"mode\": \"metro\", \"start_time\": \"08:00\", \"end_time\": \"08:54\", \"cost\": 12},\n            \"price\": 0.0,\n            \"cost\": 0.0,\n            \"tickets\": 3,\n            \"start_time\": \"09:00\",\n            \"end_time\": \"12:00\"\n        },\n        {\n            \"position\": \"Yude Longji Hakka Restaurant (Longhua Branch)\",\n            \"type\": \"lunch\",\n            \"transports\": {\"from\": \"Guangdong Wutong Mountain National Forest Park\", \"to\": \"Yude Longji Hakka Restaurant (Longhua Branch)\", \"mode\": \"metro\", \"start_time\": \"12:00\", \"end_time\": \"12:30\", \"cost\": 6},\n            \"price\": 158.0,\n            \"cost\": 474.0,\n            \"start_time\": \"13:00\",\n            \"end_time\": \"14:00\"\n        },\n        {\n            \"start\": \"Shenzhen Bao'an International Airport\",\n            \"end\": \"Shanghai Hongqiao International Airport\",\n            \"start_time\": \"16:16\",\n            \"end_time\": \"17:47\",\n            \"FlightID\": \"FL162\",\n            \"type\": \"airplane\",\n            \"transports\": {\"from\": \"Yude Longji Hakka Restaurant (Longhua Branch)\", \"to\": \"Shenzhen Bao'an International Airport\", \"mode\": \"metro\", \"start_time\": \"14:00\", \"end_time\": \"15:07\", \"cost\": 15},\n            \"price\": 559.04,\n            \"cost\": 1677.12,\n            \"tickets\": 3\n        }\n    ]\n}\n]\n```",
+      "input_tokens": 106562,
+      "output_tokens": 2518,
+      "total_tokens": 109080,
+      "model_calls": 6,
+      "failed_model_calls": 0,
+      "elapsed_time_seconds": 57.23790097236633,
+      "llm_inference_time_seconds": 43.41064691543579,
+      "information_collection_time_seconds": 13.825254201889038,
+      "initial_generation_time_s": 57.23738639999647,
+      "initial_generation_tool_calls": 5994,
+      "initial_generation_tool_call_counts_by_type": {
+        "accommodations_select": 1,
+        "attractions_select": 1,
+        "goto": 1950,
+        "intercity_transport_select": 4,
+        "next_page": 137,
+        "poi_lat_lon_search": 3900,
+        "restaurants_select": 1
+      },
+      "shared_initialization_time_s": 57.64526399993338,
+      "shared_initialization_system_metrics": {
+        "tool_call_count": 6114,
+        "successful_tool_call_count": 6114,
+        "failed_tool_call_count": 0,
+        "verification_count": 1,
+        "tool_call_counts_by_type": {
+          "accommodations_select": 4,
+          "attractions_select": 15,
+          "goto": 1982,
+          "intercity_transport_select": 6,
+          "next_page": 137,
+          "poi_lat_lon_search": 3964,
+          "restaurants_select": 6
+        }
+      }
+    }
+  },
+  "initial_plan_hash": "c75922fe46d17bea4d8809db8b6984bfc654857073374fadcd0977cbdbe79aa3",
+  "initial_state_hash": "cc63e74e8dee3ae19df951459581d658c38420921a0483ea25763c1eeabb8555"
+}

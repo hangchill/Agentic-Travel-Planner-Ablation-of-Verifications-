@@ -58,7 +58,7 @@ For Windows, activate the environment using `.venv\Scripts\activate`.
 ### 3. Download the ChinaTravel sandbox
 
 ```bash
-python scripts/setup_project.py
+python scripts/experiment_setup/setup_project.py
 ```
 
 This automatically downloads and extracts **both** official sandboxes:
@@ -112,7 +112,7 @@ python run_exp.py \
 
 This runs one medium-difficulty ChinaTravel case using the shared R0 framework. We use **DeepSeek V3** (`deepseek/deepseek-chat`) through OpenRouter as our model — it is far cheaper than GPT-4.1 (~15x on input tokens) and runs the full pipeline cleanly, which lets us afford the repair experiments on our limited budget.
 
-`--lang en` is the default, so it no longer needs to be passed (add `--lang zh` only if you specifically want the Chinese sandbox). For the comparative experiments, keep the repair budget fixed at `--refine_steps 5` across every strategy (R0–R4) so the comparison is fair and R3 has room to escalate its repair scope.
+`--lang en` is the default, so it no longer needs to be passed (add `--lang zh` only if you specifically want the Chinese sandbox). Record the explicit repair budget for each individual study; the example above uses `--refine_steps 5`.
 
 **English queries:** the ChinaTravel query files on Hugging Face are bilingual — each query carries both a Chinese (`nature_language`) and an English (`nature_language_en`) version. When you run with `--lang en`, the loader automatically downloads the same dataset, uses the English query text, and translates the city names to English so everything resolves against the English sandbox (`database_en`). No separate English query download or local query files are needed; an English request produces an English itinerary.
 
@@ -164,9 +164,9 @@ This is checkpoint-based resume, not skipping arbitrary existing final-plan file
 Run the independent offline stages explicitly:
 
 ```bash
-python scripts/build_repair_summary.py --input results/experiments/pilot5-r1
-python scripts/evaluate_repair_run.py --run-dir results/experiments/pilot5-r1
-python scripts/build_regression_matrix.py \
+python scripts/result_analysis/build_repair_summary.py --input results/experiments/pilot5-r1
+python scripts/result_analysis/evaluate_repair_run.py --run-dir results/experiments/pilot5-r1
+python scripts/matrix_building/build_regression_matrix.py \
   --input results/experiments/pilot5-r1/attempts.jsonl \
   --output-dir results/experiments/pilot5-r1/regression_matrix
 ```
@@ -471,6 +471,11 @@ The hardened evaluator additionally enforces:
 - at most one hotel breakfast per day for the free-breakfast exception;
 - exact entity names and canonical concept values from the installed sandbox;
 - safe DSL execution and legacy apostrophe normalization.
+
+For generic per-strategy analysis of persisted R0/R1/R2/R3/R4 repair runs, see
+[Repair analysis](scripts/REPAIR_ANALYSIS.md). This reads saved evidence without
+rerunning generation, verification, or benchmark evaluation. Multiple `--run`
+arguments generate independent analysis folders for the supplied strategies.
 
 ## 🛠️ Agent Environment and Harness
 

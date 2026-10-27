@@ -1,0 +1,15 @@
+column,meaning
+run_id,Experiment run the row comes from.
+query_uid,Query ID.
+repair_strategy,Repair strategy (R0-R4).
+execution_status,Whether the query finished (completed) or failed / is missing.
+rounds,Repair rounds taken (at most 6).
+cache_data_complete,False for runs made before the shared repeat-request cache existed; their cache columns are left empty.
+llm_cache_hits,"Requests answered from the cache: the strategy sent exactly the same request again for this query, so the earlier reply was reused without calling the model. R1 can send several requests per round, so this can exceed rounds."
+rounds_with_cache_hit,"Rounds with at least one cache hit, i.e. rounds where the strategy was stuck repeating itself."
+cache_hit_round_rate,rounds_with_cache_hit / rounds: share of rounds spent repeating.
+first_cache_hit_step,Round in which the strategy first repeated a request (empty if never).
+tokens_spent,Tokens of real model calls during repair (input + output).
+tokens_saved,"Tokens the reused replies originally cost, i.e. avoided by the cache."
+tokens_saved_unknown_hits,"Cache hits whose original token cost was not reported, so they are missing from tokens_saved."
+tokens_without_cache,tokens_spent + tokens_saved: what the query would have cost without the cache.

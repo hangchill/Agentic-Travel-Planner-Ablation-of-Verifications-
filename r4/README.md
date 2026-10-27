@@ -67,7 +67,7 @@ Use `R3`, not `R3P`: they are separate registered strategies.
 ### 2. Evaluate the saved R0-R3 final plans
 
 ```powershell
-python -X utf8 .\scripts\evaluate_repair_run.py --run-dir $sourceRun
+python -X utf8 .\scripts\result_analysis\evaluate_repair_run.py --run-dir $sourceRun
 if ($LASTEXITCODE -ne 0) { throw 'R0-R3 evaluation failed' }
 ```
 
@@ -76,7 +76,7 @@ This writes per-strategy benchmark exports and scores under `$sourceRun\benchmar
 ### 3. Build R0-R3 process summaries
 
 ```powershell
-python -X utf8 .\scripts\build_repair_summary.py --input $sourceRun
+python -X utf8 .\scripts\result_analysis\build_repair_summary.py --input $sourceRun
 if ($LASTEXITCODE -ne 0) { throw 'R0-R3 summary failed' }
 ```
 
@@ -88,7 +88,7 @@ The script is named **`build_regression_matrix.py`**. All four matrices use the 
 
 ```powershell
 foreach ($strategy in @('R0', 'R1', 'R2', 'R3')) {
-  python -X utf8 .\scripts\build_regression_matrix.py `
+  python -X utf8 .\scripts\matrix_building\build_regression_matrix.py `
     --input "$sourceRun\attempts.jsonl" `
     --repair-strategy $strategy `
     --output-dir "$matrixRoot\$strategy"
@@ -98,12 +98,12 @@ foreach ($strategy in @('R0', 'R1', 'R2', 'R3')) {
 
 Each directory contains `candidate_regression_count.csv`, `candidate_regression_support.csv`, `candidate_regression_rate.csv`, and `matrix_contributions.csv`, plus other diagnostics. These derive from repair attempts, not from benchmark scores or the summary CSV. If a strategy produces no usable contribution rows, the pooling stage rejects the empty provenance; gather more training attempts before pooling.
 
-Without `--output-dir`, `scripts/build_regression_matrix.py` writes to `matrices/<repair-strategy>/` (for example `matrices/R0/`). It infers the strategy when the input contains exactly one strategy; an empty input without a strategy label uses `matrices/unclassified/`. The explicit paths above keep separate batches together and avoid reusing the same output directory across runs. Explicit relative output paths are resolved from the current working directory; defaults are anchored to the repository root.
+Without `--output-dir`, `scripts/matrix_building/build_regression_matrix.py` writes to `matrices/<repair-strategy>/` (for example `matrices/R0/`). It infers the strategy when the input contains exactly one strategy; an empty input without a strategy label uses `matrices/unclassified/`. The explicit paths above keep separate batches together and avoid reusing the same output directory across runs. Explicit relative output paths are resolved from the current working directory; defaults are anchored to the repository root.
 
 ### 5. Pool R0-R3 into the R4 main matrix
 
 ```powershell
-python -X utf8 .\scripts\build_main_matrix.py `
+python -X utf8 .\scripts\matrix_building\build_main_matrix.py `
   --splits subset_train --perspective candidate `
   --input-dir "$matrixRoot\R0" `
   --input-dir "$matrixRoot\R1" `
@@ -121,7 +121,7 @@ The original nine destination columns pool the exported R0-R3 pivots. The common
 
 When a run has no saved histories, its commonsense destination counts/support stay blank. Available runs can still contribute, with supported cells marked `observed_partial` when a source run is missing or incomplete. The manifest records available strategies, exclusion counts, eligible attempts, and hashes of all history inputs. With the current subset training runs, R1 histories are unavailable; R0, R2, and `subset_train-r3-new` histories are available. An observed probability with only a few attempts or one query should not be interpreted as a reliable population estimate.
 
-Without `--output`, both `scripts/build_main_matrix.py` and `r4/build_main_matrix.py` write to `matrices/pooled/main_matrix.csv` with an adjacent manifest. `r4/prepare_matrices.py` defaults to `matrices/training_matrices/`, and the optional full pipeline writes its output regression matrices to `matrices/<r4-run-id>/<strategy>/`.
+Without `--output`, both `scripts/matrix_building/build_main_matrix.py` and `r4/build_main_matrix.py` write to `matrices/pooled/main_matrix.csv` with an adjacent manifest. `r4/prepare_matrices.py` defaults to `matrices/training_matrices/`, and the optional full pipeline writes its output regression matrices to `matrices/<r4-run-id>/<strategy>/`.
 
 Keep the source matrix directories and manifest available and unchanged: R4 checks their recorded hashes and training provenance. The run also stores an immutable snapshot of the pooled matrix and manifest inside `experiments/<r4-run-id>/inputs/pooled/`.
 
@@ -156,7 +156,7 @@ The R4 algorithm reads the fixed historical matrix on each attempt and ranks cur
 Real saved plans from the run's named training or test split can be evaluated even when the guidance matrix is synthetic; the evaluation population records the actual split/partition and matrix provenance. Matrix evidence remains restricted to training data. Mock-runtime smoke runs remain excluded from benchmark scoring.
 
 ```powershell
-python -X utf8 .\scripts\evaluate_repair_run.py --run-dir $r4Run
+python -X utf8 .\scripts\result_analysis\evaluate_repair_run.py --run-dir $r4Run
 if ($LASTEXITCODE -ne 0) { throw 'R4 evaluation failed' }
 ```
 
@@ -170,7 +170,7 @@ These optional results go under `benchmark_eval/trials/<strategy>/`.
 Optional R4 process summary:
 
 ```powershell
-python -X utf8 .\scripts\build_repair_summary.py --input $r4Run
+python -X utf8 .\scripts\result_analysis\build_repair_summary.py --input $r4Run
 if ($LASTEXITCODE -ne 0) { throw 'R4 summary failed' }
 ```
 
@@ -238,7 +238,7 @@ python -X utf8 -m r4.migrate_run --run-dir .\experiments\<r4-run-id>
 Migration verifies initial states, references, trial evidence, selected plans, costs,
 matrix hashes, and saved benchmark files. Existing trial-final benchmark scores are
 preserved under `diagnostics/benchmark_trials/`; the migration helper retains the
-historical selected-outcome layout. After migration, run `scripts/evaluate_repair_run.py`
+historical selected-outcome layout. After migration, run `scripts/result_analysis/evaluate_repair_run.py`
 to produce the primary final-accepted scores under `benchmark_eval/R4-<strategy-hash>/`.
 `layout_migration.json` records verification and historical metadata. Historical
 evidence and implementation hashes are preserved.

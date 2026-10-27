@@ -1,0 +1,1558 @@
+{
+  "run_id": "subset_test-r0",
+  "query_uid": "e20241028161037866126",
+  "state": {
+    "query_uid": "e20241028161037866126",
+    "problem": {
+      "uid": "e20241028161037866126",
+      "tag": "medium",
+      "start_city": "Nanjing",
+      "target_city": "Guangzhou",
+      "days": 2,
+      "people_number": 2,
+      "limit_rooms": true,
+      "limits_room_type": true,
+      "hard_logic_py": [
+        "result=(day_count(plan)==2)",
+        "result=(people_count(plan)==2)",
+        "total_cost=0 \nfor activity in allactivities(plan):\n    total_cost+=activity_cost(activity)\n    total_cost += innercity_transport_cost(activity_transports(activity))\nresult=(total_cost<=4000)",
+        "innercity_transport_set=set()\nfor activity in allactivities(plan):\n  if activity_transports(activity)!=[]: innercity_transport_set.add(innercity_transport_type(activity_transports(activity)))\nresult=({'metro'}<=innercity_transport_set)",
+        "result=True\nfor activity in allactivities(plan):\n  if activity_type(activity) in ['attraction', 'airplane', 'train'] and activity_tickets(activity)!=2: result=False\n  if innercity_transport_type(activity_transports(activity))=='metro'and metro_tickets(activity_transports(activity))!=2: result=False",
+        "result=True\nfor activity in allactivities(plan):\n  if activity_type(activity)=='accommodation' and room_count(activity)!=1: result=False",
+        "result=True\nfor activity in allactivities(plan):\n  if activity_type(activity)=='accommodation' and room_type(activity)!=2: result=False",
+        "result=True\nfor activity in allactivities(plan):\n  if innercity_transport_type(activity_transports(activity))=='taxi'and taxi_cars(activity_transports(activity))!=1: result=False"
+      ],
+      "nature_language": "Current location: Nanjing. Two of us are planning to visit Guangzhou for two days, choosing the metro as our mode of transportation within the city, with a budget of 4000 RMB, and booking a twin room. Please provide me with a travel plan.",
+      "nature_language_en": "Current location: Nanjing. Two of us are planning to visit Guangzhou for two days, choosing the metro as our mode of transportation within the city, with a budget of 4000 RMB, and booking a twin room. Please provide me with a travel plan."
+    },
+    "raw_initial_plan": [
+      {
+        "day": 1,
+        "activities": [
+          {
+            "start_time": "07:25",
+            "end_time": "14:36",
+            "start": "Nanjing South Railway Station",
+            "end": "Guangzhou South Railway Station",
+            "price": 736.07,
+            "cost": 1472.14,
+            "TrainID": "G637",
+            "type": "train",
+            "tickets": 2,
+            "transports": "empty"
+          },
+          {
+            "position": "Chen Clan Ancestral Hall",
+            "type": "attraction",
+            "transports": {
+              "from": "Guangzhou South Railway Station",
+              "to": "Chen Clan Ancestral Hall",
+              "mode": "metro",
+              "start_time": "14:36",
+              "end_time": "15:18",
+              "cost": 10
+            },
+            "price": 0.0,
+            "cost": 0.0,
+            "tickets": 2,
+            "start_time": "15:30",
+            "end_time": "18:30"
+          },
+          {
+            "position": "Diandude (Jufu Lou Branch)",
+            "type": "dinner",
+            "transports": {
+              "from": "Chen Clan Ancestral Hall",
+              "to": "Diandude (Jufu Lou Branch)",
+              "mode": "metro",
+              "start_time": "18:30",
+              "end_time": "18:52",
+              "cost": 4
+            },
+            "price": 77.0,
+            "cost": 154.0,
+            "start_time": "19:00",
+            "end_time": "20:00"
+          },
+          {
+            "position": "Yizhi Hotel (Guangzhou East Railway Station Tianhe Sports Center)",
+            "type": "accommodation",
+            "transports": {
+              "from": "Diandude (Jufu Lou Branch)",
+              "to": "Yizhi Hotel (Guangzhou East Railway Station Tianhe Sports Center)",
+              "mode": "metro",
+              "start_time": "20:00",
+              "end_time": "20:29",
+              "cost": 6
+            },
+            "room_type": 2,
+            "price": 385,
+            "cost": 770,
+            "start_time": "20:30",
+            "end_time": "24:00",
+            "rooms": 1
+          }
+        ]
+      },
+      {
+        "day": 2,
+        "activities": [
+          {
+            "position": "Canton Tower",
+            "type": "attraction",
+            "transports": {
+              "from": "Yizhi Hotel (Guangzhou East Railway Station Tianhe Sports Center)",
+              "to": "Canton Tower",
+              "mode": "metro",
+              "start_time": "08:00",
+              "end_time": "08:26",
+              "cost": 6
+            },
+            "price": 149.0,
+            "cost": 298.0,
+            "tickets": 2,
+            "start_time": "08:30",
+            "end_time": "10:00"
+          },
+          {
+            "position": "Guangdong Museum",
+            "type": "attraction",
+            "transports": {
+              "from": "Canton Tower",
+              "to": "Guangdong Museum",
+              "mode": "metro",
+              "start_time": "10:00",
+              "end_time": "10:12",
+              "cost": 4
+            },
+            "price": 0.0,
+            "cost": 0.0,
+            "tickets": 2,
+            "start_time": "10:15",
+            "end_time": "12:15"
+          },
+          {
+            "position": "Big Pigeon Rice (Gangding Branch)",
+            "type": "lunch",
+            "transports": {
+              "from": "Guangdong Museum",
+              "to": "Big Pigeon Rice (Gangding Branch)",
+              "mode": "metro",
+              "start_time": "12:15",
+              "end_time": "12:21",
+              "cost": 4
+            },
+            "price": 99.0,
+            "cost": 198.0,
+            "start_time": "12:30",
+            "end_time": "13:30"
+          },
+          {
+            "position": "Shamian Island",
+            "type": "attraction",
+            "transports": {
+              "from": "Big Pigeon Rice (Gangding Branch)",
+              "to": "Shamian Island",
+              "mode": "metro",
+              "start_time": "13:30",
+              "end_time": "13:55",
+              "cost": 8
+            },
+            "price": 0.0,
+            "cost": 0.0,
+            "tickets": 2,
+            "start_time": "14:00",
+            "end_time": "16:00"
+          },
+          {
+            "position": "Pearl River Night Cruise",
+            "type": "attraction",
+            "transports": {
+              "from": "Shamian Island",
+              "to": "Pearl River Night Cruise",
+              "mode": "metro",
+              "start_time": "16:00",
+              "end_time": "16:06",
+              "cost": 6
+            },
+            "price": 98.0,
+            "cost": 196.0,
+            "tickets": 2,
+            "start_time": "16:30",
+            "end_time": "18:30"
+          },
+          {
+            "start": "Guangzhou Baiyun International Airport",
+            "end": "Nanjing Lukou International Airport",
+            "start_time": "20:22",
+            "end_time": "21:47",
+            "FlightID": "FL314",
+            "type": "airplane",
+            "transports": {
+              "from": "Pearl River Night Cruise",
+              "to": "Guangzhou Baiyun International Airport",
+              "mode": "metro",
+              "start_time": "18:30",
+              "end_time": "19:37",
+              "cost": 14
+            },
+            "price": 527.99,
+            "cost": 1055.98,
+            "tickets": 2
+          }
+        ]
+      }
+    ],
+    "repair_context": {
+      "go_train_info": "TrainID\tTrainType\tFrom\tTo\tBeginTime\tEndTime\tDuration\tprice\nG637\tHigh-speed rail\tNanjing South Railway Station\tGuangzhou South Railway Station\t07:25\t14:36\t7.18\t736.07\n",
+      "go_flight_info": "FlightID\tFrom\tTo\tBeginTime\tEndTime\tDuration\tprice\nFL675\tNanjing Lukou International Airport\tGuangzhou Baiyun International Airport\t17:29\t18:54\t1.42\t518.23\nFL671\tNanjing Lukou International Airport\tGuangzhou Baiyun International Airport\t07:00\t08:25\t1.42\t550.12\nFL673\tNanjing Lukou International Airport\tGuangzhou Baiyun International Airport\t04:57\t06:22\t1.42\t565.16\nFL676\tNanjing Lukou International Airport\tGuangzhou Baiyun International Airport\t00:12\t01:37\t1.42\t590.8\n",
+      "back_train_info": "TrainID\tTrainType\tFrom\tTo\tBeginTime\tEndTime\tDuration\tprice\nG638\tHigh-speed rail\tGuangzhou South Railway Station\tNanjing South Railway Station\t15:00\t22:32\t7.53\t736.07\n",
+      "back_flight_info": "FlightID\tFrom\tTo\tBeginTime\tEndTime\tDuration\tprice\nFL314\tGuangzhou Baiyun International Airport\tNanjing Lukou International Airport\t20:22\t21:47\t1.42\t527.99\nFL313\tGuangzhou Baiyun International Airport\tNanjing Lukou International Airport\t17:15\t18:40\t1.42\t550.03\nFL312\tGuangzhou Baiyun International Airport\tNanjing Lukou International Airport\t17:40\t19:05\t1.42\t554.26\nFL311\tGuangzhou Baiyun International Airport\tNanjing Lukou International Airport\t18:36\t20:01\t1.42\t579.47\n",
+      "attraction_info": "name\ttype\tlat\tlon\topentime\tendtime\tprice\trecommendmintime\trecommendmaxtime\nCanton Tower\tCultural Landscape\t23.112223\t113.331084\t09:30\t22:30\t149.0\t0.5\t1.5\nChen Clan Ancestral Hall\thistorical site\t23.132609\t113.251995\t09:00\t18:00\t0.0\t3.0\t3.5\nShamian Island\thistorical site\t23.112627\t113.251119\t00:00\t24:00\t0.0\t0.5\t2.0\nGuangdong Museum\tMuseum/Memorial Hall\t23.120537\t113.33296\t00:00\t24:00\t0.0\t2.5\t4.0\nPearl River Night Cruise\tAmusement Park/Sports Entertainment\t23.115119\t113.294879\t09:00\t22:30\t98.0\t1.0\t2.0\nYuexiu Park\tpark\t23.14608\t113.272266\t00:00\t22:00\t0.0\t0.5\t2.0\nBeijing Road Pedestrian Street\tcommercial district\t23.127945\t113.275422\t00:00\t24:00\t0.0\t0.5\t2.0\nBeijing Road Pedestrian Street\tcommercial district\t23.127945\t113.275422\t00:00\t24:00\t0.0\t0.5\t2.0\nGuangzhou Museum\tMuseum/Memorial Hall\t23.143971\t113.27211\t09:00\t18:00\t0.0\t1.5\t3.0\nSacred Heart Cathedral of Guangzhou\thistorical site\t23.120805\t113.266558\t09:00\t11:00\t0.0\t2.0\t2.5\nGuangzhou Zoo\tAmusement Park/Sports Entertainment\t23.146478\t113.311833\t08:00\t18:00\t0.0\t3.0\t4.0\nWhite Cloud Mountain\tnatural scenery\t23.190623\t113.306556\t00:00\t24:00\t0.0\t1.0\t2.0\nGuangzhou Library\tCultural Landscape\t23.122229\t113.331974\t09:00\t21:00\t0.0\t2.5\t4.0\nShangxiajiu Pedestrian Street\tcommercial district\t23.119805\t113.252523\t00:00\t24:00\t0.0\t3.0\t4.0\nGuangzhou Art Museum\tArt museum\t23.149166\t113.28707\t09:00\t17:00\t0.0\t0.5\t1.0\n",
+      "restaurant_info": "name\tlat\tlon\tprice\tcuisine\topentime\tendtime\trecommendedfood\nDiandude (Jufu Lou Branch)\t23.1204857\t113.2654363\t77.0\tCantonese cuisine\t08:00\t21:00\tPrawn and Crab Roe Siu Mai, Golden Sand Red Rice Roll, Mango Filled Coconut Pudding, Signature Supreme Shrimp Dumpling, Roasted Pigeon, Satay Beef Tripe, Japanese Wasabi Salmon Tart, Soy Sauce Chicken Feet, Lily Sauce Chicken Feet, Tangerine Peel Beef Balls\nZi Zhou Lou Shunde Cuisine (Panyu Square Main Store)\t22.9329379\t113.3862712\t134.0\tCantonese cuisine\t09:00\t21:30\tCuttlefish balls, Golden fried dough sticks, Valley worm chicken, Shunde shredded fish congee, XO sauce stir-fried Chencun rice noodles, Traditional steamed fish head, Traditional roast goose, Crispy skin double-layer milk pudding, Lun Jiao cake, White clams\nBig Pigeon Rice (Gangding Branch)\t23.1356594\t113.3409715\t99.0\tCantonese cuisine\t11:00\t21:30\tBraised Pigeon, Grilled Pigeon Kidney Skewers, Whole Coconut with Black Chicken and Old Pigeon Soup, Stir-fried Pigeon Gizzards with Chinese Cabbage, Pigeon Rice, Pigeon Soup with Evergreen\nChaofa Chaoshan Beef Restaurant (Beijing Road Branch)\t23.1175091\t113.2705116\t101.0\tHot pot\t11:30\t03:30\tRibeye beef, fresh beef balls, marbled beef, chuck eye roll, beef shank, beef brisket fat\nNanxin Milk Dessert Specialist\t23.1134549\t113.2428924\t30.0\tBakery and Desserts\t10:00\t22:30\tNanxin Double-Skin Milk Pudding, Sour and Spicy Beef Tripe Soup, Nanxin Ginger Milk Curd, Phoenix Egg Custard, Red Bean Double-Skin Milk Pudding, Mango Pomelo Sago\n",
+      "accommodation_info": "name\tfeaturehoteltype\tlat\tlon\tprice\tnumbed\nYizhi Hotel (Guangzhou Chimelong Wildlife World)\tFamily Room\t23.0087\t113.308714\t319\t1\nYizhi Hotel (Guangzhou East Railway Station Tianhe Sports Center)\tFamily Room\t23.149659\t113.333124\t385\t1\n",
+      "innercity_transport_info": "from Guangzhou Baiyun International Airport to Guangzhou Baiyun International Airport:  metro: empty.  taxi: empty.  walk: empty. \nfrom Guangzhou Baiyun International Airport to Shamian Island: metro: duration 67, cost 14. taxi: duration 46, cost 133.24. walk: duration 369, cost 0.0. \nfrom Guangzhou Baiyun International Airport to Yuexiu Park: metro: duration 65, cost 12. taxi: duration 40, cost 115.34. walk: duration 321, cost 0.0. \nfrom Guangzhou Baiyun International Airport to Guangzhou Library: metro: duration 63, cost 14. taxi: duration 44, cost 127.11. walk: duration 353, cost 0.0. \nfrom Guangzhou Baiyun International Airport to White Cloud Mountain: metro: duration 69, cost 12. taxi: duration 32, cost 92.35. walk: duration 260, cost 0.0. \nfrom Guangzhou Baiyun International Airport to Nanxin Milk Dessert Specialist: metro: duration 67, cost 14. taxi: duration 46, cost 133.54. walk: duration 370, cost 0.0. \nfrom Guangzhou Baiyun International Airport to Chen Clan Ancestral Hall: metro: duration 65, cost 14. taxi: duration 42, cost 123.37. walk: duration 343, cost 0.0. \nfrom Guangzhou Baiyun International Airport to Guangzhou Art Museum: metro: duration 72, cost 12. taxi: duration 39, cost 113.21. walk: duration 316, cost 0.0. \nfrom Guangzhou Baiyun International Airport to Guangdong Museum: metro: duration 61, cost 14. taxi: duration 44, cost 128.0. walk: duration 355, cost 0.0. \nfrom Guangzhou Baiyun International Airport to Sacred Heart Cathedral of Guangzhou: metro: duration 64, cost 14. taxi: duration 44, cost 128.16. walk: duration 355, cost 0.0. \nfrom Guangzhou Baiyun International Airport to Zi Zhou Lou Shunde Cuisine (Panyu Square Main Store): metro: duration 104, cost 18. taxi: duration 76, cost 224.02. walk: duration 611, cost 0.0. \nfrom Guangzhou Baiyun International Airport to Diandude (Jufu Lou Branch): metro: duration 65, cost 14. taxi: duration 44, cost 128.38. walk: duration 356, cost 0.0. \nfrom Guangzhou Baiyun International Airport to Guangzhou Museum: metro: duration 63, cost 12. taxi: duration 40, cost 116.39. walk: duration 324, cost 0.0. \nfrom Guangzhou Baiyun International Airport to Big Pigeon Rice (Gangding Branch): metro: duration 57, cost 14. taxi: duration 42, cost 120.97. walk: duration 336, cost 0.0. \nfrom Guangzhou Baiyun International Airport to Chaofa Chaoshan Beef Restaurant (Beijing Road Branch): metro: duration 60, cost 14. taxi: duration 44, cost 129.58. walk: duration 359, cost 0.0. \nfrom Guangzhou Baiyun International Airport to Shangxiajiu Pedestrian Street: metro: duration 66, cost 14. taxi: duration 44, cost 129.61. walk: duration 359, cost 0.0. \nfrom Guangzhou Baiyun International Airport to Yizhi Hotel (Guangzhou East Railway Station Tianhe Sports Center): metro: duration 62, cost 12. taxi: duration 39, cost 113.58. walk: duration 317, cost 0.0. \nfrom Guangzhou Baiyun International Airport to Beijing Road Pedestrian Street: metro: duration 58, cost 14. taxi: duration 43, cost 124.17. walk: duration 345, cost 0.0. \nfrom Guangzhou Baiyun International Airport to Yizhi Hotel (Guangzhou Chimelong Wildlife World): metro: duration 101, cost 16. taxi: duration 62, cost 183.02. walk: duration 502, cost 0.0. \nfrom Guangzhou Baiyun International Airport to Canton Tower: metro: duration 69, cost 14. taxi: duration 45, cost 132.03. walk: duration 366, cost 0.0. \nfrom Guangzhou Baiyun International Airport to Pearl River Night Cruise: metro: duration 67, cost 14. taxi: duration 45, cost 130.01. walk: duration 360, cost 0.0. \nfrom Guangzhou Baiyun International Airport to Guangzhou South Railway Station: metro: duration 90, cost 16. taxi: duration 66, cost 194.19. walk: duration 531, cost 0.0. \nfrom Guangzhou Baiyun International Airport to Guangzhou Zoo: metro: duration 59, cost 12. taxi: duration 39, cost 114.41. walk: duration 319, cost 0.0. \nfrom Shamian Island to Guangzhou Baiyun International Airport: metro: duration 67, cost 14. taxi: duration 46, cost 133.24. walk: duration 369, cost 0.0. \nfrom Shamian Island to Shamian Island:  metro: empty.  taxi: empty.  walk: empty. \nfrom Shamian Island to Yuexiu Park: metro: duration 23, cost 6. taxi: duration 6, cost 19.72. walk: duration 51, cost 0.0. \nfrom Shamian Island to Guangzhou Library: metro: duration 26, cost 6. taxi: duration 12, cost 33.93. walk: duration 100, cost 0.0. \nfrom Shamian Island to White Cloud Mountain: metro: duration 53, cost 8. taxi: duration 15, cost 41.21. walk: duration 124, cost 0.0. \nfrom Shamian Island to Nanxin Milk Dessert Specialist: metro: duration 11, cost 4. taxi: duration 1, cost 11.0. walk: duration 10, cost 0.0. \nfrom Shamian Island to Chen Clan Ancestral Hall: metro: duration 18, cost 4. taxi: duration 3, cost 12.45. walk: duration 26, cost 0.0. \nfrom Shamian Island to Guangzhou Art Museum: metro: duration 31, cost 6. taxi: duration 8, cost 23.85. walk: duration 65, cost 0.0. \nfrom Shamian Island to Guangdong Museum: metro: duration 24, cost 6. taxi: duration 12, cost 34.2. walk: duration 101, cost 0.0. \nfrom Shamian Island to Sacred Heart Cathedral of Guangzhou: metro: duration 14, cost 4. taxi: duration 2, cost 11.08. walk: duration 21, cost 0.0. \nfrom Shamian Island to Zi Zhou Lou Shunde Cuisine (Panyu Square Main Store): metro: duration 55, cost 12. taxi: duration 36, cost 103.81. walk: duration 290, cost 0.0. \nfrom Shamian Island to Diandude (Jufu Lou Branch): metro: duration 15, cost 4. taxi: duration 2, cost 11.0. walk: duration 20, cost 0.0. \nfrom Shamian Island to Guangzhou Museum: metro: duration 21, cost 6. taxi: duration 6, cost 18.99. walk: duration 48, cost 0.0. \nfrom Shamian Island to Big Pigeon Rice (Gangding Branch): metro: duration 25, cost 8. taxi: duration 14, cost 38.13. walk: duration 114, cost 0.0. \nfrom Shamian Island to Chaofa Chaoshan Beef Restaurant (Beijing Road Branch): metro: duration 10, cost 4. taxi: duration 3, cost 11.91. walk: duration 24, cost 0.0. \nfrom Shamian Island to Shangxiajiu Pedestrian Street: metro: duration 12, cost 4. taxi: duration 1, cost 11.0. walk: duration 9, cost 0.0. \nfrom Shamian Island to Yizhi Hotel (Guangzhou East Railway Station Tianhe Sports Center): metro: duration 33, cost 8. taxi: duration 14, cost 37.41. walk: duration 112, cost 0.0. \nfrom Shamian Island to Beijing Road Pedestrian Street: metro: duration 12, cost 4. taxi: duration 4, cost 15.24. walk: duration 36, cost 0.0. \nfrom Shamian Island to Yizhi Hotel (Guangzhou Chimelong Wildlife World): metro: duration 50, cost 8. taxi: duration 19, cost 52.91. walk: duration 155, cost 0.0. \nfrom Shamian Island to Canton Tower: metro: duration 28, cost 6. taxi: duration 12, cost 33.37. walk: duration 98, cost 0.0. \nfrom Shamian Island to Pearl River Night Cruise: metro: duration 20, cost 6. taxi: duration 6, cost 20.42. walk: duration 53, cost 0.0. \nfrom Shamian Island to Guangzhou South Railway Station: metro: duration 34, cost 8. taxi: duration 20, cost 57.59. walk: duration 167, cost 0.0. \nfrom Shamian Island to Guangzhou Zoo: metro: duration 25, cost 6. taxi: duration 10, cost 30.11. walk: duration 87, cost 0.0. \nfrom Yuexiu Park to Guangzhou Baiyun International Airport: metro: duration 65, cost 12. taxi: duration 40, cost 115.34. walk: duration 321, cost 0.0. \nfrom Yuexiu Park to Shamian Island: metro: duration 23, cost 6. taxi: duration 6, cost 19.72. walk: duration 51, cost 0.0. \nfrom Yuexiu Park to Yuexiu Park:  metro: empty.  taxi: empty.  walk: empty. \nfrom Yuexiu Park to Guangzhou Library: metro: duration 26, cost 6. taxi: duration 9, cost 28.01. walk: duration 79, cost 0.0. \nfrom Yuexiu Park to White Cloud Mountain: metro: duration 49, cost 6. taxi: duration 9, cost 25.89. walk: duration 72, cost 0.0. \nfrom Yuexiu Park to Nanxin Milk Dessert Specialist: metro: duration 24, cost 6. taxi: duration 7, cost 21.16. walk: duration 56, cost 0.0. \nfrom Yuexiu Park to Chen Clan Ancestral Hall: metro: duration 24, cost 4. taxi: duration 3, cost 13.65. walk: duration 30, cost 0.0. \nfrom Yuexiu Park to Guangzhou Art Museum: metro: duration 29, cost 4. taxi: duration 2, cost 11.0. walk: duration 18, cost 0.0. \nfrom Yuexiu Park to Guangdong Museum: metro: duration 24, cost 6. taxi: duration 10, cost 28.6. walk: duration 81, cost 0.0. \nfrom Yuexiu Park to Sacred Heart Cathedral of Guangzhou: metro: duration 19, cost 4. taxi: duration 4, cost 14.71. walk: duration 34, cost 0.0. \nfrom Yuexiu Park to Zi Zhou Lou Shunde Cuisine (Panyu Square Main Store): metro: duration 63, cost 12. taxi: duration 39, cost 113.22. walk: duration 316, cost 0.0. \nfrom Yuexiu Park to Diandude (Jufu Lou Branch): metro: duration 20, cost 4. taxi: duration 4, cost 14.92. walk: duration 35, cost 0.0. \nfrom Yuexiu Park to Guangzhou Museum: taxi: duration 0, cost 11.0. walk: duration 2, cost 0.0. \nfrom Yuexiu Park to Big Pigeon Rice (Gangding Branch): metro: duration 23, cost 6. taxi: duration 10, cost 29.66. walk: duration 85, cost 0.0. \nfrom Yuexiu Park to Chaofa Chaoshan Beef Restaurant (Beijing Road Branch): metro: duration 15, cost 4. taxi: duration 4, cost 15.79. walk: duration 38, cost 0.0. \nfrom Yuexiu Park to Shangxiajiu Pedestrian Street: metro: duration 23, cost 4. taxi: duration 5, cost 17.1. walk: duration 42, cost 0.0. \nfrom Yuexiu Park to Yizhi Hotel (Guangzhou East Railway Station Tianhe Sports Center): metro: duration 30, cost 6. taxi: duration 9, cost 26.56. walk: duration 74, cost 0.0. \nfrom Yuexiu Park to Beijing Road Pedestrian Street: metro: duration 13, cost 4. taxi: duration 3, cost 11.82. walk: duration 24, cost 0.0. \nfrom Yuexiu Park to Yizhi Hotel (Guangzhou Chimelong Wildlife World): metro: duration 58, cost 10. taxi: duration 23, cost 65.2. walk: duration 187, cost 0.0. \nfrom Yuexiu Park to Canton Tower: metro: duration 29, cost 6. taxi: duration 10, cost 29.54. walk: duration 85, cost 0.0. \nfrom Yuexiu Park to Pearl River Night Cruise: metro: duration 22, cost 4. taxi: duration 6, cost 19.18. walk: duration 49, cost 0.0. \nfrom Yuexiu Park to Guangzhou South Railway Station: metro: duration 45, cost 10. taxi: duration 26, cost 73.76. walk: duration 210, cost 0.0. \nfrom Yuexiu Park to Guangzhou Zoo: metro: duration 22, cost 4. taxi: duration 6, cost 18.88. walk: duration 48, cost 0.0. \nfrom Guangzhou Library to Guangzhou Baiyun International Airport: metro: duration 63, cost 14. taxi: duration 44, cost 127.11. walk: duration 353, cost 0.0. \nfrom Guangzhou Library to Shamian Island: metro: duration 26, cost 6. taxi: duration 12, cost 33.93. walk: duration 100, cost 0.0. \nfrom Guangzhou Library to Yuexiu Park: metro: duration 26, cost 6. taxi: duration 9, cost 28.01. walk: duration 79, cost 0.0. \nfrom Guangzhou Library to Guangzhou Library:  metro: empty.  taxi: empty.  walk: empty. \nfrom Guangzhou Library to White Cloud Mountain: metro: duration 43, cost 6. taxi: duration 12, cost 32.73. walk: duration 96, cost 0.0. \nfrom Guangzhou Library to Nanxin Milk Dessert Specialist: metro: duration 27, cost 8. taxi: duration 13, cost 36.82. walk: duration 110, cost 0.0. \nfrom Guangzhou Library to Chen Clan Ancestral Hall: metro: duration 30, cost 8. taxi: duration 12, cost 33.65. walk: duration 99, cost 0.0. \nfrom Guangzhou Library to Guangzhou Art Museum: metro: duration 31, cost 6. taxi: duration 8, cost 23.89. walk: duration 65, cost 0.0. \nfrom Guangzhou Library to Guangdong Museum: taxi: duration 0, cost 11.0. walk: duration 2, cost 0.0. \nfrom Guangzhou Library to Sacred Heart Cathedral of Guangzhou: metro: duration 21, cost 6. taxi: duration 10, cost 28.16. walk: duration 80, cost 0.0. \nfrom Guangzhou Library to Zi Zhou Lou Shunde Cuisine (Panyu Square Main Store): metro: duration 49, cost 12. taxi: duration 32, cost 92.3. walk: duration 260, cost 0.0. \nfrom Guangzhou Library to Diandude (Jufu Lou Branch): metro: duration 22, cost 6. taxi: duration 10, cost 28.56. walk: duration 81, cost 0.0. \nfrom Guangzhou Library to Guangzhou Museum: metro: duration 24, cost 6. taxi: duration 9, cost 27.76. walk: duration 79, cost 0.0. \nfrom Guangzhou Library to Big Pigeon Rice (Gangding Branch): metro: duration 8, cost 4. taxi: duration 2, cost 11.0. walk: duration 20, cost 0.0. \nfrom Guangzhou Library to Chaofa Chaoshan Beef Restaurant (Beijing Road Branch): metro: duration 17, cost 6. taxi: duration 9, cost 26.81. walk: duration 75, cost 0.0. \nfrom Guangzhou Library to Shangxiajiu Pedestrian Street: metro: duration 27, cost 6. taxi: duration 12, cost 33.2. walk: duration 97, cost 0.0. \nfrom Guangzhou Library to Yizhi Hotel (Guangzhou East Railway Station Tianhe Sports Center): metro: duration 21, cost 4. taxi: duration 4, cost 15.34. walk: duration 36, cost 0.0. \nfrom Guangzhou Library to Beijing Road Pedestrian Street: metro: duration 16, cost 6. taxi: duration 8, cost 25.09. walk: duration 69, cost 0.0. \nfrom Guangzhou Library to Yizhi Hotel (Guangzhou Chimelong Wildlife World): metro: duration 46, cost 8. taxi: duration 19, cost 52.29. walk: duration 153, cost 0.0. \nfrom Guangzhou Library to Canton Tower: metro: duration 14, cost 4. taxi: duration 1, cost 11.0. walk: duration 13, cost 0.0. \nfrom Guangzhou Library to Pearl River Night Cruise: metro: duration 19, cost 6. taxi: duration 5, cost 18.28. walk: duration 46, cost 0.0. \nfrom Guangzhou Library to Guangzhou South Railway Station: metro: duration 37, cost 10. taxi: duration 24, cost 67.94. walk: duration 195, cost 0.0. \nfrom Guangzhou Library to Guangzhou Zoo: metro: duration 18, cost 6. taxi: duration 5, cost 16.55. walk: duration 40, cost 0.0. \nfrom White Cloud Mountain to Guangzhou Baiyun International Airport: metro: duration 69, cost 12. taxi: duration 32, cost 92.35. walk: duration 260, cost 0.0. \nfrom White Cloud Mountain to Shamian Island: metro: duration 53, cost 8. taxi: duration 15, cost 41.21. walk: duration 124, cost 0.0. \nfrom White Cloud Mountain to Yuexiu Park: metro: duration 49, cost 6. taxi: duration 9, cost 25.89. walk: duration 72, cost 0.0. \nfrom White Cloud Mountain to Guangzhou Library: metro: duration 43, cost 6. taxi: duration 12, cost 32.73. walk: duration 96, cost 0.0. \nfrom White Cloud Mountain to White Cloud Mountain:  metro: empty.  taxi: empty.  walk: empty. \nfrom White Cloud Mountain to Nanxin Milk Dessert Specialist: metro: duration 54, cost 8. taxi: duration 16, cost 43.07. walk: duration 128, cost 0.0. \nfrom White Cloud Mountain to Chen Clan Ancestral Hall: metro: duration 53, cost 8. taxi: duration 12, cost 34.5. walk: duration 102, cost 0.0. \nfrom White Cloud Mountain to Guangzhou Art Museum: metro: duration 55, cost 6. taxi: duration 7, cost 22.22. walk: duration 60, cost 0.0. \nfrom White Cloud Mountain to Guangdong Museum: metro: duration 41, cost 6. taxi: duration 12, cost 33.47. walk: duration 98, cost 0.0. \nfrom White Cloud Mountain to Sacred Heart Cathedral of Guangzhou: metro: duration 48, cost 8. taxi: duration 13, cost 35.32. walk: duration 104, cost 0.0. \nfrom White Cloud Mountain to Zi Zhou Lou Shunde Cuisine (Panyu Square Main Store): metro: duration 84, cost 14. taxi: duration 44, cost 128.28. walk: duration 356, cost 0.0. \nfrom White Cloud Mountain to Diandude (Jufu Lou Branch): metro: duration 49, cost 8. taxi: duration 13, cost 35.62. walk: duration 106, cost 0.0. \nfrom White Cloud Mountain to Guangzhou Museum: metro: duration 47, cost 6. taxi: duration 9, cost 26.59. walk: duration 75, cost 0.0. \nfrom White Cloud Mountain to Big Pigeon Rice (Gangding Branch): metro: duration 37, cost 6. taxi: duration 10, cost 29.32. walk: duration 84, cost 0.0. \nfrom White Cloud Mountain to Chaofa Chaoshan Beef Restaurant (Beijing Road Branch): metro: duration 44, cost 8. taxi: duration 13, cost 35.85. walk: duration 106, cost 0.0. \nfrom White Cloud Mountain to Shangxiajiu Pedestrian Street: metro: duration 53, cost 8. taxi: duration 14, cost 38.29. walk: duration 115, cost 0.0. \nfrom White Cloud Mountain to Yizhi Hotel (Guangzhou East Railway Station Tianhe Sports Center): metro: duration 42, cost 4. taxi: duration 7, cost 23.21. walk: duration 63, cost 0.0. \nfrom White Cloud Mountain to Beijing Road Pedestrian Street: metro: duration 42, cost 6. taxi: duration 11, cost 31.43. walk: duration 91, cost 0.0. \nfrom White Cloud Mountain to Yizhi Hotel (Guangzhou Chimelong Wildlife World): metro: duration 82, cost 10. taxi: duration 30, cost 85.37. walk: duration 241, cost 0.0. \nfrom White Cloud Mountain to Canton Tower: metro: duration 49, cost 6. taxi: duration 13, cost 36.33. walk: duration 108, cost 0.0. \nfrom White Cloud Mountain to Pearl River Night Cruise: metro: duration 49, cost 6. taxi: duration 12, cost 34.26. walk: duration 101, cost 0.0. \nfrom White Cloud Mountain to Guangzhou South Railway Station: metro: duration 72, cost 12. taxi: duration 34, cost 97.44. walk: duration 273, cost 0.0. \nfrom White Cloud Mountain to Guangzhou Zoo: metro: duration 40, cost 6. taxi: duration 7, cost 21.92. walk: duration 59, cost 0.0. \nfrom Nanxin Milk Dessert Specialist to Guangzhou Baiyun International Airport: metro: duration 67, cost 14. taxi: duration 46, cost 133.54. walk: duration 370, cost 0.0. \nfrom Nanxin Milk Dessert Specialist to Shamian Island: metro: duration 11, cost 4. taxi: duration 1, cost 11.0. walk: duration 10, cost 0.0. \nfrom Nanxin Milk Dessert Specialist to Yuexiu Park: metro: duration 24, cost 6. taxi: duration 7, cost 21.16. walk: duration 56, cost 0.0. \nfrom Nanxin Milk Dessert Specialist to Guangzhou Library: metro: duration 27, cost 8. taxi: duration 13, cost 36.82. walk: duration 110, cost 0.0. \nfrom Nanxin Milk Dessert Specialist to White Cloud Mountain: metro: duration 54, cost 8. taxi: duration 16, cost 43.07. walk: duration 128, cost 0.0. \nfrom Nanxin Milk Dessert Specialist to Nanxin Milk Dessert Specialist:  metro: empty.  taxi: empty.  walk: empty. \nfrom Nanxin Milk Dessert Specialist to Chen Clan Ancestral Hall: metro: duration 18, cost 4. taxi: duration 3, cost 12.81. walk: duration 27, cost 0.0. \nfrom Nanxin Milk Dessert Specialist to Guangzhou Art Museum: metro: duration 33, cost 6. taxi: duration 9, cost 25.73. walk: duration 72, cost 0.0. \nfrom Nanxin Milk Dessert Specialist to Guangdong Museum: metro: duration 25, cost 8. taxi: duration 13, cost 37.11. walk: duration 111, cost 0.0. \nfrom Nanxin Milk Dessert Specialist to Sacred Heart Cathedral of Guangzhou: metro: duration 16, cost 4. taxi: duration 3, cost 13.65. walk: duration 30, cost 0.0. \nfrom Nanxin Milk Dessert Specialist to Zi Zhou Lou Shunde Cuisine (Panyu Square Main Store): metro: duration 56, cost 12. taxi: duration 37, cost 106.36. walk: duration 297, cost 0.0. \nfrom Nanxin Milk Dessert Specialist to Diandude (Jufu Lou Branch): metro: duration 17, cost 4. taxi: duration 3, cost 13.23. walk: duration 29, cost 0.0. \nfrom Nanxin Milk Dessert Specialist to Guangzhou Museum: metro: duration 22, cost 6. taxi: duration 6, cost 20.5. walk: duration 54, cost 0.0. \nfrom Nanxin Milk Dessert Specialist to Big Pigeon Rice (Gangding Branch): metro: duration 27, cost 8. taxi: duration 15, cost 41.24. walk: duration 124, cost 0.0. \nfrom Nanxin Milk Dessert Specialist to Chaofa Chaoshan Beef Restaurant (Beijing Road Branch): metro: duration 12, cost 4. taxi: duration 4, cost 14.73. walk: duration 34, cost 0.0. \nfrom Nanxin Milk Dessert Specialist to Shangxiajiu Pedestrian Street: metro: duration 13, cost 4. taxi: duration 1, cost 11.0. walk: duration 14, cost 0.0. \nfrom Nanxin Milk Dessert Specialist to Yizhi Hotel (Guangzhou East Railway Station Tianhe Sports Center): metro: duration 34, cost 8. taxi: duration 15, cost 40.03. walk: duration 120, cost 0.0. \nfrom Nanxin Milk Dessert Specialist to Beijing Road Pedestrian Street: metro: duration 14, cost 6. taxi: duration 5, cost 17.64. walk: duration 44, cost 0.0. \nfrom Nanxin Milk Dessert Specialist to Yizhi Hotel (Guangzhou Chimelong Wildlife World): metro: duration 51, cost 8. taxi: duration 20, cost 55.09. walk: duration 161, cost 0.0. \nfrom Nanxin Milk Dessert Specialist to Canton Tower: metro: duration 30, cost 6. taxi: duration 13, cost 36.32. walk: duration 108, cost 0.0. \nfrom Nanxin Milk Dessert Specialist to Pearl River Night Cruise: metro: duration 22, cost 6. taxi: duration 7, cost 23.35. walk: duration 63, cost 0.0. \nfrom Nanxin Milk Dessert Specialist to Guangzhou South Railway Station: metro: duration 34, cost 8. taxi: duration 21, cost 58.59. walk: duration 170, cost 0.0. \nfrom Nanxin Milk Dessert Specialist to Guangzhou Zoo: metro: duration 26, cost 6. taxi: duration 11, cost 32.53. walk: duration 95, cost 0.0. \nfrom Chen Clan Ancestral Hall to Guangzhou Baiyun International Airport: metro: duration 65, cost 14. taxi: duration 42, cost 123.37. walk: duration 343, cost 0.0. \nfrom Chen Clan Ancestral Hall to Shamian Island: metro: duration 18, cost 4. taxi: duration 3, cost 12.45. walk: duration 26, cost 0.0. \nfrom Chen Clan Ancestral Hall to Yuexiu Park: metro: duration 24, cost 4. taxi: duration 3, cost 13.65. walk: duration 30, cost 0.0. \nfrom Chen Clan Ancestral Hall to Guangzhou Library: metro: duration 30, cost 8. taxi: duration 12, cost 33.65. walk: duration 99, cost 0.0. \nfrom Chen Clan Ancestral Hall to White Cloud Mountain: metro: duration 53, cost 8. taxi: duration 12, cost 34.5. walk: duration 102, cost 0.0. \nfrom Chen Clan Ancestral Hall to Nanxin Milk Dessert Specialist: metro: duration 18, cost 4. taxi: duration 3, cost 12.81. walk: duration 27, cost 0.0. \nfrom Chen Clan Ancestral Hall to Chen Clan Ancestral Hall:  metro: empty.  taxi: empty.  walk: empty. \nfrom Chen Clan Ancestral Hall to Guangzhou Art Museum: metro: duration 33, cost 6. taxi: duration 6, cost 18.82. walk: duration 48, cost 0.0. \nfrom Chen Clan Ancestral Hall to Guangdong Museum: metro: duration 28, cost 8. taxi: duration 12, cost 34.1. walk: duration 100, cost 0.0. \nfrom Chen Clan Ancestral Hall to Sacred Heart Cathedral of Guangzhou: metro: duration 19, cost 4. taxi: duration 2, cost 11.64. walk: duration 23, cost 0.0. \nfrom Chen Clan Ancestral Hall to Zi Zhou Lou Shunde Cuisine (Panyu Square Main Store): metro: duration 63, cost 12. taxi: duration 39, cost 111.91. walk: duration 312, cost 0.0. \nfrom Chen Clan Ancestral Hall to Diandude (Jufu Lou Branch): metro: duration 20, cost 4. taxi: duration 2, cost 11.43. walk: duration 23, cost 0.0. \nfrom Chen Clan Ancestral Hall to Guangzhou Museum: metro: duration 22, cost 4. taxi: duration 3, cost 13.15. walk: duration 28, cost 0.0. \nfrom Chen Clan Ancestral Hall to Big Pigeon Rice (Gangding Branch): metro: duration 28, cost 8. taxi: duration 13, cost 36.62. walk: duration 109, cost 0.0. \nfrom Chen Clan Ancestral Hall to Chaofa Chaoshan Beef Restaurant (Beijing Road Branch): metro: duration 15, cost 4. taxi: duration 3, cost 13.55. walk: duration 30, cost 0.0. \nfrom Chen Clan Ancestral Hall to Shangxiajiu Pedestrian Street: metro: duration 17, cost 4. taxi: duration 2, cost 11.0. walk: duration 17, cost 0.0. \nfrom Chen Clan Ancestral Hall to Yizhi Hotel (Guangzhou East Railway Station Tianhe Sports Center): metro: duration 34, cost 6. taxi: duration 12, cost 34.52. walk: duration 102, cost 0.0. \nfrom Chen Clan Ancestral Hall to Beijing Road Pedestrian Street: metro: duration 15, cost 4. taxi: duration 3, cost 13.29. walk: duration 29, cost 0.0. \nfrom Chen Clan Ancestral Hall to Yizhi Hotel (Guangzhou Chimelong Wildlife World): metro: duration 58, cost 10. taxi: duration 22, cost 61.76. walk: duration 178, cost 0.0. \nfrom Chen Clan Ancestral Hall to Canton Tower: metro: duration 32, cost 6. taxi: duration 12, cost 34.13. walk: duration 100, cost 0.0. \nfrom Chen Clan Ancestral Hall to Pearl River Night Cruise: metro: duration 24, cost 6. taxi: duration 7, cost 21.5. walk: duration 57, cost 0.0. \nfrom Chen Clan Ancestral Hall to Guangzhou South Railway Station: metro: duration 42, cost 10. taxi: duration 24, cost 67.43. walk: duration 193, cost 0.0. \nfrom Chen Clan Ancestral Hall to Guangzhou Zoo: metro: duration 26, cost 6. taxi: duration 9, cost 26.81. walk: duration 75, cost 0.0. \nfrom Guangzhou Art Museum to Guangzhou Baiyun International Airport: metro: duration 72, cost 12. taxi: duration 39, cost 113.21. walk: duration 316, cost 0.0. \nfrom Guangzhou Art Museum to Shamian Island: metro: duration 31, cost 6. taxi: duration 8, cost 23.85. walk: duration 65, cost 0.0. \nfrom Guangzhou Art Museum to Yuexiu Park: metro: duration 29, cost 4. taxi: duration 2, cost 11.0. walk: duration 18, cost 0.0. \nfrom Guangzhou Art Museum to Guangzhou Library: metro: duration 31, cost 6. taxi: duration 8, cost 23.89. walk: duration 65, cost 0.0. \nfrom Guangzhou Art Museum to White Cloud Mountain: metro: duration 55, cost 6. taxi: duration 7, cost 22.22. walk: duration 60, cost 0.0. \nfrom Guangzhou Art Museum to Nanxin Milk Dessert Specialist: metro: duration 33, cost 6. taxi: duration 9, cost 25.73. walk: duration 72, cost 0.0. \nfrom Guangzhou Art Museum to Chen Clan Ancestral Hall: metro: duration 33, cost 6. taxi: duration 6, cost 18.82. walk: duration 48, cost 0.0. \nfrom Guangzhou Art Museum to Guangzhou Art Museum:  metro: empty.  taxi: empty.  walk: empty. \nfrom Guangzhou Art Museum to Guangdong Museum: metro: duration 29, cost 6. taxi: duration 8, cost 24.54. walk: duration 68, cost 0.0. \nfrom Guangzhou Art Museum to Sacred Heart Cathedral of Guangzhou: metro: duration 27, cost 4. taxi: duration 5, cost 17.93. walk: duration 45, cost 0.0. \nfrom Guangzhou Art Museum to Zi Zhou Lou Shunde Cuisine (Panyu Square Main Store): metro: duration 68, cost 12. taxi: duration 39, cost 111.77. walk: duration 312, cost 0.0. \nfrom Guangzhou Art Museum to Diandude (Jufu Lou Branch): metro: duration 28, cost 4. taxi: duration 5, cost 18.25. walk: duration 46, cost 0.0. \nfrom Guangzhou Art Museum to Guangzhou Museum: metro: duration 27, cost 4. taxi: duration 2, cost 11.0. walk: duration 19, cost 0.0. \nfrom Guangzhou Art Museum to Big Pigeon Rice (Gangding Branch): metro: duration 28, cost 6. taxi: duration 8, cost 24.72. walk: duration 68, cost 0.0. \nfrom Guangzhou Art Museum to Chaofa Chaoshan Beef Restaurant (Beijing Road Branch): metro: duration 23, cost 4. taxi: duration 5, cost 18.33. walk: duration 46, cost 0.0. \nfrom Guangzhou Art Museum to Shangxiajiu Pedestrian Street: metro: duration 32, cost 6. taxi: duration 7, cost 21.52. walk: duration 57, cost 0.0. \nfrom Guangzhou Art Museum to Yizhi Hotel (Guangzhou East Railway Station Tianhe Sports Center): metro: duration 35, cost 6. taxi: duration 7, cost 21.21. walk: duration 56, cost 0.0. \nfrom Guangzhou Art Museum to Beijing Road Pedestrian Street: metro: duration 21, cost 4. taxi: duration 3, cost 13.92. walk: duration 31, cost 0.0. \nfrom Guangzhou Art Museum to Yizhi Hotel (Guangzhou Chimelong Wildlife World): metro: duration 64, cost 8. taxi: duration 23, cost 65.41. walk: duration 188, cost 0.0. \nfrom Guangzhou Art Museum to Canton Tower: metro: duration 34, cost 6. taxi: duration 9, cost 26.01. walk: duration 73, cost 0.0. \nfrom Guangzhou Art Museum to Pearl River Night Cruise: metro: duration 28, cost 4. taxi: duration 5, cost 18.19. walk: duration 46, cost 0.0. \nfrom Guangzhou Art Museum to Guangzhou South Railway Station: metro: duration 51, cost 10. taxi: duration 27, cost 75.73. walk: duration 216, cost 0.0. \nfrom Guangzhou Art Museum to Guangzhou Zoo: metro: duration 27, cost 4. taxi: duration 3, cost 13.64. walk: duration 30, cost 0.0. \nfrom Guangdong Museum to Guangzhou Baiyun International Airport: metro: duration 61, cost 14. taxi: duration 44, cost 128.0. walk: duration 355, cost 0.0. \nfrom Guangdong Museum to Shamian Island: metro: duration 24, cost 6. taxi: duration 12, cost 34.2. walk: duration 101, cost 0.0. \nfrom Guangdong Museum to Yuexiu Park: metro: duration 24, cost 6. taxi: duration 10, cost 28.6. walk: duration 81, cost 0.0. \nfrom Guangdong Museum to Guangzhou Library: taxi: duration 0, cost 11.0. walk: duration 2, cost 0.0. \nfrom Guangdong Museum to White Cloud Mountain: metro: duration 41, cost 6. taxi: duration 12, cost 33.47. walk: duration 98, cost 0.0. \nfrom Guangdong Museum to Nanxin Milk Dessert Specialist: metro: duration 25, cost 8. taxi: duration 13, cost 37.11. walk: duration 111, cost 0.0. \nfrom Guangdong Museum to Chen Clan Ancestral Hall: metro: duration 28, cost 8. taxi: duration 12, cost 34.1. walk: duration 100, cost 0.0. \nfrom Guangdong Museum to Guangzhou Art Museum: metro: duration 29, cost 6. taxi: duration 8, cost 24.54. walk: duration 68, cost 0.0. \nfrom Guangdong Museum to Guangdong Museum:  metro: empty.  taxi: empty.  walk: empty. \nfrom Guangdong Museum to Sacred Heart Cathedral of Guangzhou: metro: duration 19, cost 6. taxi: duration 10, cost 28.51. walk: duration 81, cost 0.0. \nfrom Guangdong Museum to Zi Zhou Lou Shunde Cuisine (Panyu Square Main Store): metro: duration 47, cost 12. taxi: duration 32, cost 91.37. walk: duration 257, cost 0.0. \nfrom Guangdong Museum to Diandude (Jufu Lou Branch): metro: duration 20, cost 6. taxi: duration 10, cost 28.91. walk: duration 82, cost 0.0. \nfrom Guangdong Museum to Guangzhou Museum: metro: duration 22, cost 6. taxi: duration 10, cost 28.33. walk: duration 81, cost 0.0. \nfrom Guangdong Museum to Big Pigeon Rice (Gangding Branch): metro: duration 6, cost 4. taxi: duration 2, cost 11.23. walk: duration 22, cost 0.0. \nfrom Guangdong Museum to Chaofa Chaoshan Beef Restaurant (Beijing Road Branch): metro: duration 15, cost 6. taxi: duration 9, cost 27.12. walk: duration 76, cost 0.0. \nfrom Guangdong Museum to Shangxiajiu Pedestrian Street: metro: duration 25, cost 6. taxi: duration 12, cost 33.54. walk: duration 98, cost 0.0. \nfrom Guangdong Museum to Yizhi Hotel (Guangzhou East Railway Station Tianhe Sports Center): metro: duration 19, cost 4. taxi: duration 4, cost 15.99. walk: duration 38, cost 0.0. \nfrom Guangdong Museum to Beijing Road Pedestrian Street: metro: duration 14, cost 6. taxi: duration 8, cost 25.53. walk: duration 71, cost 0.0. \nfrom Guangdong Museum to Yizhi Hotel (Guangzhou Chimelong Wildlife World): metro: duration 44, cost 8. taxi: duration 18, cost 51.54. walk: duration 151, cost 0.0. \nfrom Guangdong Museum to Canton Tower: metro: duration 12, cost 4. taxi: duration 1, cost 11.0. walk: duration 11, cost 0.0. \nfrom Guangdong Museum to Pearl River Night Cruise: metro: duration 17, cost 6. taxi: duration 5, cost 18.51. walk: duration 47, cost 0.0. \nfrom Guangdong Museum to Guangzhou South Railway Station: metro: duration 35, cost 10. taxi: duration 24, cost 67.36. walk: duration 193, cost 0.0. \nfrom Guangdong Museum to Guangzhou Zoo: metro: duration 16, cost 6. taxi: duration 5, cost 17.29. walk: duration 43, cost 0.0. \nfrom Sacred Heart Cathedral of Guangzhou to Guangzhou Baiyun International Airport: metro: duration 64, cost 14. taxi: duration 44, cost 128.16. walk: duration 355, cost 0.0. \nfrom Sacred Heart Cathedral of Guangzhou to Shamian Island: metro: duration 14, cost 4. taxi: duration 2, cost 11.08. walk: duration 21, cost 0.0. \nfrom Sacred Heart Cathedral of Guangzhou to Yuexiu Park: metro: duration 19, cost 4. taxi: duration 4, cost 14.71. walk: duration 34, cost 0.0. \nfrom Sacred Heart Cathedral of Guangzhou to Guangzhou Library: metro: duration 21, cost 6. taxi: duration 10, cost 28.16. walk: duration 80, cost 0.0. \nfrom Sacred Heart Cathedral of Guangzhou to White Cloud Mountain: metro: duration 48, cost 8. taxi: duration 13, cost 35.32. walk: duration 104, cost 0.0. \nfrom Sacred Heart Cathedral of Guangzhou to Nanxin Milk Dessert Specialist: metro: duration 16, cost 4. taxi: duration 3, cost 13.65. walk: duration 30, cost 0.0. \nfrom Sacred Heart Cathedral of Guangzhou to Chen Clan Ancestral Hall: metro: duration 19, cost 4. taxi: duration 2, cost 11.64. walk: duration 23, cost 0.0. \nfrom Sacred Heart Cathedral of Guangzhou to Guangzhou Art Museum: metro: duration 27, cost 4. taxi: duration 5, cost 17.93. walk: duration 45, cost 0.0. \nfrom Sacred Heart Cathedral of Guangzhou to Guangdong Museum: metro: duration 19, cost 6. taxi: duration 10, cost 28.51. walk: duration 81, cost 0.0. \nfrom Sacred Heart Cathedral of Guangzhou to Sacred Heart Cathedral of Guangzhou:  metro: empty.  taxi: empty.  walk: empty. \nfrom Sacred Heart Cathedral of Guangzhou to Zi Zhou Lou Shunde Cuisine (Panyu Square Main Store): metro: duration 54, cost 12. taxi: duration 36, cost 103.39. walk: duration 289, cost 0.0. \nfrom Sacred Heart Cathedral of Guangzhou to Diandude (Jufu Lou Branch): taxi: duration 0, cost 11.0. walk: duration 1, cost 0.0. \nfrom Sacred Heart Cathedral of Guangzhou to Guangzhou Museum: metro: duration 17, cost 4. taxi: duration 3, cost 13.9. walk: duration 31, cost 0.0. \nfrom Sacred Heart Cathedral of Guangzhou to Big Pigeon Rice (Gangding Branch): metro: duration 20, cost 6. taxi: duration 11, cost 31.99. walk: duration 93, cost 0.0. \nfrom Sacred Heart Cathedral of Guangzhou to Chaofa Chaoshan Beef Restaurant (Beijing Road Branch): taxi: duration 0, cost 11.0. walk: duration 6, cost 0.0. \nfrom Sacred Heart Cathedral of Guangzhou to Shangxiajiu Pedestrian Street: metro: duration 15, cost 4. taxi: duration 2, cost 11.0. walk: duration 17, cost 0.0. \nfrom Sacred Heart Cathedral of Guangzhou to Yizhi Hotel (Guangzhou East Railway Station Tianhe Sports Center): metro: duration 28, cost 6. taxi: duration 11, cost 31.05. walk: duration 90, cost 0.0. \nfrom Sacred Heart Cathedral of Guangzhou to Beijing Road Pedestrian Street: metro: duration 8, cost 4. taxi: duration 1, cost 11.0. walk: duration 14, cost 0.0. \nfrom Sacred Heart Cathedral of Guangzhou to Yizhi Hotel (Guangzhou Chimelong Wildlife World): metro: duration 49, cost 8. taxi: duration 19, cost 53.85. walk: duration 157, cost 0.0. \nfrom Sacred Heart Cathedral of Guangzhou to Canton Tower: metro: duration 24, cost 6. taxi: duration 10, cost 28.07. walk: duration 80, cost 0.0. \nfrom Sacred Heart Cathedral of Guangzhou to Pearl River Night Cruise: metro: duration 15, cost 4. taxi: duration 4, cost 15.09. walk: duration 35, cost 0.0. \nfrom Sacred Heart Cathedral of Guangzhou to Guangzhou South Railway Station: metro: duration 35, cost 10. taxi: duration 22, cost 61.15. walk: duration 177, cost 0.0. \nfrom Sacred Heart Cathedral of Guangzhou to Guangzhou Zoo: metro: duration 20, cost 6. taxi: duration 8, cost 23.74. walk: duration 65, cost 0.0. \nfrom Zi Zhou Lou Shunde Cuisine (Panyu Square Main Store) to Guangzhou Baiyun International Airport: metro: duration 104, cost 18. taxi: duration 76, cost 224.02. walk: duration 611, cost 0.0. \nfrom Zi Zhou Lou Shunde Cuisine (Panyu Square Main Store) to Shamian Island: metro: duration 55, cost 12. taxi: duration 36, cost 103.81. walk: duration 290, cost 0.0. \nfrom Zi Zhou Lou Shunde Cuisine (Panyu Square Main Store) to Yuexiu Park: metro: duration 63, cost 12. taxi: duration 39, cost 113.22. walk: duration 316, cost 0.0. \nfrom Zi Zhou Lou Shunde Cuisine (Panyu Square Main Store) to Guangzhou Library: metro: duration 49, cost 12. taxi: duration 32, cost 92.3. walk: duration 260, cost 0.0. \nfrom Zi Zhou Lou Shunde Cuisine (Panyu Square Main Store) to White Cloud Mountain: metro: duration 84, cost 14. taxi: duration 44, cost 128.28. walk: duration 356, cost 0.0. \nfrom Zi Zhou Lou Shunde Cuisine (Panyu Square Main Store) to Nanxin Milk Dessert Specialist: metro: duration 56, cost 12. taxi: duration 37, cost 106.36. walk: duration 297, cost 0.0. \nfrom Zi Zhou Lou Shunde Cuisine (Panyu Square Main Store) to Chen Clan Ancestral Hall: metro: duration 63, cost 12. taxi: duration 39, cost 111.91. walk: duration 312, cost 0.0. \nfrom Zi Zhou Lou Shunde Cuisine (Panyu Square Main Store) to Guangzhou Art Museum: metro: duration 68, cost 12. taxi: duration 39, cost 111.77. walk: duration 312, cost 0.0. \nfrom Zi Zhou Lou Shunde Cuisine (Panyu Square Main Store) to Guangdong Museum: metro: duration 47, cost 12. taxi: duration 32, cost 91.37. walk: duration 257, cost 0.0. \nfrom Zi Zhou Lou Shunde Cuisine (Panyu Square Main Store) to Sacred Heart Cathedral of Guangzhou: metro: duration 54, cost 12. taxi: duration 36, cost 103.39. walk: duration 289, cost 0.0. \nfrom Zi Zhou Lou Shunde Cuisine (Panyu Square Main Store) to Zi Zhou Lou Shunde Cuisine (Panyu Square Main Store):  metro: empty.  taxi: empty.  walk: empty. \nfrom Zi Zhou Lou Shunde Cuisine (Panyu Square Main Store) to Diandude (Jufu Lou Branch): metro: duration 55, cost 12. taxi: duration 36, cost 103.52. walk: duration 290, cost 0.0. \nfrom Zi Zhou Lou Shunde Cuisine (Panyu Square Main Store) to Guangzhou Museum: metro: duration 61, cost 12. taxi: duration 39, cost 112.31. walk: duration 313, cost 0.0. \nfrom Zi Zhou Lou Shunde Cuisine (Panyu Square Main Store) to Big Pigeon Rice (Gangding Branch): metro: duration 49, cost 12. taxi: duration 34, cost 97.86. walk: duration 275, cost 0.0. \nfrom Zi Zhou Lou Shunde Cuisine (Panyu Square Main Store) to Chaofa Chaoshan Beef Restaurant (Beijing Road Branch): metro: duration 50, cost 12. taxi: duration 35, cost 101.06. walk: duration 283, cost 0.0. \nfrom Zi Zhou Lou Shunde Cuisine (Panyu Square Main Store) to Shangxiajiu Pedestrian Street: metro: duration 58, cost 12. taxi: duration 37, cost 106.41. walk: duration 297, cost 0.0. \nfrom Zi Zhou Lou Shunde Cuisine (Panyu Square Main Store) to Yizhi Hotel (Guangzhou East Railway Station Tianhe Sports Center): metro: duration 62, cost 12. taxi: duration 36, cost 105.45. walk: duration 295, cost 0.0. \nfrom Zi Zhou Lou Shunde Cuisine (Panyu Square Main Store) to Beijing Road Pedestrian Street: metro: duration 51, cost 12. taxi: duration 36, cost 104.51. walk: duration 292, cost 0.0. \nfrom Zi Zhou Lou Shunde Cuisine (Panyu Square Main Store) to Yizhi Hotel (Guangzhou Chimelong Wildlife World): metro: duration 45, cost 8. taxi: duration 17, cost 46.72. walk: duration 138, cost 0.0. \nfrom Zi Zhou Lou Shunde Cuisine (Panyu Square Main Store) to Canton Tower: metro: duration 51, cost 10. taxi: duration 30, cost 87.6. walk: duration 247, cost 0.0. \nfrom Zi Zhou Lou Shunde Cuisine (Panyu Square Main Store) to Pearl River Night Cruise: metro: duration 54, cost 12. taxi: duration 33, cost 94.8. walk: duration 266, cost 0.0. \nfrom Zi Zhou Lou Shunde Cuisine (Panyu Square Main Store) to Guangzhou South Railway Station: metro: duration 31, cost 8. taxi: duration 20, cost 55.43. walk: duration 161, cost 0.0. \nfrom Zi Zhou Lou Shunde Cuisine (Panyu Square Main Store) to Guangzhou Zoo: metro: duration 58, cost 12. taxi: duration 37, cost 106.52. walk: duration 298, cost 0.0. \nfrom Diandude (Jufu Lou Branch) to Guangzhou Baiyun International Airport: metro: duration 65, cost 14. taxi: duration 44, cost 128.38. walk: duration 356, cost 0.0. \nfrom Diandude (Jufu Lou Branch) to Shamian Island: metro: duration 15, cost 4. taxi: duration 2, cost 11.0. walk: duration 20, cost 0.0. \nfrom Diandude (Jufu Lou Branch) to Yuexiu Park: metro: duration 20, cost 4. taxi: duration 4, cost 14.92. walk: duration 35, cost 0.0. \nfrom Diandude (Jufu Lou Branch) to Guangzhou Library: metro: duration 22, cost 6. taxi: duration 10, cost 28.56. walk: duration 81, cost 0.0. \nfrom Diandude (Jufu Lou Branch) to White Cloud Mountain: metro: duration 49, cost 8. taxi: duration 13, cost 35.62. walk: duration 106, cost 0.0. \nfrom Diandude (Jufu Lou Branch) to Nanxin Milk Dessert Specialist: metro: duration 17, cost 4. taxi: duration 3, cost 13.23. walk: duration 29, cost 0.0. \nfrom Diandude (Jufu Lou Branch) to Chen Clan Ancestral Hall: metro: duration 20, cost 4. taxi: duration 2, cost 11.43. walk: duration 23, cost 0.0. \nfrom Diandude (Jufu Lou Branch) to Guangzhou Art Museum: metro: duration 28, cost 4. taxi: duration 5, cost 18.25. walk: duration 46, cost 0.0. \nfrom Diandude (Jufu Lou Branch) to Guangdong Museum: metro: duration 20, cost 6. taxi: duration 10, cost 28.91. walk: duration 82, cost 0.0. \nfrom Diandude (Jufu Lou Branch) to Sacred Heart Cathedral of Guangzhou: taxi: duration 0, cost 11.0. walk: duration 1, cost 0.0. \nfrom Diandude (Jufu Lou Branch) to Zi Zhou Lou Shunde Cuisine (Panyu Square Main Store): metro: duration 55, cost 12. taxi: duration 36, cost 103.52. walk: duration 290, cost 0.0. \nfrom Diandude (Jufu Lou Branch) to Diandude (Jufu Lou Branch):  metro: empty.  taxi: empty.  walk: empty. \nfrom Diandude (Jufu Lou Branch) to Guangzhou Museum: metro: duration 18, cost 4. taxi: duration 4, cost 14.11. walk: duration 32, cost 0.0. \nfrom Diandude (Jufu Lou Branch) to Big Pigeon Rice (Gangding Branch): metro: duration 21, cost 6. taxi: duration 11, cost 32.41. walk: duration 95, cost 0.0. \nfrom Diandude (Jufu Lou Branch) to Chaofa Chaoshan Beef Restaurant (Beijing Road Branch): taxi: duration 0, cost 11.0. walk: duration 7, cost 0.0. \nfrom Diandude (Jufu Lou Branch) to Shangxiajiu Pedestrian Street: metro: duration 16, cost 4. taxi: duration 1, cost 11.0. walk: duration 15, cost 0.0. \nfrom Diandude (Jufu Lou Branch) to Yizhi Hotel (Guangzhou East Railway Station Tianhe Sports Center): metro: duration 29, cost 6. taxi: duration 11, cost 31.47. walk: duration 91, cost 0.0. \nfrom Diandude (Jufu Lou Branch) to Beijing Road Pedestrian Street: metro: duration 9, cost 4. taxi: duration 1, cost 11.0. walk: duration 15, cost 0.0. \nfrom Diandude (Jufu Lou Branch) to Yizhi Hotel (Guangzhou Chimelong Wildlife World): metro: duration 50, cost 8. taxi: duration 19, cost 53.88. walk: duration 157, cost 0.0. \nfrom Diandude (Jufu Lou Branch) to Canton Tower: metro: duration 25, cost 6. taxi: duration 10, cost 28.45. walk: duration 81, cost 0.0. \nfrom Diandude (Jufu Lou Branch) to Pearl River Night Cruise: metro: duration 16, cost 4. taxi: duration 4, cost 15.46. walk: duration 36, cost 0.0. \nfrom Diandude (Jufu Lou Branch) to Guangzhou South Railway Station: metro: duration 36, cost 10. taxi: duration 22, cost 61.0. walk: duration 176, cost 0.0. \nfrom Diandude (Jufu Lou Branch) to Guangzhou Zoo: metro: duration 21, cost 6. taxi: duration 8, cost 24.15. walk: duration 66, cost 0.0. \nfrom Guangzhou Museum to Guangzhou Baiyun International Airport: metro: duration 63, cost 12. taxi: duration 40, cost 116.39. walk: duration 324, cost 0.0. \nfrom Guangzhou Museum to Shamian Island: metro: duration 21, cost 6. taxi: duration 6, cost 18.99. walk: duration 48, cost 0.0. \nfrom Guangzhou Museum to Yuexiu Park: taxi: duration 0, cost 11.0. walk: duration 2, cost 0.0. \nfrom Guangzhou Museum to Guangzhou Library: metro: duration 24, cost 6. taxi: duration 9, cost 27.76. walk: duration 79, cost 0.0. \nfrom Guangzhou Museum to White Cloud Mountain: metro: duration 47, cost 6. taxi: duration 9, cost 26.59. walk: duration 75, cost 0.0. \nfrom Guangzhou Museum to Nanxin Milk Dessert Specialist: metro: duration 22, cost 6. taxi: duration 6, cost 20.5. walk: duration 54, cost 0.0. \nfrom Guangzhou Museum to Chen Clan Ancestral Hall: metro: duration 22, cost 4. taxi: duration 3, cost 13.15. walk: duration 28, cost 0.0. \nfrom Guangzhou Museum to Guangzhou Art Museum: metro: duration 27, cost 4. taxi: duration 2, cost 11.0. walk: duration 19, cost 0.0. \nfrom Guangzhou Museum to Guangdong Museum: metro: duration 22, cost 6. taxi: duration 10, cost 28.33. walk: duration 81, cost 0.0. \nfrom Guangzhou Museum to Sacred Heart Cathedral of Guangzhou: metro: duration 17, cost 4. taxi: duration 3, cost 13.9. walk: duration 31, cost 0.0. \nfrom Guangzhou Museum to Zi Zhou Lou Shunde Cuisine (Panyu Square Main Store): metro: duration 61, cost 12. taxi: duration 39, cost 112.31. walk: duration 313, cost 0.0. \nfrom Guangzhou Museum to Diandude (Jufu Lou Branch): metro: duration 18, cost 4. taxi: duration 4, cost 14.11. walk: duration 32, cost 0.0. \nfrom Guangzhou Museum to Guangzhou Museum:  metro: empty.  taxi: empty.  walk: empty. \nfrom Guangzhou Museum to Big Pigeon Rice (Gangding Branch): metro: duration 21, cost 6. taxi: duration 10, cost 29.59. walk: duration 85, cost 0.0. \nfrom Guangzhou Museum to Chaofa Chaoshan Beef Restaurant (Beijing Road Branch): metro: duration 13, cost 4. taxi: duration 4, cost 14.97. walk: duration 35, cost 0.0. \nfrom Guangzhou Museum to Shangxiajiu Pedestrian Street: metro: duration 21, cost 4. taxi: duration 5, cost 16.41. walk: duration 40, cost 0.0. \nfrom Guangzhou Museum to Yizhi Hotel (Guangzhou East Railway Station Tianhe Sports Center): metro: duration 28, cost 6. taxi: duration 9, cost 26.68. walk: duration 75, cost 0.0. \nfrom Guangzhou Museum to Beijing Road Pedestrian Street: metro: duration 11, cost 4. taxi: duration 2, cost 11.02. walk: duration 21, cost 0.0. \nfrom Guangzhou Museum to Yizhi Hotel (Guangzhou Chimelong Wildlife World): metro: duration 56, cost 10. taxi: duration 23, cost 64.19. walk: duration 185, cost 0.0. \nfrom Guangzhou Museum to Canton Tower: metro: duration 27, cost 6. taxi: duration 10, cost 29.16. walk: duration 83, cost 0.0. \nfrom Guangzhou Museum to Pearl River Night Cruise: metro: duration 20, cost 4. taxi: duration 5, cost 18.55. walk: duration 47, cost 0.0. \nfrom Guangzhou Museum to Guangzhou South Railway Station: metro: duration 43, cost 10. taxi: duration 26, cost 72.71. walk: duration 208, cost 0.0. \nfrom Guangzhou Museum to Guangzhou Zoo: metro: duration 20, cost 4. taxi: duration 6, cost 18.97. walk: duration 48, cost 0.0. \nfrom Big Pigeon Rice (Gangding Branch) to Guangzhou Baiyun International Airport: metro: duration 57, cost 14. taxi: duration 42, cost 120.97. walk: duration 336, cost 0.0. \nfrom Big Pigeon Rice (Gangding Branch) to Shamian Island: metro: duration 25, cost 8. taxi: duration 14, cost 38.13. walk: duration 114, cost 0.0. \nfrom Big Pigeon Rice (Gangding Branch) to Yuexiu Park: metro: duration 23, cost 6. taxi: duration 10, cost 29.66. walk: duration 85, cost 0.0. \nfrom Big Pigeon Rice (Gangding Branch) to Guangzhou Library: metro: duration 8, cost 4. taxi: duration 2, cost 11.0. walk: duration 20, cost 0.0. \nfrom Big Pigeon Rice (Gangding Branch) to White Cloud Mountain: metro: duration 37, cost 6. taxi: duration 10, cost 29.32. walk: duration 84, cost 0.0. \nfrom Big Pigeon Rice (Gangding Branch) to Nanxin Milk Dessert Specialist: metro: duration 27, cost 8. taxi: duration 15, cost 41.24. walk: duration 124, cost 0.0. \nfrom Big Pigeon Rice (Gangding Branch) to Chen Clan Ancestral Hall: metro: duration 28, cost 8. taxi: duration 13, cost 36.62. walk: duration 109, cost 0.0. \nfrom Big Pigeon Rice (Gangding Branch) to Guangzhou Art Museum: metro: duration 28, cost 6. taxi: duration 8, cost 24.72. walk: duration 68, cost 0.0. \nfrom Big Pigeon Rice (Gangding Branch) to Guangdong Museum: metro: duration 6, cost 4. taxi: duration 2, cost 11.23. walk: duration 22, cost 0.0. \nfrom Big Pigeon Rice (Gangding Branch) to Sacred Heart Cathedral of Guangzhou: metro: duration 20, cost 6. taxi: duration 11, cost 31.99. walk: duration 93, cost 0.0. \nfrom Big Pigeon Rice (Gangding Branch) to Zi Zhou Lou Shunde Cuisine (Panyu Square Main Store): metro: duration 49, cost 12. taxi: duration 34, cost 97.86. walk: duration 275, cost 0.0. \nfrom Big Pigeon Rice (Gangding Branch) to Diandude (Jufu Lou Branch): metro: duration 21, cost 6. taxi: duration 11, cost 32.41. walk: duration 95, cost 0.0. \nfrom Big Pigeon Rice (Gangding Branch) to Guangzhou Museum: metro: duration 21, cost 6. taxi: duration 10, cost 29.59. walk: duration 85, cost 0.0. \nfrom Big Pigeon Rice (Gangding Branch) to Big Pigeon Rice (Gangding Branch):  metro: empty.  taxi: empty.  walk: empty. \nfrom Big Pigeon Rice (Gangding Branch) to Chaofa Chaoshan Beef Restaurant (Beijing Road Branch): metro: duration 16, cost 6. taxi: duration 11, cost 30.92. walk: duration 89, cost 0.0. \nfrom Big Pigeon Rice (Gangding Branch) to Shangxiajiu Pedestrian Street: metro: duration 26, cost 8. taxi: duration 13, cost 37.0. walk: duration 110, cost 0.0. \nfrom Big Pigeon Rice (Gangding Branch) to Yizhi Hotel (Guangzhou East Railway Station Tianhe Sports Center): metro: duration 15, cost 4. taxi: duration 2, cost 11.0. walk: duration 20, cost 0.0. \nfrom Big Pigeon Rice (Gangding Branch) to Beijing Road Pedestrian Street: metro: duration 15, cost 6. taxi: duration 10, cost 28.39. walk: duration 81, cost 0.0. \nfrom Big Pigeon Rice (Gangding Branch) to Yizhi Hotel (Guangzhou Chimelong Wildlife World): metro: duration 47, cost 8. taxi: duration 21, cost 59.7. walk: duration 173, cost 0.0. \nfrom Big Pigeon Rice (Gangding Branch) to Canton Tower: metro: duration 15, cost 4. taxi: duration 4, cost 14.45. walk: duration 33, cost 0.0. \nfrom Big Pigeon Rice (Gangding Branch) to Pearl River Night Cruise: metro: duration 19, cost 6. taxi: duration 7, cost 23.04. walk: duration 62, cost 0.0. \nfrom Big Pigeon Rice (Gangding Branch) to Guangzhou South Railway Station: metro: duration 38, cost 10. taxi: duration 27, cost 75.74. walk: duration 216, cost 0.0. \nfrom Big Pigeon Rice (Gangding Branch) to Guangzhou Zoo: metro: duration 14, cost 4. taxi: duration 4, cost 15.96. walk: duration 38, cost 0.0. \nfrom Chaofa Chaoshan Beef Restaurant (Beijing Road Branch) to Guangzhou Baiyun International Airport: metro: duration 60, cost 14. taxi: duration 44, cost 129.58. walk: duration 359, cost 0.0. \nfrom Chaofa Chaoshan Beef Restaurant (Beijing Road Branch) to Shamian Island: metro: duration 10, cost 4. taxi: duration 3, cost 11.91. walk: duration 24, cost 0.0. \nfrom Chaofa Chaoshan Beef Restaurant (Beijing Road Branch) to Yuexiu Park: metro: duration 15, cost 4. taxi: duration 4, cost 15.79. walk: duration 38, cost 0.0. \nfrom Chaofa Chaoshan Beef Restaurant (Beijing Road Branch) to Guangzhou Library: metro: duration 17, cost 6. taxi: duration 9, cost 26.81. walk: duration 75, cost 0.0. \nfrom Chaofa Chaoshan Beef Restaurant (Beijing Road Branch) to White Cloud Mountain: metro: duration 44, cost 8. taxi: duration 13, cost 35.85. walk: duration 106, cost 0.0. \nfrom Chaofa Chaoshan Beef Restaurant (Beijing Road Branch) to Nanxin Milk Dessert Specialist: metro: duration 12, cost 4. taxi: duration 4, cost 14.73. walk: duration 34, cost 0.0. \nfrom Chaofa Chaoshan Beef Restaurant (Beijing Road Branch) to Chen Clan Ancestral Hall: metro: duration 15, cost 4. taxi: duration 3, cost 13.55. walk: duration 30, cost 0.0. \nfrom Chaofa Chaoshan Beef Restaurant (Beijing Road Branch) to Guangzhou Art Museum: metro: duration 23, cost 4. taxi: duration 5, cost 18.33. walk: duration 46, cost 0.0. \nfrom Chaofa Chaoshan Beef Restaurant (Beijing Road Branch) to Guangdong Museum: metro: duration 15, cost 6. taxi: duration 9, cost 27.12. walk: duration 76, cost 0.0. \nfrom Chaofa Chaoshan Beef Restaurant (Beijing Road Branch) to Sacred Heart Cathedral of Guangzhou: taxi: duration 0, cost 11.0. walk: duration 6, cost 0.0. \nfrom Chaofa Chaoshan Beef Restaurant (Beijing Road Branch) to Zi Zhou Lou Shunde Cuisine (Panyu Square Main Store): metro: duration 50, cost 12. taxi: duration 35, cost 101.06. walk: duration 283, cost 0.0. \nfrom Chaofa Chaoshan Beef Restaurant (Beijing Road Branch) to Diandude (Jufu Lou Branch): taxi: duration 0, cost 11.0. walk: duration 7, cost 0.0. \nfrom Chaofa Chaoshan Beef Restaurant (Beijing Road Branch) to Guangzhou Museum: metro: duration 13, cost 4. taxi: duration 4, cost 14.97. walk: duration 35, cost 0.0. \nfrom Chaofa Chaoshan Beef Restaurant (Beijing Road Branch) to Big Pigeon Rice (Gangding Branch): metro: duration 16, cost 6. taxi: duration 11, cost 30.92. walk: duration 89, cost 0.0. \nfrom Chaofa Chaoshan Beef Restaurant (Beijing Road Branch) to Chaofa Chaoshan Beef Restaurant (Beijing Road Branch):  metro: empty.  taxi: empty.  walk: empty. \nfrom Chaofa Chaoshan Beef Restaurant (Beijing Road Branch) to Shangxiajiu Pedestrian Street: metro: duration 11, cost 4. taxi: duration 2, cost 11.21. walk: duration 22, cost 0.0. \nfrom Chaofa Chaoshan Beef Restaurant (Beijing Road Branch) to Yizhi Hotel (Guangzhou East Railway Station Tianhe Sports Center): metro: duration 24, cost 6. taxi: duration 11, cost 30.37. walk: duration 88, cost 0.0. \nfrom Chaofa Chaoshan Beef Restaurant (Beijing Road Branch) to Beijing Road Pedestrian Street: metro: duration 4, cost 4. taxi: duration 1, cost 11.0. walk: duration 15, cost 0.0. \nfrom Chaofa Chaoshan Beef Restaurant (Beijing Road Branch) to Yizhi Hotel (Guangzhou Chimelong Wildlife World): metro: duration 45, cost 8. taxi: duration 19, cost 51.72. walk: duration 152, cost 0.0. \nfrom Chaofa Chaoshan Beef Restaurant (Beijing Road Branch) to Canton Tower: metro: duration 20, cost 6. taxi: duration 9, cost 26.51. walk: duration 74, cost 0.0. \nfrom Chaofa Chaoshan Beef Restaurant (Beijing Road Branch) to Pearl River Night Cruise: metro: duration 11, cost 4. taxi: duration 3, cost 13.49. walk: duration 30, cost 0.0. \nfrom Chaofa Chaoshan Beef Restaurant (Beijing Road Branch) to Guangzhou South Railway Station: metro: duration 31, cost 10. taxi: duration 21, cost 59.51. walk: duration 172, cost 0.0. \nfrom Chaofa Chaoshan Beef Restaurant (Beijing Road Branch) to Guangzhou Zoo: metro: duration 16, cost 6. taxi: duration 7, cost 23.29. walk: duration 63, cost 0.0. \nfrom Shangxiajiu Pedestrian Street to Guangzhou Baiyun International Airport: metro: duration 66, cost 14. taxi: duration 44, cost 129.61. walk: duration 359, cost 0.0. \nfrom Shangxiajiu Pedestrian Street to Shamian Island: metro: duration 12, cost 4. taxi: duration 1, cost 11.0. walk: duration 9, cost 0.0. \nfrom Shangxiajiu Pedestrian Street to Yuexiu Park: metro: duration 23, cost 4. taxi: duration 5, cost 17.1. walk: duration 42, cost 0.0. \nfrom Shangxiajiu Pedestrian Street to Guangzhou Library: metro: duration 27, cost 6. taxi: duration 12, cost 33.2. walk: duration 97, cost 0.0. \nfrom Shangxiajiu Pedestrian Street to White Cloud Mountain: metro: duration 53, cost 8. taxi: duration 14, cost 38.29. walk: duration 115, cost 0.0. \nfrom Shangxiajiu Pedestrian Street to Nanxin Milk Dessert Specialist: metro: duration 13, cost 4. taxi: duration 1, cost 11.0. walk: duration 14, cost 0.0. \nfrom Shangxiajiu Pedestrian Street to Chen Clan Ancestral Hall: metro: duration 17, cost 4. taxi: duration 2, cost 11.0. walk: duration 17, cost 0.0. \nfrom Shangxiajiu Pedestrian Street to Guangzhou Art Museum: metro: duration 32, cost 6. taxi: duration 7, cost 21.52. walk: duration 57, cost 0.0. \nfrom Shangxiajiu Pedestrian Street to Guangdong Museum: metro: duration 25, cost 6. taxi: duration 12, cost 33.54. walk: duration 98, cost 0.0. \nfrom Shangxiajiu Pedestrian Street to Sacred Heart Cathedral of Guangzhou: metro: duration 15, cost 4. taxi: duration 2, cost 11.0. walk: duration 17, cost 0.0. \nfrom Shangxiajiu Pedestrian Street to Zi Zhou Lou Shunde Cuisine (Panyu Square Main Store): metro: duration 58, cost 12. taxi: duration 37, cost 106.41. walk: duration 297, cost 0.0. \nfrom Shangxiajiu Pedestrian Street to Diandude (Jufu Lou Branch): metro: duration 16, cost 4. taxi: duration 1, cost 11.0. walk: duration 15, cost 0.0. \nfrom Shangxiajiu Pedestrian Street to Guangzhou Museum: metro: duration 21, cost 4. taxi: duration 5, cost 16.41. walk: duration 40, cost 0.0. \nfrom Shangxiajiu Pedestrian Street to Big Pigeon Rice (Gangding Branch): metro: duration 26, cost 8. taxi: duration 13, cost 37.0. walk: duration 110, cost 0.0. \nfrom Shangxiajiu Pedestrian Street to Chaofa Chaoshan Beef Restaurant (Beijing Road Branch): metro: duration 11, cost 4. taxi: duration 2, cost 11.21. walk: duration 22, cost 0.0. \nfrom Shangxiajiu Pedestrian Street to Shangxiajiu Pedestrian Street:  metro: empty.  taxi: empty.  walk: empty. \nfrom Shangxiajiu Pedestrian Street to Yizhi Hotel (Guangzhou East Railway Station Tianhe Sports Center): metro: duration 33, cost 6. taxi: duration 13, cost 35.82. walk: duration 106, cost 0.0. \nfrom Shangxiajiu Pedestrian Street to Beijing Road Pedestrian Street: metro: duration 13, cost 4. taxi: duration 3, cost 13.49. walk: duration 30, cost 0.0. \nfrom Shangxiajiu Pedestrian Street to Yizhi Hotel (Guangzhou Chimelong Wildlife World): metro: duration 52, cost 8. taxi: duration 20, cost 55.83. walk: duration 163, cost 0.0. \nfrom Shangxiajiu Pedestrian Street to Canton Tower: metro: duration 29, cost 6. taxi: duration 12, cost 33.02. walk: duration 97, cost 0.0. \nfrom Shangxiajiu Pedestrian Street to Pearl River Night Cruise: metro: duration 21, cost 6. taxi: duration 6, cost 19.99. walk: duration 52, cost 0.0. \nfrom Shangxiajiu Pedestrian Street to Guangzhou South Railway Station: metro: duration 36, cost 10. taxi: duration 22, cost 61.06. walk: duration 176, cost 0.0. \nfrom Shangxiajiu Pedestrian Street to Guangzhou Zoo: metro: duration 25, cost 6. taxi: duration 10, cost 28.34. walk: duration 81, cost 0.0. \nfrom Yizhi Hotel (Guangzhou East Railway Station Tianhe Sports Center) to Guangzhou Baiyun International Airport: metro: duration 62, cost 12. taxi: duration 39, cost 113.58. walk: duration 317, cost 0.0. \nfrom Yizhi Hotel (Guangzhou East Railway Station Tianhe Sports Center) to Shamian Island: metro: duration 33, cost 8. taxi: duration 14, cost 37.41. walk: duration 112, cost 0.0. \nfrom Yizhi Hotel (Guangzhou East Railway Station Tianhe Sports Center) to Yuexiu Park: metro: duration 30, cost 6. taxi: duration 9, cost 26.56. walk: duration 74, cost 0.0. \nfrom Yizhi Hotel (Guangzhou East Railway Station Tianhe Sports Center) to Guangzhou Library: metro: duration 21, cost 4. taxi: duration 4, cost 15.34. walk: duration 36, cost 0.0. \nfrom Yizhi Hotel (Guangzhou East Railway Station Tianhe Sports Center) to White Cloud Mountain: metro: duration 42, cost 4. taxi: duration 7, cost 23.21. walk: duration 63, cost 0.0. \nfrom Yizhi Hotel (Guangzhou East Railway Station Tianhe Sports Center) to Nanxin Milk Dessert Specialist: metro: duration 34, cost 8. taxi: duration 15, cost 40.03. walk: duration 120, cost 0.0. \nfrom Yizhi Hotel (Guangzhou East Railway Station Tianhe Sports Center) to Chen Clan Ancestral Hall: metro: duration 34, cost 6. taxi: duration 12, cost 34.52. walk: duration 102, cost 0.0. \nfrom Yizhi Hotel (Guangzhou East Railway Station Tianhe Sports Center) to Guangzhou Art Museum: metro: duration 35, cost 6. taxi: duration 7, cost 21.21. walk: duration 56, cost 0.0. \nfrom Yizhi Hotel (Guangzhou East Railway Station Tianhe Sports Center) to Guangdong Museum: metro: duration 19, cost 4. taxi: duration 4, cost 15.99. walk: duration 38, cost 0.0. \nfrom Yizhi Hotel (Guangzhou East Railway Station Tianhe Sports Center) to Sacred Heart Cathedral of Guangzhou: metro: duration 28, cost 6. taxi: duration 11, cost 31.05. walk: duration 90, cost 0.0. \nfrom Yizhi Hotel (Guangzhou East Railway Station Tianhe Sports Center) to Zi Zhou Lou Shunde Cuisine (Panyu Square Main Store): metro: duration 62, cost 12. taxi: duration 36, cost 105.45. walk: duration 295, cost 0.0. \nfrom Yizhi Hotel (Guangzhou East Railway Station Tianhe Sports Center) to Diandude (Jufu Lou Branch): metro: duration 29, cost 6. taxi: duration 11, cost 31.47. walk: duration 91, cost 0.0. \nfrom Yizhi Hotel (Guangzhou East Railway Station Tianhe Sports Center) to Guangzhou Museum: metro: duration 28, cost 6. taxi: duration 9, cost 26.68. walk: duration 75, cost 0.0. \nfrom Yizhi Hotel (Guangzhou East Railway Station Tianhe Sports Center) to Big Pigeon Rice (Gangding Branch): metro: duration 15, cost 4. taxi: duration 2, cost 11.0. walk: duration 20, cost 0.0. \nfrom Yizhi Hotel (Guangzhou East Railway Station Tianhe Sports Center) to Chaofa Chaoshan Beef Restaurant (Beijing Road Branch): metro: duration 24, cost 6. taxi: duration 11, cost 30.37. walk: duration 88, cost 0.0. \nfrom Yizhi Hotel (Guangzhou East Railway Station Tianhe Sports Center) to Shangxiajiu Pedestrian Street: metro: duration 33, cost 6. taxi: duration 13, cost 35.82. walk: duration 106, cost 0.0. \nfrom Yizhi Hotel (Guangzhou East Railway Station Tianhe Sports Center) to Yizhi Hotel (Guangzhou East Railway Station Tianhe Sports Center):  metro: empty.  taxi: empty.  walk: empty. \nfrom Yizhi Hotel (Guangzhou East Railway Station Tianhe Sports Center) to Beijing Road Pedestrian Street: metro: duration 22, cost 6. taxi: duration 9, cost 27.03. walk: duration 76, cost 0.0. \nfrom Yizhi Hotel (Guangzhou East Railway Station Tianhe Sports Center) to Yizhi Hotel (Guangzhou Chimelong Wildlife World): metro: duration 59, cost 10. taxi: duration 23, cost 65.84. walk: duration 189, cost 0.0. \nfrom Yizhi Hotel (Guangzhou East Railway Station Tianhe Sports Center) to Canton Tower: metro: duration 26, cost 6. taxi: duration 6, cost 19.23. walk: duration 49, cost 0.0. \nfrom Yizhi Hotel (Guangzhou East Railway Station Tianhe Sports Center) to Pearl River Night Cruise: metro: duration 27, cost 6. taxi: duration 8, cost 23.86. walk: duration 65, cost 0.0. \nfrom Yizhi Hotel (Guangzhou East Railway Station Tianhe Sports Center) to Guangzhou South Railway Station: metro: duration 49, cost 10. taxi: duration 28, cost 80.83. walk: duration 229, cost 0.0. \nfrom Yizhi Hotel (Guangzhou East Railway Station Tianhe Sports Center) to Guangzhou Zoo: metro: duration 19, cost 4. taxi: duration 3, cost 12.43. walk: duration 26, cost 0.0. \nfrom Beijing Road Pedestrian Street to Guangzhou Baiyun International Airport: metro: duration 58, cost 14. taxi: duration 43, cost 124.17. walk: duration 345, cost 0.0. \nfrom Beijing Road Pedestrian Street to Shamian Island: metro: duration 12, cost 4. taxi: duration 4, cost 15.24. walk: duration 36, cost 0.0. \nfrom Beijing Road Pedestrian Street to Yuexiu Park: metro: duration 13, cost 4. taxi: duration 3, cost 11.82. walk: duration 24, cost 0.0. \nfrom Beijing Road Pedestrian Street to Guangzhou Library: metro: duration 16, cost 6. taxi: duration 8, cost 25.09. walk: duration 69, cost 0.0. \nfrom Beijing Road Pedestrian Street to White Cloud Mountain: metro: duration 42, cost 6. taxi: duration 11, cost 31.43. walk: duration 91, cost 0.0. \nfrom Beijing Road Pedestrian Street to Nanxin Milk Dessert Specialist: metro: duration 14, cost 6. taxi: duration 5, cost 17.64. walk: duration 44, cost 0.0. \nfrom Beijing Road Pedestrian Street to Chen Clan Ancestral Hall: metro: duration 15, cost 4. taxi: duration 3, cost 13.29. walk: duration 29, cost 0.0. \nfrom Beijing Road Pedestrian Street to Guangzhou Art Museum: metro: duration 21, cost 4. taxi: duration 3, cost 13.92. walk: duration 31, cost 0.0. \nfrom Beijing Road Pedestrian Street to Guangdong Museum: metro: duration 14, cost 6. taxi: duration 8, cost 25.53. walk: duration 71, cost 0.0. \nfrom Beijing Road Pedestrian Street to Sacred Heart Cathedral of Guangzhou: metro: duration 8, cost 4. taxi: duration 1, cost 11.0. walk: duration 14, cost 0.0. \nfrom Beijing Road Pedestrian Street to Zi Zhou Lou Shunde Cuisine (Panyu Square Main Store): metro: duration 51, cost 12. taxi: duration 36, cost 104.51. walk: duration 292, cost 0.0. \nfrom Beijing Road Pedestrian Street to Diandude (Jufu Lou Branch): metro: duration 9, cost 4. taxi: duration 1, cost 11.0. walk: duration 15, cost 0.0. \nfrom Beijing Road Pedestrian Street to Guangzhou Museum: metro: duration 11, cost 4. taxi: duration 2, cost 11.02. walk: duration 21, cost 0.0. \nfrom Beijing Road Pedestrian Street to Big Pigeon Rice (Gangding Branch): metro: duration 15, cost 6. taxi: duration 10, cost 28.39. walk: duration 81, cost 0.0. \nfrom Beijing Road Pedestrian Street to Chaofa Chaoshan Beef Restaurant (Beijing Road Branch): metro: duration 4, cost 4. taxi: duration 1, cost 11.0. walk: duration 15, cost 0.0. \nfrom Beijing Road Pedestrian Street to Shangxiajiu Pedestrian Street: metro: duration 13, cost 4. taxi: duration 3, cost 13.49. walk: duration 30, cost 0.0. \nfrom Beijing Road Pedestrian Street to Yizhi Hotel (Guangzhou East Railway Station Tianhe Sports Center): metro: duration 22, cost 6. taxi: duration 9, cost 27.03. walk: duration 76, cost 0.0. \nfrom Beijing Road Pedestrian Street to Beijing Road Pedestrian Street:  metro: empty.  taxi: empty.  walk: empty. \nfrom Beijing Road Pedestrian Street to Yizhi Hotel (Guangzhou Chimelong Wildlife World): metro: duration 46, cost 8. taxi: duration 20, cost 56.08. walk: duration 163, cost 0.0. \nfrom Beijing Road Pedestrian Street to Canton Tower: metro: duration 19, cost 6. taxi: duration 8, cost 25.57. walk: duration 71, cost 0.0. \nfrom Beijing Road Pedestrian Street to Pearl River Night Cruise: metro: duration 11, cost 4. taxi: duration 3, cost 13.27. walk: duration 29, cost 0.0. \nfrom Beijing Road Pedestrian Street to Guangzhou South Railway Station: metro: duration 33, cost 10. taxi: duration 23, cost 64.78. walk: duration 186, cost 0.0. \nfrom Beijing Road Pedestrian Street to Guangzhou Zoo: metro: duration 14, cost 4. taxi: duration 6, cost 19.6. walk: duration 51, cost 0.0. \nfrom Yizhi Hotel (Guangzhou Chimelong Wildlife World) to Guangzhou Baiyun International Airport: metro: duration 101, cost 16. taxi: duration 62, cost 183.02. walk: duration 502, cost 0.0. \nfrom Yizhi Hotel (Guangzhou Chimelong Wildlife World) to Shamian Island: metro: duration 50, cost 8. taxi: duration 19, cost 52.91. walk: duration 155, cost 0.0. \nfrom Yizhi Hotel (Guangzhou Chimelong Wildlife World) to Yuexiu Park: metro: duration 58, cost 10. taxi: duration 23, cost 65.2. walk: duration 187, cost 0.0. \nfrom Yizhi Hotel (Guangzhou Chimelong Wildlife World) to Guangzhou Library: metro: duration 46, cost 8. taxi: duration 19, cost 52.29. walk: duration 153, cost 0.0. \nfrom Yizhi Hotel (Guangzhou Chimelong Wildlife World) to White Cloud Mountain: metro: duration 82, cost 10. taxi: duration 30, cost 85.37. walk: duration 241, cost 0.0. \nfrom Yizhi Hotel (Guangzhou Chimelong Wildlife World) to Nanxin Milk Dessert Specialist: metro: duration 51, cost 8. taxi: duration 20, cost 55.09. walk: duration 161, cost 0.0. \nfrom Yizhi Hotel (Guangzhou Chimelong Wildlife World) to Chen Clan Ancestral Hall: metro: duration 58, cost 10. taxi: duration 22, cost 61.76. walk: duration 178, cost 0.0. \nfrom Yizhi Hotel (Guangzhou Chimelong Wildlife World) to Guangzhou Art Museum: metro: duration 64, cost 8. taxi: duration 23, cost 65.41. walk: duration 188, cost 0.0. \nfrom Yizhi Hotel (Guangzhou Chimelong Wildlife World) to Guangdong Museum: metro: duration 44, cost 8. taxi: duration 18, cost 51.54. walk: duration 151, cost 0.0. \nfrom Yizhi Hotel (Guangzhou Chimelong Wildlife World) to Sacred Heart Cathedral of Guangzhou: metro: duration 49, cost 8. taxi: duration 19, cost 53.85. walk: duration 157, cost 0.0. \nfrom Yizhi Hotel (Guangzhou Chimelong Wildlife World) to Zi Zhou Lou Shunde Cuisine (Panyu Square Main Store): metro: duration 45, cost 8. taxi: duration 17, cost 46.72. walk: duration 138, cost 0.0. \nfrom Yizhi Hotel (Guangzhou Chimelong Wildlife World) to Diandude (Jufu Lou Branch): metro: duration 50, cost 8. taxi: duration 19, cost 53.88. walk: duration 157, cost 0.0. \nfrom Yizhi Hotel (Guangzhou Chimelong Wildlife World) to Guangzhou Museum: metro: duration 56, cost 10. taxi: duration 23, cost 64.19. walk: duration 185, cost 0.0. \nfrom Yizhi Hotel (Guangzhou Chimelong Wildlife World) to Big Pigeon Rice (Gangding Branch): metro: duration 47, cost 8. taxi: duration 21, cost 59.7. walk: duration 173, cost 0.0. \nfrom Yizhi Hotel (Guangzhou Chimelong Wildlife World) to Chaofa Chaoshan Beef Restaurant (Beijing Road Branch): metro: duration 45, cost 8. taxi: duration 19, cost 51.72. walk: duration 152, cost 0.0. \nfrom Yizhi Hotel (Guangzhou Chimelong Wildlife World) to Shangxiajiu Pedestrian Street: metro: duration 52, cost 8. taxi: duration 20, cost 55.83. walk: duration 163, cost 0.0. \nfrom Yizhi Hotel (Guangzhou Chimelong Wildlife World) to Yizhi Hotel (Guangzhou East Railway Station Tianhe Sports Center): metro: duration 59, cost 10. taxi: duration 23, cost 65.84. walk: duration 189, cost 0.0. \nfrom Yizhi Hotel (Guangzhou Chimelong Wildlife World) to Beijing Road Pedestrian Street: metro: duration 46, cost 8. taxi: duration 20, cost 56.08. walk: duration 163, cost 0.0. \nfrom Yizhi Hotel (Guangzhou Chimelong Wildlife World) to Yizhi Hotel (Guangzhou Chimelong Wildlife World):  metro: empty.  taxi: empty.  walk: empty. \nfrom Yizhi Hotel (Guangzhou Chimelong Wildlife World) to Canton Tower: metro: duration 48, cost 8. taxi: duration 17, cost 47.31. walk: duration 140, cost 0.0. \nfrom Yizhi Hotel (Guangzhou Chimelong Wildlife World) to Pearl River Night Cruise: metro: duration 49, cost 8. taxi: duration 17, cost 48.12. walk: duration 142, cost 0.0. \nfrom Yizhi Hotel (Guangzhou Chimelong Wildlife World) to Guangzhou South Railway Station: metro: duration 34, cost 6. taxi: duration 7, cost 21.28. walk: duration 56, cost 0.0. \nfrom Yizhi Hotel (Guangzhou Chimelong Wildlife World) to Guangzhou Zoo: metro: duration 54, cost 10. taxi: duration 22, cost 63.38. walk: duration 183, cost 0.0. \nfrom Canton Tower to Guangzhou Baiyun International Airport: metro: duration 69, cost 14. taxi: duration 45, cost 132.03. walk: duration 366, cost 0.0. \nfrom Canton Tower to Shamian Island: metro: duration 28, cost 6. taxi: duration 12, cost 33.37. walk: duration 98, cost 0.0. \nfrom Canton Tower to Yuexiu Park: metro: duration 29, cost 6. taxi: duration 10, cost 29.54. walk: duration 85, cost 0.0. \nfrom Canton Tower to Guangzhou Library: metro: duration 14, cost 4. taxi: duration 1, cost 11.0. walk: duration 13, cost 0.0. \nfrom Canton Tower to White Cloud Mountain: metro: duration 49, cost 6. taxi: duration 13, cost 36.33. walk: duration 108, cost 0.0. \nfrom Canton Tower to Nanxin Milk Dessert Specialist: metro: duration 30, cost 6. taxi: duration 13, cost 36.32. walk: duration 108, cost 0.0. \nfrom Canton Tower to Chen Clan Ancestral Hall: metro: duration 32, cost 6. taxi: duration 12, cost 34.13. walk: duration 100, cost 0.0. \nfrom Canton Tower to Guangzhou Art Museum: metro: duration 34, cost 6. taxi: duration 9, cost 26.01. walk: duration 73, cost 0.0. \nfrom Canton Tower to Guangdong Museum: metro: duration 12, cost 4. taxi: duration 1, cost 11.0. walk: duration 11, cost 0.0. \nfrom Canton Tower to Sacred Heart Cathedral of Guangzhou: metro: duration 24, cost 6. taxi: duration 10, cost 28.07. walk: duration 80, cost 0.0. \nfrom Canton Tower to Zi Zhou Lou Shunde Cuisine (Panyu Square Main Store): metro: duration 51, cost 10. taxi: duration 30, cost 87.6. walk: duration 247, cost 0.0. \nfrom Canton Tower to Diandude (Jufu Lou Branch): metro: duration 25, cost 6. taxi: duration 10, cost 28.45. walk: duration 81, cost 0.0. \nfrom Canton Tower to Guangzhou Museum: metro: duration 27, cost 6. taxi: duration 10, cost 29.16. walk: duration 83, cost 0.0. \nfrom Canton Tower to Big Pigeon Rice (Gangding Branch): metro: duration 15, cost 4. taxi: duration 4, cost 14.45. walk: duration 33, cost 0.0. \nfrom Canton Tower to Chaofa Chaoshan Beef Restaurant (Beijing Road Branch): metro: duration 20, cost 6. taxi: duration 9, cost 26.51. walk: duration 74, cost 0.0. \nfrom Canton Tower to Shangxiajiu Pedestrian Street: metro: duration 29, cost 6. taxi: duration 12, cost 33.02. walk: duration 97, cost 0.0. \nfrom Canton Tower to Yizhi Hotel (Guangzhou East Railway Station Tianhe Sports Center): metro: duration 26, cost 6. taxi: duration 6, cost 19.23. walk: duration 49, cost 0.0. \nfrom Canton Tower to Beijing Road Pedestrian Street: metro: duration 19, cost 6. taxi: duration 8, cost 25.57. walk: duration 71, cost 0.0. \nfrom Canton Tower to Yizhi Hotel (Guangzhou Chimelong Wildlife World): metro: duration 48, cost 8. taxi: duration 17, cost 47.31. walk: duration 140, cost 0.0. \nfrom Canton Tower to Canton Tower:  metro: empty.  taxi: empty.  walk: empty. \nfrom Canton Tower to Pearl River Night Cruise: metro: duration 22, cost 4. taxi: duration 5, cost 17.73. walk: duration 44, cost 0.0. \nfrom Canton Tower to Guangzhou South Railway Station: metro: duration 39, cost 10. taxi: duration 22, cost 63.23. walk: duration 182, cost 0.0. \nfrom Canton Tower to Guangzhou Zoo: metro: duration 22, cost 6. taxi: duration 6, cost 19.66. walk: duration 51, cost 0.0. \nfrom Pearl River Night Cruise to Guangzhou Baiyun International Airport: metro: duration 67, cost 14. taxi: duration 45, cost 130.01. walk: duration 360, cost 0.0. \nfrom Pearl River Night Cruise to Shamian Island: metro: duration 20, cost 6. taxi: duration 6, cost 20.42. walk: duration 53, cost 0.0. \nfrom Pearl River Night Cruise to Yuexiu Park: metro: duration 22, cost 4. taxi: duration 6, cost 19.18. walk: duration 49, cost 0.0. \nfrom Pearl River Night Cruise to Guangzhou Library: metro: duration 19, cost 6. taxi: duration 5, cost 18.28. walk: duration 46, cost 0.0. \nfrom Pearl River Night Cruise to White Cloud Mountain: metro: duration 49, cost 6. taxi: duration 12, cost 34.26. walk: duration 101, cost 0.0. \nfrom Pearl River Night Cruise to Nanxin Milk Dessert Specialist: metro: duration 22, cost 6. taxi: duration 7, cost 23.35. walk: duration 63, cost 0.0. \nfrom Pearl River Night Cruise to Chen Clan Ancestral Hall: metro: duration 24, cost 6. taxi: duration 7, cost 21.5. walk: duration 57, cost 0.0. \nfrom Pearl River Night Cruise to Guangzhou Art Museum: metro: duration 28, cost 4. taxi: duration 5, cost 18.19. walk: duration 46, cost 0.0. \nfrom Pearl River Night Cruise to Guangdong Museum: metro: duration 17, cost 6. taxi: duration 5, cost 18.51. walk: duration 47, cost 0.0. \nfrom Pearl River Night Cruise to Sacred Heart Cathedral of Guangzhou: metro: duration 15, cost 4. taxi: duration 4, cost 15.09. walk: duration 35, cost 0.0. \nfrom Pearl River Night Cruise to Zi Zhou Lou Shunde Cuisine (Panyu Square Main Store): metro: duration 54, cost 12. taxi: duration 33, cost 94.8. walk: duration 266, cost 0.0. \nfrom Pearl River Night Cruise to Diandude (Jufu Lou Branch): metro: duration 16, cost 4. taxi: duration 4, cost 15.46. walk: duration 36, cost 0.0. \nfrom Pearl River Night Cruise to Guangzhou Museum: metro: duration 20, cost 4. taxi: duration 5, cost 18.55. walk: duration 47, cost 0.0. \nfrom Pearl River Night Cruise to Big Pigeon Rice (Gangding Branch): metro: duration 19, cost 6. taxi: duration 7, cost 23.04. walk: duration 62, cost 0.0. \nfrom Pearl River Night Cruise to Chaofa Chaoshan Beef Restaurant (Beijing Road Branch): metro: duration 11, cost 4. taxi: duration 3, cost 13.49. walk: duration 30, cost 0.0. \nfrom Pearl River Night Cruise to Shangxiajiu Pedestrian Street: metro: duration 21, cost 6. taxi: duration 6, cost 19.99. walk: duration 52, cost 0.0. \nfrom Pearl River Night Cruise to Yizhi Hotel (Guangzhou East Railway Station Tianhe Sports Center): metro: duration 27, cost 6. taxi: duration 8, cost 23.86. walk: duration 65, cost 0.0. \nfrom Pearl River Night Cruise to Beijing Road Pedestrian Street: metro: duration 11, cost 4. taxi: duration 3, cost 13.27. walk: duration 29, cost 0.0. \nfrom Pearl River Night Cruise to Yizhi Hotel (Guangzhou Chimelong Wildlife World): metro: duration 49, cost 8. taxi: duration 17, cost 48.12. walk: duration 142, cost 0.0. \nfrom Pearl River Night Cruise to Canton Tower: metro: duration 22, cost 4. taxi: duration 5, cost 17.73. walk: duration 44, cost 0.0. \nfrom Pearl River Night Cruise to Pearl River Night Cruise:  metro: empty.  taxi: empty.  walk: empty. \nfrom Pearl River Night Cruise to Guangzhou South Railway Station: metro: duration 37, cost 10. taxi: duration 21, cost 59.46. walk: duration 172, cost 0.0. \nfrom Pearl River Night Cruise to Guangzhou Zoo: metro: duration 21, cost 6. taxi: duration 5, cost 18.29. walk: duration 46, cost 0.0. \nfrom Guangzhou South Railway Station to Guangzhou Baiyun International Airport: metro: duration 90, cost 16. taxi: duration 66, cost 194.19. walk: duration 531, cost 0.0. \nfrom Guangzhou South Railway Station to Shamian Island: metro: duration 34, cost 8. taxi: duration 20, cost 57.59. walk: duration 167, cost 0.0. \nfrom Guangzhou South Railway Station to Yuexiu Park: metro: duration 45, cost 10. taxi: duration 26, cost 73.76. walk: duration 210, cost 0.0. \nfrom Guangzhou South Railway Station to Guangzhou Library: metro: duration 37, cost 10. taxi: duration 24, cost 67.94. walk: duration 195, cost 0.0. \nfrom Guangzhou South Railway Station to White Cloud Mountain: metro: duration 72, cost 12. taxi: duration 34, cost 97.44. walk: duration 273, cost 0.0. \nfrom Guangzhou South Railway Station to Nanxin Milk Dessert Specialist: metro: duration 34, cost 8. taxi: duration 21, cost 58.59. walk: duration 170, cost 0.0. \nfrom Guangzhou South Railway Station to Chen Clan Ancestral Hall: metro: duration 42, cost 10. taxi: duration 24, cost 67.43. walk: duration 193, cost 0.0. \nfrom Guangzhou South Railway Station to Guangzhou Art Museum: metro: duration 51, cost 10. taxi: duration 27, cost 75.73. walk: duration 216, cost 0.0. \nfrom Guangzhou South Railway Station to Guangdong Museum: metro: duration 35, cost 10. taxi: duration 24, cost 67.36. walk: duration 193, cost 0.0. \nfrom Guangzhou South Railway Station to Sacred Heart Cathedral of Guangzhou: metro: duration 35, cost 10. taxi: duration 22, cost 61.15. walk: duration 177, cost 0.0. \nfrom Guangzhou South Railway Station to Zi Zhou Lou Shunde Cuisine (Panyu Square Main Store): metro: duration 31, cost 8. taxi: duration 20, cost 55.43. walk: duration 161, cost 0.0. \nfrom Guangzhou South Railway Station to Diandude (Jufu Lou Branch): metro: duration 36, cost 10. taxi: duration 22, cost 61.0. walk: duration 176, cost 0.0. \nfrom Guangzhou South Railway Station to Guangzhou Museum: metro: duration 43, cost 10. taxi: duration 26, cost 72.71. walk: duration 208, cost 0.0. \nfrom Guangzhou South Railway Station to Big Pigeon Rice (Gangding Branch): metro: duration 38, cost 10. taxi: duration 27, cost 75.74. walk: duration 216, cost 0.0. \nfrom Guangzhou South Railway Station to Chaofa Chaoshan Beef Restaurant (Beijing Road Branch): metro: duration 31, cost 10. taxi: duration 21, cost 59.51. walk: duration 172, cost 0.0. \nfrom Guangzhou South Railway Station to Shangxiajiu Pedestrian Street: metro: duration 36, cost 10. taxi: duration 22, cost 61.06. walk: duration 176, cost 0.0. \nfrom Guangzhou South Railway Station to Yizhi Hotel (Guangzhou East Railway Station Tianhe Sports Center): metro: duration 49, cost 10. taxi: duration 28, cost 80.83. walk: duration 229, cost 0.0. \nfrom Guangzhou South Railway Station to Beijing Road Pedestrian Street: metro: duration 33, cost 10. taxi: duration 23, cost 64.78. walk: duration 186, cost 0.0. \nfrom Guangzhou South Railway Station to Yizhi Hotel (Guangzhou Chimelong Wildlife World): metro: duration 34, cost 6. taxi: duration 7, cost 21.28. walk: duration 56, cost 0.0. \nfrom Guangzhou South Railway Station to Canton Tower: metro: duration 39, cost 10. taxi: duration 22, cost 63.23. walk: duration 182, cost 0.0. \nfrom Guangzhou South Railway Station to Pearl River Night Cruise: metro: duration 37, cost 10. taxi: duration 21, cost 59.46. walk: duration 172, cost 0.0. \nfrom Guangzhou South Railway Station to Guangzhou South Railway Station:  metro: empty.  taxi: empty.  walk: empty. \nfrom Guangzhou South Railway Station to Guangzhou Zoo: metro: duration 43, cost 10. taxi: duration 27, cost 76.41. walk: duration 217, cost 0.0. \nfrom Guangzhou Zoo to Guangzhou Baiyun International Airport: metro: duration 59, cost 12. taxi: duration 39, cost 114.41. walk: duration 319, cost 0.0. \nfrom Guangzhou Zoo to Shamian Island: metro: duration 25, cost 6. taxi: duration 10, cost 30.11. walk: duration 87, cost 0.0. \nfrom Guangzhou Zoo to Yuexiu Park: metro: duration 22, cost 4. taxi: duration 6, cost 18.88. walk: duration 48, cost 0.0. \nfrom Guangzhou Zoo to Guangzhou Library: metro: duration 18, cost 6. taxi: duration 5, cost 16.55. walk: duration 40, cost 0.0. \nfrom Guangzhou Zoo to White Cloud Mountain: metro: duration 40, cost 6. taxi: duration 7, cost 21.92. walk: duration 59, cost 0.0. \nfrom Guangzhou Zoo to Nanxin Milk Dessert Specialist: metro: duration 26, cost 6. taxi: duration 11, cost 32.53. walk: duration 95, cost 0.0. \nfrom Guangzhou Zoo to Chen Clan Ancestral Hall: metro: duration 26, cost 6. taxi: duration 9, cost 26.81. walk: duration 75, cost 0.0. \nfrom Guangzhou Zoo to Guangzhou Art Museum: metro: duration 27, cost 4. taxi: duration 3, cost 13.64. walk: duration 30, cost 0.0. \nfrom Guangzhou Zoo to Guangdong Museum: metro: duration 16, cost 6. taxi: duration 5, cost 17.29. walk: duration 43, cost 0.0. \nfrom Guangzhou Zoo to Sacred Heart Cathedral of Guangzhou: metro: duration 20, cost 6. taxi: duration 8, cost 23.74. walk: duration 65, cost 0.0. \nfrom Guangzhou Zoo to Zi Zhou Lou Shunde Cuisine (Panyu Square Main Store): metro: duration 58, cost 12. taxi: duration 37, cost 106.52. walk: duration 298, cost 0.0. \nfrom Guangzhou Zoo to Diandude (Jufu Lou Branch): metro: duration 21, cost 6. taxi: duration 8, cost 24.15. walk: duration 66, cost 0.0. \nfrom Guangzhou Zoo to Guangzhou Museum: metro: duration 20, cost 4. taxi: duration 6, cost 18.97. walk: duration 48, cost 0.0. \nfrom Guangzhou Zoo to Big Pigeon Rice (Gangding Branch): metro: duration 14, cost 4. taxi: duration 4, cost 15.96. walk: duration 38, cost 0.0. \nfrom Guangzhou Zoo to Chaofa Chaoshan Beef Restaurant (Beijing Road Branch): metro: duration 16, cost 6. taxi: duration 7, cost 23.29. walk: duration 63, cost 0.0. \nfrom Guangzhou Zoo to Shangxiajiu Pedestrian Street: metro: duration 25, cost 6. taxi: duration 10, cost 28.34. walk: duration 81, cost 0.0. \nfrom Guangzhou Zoo to Yizhi Hotel (Guangzhou East Railway Station Tianhe Sports Center): metro: duration 19, cost 4. taxi: duration 3, cost 12.43. walk: duration 26, cost 0.0. \nfrom Guangzhou Zoo to Beijing Road Pedestrian Street: metro: duration 14, cost 4. taxi: duration 6, cost 19.6. walk: duration 51, cost 0.0. \nfrom Guangzhou Zoo to Yizhi Hotel (Guangzhou Chimelong Wildlife World): metro: duration 54, cost 10. taxi: duration 22, cost 63.38. walk: duration 183, cost 0.0. \nfrom Guangzhou Zoo to Canton Tower: metro: duration 22, cost 6. taxi: duration 6, cost 19.66. walk: duration 51, cost 0.0. \nfrom Guangzhou Zoo to Pearl River Night Cruise: metro: duration 21, cost 6. taxi: duration 5, cost 18.29. walk: duration 46, cost 0.0. \nfrom Guangzhou Zoo to Guangzhou South Railway Station: metro: duration 43, cost 10. taxi: duration 27, cost 76.41. walk: duration 217, cost 0.0. \nfrom Guangzhou Zoo to Guangzhou Zoo:  metro: empty.  taxi: empty.  walk: empty. \n"
+    },
+    "initial_verification": {
+      "commonsense_errors": [
+        "The attraction, Chen Clan Ancestral Hall in day 1, is closed when you visiting. Its open time is [09:00 -- 18:00]",
+        "The attraction, Canton Tower in day 2, is closed when you visiting. Its open time is [09:30 -- 22:30]",
+        "Incorrect room_type infomation of accommodation activity, Yizhi Hotel (Guangzhou East Railway Station Tianhe Sports Center) in day 1. The room type should be an integer, equaling to the num_bed information of the selected accommodation.",
+        "Incorrect cost information of accommodation. [cost = price * rooms]"
+      ],
+      "personal_constraints": [
+        true,
+        true,
+        false,
+        true,
+        true,
+        true,
+        true,
+        true
+      ],
+      "category_normalization": [
+        {
+          "constraint_index": 4,
+          "category_domain": "transport",
+          "expression": "{'metro'}",
+          "raw_label": "metro",
+          "normalized_label": "metro"
+        },
+        {
+          "constraint_index": 4,
+          "category_domain": "transport",
+          "expression": "innercity_transport_set",
+          "raw_label": "metro",
+          "normalized_label": "metro"
+        },
+        {
+          "constraint_index": 5,
+          "category_domain": "activity",
+          "expression": "activity_type(activity)",
+          "raw_label": "train",
+          "normalized_label": "train"
+        },
+        {
+          "constraint_index": 5,
+          "category_domain": "activity",
+          "expression": "['attraction', 'airplane', 'train']",
+          "raw_label": "attraction",
+          "normalized_label": "attraction"
+        },
+        {
+          "constraint_index": 5,
+          "category_domain": "activity",
+          "expression": "['attraction', 'airplane', 'train']",
+          "raw_label": "airplane",
+          "normalized_label": "airplane"
+        },
+        {
+          "constraint_index": 5,
+          "category_domain": "activity",
+          "expression": "['attraction', 'airplane', 'train']",
+          "raw_label": "train",
+          "normalized_label": "train"
+        },
+        {
+          "constraint_index": 5,
+          "category_domain": "transport",
+          "expression": "innercity_transport_type(activity_transports(activity))",
+          "raw_label": "empty",
+          "normalized_label": "empty"
+        },
+        {
+          "constraint_index": 5,
+          "category_domain": "transport",
+          "expression": "'metro'",
+          "raw_label": "metro",
+          "normalized_label": "metro"
+        },
+        {
+          "constraint_index": 5,
+          "category_domain": "activity",
+          "expression": "activity_type(activity)",
+          "raw_label": "attraction",
+          "normalized_label": "attraction"
+        },
+        {
+          "constraint_index": 5,
+          "category_domain": "activity",
+          "expression": "['attraction', 'airplane', 'train']",
+          "raw_label": "attraction",
+          "normalized_label": "attraction"
+        },
+        {
+          "constraint_index": 5,
+          "category_domain": "activity",
+          "expression": "['attraction', 'airplane', 'train']",
+          "raw_label": "airplane",
+          "normalized_label": "airplane"
+        },
+        {
+          "constraint_index": 5,
+          "category_domain": "activity",
+          "expression": "['attraction', 'airplane', 'train']",
+          "raw_label": "train",
+          "normalized_label": "train"
+        },
+        {
+          "constraint_index": 5,
+          "category_domain": "transport",
+          "expression": "innercity_transport_type(activity_transports(activity))",
+          "raw_label": "metro",
+          "normalized_label": "metro"
+        },
+        {
+          "constraint_index": 5,
+          "category_domain": "transport",
+          "expression": "'metro'",
+          "raw_label": "metro",
+          "normalized_label": "metro"
+        },
+        {
+          "constraint_index": 5,
+          "category_domain": "activity",
+          "expression": "activity_type(activity)",
+          "raw_label": "dinner",
+          "normalized_label": "dinner"
+        },
+        {
+          "constraint_index": 5,
+          "category_domain": "activity",
+          "expression": "['attraction', 'airplane', 'train']",
+          "raw_label": "attraction",
+          "normalized_label": "attraction"
+        },
+        {
+          "constraint_index": 5,
+          "category_domain": "activity",
+          "expression": "['attraction', 'airplane', 'train']",
+          "raw_label": "airplane",
+          "normalized_label": "airplane"
+        },
+        {
+          "constraint_index": 5,
+          "category_domain": "activity",
+          "expression": "['attraction', 'airplane', 'train']",
+          "raw_label": "train",
+          "normalized_label": "train"
+        },
+        {
+          "constraint_index": 5,
+          "category_domain": "transport",
+          "expression": "innercity_transport_type(activity_transports(activity))",
+          "raw_label": "metro",
+          "normalized_label": "metro"
+        },
+        {
+          "constraint_index": 5,
+          "category_domain": "transport",
+          "expression": "'metro'",
+          "raw_label": "metro",
+          "normalized_label": "metro"
+        },
+        {
+          "constraint_index": 5,
+          "category_domain": "activity",
+          "expression": "activity_type(activity)",
+          "raw_label": "accommodation",
+          "normalized_label": "accommodation"
+        },
+        {
+          "constraint_index": 5,
+          "category_domain": "activity",
+          "expression": "['attraction', 'airplane', 'train']",
+          "raw_label": "attraction",
+          "normalized_label": "attraction"
+        },
+        {
+          "constraint_index": 5,
+          "category_domain": "activity",
+          "expression": "['attraction', 'airplane', 'train']",
+          "raw_label": "airplane",
+          "normalized_label": "airplane"
+        },
+        {
+          "constraint_index": 5,
+          "category_domain": "activity",
+          "expression": "['attraction', 'airplane', 'train']",
+          "raw_label": "train",
+          "normalized_label": "train"
+        },
+        {
+          "constraint_index": 5,
+          "category_domain": "transport",
+          "expression": "innercity_transport_type(activity_transports(activity))",
+          "raw_label": "metro",
+          "normalized_label": "metro"
+        },
+        {
+          "constraint_index": 5,
+          "category_domain": "transport",
+          "expression": "'metro'",
+          "raw_label": "metro",
+          "normalized_label": "metro"
+        },
+        {
+          "constraint_index": 5,
+          "category_domain": "activity",
+          "expression": "activity_type(activity)",
+          "raw_label": "attraction",
+          "normalized_label": "attraction"
+        },
+        {
+          "constraint_index": 5,
+          "category_domain": "activity",
+          "expression": "['attraction', 'airplane', 'train']",
+          "raw_label": "attraction",
+          "normalized_label": "attraction"
+        },
+        {
+          "constraint_index": 5,
+          "category_domain": "activity",
+          "expression": "['attraction', 'airplane', 'train']",
+          "raw_label": "airplane",
+          "normalized_label": "airplane"
+        },
+        {
+          "constraint_index": 5,
+          "category_domain": "activity",
+          "expression": "['attraction', 'airplane', 'train']",
+          "raw_label": "train",
+          "normalized_label": "train"
+        },
+        {
+          "constraint_index": 5,
+          "category_domain": "transport",
+          "expression": "innercity_transport_type(activity_transports(activity))",
+          "raw_label": "metro",
+          "normalized_label": "metro"
+        },
+        {
+          "constraint_index": 5,
+          "category_domain": "transport",
+          "expression": "'metro'",
+          "raw_label": "metro",
+          "normalized_label": "metro"
+        },
+        {
+          "constraint_index": 5,
+          "category_domain": "activity",
+          "expression": "activity_type(activity)",
+          "raw_label": "attraction",
+          "normalized_label": "attraction"
+        },
+        {
+          "constraint_index": 5,
+          "category_domain": "activity",
+          "expression": "['attraction', 'airplane', 'train']",
+          "raw_label": "attraction",
+          "normalized_label": "attraction"
+        },
+        {
+          "constraint_index": 5,
+          "category_domain": "activity",
+          "expression": "['attraction', 'airplane', 'train']",
+          "raw_label": "airplane",
+          "normalized_label": "airplane"
+        },
+        {
+          "constraint_index": 5,
+          "category_domain": "activity",
+          "expression": "['attraction', 'airplane', 'train']",
+          "raw_label": "train",
+          "normalized_label": "train"
+        },
+        {
+          "constraint_index": 5,
+          "category_domain": "transport",
+          "expression": "innercity_transport_type(activity_transports(activity))",
+          "raw_label": "metro",
+          "normalized_label": "metro"
+        },
+        {
+          "constraint_index": 5,
+          "category_domain": "transport",
+          "expression": "'metro'",
+          "raw_label": "metro",
+          "normalized_label": "metro"
+        },
+        {
+          "constraint_index": 5,
+          "category_domain": "activity",
+          "expression": "activity_type(activity)",
+          "raw_label": "lunch",
+          "normalized_label": "lunch"
+        },
+        {
+          "constraint_index": 5,
+          "category_domain": "activity",
+          "expression": "['attraction', 'airplane', 'train']",
+          "raw_label": "attraction",
+          "normalized_label": "attraction"
+        },
+        {
+          "constraint_index": 5,
+          "category_domain": "activity",
+          "expression": "['attraction', 'airplane', 'train']",
+          "raw_label": "airplane",
+          "normalized_label": "airplane"
+        },
+        {
+          "constraint_index": 5,
+          "category_domain": "activity",
+          "expression": "['attraction', 'airplane', 'train']",
+          "raw_label": "train",
+          "normalized_label": "train"
+        },
+        {
+          "constraint_index": 5,
+          "category_domain": "transport",
+          "expression": "innercity_transport_type(activity_transports(activity))",
+          "raw_label": "metro",
+          "normalized_label": "metro"
+        },
+        {
+          "constraint_index": 5,
+          "category_domain": "transport",
+          "expression": "'metro'",
+          "raw_label": "metro",
+          "normalized_label": "metro"
+        },
+        {
+          "constraint_index": 5,
+          "category_domain": "activity",
+          "expression": "activity_type(activity)",
+          "raw_label": "attraction",
+          "normalized_label": "attraction"
+        },
+        {
+          "constraint_index": 5,
+          "category_domain": "activity",
+          "expression": "['attraction', 'airplane', 'train']",
+          "raw_label": "attraction",
+          "normalized_label": "attraction"
+        },
+        {
+          "constraint_index": 5,
+          "category_domain": "activity",
+          "expression": "['attraction', 'airplane', 'train']",
+          "raw_label": "airplane",
+          "normalized_label": "airplane"
+        },
+        {
+          "constraint_index": 5,
+          "category_domain": "activity",
+          "expression": "['attraction', 'airplane', 'train']",
+          "raw_label": "train",
+          "normalized_label": "train"
+        },
+        {
+          "constraint_index": 5,
+          "category_domain": "transport",
+          "expression": "innercity_transport_type(activity_transports(activity))",
+          "raw_label": "metro",
+          "normalized_label": "metro"
+        },
+        {
+          "constraint_index": 5,
+          "category_domain": "transport",
+          "expression": "'metro'",
+          "raw_label": "metro",
+          "normalized_label": "metro"
+        },
+        {
+          "constraint_index": 5,
+          "category_domain": "activity",
+          "expression": "activity_type(activity)",
+          "raw_label": "attraction",
+          "normalized_label": "attraction"
+        },
+        {
+          "constraint_index": 5,
+          "category_domain": "activity",
+          "expression": "['attraction', 'airplane', 'train']",
+          "raw_label": "attraction",
+          "normalized_label": "attraction"
+        },
+        {
+          "constraint_index": 5,
+          "category_domain": "activity",
+          "expression": "['attraction', 'airplane', 'train']",
+          "raw_label": "airplane",
+          "normalized_label": "airplane"
+        },
+        {
+          "constraint_index": 5,
+          "category_domain": "activity",
+          "expression": "['attraction', 'airplane', 'train']",
+          "raw_label": "train",
+          "normalized_label": "train"
+        },
+        {
+          "constraint_index": 5,
+          "category_domain": "transport",
+          "expression": "innercity_transport_type(activity_transports(activity))",
+          "raw_label": "metro",
+          "normalized_label": "metro"
+        },
+        {
+          "constraint_index": 5,
+          "category_domain": "transport",
+          "expression": "'metro'",
+          "raw_label": "metro",
+          "normalized_label": "metro"
+        },
+        {
+          "constraint_index": 5,
+          "category_domain": "activity",
+          "expression": "activity_type(activity)",
+          "raw_label": "airplane",
+          "normalized_label": "airplane"
+        },
+        {
+          "constraint_index": 5,
+          "category_domain": "activity",
+          "expression": "['attraction', 'airplane', 'train']",
+          "raw_label": "attraction",
+          "normalized_label": "attraction"
+        },
+        {
+          "constraint_index": 5,
+          "category_domain": "activity",
+          "expression": "['attraction', 'airplane', 'train']",
+          "raw_label": "airplane",
+          "normalized_label": "airplane"
+        },
+        {
+          "constraint_index": 5,
+          "category_domain": "activity",
+          "expression": "['attraction', 'airplane', 'train']",
+          "raw_label": "train",
+          "normalized_label": "train"
+        },
+        {
+          "constraint_index": 5,
+          "category_domain": "transport",
+          "expression": "innercity_transport_type(activity_transports(activity))",
+          "raw_label": "metro",
+          "normalized_label": "metro"
+        },
+        {
+          "constraint_index": 5,
+          "category_domain": "transport",
+          "expression": "'metro'",
+          "raw_label": "metro",
+          "normalized_label": "metro"
+        },
+        {
+          "constraint_index": 6,
+          "category_domain": "activity",
+          "expression": "activity_type(activity)",
+          "raw_label": "train",
+          "normalized_label": "train"
+        },
+        {
+          "constraint_index": 6,
+          "category_domain": "activity",
+          "expression": "'accommodation'",
+          "raw_label": "accommodation",
+          "normalized_label": "accommodation"
+        },
+        {
+          "constraint_index": 6,
+          "category_domain": "activity",
+          "expression": "activity_type(activity)",
+          "raw_label": "attraction",
+          "normalized_label": "attraction"
+        },
+        {
+          "constraint_index": 6,
+          "category_domain": "activity",
+          "expression": "'accommodation'",
+          "raw_label": "accommodation",
+          "normalized_label": "accommodation"
+        },
+        {
+          "constraint_index": 6,
+          "category_domain": "activity",
+          "expression": "activity_type(activity)",
+          "raw_label": "dinner",
+          "normalized_label": "dinner"
+        },
+        {
+          "constraint_index": 6,
+          "category_domain": "activity",
+          "expression": "'accommodation'",
+          "raw_label": "accommodation",
+          "normalized_label": "accommodation"
+        },
+        {
+          "constraint_index": 6,
+          "category_domain": "activity",
+          "expression": "activity_type(activity)",
+          "raw_label": "accommodation",
+          "normalized_label": "accommodation"
+        },
+        {
+          "constraint_index": 6,
+          "category_domain": "activity",
+          "expression": "'accommodation'",
+          "raw_label": "accommodation",
+          "normalized_label": "accommodation"
+        },
+        {
+          "constraint_index": 6,
+          "category_domain": "activity",
+          "expression": "activity_type(activity)",
+          "raw_label": "attraction",
+          "normalized_label": "attraction"
+        },
+        {
+          "constraint_index": 6,
+          "category_domain": "activity",
+          "expression": "'accommodation'",
+          "raw_label": "accommodation",
+          "normalized_label": "accommodation"
+        },
+        {
+          "constraint_index": 6,
+          "category_domain": "activity",
+          "expression": "activity_type(activity)",
+          "raw_label": "attraction",
+          "normalized_label": "attraction"
+        },
+        {
+          "constraint_index": 6,
+          "category_domain": "activity",
+          "expression": "'accommodation'",
+          "raw_label": "accommodation",
+          "normalized_label": "accommodation"
+        },
+        {
+          "constraint_index": 6,
+          "category_domain": "activity",
+          "expression": "activity_type(activity)",
+          "raw_label": "lunch",
+          "normalized_label": "lunch"
+        },
+        {
+          "constraint_index": 6,
+          "category_domain": "activity",
+          "expression": "'accommodation'",
+          "raw_label": "accommodation",
+          "normalized_label": "accommodation"
+        },
+        {
+          "constraint_index": 6,
+          "category_domain": "activity",
+          "expression": "activity_type(activity)",
+          "raw_label": "attraction",
+          "normalized_label": "attraction"
+        },
+        {
+          "constraint_index": 6,
+          "category_domain": "activity",
+          "expression": "'accommodation'",
+          "raw_label": "accommodation",
+          "normalized_label": "accommodation"
+        },
+        {
+          "constraint_index": 6,
+          "category_domain": "activity",
+          "expression": "activity_type(activity)",
+          "raw_label": "attraction",
+          "normalized_label": "attraction"
+        },
+        {
+          "constraint_index": 6,
+          "category_domain": "activity",
+          "expression": "'accommodation'",
+          "raw_label": "accommodation",
+          "normalized_label": "accommodation"
+        },
+        {
+          "constraint_index": 6,
+          "category_domain": "activity",
+          "expression": "activity_type(activity)",
+          "raw_label": "airplane",
+          "normalized_label": "airplane"
+        },
+        {
+          "constraint_index": 6,
+          "category_domain": "activity",
+          "expression": "'accommodation'",
+          "raw_label": "accommodation",
+          "normalized_label": "accommodation"
+        },
+        {
+          "constraint_index": 7,
+          "category_domain": "activity",
+          "expression": "activity_type(activity)",
+          "raw_label": "train",
+          "normalized_label": "train"
+        },
+        {
+          "constraint_index": 7,
+          "category_domain": "activity",
+          "expression": "'accommodation'",
+          "raw_label": "accommodation",
+          "normalized_label": "accommodation"
+        },
+        {
+          "constraint_index": 7,
+          "category_domain": "activity",
+          "expression": "activity_type(activity)",
+          "raw_label": "attraction",
+          "normalized_label": "attraction"
+        },
+        {
+          "constraint_index": 7,
+          "category_domain": "activity",
+          "expression": "'accommodation'",
+          "raw_label": "accommodation",
+          "normalized_label": "accommodation"
+        },
+        {
+          "constraint_index": 7,
+          "category_domain": "activity",
+          "expression": "activity_type(activity)",
+          "raw_label": "dinner",
+          "normalized_label": "dinner"
+        },
+        {
+          "constraint_index": 7,
+          "category_domain": "activity",
+          "expression": "'accommodation'",
+          "raw_label": "accommodation",
+          "normalized_label": "accommodation"
+        },
+        {
+          "constraint_index": 7,
+          "category_domain": "activity",
+          "expression": "activity_type(activity)",
+          "raw_label": "accommodation",
+          "normalized_label": "accommodation"
+        },
+        {
+          "constraint_index": 7,
+          "category_domain": "activity",
+          "expression": "'accommodation'",
+          "raw_label": "accommodation",
+          "normalized_label": "accommodation"
+        },
+        {
+          "constraint_index": 7,
+          "category_domain": "activity",
+          "expression": "activity_type(activity)",
+          "raw_label": "attraction",
+          "normalized_label": "attraction"
+        },
+        {
+          "constraint_index": 7,
+          "category_domain": "activity",
+          "expression": "'accommodation'",
+          "raw_label": "accommodation",
+          "normalized_label": "accommodation"
+        },
+        {
+          "constraint_index": 7,
+          "category_domain": "activity",
+          "expression": "activity_type(activity)",
+          "raw_label": "attraction",
+          "normalized_label": "attraction"
+        },
+        {
+          "constraint_index": 7,
+          "category_domain": "activity",
+          "expression": "'accommodation'",
+          "raw_label": "accommodation",
+          "normalized_label": "accommodation"
+        },
+        {
+          "constraint_index": 7,
+          "category_domain": "activity",
+          "expression": "activity_type(activity)",
+          "raw_label": "lunch",
+          "normalized_label": "lunch"
+        },
+        {
+          "constraint_index": 7,
+          "category_domain": "activity",
+          "expression": "'accommodation'",
+          "raw_label": "accommodation",
+          "normalized_label": "accommodation"
+        },
+        {
+          "constraint_index": 7,
+          "category_domain": "activity",
+          "expression": "activity_type(activity)",
+          "raw_label": "attraction",
+          "normalized_label": "attraction"
+        },
+        {
+          "constraint_index": 7,
+          "category_domain": "activity",
+          "expression": "'accommodation'",
+          "raw_label": "accommodation",
+          "normalized_label": "accommodation"
+        },
+        {
+          "constraint_index": 7,
+          "category_domain": "activity",
+          "expression": "activity_type(activity)",
+          "raw_label": "attraction",
+          "normalized_label": "attraction"
+        },
+        {
+          "constraint_index": 7,
+          "category_domain": "activity",
+          "expression": "'accommodation'",
+          "raw_label": "accommodation",
+          "normalized_label": "accommodation"
+        },
+        {
+          "constraint_index": 7,
+          "category_domain": "activity",
+          "expression": "activity_type(activity)",
+          "raw_label": "airplane",
+          "normalized_label": "airplane"
+        },
+        {
+          "constraint_index": 7,
+          "category_domain": "activity",
+          "expression": "'accommodation'",
+          "raw_label": "accommodation",
+          "normalized_label": "accommodation"
+        },
+        {
+          "constraint_index": 8,
+          "category_domain": "transport",
+          "expression": "innercity_transport_type(activity_transports(activity))",
+          "raw_label": "empty",
+          "normalized_label": "empty"
+        },
+        {
+          "constraint_index": 8,
+          "category_domain": "transport",
+          "expression": "'taxi'",
+          "raw_label": "taxi",
+          "normalized_label": "taxi"
+        },
+        {
+          "constraint_index": 8,
+          "category_domain": "transport",
+          "expression": "innercity_transport_type(activity_transports(activity))",
+          "raw_label": "metro",
+          "normalized_label": "metro"
+        },
+        {
+          "constraint_index": 8,
+          "category_domain": "transport",
+          "expression": "'taxi'",
+          "raw_label": "taxi",
+          "normalized_label": "taxi"
+        },
+        {
+          "constraint_index": 8,
+          "category_domain": "transport",
+          "expression": "innercity_transport_type(activity_transports(activity))",
+          "raw_label": "metro",
+          "normalized_label": "metro"
+        },
+        {
+          "constraint_index": 8,
+          "category_domain": "transport",
+          "expression": "'taxi'",
+          "raw_label": "taxi",
+          "normalized_label": "taxi"
+        },
+        {
+          "constraint_index": 8,
+          "category_domain": "transport",
+          "expression": "innercity_transport_type(activity_transports(activity))",
+          "raw_label": "metro",
+          "normalized_label": "metro"
+        },
+        {
+          "constraint_index": 8,
+          "category_domain": "transport",
+          "expression": "'taxi'",
+          "raw_label": "taxi",
+          "normalized_label": "taxi"
+        },
+        {
+          "constraint_index": 8,
+          "category_domain": "transport",
+          "expression": "innercity_transport_type(activity_transports(activity))",
+          "raw_label": "metro",
+          "normalized_label": "metro"
+        },
+        {
+          "constraint_index": 8,
+          "category_domain": "transport",
+          "expression": "'taxi'",
+          "raw_label": "taxi",
+          "normalized_label": "taxi"
+        },
+        {
+          "constraint_index": 8,
+          "category_domain": "transport",
+          "expression": "innercity_transport_type(activity_transports(activity))",
+          "raw_label": "metro",
+          "normalized_label": "metro"
+        },
+        {
+          "constraint_index": 8,
+          "category_domain": "transport",
+          "expression": "'taxi'",
+          "raw_label": "taxi",
+          "normalized_label": "taxi"
+        },
+        {
+          "constraint_index": 8,
+          "category_domain": "transport",
+          "expression": "innercity_transport_type(activity_transports(activity))",
+          "raw_label": "metro",
+          "normalized_label": "metro"
+        },
+        {
+          "constraint_index": 8,
+          "category_domain": "transport",
+          "expression": "'taxi'",
+          "raw_label": "taxi",
+          "normalized_label": "taxi"
+        },
+        {
+          "constraint_index": 8,
+          "category_domain": "transport",
+          "expression": "innercity_transport_type(activity_transports(activity))",
+          "raw_label": "metro",
+          "normalized_label": "metro"
+        },
+        {
+          "constraint_index": 8,
+          "category_domain": "transport",
+          "expression": "'taxi'",
+          "raw_label": "taxi",
+          "normalized_label": "taxi"
+        },
+        {
+          "constraint_index": 8,
+          "category_domain": "transport",
+          "expression": "innercity_transport_type(activity_transports(activity))",
+          "raw_label": "metro",
+          "normalized_label": "metro"
+        },
+        {
+          "constraint_index": 8,
+          "category_domain": "transport",
+          "expression": "'taxi'",
+          "raw_label": "taxi",
+          "normalized_label": "taxi"
+        },
+        {
+          "constraint_index": 8,
+          "category_domain": "transport",
+          "expression": "innercity_transport_type(activity_transports(activity))",
+          "raw_label": "metro",
+          "normalized_label": "metro"
+        },
+        {
+          "constraint_index": 8,
+          "category_domain": "transport",
+          "expression": "'taxi'",
+          "raw_label": "taxi",
+          "normalized_label": "taxi"
+        }
+      ],
+      "personal_errors": [
+        "Personal constraint 3 failed: total_cost=0 \nfor activity in allactivities(plan):\n    total_cost+=activity_cost(activity)\n    total_cost += innercity_transport_cost(activity_transports(activity))\nresult=(total_cost<=4000)"
+      ],
+      "evaluation_errors": [],
+      "translation_errors": [],
+      "error_info": [
+        "The attraction, Chen Clan Ancestral Hall in day 1, is closed when you visiting. Its open time is [09:00 -- 18:00]",
+        "The attraction, Canton Tower in day 2, is closed when you visiting. Its open time is [09:30 -- 22:30]",
+        "Incorrect room_type infomation of accommodation activity, Yizhi Hotel (Guangzhou East Railway Station Tianhe Sports Center) in day 1. The room type should be an integer, equaling to the num_bed information of the selected accommodation.",
+        "Incorrect cost information of accommodation. [cost = price * rooms]",
+        "Personal constraint 3 failed: total_cost=0 \nfor activity in allactivities(plan):\n    total_cost+=activity_cost(activity)\n    total_cost += innercity_transport_cost(activity_transports(activity))\nresult=(total_cost<=4000)"
+      ],
+      "passed": false,
+      "translated_plan": {
+        "people_number": 2,
+        "start_city": "Nanjing",
+        "target_city": "Guangzhou",
+        "itinerary": [
+          {
+            "day": 1,
+            "activities": [
+              {
+                "start_time": "07:25",
+                "end_time": "14:36",
+                "start": "Nanjing South Railway Station",
+                "end": "Guangzhou South Railway Station",
+                "price": 736.07,
+                "cost": 1472.14,
+                "TrainID": "G637",
+                "type": "train",
+                "tickets": 2,
+                "transports": []
+              },
+              {
+                "position": "Chen Clan Ancestral Hall",
+                "type": "attraction",
+                "transports": [
+                  {
+                    "start": "Guangzhou South Railway Station",
+                    "end": "Guangzhou South Railway Station-Metro Station",
+                    "mode": "walk",
+                    "start_time": "14:36",
+                    "end_time": "14:38",
+                    "cost": 0,
+                    "distance": 0.19,
+                    "price": 0
+                  },
+                  {
+                    "start": "Guangzhou South Railway Station-Metro Station",
+                    "end": "Rainbow Bridge-Metro Station",
+                    "mode": "metro",
+                    "start_time": "14:38",
+                    "end_time": "15:10",
+                    "cost": 10,
+                    "distance": 16.27,
+                    "price": 5,
+                    "tickets": 2
+                  },
+                  {
+                    "start": "Rainbow Bridge-Metro Station",
+                    "end": "Chen Clan Ancestral Hall",
+                    "mode": "walk",
+                    "start_time": "15:10",
+                    "end_time": "15:18",
+                    "cost": 0,
+                    "distance": 0.7,
+                    "price": 0
+                  }
+                ],
+                "price": 0.0,
+                "cost": 0.0,
+                "tickets": 2,
+                "start_time": "15:30",
+                "end_time": "18:30"
+              },
+              {
+                "position": "Diandude (Jufu Lou Branch)",
+                "type": "dinner",
+                "transports": [
+                  {
+                    "start": "Chen Clan Ancestral Hall",
+                    "end": "Rainbow Bridge-Metro Station",
+                    "mode": "walk",
+                    "start_time": "18:30",
+                    "end_time": "18:38",
+                    "cost": 0,
+                    "distance": 0.7,
+                    "price": 0
+                  },
+                  {
+                    "start": "Rainbow Bridge-Metro Station",
+                    "end": "Beijing Road-Metro Station",
+                    "mode": "metro",
+                    "start_time": "18:38",
+                    "end_time": "18:44",
+                    "cost": 4,
+                    "distance": 3.06,
+                    "price": 2,
+                    "tickets": 2
+                  },
+                  {
+                    "start": "Beijing Road-Metro Station",
+                    "end": "Diandude (Jufu Lou Branch)",
+                    "mode": "walk",
+                    "start_time": "18:44",
+                    "end_time": "18:50",
+                    "cost": 0,
+                    "distance": 0.53,
+                    "price": 0
+                  }
+                ],
+                "price": 77.0,
+                "cost": 154.0,
+                "start_time": "19:00",
+                "end_time": "20:00"
+              },
+              {
+                "position": "Yizhi Hotel (Guangzhou East Railway Station Tianhe Sports Center)",
+                "type": "accommodation",
+                "transports": [
+                  {
+                    "start": "Diandude (Jufu Lou Branch)",
+                    "end": "Beijing Road-Metro Station",
+                    "mode": "walk",
+                    "start_time": "20:00",
+                    "end_time": "20:06",
+                    "cost": 0,
+                    "distance": 0.53,
+                    "price": 0
+                  },
+                  {
+                    "start": "Beijing Road-Metro Station",
+                    "end": "Guangzhou East Station-Metro Station",
+                    "mode": "metro",
+                    "start_time": "20:06",
+                    "end_time": "20:19",
+                    "cost": 6,
+                    "distance": 6.63,
+                    "price": 3,
+                    "tickets": 2
+                  },
+                  {
+                    "start": "Guangzhou East Station-Metro Station",
+                    "end": "Yizhi Hotel (Guangzhou East Railway Station Tianhe Sports Center)",
+                    "mode": "walk",
+                    "start_time": "20:19",
+                    "end_time": "20:29",
+                    "cost": 0,
+                    "distance": 0.86,
+                    "price": 0
+                  }
+                ],
+                "room_type": 2,
+                "price": 385,
+                "cost": 770,
+                "start_time": "20:30",
+                "end_time": "24:00",
+                "rooms": 1
+              }
+            ]
+          },
+          {
+            "day": 2,
+            "activities": [
+              {
+                "position": "Canton Tower",
+                "type": "attraction",
+                "transports": [
+                  {
+                    "start": "Yizhi Hotel (Guangzhou East Railway Station Tianhe Sports Center)",
+                    "end": "Guangzhou East Station-Metro Station",
+                    "mode": "walk",
+                    "start_time": "08:00",
+                    "end_time": "08:10",
+                    "cost": 0,
+                    "distance": 0.86,
+                    "price": 0
+                  },
+                  {
+                    "start": "Guangzhou East Station-Metro Station",
+                    "end": "Haixinsha-Metro Station",
+                    "mode": "metro",
+                    "start_time": "08:10",
+                    "end_time": "08:18",
+                    "cost": 6,
+                    "distance": 4.37,
+                    "price": 3,
+                    "tickets": 2
+                  },
+                  {
+                    "start": "Haixinsha-Metro Station",
+                    "end": "Canton Tower",
+                    "mode": "walk",
+                    "start_time": "08:18",
+                    "end_time": "08:26",
+                    "cost": 0,
+                    "distance": 0.69,
+                    "price": 0
+                  }
+                ],
+                "price": 149.0,
+                "cost": 298.0,
+                "tickets": 2,
+                "start_time": "08:30",
+                "end_time": "10:00"
+              },
+              {
+                "position": "Guangdong Museum",
+                "type": "attraction",
+                "transports": [
+                  {
+                    "start": "Canton Tower",
+                    "end": "Haixinsha-Metro Station",
+                    "mode": "walk",
+                    "start_time": "10:00",
+                    "end_time": "10:08",
+                    "cost": 0,
+                    "distance": 0.69,
+                    "price": 0
+                  },
+                  {
+                    "start": "Haixinsha-Metro Station",
+                    "end": "Liede-Metro Station",
+                    "mode": "metro",
+                    "start_time": "10:08",
+                    "end_time": "10:10",
+                    "cost": 4,
+                    "distance": 1.1,
+                    "price": 2,
+                    "tickets": 2
+                  },
+                  {
+                    "start": "Liede-Metro Station",
+                    "end": "Guangdong Museum",
+                    "mode": "walk",
+                    "start_time": "10:10",
+                    "end_time": "10:12",
+                    "cost": 0,
+                    "distance": 0.24,
+                    "price": 0
+                  }
+                ],
+                "price": 0.0,
+                "cost": 0.0,
+                "tickets": 2,
+                "start_time": "10:15",
+                "end_time": "12:15"
+              },
+              {
+                "position": "Big Pigeon Rice (Gangding Branch)",
+                "type": "lunch",
+                "transports": [
+                  {
+                    "start": "Guangdong Museum",
+                    "end": "Liede-Metro Station",
+                    "mode": "walk",
+                    "start_time": "12:15",
+                    "end_time": "12:17",
+                    "cost": 0,
+                    "distance": 0.24,
+                    "price": 0
+                  },
+                  {
+                    "start": "Liede-Metro Station",
+                    "end": "Gangding-Metro Station",
+                    "mode": "metro",
+                    "start_time": "12:17",
+                    "end_time": "12:20",
+                    "cost": 4,
+                    "distance": 1.97,
+                    "price": 2,
+                    "tickets": 2
+                  },
+                  {
+                    "start": "Gangding-Metro Station",
+                    "end": "Big Pigeon Rice (Gangding Branch)",
+                    "mode": "walk",
+                    "start_time": "12:20",
+                    "end_time": "12:21",
+                    "cost": 0,
+                    "distance": 0.16,
+                    "price": 0
+                  }
+                ],
+                "price": 99.0,
+                "cost": 198.0,
+                "start_time": "12:30",
+                "end_time": "13:30"
+              },
+              {
+                "position": "Shamian Island",
+                "type": "attraction",
+                "transports": [
+                  {
+                    "start": "Big Pigeon Rice (Gangding Branch)",
+                    "end": "Gangding-Metro Station",
+                    "mode": "walk",
+                    "start_time": "13:30",
+                    "end_time": "13:31",
+                    "cost": 0,
+                    "distance": 0.16,
+                    "price": 0
+                  },
+                  {
+                    "start": "Gangding-Metro Station",
+                    "end": "Cultural Park-Metro Station",
+                    "mode": "metro",
+                    "start_time": "13:31",
+                    "end_time": "13:50",
+                    "cost": 8,
+                    "distance": 9.71,
+                    "price": 4,
+                    "tickets": 2
+                  },
+                  {
+                    "start": "Cultural Park-Metro Station",
+                    "end": "Shamian Island",
+                    "mode": "walk",
+                    "start_time": "13:50",
+                    "end_time": "13:55",
+                    "cost": 0,
+                    "distance": 0.44,
+                    "price": 0
+                  }
+                ],
+                "price": 0.0,
+                "cost": 0.0,
+                "tickets": 2,
+                "start_time": "14:00",
+                "end_time": "16:00"
+              },
+              {
+                "position": "Pearl River Night Cruise",
+                "type": "attraction",
+                "transports": [
+                  {
+                    "start": "Shamian Island",
+                    "end": "Cultural Park-Metro Station",
+                    "mode": "walk",
+                    "start_time": "16:00",
+                    "end_time": "16:05",
+                    "cost": 0,
+                    "distance": 0.44,
+                    "price": 0
+                  },
+                  {
+                    "start": "Cultural Park-Metro Station",
+                    "end": "East Lake-Metro Station",
+                    "mode": "metro",
+                    "start_time": "16:05",
+                    "end_time": "16:13",
+                    "cost": 6,
+                    "distance": 4.11,
+                    "price": 3,
+                    "tickets": 2
+                  },
+                  {
+                    "start": "East Lake-Metro Station",
+                    "end": "Pearl River Night Cruise",
+                    "mode": "walk",
+                    "start_time": "16:13",
+                    "end_time": "16:20",
+                    "cost": 0,
+                    "distance": 0.64,
+                    "price": 0
+                  }
+                ],
+                "price": 98.0,
+                "cost": 196.0,
+                "tickets": 2,
+                "start_time": "16:30",
+                "end_time": "18:30"
+              },
+              {
+                "start": "Guangzhou Baiyun International Airport",
+                "end": "Nanjing Lukou International Airport",
+                "start_time": "20:22",
+                "end_time": "21:47",
+                "FlightID": "FL314",
+                "type": "airplane",
+                "transports": [
+                  {
+                    "start": "Pearl River Night Cruise",
+                    "end": "East Lake-Metro Station",
+                    "mode": "walk",
+                    "start_time": "18:30",
+                    "end_time": "18:37",
+                    "cost": 0,
+                    "distance": 0.64,
+                    "price": 0
+                  },
+                  {
+                    "start": "East Lake-Metro Station",
+                    "end": "Airport South (Terminal 1)-Metro Station",
+                    "mode": "metro",
+                    "start_time": "18:37",
+                    "end_time": "19:37",
+                    "cost": 14,
+                    "distance": 30.11,
+                    "price": 7,
+                    "tickets": 2
+                  },
+                  {
+                    "start": "Airport South (Terminal 1)-Metro Station",
+                    "end": "Guangzhou Baiyun International Airport",
+                    "mode": "walk",
+                    "start_time": "19:37",
+                    "end_time": "19:37",
+                    "cost": 0,
+                    "distance": 0.05,
+                    "price": 0
+                  }
+                ],
+                "price": 527.99,
+                "cost": 1055.98,
+                "tickets": 2
+              }
+            ]
+          }
+        ]
+      },
+      "verifier_errors": [],
+      "schema_errors": [],
+      "translation_failures": []
+    },
+    "environment_context": {
+      "lang": "en"
+    },
+    "generation_metadata": {
+      "raw_response": "[{\"day\": 1,```json\n{\n    \"day\": 1,\n    \"activities\": [\n        {\n            \"start_time\": \"07:25\",\n            \"end_time\": \"14:36\",\n            \"start\": \"Nanjing South Railway Station\",\n            \"end\": \"Guangzhou South Railway Station\",\n            \"price\": 736.07,\n            \"cost\": 1472.14,\n            \"TrainID\": \"G637\",\n            \"type\": \"train\",\n            \"tickets\": 2,\n            \"transports\": \"empty\"\n        },\n        {\n            \"position\": \"Chen Clan Ancestral Hall\",\n            \"type\": \"attraction\",\n            \"transports\": {\"from\": \"Guangzhou South Railway Station\", \"to\": \"Chen Clan Ancestral Hall\", \"mode\": \"metro\", \"start_time\": \"14:36\", \"end_time\": \"15:18\", \"cost\": 10},\n            \"price\": 0.0,\n            \"cost\": 0.0,\n            \"tickets\": 2,\n            \"start_time\": \"15:30\",\n            \"end_time\": \"18:30\"\n        },\n        {\n            \"position\": \"Diandude (Jufu Lou Branch)\",\n            \"type\": \"dinner\",\n            \"transports\": {\"from\": \"Chen Clan Ancestral Hall\", \"to\": \"Diandude (Jufu Lou Branch)\", \"mode\": \"metro\", \"start_time\": \"18:30\", \"end_time\": \"18:52\", \"cost\": 4},\n            \"price\": 77.0,\n            \"cost\": 154.0,\n            \"start_time\": \"19:00\",\n            \"end_time\": \"20:00\"\n        },\n        {\n            \"position\": \"Yizhi Hotel (Guangzhou East Railway Station Tianhe Sports Center)\",\n            \"type\": \"accommodation\",\n            \"transports\": {\"from\": \"Diandude (Jufu Lou Branch)\", \"to\": \"Yizhi Hotel (Guangzhou East Railway Station Tianhe Sports Center)\", \"mode\": \"metro\", \"start_time\": \"20:00\", \"end_time\": \"20:29\", \"cost\": 6},\n            \"room_type\": 2,\n            \"price\": 385,\n            \"cost\": 770,\n            \"start_time\": \"20:30\",\n            \"end_time\": \"24:00\",\n            \"rooms\": 1\n        }\n    ]\n},\n{\n    \"day\": 2,\n    \"activities\": [\n        {\n            \"position\": \"Canton Tower\",\n            \"type\": \"attraction\",\n            \"transports\": {\"from\": \"Yizhi Hotel (Guangzhou East Railway Station Tianhe Sports Center)\", \"to\": \"Canton Tower\", \"mode\": \"metro\", \"start_time\": \"08:00\", \"end_time\": \"08:26\", \"cost\": 6},\n            \"price\": 149.0,\n            \"cost\": 298.0,\n            \"tickets\": 2,\n            \"start_time\": \"08:30\",\n            \"end_time\": \"10:00\"\n        },\n        {\n            \"position\": \"Guangdong Museum\",\n            \"type\": \"attraction\",\n            \"transports\": {\"from\": \"Canton Tower\", \"to\": \"Guangdong Museum\", \"mode\": \"metro\", \"start_time\": \"10:00\", \"end_time\": \"10:12\", \"cost\": 4},\n            \"price\": 0.0,\n            \"cost\": 0.0,\n            \"tickets\": 2,\n            \"start_time\": \"10:15\",\n            \"end_time\": \"12:15\"\n        },\n        {\n            \"position\": \"Big Pigeon Rice (Gangding Branch)\",\n            \"type\": \"lunch\",\n            \"transports\": {\"from\": \"Guangdong Museum\", \"to\": \"Big Pigeon Rice (Gangding Branch)\", \"mode\": \"metro\", \"start_time\": \"12:15\", \"end_time\": \"12:21\", \"cost\": 4},\n            \"price\": 99.0,\n            \"cost\": 198.0,\n            \"start_time\": \"12:30\",\n            \"end_time\": \"13:30\"\n        },\n        {\n            \"position\": \"Shamian Island\",\n            \"type\": \"attraction\",\n            \"transports\": {\"from\": \"Big Pigeon Rice (Gangding Branch)\", \"to\": \"Shamian Island\", \"mode\": \"metro\", \"start_time\": \"13:30\", \"end_time\": \"13:55\", \"cost\": 8},\n            \"price\": 0.0,\n            \"cost\": 0.0,\n            \"tickets\": 2,\n            \"start_time\": \"14:00\",\n            \"end_time\": \"16:00\"\n        },\n        {\n            \"position\": \"Pearl River Night Cruise\",\n            \"type\": \"attraction\",\n            \"transports\": {\"from\": \"Shamian Island\", \"to\": \"Pearl River Night Cruise\", \"mode\": \"metro\", \"start_time\": \"16:00\", \"end_time\": \"16:06\", \"cost\": 6},\n            \"price\": 98.0,\n            \"cost\": 196.0,\n            \"tickets\": 2,\n            \"start_time\": \"16:30\",\n            \"end_time\": \"18:30\"\n        },\n        {\n            \"start\": \"Guangzhou Baiyun International Airport\",\n            \"end\": \"Nanjing Lukou International Airport\",\n            \"start_time\": \"20:22\",\n            \"end_time\": \"21:47\",\n            \"FlightID\": \"FL314\",\n            \"type\": \"airplane\",\n            \"transports\": {\"from\": \"Pearl River Night Cruise\", \"to\": \"Guangzhou Baiyun International Airport\", \"mode\": \"metro\", \"start_time\": \"18:30\", \"end_time\": \"19:37\", \"cost\": 14},\n            \"price\": 527.99,\n            \"cost\": 1055.98,\n            \"tickets\": 2\n        }\n    ]\n}\n]\n```",
+      "input_tokens": 92503,
+      "output_tokens": 1573,
+      "total_tokens": 94076,
+      "model_calls": 6,
+      "failed_model_calls": 0,
+      "elapsed_time_seconds": 49.27464818954468,
+      "llm_inference_time_seconds": 32.19176125526428,
+      "information_collection_time_seconds": 17.080151081085205,
+      "initial_generation_time_s": 49.27507274993695,
+      "initial_generation_tool_calls": 4686,
+      "initial_generation_tool_call_counts_by_type": {
+        "accommodations_select": 1,
+        "attractions_select": 1,
+        "goto": 1518,
+        "intercity_transport_select": 4,
+        "next_page": 125,
+        "poi_lat_lon_search": 3036,
+        "restaurants_select": 1
+      },
+      "shared_initialization_time_s": 49.736606708029285,
+      "shared_initialization_system_metrics": {
+        "tool_call_count": 4750,
+        "successful_tool_call_count": 4750,
+        "failed_tool_call_count": 0,
+        "verification_count": 1,
+        "tool_call_counts_by_type": {
+          "accommodations_select": 2,
+          "attractions_select": 6,
+          "goto": 1536,
+          "intercity_transport_select": 6,
+          "next_page": 125,
+          "poi_lat_lon_search": 3072,
+          "restaurants_select": 3
+        }
+      }
+    }
+  },
+  "initial_plan_hash": "e4430255aec36e3f8e9afdc53862e6b56f912f1e9e405f4c0498ad6210d1bf2a",
+  "initial_state_hash": "ff717718e8826a3d7d25b0bd591a2a7b53152c54219ad3bfa55fbc0f3c683e2c"
+}

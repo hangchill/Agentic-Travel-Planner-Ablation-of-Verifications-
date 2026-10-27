@@ -117,7 +117,7 @@ Every strategy calls the model through the loop's per-query repeat-request cache
 (same messages and options) reuses the earlier reply without a model call. No
 strategy has a skip rule of its own. Each attempt's `repair_metadata` records
 `llm_cache_hits`, `llm_cache_saved_input_tokens`, `llm_cache_saved_output_tokens`
-and `llm_cache_saved_unknown`; `scripts/build_repair_summary.py` summarises them
+and `llm_cache_saved_unknown`; `scripts/result_analysis/build_repair_summary.py` summarises them
 per query in `llm_cache_hits.csv`.
 Exceptions remain recorded and raised, rather than spending further proposals.
 
