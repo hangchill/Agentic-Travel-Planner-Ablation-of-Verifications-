@@ -12,33 +12,33 @@ Initial = plan before any repair round; final = plan the benchmark scored. Named
 |---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
 | Queries (n) | 10 | 10 | 10 | 10 | 10 | 10 | 10 | 10 | 10 | 10 | 10 | 10 | 10 | 10 | 10 | 30 | 30 | 30 | 30 | 30 |
 | Avg personal constraints per query | 5.2 | 5.2 | 5.2 | 5.2 | 5.2 | 8.5 | 8.5 | 8.5 | 8.5 | 8.5 | 5.1 | 5.1 | 5.1 | 5.1 | 5.1 | 6.27 | 6.27 | 6.27 | 6.27 | 6.27 |
-| Avg PC failed per query - initial plan | 0.7 | 0.7 | 0.9 | 0.7 | 1.1 | 1 | 0.9 | 0.8 | 0.6 | 1 | 0.7 | 0.4 | 0.3 | 0.4 | 0.9 | 0.8 | 0.67 | 0.67 | 0.57 | 1 |
-| Avg PC failed per query - final plan | 0.5 | 0.7 | 0.6 | 0.5 | 0.9 | 1.1 | 0.6 | 0.8 | 0.7 | 1 | 0.6 | 0.4 | 0.3 | 0.4 | 0.7 | 0.73 | 0.57 | 0.57 | 0.53 | 0.87 |
-| Avg PC passed per query - initial plan | 4.5 | 4.5 | 4.3 | 4.5 | 4.1 | 7.5 | 7.6 | 7.7 | 7.9 | 7.5 | 4.4 | 4.7 | 4.8 | 4.7 | 4.2 | 5.47 | 5.6 | 5.6 | 5.7 | 5.27 |
-| Avg PC passed per query - final plan | 4.7 | 4.5 | 4.6 | 4.7 | 4.3 | 7.4 | 7.9 | 7.7 | 7.8 | 7.5 | 4.5 | 4.7 | 4.8 | 4.7 | 4.4 | 5.53 | 5.7 | 5.7 | 5.73 | 5.4 |
+| Avg PC failed per query - initial plan | 0.7 | 0.7 | 0.9 | 0.7 | 0.7 | 1 | 0.9 | 0.8 | 0.6 | 0.8 | 0.7 | 0.4 | 0.3 | 0.4 | 0.6 | 0.8 | 0.67 | 0.67 | 0.57 | 0.7 |
+| Avg PC failed per query - final plan | 0.5 | 0.7 | 0.6 | 0.5 | 0.5 | 1.1 | 0.6 | 0.8 | 0.7 | 0.8 | 0.6 | 0.4 | 0.3 | 0.4 | 0.4 | 0.73 | 0.57 | 0.57 | 0.53 | 0.57 |
+| Avg PC passed per query - initial plan | 4.5 | 4.5 | 4.3 | 4.5 | 4.5 | 7.5 | 7.6 | 7.7 | 7.9 | 7.7 | 4.4 | 4.7 | 4.8 | 4.7 | 4.5 | 5.47 | 5.6 | 5.6 | 5.7 | 5.57 |
+| Avg PC passed per query - final plan | 4.7 | 4.5 | 4.6 | 4.7 | 4.7 | 7.4 | 7.9 | 7.7 | 7.8 | 7.7 | 4.5 | 4.7 | 4.8 | 4.7 | 4.7 | 5.53 | 5.7 | 5.7 | 5.73 | 5.7 |
 | Avg PC passed per query - change (final - initial) | 0.2 | 0 | 0.3 | 0.2 | 0.2 | -0.1 | 0.3 | 0 | -0.1 | 0 | 0.1 | 0 | 0 | 0 | 0.2 | 0.07 | 0.1 | 0.1 | 0.03 | 0.13 |
-| Avg % PC passed per query - initial plan | 86.6 | 86.6 | 82.6 | 86.6 | 78.6 | 89.2 | 90.2 | 91.5 | 93.5 | 89.2 | 87.0 | 92.3 | 94.3 | 92.3 | 83.0 | 87.6 | 89.7 | 89.5 | 90.8 | 83.6 |
-| Avg % PC passed per query - final plan | 90.0 | 86.6 | 88.0 | 90.0 | 82.0 | 87.5 | 93.5 | 91.5 | 92.5 | 89.2 | 89.0 | 92.3 | 94.3 | 92.3 | 86.7 | 88.8 | 90.8 | 91.3 | 91.6 | 86.0 |
+| Avg % PC passed per query - initial plan | 86.6 | 86.6 | 82.6 | 86.6 | 86.6 | 89.2 | 90.2 | 91.5 | 93.5 | 91.5 | 87.0 | 92.3 | 94.3 | 92.3 | 89.0 | 87.6 | 89.7 | 89.5 | 90.8 | 89.0 |
+| Avg % PC passed per query - final plan | 90.0 | 86.6 | 88.0 | 90.0 | 90.0 | 87.5 | 93.5 | 91.5 | 92.5 | 91.5 | 89.0 | 92.3 | 94.3 | 92.3 | 92.7 | 88.8 | 90.8 | 91.3 | 91.6 | 91.4 |
 | Avg % PC passed per query - change (percentage points) | 3.4 | 0.0 | 5.4 | 3.4 | 3.4 | -1.8 | 3.2 | 0.0 | -1.0 | 0.0 | 2.0 | 0.0 | 0.0 | 0.0 | 3.7 | 1.2 | 1.1 | 1.8 | 0.8 | 2.4 |
 | Queries where % PC passed increased | 2 | 0 | 2 | 2 | 2 | 2 | 3 | 0 | 0 | 0 | 1 | 0 | 0 | 0 | 2 | 5 | 3 | 2 | 2 | 4 |
 | Queries where % PC passed remained the same | 8 | 10 | 8 | 8 | 8 | 6 | 7 | 10 | 9 | 10 | 9 | 10 | 10 | 10 | 8 | 23 | 27 | 28 | 27 | 26 |
-|   of which already 100% in the initial plan | 4 | 4 | 3 | 4 | 3 | 5 | 5 | 6 | 7 | 5 | 4 | 6 | 7 | 6 | 5 | 13 | 15 | 16 | 17 | 13 |
+|   of which already 100% in the initial plan | 4 | 4 | 3 | 4 | 4 | 5 | 5 | 6 | 7 | 6 | 4 | 6 | 7 | 6 | 5 | 13 | 15 | 16 | 17 | 15 |
 | Queries where % PC passed decreased | 0 | 0 | 0 | 0 | 0 | 2 | 0 | 0 | 1 | 0 | 0 | 0 | 0 | 0 | 0 | 2 | 0 | 0 | 1 | 0 |
-| Final plans with 0 failed PC | 5 | 4 | 4 | 5 | 4 | 5 | 6 | 6 | 7 | 5 | 5 | 6 | 7 | 6 | 7 | 15 | 16 | 17 | 18 | 16 |
-| Final plans with 1 failed PC | 5 | 5 | 6 | 5 | 5 | 2 | 3 | 3 | 2 | 3 | 4 | 4 | 3 | 4 | 1 | 11 | 12 | 12 | 11 | 9 |
-| Final plans with 2 failed PC | 0 | 1 | 0 | 0 | 0 | 1 | 0 | 0 | 0 | 1 | 1 | 0 | 0 | 0 | 1 | 2 | 1 | 0 | 0 | 2 |
-| Final plans with 3+ failed PC | 0 | 0 | 0 | 0 | 1 | 2 | 1 | 1 | 1 | 1 | 0 | 0 | 0 | 0 | 1 | 2 | 1 | 1 | 1 | 3 |
-| Final plans passing all PC, excluding named-place constraints | 10 | 8 | 10 | 10 | 9 | 5 | 6 | 6 | 7 | 5 | 5 | 6 | 7 | 6 | 7 | 20 | 20 | 23 | 23 | 21 |
-| Avg % PC passed per query - final plan, excluding named-place constraints | 100.0 | 96.1 | 100.0 | 100.0 | 92.5 | 87.2 | 93.2 | 91.2 | 92.3 | 88.8 | 89.0 | 92.3 | 94.3 | 92.3 | 86.7 | 92.1 | 93.9 | 95.2 | 94.9 | 89.3 |
+| Final plans with 0 failed PC | 5 | 4 | 4 | 5 | 5 | 5 | 6 | 6 | 7 | 6 | 5 | 6 | 7 | 6 | 6 | 15 | 16 | 17 | 18 | 17 |
+| Final plans with 1 failed PC | 5 | 5 | 6 | 5 | 5 | 2 | 3 | 3 | 2 | 3 | 4 | 4 | 3 | 4 | 4 | 11 | 12 | 12 | 11 | 12 |
+| Final plans with 2 failed PC | 0 | 1 | 0 | 0 | 0 | 1 | 0 | 0 | 0 | 0 | 1 | 0 | 0 | 0 | 0 | 2 | 1 | 0 | 0 | 0 |
+| Final plans with 3+ failed PC | 0 | 0 | 0 | 0 | 0 | 2 | 1 | 1 | 1 | 1 | 0 | 0 | 0 | 0 | 0 | 2 | 1 | 1 | 1 | 1 |
+| Final plans passing all PC, excluding named-place constraints | 10 | 8 | 10 | 10 | 10 | 5 | 6 | 6 | 7 | 6 | 5 | 6 | 7 | 6 | 6 | 20 | 20 | 23 | 23 | 22 |
+| Avg % PC passed per query - final plan, excluding named-place constraints | 100.0 | 96.1 | 100.0 | 100.0 | 100.0 | 87.2 | 93.2 | 91.2 | 92.3 | 91.2 | 89.0 | 92.3 | 94.3 | 92.3 | 92.7 | 92.1 | 93.9 | 95.2 | 94.9 | 94.6 |
 
 **Top 3 failing PC kinds in final plans (failures)**
 
 | Group | R0 | R1 | R2 | R3 | R4 |
 |---|---|---|---|---|---|
-| Easy | Must include a named place (5) | Must include a named place (5); Rooms / room type (1); Ticket / taxi counts (1) | Must include a named place (6) | Must include a named place (5) | Must include a named place (6); Ticket / taxi counts (2); Days / people count (1) |
-| Medium | Total budget (4); Rooms / room type (4); Intercity transport mode (2) | Total budget (2); Intercity transport mode (2); Ticket / taxi counts (1) | Total budget (2); Intercity transport mode (2); Rooms / room type (2) | Total budget (3); Rooms / room type (2); Required attraction / restaurant / hotel type (1) | Total budget (3); Rooms / room type (3); Intercity transport mode (2) |
-| Human | Required attraction / restaurant / hotel type (2); Total budget (2); Intercity transport mode (1) | Required attraction / restaurant / hotel type (2); Total budget (2) | Required attraction / restaurant / hotel type (2); Total budget (1) | Required attraction / restaurant / hotel type (2); Total budget (2) | Required attraction / restaurant / hotel type (3); Days / people count (2); Ticket / taxi counts (1) |
-| All | Total budget (6); Must include a named place (5); Rooms / room type (4) | Must include a named place (5); Total budget (4); Required attraction / restaurant / hotel type (3) | Must include a named place (6); Total budget (3); Required attraction / restaurant / hotel type (3) | Total budget (5); Must include a named place (5); Required attraction / restaurant / hotel type (3) | Must include a named place (6); Total budget (4); Ticket / taxi counts (4) |
+| Easy | Must include a named place (5) | Must include a named place (5); Rooms / room type (1); Ticket / taxi counts (1) | Must include a named place (6) | Must include a named place (5) | Must include a named place (5) |
+| Medium | Total budget (4); Rooms / room type (4); Intercity transport mode (2) | Total budget (2); Intercity transport mode (2); Ticket / taxi counts (1) | Total budget (2); Intercity transport mode (2); Rooms / room type (2) | Total budget (3); Rooms / room type (2); Required attraction / restaurant / hotel type (1) | Rooms / room type (3); Total budget (2); Ticket / taxi counts (1) |
+| Human | Required attraction / restaurant / hotel type (2); Total budget (2); Intercity transport mode (1) | Required attraction / restaurant / hotel type (2); Total budget (2) | Required attraction / restaurant / hotel type (2); Total budget (1) | Required attraction / restaurant / hotel type (2); Total budget (2) | Required attraction / restaurant / hotel type (2); Total budget (1); Intercity transport mode (1) |
+| All | Total budget (6); Must include a named place (5); Rooms / room type (4) | Must include a named place (5); Total budget (4); Required attraction / restaurant / hotel type (3) | Must include a named place (6); Total budget (3); Required attraction / restaurant / hotel type (3) | Total budget (5); Must include a named place (5); Required attraction / restaurant / hotel type (3) | Must include a named place (5); Total budget (3); Rooms / room type (3) |
 
 ## Table 1b: PC failure rate by kind, whole cohort
 
@@ -46,16 +46,16 @@ Failed / total constraints of each kind in the final plans.
 
 | Kind | R0 | R1 | R2 | R3 | R4 |
 |---|---|---|---|---|---|
-| Must include a named place | 5/9 (55.6%) | 5/9 (55.6%) | 6/9 (66.7%) | 5/9 (55.6%) | 6/9 (66.7%) |
-| Total budget | 6/15 (40.0%) | 4/15 (26.7%) | 3/15 (20.0%) | 5/15 (33.3%) | 4/15 (26.7%) |
-| Intercity transport mode | 3/12 (25.0%) | 2/12 (16.7%) | 2/12 (16.7%) | 0/12 (0.0%) | 2/12 (16.7%) |
+| Must include a named place | 5/9 (55.6%) | 5/9 (55.6%) | 6/9 (66.7%) | 5/9 (55.6%) | 5/9 (55.6%) |
+| Total budget | 6/15 (40.0%) | 4/15 (26.7%) | 3/15 (20.0%) | 5/15 (33.3%) | 3/15 (20.0%) |
+| Intercity transport mode | 3/12 (25.0%) | 2/12 (16.7%) | 2/12 (16.7%) | 0/12 (0.0%) | 1/12 (8.3%) |
 | Rooms / room type | 4/21 (19.0%) | 1/21 (4.8%) | 2/21 (9.5%) | 2/21 (9.5%) | 3/21 (14.3%) |
-| Required attraction / restaurant / hotel type | 3/16 (18.8%) | 3/16 (18.8%) | 3/16 (18.8%) | 3/16 (18.8%) | 4/16 (25.0%) |
-| Days / people count | 1/60 (1.7%) | 0/60 (0.0%) | 0/60 (0.0%) | 0/60 (0.0%) | 3/60 (5.0%) |
-| Ticket / taxi counts | 0/50 (0.0%) | 2/50 (4.0%) | 1/50 (2.0%) | 0/50 (0.0%) | 4/50 (8.0%) |
+| Required attraction / restaurant / hotel type | 3/16 (18.8%) | 3/16 (18.8%) | 3/16 (18.8%) | 3/16 (18.8%) | 3/16 (18.8%) |
+| Days / people count | 1/60 (1.7%) | 0/60 (0.0%) | 0/60 (0.0%) | 0/60 (0.0%) | 0/60 (0.0%) |
+| Ticket / taxi counts | 0/50 (0.0%) | 2/50 (4.0%) | 1/50 (2.0%) | 0/50 (0.0%) | 1/50 (2.0%) |
 | Departure / return times | 0/2 (0.0%) | 0/2 (0.0%) | 0/2 (0.0%) | 0/2 (0.0%) | 0/2 (0.0%) |
 | Inner-city transport mode | 0/2 (0.0%) | 0/2 (0.0%) | 0/2 (0.0%) | 0/2 (0.0%) | 0/2 (0.0%) |
-| Food cost per person | 0/1 (0.0%) | 0/1 (0.0%) | 0/1 (0.0%) | 1/1 (100.0%) | 0/1 (0.0%) |
+| Food cost per person | 0/1 (0.0%) | 0/1 (0.0%) | 0/1 (0.0%) | 1/1 (100.0%) | 1/1 (100.0%) |
 
 ## Table 2: Commonsense (CS), number of failed checks, benchmark
 
@@ -63,31 +63,31 @@ Each plan is checked against the same 28 checks; fewer failed is better. A plan 
 
 | Metric | Easy R0 | Easy R1 | Easy R2 | Easy R3 | Easy R4 | Medium R0 | Medium R1 | Medium R2 | Medium R3 | Medium R4 | Human R0 | Human R1 | Human R2 | Human R3 | Human R4 | All R0 | All R1 | All R2 | All R3 | All R4 |
 |---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
-| Avg CS checks failed per query - initial plan | 5.3 | 5.7 | 6.3 | 6.4 | 8.2 | 6.5 | 5.7 | 5.6 | 5.5 | 5.8 | 6.5 | 4.5 | 5.3 | 4.5 | 6.5 | 6.1 | 5.3 | 5.73 | 5.47 | 6.83 |
-| Avg CS checks failed per query - final plan | 3 | 6.4 | 3.9 | 3.5 | 6 | 4.4 | 6.1 | 4.4 | 4.2 | 5.5 | 3.6 | 4.9 | 3.4 | 3.2 | 5.5 | 3.67 | 5.8 | 3.9 | 3.63 | 5.67 |
-| Avg CS checks failed per query - change (final - initial; negative = fewer failures) | -2.3 | 0.7 | -2.4 | -2.9 | -2.2 | -2.1 | 0.4 | -1.2 | -1.3 | -0.3 | -2.9 | 0.4 | -1.9 | -1.3 | -1 | -2.43 | 0.5 | -1.83 | -1.83 | -1.17 |
-| Avg % CS checks passed per query - initial plan | 81.1 | 79.6 | 77.5 | 77.1 | 70.7 | 76.8 | 79.6 | 80.0 | 80.4 | 79.3 | 76.8 | 83.9 | 81.1 | 83.9 | 76.8 | 78.2 | 81.1 | 79.5 | 80.5 | 75.6 |
-| Avg % CS checks passed per query - final plan | 89.3 | 77.1 | 86.1 | 87.5 | 78.6 | 84.3 | 78.2 | 84.3 | 85.0 | 80.4 | 87.1 | 82.5 | 87.9 | 88.6 | 80.4 | 86.9 | 79.3 | 86.1 | 87.0 | 79.8 |
-| Avg % CS checks passed per query - change (percentage points) | 8.2 | -2.5 | 8.6 | 10.4 | 7.9 | 7.5 | -1.4 | 4.3 | 4.6 | 1.1 | 10.4 | -1.4 | 6.8 | 4.6 | 3.6 | 8.7 | -1.8 | 6.5 | 6.5 | 4.2 |
-| Queries where failed CS checks decreased (improved) | 7 | 3 | 7 | 9 | 7 | 8 | 3 | 5 | 7 | 3 | 7 | 2 | 6 | 6 | 5 | 22 | 8 | 18 | 22 | 15 |
-| Queries where failed CS checks stayed the same | 3 | 2 | 3 | 0 | 2 | 1 | 3 | 5 | 3 | 6 | 3 | 4 | 3 | 2 | 4 | 7 | 9 | 11 | 5 | 12 |
-| Queries where failed CS checks increased (got worse) | 0 | 5 | 0 | 1 | 1 | 1 | 4 | 0 | 0 | 1 | 0 | 4 | 1 | 2 | 1 | 1 | 13 | 1 | 3 | 3 |
-| Final plans with 0 failed CS checks | 0 | 0 | 0 | 1 | 0 | 0 | 0 | 0 | 1 | 0 | 0 | 1 | 0 | 0 | 0 | 0 | 1 | 0 | 2 | 0 |
-| Final plans with 1 failed CS check | 1 | 1 | 2 | 0 | 0 | 2 | 1 | 0 | 0 | 1 | 1 | 0 | 2 | 1 | 2 | 4 | 2 | 4 | 1 | 3 |
-| Final plans with 2 failed CS checks | 5 | 1 | 3 | 2 | 3 | 1 | 1 | 1 | 0 | 1 | 2 | 1 | 2 | 2 | 1 | 8 | 3 | 6 | 4 | 5 |
-| Final plans with 3 failed CS checks | 1 | 0 | 0 | 3 | 3 | 1 | 1 | 4 | 5 | 2 | 3 | 1 | 2 | 3 | 1 | 5 | 2 | 6 | 11 | 6 |
-| Final plans with 4+ failed CS checks | 3 | 8 | 5 | 4 | 4 | 6 | 7 | 5 | 4 | 6 | 4 | 7 | 4 | 4 | 6 | 13 | 22 | 14 | 12 | 16 |
-| Final plans with at most 4 failed CS checks (more than 85% of the 28 checks passed) | 8 | 2 | 6 | 8 | 8 | 5 | 4 | 6 | 6 | 5 | 7 | 4 | 6 | 9 | 9 | 20 | 10 | 18 | 23 | 22 |
-| Final plans the CS evaluator could not check (counted as failing every check) | 0 | 0 | 0 | 0 | 1 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 1 | 0 | 0 | 0 | 0 | 2 |
+| Avg CS checks failed per query - initial plan | 5.3 | 5.7 | 6.3 | 6.4 | 4.8 | 6.5 | 5.7 | 5.6 | 5.5 | 5 | 6.5 | 4.5 | 5.3 | 4.5 | 4.6 | 6.1 | 5.3 | 5.73 | 5.47 | 4.8 |
+| Avg CS checks failed per query - final plan | 3 | 6.4 | 3.9 | 3.5 | 2.6 | 4.4 | 6.1 | 4.4 | 4.2 | 3.3 | 3.6 | 4.9 | 3.4 | 3.2 | 2.3 | 3.67 | 5.8 | 3.9 | 3.63 | 2.73 |
+| Avg CS checks failed per query - change (final - initial; negative = fewer failures) | -2.3 | 0.7 | -2.4 | -2.9 | -2.2 | -2.1 | 0.4 | -1.2 | -1.3 | -1.7 | -2.9 | 0.4 | -1.9 | -1.3 | -2.3 | -2.43 | 0.5 | -1.83 | -1.83 | -2.07 |
+| Avg % CS checks passed per query - initial plan | 81.1 | 79.6 | 77.5 | 77.1 | 82.9 | 76.8 | 79.6 | 80.0 | 80.4 | 82.1 | 76.8 | 83.9 | 81.1 | 83.9 | 83.6 | 78.2 | 81.1 | 79.5 | 80.5 | 82.9 |
+| Avg % CS checks passed per query - final plan | 89.3 | 77.1 | 86.1 | 87.5 | 90.7 | 84.3 | 78.2 | 84.3 | 85.0 | 88.2 | 87.1 | 82.5 | 87.9 | 88.6 | 91.8 | 86.9 | 79.3 | 86.1 | 87.0 | 90.2 |
+| Avg % CS checks passed per query - change (percentage points) | 8.2 | -2.5 | 8.6 | 10.4 | 7.9 | 7.5 | -1.4 | 4.3 | 4.6 | 6.1 | 10.4 | -1.4 | 6.8 | 4.6 | 8.2 | 8.7 | -1.8 | 6.5 | 6.5 | 7.4 |
+| Queries where failed CS checks decreased (improved) | 7 | 3 | 7 | 9 | 6 | 8 | 3 | 5 | 7 | 9 | 7 | 2 | 6 | 6 | 9 | 22 | 8 | 18 | 22 | 24 |
+| Queries where failed CS checks stayed the same | 3 | 2 | 3 | 0 | 3 | 1 | 3 | 5 | 3 | 0 | 3 | 4 | 3 | 2 | 1 | 7 | 9 | 11 | 5 | 4 |
+| Queries where failed CS checks increased (got worse) | 0 | 5 | 0 | 1 | 1 | 1 | 4 | 0 | 0 | 1 | 0 | 4 | 1 | 2 | 0 | 1 | 13 | 1 | 3 | 2 |
+| Final plans with 0 failed CS checks | 0 | 0 | 0 | 1 | 1 | 0 | 0 | 0 | 1 | 1 | 0 | 1 | 0 | 0 | 0 | 0 | 1 | 0 | 2 | 2 |
+| Final plans with 1 failed CS check | 1 | 1 | 2 | 0 | 0 | 2 | 1 | 0 | 0 | 0 | 1 | 0 | 2 | 1 | 3 | 4 | 2 | 4 | 1 | 3 |
+| Final plans with 2 failed CS checks | 5 | 1 | 3 | 2 | 4 | 1 | 1 | 1 | 0 | 1 | 2 | 1 | 2 | 2 | 3 | 8 | 3 | 6 | 4 | 8 |
+| Final plans with 3 failed CS checks | 1 | 0 | 0 | 3 | 3 | 1 | 1 | 4 | 5 | 4 | 3 | 1 | 2 | 3 | 3 | 5 | 2 | 6 | 11 | 10 |
+| Final plans with 4+ failed CS checks | 3 | 8 | 5 | 4 | 2 | 6 | 7 | 5 | 4 | 4 | 4 | 7 | 4 | 4 | 1 | 13 | 22 | 14 | 12 | 7 |
+| Final plans with at most 4 failed CS checks (more than 85% of the 28 checks passed) | 8 | 2 | 6 | 8 | 9 | 5 | 4 | 6 | 6 | 8 | 7 | 4 | 6 | 9 | 9 | 20 | 10 | 18 | 23 | 26 |
+| Final plans the CS evaluator could not check (counted as failing every check) | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 |
 
 **Top 3 failing CS checks in final plans (plans failing)**
 
 | Group | R0 | R1 | R2 | R3 | R4 |
 |---|---|---|---|---|---|
-| Easy | Does not follow Chronological Order (8); Incorrect cost information of Inner-City Transport (6); Incorrect Information of Intercity Transport on price or duration (5) | Does not follow Chronological Order (9); Invalid Transport information across positions (9); Invalid or ungrounded activity entity (5) | Does not follow Chronological Order (8); Incorrect Information of Inner-City Transporton on price, distance, and duration (5); Incorrect Information of Intercity Transport on price or duration (4) | Does not follow Chronological Order (9); Incorrect cost information of Inner-City Transport (6); Incorrect Information of Inner-City Transporton on price, distance, and duration (4) | Does not follow Chronological Order (9); Incorrect cost information of Inner-City Transport (7); Incorrect Information of Inner-City Transporton on price, distance, and duration (3) |
-| Medium | Does not follow Chronological Order (7); Incorrect cost information of Inner-City Transport (6); Incorrect Information of Intercity Transport on price or duration (6) | Incorrect Information of Inner-City Transporton on price, distance, and duration (8); Does not follow Chronological Order (8); Incorrect Information of Intercity Transport on price or duration (6) | Incorrect Information of Inner-City Transporton on price, distance, and duration (9); Incorrect cost information of Inner-City Transport (6); Does not follow Chronological Order (6) | Inappropriate Meal Times (7); Does not follow Chronological Order (6); Incorrect Information of Inner-City Transporton on price, distance, and duration (6) | Does not follow Chronological Order (8); Inappropriate Meal Times (6); Incorrect Information of Inner-City Transporton on price, distance, and duration (5) |
-| Human | Does not follow Chronological Order (8); Incorrect Information of Intercity Transport on price or duration (5); Incorrect Information of Inner-City Transporton on price, distance, and duration (4) | Does not follow Chronological Order (7); Invalid or ungrounded activity entity (6); Invalid Transport information across positions (6) | Does not follow Chronological Order (8); Incorrect cost information of Inner-City Transport (5); Inappropriate Meal Times (4) | Does not follow Chronological Order (8); Incorrect cost information of Inner-City Transport (8); Incorrect Information of Inner-City Transporton on price, distance, and duration (4) | Does not follow Chronological Order (6); Incorrect cost information of Inner-City Transport (4); Incorrect Information of Inner-City Transporton on price, distance, and duration (3) |
-| All | Does not follow Chronological Order (23); Incorrect Information of Intercity Transport on price or duration (16); Incorrect cost information of Inner-City Transport (16) | Does not follow Chronological Order (24); Invalid Transport information across positions (19); Invalid or ungrounded activity entity (15) | Does not follow Chronological Order (22); Incorrect Information of Inner-City Transporton on price, distance, and duration (17); Incorrect cost information of Inner-City Transport (13) | Does not follow Chronological Order (23); Incorrect cost information of Inner-City Transport (18); Incorrect Information of Inner-City Transporton on price, distance, and duration (14) | Does not follow Chronological Order (23); Incorrect cost information of Inner-City Transport (15); Inappropriate Meal Times (12) |
+| Easy | Does not follow Chronological Order (8); Incorrect cost information of Inner-City Transport (6); Incorrect Information of Intercity Transport on price or duration (5) | Does not follow Chronological Order (9); Invalid Transport information across positions (9); Invalid or ungrounded activity entity (5) | Does not follow Chronological Order (8); Incorrect Information of Inner-City Transporton on price, distance, and duration (5); Incorrect Information of Intercity Transport on price or duration (4) | Does not follow Chronological Order (9); Incorrect cost information of Inner-City Transport (6); Incorrect Information of Inner-City Transporton on price, distance, and duration (4) | Does not follow Chronological Order (8); Incorrect cost information of Inner-City Transport (7); Incorrect Information of Inner-City Transporton on price, distance, and duration (4) |
+| Medium | Does not follow Chronological Order (7); Incorrect cost information of Inner-City Transport (6); Incorrect Information of Intercity Transport on price or duration (6) | Incorrect Information of Inner-City Transporton on price, distance, and duration (8); Does not follow Chronological Order (8); Incorrect Information of Intercity Transport on price or duration (6) | Incorrect Information of Inner-City Transporton on price, distance, and duration (9); Incorrect cost information of Inner-City Transport (6); Does not follow Chronological Order (6) | Inappropriate Meal Times (7); Does not follow Chronological Order (6); Incorrect Information of Inner-City Transporton on price, distance, and duration (6) | Does not follow Chronological Order (9); Incorrect Information of Inner-City Transporton on price, distance, and duration (6); Incorrect cost information of Inner-City Transport (6) |
+| Human | Does not follow Chronological Order (8); Incorrect Information of Intercity Transport on price or duration (5); Incorrect Information of Inner-City Transporton on price, distance, and duration (4) | Does not follow Chronological Order (7); Invalid or ungrounded activity entity (6); Invalid Transport information across positions (6) | Does not follow Chronological Order (8); Incorrect cost information of Inner-City Transport (5); Inappropriate Meal Times (4) | Does not follow Chronological Order (8); Incorrect cost information of Inner-City Transport (8); Incorrect Information of Inner-City Transporton on price, distance, and duration (4) | Does not follow Chronological Order (6); Incorrect cost information of Inner-City Transport (5); Incorrect Information of Inner-City Transporton on price, distance, and duration (3) |
+| All | Does not follow Chronological Order (23); Incorrect Information of Intercity Transport on price or duration (16); Incorrect cost information of Inner-City Transport (16) | Does not follow Chronological Order (24); Invalid Transport information across positions (19); Invalid or ungrounded activity entity (15) | Does not follow Chronological Order (22); Incorrect Information of Inner-City Transporton on price, distance, and duration (17); Incorrect cost information of Inner-City Transport (13) | Does not follow Chronological Order (23); Incorrect cost information of Inner-City Transport (18); Incorrect Information of Inner-City Transporton on price, distance, and duration (14) | Does not follow Chronological Order (23); Incorrect cost information of Inner-City Transport (18); Incorrect Information of Inner-City Transporton on price, distance, and duration (13) |
 
 ## Table 3: Repair process
 
@@ -95,19 +95,19 @@ Each plan is checked against the same 28 checks; fewer failed is better. A plan 
 
 | Metric | Easy R0 | Easy R1 | Easy R2 | Easy R3 | Easy R4 | Medium R0 | Medium R1 | Medium R2 | Medium R3 | Medium R4 | Human R0 | Human R1 | Human R2 | Human R3 | Human R4 | All R0 | All R1 | All R2 | All R3 | All R4 |
 |---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
-| [per query] Queries with token data | 10 | 10 | 10 | 10 | 9 | 10 | 10 | 10 | 10 | 3 | 10 | 10 | 10 | 10 | 3 | 30 | 30 | 30 | 30 | 15 |
-| [per query] Avg tokens spent per query (queries with complete token data) | 80904 | 73105 | 80298 | 163535 | 104673 | 102240 | 149564 | 123354 | 194460 | 113704 | 94304 | 91174 | 74269 | 193696 | 131993 | 92483 | 104614 | 92640 | 183897 | 111943 |
-| [per query] Rounds with no recorded token count | 0 | 0 | 0 | 0 | 1 | 0 | 0 | 0 | 0 | 12 | 0 | 0 | 0 | 0 | 8 | 0 | 0 | 0 | 0 | 21 |
-| [per query] Avg tokens spent per query - all queries, failed requests counted as 0 (lower bound) | 80904 | 73105 | 80298 | 163535 | 98406 | 102240 | 149564 | 123354 | 194460 | 50791 | 94304 | 91174 | 74269 | 193696 | 67589 | 92483 | 104614 | 92640 | 183897 | 72262 |
-| [per query] Avg repair time per query (s) | 69.3 | 11.9 | 68.3 | 133.1 | 100.1 | 103.8 | 22.8 | 103.4 | 161.2 | 61.6 | 133.7 | 19.4 | 104.4 | 209.1 | 101.2 | 102.3 | 18.0 | 92.1 | 167.8 | 87.6 |
-| [per query] Queries with at least one round that changed the plan | 7 | 8 | 8 | 10 | 9 | 9 | 9 | 8 | 9 | 6 | 8 | 8 | 8 | 10 | 6 | 24 | 25 | 24 | 29 | 21 |
-| [per query] Avg change in PC passed per changed round (loop verifier) | 0.98 | -0.38 | 1.25 | 0.88 | 0.72 | -0.26 | 0.09 | 0.06 | -0.04 | 0 | 0.04 | 0 | 0.62 | 0 | -0.29 | 0.2 | -0.09 | 0.65 | 0.29 | 0.23 |
-| [per query] Avg change in CS errors per changed round (loop verifier; negative = fewer errors) | 0.33 | 0.15 | -0.31 | -0.94 | -0.79 | -0.44 | -0.16 | 0.77 | -0.06 | 1.25 | 0.68 | 0.22 | -1 | 0.04 | -0.71 | 0.16 | 0.06 | -0.18 | -0.33 | -0.18 |
-| [round-wise] Repair rounds in total | 55 | 55 | 53 | 60 | 60 | 60 | 60 | 60 | 57 | 55 | 54 | 48 | 56 | 57 | 60 | 169 | 163 | 169 | 174 | 175 |
-| [round-wise] % of rounds where the model call failed (error text instead of a plan; includes cached repeats of a failed reply) | 0.0 | 0.0 | 0.0 | 0.0 | 8.3 | 0.0 | 0.0 | 0.0 | 0.0 | 69.1 | 0.0 | 0.0 | 0.0 | 0.0 | 58.3 | 0.0 | 0.0 | 0.0 | 0.0 | 44.6 |
-| [round-wise] % of rounds where the plan changed | 20.0 | 27.3 | 22.6 | 45.0 | 33.3 | 28.3 | 50.0 | 38.3 | 56.1 | 18.2 | 29.6 | 60.4 | 19.6 | 61.4 | 23.3 | 26.0 | 45.4 | 27.2 | 54.0 | 25.1 |
-| [round-wise] % of rounds unchanged - answered from cache (exact repeat of an earlier request) | 60.0 | 14.5 | 60.4 | 25.0 | 51.7 | 56.7 | 8.3 | 48.3 | 15.8 | 56.4 | 53.7 | 0.0 | 62.5 | 7.0 | 56.7 | 56.8 | 8.0 | 56.8 | 16.1 | 54.9 |
-| [round-wise] % of rounds unchanged - from a different request (model called) | 20.0 | 58.2 | 17.0 | 30.0 | 15.0 | 15.0 | 41.7 | 13.3 | 28.1 | 25.5 | 16.7 | 39.6 | 17.9 | 31.6 | 20.0 | 17.2 | 46.6 | 16.0 | 29.9 | 20.0 |
+| [per query] Queries with token data | 10 | 10 | 10 | 10 | 10 | 10 | 10 | 10 | 10 | 10 | 10 | 10 | 10 | 10 | 10 | 30 | 30 | 30 | 30 | 30 |
+| [per query] Avg tokens spent per query (queries with complete token data) | 80904 | 73105 | 80298 | 163535 | 92403 | 102240 | 149564 | 123354 | 194460 | 126154 | 94304 | 91174 | 74269 | 193696 | 108751 | 92483 | 104614 | 92640 | 183897 | 109103 |
+| [per query] Rounds with no recorded token count | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 |
+| [per query] Avg tokens spent per query - all queries, failed requests counted as 0 (lower bound) | 80904 | 73105 | 80298 | 163535 | 92403 | 102240 | 149564 | 123354 | 194460 | 126154 | 94304 | 91174 | 74269 | 193696 | 108751 | 92483 | 104614 | 92640 | 183897 | 109103 |
+| [per query] Avg repair time per query (s) | 69.3 | 11.9 | 68.3 | 133.1 | 66.8 | 103.8 | 22.8 | 103.4 | 161.2 | 101.9 | 133.7 | 19.4 | 104.4 | 209.1 | 131.9 | 102.3 | 18.0 | 92.1 | 167.8 | 100.2 |
+| [per query] Queries with at least one round that changed the plan | 7 | 8 | 8 | 10 | 9 | 9 | 9 | 8 | 9 | 10 | 8 | 8 | 8 | 10 | 9 | 24 | 25 | 24 | 29 | 28 |
+| [per query] Avg change in PC passed per changed round (loop verifier) | 0.98 | -0.38 | 1.25 | 0.88 | 1.0 | -0.26 | 0.09 | 0.06 | -0.04 | 0 | 0.04 | 0 | 0.62 | 0 | 0.05 | 0.2 | -0.09 | 0.65 | 0.29 | 0.34 |
+| [per query] Avg change in CS errors per changed round (loop verifier; negative = fewer errors) | 0.33 | 0.15 | -0.31 | -0.94 | -1.0 | -0.44 | -0.16 | 0.77 | -0.06 | 0.13 | 0.68 | 0.22 | -1 | 0.04 | 0.67 | 0.16 | 0.06 | -0.18 | -0.33 | -0.06 |
+| [round-wise] Repair rounds in total | 55 | 55 | 53 | 60 | 60 | 60 | 60 | 60 | 57 | 50 | 54 | 48 | 56 | 57 | 52 | 169 | 163 | 169 | 174 | 162 |
+| [round-wise] % of rounds where the model call failed (error text instead of a plan; includes cached repeats of a failed reply) | 0.0 | 0.0 | 0.0 | 0.0 | 0.0 | 0.0 | 0.0 | 0.0 | 0.0 | 0.0 | 0.0 | 0.0 | 0.0 | 0.0 | 0.0 | 0.0 | 0.0 | 0.0 | 0.0 | 0.0 |
+| [round-wise] % of rounds where the plan changed | 20.0 | 27.3 | 22.6 | 45.0 | 23.3 | 28.3 | 50.0 | 38.3 | 56.1 | 50.0 | 29.6 | 60.4 | 19.6 | 61.4 | 40.4 | 26.0 | 45.4 | 27.2 | 54.0 | 37.0 |
+| [round-wise] % of rounds unchanged - answered from cache (exact repeat of an earlier request) | 60.0 | 14.5 | 60.4 | 25.0 | 60.0 | 56.7 | 8.3 | 48.3 | 15.8 | 38.0 | 53.7 | 0.0 | 62.5 | 7.0 | 46.2 | 56.8 | 8.0 | 56.8 | 16.1 | 48.8 |
+| [round-wise] % of rounds unchanged - from a different request (model called) | 20.0 | 58.2 | 17.0 | 30.0 | 16.7 | 15.0 | 41.7 | 13.3 | 28.1 | 12.0 | 16.7 | 39.6 | 17.9 | 31.6 | 13.5 | 17.2 | 46.6 | 16.0 | 29.9 | 14.2 |
 
 ## Table 4: ChinaTravel's own metrics (eval_exp definitions), final plans
 
@@ -115,8 +115,8 @@ The All columns match each run's benchmark_eval/*/benchmark_summary.json. Common
 
 | Metric | Easy R0 | Easy R1 | Easy R2 | Easy R3 | Easy R4 | Medium R0 | Medium R1 | Medium R2 | Medium R3 | Medium R4 | Human R0 | Human R1 | Human R2 | Human R3 | Human R4 | All R0 | All R1 | All R2 | All R3 | All R4 |
 |---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
-| Commonsense micro (%) - share of all (plan, check) pairs passed | 89.29 | 77.14 | 86.07 | 87.5 | 88.62 | 84.29 | 78.21 | 84.29 | 85.0 | 81.03 | 87.14 | 82.5 | 87.86 | 88.57 | 90.34 | 86.9 | 79.29 | 86.07 | 87.02 | 86.67 |
-| Commonsense macro (%) - plans passing every CS check | 0.0 | 0.0 | 0.0 | 10.0 | 0.0 | 0.0 | 0.0 | 0.0 | 10.0 | 0.0 | 0.0 | 10.0 | 0.0 | 0.0 | 0.0 | 0.0 | 3.33 | 0.0 | 6.67 | 0.0 |
-| Logical micro (%) - share of all personal constraints passed (pooled) | 90.38 | 86.54 | 88.46 | 90.38 | 82.69 | 87.06 | 92.94 | 90.59 | 91.76 | 88.24 | 88.24 | 92.16 | 94.12 | 92.16 | 86.27 | 88.3 | 90.96 | 90.96 | 91.49 | 86.17 |
-| Logical macro (%) - plans passing every personal constraint | 50.0 | 40.0 | 40.0 | 50.0 | 40.0 | 50.0 | 60.0 | 60.0 | 70.0 | 50.0 | 50.0 | 60.0 | 70.0 | 60.0 | 70.0 | 50.0 | 53.33 | 56.67 | 60.0 | 53.33 |
-| All-pass ratio (%) - schema + CS + PC all passed | 0.0 | 0.0 | 0.0 | 10.0 | 0.0 | 0.0 | 0.0 | 0.0 | 10.0 | 0.0 | 0.0 | 10.0 | 0.0 | 0.0 | 0.0 | 0.0 | 3.33 | 0.0 | 6.67 | 0.0 |
+| Commonsense micro (%) - share of all (plan, check) pairs passed | 89.29 | 77.14 | 86.07 | 87.5 | 90.71 | 84.29 | 78.21 | 84.29 | 85.0 | 88.21 | 87.14 | 82.5 | 87.86 | 88.57 | 91.79 | 86.9 | 79.29 | 86.07 | 87.02 | 90.24 |
+| Commonsense macro (%) - plans passing every CS check | 0.0 | 0.0 | 0.0 | 10.0 | 10.0 | 0.0 | 0.0 | 0.0 | 10.0 | 10.0 | 0.0 | 10.0 | 0.0 | 0.0 | 0.0 | 0.0 | 3.33 | 0.0 | 6.67 | 6.67 |
+| Logical micro (%) - share of all personal constraints passed (pooled) | 90.38 | 86.54 | 88.46 | 90.38 | 90.38 | 87.06 | 92.94 | 90.59 | 91.76 | 90.59 | 88.24 | 92.16 | 94.12 | 92.16 | 92.16 | 88.3 | 90.96 | 90.96 | 91.49 | 90.96 |
+| Logical macro (%) - plans passing every personal constraint | 50.0 | 40.0 | 40.0 | 50.0 | 50.0 | 50.0 | 60.0 | 60.0 | 70.0 | 60.0 | 50.0 | 60.0 | 70.0 | 60.0 | 60.0 | 50.0 | 53.33 | 56.67 | 60.0 | 56.67 |
+| All-pass ratio (%) - schema + CS + PC all passed | 0.0 | 0.0 | 0.0 | 10.0 | 10.0 | 0.0 | 0.0 | 0.0 | 10.0 | 10.0 | 0.0 | 10.0 | 0.0 | 0.0 | 0.0 | 0.0 | 3.33 | 0.0 | 6.67 | 6.67 |

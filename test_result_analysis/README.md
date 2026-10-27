@@ -62,22 +62,4 @@ Unless a row says otherwise, a value is computed for each query first and then a
 
 ### R4
 - Source run: `experiments/subset_test-r4` (run_id `subset_test-r4`, split `subset_test`, model `deepseek/deepseek-chat`, 30 queries, max 6 rounds).
-- `e20241028160914767827` (medium): 4 of 6 rounds got the failed-call text instead of a plan (provider error).
-- `e20241028160937967706` (medium): 5 of 6 rounds got the failed-call text instead of a plan (provider error).
-- `e20241028161037866126` (medium): 6 of 6 rounds got the failed-call text instead of a plan (provider error).
-- `e20241028161125262867` (medium): 5 of 6 rounds got the failed-call text instead of a plan (provider error).
-- `e20241028161311009105` (medium): 6 of 6 rounds got the failed-call text instead of a plan (provider error).
-- `e20241028161334777418` (medium): 6 of 6 rounds got the failed-call text instead of a plan (provider error).
-- `e20241028161340383778` (medium): 6 of 6 rounds got the failed-call text instead of a plan (provider error).
-- `h20241029143522848652` (human): 4 of 6 rounds got the failed-call text instead of a plan (provider error).
-- `h20241029143551657496` (human): 6 of 6 rounds got the failed-call text instead of a plan (provider error).
-- `h20241029143556181559` (human): initial plan generation failed (error placeholder, no activities); the query scores as a failure.
-- `h20241029143556181559` (human): 6 of 6 rounds got the failed-call text instead of a plan (provider error).
-- `h20241029143630351554` (human): 4 of 6 rounds got the failed-call text instead of a plan (provider error).
-- `h20241029143652031792` (human): 5 of 6 rounds got the failed-call text instead of a plan (provider error).
-- `h20241029143729369677` (human): 4 of 6 rounds got the failed-call text instead of a plan (provider error).
-- `h20241029143820591758` (human): 6 of 6 rounds got the failed-call text instead of a plan (provider error).
-- `m20241028164819146853` (easy): 5 of 6 rounds got the failed-call text instead of a plan (provider error).
-- `m20241028164916356794` (easy): initial plan generation failed (error placeholder, no activities); the query scores as a failure.
-- Token data incomplete for 15 queries (21 rounds with no recorded token count): `e20241028160914767827`, `e20241028160937967706`, `e20241028161037866126`, `e20241028161125262867`, `e20241028161311009105`, `e20241028161334777418`, `e20241028161340383778`, `h20241029143522848652`, `h20241029143551657496`, `h20241029143556181559`, `h20241029143630351554`, `h20241029143652031792`, `h20241029143729369677`, `h20241029143820591758`, `m20241028164819146853`. Each of these rounds had at least one failed model request (the provider returned an error and no token usage; the model wrapper then returned the text '{"error": "Request failed, please try again."}' instead of a plan). These queries are left out of the complete-data token row; the lower-bound row counts every request that did report usage and counts failed requests as 0.
 
