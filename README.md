@@ -4,15 +4,25 @@ This repository is adapted from the original [ChinaTravel benchmark](https://git
 
 Our project investigates whether modelling constraint interdependencies can improve verification-guided repair in LLM-based travel planning.
 
-We use the existing ChinaTravel planner and compare five repair strategies.
+We use the existing ChinaTravel planner and compare five repair strategies. We hold the planner
+and the verifier fixed and ablate only the **repair step**: when a generated itinerary fails a
+constraint, how should the planner fix it without breaking constraints that were already passing?
 
 | Strategy | Description |
 |---|---|
 | R0 | Whole-plan regeneration (baseline) |
-| R1 | Targeted repair |
-| R2 | Protected repair |
-| R3 | Adaptive-scope repair |
-| R4 | Constraint-interdependency-guided repair |
+| R1 | Targeted / slot repair |
+| R2 | Protected repair (tracks and can reject regressions) |
+| R3 | Adaptive-scope repair (slot → day → plan) |
+| R4 | Constraint-interdependency-guided repair (reads a learned regression matrix) |
+
+The headline artifact is a **regression / interaction matrix** `M[i][j] = P(constraint family j
+breaks when repairing family i)`, learned from R0–R3 on the training split. **R4** consumes `M`
+to choose a repair order/scope that minimises these cascades.
+
+> **For anyone taking over the project, read [`HANDOVER.md`](HANDOVER.md) first** — it is a
+> self-contained brief (what we did, why, current status, exact commands, and how to read the
+> results) that needs no prior context.
 
 ### Verification is held constant (the experimental control)
 
@@ -120,9 +130,11 @@ This runs one medium-difficulty ChinaTravel case using the shared R0 framework. 
 
 Results are saved under `results/`, while repair histories and logs are saved under `cache/`.
 
-## For Teammates — Implementing R1–R4
+## For Teammates — Running and Extending the Strategies
 
-The shared framework and R0 are already implemented. You do not need to rewrite the original planner.
+All five repair strategies (R0, R1, R2, R3, R4) are implemented, registered, and have been run.
+You do not need to rewrite the original planner. This section is for running further experiments
+and reading the shared framework.
 
 ### Main files
 
@@ -176,31 +188,55 @@ See [the experiment workflow](experiments/Commands_to_test_queries.md) and
 Registered implementations are currently R0, R1, R2, R3, and R4. Registered strategies use the shared scheduler (personal repairs first, at most five, then repeated commonsense repairs; all rounds used unless the plan passes), capped at six
 proposals; explicit smaller budgets are respected.
 
-### How to implement your strategy
+### Running R4 (matrix-guided)
 
-Create your assigned file inside `repair_strategies/`, such as `r1.py`, `r2.py`, `r3.py` or `r4.py`.
+R4 needs the learned regression matrix `M` (pooled from R0–R3 training runs). The committed
+matrix is `r4/main_matrix_from_subset_train_r0_r3_10x10.csv`. Point R4 at it with `--r4-matrix`:
 
-Follow the interface in `base.py`:
+```bash
+python run_experiments.py --strategy R4 --splits subset_test --max-steps 6 \
+  --lang en --llm deepseek/deepseek-chat \
+  --r4-matrix r4/main_matrix_from_subset_train_r0_r3_10x10.csv \
+  --output-dir experiments --run-id subset_test-r4
+```
+
+See `r4/README.md` for the full matrix-learning workflow and `r4/main_matrix_manifest.json` for
+how the committed matrix was pooled and from which runs.
+
+### Adding or changing a strategy
+
+Each strategy is a file in `repair_strategies/` (`r0.py` … `r4.py`) that follows the interface in
+`base.py`:
 
 ```python
 def repair(self, problem, raw_plan, verification_results, context, llm):
-    ## Implement your repair strategy here.
-
-    return RepairResult(
-        repaired_plan=new_plan,
-        metadata={"strategy": "R1"},
-    )
+    ## Propose a repaired itinerary.
+    return RepairResult(repaired_plan=new_plan, metadata={"strategy": "R1"})
 ```
 
-Your strategy receives the current raw itinerary, verification feedback, travel information and LLM adapter. It must return a proposed raw itinerary.
+The strategy receives the current raw itinerary, verification feedback, travel information and the
+LLM adapter, and returns a proposed itinerary. Override `accept()` if it needs to reject a
+proposed repair (as R2 does). Register it in `repair_strategies/__init__.py`
+(`STRATEGY_FACTORIES`) and smoke-test it on `pilot5` before larger runs.
 
-If your method needs to reject a proposed repair, override the `accept()` method.
+### Current status
 
-After implementing your strategy, register it in `llm_modulo.py` and test it on one case before running larger experiments.
+The shared framework and all five strategies (R0, R1, R2, R3, R4) are implemented, registered
+(`STRATEGY_FACTORIES = {R0, R1, R2, R3, R4}`), and have been run. The shared verifier reports
+invalid itinerary structure, transport-translation failures and verifier execution errors
+separately from genuine constraint violations, and is **language-aware** (English itineraries are
+checked against the English sandbox, fixing earlier false "unavailable transport" errors).
+Named-place constraints are translated to English at scoring time. Experiments run on **DeepSeek
+V3** (far cheaper than GPT-4.1), and logging is **cross-platform** (Windows long-path fixes).
 
-**Current status:** The shared framework and R0 are implemented and tested end-to-end. The shared verifier detects invalid itinerary structures, transport translation failures and verifier execution errors separately from genuine constraint violations, and is **language-aware** (it checks English itineraries against the English sandbox, fixing earlier false "unavailable transport" errors). Experiments run on **DeepSeek V3** by default (far cheaper than GPT-4.1) and logging is **cross-platform** (Windows long-path + nested-dir fixes). With both sandboxes installed the full test suite passes (277 tests, 0 failures, 0 errors). See `framework_r0.ipynb` for runnable proof cells and `train_test_split_r0.ipynb` for the split + R0 experiment.
+**Experiments committed so far:** training runs on `subset_train` for R0–R3, and test runs on
+`subset_test` for R0, R2, R3, R4. The learned matrix `M` is built and committed under `r4/`.
+Per-method result tables are in `test_result_analysis/` (see its `README.md` for metric
+definitions and data caveats). **Not yet run: R1 on `subset_test`.**
 
-R1, R2, R3, and R4 are all implemented and registered (R3P was merged into R3's ladder and removed). See `framework_r0.ipynb` for implementation details, testing results and remaining limitations.
+For the full, standalone project brief — status, methodology, commands, and how to read the
+results without touching code — see **[`HANDOVER.md`](HANDOVER.md)**.
+
 ---
 
 # Original ChinaTravel Documentation

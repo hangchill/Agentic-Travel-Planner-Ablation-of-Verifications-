@@ -1,325 +1,328 @@
 # HANDOVER — DSA4213 Verification-Guided Travel-Planner Repair
 
-> Self-contained brief for an AI assistant who **cannot** access this repo. Everything you
-> need to continue the project is here. Where a claim is uncertain or an existing doc is
-> stale, it is flagged explicitly. Last verified against `main` @ commit `3b47d9a`
-> (Merge PR #21 "eval-matrix-infra"), working tree clean.
+> **Read this file alone and you can understand the whole project and continue it.**
+> You do not need to open any Python file to follow what we did, why, and what is left.
+> Code-level pointers are given only so you know *where* to look if you choose to.
+>
+> Last updated against `main` after the R0 `subset_test` rerun/merge (commit history around
+> the "Rerun 5 failed R0 subset_test queries" commit, on top of `b87d66e`). Working tree clean.
+> Where a number or claim could be stale, it is flagged.
 
 ---
 
-## 1. Project in one paragraph + research question
+## 1. What this project is (one paragraph)
 
-This is a fork of the **ChinaTravel** benchmark (an LLM travel-planning benchmark with a
-symbolic constraint verifier). The group project holds the **verifier constant** and ablates
-only the **repair step**: when a generated itinerary fails a constraint, how should the planner
-fix it? We compare repair strategies R0–R4.
+We forked the **ChinaTravel** benchmark. ChinaTravel asks an LLM to build a multi-day travel
+itinerary (flights/trains, hotels, attractions, restaurants, inner-city transport) that satisfies
+a natural-language request **plus** a set of machine-checkable constraints, and it ships a
+**verifier** that checks any itinerary against those constraints. When the itinerary fails a
+constraint, the planner tries to **repair** it and re-checks. Our project does **not** change how
+planning or checking works. We **hold the verifier fixed** and change only the **repair step**,
+then compare repair strategies head-to-head. This is an *ablation of the repair method*.
 
-**Research question:** *Can modelling constraint interdependencies make repair more effective —
-i.e. fix the failing constraint without cascading new violations into constraints that were
-already passing?* The flagship deliverable is an **interaction / regression matrix**
-`M[i][j] = P(constraint family j breaks when repairing family i)`. R4 (planned) is the
-matrix-guided strategy that should use `M` to avoid cascades.
-
-### Strategy table
-
-| Strategy | What it does | Status |
-|---|---|---|
-| **R0** | Whole-plan regeneration (baseline). Feeds verifier errors into the original ChinaTravel `BACK_PROMPT`, asks the LLM to regenerate the entire itinerary. | **Done, registered** |
-| **R1** | Targeted / slot repair. Edits only the activity slot(s) tied to a failing constraint; freezes everything else. | **Done, registered** |
-| **R2** | Protected repair. Whole-plan rewrite, but **records** which previously-passing constraints it broke (regressions). *(Code does not hard-reject/rollback in current form — see §6.)* | **Done, registered** |
-| **R3** | Adaptive-scope repair. "R1 that relaxes into R0": starts at slot scope, widens slot→day→plan on a fixed schedule (2 iters per rung). At tightest = R1, widest = R0. | **Done, registered** |
-| **R3P** | Phased variant of R3: repairs *personal* constraints only for up to 5 iters, then a forced commonsense-repair iteration (protecting passing personal constraints), recovering if it breaks one. Same R3 class with `phased=True`. | **Done, registered** |
-| **R4** | Constraint-interdependency-guided repair. Should consume the learned matrix `M` to choose repair order/scope that minimises cascades. | **NOT implemented, NOT registered** |
-
-**Control:** all strategies share ONE verifier (`shared_verifier.py::verify_plan`) that
-re-checks the **whole itinerary against all constraints after every attempt**. Strategies differ
-only in *what may change*, never in *how the plan is checked*. This is what makes the comparison
-apples-to-apples.
+**Research question.** When you repair the one constraint that is failing, do you accidentally
+break constraints that were already passing (a "cascade")? And can we reduce those cascades by
+**modelling which constraint types tend to break which other types**? The headline artifact is a
+**regression / interaction matrix** `M[i][j] = probability that constraint family j newly breaks
+when we repair family i`. Our final strategy (R4) reads this matrix to repair in an order/scope
+that avoids cascades.
 
 ---
 
-## 2. Current status — DONE vs TODO (based on code + git log, not docs)
+## 2. The five repair strategies (what differs is ONLY the repair)
 
-**DONE (verified in code):**
-- Shared framework: `shared_verifier.py`, `shared_repair_loop.py` (the scheduler lives
-  *inside* `run_repair_loop`: personal-repair iterations first (≤5), then commonsense iterations
-  while errors remain, back to personal if one breaks a personal constraint; total budget capped
-  at 6 and always used unless the plan passes or nothing is left to fix), strategy factory registration.
-- **R0, R1, R2, R3, R3P all implemented AND registered** in
-  `repair_strategies/__init__.py` (`STRATEGY_FACTORIES = {R0, R1, R2, R3, R3P}`). All five are
-  selectable and executable via `run_experiments.py --strategy ...`.
-- Language-aware verifier fix (English itineraries checked against English sandbox — removed
-  false "unavailable transport" errors). Windows long-path / nested-dir logging fixes.
-- Evaluation + matrix pipeline: `repair_attempt.py`, `repair_metrics.py`, `regression_matrix.py`,
-  `constraint_families.py`, `edit_footprint.py`, `repair_comparison.py`, `train_test_split.py`
-  plus the four offline scripts. End-to-end flow works.
-- Splits generated and committed: `pilot5`, `subset_train/test`, `combined_train/test`,
-  `medium_train/test` + `*_origin.json` manifests.
-- Committed pilot5 evidence for R0, R2, R3, R3P (see §5).
-- Test suite green: **277 tests, 0 failures, 0 errors** (verified this session).
+Every strategy generates an initial plan the same way and is checked by the **same shared
+verifier after every repair attempt**. They differ only in *what part of the plan is allowed to
+change* during a repair.
 
-**TODO:**
-- **R4 (matrix-guided)** — the core research contribution. Not written yet. Needs the learned
-  matrix `M` as input.
-- **Build the matrix `M`** from R0–R3 **train** trajectories (`subset_train`) via
-  `build_regression_matrix.py`. Pipeline exists; the matrices for the real learning runs still
-  need to be produced/collected.
-- **Full experiment runs on `subset_test`** for R0–R3 (individual results) and R4 on
-  `subset_test` only (held-out hypothesis test). The current committed results are the 5-query
-  `pilot5` smoke runs, not the subset runs.
-- **Individual per-strategy analyses / write-ups.**
+| Strategy | Idea | One-line behaviour | Status |
+|---|---|---|---|
+| **R0** | Baseline | Regenerate the **whole** itinerary from scratch given the verifier's error list. | Implemented, registered |
+| **R1** | Targeted | Edit only the **slot(s)** tied to the failing constraint; freeze everything else. | Implemented, registered |
+| **R2** | Protected | Whole-plan rewrite, but **track** which previously-passing constraints it broke; can reject/roll back a regressing candidate. | Implemented, registered |
+| **R3** | Adaptive scope | Start narrow (slot), widen **slot → day → plan** on a schedule. At its narrowest it behaves like R1, at its widest like R0. | Implemented, registered |
+| **R4** | Matrix-guided | Reads the learned matrix `M` and chooses repair order/scope to **minimise cascades**. The core research contribution. | Implemented, registered |
 
-> ✅ **Current facts (README/CONTRIBUTIONS/notebooks updated to match):** R0, R1, R2, R3, R3P
-> are all implemented and registered (`STRATEGY_FACTORIES`); only **R4** remains. The test suite
-> has **277 tests** (0 failures, 0 errors). Subset sizes are `subset_train`=60
-> (20 easy / 20 medium / 20 human) and `subset_test`=30 (10 / 10 / 10), balanced equally by
-> difficulty, with `pilot5` (5) a subset of `subset_train`; `combined_train`=422 /
-> `combined_test`=182, `medium_train`=105 / `medium_test`=45. If any doc still cites "221 tests"
-> or "R2/R4 not registered", trust the code and the split files over that prose.
+> **R3P is gone.** An earlier "phased" variant (R3P) was folded into R3 and removed. If any doc
+> still mentions R3P as a separate strategy, that doc is stale — there are exactly five: R0–R4.
+
+**Why this is a fair comparison (the control).** All five call one verifier,
+`chinatravel/agent/nesy_verifier/shared_verifier.py::verify_plan`, which re-checks the **entire
+itinerary against all constraints** after each attempt. Any difference in results is therefore due
+to the repair method, not the checker.
+
+**Two different "baselines" — don't confuse them:**
+- **Project R0** (`--strategy R0`) runs through *our* shared repair loop and shared verifier. This
+  is the baseline we ablate R1–R4 against.
+- **Legacy ChinaTravel** (running the original agent with no repair strategy) uses the original,
+  separate verification path. It is **not** our comparison baseline.
 
 ---
 
-## 3. Repo map (key files, one line each)
+## 3. Current status — DONE vs TODO
 
-**Repair framework — `chinatravel/agent/nesy_verifier/`**
-| File | Purpose |
-|---|---|
-| `shared_verifier.py` | `verify_plan()`: structure check + commonsense + personal DSL constraints. Returns tri-state `personal_constraints` (True/False/None), `error_info` (genuine violations only), and separate technical channels (`verifier_errors`, `translation_errors`, `schema_errors`). Any technical error forces `passed=False`. |
-| `shared_repair_loop.py` | `run_repair_loop()`: the personal-first / repeating-commonsense scheduler. verify → `strategy.repair()` → verify candidate → `strategy.accept()` → record a `RepairAttemptRecord` per attempt. One strategy instance for the whole loop (strategies may hold state). `max_steps` capped at 6; rejected attempts still consume budget. Sets `context["repair_phase"]` = `"personal"` or `"commonsense"`. |
-| `llm_modulo.py` | Main LLM-modulo agent; `solve()` builds initial plan + context, selects repair strategy, drives the loop. Contains the Windows path sanitisation fixes. |
-| `initial_state.py` | Builds the initial repair state. |
-| `repair_strategies/base.py` | `BaseRepairStrategy` (abstract `repair()`, default `accept()`=True) + `RepairResult(repaired_plan, metadata)` dataclass. **Read this first to implement R4.** |
-| `repair_strategies/__init__.py` | `STRATEGY_FACTORIES` registry + `create_repair_strategy(name)`. Add R4 here. |
-| `repair_strategies/r0.py` | R0 whole-plan regeneration. Simplest reference impl. |
-| `repair_strategies/r1.py` | R1 slot-targeted repair (slot discovery, single-slot replacement, type preservation). |
-| `repair_strategies/r2.py` | R2 protected whole-plan repair; tracks protected (passing) indices + regressions. |
-| `repair_strategies/r3.py` | R3 + R3P (ladder slot→day→plan; `phased=True` = R3P). Richest example; emits the full canonical repair-intent metadata contract. |
-| `prompts/llm_modulo.py` | `BACK_PROMPT` / `INITIAL_PROMPT` + prompt rules (inner-city transport nested in `transports`, allowed activity types, required `start_time`/`end_time`). |
-| `verifier/commonsense_constraint_nl.py` | `collect_commonsense_constraints_error()`; **language-aware** (`_infer_lang`/`_set_lang`) — the fix that made English runs honest. |
+**DONE**
+- Shared framework: one verifier + one repair loop + a strategy registry. All five strategies
+  (R0, R1, R2, R3, R4) are implemented and selectable.
+- The matrix pipeline: run a strategy → per-attempt log → regression matrix CSVs.
+- The **learned matrix `M`** has been built by pooling R0–R3 **training** trajectories
+  (`r4/main_matrix_from_subset_train_r0_r3_10x10.csv` and its `_probabilities.csv`).
+- **Training runs** on `subset_train` (60 queries) committed for **R0, R1, R2, R3**.
+- **Test runs** on `subset_test` (30 queries) committed for **R0, R2, R3, R4**.
+- Per-method **result tables** (personal-constraint, commonsense, repair-process, benchmark
+  metrics) under `test_result_analysis/`, plus a merged side-by-side comparison.
+- Language-aware verifier (English itineraries checked against the English sandbox) and
+  **named-place translation** for scoring (Chinese place names in the DSL are matched to the
+  English plan at eval time). Cross-platform (Windows) logging fixes.
+- Test suite green (41 test files under `tests/`; run it to get the exact assertion count).
 
-**Evaluation + matrix — `chinatravel/evaluation/`**
-| File | Purpose |
-|---|---|
-| `repair_attempt.py` | `RepairAttemptRecord` data model + `normalize_repair_intent_metadata` + `failed_constraint_indices`. The per-attempt log schema. |
-| `repair_metrics.py` | Repair success / efficiency metrics. |
-| `repair_comparison.py` | Paired before/after repair comparison. |
-| `regression_matrix.py` | `build_regression_matrix()` — turns attempt records into the per-family regression matrix (the `M` builder). |
-| `constraint_families.py` | `CONSTRAINT_FAMILIES` (the 9 families, below) + `classify_constraint()`. |
-| `edit_footprint.py` | `compare_edit_footprint()` — how much a repair changed. |
-| `train_test_split.py` | `load_manifest`/`filter_attempts` — split attempts by train/test partition (leakage control). |
-| `export_final_plans.py` | Export final plans from a run. |
-| `*.md` (REPAIR_*, REGRESSION_MATRIX, CONSTRAINT_FAMILIES) | Contracts/specs for each piece. `REPAIR_COMPARISON.md` is the evidence contract. |
-
-The 9 constraint families: `trip_specification, party_resources, monetary_budget,
-accommodation, dining, attraction, transport_mode, travel_extent, schedule_order`.
-
-**Scripts — `scripts/`**
-| File | Purpose |
-|---|---|
-| `experiment_setup/setup_project.py` | Downloads both sandboxes from Hugging Face (`database/` zh, `database_en/` en). Run once after `pip install`. |
-| `matrix_building/build_regression_matrix.py` | Build regression-matrix CSVs from `attempts.jsonl` (or a history JSON). Supports `--repair-strategy`, `--split-manifest`+`--partition` for leakage-free train/test slicing. |
-| `result_analysis/build_repair_summary.py` | Per-run `summaries.csv`. |
-| `result_analysis/evaluate_repair_run.py` | Offline benchmark eval of a run dir (schema/commonsense/logical CSVs). |
-| `experiment_setup/build_train_test_split.py` | Generate a train/test split config. |
-
-**Runners (repo root)**
-| File | Purpose |
-|---|---|
-| `run_experiments.py` | **Canonical** repair-strategy study runner (DeepSeek, registered strategies). Writes a run dir with `queries/`, `attempts.jsonl`, `run_manifest.json`. Supports `--resume`, `--retry-failed`. |
-| `run_exp.py` | General ChinaTravel launcher (other agents/baselines; has `--repair_strategy R0..R4`). Not the study runner. |
-| `run_tpc.py`, `eval_exp.py`, `eval_tpc.py`, `eval_with_oracle.py` | Original ChinaTravel run/eval entrypoints. |
-| `run_experiment.py` | **Removed** (historical paired runner; replaced by `run_experiments.py`). |
-
-**Notebooks / docs**
-- `framework_r0.ipynb` — explains the R0 framework + tests, runnable proof cells.
-- `train_test_split_r0.ipynb` — the deterministic split + how it wires into the runner.
-- `docs/PRD_R3_adaptive_repair.md` — the R3 design spec (ladder, scope rungs, matrix-component logging). Good model for an R4 PRD.
-- `experiments/Commands_to_test_queries.md` — the 4-step experiment workflow + which split each strategy runs on.
-- `CLAUDE.md` — long-form internal project notes (big; lower priority to upload).
+**TODO / gaps to be aware of**
+- **No `subset_test-r1`** run is committed. R1 has a training run but not a test run, so the main
+  (test-set) comparison currently covers R0, R2, R3, R4 but **not R1**. If the comparison needs
+  R1, run it (see §7) — budget permitting.
+- **No `subset_train-r4`** run. R4 is evaluated on `subset_test` only (correct, since R4 must be
+  tested on held-out data), and there is a small training-only R4 pilot path if needed.
+- **Write-up / interpretation.** The tables exist; the narrative comparing strategies (does
+  matrix guidance actually reduce cascades vs R0?) still needs to be written from them.
+- **Known data-quality caveats affect the numbers** — see §6. They are documented, not bugs to
+  rediscover.
 
 ---
 
-## 4. End-to-end flow: run a strategy → attempts.jsonl → metrics/matrix
+## 4. How a single run works (the pipeline, no code needed)
 
 ```
-run_experiments.py (one strategy, one split)
-      │   per query: build initial plan → run_repair_loop → one RepairAttemptRecord per step
+run_experiments.py  (pick ONE strategy, ONE split)
+      │   for each query: build an initial plan, then repair-and-recheck up to 6 times
       ▼
 experiments/<run-id>/
-   ├── run_manifest.json   (model, split, max_steps, git commit, sampling args — the fairness record)
-   ├── attempts.jsonl      (one JSON repair-attempt record per line)  ◄── matrix/metrics input
-   └── queries/<uid-hash>/ (per-query final plan + initial_state.json + reference/query.json)
+   ├── run_manifest.json   model, split, max-steps, git commit, sampling args  (the fairness record)
+   ├── attempts.jsonl      one line per repair attempt  ◄── the single source of truth
+   └── queries/<uid>/      per-query initial state + final plan (+ reference query)
       │
-      ├─► scripts/result_analysis/evaluate_repair_run.py  --run-dir <run>        → benchmark_eval/*.csv
-      ├─► scripts/result_analysis/build_repair_summary.py --input <run>          → summaries.csv
-      └─► scripts/matrix_building/build_regression_matrix.py
-             --input <run>/attempts.jsonl
-             --output-dir <run>/regression_matrix
-             --repair-strategy <STRATEGY>                        → regression matrix CSVs
+      ├─► scripts/result_analysis/evaluate_repair_run.py   → benchmark_eval/  (schema/commonsense/logical scores)
+      ├─► scripts/result_analysis/build_repair_summary.py  → summaries.csv, pass_rates.csv, phase_outcomes.csv, llm_cache_hits.csv
+      └─► scripts/matrix_building/build_regression_matrix.py → regression_matrix/  (the M builder)
 ```
 
-`attempts.jsonl` is the single source of truth for both metrics and the matrix `M`. Each record
-carries `before_personal_constraints`, `after_personal_constraints`, and the transition sets
-`{fixed, newly_violated, still_failed, still_passed, unknown}` — `newly_violated` is the
-cascade signal `M` is built from.
+Each line in `attempts.jsonl` records the constraints **before** and **after** the attempt and
+the transition sets `{fixed, newly_violated, still_failed, still_passed, unknown}`. The
+`newly_violated` set is the **cascade signal** the matrix `M` is built from.
+
+**Building the matrix M for R4.** Run R0–R3 on `subset_train`, build each one's regression matrix,
+then **pool** them into one matrix (sum the regression counts and the attempt supports across
+R0–R3, then divide). That pooled matrix is what R4 consumes. The committed pooled matrix lives at
+`r4/main_matrix_from_subset_train_r0_r3_10x10.csv`; R4 is pointed at a matrix via the
+`--r4-matrix PATH` flag (or the `CHINATRAVEL_R4_MATRIX` env var).
 
 ---
 
-## 5. Data / splits / experiments
+## 5. Data splits and the committed experiment runs
 
-**Splits** (`chinatravel/evaluation/default_splits/*.txt`, one UID per line):
+**Splits** (`chinatravel/evaluation/default_splits/<name>.txt`, one query id per line):
 
 | Split | Size | Role |
 |---|---|---|
-| `pilot5` | 5 (2 easy / 1 medium / 2 human) | Shared smoke/comparison set everyone runs first. **Subset of `subset_train`.** |
-| `subset_train` | 60 (20 easy / 20 medium / 20 human) | Learn the matrix `M` (R0–R3 train trajectories). |
-| `subset_test` | 30 (10 easy / 10 medium / 10 human) | **Main comparison** + held-out R4 test. No leakage from train. |
-| `combined_train/test` | 422 / 182 | Full stratified 70/30 across easy+medium+human. |
-| `medium_train/test` | 105 / 45 | Medium-only split. |
-| base: `easy`/`medium`/`human` | 300 / 149 / 154 | Upstream difficulty tiers. |
+| `pilot5` | 5 | Shared smoke set — run a new strategy here first for a quick sanity check. Subset of `subset_train`. |
+| `subset_train` | 60 (20 easy / 20 medium / 20 human) | **Learn** the matrix `M` from R0–R3 here. |
+| `subset_test` | 30 (10 easy / 10 medium / 10 human) | **Main comparison** and held-out R4 test. No overlap with train. |
+| `combined_train` / `combined_test` | 422 / 182 | Full stratified 70/30 split. |
+| `medium_train` / `medium_test` | 105 / 45 | Medium-difficulty only. |
 
-`chinatravel/evaluation/splits/*_origin.json` map each UID in a stratified split back to its
-base Hugging Face split (easy/medium/human) so the loader fetches each query from the right
-place and results can be sliced by difficulty.
+Difficulty of each query comes from `chinatravel/evaluation/splits/subset_origin.json`, not from
+the id prefix — the analysis tables group Easy/Medium/Human using that map.
 
-**Experiments folder** (`experiments/`, git-tracked):
-- Newer runs (`run_experiments.py` output) = a `<run-id>/` dir with `attempts.jsonl` +
-  `run_manifest.json` + `queries/`. Committed example: `experiments/pilot5-r2/`.
-- Older flat style = `<strategy>_<model>_<split>/<uid>.json` final plans. Committed:
-  `r0_deepseek-chat_pilot5/`, `r3_deepseek-chat_pilot5/`, `r3p_deepseek-chat_pilot5/`
-  (5 queries each). `_archive_gpt4.1/` = superseded GPT-4.1 samples (predate the language fix).
-- **What exists today = pilot5 smoke runs only** (R0, R2, R3, R3P). The `subset_train`/
-  `subset_test` production runs that the comparison and matrix need are NOT yet committed.
+**Committed runs** under `experiments/` (git-tracked):
 
-`.gitignore`: `results/` and `cache/` are ignored; `experiments/` IS tracked. Final plans land
-in `results/`, repair logs in `cache/`.
+| Run folder | Strategy | Split | Notes |
+|---|---|---|---|
+| `subset_train-r0` | R0 | train | |
+| `subset_train-r1` | R1 | train | |
+| `subset_train-r2` | R2 | train | |
+| `subset_train-r3-new` | R3 | train | current R3 training run |
+| `subset_test-r0` | R0 | test | 5 queries were reran after provider failures — see §6 and their `rerun_provenance.json` |
+| `subset_test-r2` | R2 | test | |
+| `subset_test-r3` | R3 | test | 1 query reran after provider failures (`rerun_provenance.json`) |
+| `subset_test-r4` | R4 | test | matrix-guided; its matrix inputs are under `inputs/pooled/` |
 
----
+`r4_signal_exploration/` and `archives_runs/` hold exploratory / superseded material.
+`.gitignore` ignores `results/` and `cache/`; `experiments/` **is** tracked. Per team convention
+we commit each run folder **except its `logs/` subfolder**.
 
-## 6. Conventions & gotchas (read before changing anything)
+**Headline test-set results** (final pass rate = whole plan passes every check; from each run's
+`pass_rates.csv`). Treat small differences as noise — only 10 queries per difficulty group.
 
-- **Fairness invariant:** keep **DeepSeek V3 (`deepseek/deepseek-chat`) + `--max-steps 6` (≤5 personal + commonsense rounds)
-  + `--lang en`** identical across all strategies. Any difference in results must be attributable
-  to the repair method, not the setup. The committed pilot5-r2 manifest also shows
-  `temperature=0, top_p≈0` (greedy) — keep sampling settings fixed too. `run_manifest.json`
-  records the git commit + sampling args per run so fairness is auditable.
-- **Train vs test (leakage):** develop/tune on `subset_train`; build `M` from R0–R3 **train**
-  trajectories; test R4 on held-out `subset_test` only. Use
-  `--split-manifest ... --partition train|test` in `build_regression_matrix.py` to slice
-  cleanly. "Main comparisons can only be made on `subset_test`."
-- **R0 baseline vs legacy baseline:** `--strategy R0` (shared loop + shared verifier) is the
-  ablation baseline. Legacy ChinaTravel (no repair strategy, original verifier) is NOT the
-  comparison baseline.
-- **`pilot5` is the shared 5-query set** — run every new strategy on it first for a quick
-  apples-to-apples check before scaling.
-- **Language-aware verifier:** English itineraries are now checked against `database_en`
-  (`_infer_lang`/`_set_lang` in `commonsense_constraint_nl.py`). Before this fix, English runs
-  produced false "unavailable transport" errors and inflated error counts (that's why the
-  `_archive_gpt4.1` numbers are not comparable).
-- **Windows fixes:** long-path `\\?\` prefix + model-name sanitisation in log dirs; `Logger`
-  creates parent dirs. No-ops on macOS/Linux. On Windows set `$env:PYTHONUTF8="1"` or offline
-  eval fails to read saved JSON.
-- **"full pass rate 0" on R0 pilot5 is expected, not a bug:** a plan only "fully passes" when
-  ALL personal + commonsense checks pass AND no technical error; the 5 pilot queries are hard
-  (human/medium) and DeepSeek within a budget-5 repair loop often still has residual
-  violations. The research signal is the *transitions* (fixed vs newly_violated), not the raw
-  full-pass count. Judge strategies on cascade/repair metrics, not full-pass alone.
-- **R2 caveat:** the PRD describes R2 as reject + rollback on regression, but the current `r2.py`
-  **records** regressions on a whole-plan rewrite and the base `accept()` default is True. If R2
-  is meant to hard-reject, verify/implement its `accept()` override before trusting R2 results.
-- **Stray artifacts:** an empty file named `python` sits at repo root (harmless; likely a
-  misdirected shell redirect). Safe to ignore/delete.
-- **Dependencies:** Python 3.12 in `.venv`; `requirements.txt` pins `openai` upper bound
-  (httpx compat), `pyarrow==19.0.1`, `python-dotenv`. `.env` holds the OpenRouter key
-  (`CHINATRAVEL_OPENAI_API_KEY`, `CHINATRAVEL_OPENAI_BASE_URL=https://openrouter.ai/api/v1`);
-  never commit it.
+| Strategy (subset_test) | Final full-pass rate | Final "all personal constraints pass" rate |
+|---|---|---|
+| R0 | 2/30 (6.7%) | 43% |
+| R2 | 1/30 (3.3%) | 53% |
+| R3 | 3/30 (10%) | 50% |
+| R4 | 1/30 (3.3%) | 43% |
+
+> **Do not read these full-pass rates as "the strategy failed."** Full pass requires *every*
+> personal + commonsense check to pass with no technical error, and these queries are hard. The
+> research signal is the **transitions** — how many failing constraints got fixed vs how many
+> passing ones got broken (cascades) — captured per attempt in `attempts.jsonl` and summarised in
+> the `test_result_analysis/` tables. Judge strategies on fix-vs-cascade behaviour, not raw full-pass.
 
 ---
 
-## 7. How to run things (real syntax)
+## 6. Conventions and gotchas (read before changing or trusting numbers)
 
-**(a) Setup**
+- **Fairness invariant.** Keep the model and settings identical across all strategies:
+  **DeepSeek V3 (`deepseek/deepseek-chat`) via OpenRouter, `--lang en`, `--max-steps 6`,
+  `temperature=0`, `top_p≈0` (greedy).** `run_manifest.json` records these per run so fairness is
+  auditable. Any result difference must come from the repair method, not the setup.
+- **Train vs test (no leakage).** Develop and learn `M` on `subset_train`; evaluate the
+  held-out comparison (especially R4) on `subset_test`. Main comparisons are made on
+  `subset_test`.
+- **Named-place constraints are translated at scoring time.** The query DSL keeps Chinese place
+  names (e.g. `{'寒山寺'}<=attraction_name_set`) but English plans use English names. The
+  evaluator swaps in the English name of the same database row before scoring (logged in each
+  run's `benchmark_eval/*/named_place_translations.json`). **During repair** the loop still
+  checked the Chinese name, so it reported those constraints as failed even when the plan had the
+  right place — the tables include "excluding named-place constraints" rows to show results
+  without that artifact.
+- **Failed model calls can poison a result (important).** When a provider request fails,
+  the model wrapper returns the text `{"error": "Request failed, please try again."}` instead of
+  raising. That round then has **no token count**, the repeat-request cache can serve that error
+  text to later identical requests, and a strategy that always accepts (R0) can take the error
+  text as its "new plan" — replacing a working plan with an error stub. **This is exactly what
+  happened to 5 queries in the original `subset_test-r0` run; we reran those 5, replaced their
+  checkpoints, and rebuilt the eval outputs** (each carries a `rerun_provenance.json`; the R3 test
+  run had 1 such rerun). If you see a query with `model_call_data_complete = False` or an
+  error-stub final plan, that query needs a rerun before its tokens/metrics are trustworthy.
+- **Other documented data caveats** (see `test_result_analysis/README.md` for the full list):
+  walking legs can miss a `price` field (fails a schema/commonsense check); a timing-check bug can
+  raise on transport that departs before arrival (hides timing errors / stops a query early); a
+  plan the commonsense evaluator crashes on is counted as failing all checks in Tables 1–3.
+- **Small groups.** 10 queries per difficulty group — a one- or two-query swing is noise.
+- **Stray/again:** `.env` holds the OpenRouter key (`CHINATRAVEL_OPENAI_API_KEY`,
+  `CHINATRAVEL_OPENAI_BASE_URL=https://openrouter.ai/api/v1`). **Never commit `.env`.** Python 3.12
+  in `.venv`.
+
+---
+
+## 7. How to run everything (copy-paste)
+
+**Setup (once)**
 ```bash
 python3.12 -m venv .venv
-source .venv/bin/activate          # Windows: .venv\Scripts\activate
+source .venv/bin/activate                      # Windows: .venv\Scripts\activate
 python -m pip install -r requirements.txt
-python scripts/experiment_setup/setup_project.py    # downloads both sandboxes (database/, database_en/)
-cp .env.example .env               # then paste the OpenRouter key into .env
-set -a; source .env; set +a        # macOS/Linux: load env vars
+python scripts/experiment_setup/setup_project.py   # downloads both sandboxes (database/, database_en/)
+cp .env.example .env                           # then paste the OpenRouter key into .env
 ```
 
-**(b) Run a strategy on a split** (`--strategy` ∈ R0,R1,R2,R3,R3P)
+**Run one strategy on one split** (`--strategy` ∈ R0, R1, R2, R3, R4)
 ```bash
 python run_experiments.py \
-  --strategy R3 --splits pilot5 \
+  --strategy R3 --splits subset_test \
   --llm deepseek/deepseek-chat --lang en \
   --max-steps 6 \
-  --output-dir experiments --run-id pilot5-r3
-# resume a partial run: add --resume (and --retry-failed to retry failures)
+  --output-dir experiments --run-id subset_test-r3
+# resume a partial run: add --resume ; retry failed queries: add --resume --retry-failed
+# run only specific queries: --index <uid> <uid> ...
 ```
-Other `run_experiments.py` flags: `--index UID [UID ...]`, `--temperature`, `--top-p`,
-`--seed`, `--oracle-translation`, `--split-manifest`, `--partition {train,test}`,
-`--skip-unavailable`.
 
-**(c) Produce eval / summaries / matrix**
+**R4 needs the learned matrix:**
 ```bash
-python scripts/result_analysis/evaluate_repair_run.py  --run-dir experiments/pilot5-r3
-python scripts/result_analysis/build_repair_summary.py --input   experiments/pilot5-r3
-python scripts/matrix_building/build_regression_matrix.py \
-  --input experiments/pilot5-r3/attempts.jsonl \
-  --output-dir experiments/pilot5-r3/regression_matrix \
-  --repair-strategy R3
-# leakage-free matrix from train partition only:
-#   ... --split-manifest <manifest.json> --partition train
+python run_experiments.py \
+  --strategy R4 --splits subset_test \
+  --llm deepseek/deepseek-chat --lang en --max-steps 6 \
+  --r4-matrix r4/main_matrix_from_subset_train_r0_r3_10x10.csv \
+  --output-dir experiments --run-id subset_test-r4
 ```
 
-**(d) Tests**
+**Evaluate + summarise + build the matrix for a run** (no API calls; safe to re-run)
+```bash
+python scripts/result_analysis/evaluate_repair_run.py  --run-dir experiments/subset_test-r3
+python scripts/result_analysis/build_repair_summary.py --input   experiments/subset_test-r3
+python scripts/matrix_building/build_regression_matrix.py \
+  --input experiments/subset_test-r3/attempts.jsonl \
+  --output-dir experiments/subset_test-r3/regression_matrix \
+  --repair-strategy R3
+```
+
+**Build the per-method analysis tables** (what's under `test_result_analysis/`)
+```bash
+python scripts/result_analysis/build_test_result_tables.py \
+  --run experiments/subset_test-r0 --run experiments/subset_test-r2 \
+  --run experiments/subset_test-r3 --run experiments/subset_test-r4
+```
+
+**Tests**
 ```bash
 python -m unittest discover -s tests -p "test_*.py"
-# verified this session: Ran 277 tests — OK (0 failures, 0 errors)
+```
+
+**Check remaining OpenRouter credit before a run** (runs cost real money)
+```bash
+curl -s -H "Authorization: Bearer $(grep -m1 '^CHINATRAVEL_OPENAI_API_KEY=' .env | sed 's/^[^=]*=//' | tr -d '\"')" \
+  https://openrouter.ai/api/v1/key
 ```
 
 ---
 
-## 8. What the next AI should probably help with
+## 8. Where things live (only if you want to read code)
 
-1. **Design + implement R4 (`repair_strategies/r4.py`)** following `base.py` and the R3 pattern;
-   register it in `repair_strategies/__init__.py` (`STRATEGY_FACTORIES["R4"] = _r4`). R4 reads
-   the learned matrix `M` to order/scope repairs so fixing constraint family *i* avoids
-   cascading into family *j*. Mirror the R3 PRD to write an R4 PRD first.
-2. **Produce the learned matrix `M`:** run R0–R3 on `subset_train`, then
-   `build_regression_matrix.py --partition train` per strategy; decide the fusion scheme
-   (per-strategy matrices vs one fused universal matrix — see `Commands_to_test_queries.md`
-   "Scenario 1 / Scenario 2").
-3. **Run the individual studies:** R0–R3 + R4 on `subset_test` (held-out), fixed DeepSeek/budget/en
-   settings; collect metrics and the cascade (`newly_violated`) analysis.
-4. **Write-up + individual strategy reports;** describe recorded cascading violations
-   and matrix-guidance evidence within each run.
-5. (Done) Doc drift in README/CONTRIBUTIONS/notebooks ("R2/R4 not registered", "221 tests",
-   subset "69/31") has been corrected to R0–R3P registered / 277 tests / 60(20·20·20)·30(10·10·10).
-   Re-check only if the code moves again.
-6. **Confirm R2's intended accept/rollback semantics** before trusting R2 numbers (see §6).
+**Repair framework — `chinatravel/agent/nesy_verifier/`**
+- `shared_verifier.py` — `verify_plan()`: structure + commonsense + personal-constraint checks;
+  returns a tri-state per constraint (pass / fail / couldn't-evaluate) and keeps technical errors
+  on separate channels.
+- `shared_repair_loop.py` — `run_repair_loop()`: the loop that verifies, calls the strategy's
+  `repair()`, re-verifies, applies the strategy's `accept()`, and logs one attempt record per step
+  (budget capped at 6).
+- `repair_strategies/` — `base.py` (the interface every strategy implements), then `r0.py`…`r4.py`;
+  `__init__.py` is the registry (`STRATEGY_FACTORIES = {R0, R1, R2, R3, R4}`).
+
+**Evaluation + matrix — `chinatravel/evaluation/`**
+- `regression_matrix.py` — builds the matrix `M` from attempt records.
+- `constraint_families.py` — the 9 families: `trip_specification, party_resources,
+  monetary_budget, accommodation, dining, attraction, transport_mode, travel_extent,
+  schedule_order` (plus a `commonsense_repair` source row in the matrix).
+- `repair_attempt.py` — the per-attempt record schema; `*.md` files are the specs/contracts.
+
+**R4 helpers — `r4/`**
+- `main_matrix_from_subset_train_r0_r3_10x10.csv` (+ `_probabilities.csv`) — the committed learned
+  matrix; `main_matrix_manifest.json` records how it was pooled and from which runs.
+- `README.md` — the full R4 training/matrix workflow; `run_r4.py` / `run_r4_pipeline.py` are
+  optional helpers (the normal path is `run_experiments.py --strategy R4 --r4-matrix ...`).
+
+**Analysis output — `test_result_analysis/`**
+- One folder per method (`R0`, `R2`, `R3`, `R4`) with `table1_pc.csv` (personal constraints),
+  `table2_cs.csv` (commonsense), `table3_repair_process.csv` (tokens/time/rounds),
+  `table4_eval_exp.csv` (benchmark metrics), and `per_query.csv`.
+- `merged/` + `MERGED_TABLES.md` — all methods side by side. `README.md` there defines every
+  metric and lists all data caveats. **Read that README to interpret any number correctly.**
+
+**Runners / docs**
+- `run_experiments.py` — the canonical study runner. `run_exp.py` — the general ChinaTravel
+  launcher (not the study runner).
+- `experiments/Commands_to_test_queries.md` — the 4-step run→eval→summary→matrix workflow and the
+  matrix-fusion scenarios for R4.
+- `docs/PRD_R3_adaptive_repair.md` — the R3 design spec (a good template if you write an R4 spec).
 
 ---
 
-## 9. Files the user should UPLOAD to the next AI (max context, small footprint)
+## 9. What the next person should probably do
 
-The next AI can't read the repo, so prioritise these (each is self-describing):
-
-1. **`HANDOVER.md`** (this file) — the map + status + commands.
-2. **`chinatravel/agent/nesy_verifier/repair_strategies/base.py`** — the interface R4 must implement (tiny).
-3. **`chinatravel/agent/nesy_verifier/repair_strategies/r3.py`** — the richest worked example (R3/R3P, ladder, metadata contract).
-4. **`docs/PRD_R3_adaptive_repair.md`** — the design-spec template to copy for an R4 PRD.
-5. **`experiments/Commands_to_test_queries.md`** — exact run/eval/matrix workflow + which split per strategy + the R4 matrix-fusion scenarios.
-6. **`chinatravel/evaluation/REPAIR_COMPARISON.md`** (or `REGRESSION_MATRIX.md`) — the evidence/matrix contract.
-
-If a 7th slot is allowed: `chinatravel/evaluation/repair_attempt.py` (the attempt-record schema
-that feeds the matrix) or `CONTRIBUTIONS.md` (file ownership map — but note its stale rows).
+1. **Run R1 on `subset_test`** so the main comparison is complete across all five strategies
+   (currently R1 is missing from the test set).
+2. **Write the results narrative** from `test_result_analysis/` + the regression matrices: does
+   matrix-guided R4 actually reduce cascades (`newly_violated`) relative to R0, and how do R1/R2/R3
+   sit in between? Use the cascade/fix transitions, not raw full-pass rates.
+3. **Watch for poisoned runs.** Before trusting any run's tokens/metrics, confirm no query has an
+   error-stub final plan or `model_call_data_complete = False`; rerun offending queries and replace
+   their checkpoints (mirror the existing `rerun_provenance.json` pattern), then rebuild the eval
+   outputs.
+4. **Keep the fairness invariant** (model, budget, language, greedy sampling) identical across any
+   new runs, and keep train/test separation (learn `M` on train, compare on test).
 
 ---
 
-*Honesty notes: Items marked "verified this session" were confirmed by reading code / running
-the suite on `main` @ `3b47d9a`. R4 is unwritten. The only committed experiment evidence is the
-5-query pilot runs; no `subset_train/test` production results exist in the repo yet. README and
-CONTRIBUTIONS prose is partly stale (R2/R4 status, 221 vs 277 tests, subset sizes) — trust the
-code and the split files over that prose.*
+*Honesty notes: result numbers in §5 are read from the committed `pass_rates.csv` of each
+`subset_test` run. The exact unit-test assertion count isn't pinned here — run the suite for it.
+Known data-quality caveats (named-place translation, failed-model-call stubs, walking-leg price,
+timing-check crash) are real and documented in `test_result_analysis/README.md`; they shape the
+numbers and are not new bugs. R1 is not yet run on `subset_test`.*
