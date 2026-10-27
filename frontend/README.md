@@ -1,47 +1,59 @@
-# Streamlit travel planner
+# Recorded repair walkthrough
 
-The frontend wraps the existing LLM-Modulo agent and shared verification/repair
-loop. It offers R0–R4, with R3 selected by default. R4 requires an empirical,
-validated matrix pooled from R0–R3 evidence.
+The frontend replays one saved experiment locally. It replaces the live planner:
+there is no prompt submission, API client, credential loading, or live verification.
 
-## Setup
-
-From the project root, install the project dependencies and set up the ChinaTravel
-database and model credentials as described in the main README:
+From the repository root:
 
 ```powershell
-python -m pip install -r requirements.txt
-python scripts/setup_project.py
-```
-
-Set `CHINATRAVEL_OPENAI_API_KEY`, `CHINATRAVEL_OPENAI_BASE_URL`, and
-`CHINATRAVEL_OPENAI_MODEL` in the environment or the project's `.env` file.
-To prefill the R4 matrix field, set `CHINATRAVEL_R4_MATRIX` to the path of the
-pooled `main_matrix.csv`. The matrix's manifest and source provenance files must
-remain available and unchanged; synthetic fixture matrices are rejected.
-
-## Run
-
-From the project root:
-
-```powershell
+python -m pip install "streamlit>=1.40,<2"
 python -m streamlit run frontend/app.py
 ```
 
-Each submission creates `frontend/runs/<run-id>/`. It stores `run.json`,
-`request.json`, `itinerary.json`, `repair_history.json`, and `attempts.json`, plus
-the planner's runtime logs and cache. Repair artifacts are checkpointed as the
-shared repair loop runs, so partial attempts remain available if a run fails.
-Free-text preferences are passed to the model but are not compiled into formal
-personal-constraint rules; the app reports the shared verifier result separately.
+Open the local URL printed by Streamlit (usually http://localhost:8501).
+The demo needs only Streamlit and the bundled JSON file; no travel database,
+model credentials, or running backend is required.
 
-## Browse past results
+## Walkthrough
 
-The **Past results** selector at the top of the page loads saved itineraries
-locally. It does not invoke the model API. It includes completed frontend runs
-from `frontend/runs/`, saved experiment query results under `experiments/`, and
-exported benchmark plans and legacy planner outputs under `results/` when a
-matching detailed query result is unavailable.
-Older experiment outputs may not contain a verification report or repair history;
-in that case the UI shows the saved itinerary and indicates that no such details
-were stored.
+- Select **Initial plan**, any **Repair 1–6**, or use **Previous / Next**.
+- Red labels locate saved violations. Blue outlines and before/after values show
+  changed activities, including their inbound transfers. Green badges identify
+  previously reported issues that are no longer reported.
+- Compare a proposal with **Input to this repair** or **Initial itinerary**.
+  Input means the last accepted plan, skipping rejected proposals.
+- Use **Locate a constraint** to outline the associated activity in amber.
+- **What changed** lists all changed fields. **Constraint history** shows the
+  checks across all seven snapshots. Evidence expanders preserve verifier messages.
+- The final attempt explicitly reports budget exhaustion and unresolved issues.
+
+The example is a one-day solo trip from Guangzhou to Nanjing, budget RMB 2,000,
+from `experiments/subset_train-r2`, query `e20241028160445320665`, strategy R2.
+Its commonsense error counts are **4 → 3 → 4 → 3 → 2 → 2 → 2**.
+All five personal checks pass throughout; overall verification never passes.
+Repairs 5 and 6 make no itinerary changes.
+
+## Evidence and scope
+
+`demo_data/nanjing_r2.json` is a compact, frozen copy of the original query, raw
+initial/candidate itineraries, saved verifier results, and acceptance decisions.
+It retains the original artifact path and SHA-256. It is independent of experiment
+files changing during other work. No synthetic itineraries or repairs are added.
+
+English check names, shortened display names, and issue-to-activity mappings are
+manually curated for this example. Original place names remain in tooltips and
+source evidence. The attraction-opening-hours check retains the same identity
+when the venue changes, so replacing a museum with a still-invalid palace visit
+does not incorrectly count as a resolution. A clear status means an issue is not
+reported by the saved verifier; it is not an independently rerun assessment.
+
+Activity slots remain stable in this example. Adding a case that inserts,
+removes, or reorders activities requires explicit alignment and reviewed mappings.
+`replay.py` owns comparisons; `app.py` owns presentation. Existing planner/history
+helpers remain available to other code but are not imported by the replay UI.
+
+Run focused checks with:
+
+```powershell
+python -m pytest tests/test_frontend_replay.py tests/test_frontend_replay_app.py
+```
