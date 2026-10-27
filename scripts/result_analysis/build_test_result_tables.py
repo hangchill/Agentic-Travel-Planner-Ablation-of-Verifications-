@@ -124,6 +124,12 @@ def score_plans(ids, references, plans, lang):
 
 ## ---------- constraint kinds ----------
 
+def original_code(query):
+    """Constraints as the query states them. English runs score translated named-place
+    names (`hard_logic_py`); the Chinese original (`hard_logic_py_original`) keeps the kind visible."""
+    return query.get("hard_logic_py_original") or query["hard_logic_py"]
+
+
 def constraint_kind(code):
     text = " ".join(code.split())
     if re.search(r"_name_set\)", text) and re.search(r"[一-鿿]", text):
@@ -238,7 +244,7 @@ def build_queries(root, origin):
         if uid not in origin:
             raise SystemExit(f"{uid} has no difficulty group in the origin file")
         code = references[uid]["hard_logic_py"]
-        kinds = [constraint_kind(c) for c in code]
+        kinds = [constraint_kind(c) for c in original_code(references[uid])]
         init, final = initial_scores[uid], final_scores[uid]
         kept = [i for i, kind in enumerate(kinds) if kind != "Must include a named place"]
         checkpoint = checkpoints[uid]
@@ -348,24 +354,25 @@ def table_pc(rows):
                         lambda g: sum(r["pc_passed_final"] < r["pc_passed_initial"] for r in g), SRC_PC))
     t.append(metric_row("Final plans with 0 failed PC", rows, lambda g: sum(r["pc_failed_final"] == 0 for r in g), SRC_PC))
     t.append(metric_row("Final plans with 1 failed PC", rows, lambda g: sum(r["pc_failed_final"] == 1 for r in g), SRC_PC))
-    t.append(metric_row("Final plans with 2+ failed PC", rows, lambda g: sum(r["pc_failed_final"] >= 2 for r in g), SRC_PC))
+    t.append(metric_row("Final plans with 2 failed PC", rows, lambda g: sum(r["pc_failed_final"] == 2 for r in g), SRC_PC))
+    t.append(metric_row("Final plans with 3+ failed PC", rows, lambda g: sum(r["pc_failed_final"] >= 3 for r in g), SRC_PC))
     t.append(metric_row("Top 3 failing PC kinds in final plans (failures)", rows,
                         lambda g: top_three(Counter(k for r in g for k in r["pc_failed_kinds_final"].split("; ") if k)),
                         SRC_PC + "; kind classified from hard_logic_py"))
     t.append(metric_row("Final plans passing all PC, excluding named-place constraints", rows,
                         lambda g: sum(r["pc_passed_final_excl_named"] == r["pc_total_excl_named"] for r in g),
-                        SRC_PC + "; named-place constraints can never pass in English runs"))
+                        SRC_PC + "; named-place names translated to English for scoring"))
     t.append(metric_row("Avg % PC passed per query - final plan, excluding named-place constraints", rows,
                         lambda g: mean((100 * r["pc_passed_final_excl_named"] / r["pc_total_excl_named"]
                                         for r in g if r["pc_total_excl_named"]), 1),
-                        SRC_PC + "; named-place constraints can never pass in English runs"))
+                        SRC_PC + "; named-place names translated to English for scoring"))
     return t
 
 
 def table_pc_kinds(rows, references):
     failed, total = Counter(), Counter()
     for r in rows:
-        kinds = [constraint_kind(c) for c in references[r["query_uid"]]["hard_logic_py"]]
+        kinds = [constraint_kind(c) for c in original_code(references[r["query_uid"]])]
         total.update(kinds)
         failed.update(k for k in r["pc_failed_kinds_final"].split("; ") if k)
     records = [dict(kind=kind, failed=failed[kind], total=total[kind],
@@ -497,7 +504,7 @@ def readme(run_notes):
         "",
         "| File | Contents |",
         "|---|---|",
-        "| `table1_pc.csv` | Personal constraints (PC), benchmark: avg failed and avg passed initial vs final, queries up / same / down, 0 / 1 / 2+ failed, top failing kinds, results without named-place constraints |",
+        "| `table1_pc.csv` | Personal constraints (PC), benchmark: avg failed and avg passed initial vs final, queries up / same / down, 0 / 1 / 2 / 3+ failed, top failing kinds, results without named-place constraints |",
         "| `table1b_pc_failure_by_kind.csv` | PC failure rate by constraint kind, whole cohort |",
         "| `table2_cs.csv` | Commonsense (CS) checks, benchmark: avg failed checks and avg % passed initial vs final, queries improved / same / worse, plans with 0 / 1 / 2 / 3 / 4+ failed, plans with at most 4 failed, top failing checks |",
         "| `table3_repair_process.csv` | Avg tokens and repair time, effect of a changed round, and the round split (changed / cached / other) |",
@@ -521,7 +528,7 @@ def readme(run_notes):
         "",
         "## Caveats",
         "",
-        "- **Named-place constraints can never pass in English runs.** The DSL compares the plan's English place name with a Chinese literal. See the \"excluding named-place constraints\" rows.",
+        "- **Named-place constraints are translated for scoring.** The query DSL keeps Chinese place names (for example `{'寒山寺'}<=attraction_name_set`), but English plans use English names. `evaluate_repair_run` replaces each name with the English name of the same database row before scoring (`chinatravel/evaluation/named_place_translation.py`; log in `benchmark_eval/*/named_place_translations.json`). The repair loop still checked the Chinese name, so during repair it reported these constraints as failed even when the plan had the right place. The \"excluding named-place constraints\" rows show results without them.",
         "- **Missing walking-leg `price`.** `translate_innercity_transport` (`llm_modulo.py`) leaves `price` off direct walking legs, which fails the schema check and the \"Incorrect Information of Inner-City Transport on price, distance, and duration\" CS check for many plans.",
         "- **Loop time-check crash.** `collect_time_error` raises `KeyError: 'position'` on a train or flight that departs before its transport arrives. That hides timing errors from repair and can stop a query early while it is still failing.",
         "- **Plans the CS evaluator can't check.** When `evaluate_commonsense_constraints` crashes on a plan (for example an error placeholder with no activities), it marks only an extra `Commonsense Evaluator Exception` column. That plan would look like it passed every real check. Tables 1–3 use the 28 standard checks and count such a plan as failing all of them. Table 4 keeps ChinaTravel's own definition so it matches `benchmark_summary.json`, so its commonsense micro is inflated for runs with such plans.",
@@ -643,7 +650,7 @@ def write_merged(out, per_run):
 MERGED_TITLES = {
     "table1_pc.csv": ("Table 1: Personal constraints (PC), benchmark",
                       "Initial = plan before any repair round; final = plan the benchmark scored. "
-                      "Named-place constraints can never pass in English runs (see README)."),
+                      "Named-place names are translated to English for scoring (see README)."),
     "table2_cs.csv": ("Table 2: Commonsense (CS), number of failed checks, benchmark",
                       "Each plan is checked against the same 28 checks; fewer failed is better. "
                       "A plan the checker can't evaluate counts as failing all 28."),

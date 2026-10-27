@@ -8,7 +8,7 @@ Unless a row says otherwise, a value is computed for each query first and then a
 
 | File | Contents |
 |---|---|
-| `table1_pc.csv` | Personal constraints (PC), benchmark: avg failed and avg passed initial vs final, queries up / same / down, 0 / 1 / 2+ failed, top failing kinds, results without named-place constraints |
+| `table1_pc.csv` | Personal constraints (PC), benchmark: avg failed and avg passed initial vs final, queries up / same / down, 0 / 1 / 2 / 3+ failed, top failing kinds, results without named-place constraints |
 | `table1b_pc_failure_by_kind.csv` | PC failure rate by constraint kind, whole cohort |
 | `table2_cs.csv` | Commonsense (CS) checks, benchmark: avg failed checks and avg % passed initial vs final, queries improved / same / worse, plans with 0 / 1 / 2 / 3 / 4+ failed, plans with at most 4 failed, top failing checks |
 | `table3_repair_process.csv` | Avg tokens and repair time, effect of a changed round, and the round split (changed / cached / other) |
@@ -30,7 +30,7 @@ Unless a row says otherwise, a value is computed for each query first and then a
 
 ## Caveats
 
-- **Named-place constraints can never pass in English runs.** The DSL compares the plan's English place name with a Chinese literal. See the "excluding named-place constraints" rows.
+- **Named-place constraints are translated for scoring.** The query DSL keeps Chinese place names (for example `{'寒山寺'}<=attraction_name_set`), but English plans use English names. `evaluate_repair_run` replaces each name with the English name of the same database row before scoring (`chinatravel/evaluation/named_place_translation.py`; log in `benchmark_eval/*/named_place_translations.json`). The repair loop still checked the Chinese name, so during repair it reported these constraints as failed even when the plan had the right place. The "excluding named-place constraints" rows show results without them.
 - **Missing walking-leg `price`.** `translate_innercity_transport` (`llm_modulo.py`) leaves `price` off direct walking legs, which fails the schema check and the "Incorrect Information of Inner-City Transport on price, distance, and duration" CS check for many plans.
 - **Loop time-check crash.** `collect_time_error` raises `KeyError: 'position'` on a train or flight that departs before its transport arrives. That hides timing errors from repair and can stop a query early while it is still failing.
 - **Plans the CS evaluator can't check.** When `evaluate_commonsense_constraints` crashes on a plan (for example an error placeholder with no activities), it marks only an extra `Commonsense Evaluator Exception` column. That plan would look like it passed every real check. Tables 1–3 use the 28 standard checks and count such a plan as failing all of them. Table 4 keeps ChinaTravel's own definition so it matches `benchmark_summary.json`, so its commonsense micro is inflated for runs with such plans.

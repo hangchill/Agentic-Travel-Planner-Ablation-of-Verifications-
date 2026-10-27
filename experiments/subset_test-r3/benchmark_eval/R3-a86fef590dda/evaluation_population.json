@@ -66,7 +66,10 @@
     "m20241028165017072372": "completed",
     "t20241206171855902412": "completed"
   },
-  "partition": null,
+  "split": "subset_test",
+  "partition": "test",
+  "outcome_policy": "final_accepted",
+  "plan_source": "final_verification.translated_plan",
   "queries": {
     "e20241028160332826857": {
       "uid": "e20241028160332826857",
@@ -235,11 +238,21 @@
         "result=True\nfor activity in allactivities(plan):\n  if activity_type(activity) in ['attraction', 'airplane', 'train'] and activity_tickets(activity)!=3: result=False\n  if innercity_transport_type(activity_transports(activity))=='metro'and metro_tickets(activity_transports(activity))!=3: result=False",
         "result=True\nfor activity in allactivities(plan):\n  if activity_type(activity)=='accommodation' and room_count(activity)!=2: result=False",
         "intercity_transport_set=set()\nfor activity in allactivities(plan):\n  if activity_type(activity) in ['train', 'airplane']: intercity_transport_set.add(intercity_transport_type(activity))\nresult=({'train'}==intercity_transport_set)",
-        "attraction_name_set=set()\nfor activity in allactivities(plan):\n  if activity_type(activity)=='attraction': attraction_name_set.add(activity_position(activity))\nresult=({'寒山寺'}<=attraction_name_set)",
+        "attraction_name_set=set()\nfor activity in allactivities(plan):\n  if activity_type(activity)=='attraction': attraction_name_set.add(activity_position(activity))\nresult=({'Hanshan Temple'}<=attraction_name_set)",
         "result=True\nfor activity in allactivities(plan):\n  if innercity_transport_type(activity_transports(activity))=='taxi'and taxi_cars(activity_transports(activity))!=1: result=False"
       ],
       "nature_language": "Current location: Chongqing. Three of us want to visit Suzhou for 2 days with a budget of 6,100 RMB. We need two rooms and plan to travel by train. We would like to visit Hanshan Temple. Please provide a travel itinerary.",
-      "nature_language_en": "Current location: Chongqing. Three of us want to visit Suzhou for 2 days with a budget of 6,100 RMB. We need two rooms and plan to travel by train. We would like to visit Hanshan Temple. Please provide a travel itinerary."
+      "nature_language_en": "Current location: Chongqing. Three of us want to visit Suzhou for 2 days with a budget of 6,100 RMB. We need two rooms and plan to travel by train. We would like to visit Hanshan Temple. Please provide a travel itinerary.",
+      "hard_logic_py_original": [
+        "result=(day_count(plan)==2)",
+        "result=(people_count(plan)==3)",
+        "total_cost=0 \nfor activity in allactivities(plan):\n    total_cost+=activity_cost(activity)\n    total_cost += innercity_transport_cost(activity_transports(activity))\nresult=(total_cost<=6100)",
+        "result=True\nfor activity in allactivities(plan):\n  if activity_type(activity) in ['attraction', 'airplane', 'train'] and activity_tickets(activity)!=3: result=False\n  if innercity_transport_type(activity_transports(activity))=='metro'and metro_tickets(activity_transports(activity))!=3: result=False",
+        "result=True\nfor activity in allactivities(plan):\n  if activity_type(activity)=='accommodation' and room_count(activity)!=2: result=False",
+        "intercity_transport_set=set()\nfor activity in allactivities(plan):\n  if activity_type(activity) in ['train', 'airplane']: intercity_transport_set.add(intercity_transport_type(activity))\nresult=({'train'}==intercity_transport_set)",
+        "attraction_name_set=set()\nfor activity in allactivities(plan):\n  if activity_type(activity)=='attraction': attraction_name_set.add(activity_position(activity))\nresult=({'寒山寺'}<=attraction_name_set)",
+        "result=True\nfor activity in allactivities(plan):\n  if innercity_transport_type(activity_transports(activity))=='taxi'and taxi_cars(activity_transports(activity))!=1: result=False"
+      ]
     },
     "e20241028161311009105": {
       "uid": "e20241028161311009105",
@@ -258,11 +271,22 @@
         "result=True\nfor activity in allactivities(plan):\n  if activity_type(activity)=='accommodation' and room_count(activity)!=1: result=False",
         "result=True\nfor activity in allactivities(plan):\n  if activity_type(activity)=='accommodation' and room_type(activity)!=1: result=False",
         "intercity_transport_set=set()\nfor activity in allactivities(plan):\n  if activity_type(activity) in ['train', 'airplane']: intercity_transport_set.add(intercity_transport_type(activity))\nresult=({'train'}==intercity_transport_set)",
-        "attraction_name_set=set()\nfor activity in allactivities(plan):\n  if activity_type(activity)=='attraction': attraction_name_set.add(activity_position(activity))\nresult=({'拙政园'}<=attraction_name_set)",
+        "attraction_name_set=set()\nfor activity in allactivities(plan):\n  if activity_type(activity)=='attraction': attraction_name_set.add(activity_position(activity))\nresult=({\"Humble Administrator's Garden\"}<=attraction_name_set)",
         "result=True\nfor activity in allactivities(plan):\n  if innercity_transport_type(activity_transports(activity))=='taxi'and taxi_cars(activity_transports(activity))!=1: result=False"
       ],
       "nature_language": "Current location: Hangzhou. I want to travel alone to Suzhou for 2 days with a budget of 1500 RMB. I plan to take the train and stay in a single room. I would like to visit the Humble Administrator's Garden. Please provide me with a travel plan.",
-      "nature_language_en": "Current location: Hangzhou. I want to travel alone to Suzhou for 2 days with a budget of 1500 RMB. I plan to take the train and stay in a single room. I would like to visit the Humble Administrator's Garden. Please provide me with a travel plan."
+      "nature_language_en": "Current location: Hangzhou. I want to travel alone to Suzhou for 2 days with a budget of 1500 RMB. I plan to take the train and stay in a single room. I would like to visit the Humble Administrator's Garden. Please provide me with a travel plan.",
+      "hard_logic_py_original": [
+        "result=(day_count(plan)==2)",
+        "result=(people_count(plan)==1)",
+        "total_cost=0 \nfor activity in allactivities(plan):\n    total_cost+=activity_cost(activity)\n    total_cost += innercity_transport_cost(activity_transports(activity))\nresult=(total_cost<=1500)",
+        "result=True\nfor activity in allactivities(plan):\n  if activity_type(activity) in ['attraction', 'airplane', 'train'] and activity_tickets(activity)!=1: result=False\n  if innercity_transport_type(activity_transports(activity))=='metro'and metro_tickets(activity_transports(activity))!=1: result=False",
+        "result=True\nfor activity in allactivities(plan):\n  if activity_type(activity)=='accommodation' and room_count(activity)!=1: result=False",
+        "result=True\nfor activity in allactivities(plan):\n  if activity_type(activity)=='accommodation' and room_type(activity)!=1: result=False",
+        "intercity_transport_set=set()\nfor activity in allactivities(plan):\n  if activity_type(activity) in ['train', 'airplane']: intercity_transport_set.add(intercity_transport_type(activity))\nresult=({'train'}==intercity_transport_set)",
+        "attraction_name_set=set()\nfor activity in allactivities(plan):\n  if activity_type(activity)=='attraction': attraction_name_set.add(activity_position(activity))\nresult=({'拙政园'}<=attraction_name_set)",
+        "result=True\nfor activity in allactivities(plan):\n  if innercity_transport_type(activity_transports(activity))=='taxi'and taxi_cars(activity_transports(activity))!=1: result=False"
+      ]
     },
     "e20241028161334777418": {
       "uid": "e20241028161334777418",
@@ -282,11 +306,23 @@
         "result=True\nfor activity in allactivities(plan):\n  if activity_type(activity)=='accommodation' and room_type(activity)!=1: result=False",
         "intercity_transport_set=set()\nfor activity in allactivities(plan):\n  if activity_type(activity) in ['train', 'airplane']: intercity_transport_set.add(intercity_transport_type(activity))\nresult=({'train'}==intercity_transport_set)",
         "attraction_type_set=set()\nfor activity in allactivities(plan):\n  if activity_type(activity)=='attraction': attraction_type_set.add(attraction_type(activity, target_city(plan)))\nresult=({'历史古迹'}<=attraction_type_set)",
-        "attraction_name_set=set()\nfor activity in allactivities(plan):\n  if activity_type(activity)=='attraction': attraction_name_set.add(activity_position(activity))\nresult=({'黄鹤楼'}<=attraction_name_set)",
+        "attraction_name_set=set()\nfor activity in allactivities(plan):\n  if activity_type(activity)=='attraction': attraction_name_set.add(activity_position(activity))\nresult=({'Yellow Crane Tower'}<=attraction_name_set)",
         "result=True\nfor activity in allactivities(plan):\n  if innercity_transport_type(activity_transports(activity))=='taxi'and taxi_cars(activity_transports(activity))!=1: result=False"
       ],
       "nature_language": "**Travel Plan from Shanghai to Wuhan (2 Days, Budget: 2500 RMB)**",
-      "nature_language_en": "**Travel Plan from Shanghai to Wuhan (2 Days, Budget: 2500 RMB)**"
+      "nature_language_en": "**Travel Plan from Shanghai to Wuhan (2 Days, Budget: 2500 RMB)**",
+      "hard_logic_py_original": [
+        "result=(day_count(plan)==2)",
+        "result=(people_count(plan)==1)",
+        "total_cost=0 \nfor activity in allactivities(plan):\n    total_cost+=activity_cost(activity)\n    total_cost += innercity_transport_cost(activity_transports(activity))\nresult=(total_cost<=2500)",
+        "result=True\nfor activity in allactivities(plan):\n  if activity_type(activity) in ['attraction', 'airplane', 'train'] and activity_tickets(activity)!=1: result=False\n  if innercity_transport_type(activity_transports(activity))=='metro'and metro_tickets(activity_transports(activity))!=1: result=False",
+        "result=True\nfor activity in allactivities(plan):\n  if activity_type(activity)=='accommodation' and room_count(activity)!=1: result=False",
+        "result=True\nfor activity in allactivities(plan):\n  if activity_type(activity)=='accommodation' and room_type(activity)!=1: result=False",
+        "intercity_transport_set=set()\nfor activity in allactivities(plan):\n  if activity_type(activity) in ['train', 'airplane']: intercity_transport_set.add(intercity_transport_type(activity))\nresult=({'train'}==intercity_transport_set)",
+        "attraction_type_set=set()\nfor activity in allactivities(plan):\n  if activity_type(activity)=='attraction': attraction_type_set.add(attraction_type(activity, target_city(plan)))\nresult=({'历史古迹'}<=attraction_type_set)",
+        "attraction_name_set=set()\nfor activity in allactivities(plan):\n  if activity_type(activity)=='attraction': attraction_name_set.add(activity_position(activity))\nresult=({'黄鹤楼'}<=attraction_name_set)",
+        "result=True\nfor activity in allactivities(plan):\n  if innercity_transport_type(activity_transports(activity))=='taxi'and taxi_cars(activity_transports(activity))!=1: result=False"
+      ]
     },
     "e20241028161340383778": {
       "uid": "e20241028161340383778",
@@ -556,11 +592,18 @@
         "result=(day_count(plan)==3)",
         "result=(people_count(plan)==1)",
         "result=True\nfor activity in allactivities(plan):\n  if activity_type(activity) in ['attraction', 'airplane', 'train'] and activity_tickets(activity)!=1: result=False\n  if innercity_transport_type(activity_transports(activity))=='metro'and metro_tickets(activity_transports(activity))!=1: result=False",
-        "attraction_name_set=set()\nfor activity in allactivities(plan):\n  if activity_type(activity)=='attraction': attraction_name_set.add(activity_position(activity))\nresult=({'青溪老街'}<=attraction_name_set)",
+        "attraction_name_set=set()\nfor activity in allactivities(plan):\n  if activity_type(activity)=='attraction': attraction_name_set.add(activity_position(activity))\nresult=({'Qingxi Old Street'}<=attraction_name_set)",
         "result=True\nfor activity in allactivities(plan):\n  if innercity_transport_type(activity_transports(activity))=='taxi'and taxi_cars(activity_transports(activity))!=1: result=False"
       ],
       "nature_language": "Current location: Hangzhou. I want to travel to Shanghai alone for 3 days and visit Qibao Old Street. Please provide me with a travel plan.",
-      "nature_language_en": "Current location: Hangzhou. I want to travel to Shanghai alone for 3 days and visit Qibao Old Street. Please provide me with a travel plan."
+      "nature_language_en": "Current location: Hangzhou. I want to travel to Shanghai alone for 3 days and visit Qibao Old Street. Please provide me with a travel plan.",
+      "hard_logic_py_original": [
+        "result=(day_count(plan)==3)",
+        "result=(people_count(plan)==1)",
+        "result=True\nfor activity in allactivities(plan):\n  if activity_type(activity) in ['attraction', 'airplane', 'train'] and activity_tickets(activity)!=1: result=False\n  if innercity_transport_type(activity_transports(activity))=='metro'and metro_tickets(activity_transports(activity))!=1: result=False",
+        "attraction_name_set=set()\nfor activity in allactivities(plan):\n  if activity_type(activity)=='attraction': attraction_name_set.add(activity_position(activity))\nresult=({'青溪老街'}<=attraction_name_set)",
+        "result=True\nfor activity in allactivities(plan):\n  if innercity_transport_type(activity_transports(activity))=='taxi'and taxi_cars(activity_transports(activity))!=1: result=False"
+      ]
     },
     "m20241028164848577483": {
       "uid": "m20241028164848577483",
@@ -575,11 +618,18 @@
         "result=(day_count(plan)==2)",
         "result=(people_count(plan)==3)",
         "result=True\nfor activity in allactivities(plan):\n  if activity_type(activity) in ['attraction', 'airplane', 'train'] and activity_tickets(activity)!=3: result=False\n  if innercity_transport_type(activity_transports(activity))=='metro'and metro_tickets(activity_transports(activity))!=3: result=False",
-        "attraction_name_set=set()\nfor activity in allactivities(plan):\n  if activity_type(activity)=='attraction': attraction_name_set.add(activity_position(activity))\nresult=({'西岸美术馆'}<=attraction_name_set)",
+        "attraction_name_set=set()\nfor activity in allactivities(plan):\n  if activity_type(activity)=='attraction': attraction_name_set.add(activity_position(activity))\nresult=({'West Bund Museum'}<=attraction_name_set)",
         "result=True\nfor activity in allactivities(plan):\n  if innercity_transport_type(activity_transports(activity))=='taxi'and taxi_cars(activity_transports(activity))!=1: result=False"
       ],
       "nature_language": "Current location: Guangzhou. The three of us want to visit Shanghai for 2 days and would like to go to the West Bund Art Museum. Please provide us with a travel plan.",
-      "nature_language_en": "Current location: Guangzhou. The three of us want to visit Shanghai for 2 days and would like to go to the West Bund Art Museum. Please provide us with a travel plan."
+      "nature_language_en": "Current location: Guangzhou. The three of us want to visit Shanghai for 2 days and would like to go to the West Bund Art Museum. Please provide us with a travel plan.",
+      "hard_logic_py_original": [
+        "result=(day_count(plan)==2)",
+        "result=(people_count(plan)==3)",
+        "result=True\nfor activity in allactivities(plan):\n  if activity_type(activity) in ['attraction', 'airplane', 'train'] and activity_tickets(activity)!=3: result=False\n  if innercity_transport_type(activity_transports(activity))=='metro'and metro_tickets(activity_transports(activity))!=3: result=False",
+        "attraction_name_set=set()\nfor activity in allactivities(plan):\n  if activity_type(activity)=='attraction': attraction_name_set.add(activity_position(activity))\nresult=({'西岸美术馆'}<=attraction_name_set)",
+        "result=True\nfor activity in allactivities(plan):\n  if innercity_transport_type(activity_transports(activity))=='taxi'and taxi_cars(activity_transports(activity))!=1: result=False"
+      ]
     },
     "m20241028164916356794": {
       "uid": "m20241028164916356794",
@@ -594,11 +644,18 @@
         "result=(day_count(plan)==3)",
         "result=(people_count(plan)==4)",
         "result=True\nfor activity in allactivities(plan):\n  if activity_type(activity) in ['attraction', 'airplane', 'train'] and activity_tickets(activity)!=4: result=False\n  if innercity_transport_type(activity_transports(activity))=='metro'and metro_tickets(activity_transports(activity))!=4: result=False",
-        "restaurant_name_set=set()\nfor activity in allactivities(plan):\n  if activity_type(activity) in ['breakfast', 'lunch', 'dinner']: restaurant_name_set.add(activity_position(activity))\nresult=({'上海宝格丽酒店·宝丽轩中餐厅'}<=restaurant_name_set)",
+        "restaurant_name_set=set()\nfor activity in allactivities(plan):\n  if activity_type(activity) in ['breakfast', 'lunch', 'dinner']: restaurant_name_set.add(activity_position(activity))\nresult=({'Shanghai Bulgari Hotel · Baolixuan Chinese Restaurant'}<=restaurant_name_set)",
         "result=True\nfor activity in allactivities(plan):\n  if innercity_transport_type(activity_transports(activity))=='taxi'and taxi_cars(activity_transports(activity))!=1: result=False"
       ],
       "nature_language": "Current location: Beijing. Four of us want to visit Shanghai for three days and dine at the Bao Li Xuan Chinese restaurant in the Bulgari Hotel Shanghai. Please provide us with a travel plan.",
-      "nature_language_en": "Current location: Beijing. Four of us want to visit Shanghai for three days and dine at the Bao Li Xuan Chinese restaurant in the Bulgari Hotel Shanghai. Please provide us with a travel plan."
+      "nature_language_en": "Current location: Beijing. Four of us want to visit Shanghai for three days and dine at the Bao Li Xuan Chinese restaurant in the Bulgari Hotel Shanghai. Please provide us with a travel plan.",
+      "hard_logic_py_original": [
+        "result=(day_count(plan)==3)",
+        "result=(people_count(plan)==4)",
+        "result=True\nfor activity in allactivities(plan):\n  if activity_type(activity) in ['attraction', 'airplane', 'train'] and activity_tickets(activity)!=4: result=False\n  if innercity_transport_type(activity_transports(activity))=='metro'and metro_tickets(activity_transports(activity))!=4: result=False",
+        "restaurant_name_set=set()\nfor activity in allactivities(plan):\n  if activity_type(activity) in ['breakfast', 'lunch', 'dinner']: restaurant_name_set.add(activity_position(activity))\nresult=({'上海宝格丽酒店·宝丽轩中餐厅'}<=restaurant_name_set)",
+        "result=True\nfor activity in allactivities(plan):\n  if innercity_transport_type(activity_transports(activity))=='taxi'and taxi_cars(activity_transports(activity))!=1: result=False"
+      ]
     },
     "m20241028164936662445": {
       "uid": "m20241028164936662445",
@@ -613,11 +670,18 @@
         "result=(day_count(plan)==3)",
         "result=(people_count(plan)==4)",
         "result=True\nfor activity in allactivities(plan):\n  if activity_type(activity) in ['attraction', 'airplane', 'train'] and activity_tickets(activity)!=4: result=False\n  if innercity_transport_type(activity_transports(activity))=='metro'and metro_tickets(activity_transports(activity))!=4: result=False",
-        "restaurant_name_set=set()\nfor activity in allactivities(plan):\n  if activity_type(activity) in ['breakfast', 'lunch', 'dinner']: restaurant_name_set.add(activity_position(activity))\nresult=({'蓝苑人家渝菜坊(北滨路店)'}<=restaurant_name_set)",
+        "restaurant_name_set=set()\nfor activity in allactivities(plan):\n  if activity_type(activity) in ['breakfast', 'lunch', 'dinner']: restaurant_name_set.add(activity_position(activity))\nresult=({'Blue Garden Family Sichuan Cuisine Restaurant (North Riverside Road Branch)'}<=restaurant_name_set)",
         "result=True\nfor activity in allactivities(plan):\n  if innercity_transport_type(activity_transports(activity))=='taxi'and taxi_cars(activity_transports(activity))!=1: result=False"
       ],
       "nature_language": "Current location: Beijing. Four of us want to visit Chongqing for 3 days and would like to eat at Lanyuan Renjia Yucai Fang (Beibin Road branch). Please provide us with a travel plan.",
-      "nature_language_en": "Current location: Beijing. Four of us want to visit Chongqing for 3 days and would like to eat at Lanyuan Renjia Yucai Fang (Beibin Road branch). Please provide us with a travel plan."
+      "nature_language_en": "Current location: Beijing. Four of us want to visit Chongqing for 3 days and would like to eat at Lanyuan Renjia Yucai Fang (Beibin Road branch). Please provide us with a travel plan.",
+      "hard_logic_py_original": [
+        "result=(day_count(plan)==3)",
+        "result=(people_count(plan)==4)",
+        "result=True\nfor activity in allactivities(plan):\n  if activity_type(activity) in ['attraction', 'airplane', 'train'] and activity_tickets(activity)!=4: result=False\n  if innercity_transport_type(activity_transports(activity))=='metro'and metro_tickets(activity_transports(activity))!=4: result=False",
+        "restaurant_name_set=set()\nfor activity in allactivities(plan):\n  if activity_type(activity) in ['breakfast', 'lunch', 'dinner']: restaurant_name_set.add(activity_position(activity))\nresult=({'蓝苑人家渝菜坊(北滨路店)'}<=restaurant_name_set)",
+        "result=True\nfor activity in allactivities(plan):\n  if innercity_transport_type(activity_transports(activity))=='taxi'and taxi_cars(activity_transports(activity))!=1: result=False"
+      ]
     },
     "m20241028165006698484": {
       "uid": "m20241028165006698484",
@@ -632,11 +696,18 @@
         "result=(day_count(plan)==2)",
         "result=(people_count(plan)==3)",
         "result=True\nfor activity in allactivities(plan):\n  if activity_type(activity) in ['attraction', 'airplane', 'train'] and activity_tickets(activity)!=3: result=False\n  if innercity_transport_type(activity_transports(activity))=='metro'and metro_tickets(activity_transports(activity))!=3: result=False",
-        "accommodation_name_set=set()\nfor activity in allactivities(plan):\n  if activity_type(activity)=='accommodation': accommodation_name_set.add(activity_position(activity))\nresult=({'重庆INDITION英迪逊酒店(江北嘴金融城店)'}<=accommodation_name_set)",
+        "accommodation_name_set=set()\nfor activity in allactivities(plan):\n  if activity_type(activity)=='accommodation': accommodation_name_set.add(activity_position(activity))\nresult=({'CHONGQING INDITION HOTEL(JIANG BEI)'}<=accommodation_name_set)",
         "result=True\nfor activity in allactivities(plan):\n  if innercity_transport_type(activity_transports(activity))=='taxi'and taxi_cars(activity_transports(activity))!=1: result=False"
       ],
       "nature_language": "Sure, here is the translation of your request into English:",
-      "nature_language_en": "Sure, here is the translation of your request into English:"
+      "nature_language_en": "Sure, here is the translation of your request into English:",
+      "hard_logic_py_original": [
+        "result=(day_count(plan)==2)",
+        "result=(people_count(plan)==3)",
+        "result=True\nfor activity in allactivities(plan):\n  if activity_type(activity) in ['attraction', 'airplane', 'train'] and activity_tickets(activity)!=3: result=False\n  if innercity_transport_type(activity_transports(activity))=='metro'and metro_tickets(activity_transports(activity))!=3: result=False",
+        "accommodation_name_set=set()\nfor activity in allactivities(plan):\n  if activity_type(activity)=='accommodation': accommodation_name_set.add(activity_position(activity))\nresult=({'重庆INDITION英迪逊酒店(江北嘴金融城店)'}<=accommodation_name_set)",
+        "result=True\nfor activity in allactivities(plan):\n  if innercity_transport_type(activity_transports(activity))=='taxi'and taxi_cars(activity_transports(activity))!=1: result=False"
+      ]
     },
     "m20241028165017072372": {
       "uid": "m20241028165017072372",
@@ -651,11 +722,18 @@
         "result=(day_count(plan)==2)",
         "result=(people_count(plan)==1)",
         "result=True\nfor activity in allactivities(plan):\n  if activity_type(activity) in ['attraction', 'airplane', 'train'] and activity_tickets(activity)!=1: result=False\n  if innercity_transport_type(activity_transports(activity))=='metro'and metro_tickets(activity_transports(activity))!=1: result=False",
-        "accommodation_name_set=set()\nfor activity in allactivities(plan):\n  if activity_type(activity)=='accommodation': accommodation_name_set.add(activity_position(activity))\nresult=({'花筑·僖堂民宿(南京夫子庙老门东店)'}<=accommodation_name_set)",
+        "accommodation_name_set=set()\nfor activity in allactivities(plan):\n  if activity_type(activity)=='accommodation': accommodation_name_set.add(activity_position(activity))\nresult=({'Floral Hotel Xitang B&B (Nanjing Confucius Temple Laomendong Branch)'}<=accommodation_name_set)",
         "result=True\nfor activity in allactivities(plan):\n  if innercity_transport_type(activity_transports(activity))=='taxi'and taxi_cars(activity_transports(activity))!=1: result=False"
       ],
       "nature_language": "Sure! Here is the translation of your request into English:",
-      "nature_language_en": "Sure! Here is the translation of your request into English:"
+      "nature_language_en": "Sure! Here is the translation of your request into English:",
+      "hard_logic_py_original": [
+        "result=(day_count(plan)==2)",
+        "result=(people_count(plan)==1)",
+        "result=True\nfor activity in allactivities(plan):\n  if activity_type(activity) in ['attraction', 'airplane', 'train'] and activity_tickets(activity)!=1: result=False\n  if innercity_transport_type(activity_transports(activity))=='metro'and metro_tickets(activity_transports(activity))!=1: result=False",
+        "accommodation_name_set=set()\nfor activity in allactivities(plan):\n  if activity_type(activity)=='accommodation': accommodation_name_set.add(activity_position(activity))\nresult=({'花筑·僖堂民宿(南京夫子庙老门东店)'}<=accommodation_name_set)",
+        "result=True\nfor activity in allactivities(plan):\n  if innercity_transport_type(activity_transports(activity))=='taxi'and taxi_cars(activity_transports(activity))!=1: result=False"
+      ]
     },
     "t20241206171855902412": {
       "uid": "t20241206171855902412",
@@ -676,5 +754,6 @@
       "nature_language": "Current location: Beijing. My two friends and I plan to travel to Shenzhen for two days. We will be flying. Please provide me with a travel plan.",
       "nature_language_en": "Current location: Beijing. My two friends and I plan to travel to Shenzhen for two days. We will be flying. Please provide me with a travel plan."
     }
-  }
+  },
+  "named_place_translation": "named_place_translations.json"
 }

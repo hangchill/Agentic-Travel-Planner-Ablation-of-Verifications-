@@ -3,6 +3,7 @@ from copy import deepcopy
 import json
 from pathlib import Path
 
+from chinatravel.evaluation.named_place_translation import translate_references
 from chinatravel.evaluation.repair_comparison import _component, _save, pair_path
 
 
@@ -75,8 +76,24 @@ def evaluate_repair_run(run_dir, queries=None, *, evaluator=None, preference=Fal
         evaluator = evaluate_final_plans
     references, exports = export_final_plans(run_dir, queries, trial_diagnostics=trial_diagnostics)
     manifest = json.loads((Path(run_dir) / "run_manifest.json").read_text(encoding="utf-8"))
+    ## English runs: named-place constraints carry Chinese names; score them with the
+    ## English names of the same database rows (see named_place_translation.py).
+    references, translation_log = translate_references(references, manifest.get("language"))
+    if translation_log:
+        resolved = sum(entry["resolved"] for entry in translation_log)
+        print(f"Named-place names translated for evaluation: {resolved} resolved, "
+              f"{len(translation_log) - resolved} unresolved")
     results = {}
     for strategy, (directory, plans) in exports.items():
+        if translation_log:
+            population_path = directory / "evaluation_population.json"
+            population = json.loads(population_path.read_text(encoding="utf-8"))
+            population["queries"] = references
+            population["named_place_translation"] = "named_place_translations.json"
+            _save(population_path, population)
+            _save(directory / "named_place_translations.json", translation_log)
+        else:
+            (directory / "named_place_translations.json").unlink(missing_ok=True)
         try:
             results[strategy] = evaluator(references, plans, directory,
                                           lang=manifest["language"], preference=preference)
