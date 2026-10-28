@@ -1,3 +1,23 @@
+## Examples page removal
+
+Current navigation has exactly six entries: Overview, Query Explorer, TRAIN set,
+TEST set, Ablations & Comparisons, Strategy-Specific. The Examples page module,
+registration/import, UI renderer, selectors and page-specific exports were removed.
+Evidence collection, selection, matrix validation, Markdown serialization and
+analysis regression tests remain available as library helpers. No numerical
+analysis, generated artifact or Query Explorer behavior was changed.
+
+Validation: 161 dashboard tests ran: 159 passed, with the same two pre-existing
+PC reporting errors referencing the obsolete `Final plans with 2+ failed PC` row.
+Existing strategy analysis (48), ablation comparisons (18), repair metrics (13)
+and commonsense round metrics (4) passed. Actual app startup, exact navigation/
+route checks, imports, compilation and whitespace checks passed. All 3,413
+protected file hashes match, including Query Explorer and analysis artifacts.
+No model/API calls, commits or pushes occurred.
+
+The revision notes below describe historical implementations, including the retired
+Examples page; they are not the current navigation contract.
+
 ## R0/R4 matrix-guidance comparison revision
 
 The canonical fourth pair is now **R0 vs R4 — Matrix-guidance comparison**,
@@ -41,8 +61,8 @@ No model/API calls, commits or pushes.
 
 ## Ablations & Comparisons revision
 
-Added the seventh page, ordered Overview, Query Explorer, TRAIN set, TEST set,
-Ablations & Comparisons, Strategy-Specific, Examples. The new page reads generated
+Added Ablations & Comparisons after TEST set. It remains in the current six-page
+navigation before Strategy-Specific. The comparison page reads generated
 CSV/JSON only. It shows pair questions, validity/checklists, difficulty-specific
 common results and Right − Left deltas, distinct mechanism evidence, downloads,
 one supplementary chart, definitions, and reproduction commands/provenance.
@@ -86,8 +106,8 @@ startup, imports, compilation and whitespace checks pass. Exact navigation label
 order, stable routes and all six headings are covered by tests. Protected source
 and experiment artifacts (2,572 files) remain unchanged. No commits or pushes.
 
-Top navigation and page headings now read, in order: Overview, Query Explorer,
-TRAIN set, TEST set, Strategy-Specific, Examples. `PAGE_SPECS` keeps the visible
+Current navigation and headings read, in order: Overview, Query Explorer,
+TRAIN set, TEST set, Ablations & Comparisons, Strategy-Specific. `PAGE_SPECS` keeps the visible
 ordering explicit. Existing module URL paths (Overview at the root) are preserved.
 UI cross-references, README order/filter policy, and navigation/headings tests are
 updated. Only presentation, tests and documentation changed; page dataset bindings,
@@ -146,7 +166,7 @@ controls. Top navigation is persistent and contains only the six page links.
 `page_context.py` owns explicitly scoped diagnostic selectors with distinct widget
 keys; the app passes only discovered runs. TRAIN matrices use TRAIN R0–R3,
 TEST Tables 1–4 use TEST reporting, Strategy-Specific uses TEST. Query Explorer
-and Examples default to TEST with their own local partition controls. Overview
+defaults to TEST with its own local partition controls. Overview
 summarizes both partitions. Refresh remains in the sidebar.
 
 Table selectors/downloads, source bindings, formulas and saved numerical cells

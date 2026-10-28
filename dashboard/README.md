@@ -145,14 +145,10 @@ The top navigation uses this exact order:
    difficulty filters and reproducibility. See [ABLATION_COMPARISONS.md](ABLATION_COMPARISONS.md).
 6. **Strategy-Specific**: TEST strategy diagnostics, including localisation, protection,
    widening, matrix guidance, guards and trial selection.
-7. **Examples**: four canonical mechanism sections with automatic source binding,
-   alternative qualifying selections and Markdown exports. These illustrate mechanisms,
-   not aggregate evidence. See [EXAMPLES_REPORTING.md](EXAMPLES_REPORTING.md).
 
 All analytical filters are local to their page. TEST set binds TEST reporting
 regardless of selections elsewhere; TRAIN set binds TRAIN R0–R3 evidence.
 Query Explorer retains initial/final endpoints while filtering expanded rounds.
-Examples searches complete independent trajectories using its canonical criteria.
 Saved aggregate matrices use local strategy/perspective/family/support controls;
 proposal filters never rebuild them. PC family and TEST failure kind remain
 different taxonomies.
@@ -266,7 +262,7 @@ results and the distinction between Commonsense macro and three-way All-pass.
 
 ### Page navigation and partition policy
 
-The persistent top navigation contains only the seven pages. There is no global
+The persistent top navigation contains only the six pages. There is no global
 run, partition or analytical filter state; the sidebar retains only Refresh local data.
 
 | Page | Partition | Local controls |
@@ -277,7 +273,6 @@ run, partition or analytical filter state; the sidebar retains only Refresh loca
 | TEST set | TEST reporting only | Existing independent Table 1–4 difficulty, strategies, metric/failure-family and round comparison controls |
 | Ablations & Comparisons | TEST only | Comparison, difficulty, supplementary metric; generated validity and cohort safeguards |
 | Strategy-Specific | TEST only | Strategy/run, difficulty where reporting exists, proposal phase/round/family/outcome/UID |
-| Examples | TRAIN cascade; TEST R2/R3/R4 | Qualifying example selector per canonical section; Markdown exports |
 
 Missing TEST runs remain unavailable; TRAIN is never substituted. Changing pages
 cannot carry a partition or proposal filter into benchmark reporting. The reporting

@@ -1,6 +1,6 @@
 # Ablations & Comparisons
 
-The page follows TEST set in the seven-page navigation. It reads only generated
+The page follows TEST set in the six-page navigation. It reads only generated
 outputs under `results/analysis/ablation_comparisons/` and offers exactly:
 
 1. **R0 vs R2 — Rollback protection**

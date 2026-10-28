@@ -1,11 +1,17 @@
 # Canonical mechanism examples
 
-The page contains four fixed sections and a contrast subsection within R4.
-Examples illustrate mechanisms, not aggregate performance. All run/partition
-bindings are explicit and independent of other pages and session filters.
-No UID is hard-coded. Every qualifying checkpoint proposal is selectable;
-defaults rank clear evidence deterministically. Missing categories display
-“No qualifying example found in the currently available run.”
+The Examples dashboard page and route have been removed. The six-page navigation
+is Overview, Query Explorer, TRAIN set, TEST set, Ablations & Comparisons, and
+Strategy-Specific. This document describes retained analysis helpers, not an
+available dashboard screen.
+
+`dashboard/example_selection.py` retains mechanism qualification, ranking and
+Markdown serialization. `dashboard/components/examples.py` retains only evidence
+collection and frozen TRAIN-matrix validation. Their analysis regression tests
+remain; page rendering, selectors and page-specific exports were removed.
+No experiment or representative-example analysis artifacts were deleted.
+
+The retained qualification rules are:
 
 | Section | Source | Exact qualification |
 | --- | --- | --- |
@@ -58,9 +64,7 @@ in `chinatravel/agent/nesy_verifier/repair_strategies/r3.py`; no causal reaction
 failure is claimed. R4 was **provided** guidance; following or causal impact is
 not inferred.
 
-Each selection renders a compact Markdown narrative with a short trajectory,
-verifier states, target/family/protected-PC evidence, matrix relationships, source
-identity and explanation. Its download uses the same narrative Markdown, with the section title included
-as the export heading.
-Raw itineraries and full logs are excluded. Tables 1–4, numerical aggregate
-metrics, experiment artifacts and analysis output files are untouched.
+The retained Markdown serializer can describe a selected trajectory and states
+for programmatic use. It is no longer registered as a dashboard display or download.
+Tables 1–4, numerical aggregate metrics, experiment artifacts and analysis outputs
+are unchanged.

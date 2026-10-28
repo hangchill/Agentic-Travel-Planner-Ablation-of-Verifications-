@@ -1,12 +1,11 @@
-"""Canonical examples with fixed source bindings and evidence-based defaults."""
+"""Retained example-evidence collection and matrix validation; no dashboard page."""
 import hashlib
 from pathlib import Path
 
 import pandas as pd
-import streamlit as st
 
 from dashboard import data_loader as data
-from dashboard.example_selection import EMPTY, TITLES, find_examples, markdown
+from dashboard.example_selection import TITLES, find_examples
 
 
 def recorded_hash_matches(path, expected):
@@ -72,26 +71,3 @@ def collect(runs):
     for examples in result.values():
         examples.sort(key=lambda e: (e['rank'],e['run'].run_id,e['uid'],str(e['trial']),-e['step']), reverse=True)
     return result
-
-
-def section(category, examples):
-    st.subheader(TITLES[category])
-    if not examples:
-        st.info(EMPTY)
-        return
-    st.caption(f'{len(examples)} qualifying examples. The default prioritizes clear logged evidence; these are mechanism illustrations.')
-    selected = st.selectbox('Selected representative example', range(len(examples)),
-        format_func=lambda i: f'{examples[i]["run"].strategy} · {examples[i]["uid"]} · {examples[i]["trial"]} · attempt {examples[i]["step"]} · {examples[i]["run"].run_id}',
-        key=f'canonical_example_{category}')
-    summary = markdown(examples[selected], category)
-    # The section heading already supplies the exported title.
-    st.markdown(summary.split('\n', 2)[2])
-    st.download_button('Export example Markdown', summary, file_name=f'{category}_example.md', mime='text/markdown', key=f'canonical_export_{category}')
-
-
-def render(runs):
-    examples = collect(runs)
-    for category in ('cascade','r2','r3','r4'):
-        section(category, examples[category])
-        if category == 'r4':
-            section('contrast', examples['contrast'])

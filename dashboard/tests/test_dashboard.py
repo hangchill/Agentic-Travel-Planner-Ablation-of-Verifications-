@@ -215,7 +215,7 @@ class UISmokeTests(FixtureCase):
             ('test_results', 'TEST', 'R0'), ('strategy_details', 'TRAIN', 'R1'),
             ('strategy_details', 'TEST', 'R2'), ('strategy_details', 'TEST', 'R3'),
             ('strategy_details', 'TEST', 'R4'), ('query_explorer', 'TEST', 'R2'),
-            ('query_explorer', 'TEST', 'R4'), ('representative_examples', 'TEST', 'R4')]:
+            ('query_explorer', 'TEST', 'R4')]:
             with self.subTest(page=page, strategy=strategy):
                 script = f'from dashboard.tests.test_dashboard import context\nfrom dashboard.pages.{page} import render\nrender(context({partition!r}, {strategy!r}))'
                 app = AppTest.from_string(script).run(timeout=90)
@@ -269,14 +269,6 @@ render(ctx)
 """
         app = AppTest.from_string(script).run(timeout=90)
         self.assertFalse(app.exception)
-
-    def test_canonical_examples_render_without_global_selection(self):
-        from streamlit.testing.v1 import AppTest
-        from dashboard.example_selection import TITLES
-        app = AppTest.from_string("from dashboard import data_loader as d\nfrom dashboard.pages.representative_examples import render\nrender({'runs': d.discover_runs()})").run(timeout=90)
-        self.assertFalse(app.exception)
-        self.assertEqual([x.value for x in app.subheader], list(TITLES.values()))
-        self.assertFalse(any(x.label in ('Partition', 'Strategy', 'Example criteria') for x in app.selectbox))
 
     def test_r2_examples_require_verified_preservation(self):
         a = pd.DataFrame({'query_uid': ['x'], 'step': [1], 'protected_regression_count': [1], 'rejected': [True]})

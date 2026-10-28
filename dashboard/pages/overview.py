@@ -30,4 +30,4 @@ def render(ctx):
     with st.expander('Run provenance'):
         provenance_run = st.selectbox('Run to inspect', ctx['runs'], format_func=lambda r: r.label, key='overview_provenance_run')
         freshness(provenance_run)
-    st.write('Use the page navigation for Overview, Query Explorer, TRAIN set, TEST set, Ablations & Comparisons, Strategy-Specific, and Examples.')
+    st.write('Use the page navigation for Overview, Query Explorer, TRAIN set, TEST set, Ablations & Comparisons, and Strategy-Specific.')

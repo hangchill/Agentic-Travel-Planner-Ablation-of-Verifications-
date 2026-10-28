@@ -15,20 +15,22 @@ class NavigationTests(FixtureCase):
 
     def test_actual_top_navigation_names_order_and_stable_routes(self):
         from pathlib import Path
-        expected = ['Overview', 'Query Explorer', 'TRAIN set', 'TEST set', 'Ablations & Comparisons', 'Strategy-Specific', 'Examples']
+        expected = ['Overview', 'Query Explorer', 'TRAIN set', 'TEST set', 'Ablations & Comparisons', 'Strategy-Specific']
         # Streamlit exposes the default Overview page at the root URL.
-        routes = ['', 'query_explorer', 'train_interdependencies', 'test_results', 'ablation_comparisons', 'strategy_details', 'representative_examples']
+        routes = ['', 'query_explorer', 'train_interdependencies', 'test_results', 'ablation_comparisons', 'strategy_details']
         with patch('streamlit.navigation', wraps=st.navigation) as navigation:
             app = AppTest.from_file(str(Path(__file__).resolve().parents[1] / 'app.py')).run(timeout=90)
         self.assertFalse(app.exception)
         self.assertEqual([page.title for page in navigation.call_args.args[0]], expected)
         self.assertEqual([page.url_path for page in navigation.call_args.args[0]], routes)
         self.assertEqual(navigation.call_args.kwargs['position'], 'top')
+        self.assertNotIn('dashboard.pages.representative_examples', __import__('sys').modules)
+        self.assertFalse((Path(__file__).resolve().parents[1] / 'pages/representative_examples.py').exists())
 
     def test_page_headings_match_navigation_names(self):
         for module, heading in [('overview','Overview'), ('query_explorer','Query Explorer'),
                                 ('train_interdependencies','TRAIN set'), ('test_results','TEST set'),
-                                ('ablation_comparisons','Ablations & Comparisons'), ('strategy_details','Strategy-Specific'), ('representative_examples','Examples')]:
+                                ('ablation_comparisons','Ablations & Comparisons'), ('strategy_details','Strategy-Specific')]:
             with self.subTest(page=module):
                 app = self.page(module)
                 self.assertFalse(app.exception)

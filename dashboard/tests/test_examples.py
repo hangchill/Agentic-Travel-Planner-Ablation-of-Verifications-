@@ -4,14 +4,12 @@ import hashlib
 from pathlib import Path
 import tempfile
 import unittest
-from unittest.mock import patch
 
 import pandas as pd
-from streamlit.testing.v1 import AppTest
 
 from dashboard import data_loader as d
-from dashboard.example_selection import EMPTY, TITLES, find_examples, markdown, trajectory_rows
-from dashboard.components.examples import collect, section, recorded_hash_matches, bound_train_matrix
+from dashboard.example_selection import find_examples, markdown, trajectory_rows
+from dashboard.components.examples import collect, recorded_hash_matches, bound_train_matrix
 from dashboard.tests.test_dashboard import FixtureCase
 
 DESCRIPTORS = [
@@ -140,7 +138,7 @@ class SelectionTests(unittest.TestCase):
         self.assertFalse(find('R3','TRAIN',[{'pc':[False,True]},{'pc':[True,True],'scope':'day','accepted':True}])['r3'])
         self.assertFalse(find('R4','TRAIN',[{'pc':[True,True],'accepted':True,'meta':guidance()}],train_matrix=train_matrix())['r4'])
 
-    def test_markdown_and_download_use_displayed_trajectory_and_states(self):
+    def test_markdown_retains_trajectory_and_states(self):
         e=find('R2','TEST')['r2'][0]
         summary=markdown(e,'r2')
         self.assertIn('| Attempt | Scope |',summary)
@@ -148,10 +146,6 @@ class SelectionTests(unittest.TestCase):
         self.assertIn('"PC states (1-based order)": [true, false]',summary)
         self.assertIn('"PC states (1-based order)": [false, true]',summary)
         self.assertNotIn('translated_plan',summary)
-        with patch('dashboard.components.examples.st.selectbox',return_value=0), patch('dashboard.components.examples.st.markdown') as display, patch('dashboard.components.examples.st.download_button') as download:
-            section('r2',[e])
-        self.assertEqual(display.call_args.args[0],summary.split('\n',2)[2])
-        self.assertEqual(download.call_args.args[1],summary)
 
     def test_missing_intermediate_accepted_plan_cannot_prove_rollback(self):
         cp=checkpoint('R2',[{'pc':[False,True],'accepted':True},{'pc':[True,False]}])
@@ -184,14 +178,7 @@ class SelectionTests(unittest.TestCase):
             self.assertFalse(recorded_hash_matches(p,expected))
 
 
-class ExampleUITests(FixtureCase):
-    def test_canonical_sections_and_unavailable_no_partition_selector(self):
-        app=AppTest.from_string("from dashboard.pages.representative_examples import render\nrender({'runs': []})").run(timeout=60)
-        self.assertFalse(app.exception)
-        self.assertEqual([x.value for x in app.subheader],list(TITLES.values()))
-        self.assertEqual([x.value for x in app.info],[EMPTY]*5)
-        self.assertFalse(app.selectbox)
-
+class ExampleCollectionTests(FixtureCase):
     def test_collection_never_uses_wrong_partition(self):
         found=collect(d.discover_runs())
         for key, examples in found.items():
