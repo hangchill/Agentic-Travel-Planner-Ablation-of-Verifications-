@@ -2,7 +2,8 @@
 
 Two panels (personal constraints, commonsense). In each, one stacked bar per strategy splits
 its queries by whether repair left them with more, the same, or fewer checks passing than
-their starting plan, with the start -> final pass rate under the bar. The runs start from
+their starting plan, with the start -> final pass rate under the bar (each query's own pass
+rate averaged over queries, and the mean per-query change in percentage points). The runs start from
 different initial plans, so the bars compare each strategy's change, not its final level.
 
 Reads only the per-query test reporting (test_result_analysis/<strategy>/per_query.csv):
@@ -37,15 +38,20 @@ PANELS = [('Personal constraints', 'protected by R2', 'pc'),
 ## ---------- per-query evidence ----------
 
 def outcome_counts(per_query, prefix):
-    """Queries better / same / worse than their start, plus pooled start and final passes."""
+    """Queries better / same / worse than their start, plus the mean per-query pass rate
+    (each query's own share, averaged over queries, as in the strategy comparison slide)."""
     delta = per_query[f'{prefix}_passed_final'] - per_query[f'{prefix}_passed_initial']
+    total = per_query[f'{prefix}_total']
+    start = 100 * per_query[f'{prefix}_passed_initial'] / total
+    end = 100 * per_query[f'{prefix}_passed_final'] / total
     return {
         'worse': int((delta < 0).sum()),
         'same': int((delta == 0).sum()),
         'better': int((delta > 0).sum()),
-        'start': int(per_query[f'{prefix}_passed_initial'].sum()),
-        'end': int(per_query[f'{prefix}_passed_final'].sum()),
-        'total': int(per_query[f'{prefix}_total'].sum()),
+        'start_rate': start.mean(),
+        'end_rate': end.mean(),
+        'change_pp': (end - start).mean(),
+        'total': int(total.sum()),
         'queries': len(per_query),
     }
 
@@ -89,8 +95,9 @@ def plot(strategies, reporting_dir, output):
                             color=INK if key == 'same' else 'white')
                 left += width
             zero = '0 worse · ' if c['worse'] == 0 else ''
-            ax.text(0, y - 0.38, f"{zero}pass rate {100 * c['start'] / c['total']:.1f}% → "
-                    f"{100 * c['end'] / c['total']:.1f}%", fontsize=8.5, color=INK_2, va='top')
+            ax.text(0, y - 0.38, f"{zero}avg pass rate {c['start_rate']:.1f}% → "
+                    f"{c['end_rate']:.1f}% ({c['change_pp']:+.1f} pp)", fontsize=8.5,
+                    color=INK_2, va='top')
         ax.set_yticks(range(len(strategies)), [s for s in reversed(strategies)],
                       fontsize=11, fontweight='bold', color=INK)
         ax.set_xlim(0, n)
@@ -104,7 +111,8 @@ def plot(strategies, reporting_dir, output):
     names = ' and '.join(strategies)
     fig.text(0.05, 0.075, textwrap.fill(f"R2's rollback guards personal constraints only; commonsense checks are "
              f'not protected by either strategy. {names} start from different initial plans, so '
-             'compare the change, not the final level. One run per strategy.', 150),
+             'compare the change, not the final level. Pass rates are averaged per query. '
+             'One run per strategy.', 150),
              fontsize=8.5, color=INK_2, va='top')
 
     output.parent.mkdir(parents=True, exist_ok=True)
