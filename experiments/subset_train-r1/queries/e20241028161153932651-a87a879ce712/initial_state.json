@@ -1,0 +1,27 @@
+{
+  "query_uid": "e20241028161153932651",
+  "reconstructed": "Reconstructed offline from attempts.jsonl by train_result_analysis/difficulty_comparisons/difficulty_comparison_r0-3.py (score step): final plan = accepted_plan_after of the last attempt, translated with LLMModuloAgent.translate_innercity_transport; reference queries from subset_train-r0. Not a checkpoint written by the repair loop.",
+  "state": {
+    "problem": {
+      "uid": "e20241028161153932651",
+      "tag": "medium",
+      "start_city": "Shenzhen",
+      "target_city": "Chengdu",
+      "days": 2,
+      "people_number": 4,
+      "limit_rooms": true,
+      "limits_room_type": false,
+      "hard_logic_py": [
+        "result=(day_count(plan)==2)",
+        "result=(people_count(plan)==4)",
+        "total_cost=0 \nfor activity in allactivities(plan):\n    total_cost+=activity_cost(activity)\n    total_cost += innercity_transport_cost(activity_transports(activity))\nresult=(total_cost<=8000)",
+        "result=True\nfor activity in allactivities(plan):\n  if activity_type(activity) in ['attraction', 'airplane', 'train'] and activity_tickets(activity)!=4: result=False\n  if innercity_transport_type(activity_transports(activity))=='metro'and metro_tickets(activity_transports(activity))!=4: result=False",
+        "result=True\nfor activity in allactivities(plan):\n  if activity_type(activity)=='accommodation' and room_count(activity)!=2: result=False",
+        "intercity_transport_set=set()\nfor activity in allactivities(plan):\n  if activity_type(activity) in ['train', 'airplane']: intercity_transport_set.add(intercity_transport_type(activity))\nresult=({'airplane'}==intercity_transport_set)",
+        "result=True\nfor activity in allactivities(plan):\n  if innercity_transport_type(activity_transports(activity))=='taxi'and taxi_cars(activity_transports(activity))!=1: result=False"
+      ],
+      "nature_language": "Current location: Shenzhen. Four of us want to visit Chengdu for 2 days with a budget of 8,000 RMB. We plan to fly round-trip and stay in two rooms. Could you please provide a travel itinerary for us?",
+      "nature_language_en": "Current location: Shenzhen. Four of us want to visit Chengdu for 2 days with a budget of 8,000 RMB. We plan to fly round-trip and stay in two rooms. Could you please provide a travel itinerary for us?"
+    }
+  }
+}

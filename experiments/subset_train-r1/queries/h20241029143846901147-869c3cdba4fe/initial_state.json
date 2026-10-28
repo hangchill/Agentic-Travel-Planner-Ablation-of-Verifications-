@@ -1,0 +1,26 @@
+{
+  "query_uid": "h20241029143846901147",
+  "reconstructed": "Reconstructed offline from attempts.jsonl by train_result_analysis/difficulty_comparisons/difficulty_comparison_r0-3.py (score step): final plan = accepted_plan_after of the last attempt, translated with LLMModuloAgent.translate_innercity_transport; reference queries from subset_train-r0. Not a checkpoint written by the repair loop.",
+  "state": {
+    "problem": {
+      "uid": "h20241029143846901147",
+      "tag": "human",
+      "start_city": "Nanjing",
+      "target_city": "Beijing",
+      "days": 5,
+      "people_number": 1,
+      "limit_rooms": false,
+      "limits_room_type": false,
+      "hard_logic_py": [
+        "attraction_name_set=set()\nfor activity in allactivities(plan):\n  if activity_type(activity)=='attraction': attraction_name_set.add(activity_position(activity))\nresult=({'北京环球度假区'}<=attraction_name_set)",
+        "total_cost=0 \nfor activity in allactivities(plan):\n    total_cost+=activity_cost(activity)\n    total_cost += innercity_transport_cost(activity_transports(activity))\nresult=(total_cost<=5000)",
+        "restaurant_type_set=set()\nfor activity in allactivities(plan):\n  if activity_type(activity) in ['breakfast', 'lunch', 'dinner']: restaurant_type_set.add(restaurant_type(activity, target_city(plan)))\nresult=({'北京菜'}<=restaurant_type_set)",
+        "result=(day_count(plan)==5)",
+        "result=(people_count(plan)==1)",
+        "result=True\nfor activity in allactivities(plan):\n  if innercity_transport_type(activity_transports(activity))=='taxi'and taxi_cars(activity_transports(activity))!=1: result=False"
+      ],
+      "nature_language": "[Current location: Nanjing, Destination: Beijing, Number of travelers: 2, Travel days: 5] One person is going to Beijing for 5 days to explore Old Beijing and Universal Studios, with a budget of over four thousand, planning to eat Peking duck and other local specialties.",
+      "nature_language_en": "[Current location: Nanjing, Destination: Beijing, Number of travelers: 2, Travel days: 5] One person is going to Beijing for 5 days to explore Old Beijing and Universal Studios, with a budget of over four thousand, planning to eat Peking duck and other local specialties."
+    }
+  }
+}

@@ -1,0 +1,25 @@
+{
+  "query_uid": "e20241028160445320665",
+  "reconstructed": "Reconstructed offline from attempts.jsonl by train_result_analysis/difficulty_comparisons/difficulty_comparison_r0-3.py (score step): final plan = accepted_plan_after of the last attempt, translated with LLMModuloAgent.translate_innercity_transport; reference queries from subset_train-r0. Not a checkpoint written by the repair loop.",
+  "state": {
+    "problem": {
+      "uid": "e20241028160445320665",
+      "tag": "easy",
+      "start_city": "Guangzhou",
+      "target_city": "Nanjing",
+      "days": 1,
+      "people_number": 1,
+      "limit_rooms": false,
+      "limits_room_type": false,
+      "hard_logic_py": [
+        "result=(day_count(plan)==1)",
+        "result=(people_count(plan)==1)",
+        "total_cost=0 \nfor activity in allactivities(plan):\n    total_cost+=activity_cost(activity)\n    total_cost += innercity_transport_cost(activity_transports(activity))\nresult=(total_cost<=2000)",
+        "result=True\nfor activity in allactivities(plan):\n  if activity_type(activity) in ['attraction', 'airplane', 'train'] and activity_tickets(activity)!=1: result=False\n  if innercity_transport_type(activity_transports(activity))=='metro'and metro_tickets(activity_transports(activity))!=1: result=False",
+        "result=True\nfor activity in allactivities(plan):\n  if innercity_transport_type(activity_transports(activity))=='taxi'and taxi_cars(activity_transports(activity))!=1: result=False"
+      ],
+      "nature_language": "Current location: Guangzhou. I want to visit Nanjing for a day by myself with a budget of 2000 RMB. Please provide me with a travel plan.",
+      "nature_language_en": "Current location: Guangzhou. I want to visit Nanjing for a day by myself with a budget of 2000 RMB. Please provide me with a travel plan."
+    }
+  }
+}
