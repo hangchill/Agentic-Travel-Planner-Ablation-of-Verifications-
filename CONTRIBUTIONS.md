@@ -191,7 +191,6 @@ Workflow/analysis docs: `experiments/Commands_to_test_queries.md` (Jun Hang Soo,
 | `docs/PRD_R3_adaptive_repair.md` | Nancy Shen, Jun Hang Soo |
 | `docs/R2_rollback_how_it_works.pdf` | Jiarui |
 | `matrices/README.md` | Jun Hang Soo, Thydaphea |
-| `assets/repair-framework-illustrations/*` | Jun Hang Soo |
 
 ## Runners & project config (root)
 
