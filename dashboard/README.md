@@ -284,3 +284,59 @@ cannot carry a partition or proposal filter into benchmark reporting. The report
 pages use the same saved tables and metric helpers as before; removing proposal
 filters restores the full benchmark cohort by default. Restart Streamlit after
 updating source (file watching is disabled in the repository configuration).
+
+## Query Explorer walkthrough
+
+Query Explorer retains its local TEST-default partition, strategy/run, difficulty,
+query UID, phase/round/family/outcome and independent-trial controls. The summary
+shows the original saved request where available, initial/final accepted PC and
+loop-CS results, and run/trial identity. Benchmark reporting remains separate.
+
+The compact Initial/Attempt navigation wraps after seven buttons and includes
+Previous/Next. Attempt labels use persisted step IDs; navigation uses independent
+record identities, so nonconsecutive or missing step IDs are not renumbered as
+recorded rounds. Filters restrict selectable attempts, while initial/final states
+and the full constraint history remain available. Selecting another query or trial
+uses independent navigation state.
+
+Before, Candidate and Accepted after each have verification details and activity
+cards. Rejected candidates remain visible; accepted state advances only according
+to the recorded loop decision. Missing raw plans remain unavailable rather than
+being replaced with translated plans, last candidates or selected exports. The
+final accepted loop plan and R4 post-hoc selected outcome have separate sections.
+
+`components/itinerary_cards.py` imports only the pure `activity_title`,
+`format_money` and `transport_description` functions from `frontend.presentation`.
+No replay data, narration, curated issue IDs, live planner, history discovery or
+storage helpers are imported. Cards support multiple days, dict/list transfers,
+recorded details and escaped text. Longer itineraries use collapsed day sections.
+
+The supplementary raw-plan diff matches unique recorded activity/slot IDs first,
+then unique unchanged place/route identities within explicitly identified days
+(or a single unambiguous day). It never pairs activities by list position.
+Insertions/deletions with stable IDs are labelled explicitly; changed identities,
+duplicates and other ambiguous activities remain unmatched. Reordering is shown
+as an order change. Partial alignment has no invented changed-activity count.
+This display does not redefine the team's translated-plan changed metric.
+
+Explicit zero-based `editable_slots` records can focus the Before itinerary.
+These are editable-location mappings, not inferred violation locations; highlights
+are never transferred to a possibly reordered candidate.
+
+PC history shows saved True/False/Unknown candidate vectors and the final accepted
+state. CS history shows saved messages/counts, without invented persistent check
+identities. Message-set introductions/removals are loop diagnostics, not benchmark
+check fixes. R2 shows protected PCs, candidate regressions, rejection and recorded
+raw-plan retention evidence. R3 shows actual scope, scheduled widening and logged
+escalation. R4 separates relationship evidence/support, guard status, candidate
+outcome, loop acceptance and post-hoc selection; logged guidance does not prove
+that the model followed it.
+
+Process details expose only saved counters. Raw evidence is collapsed and
+credential/environment fields are redacted. Downloads include the current
+attempt, state comparison, field diff, checkpoint and final itinerary; existing
+itinerary and benchmark CSV downloads remain available. Provenance uses the
+existing binding/freshness infrastructure and adds the selected checkpoint path.
+Generation timestamps and freshness limitations are labelled when unavailable.
+
+See `QUERY_EXPLORER_MERGE.md` for implementation and validation details.

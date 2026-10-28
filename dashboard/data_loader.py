@@ -214,11 +214,14 @@ def query_artifacts(run, uid):
     if not directories:
         return {'checkpoints': [], 'initial': {}, 'selected': {}}
     d = directories[0]
-    cps = [read_json(p) for p in sorted(list(d.glob(f'{run.strategy}-*.json')) +
-                                      list((d / 'trials').glob('*.json')))]
-    cps = [c for c in cps if c.get('query_uid') == uid and 'final_verification' in c]
+    paths = sorted(list(d.glob(f'{run.strategy}-*.json')) + list((d / 'trials').glob('*.json')))
+    pairs = [(p, read_json(p)) for p in paths]
+    pairs = [(p, c) for p, c in pairs if c.get('query_uid') == uid and 'final_verification' in c]
+    cps = [c for _, c in pairs]
     return {'checkpoints': cps, 'initial': read_json(d / 'initial_state.json'),
-            'selected': read_json(d / 'final_state.json')}
+            'selected': read_json(d / 'final_state.json'),
+            'checkpoint_paths': [str(p) for p, _ in pairs],
+            'reference': read_json(d / 'reference/query.json')}
 
 
 @st.cache_data(show_spinner=False, hash_funcs={Run: lambda r: (r.path, r.partition, r.strategy, r.run_id)})
