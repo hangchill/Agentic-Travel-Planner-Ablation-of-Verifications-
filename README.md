@@ -4,25 +4,66 @@ This repository is adapted from the original [ChinaTravel benchmark](https://git
 
 Our project investigates whether modelling constraint interdependencies can improve verification-guided repair in LLM-based travel planning.
 
-We use the existing ChinaTravel planner and compare five repair strategies. We hold the planner
-and the verifier fixed and ablate only the **repair step**: when a generated itinerary fails a
+We use the existing ChinaTravel planner and compared five repair strategies. We held the planner
+and the verifier fixed and ablated only the **repair step**: when a generated itinerary fails a
 constraint, how should the planner fix it without breaking constraints that were already passing?
 
-| Strategy | Description |
-|---|---|
-| R0 | Whole-plan regeneration (baseline) |
-| R1 | Targeted / slot repair |
-| R2 | Protected repair (tracks and can reject regressions) |
-| R3 | Adaptive-scope repair (slot → day → plan) |
-| R4 | Constraint-interdependency-guided repair (reads a learned regression matrix) |
+Our research question: **Can modelling constraint interdependencies improve the effectiveness and
+efficiency of verification-guided repair?**
+
+All five strategies are implemented and were evaluated on the held-out `subset_test` set (30
+queries). They differ only in *which part of the plan can change during repair* and *whether a
+repair can be rejected*.
+
+| Strategy | What it does | Guard against regressions? |
+|---|---|---|
+| R0 | Whole-plan regeneration (baseline) | No — always accepts the new plan |
+| R1 | Targeted single-slot edit (one activity or transport) | No |
+| R2 | Whole-plan rewrite with a **hard rollback guard** | **Yes** — rejects any candidate that breaks a previously-passing personal constraint |
+| R3 | Adaptive scope, slot → day → plan on an iteration schedule | No |
+| R4 | R3-at-plan-scope **plus advisory regression-matrix text in the prompt** | No — it only *warns* the LLM |
 
 The headline artifact is a **regression / interaction matrix** `M[i][j] = P(constraint family j
-breaks when repairing family i)`, learned from R0–R3 on the training split. **R4** consumes `M`
-to choose a repair order/scope that minimises these cascades.
+breaks when repairing family i)`, learned by pooling R0–R3 trajectories on the **training** split
+(no test leakage). R4 reads `M` and appends advisory risk rankings to the repair prompt.
 
-> **For anyone taking over the project, read [`HANDOVER.md`](HANDOVER.md) first** — it is a
-> self-contained brief (what we did, why, current status, exact commands, and how to read the
-> results) that needs no prior context.
+> **Honest note on R4.** R4 does **not** prevent regressions. It does not override the
+> accept/reject step; it only adds advisory text that warns the LLM which fixes historically break
+> which other constraints. **Only R2 enforces** a hard guard. Treat R4 as a prompt-level nudge,
+> not a hard constraint-protection mechanism.
+
+### Results summary (held-out `subset_test`, n = 30)
+
+On the 30-query test set, the differences between strategies are small — each difficulty group has
+only ~10 queries, so a swing of one or two queries is within noise. With that caveat:
+
+- **R4 was best on commonsense satisfaction** (commonsense micro 90.2% vs R0's 86.9%; fewest final
+  commonsense failures). This is a small, consistent edge, not a conclusive win.
+- **R3 edged the logical metrics** (logical micro 91.49%, macro 60%) but was the **most expensive**
+  (~168 s and ~184k tokens per query).
+- **R1 was cheapest and fastest** (~18 s/query) but **worst on commonsense** — its single-slot edits
+  often left structural issues.
+- **R2's rollback guard worked as designed**: it rejected 11 harmful repairs on the test set and
+  never let a passing personal constraint regress.
+
+> **Fairness caveat (important).** The five strategies did **not** start from the same initial
+> itinerary for a given query — each regenerated its own first draft (different
+> `initial_plan_hash`). So prefer *within-strategy initial→final improvement* over absolute
+> cross-strategy *final-level* comparison. The verified conclusion is "R4 is promising on
+> commonsense," **not** "R4 is proven to work."
+
+### Where to look
+
+| Path | What is there |
+|---|---|
+| `experiments/subset_{train,test}-r{0..4}` | The committed run outputs (`attempts.jsonl`, per-query plans, benchmark eval) |
+| `test_result_analysis/` (+ `merged/`, `README.md`) | Per-method result tables for R0–R4 and the metric definitions / data caveats |
+| `train_result_analysis/` | Training-set result notebooks |
+| `r4/` | The regression-matrix pipeline, the committed learned matrix, and its manifest |
+| `dashboard/` | A local, read-only Streamlit app that visualises the tables and ablation comparisons |
+
+> For a standalone project overview — methodology, commands, results, and honest limitations — see
+> [`HANDOVER.md`](HANDOVER.md).
 
 ### Verification is held constant (the experimental control)
 
@@ -130,11 +171,11 @@ This runs one medium-difficulty ChinaTravel case using the shared R0 framework. 
 
 Results are saved under `results/`, while repair histories and logs are saved under `cache/`.
 
-## For Teammates — Running and Extending the Strategies
+## Running and Reading the Shared Framework
 
-All five repair strategies (R0, R1, R2, R3, R4) are implemented, registered, and have been run.
-You do not need to rewrite the original planner. This section is for running further experiments
-and reading the shared framework.
+All five repair strategies (R0, R1, R2, R3, R4) are implemented, registered, and were run on the
+subset splits. The original ChinaTravel planner is reused unchanged. This section documents the
+shared framework and how to reproduce a run.
 
 ### Main files
 
@@ -143,13 +184,14 @@ All these files are inside `chinatravel/agent/nesy_verifier/`.
 | File | Purpose |
 |---|---|
 | `repair_strategies/base.py` | Common interface for all repair methods |
-| `repair_strategies/r0.py` | Example implementation |
+| `repair_strategies/r0.py` | R0 whole-plan regeneration (baseline); R1–R4 live alongside as `r1.py`…`r4.py` |
 | `shared_verifier.py` | Checks constraints and separately records technical verification errors |
 | `shared_repair_loop.py` | Handles repair attempts, acceptance/rejection and logging |
 | `llm_modulo.py` | Main agent and strategy selection |
 
-For implementation and historical R0 results, see `framework_r0.ipynb` and
-`train_test_split_r0.ipynb`. The current subset UID lists are `subset_train`
+For a walk-through of the shared framework and the R0 baseline, see `framework_r0.ipynb`; for the
+train/test split and how the experiments were run, see `train_test_split_r0.ipynb`. The subset UID
+lists are `subset_train`
 (60 queries: 20 easy / 20 medium / 20 human) and `subset_test` (30 queries:
 10 easy / 10 medium / 10 human), balanced equally across difficulty on both
 sides. The shared `pilot5` set (5 queries: 2 easy / 1 medium / 2 human) is a
@@ -215,26 +257,28 @@ def repair(self, problem, raw_plan, verification_results, context, llm):
 ```
 
 The strategy receives the current raw itinerary, verification feedback, travel information and the
-LLM adapter, and returns a proposed itinerary. Override `accept()` if it needs to reject a
-proposed repair (as R2 does). Register it in `repair_strategies/__init__.py`
-(`STRATEGY_FACTORIES`) and smoke-test it on `pilot5` before larger runs.
+LLM adapter, and returns a proposed itinerary. A strategy can override `accept()` to reject a
+proposed repair — R2 is the only strategy that does this (its hard rollback guard). Strategies are
+registered in `repair_strategies/__init__.py` (`STRATEGY_FACTORIES`).
 
-### Current status
+### Project status
 
 The shared framework and all five strategies (R0, R1, R2, R3, R4) are implemented, registered
-(`STRATEGY_FACTORIES = {R0, R1, R2, R3, R4}`), and have been run. The shared verifier reports
-invalid itinerary structure, transport-translation failures and verifier execution errors
-separately from genuine constraint violations, and is **language-aware** (English itineraries are
-checked against the English sandbox, fixing earlier false "unavailable transport" errors).
-Named-place constraints are translated to English at scoring time. Experiments run on **DeepSeek
-V3** (far cheaper than GPT-4.1), and logging is **cross-platform** (Windows long-path fixes).
+(`STRATEGY_FACTORIES = {R0, R1, R2, R3, R4}`), and were run. The shared verifier reports invalid
+itinerary structure, transport-translation failures and verifier execution errors separately from
+genuine constraint violations, and is **language-aware** (English itineraries are checked against
+the English sandbox, which fixed earlier false "unavailable transport" errors). Named-place
+constraints are translated to English at scoring time. Experiments ran on **DeepSeek V3** (far
+cheaper than GPT-4.1) at temperature 0, with `--lang en`, `--max-steps 6`, and the shared
+verifier. Logging is **cross-platform** (Windows long-path fixes).
 
-**Experiments committed so far:** training runs on `subset_train` for R0–R3, and test runs on
-`subset_test` for **all five strategies (R0, R1, R2, R3, R4)**. The learned matrix `M` is built
-and committed under `r4/`. Per-method result tables for R0–R4 are in `test_result_analysis/` (see
-its `README.md` for metric definitions and data caveats). Note: the `subset_test-r1` run still
-needs its `summaries.csv`/`pass_rates.csv` and `regression_matrix/` built (only `attempts.jsonl`
-and `benchmark_eval` exist so far).
+**Committed experiments:** training runs on `subset_train` (60 queries) for R0–R3, and test runs
+on `subset_test` (30 queries) for **all five strategies (R0, R1, R2, R3, R4)**. The learned matrix
+`M` was pooled from the R0–R3 training trajectories and committed under `r4/`. Per-method result
+tables for R0–R4 are in `test_result_analysis/` (see its `README.md` for metric definitions and
+data caveats). Note: the `subset_test-r1` run has `attempts.jsonl` and `benchmark_eval` but its
+`summaries.csv`/`pass_rates.csv` and `regression_matrix/` were not built, so some R1 cells in the
+merged tables are drawn from the benchmark eval rather than a `pass_rates.csv`.
 
 **Comparison & visualisation layer:** `scripts/result_analysis/ablation_comparisons/` builds
 offline pairwise comparisons from the test reporting (R0↔R2 rollback protection, R1↔R3
@@ -243,8 +287,8 @@ read-only **Streamlit dashboard** (`dashboard/`, launched with
 `streamlit run dashboard/app.py` after `pip install -r requirements-dashboard.txt`) visualises
 these tables and comparisons. Neither runs experiments, scores plans, or calls a model.
 
-For the full, standalone project brief — status, methodology, commands, and how to read the
-results without touching code — see **[`HANDOVER.md`](HANDOVER.md)**.
+For the full, standalone project overview — methodology, commands, results, and honest limitations
+— see **[`HANDOVER.md`](HANDOVER.md)**.
 
 ---
 

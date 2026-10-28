@@ -1,14 +1,4 @@
-# HANDOVER — DSA4213 Verification-Guided Travel-Planner Repair
-
-> **Read this file alone and you can understand the whole project and continue it.**
-> You do not need to open any Python file to follow what we did, why, and what is left.
-> Code-level pointers are given only so you know *where* to look if you choose to.
->
-> Last updated against `main` @ `2ae0ed1` (after the ablation-comparisons + dashboard work and
-> the R0/R4 comparison were merged). Working tree clean. Where a number or claim could be stale,
-> it is flagged.
-
----
+# Project Overview — DSA4213 Verification-Guided Travel-Planner Repair
 
 ## 1. What this project is (one paragraph)
 
@@ -20,12 +10,14 @@ constraint, the planner tries to **repair** it and re-checks. Our project does *
 planning or checking works. We **hold the verifier fixed** and change only the **repair step**,
 then compare repair strategies head-to-head. This is an *ablation of the repair method*.
 
-**Research question.** When you repair the one constraint that is failing, do you accidentally
-break constraints that were already passing (a "cascade")? And can we reduce those cascades by
-**modelling which constraint types tend to break which other types**? The headline artifact is a
-**regression / interaction matrix** `M[i][j] = probability that constraint family j newly breaks
-when we repair family i`. Our final strategy (R4) reads this matrix to repair in an order/scope
-that avoids cascades.
+**Research question.** *Can modelling constraint interdependencies improve the effectiveness and
+efficiency of verification-guided repair?* When you repair the one constraint that is failing, do
+you accidentally break constraints that were already passing (a "cascade")? And can we reduce
+those cascades by **modelling which constraint types tend to break which other types**? The
+headline artifact is a **regression / interaction matrix** `M[i][j] = probability that constraint
+family j newly breaks when we repair family i`. Our final strategy (R4) reads this matrix and adds
+advisory risk text to the repair prompt. Importantly, R4 only *warns* the LLM about likely
+cascades — it does not enforce anything (see §9).
 
 ---
 
@@ -35,16 +27,23 @@ Every strategy generates an initial plan the same way and is checked by the **sa
 verifier after every repair attempt**. They differ only in *what part of the plan is allowed to
 change* during a repair.
 
-| Strategy | Idea | One-line behaviour | Status |
+| Strategy | Idea | One-line behaviour | Guard against regressions? |
 |---|---|---|---|
-| **R0** | Baseline | Regenerate the **whole** itinerary from scratch given the verifier's error list. | Implemented, registered |
-| **R1** | Targeted | Edit only the **slot(s)** tied to the failing constraint; freeze everything else. | Implemented, registered |
-| **R2** | Protected | Whole-plan rewrite, but **track** which previously-passing constraints it broke; can reject/roll back a regressing candidate. | Implemented, registered |
-| **R3** | Adaptive scope | Start narrow (slot), widen **slot → day → plan** on a schedule. At its narrowest it behaves like R1, at its widest like R0. | Implemented, registered |
-| **R4** | Matrix-guided | Reads the learned matrix `M` and chooses repair order/scope to **minimise cascades**. The core research contribution. | Implemented, registered |
+| **R0** | Baseline | Regenerate the **whole** itinerary from scratch given the verifier's error list. | No — always accepts |
+| **R1** | Targeted | Edit only the **one slot** tied to the failing constraint (one activity or nested transport); freeze everything else. | No |
+| **R2** | Protected | Whole-plan rewrite, but its `accept()` **rejects any candidate that breaks a previously-passing personal constraint** (a hard rollback). | **Yes** — the only strategy with a real guard |
+| **R3** | Adaptive scope | Start narrow (slot), widen **slot → day → plan** driven by the iteration counter (1–2 slot, 3–4 day, 5+ plan). At its narrowest it behaves like R1, at its widest like R0. | No |
+| **R4** | Matrix-guided | R3-at-plan-scope **plus advisory regression-matrix text in the prompt**. Each round it reads the learned matrix `M`, ranks the failing constraints by estimated cascade risk, and appends that advice to the prompt. | **No — advisory only** (it warns the LLM; it does not override `accept()`) |
 
 > **R3P is gone.** An earlier "phased" variant (R3P) was folded into R3 and removed. If any doc
 > still mentions R3P as a separate strategy, that doc is stale — there are exactly five: R0–R4.
+
+> **Be honest about R4.** R4 is mechanically "R3 edited at whole-plan scope, with advisory matrix
+> text added to the prompt." It does **not** override the accept/reject step, so it inherits the
+> base `accept()` that always returns `True`. The matrix changes **prompt content only** — never
+> the editing scope, the candidate selection, or the loop's repair order. **R4 does not prevent
+> regressions; only R2 does.** The case study in §9 even shows R4 accepting a regressing candidate.
+> This is the single most important thing to state plainly when presenting the project.
 
 **Why this is a fair comparison (the control).** All five call one verifier,
 `chinatravel/agent/nesy_verifier/shared_verifier.py::verify_plan`, which re-checks the **entire
@@ -59,13 +58,12 @@ to the repair method, not the checker.
 
 ---
 
-## 3. Current status — DONE vs TODO
+## 3. What was built and run
 
-**DONE**
 - Shared framework: one verifier + one repair loop + a strategy registry. All five strategies
   (R0, R1, R2, R3, R4) are implemented and selectable.
 - The matrix pipeline: run a strategy → per-attempt log → regression matrix CSVs.
-- The **learned matrix `M`** has been built by pooling R0–R3 **training** trajectories
+- The **learned matrix `M`** was built by pooling R0–R3 **training** trajectories
   (`r4/main_matrix_from_subset_train_r0_r3_10x10.csv` and its `_probabilities.csv`).
 - **Training runs** on `subset_train` (60 queries) committed for **R0, R1, R2, R3**.
 - **Test runs** on `subset_test` (30 queries) committed for **all five: R0, R1, R2, R3, R4**.
@@ -80,19 +78,17 @@ to the repair method, not the checker.
 - Language-aware verifier (English itineraries checked against the English sandbox) and
   **named-place translation** for scoring (Chinese place names in the DSL are matched to the
   English plan at eval time). Cross-platform (Windows) logging fixes.
-- Test suite green (41 test files under `tests/`; run it to get the exact assertion count).
+- Automated tests: **41 test files under `tests/`**; the suite passes offline (run it to get the
+  exact assertion count — the number of files is stable, the assertion count is not pinned here).
 
-**TODO / gaps to be aware of**
-- The `subset_test-r1` run has `attempts.jsonl` + `benchmark_eval` (and is in the analysis
-  tables) but is **missing its `summaries.csv`, `pass_rates.csv`, and `regression_matrix/`** —
-  the summary and matrix steps weren't run for it. Run those two offline steps (see §7) to make
-  R1 consistent with the other test runs.
-- **No `subset_train-r4`** run. R4 is evaluated on `subset_test` only (correct, since R4 must be
-  tested on held-out data), and there is a small training-only R4 pilot path if needed.
-- **Write-up / interpretation.** The tables exist; the narrative comparing strategies (does
-  matrix guidance actually reduce cascades vs R0?) still needs to be written from them.
-- **Known data-quality caveats affect the numbers** — see §6. They are documented, not bugs to
-  rediscover.
+**A few practical notes on the committed runs (not open work, just things a reader should know):**
+- The `subset_test-r1` run has `attempts.jsonl` + `benchmark_eval` and appears in the analysis
+  tables, but its `summaries.csv`, `pass_rates.csv`, and `regression_matrix/` were not built, so
+  some R1 cells are read from the benchmark eval rather than a `pass_rates.csv`.
+- There is **no `subset_train-r4`** run by design: R4 must be evaluated on held-out data, so it was
+  only run on `subset_test`. The matrix it consumes is learned from R0–R3 training runs.
+- The **data-quality caveats in §6 shape the numbers**. They are documented and understood, not
+  undiscovered bugs.
 
 ---
 
@@ -157,23 +153,41 @@ the id prefix — the analysis tables group Easy/Medium/Human using that map.
 `.gitignore` ignores `results/` and `cache/`; `experiments/` **is** tracked. Per team convention
 we commit each run folder **except its `logs/` subfolder**.
 
-**Headline test-set results** (final full-pass rate = whole plan passes every check). R0/R2/R3/R4
-are from each run's `pass_rates.csv`; R1 is from its benchmark summary + analysis table (it has no
-`pass_rates.csv` yet). Treat small differences as noise — only 10 queries per difficulty group.
+**Headline test-set results** (All = 30 queries; sources: `test_result_analysis/merged/*.csv`,
+each run's `benchmark_eval/*/benchmark_summary.json`). Treat small differences as noise — only
+~10 queries per difficulty group, so a swing of one or two queries is not meaningful.
 
-| Strategy (subset_test) | Final full-pass rate | Final "all personal constraints pass" rate |
-|---|---|---|
-| R0 | 2/30 (6.7%) | 43% |
-| R1 | 1/30 (3.3%) | ~47% (14/30 final plans with 0 failed personal constraints) |
-| R2 | 1/30 (3.3%) | 53% |
-| R3 | 3/30 (10%) | 50% |
-| R4 | 1/30 (3.3%) | 43% |
+| Metric (All, n=30) | R0 | R1 | R2 | R3 | R4 |
+|---|---|---|---|---|---|
+| Avg personal-constraint failures — final | 0.73 | 0.57 | 0.57 | 0.53 | 0.57 |
+| Avg commonsense checks failed — final | 3.67 | 5.80 | 3.90 | 3.63 | **2.73** |
+| Logical micro % | 88.30 | 90.96 | 90.96 | **91.49** | 90.96 |
+| Logical macro % | 50.0 | 53.3 | 56.7 | **60.0** | 56.7 |
+| Commonsense micro % | 86.90 | 79.29 | 86.07 | 87.02 | **90.24** |
+| Full-pass rate (schema + CS + PC) | 0/30 | 1/30 | 0/30 | 2/30 | 2/30 |
+| Harmful repairs rejected | — | — | **11** | — | — |
+| Avg repair time / query (s) | 102.3 | **18.0** | 92.1 | **167.8** | 100.2 |
+| Avg tokens / query | 92,483 | 104,614 | 92,640 | **183,897** | 109,103 |
 
-> **Do not read these full-pass rates as "the strategy failed."** Full pass requires *every*
-> personal + commonsense check to pass with no technical error, and these queries are hard. The
-> research signal is the **transitions** — how many failing constraints got fixed vs how many
-> passing ones got broken (cascades) — captured per attempt in `attempts.jsonl` and summarised in
-> the `test_result_analysis/` tables. Judge strategies on fix-vs-cascade behaviour, not raw full-pass.
+**How to read it.** R4 is the best on **commonsense** (fewest final commonsense failures, highest
+commonsense micro 90.2% vs R0 86.9%) — a small but consistent edge. R3 edges the **logical**
+metrics (micro 91.49%, macro 60%) and full-pass, but is the **most expensive** on time and tokens.
+R1 is the **cheapest and fastest** (~18 s/query) but **worst on commonsense**. R2's rollback guard
+**rejected 11 harmful repairs** and never let a passing personal constraint regress.
+
+> **Do not read full-pass rates as "the strategy failed."** Full pass requires *every* personal +
+> commonsense check to pass with no technical error, and these queries are hard. The research
+> signal is the **transitions** — how many failing constraints got fixed vs how many passing ones
+> got broken (cascades) — captured per attempt in `attempts.jsonl` and summarised in the
+> `test_result_analysis/` tables. Judge strategies on fix-vs-cascade behaviour, not raw full-pass.
+
+> **Fairness caveat (read before quoting any cross-strategy number).** The five strategies did
+> **not** start from the same initial itinerary for a given query — each regenerated its own first
+> draft (confirmed by differing `initial_plan_hash` across R0–R4 for the same UID). So a lower
+> final failure count could reflect an easier first draft rather than better repair. The honest,
+> defensible comparison is **within-strategy initial→final improvement**, not absolute final
+> levels. The `test_result_analysis/` tables report both initial and final, so the delta view is
+> available.
 
 ---
 
@@ -339,27 +353,61 @@ curl -s -H "Authorization: Bearer $(grep -m1 '^CHINATRAVEL_OPENAI_API_KEY=' .env
 
 ---
 
-## 9. What the next person should probably do
+## 9. Project status & honest limitations
 
-1. **Finish the `subset_test-r1` eval** — build its `summaries.csv`/`pass_rates.csv` and its
-   `regression_matrix/` (run the two offline steps in §7 on `experiments/subset_test-r1`) so R1
-   is consistent with the other four test runs. The run and benchmark eval already exist.
-2. **Write the results narrative** from `test_result_analysis/` + the regression matrices: does
-   matrix-guided R4 actually reduce cascades (`newly_violated`) relative to R0, and how do R1/R2/R3
-   sit in between? Use the cascade/fix transitions, not raw full-pass rates.
-3. **Watch for poisoned runs.** Before trusting any run's tokens/metrics, confirm no query has an
-   error-stub final plan or `model_call_data_complete = False`; rerun offending queries and replace
-   their checkpoints (mirror the existing `rerun_provenance.json` pattern), then rebuild the eval
-   outputs.
-4. **Keep the fairness invariant** (model, budget, language, greedy sampling) identical across any
-   new runs, and keep train/test separation (learn `M` on train, compare on test).
+The project is complete for the DSA4213 deliverable: all five strategies are implemented, were run
+on the held-out test set, and the results and matrix are committed. What the experiments can and
+cannot say is below — stated plainly so an outside reader can judge the work fairly.
+
+**What we can legitimately claim.** With the same model, verifier, and budget across all five
+strategies, R4's prompt-level matrix advice did not hurt and gave a small commonsense-satisfaction
+edge (commonsense micro 90.2% vs R0 86.9%; fewest final commonsense failures; ~+0.93 commonsense
+and ~+0.17 personal constraints satisfied per query vs R0). R2's hard rollback guard provably
+worked — it rejected 11 regressing rewrites and never let a passing personal constraint break. R3
+traded the best logical-macro score for the highest cost. So the effectiveness-vs-efficiency
+trade-off is real and measurable, and R4 is **promising on commonsense** — not proven.
+
+**What would be too strong to claim.** "R4 works" or "modelling constraint interdependencies
+improves repair" as a causal result. The evidence does not support that, for the reasons below.
+
+**Honest limitations.**
+
+1. **R4 is advisory only — no regression guard.** R4 does not override `accept()`; it only adds
+   risk text to the prompt and trusts the LLM to act on it. It does not block regressions. A
+   concrete trace: on query `h20241029143652031792`, one of R4's commonsense-phase repairs broke a
+   previously-passing personal constraint and R4 accepted it anyway (a later round happened to
+   re-fix it). Only R2 enforces. Mechanically, R4 = R3-at-plan-scope + prompt text.
+
+2. **The strategies did not start from identical initial plans.** For the same query, R0–R4 each
+   regenerated their own first itinerary (different `initial_plan_hash`). Cross-strategy
+   *final-level* comparisons are therefore confounded; only *within-strategy initial→final* deltas
+   are a fair signal. Any claim that R4 "started from the same plan as R0" is incorrect.
+
+3. **The regression matrix is sparse and low-support.** Most of the 100 cells are unobserved
+   (support 0) and fall back to a neutral 0.5. Only two relationships have real support —
+   `commonsense_repair → accommodation` (34/99 ≈ 0.34) and `commonsense_repair → monetary_budget`
+   (15/91 ≈ 0.17). Low-N cells (e.g. 2/2 = 1.0) are not reliable estimates. A clean pipeline does
+   not establish that the matrix has useful statistical support.
+
+4. **Small sample.** n = 30 on test (≈10 per difficulty group), so a one- or two-query swing is
+   noise. Differences between strategies are small relative to that.
+
+5. **Data-quality caveats (see §6)** — named-place constraints checked in Chinese during repair,
+   missing walking-leg prices, a timing-check crash, and failed-model-call stubs — affect all
+   methods and are documented in `test_result_analysis/README.md`.
+
+**If someone extends this work**, the two most valuable improvements would be (a) start every
+strategy from the *same* initial plan per query so final-level comparisons become fair, and (b)
+give R4 (or a new strategy) a *hard* guard so the matrix actually filters candidates rather than
+only advising. Keep the fairness invariant (same model, budget, language, greedy sampling) and the
+train/test separation (learn `M` on train, compare on test).
 
 ---
 
-*Honesty notes: result numbers in §5 are read from the committed `pass_rates.csv` of each
-`subset_test` run. The exact unit-test assertion count isn't pinned here — run the suite for it.
-Known data-quality caveats (named-place translation, failed-model-call stubs, walking-leg price,
+*Honesty notes: result numbers in §5 are read from the committed `test_result_analysis/merged/`
+tables and each run's `benchmark_eval` summaries. The exact unit-test assertion count isn't pinned
+here — there are 41 test files under `tests/`; run the suite for the assertion count. Known
+data-quality caveats (named-place translation, failed-model-call stubs, walking-leg price,
 timing-check crash) are real and documented in `test_result_analysis/README.md`; they shape the
-numbers and are not new bugs. All five strategies now have a `subset_test` run, but
-`subset_test-r1` still lacks its summary/matrix outputs (only `attempts.jsonl` + `benchmark_eval`
-exist).*
+numbers and are not new bugs. All five strategies have a `subset_test` run; `subset_test-r1` has
+only `attempts.jsonl` + `benchmark_eval` (no summary/matrix outputs).*
