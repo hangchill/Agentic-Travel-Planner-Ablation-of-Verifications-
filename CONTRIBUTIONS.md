@@ -56,6 +56,8 @@ git diff d3a4e7b main -- <path/to/file>
 - **R3 (adaptive scope) + experiment runs + result tables + analysis docs:** Jun Hang Soo
 - **R4 (matrix-guided) + the `r4/` matrix pipeline + the `frontend/` demo:** Thydaphea, Jun Hang Soo
 - **Subset splits + rerun bookkeeping:** Jun Hang Soo, En Rui
+- **Result analysis:** `test_result_analysis/` and `report_result_evaluations/`: Jun Hang Soo;
+  `train_result_analysis/` notebooks: En Rui (R1: Whitney Woo)
 
 ---
 
@@ -161,19 +163,57 @@ and the `r4/tests/`.
 **Thydaphea** (with Jun Hang Soo on the README) — the planner demo app (`app.py`, `planner.py`,
 `presentation.py`, `history.py`, `replay.py`, `storage.py`, demo data) and its replay tests.
 
-## Train-results analysis (`train_result_analysis/`)
+## Test-results analysis (`test_result_analysis/`)
 
-Per-strategy notebooks that reproduce the training-set result tables from the committed runs
-(each writes an `.xlsx` and keeps the two analyzer summary CSVs under `analysis_output/`).
+Result tables for the 30 held-out test queries, built from the committed runs in
+`experiments/subset_test-r*` by `scripts/result_analysis/build_test_result_tables.py`, plus the
+comparison scripts and plots. Each strategy folder holds `per_query.csv` and `table1_pc.csv` to
+`table4_eval_exp.csv`.
 
 | File | Author(s) |
 | --- | --- |
-| `Train_results_R0.ipynb` (new) | En Rui |
-| `Train_results_R1.ipynb` (new) | Whitney Woo |
-| `Train_results_R2.ipynb` (new) | En Rui, Jiarui |
-| `Train_results_R3.ipynb` (new) | En Rui |
+| `R0/`, `R2/` (new) | Jun Hang Soo |
+| `R1/` (new) | Whitney Woo, Jun Hang Soo |
+| `R3/` tables (new) | Jun Hang Soo, Jiarui |
+| `R3/metric_result_comparison/`, `R3/scoping_effect/`, `R3/archive/` (new) | Jun Hang Soo |
+| `R4/` (new) | Jun Hang Soo, Thydaphea |
+| `merged/`, `MERGED_TABLES.md` (new) | Jun Hang Soo, Thydaphea, Jiarui |
+| `README.md` (new) | Jun Hang Soo, Jiarui, Thydaphea |
+| `difficulty_comparison_graphs/` (`difficulty_comparison_ALL.py` + its plots) (new) | Jun Hang Soo |
+| `logical_macro_all.py` (+ its plot) (new) | Jun Hang Soo |
+
+## Train-results analysis (`train_result_analysis/`)
+
+Per-strategy notebooks that reproduce the training-set result tables from the committed runs
+(each writes an `.xlsx` and keeps the two analyzer summary CSVs under `analysis_output/`), plus
+the same tables as `test_result_analysis/` for the train split.
+
+| File | Author(s) |
+| --- | --- |
+| `Train_results_R0.ipynb` (+ `.xlsx`) (new) | En Rui |
+| `Train_results_R1.ipynb` (+ `.xlsx`) (new) | Whitney Woo |
+| `Train_results_R2.ipynb` (+ `.xlsx`) (new) | En Rui, Jiarui |
+| `Train_results_R3.ipynb` (+ `.xlsx`) (new) | En Rui |
+| `analysis_output/` (new) | En Rui (+ Whitney Woo on `R1/`) |
+| `R0/`, `R2/`, `R3/`, `merged/` (new) | Jun Hang Soo |
 | `README.md`, `MERGED_TABLES.md` (new) | Jun Hang Soo |
 | `difficulty_comparisons/difficulty_comparison_r0-3.py` (+ its plot) (new) | Jun Hang Soo |
+
+There is no `R1/` table folder: the R1 train run has no saved initial plans, so
+`difficulty_comparison_r0-3.py` scores its final plans instead.
+
+## Report results (`report_result_evaluations/`)
+
+**Jun Hang Soo** — the code, tables and figures behind the report's Evaluation and Results
+section. `python report_result_evaluations/run_all.py` rebuilds all of them from the committed
+runs, with no model calls (see its `README.md`).
+
+| File | Author(s) | What it is |
+| --- | --- | --- |
+| `run_all.py`, `load_runs.py`, `build_report_tables.py`, `failure_repair.py`, `make_figures.py` (new) | Jun Hang Soo | The rebuild pipeline. |
+| `plots/` (new) | Jun Hang Soo | Copies of `test_result_analysis/difficulty_comparison_graphs/difficulty_comparison_ALL.py`, `train_result_analysis/difficulty_comparisons/difficulty_comparison_r0-3.py` and `test_result_analysis/R3/scoping_effect/R1vR3_scope_effect_graph.py`; only the paths changed. |
+| `report_tables/`, `tables/`, `figures/`, `data/`, `MANIFEST.csv` (new) | Jun Hang Soo | Generated outputs: the report's three tables, the data tables behind them, the six figures and the per-round / per-query rows. |
+| `README.md` (new) | Jun Hang Soo | What each file is and which part of the report uses it. |
 
 ## Experiments (`experiments/`) — who ran what
 
@@ -195,7 +235,6 @@ matrices, per-query plans). Attributed by who committed the run:
 
 Workflow/analysis docs: `experiments/Commands_to_test_queries.md` (Jun Hang Soo, Nancy Shen),
 `REPAIR_METHOD_COMPARISON.md` + `repair_comparison_report.md` (Jun Hang Soo).
-`test_result_analysis/` tables and README (Jun Hang Soo, Jiarui).
 
 ## Notebooks & docs (root)
 
@@ -204,11 +243,13 @@ Workflow/analysis docs: `experiments/Commands_to_test_queries.md` (Jun Hang Soo,
 | `framework_r0.ipynb`, `train_test_split_r0.ipynb` (new) | En Rui (+ Jun Hang Soo, Nancy Shen) |
 | `HANDOVER.md` (new) | En Rui (+ Jun Hang Soo, Nancy Shen) |
 | `README.md` (edited) | En Rui, Jun Hang Soo, Nancy Shen, Thydaphea |
+| `README.zh-CN.md` (edited) | Jun Hang Soo (removed the link to the deleted `docs/RELEASE_VALIDATION.md`) |
 | `CONTRIBUTIONS.md` (new) | En Rui, Nancy Shen, Jun Hang Soo |
-| `CLAUDE.md` (new) | Jun Hang Soo, Jiarui |
-| `docs/PRD_R3_adaptive_repair.md` (new) | Nancy Shen, Jun Hang Soo |
-| `docs/R2_rollback_how_it_works.pdf` (new) | Jiarui |
 | `matrices/README.md` (new) | Jun Hang Soo, Thydaphea |
+
+Removed from the repository (still in the git history): our `CLAUDE.md` (Jun Hang Soo, Jiarui),
+`docs/PRD_R3_adaptive_repair.md` (Nancy Shen, Jun Hang Soo) and
+`docs/R2_rollback_how_it_works.pdf` (Jiarui), and the upstream file `docs/RELEASE_VALIDATION.md`.
 
 ## Runners & project config (root)
 
@@ -245,7 +286,8 @@ Workflow/analysis docs: `experiments/Commands_to_test_queries.md` (Jun Hang Soo,
 
 *This map reflects the diff between `d3a4e7b` (ChinaTravel import) and `main`, with authorship taken
 from git history (most-active author first per file). Experiment output files under
-`experiments/**` and generated tables under `test_result_analysis/**` are summarised by run rather
-than listed individually. To refresh after new work, regenerate with the commands in "The fork
+`experiments/**` are summarised by run, and the generated tables and figures under
+`test_result_analysis/**`, `train_result_analysis/**` and `report_result_evaluations/**` by folder,
+rather than listed individually. To refresh after new work, regenerate with the commands in "The fork
 point" above. (There is a stray empty file named `python` at the repo root, added accidentally —
 safe to delete.)*

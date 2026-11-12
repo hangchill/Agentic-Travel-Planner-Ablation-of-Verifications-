@@ -349,7 +349,6 @@ curl -s -H "Authorization: Bearer $(grep -m1 '^CHINATRAVEL_OPENAI_API_KEY=' .env
   launcher (not the study runner).
 - `experiments/Commands_to_test_queries.md` — the 4-step run→eval→summary→matrix workflow and the
   matrix-fusion scenarios for R4.
-- `docs/PRD_R3_adaptive_repair.md` — the R3 design spec (a good template if you write an R4 spec).
 
 ---
 

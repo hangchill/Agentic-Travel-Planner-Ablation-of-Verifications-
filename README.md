@@ -675,7 +675,6 @@ control flow, synthetic constraints, and translation repair.
 - [Synthetic query generation](synthetic_query_generation/README.md)
 - [Translation and audit](scripts/TRANSLATION_PIPELINE.md)
 - [Fixed sandbox export](scripts/SANDBOX_EXPORT.md)
-- [Post-competition release validation](docs/RELEASE_VALIDATION.md)
 - [TPC@AIC 2025](TPC@AIC2025/readme.md)
 
 ## 🏆 Competition Archives

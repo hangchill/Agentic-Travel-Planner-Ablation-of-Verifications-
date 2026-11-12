@@ -336,7 +336,6 @@ DSL 安全控制流、合成约束和翻译修复。
 - [合成 Query 生成](synthetic_query_generation/README.zh-CN.md)
 - [翻译与审计](scripts/TRANSLATION_PIPELINE.zh-CN.md)
 - [修复版沙盒导出](scripts/SANDBOX_EXPORT.md)
-- [赛后版本验证报告](docs/RELEASE_VALIDATION.md)
 - [TPC@AIC 2025](TPC@AIC2025/readme.md)
 
 ## 🏆 历届比赛
